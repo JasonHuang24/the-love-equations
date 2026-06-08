@@ -2,6 +2,8 @@
 
 A static website presenting a personal framework for attraction, selection, and compatibility.
 
+**Live site:** <https://jasonhuang24.github.io/the-love-equations/>
+
 ## Structure
 
 - `index.html` — home
@@ -15,14 +17,3 @@ A static website presenting a personal framework for attraction, selection, and 
 - `partials/` — shared `navigation-bar.html` and `footer.html`, injected at runtime
 - `js/include.js` — fetches the partials and sets the active nav link
 - `css/` — styles
-
-## Running locally
-
-The shared header/footer are loaded with `fetch`, which the browser blocks over `file://`.
-Serve over HTTP instead:
-
-```bash
-python -m http.server 8080
-```
-
-Then open http://localhost:8080/
