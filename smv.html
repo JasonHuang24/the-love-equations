@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The 5 Factors of SMV — The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .smv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+    .smv-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; cursor: pointer; transition: all 0.12s; }
+    .smv-card:hover { border-color: var(--text-dim); }
+    .smv-card.active { border-width: 1.5px; border-color: var(--scarlet); background: var(--scarlet-pale); }
+    .smv-num { font-size: 11px; margin-bottom: 6px; letter-spacing: 0.05em; }
+    .smv-name { font-size: 17px; color: var(--text); margin-bottom: 6px; }
+    .smv-tagline { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+    .c1 { color: #BA7517; } .c2 { color: #1D9E75; } .c3 { color: #7F77DD; } .c4 { color: #D4537E; } .c5 { color: var(--scarlet); }
+    .detail-box { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; min-height: 100px; }
+    .detail-label { font-size: 11px; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+    .detail-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--card); border: 0.5px solid var(--border); color: var(--text-muted); }
+  </style>
+</head>
+<body data-page="smv">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Model</div>
+      <div class="page-title">The 5 Factors of SMV</div>
+      <div class="page-sub">Sexual Market Value is composed of five distinct axes. Each factor contributes independently — and each can be improved. Click any factor to expand its breakdown.</div>
+    </div>
+
+    <div class="content">
+      <div class="smv-grid" id="cards">
+        <div class="smv-card" data-i="0" onclick="select(0)">
+          <div class="smv-num c1">01</div>
+          <div class="smv-name">Looks</div>
+          <div class="smv-tagline">Physical appearance in all its dimensions</div>
+        </div>
+        <div class="smv-card" data-i="1" onclick="select(1)">
+          <div class="smv-num c2">02</div>
+          <div class="smv-name">Money</div>
+          <div class="smv-tagline">Wealth — the more the better</div>
+        </div>
+        <div class="smv-card" data-i="2" onclick="select(2)">
+          <div class="smv-num c3">03</div>
+          <div class="smv-name">Status</div>
+          <div class="smv-tagline">Position, reputation, and social proof</div>
+        </div>
+        <div class="smv-card" data-i="3" onclick="select(3)">
+          <div class="smv-num c4">04</div>
+          <div class="smv-name">Charm</div>
+          <div class="smv-tagline">Personality, wit, and social presence</div>
+        </div>
+        <div class="smv-card" data-i="4" onclick="select(4)">
+          <div class="smv-num c5">05</div>
+          <div class="smv-name">Exposure</div>
+          <div class="smv-tagline">Visibility and surface area to the market</div>
+        </div>
+      </div>
+
+      <div class="detail-box" id="detail">
+        <div class="detail-label" id="d-label" style="color:var(--text-dim)">Select a factor</div>
+        <div class="detail-text" id="d-text" style="color:var(--text-dim)">Click any card above to expand its breakdown.</div>
+        <div class="tags" id="d-tags"></div>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+    const data = [
+      { label: 'Looks', color: '#BA7517', text: 'Your physical appearance across every axis — not just face, but the full picture of how you present physically.', tags: ['Height','Face','Race','Voice','Style'] },
+      { label: 'Money', color: '#1D9E75', text: 'Wealth is straightforward: the more you have, the more it amplifies everything else. It buys options, signals stability, and raises the floor on everything.', tags: ['Wealth','Income','Assets','Financial freedom'] },
+      { label: 'Status', color: '#7F77DD', text: 'Where you stand relative to others — in your field, your social circle, and the broader world. Reputation compounds over time.', tags: ['Job title','Reputation','Purity','Fame','Pre-selection'] },
+      { label: 'Charm', color: '#D4537E', text: 'The quality of how you engage: your wit, your personality, how you move in rooms. Hobbies that are social and visible add surface area here.', tags: ['Personality','Wit','Social hobbies','Way with words'] },
+      { label: 'Exposure', color: '#C41E3A', text: 'Raw volume of market contact. Where you live, how often you appear, how many new faces encounter you regularly — frequency and location both matter.', tags: ['Location','Visibility','Frequency','New faces','Putting yourself out there'] }
+    ];
+
+    function select(i) {
+      document.querySelectorAll('.smv-card').forEach((c, idx) => {
+        c.classList.toggle('active', idx === i);
+      });
+      const d = data[i];
+      const lbl = document.getElementById('d-label');
+      lbl.textContent = d.label;
+      lbl.style.color = d.color;
+      document.getElementById('d-text').textContent = d.text;
+      document.getElementById('d-text').style.color = '';
+      document.getElementById('d-tags').innerHTML = d.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    }
+  </script>
+</body>
+</html>

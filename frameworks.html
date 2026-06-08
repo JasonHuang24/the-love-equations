@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rules &amp; Frameworks — The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .rf-entry { margin-bottom: 3rem; padding-bottom: 3rem; border-bottom: 0.5px solid var(--border); scroll-margin-top: 96px; }
+    .rf-entry:last-child { border-bottom: none; }
+    .rf-eyebrow { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--scarlet); margin-bottom: 8px; }
+    .rf-title { font-size: 26px; color: var(--text); margin-bottom: 10px; }
+    .rf-sub { font-size: 14px; color: var(--text-muted); line-height: 1.75; margin-bottom: 1.5rem; }
+    .gate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+    .gate-card { border-radius: var(--radius-lg); border: 0.5px solid var(--border); background: var(--card); padding: 1.1rem 1.25rem; }
+    .gate-factor { font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
+    .gate-threshold { font-size: 36px; margin-bottom: 6px; line-height: 1; }
+    .gate-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .gate-fail { font-size: 12px; margin-top: 10px; padding: 6px 10px; border-radius: var(--radius-md); line-height: 1.5; }
+    .gate-card.looks .gate-factor { color: #BA7517; }
+    .gate-card.looks .gate-threshold { color: #BA7517; }
+    .gate-card.looks .gate-fail { background: #FAEEDA; color: #854F0B; }
+    .gate-card.pers .gate-factor { color: #7F77DD; }
+    .gate-card.pers .gate-threshold { color: #7F77DD; }
+    .gate-card.pers .gate-fail { background: #EEEDFE; color: #3C3489; }
+    .outcome-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+    .outcome-card { border-radius: var(--radius-lg); padding: 1rem 1.1rem; border: 0.5px solid transparent; }
+    .outcome-card.pass { background: #E1F5EE; border-color: #9FE1CB; }
+    .outcome-card.fail { background: var(--scarlet-pale); border-color: #F0B0BC; }
+    .outcome-label { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 6px; }
+    .outcome-card.pass .outcome-label { color: #0F6E56; }
+    .outcome-card.fail .outcome-label { color: var(--scarlet-dim); }
+    .outcome-cond { font-size: 13px; margin-bottom: 5px; }
+    .outcome-card.pass .outcome-cond { color: #085041; }
+    .outcome-card.fail .outcome-cond { color: var(--scarlet-dim); }
+    .outcome-note { font-size: 12px; line-height: 1.55; }
+    .outcome-card.pass .outcome-note { color: #0F6E56; }
+    .outcome-card.fail .outcome-note { color: var(--scarlet-dim); }
+    .reasoning-box { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
+    .box-header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0.75rem 1.1rem; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
+    .box-body { padding: 1rem 1.25rem; }
+    .reason-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
+    .reason-row:last-child { margin-bottom: 0; }
+    .reason-icon { font-size: 15px; color: var(--scarlet); margin-top: 2px; flex-shrink: 0; }
+    .reason-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .reason-text strong { color: var(--text); }
+    .spectrum-track { display: flex; border-radius: var(--radius-md); overflow: hidden; height: 32px; margin-bottom: 10px; }
+    .track-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; }
+    .track-seg.reject { background: var(--scarlet-pale); color: var(--scarlet-dim); flex: 4; }
+    .track-seg.threshold { background: #FAEEDA; color: #854F0B; flex: 1; }
+    .track-seg.eligible { background: #E1F5EE; color: #0F6E56; flex: 6; }
+    .spectrum-labels { display: flex; font-size: 11px; color: var(--text-dim); }
+    .spec-left { flex: 4; } .spec-mid { flex: 1; text-align: center; } .spec-right { flex: 6; text-align: right; }
+    .checker-box { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
+    .checker-header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0.75rem 1.1rem; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
+    .checker-body { padding: 1.25rem; }
+    .slider-row { margin-bottom: 14px; }
+    .slider-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .slider-label { font-size: 13px; color: var(--text); }
+    .slider-val { font-size: 17px; }
+    .verdict { border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-top: 0.5rem; border: 1.5px solid transparent; }
+    .verdict.reject { background: var(--scarlet-pale); border-color: #E0A0A8; }
+    .verdict.pass { background: #E1F5EE; border-color: #9FE1CB; }
+    .verdict-title { font-size: 16px; margin-bottom: 3px; }
+    .verdict-title.reject { color: var(--scarlet-dim); }
+    .verdict-title.pass { color: #085041; }
+    .verdict-sub { font-size: 13px; line-height: 1.55; }
+    .verdict-sub.reject { color: #8A2030; }
+    .verdict-sub.pass { color: #0F6E56; }
+    .profiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.25rem; }
+    .profile-heading { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); }
+    .profile-heading.a { color: #378ADD; }
+    .profile-heading.b { color: var(--scarlet); }
+    .treatment-battle { background: var(--surface); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+    .battle-header { font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+    .battle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .battle-score { font-size: 20px; width: 36px; text-align: center; }
+    .battle-bar-wrap { flex: 1; height: 6px; background: var(--card); border-radius: 3px; overflow: hidden; }
+    .battle-bar { height: 100%; border-radius: 3px; transition: width 0.3s; }
+    .battle-bar.a { background: #378ADD; }
+    .battle-bar.b { background: var(--scarlet); }
+    .battle-label { font-size: 11px; width: 60px; }
+    .battle-label.a { color: #378ADD; }
+    .battle-label.b { color: var(--scarlet); }
+    .battle-result { font-size: 13px; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .winner-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; }
+    .winner-badge.a { background: #EBF3FD; color: #185FA5; }
+    .winner-badge.b { background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .winner-badge.tie { background: var(--surface); color: var(--text-muted); border: 0.5px solid var(--border); }
+    .result-panel-grid { display: grid; grid-template-columns: 1fr 1fr; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
+    .result-col { padding: 1.1rem 1.25rem; background: var(--card); }
+    .result-col + .result-col { border-left: 0.5px solid var(--border); }
+    .res-who { font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 10px; }
+    .res-who.a { color: #378ADD; } .res-who.b { color: var(--scarlet); }
+    .res-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
+    .res-row span:last-child { color: var(--text); }
+    .res-divider { height: 0.5px; background: var(--border); margin: 8px 0; }
+    .res-final { font-size: 26px; margin-top: 6px; }
+    .res-final.a { color: #378ADD; } .res-final.b { color: var(--scarlet); }
+    .res-outcome { font-size: 11px; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-top: 8px; }
+    .res-outcome.wins { background: #E1F5EE; color: #0F6E56; }
+    .res-outcome.loses { background: var(--surface); color: var(--text-dim); }
+    .bonus-scale { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
+    .bs-header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0.75rem 1.1rem; }
+    .bs-header-title { font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
+    .bs-header-sub { font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+    .bs-row { display: flex; align-items: center; padding: 0.6rem 1.1rem; border-bottom: 0.5px solid var(--border); gap: 12px; }
+    .bs-row:last-child { border-bottom: none; }
+    .bs-row.active { background: #E1F5EE; }
+    .bs-diff { font-size: 12px; color: var(--text); width: 150px; }
+    .bs-bar-wrap { flex: 1; height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; }
+    .bs-bar { height: 100%; border-radius: 2px; background: #1D9E75; }
+    .bs-pct { font-size: 13px; color: #1D9E75; width: 36px; text-align: right; }
+    .bs-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: #E1F5EE; color: #0F6E56; }
+    .band-visual { position: relative; margin: 1.5rem 0 0.5rem; }
+    .band-track { height: 48px; border-radius: var(--radius-md); background: var(--surface); position: relative; }
+    .band-deviation { position: absolute; height: 100%; border-radius: var(--radius-md); background: var(--scarlet-pale); transition: all 0.3s; }
+    .band-sr { position: absolute; height: 100%; border-radius: var(--radius-md); background: var(--scarlet); opacity: 0.2; transition: all 0.3s; }
+    .band-score { position: absolute; width: 3px; height: 64px; background: var(--scarlet); border-radius: 2px; top: -8px; transition: left 0.3s; }
+    .band-score-dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--scarlet); border: 2px solid white; top: -14px; left: -4.5px; }
+    .band-label { position: absolute; font-size: 10px; color: var(--scarlet); white-space: nowrap; }
+    .scale-ticks { display: flex; justify-content: space-between; margin-top: 6px; }
+    .tick { font-size: 11px; color: var(--text-dim); width: 20px; text-align: center; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.25rem; }
+    .stat-card { background: var(--surface); border-radius: var(--radius-md); padding: 0.85rem 0.9rem; }
+    .stat-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
+    .stat-val { font-size: 20px; }
+    .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+    .bias-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .bias-outcome { font-size: 12px; color: var(--text); width: 130px; }
+    .bias-bar-wrap { flex: 1; height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+    .bias-bar { height: 100%; border-radius: 4px; }
+    .bias-bar.common { background: var(--scarlet); }
+    .bias-bar.rare { background: var(--text-dim); }
+    .bias-bar.veryrare { background: var(--border); }
+    .bias-freq { font-size: 12px; width: 80px; text-align: right; }
+    .bias-freq.common { color: var(--scarlet); }
+    .bias-freq.rare { color: var(--text-dim); }
+    .impl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .impl-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+    .impl-letter { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--scarlet); margin-bottom: 6px; }
+    .impl-title { font-size: 14px; color: var(--text); margin-bottom: 6px; }
+    .impl-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  </style>
+</head>
+<body data-page="frameworks">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Reference</div>
+      <div class="page-title">Rules &amp; Frameworks</div>
+      <div class="page-sub">Working models — scoring gates, markup systems, rating bands, and selection rules. These concepts are staged here until each finds a permanent home in the framework.</div>
+    </div>
+
+    <div class="content">
+
+      <!-- 7-7 Rule -->
+      <div class="rf-entry" id="seven-seven-rule">
+        <div class="rf-eyebrow">Long-term partner selection gate</div>
+        <div class="rf-title">The 7–7 Rule</div>
+        <div class="rf-sub">A binary qualification gate for serious long-term candidates. Both conditions must be independently met. A high score in one does not compensate for a low score in the other.</div>
+        <div class="gate-grid">
+          <div class="gate-card looks">
+            <div class="gate-factor">Physical attractiveness</div>
+            <div class="gate-threshold">≥ 7</div>
+            <div class="gate-desc">Sustained physical attraction is non-negotiable for long-term viability. Below the threshold, attraction degrades over time.</div>
+            <div class="gate-fail">Below 7 → insufficient sustained attraction risk</div>
+          </div>
+          <div class="gate-card pers">
+            <div class="gate-factor">Personality</div>
+            <div class="gate-threshold">≥ 7</div>
+            <div class="gate-desc">Long-term compatibility requires genuine personality quality — not rationalized likability or tolerable traits.</div>
+            <div class="gate-fail">Below 7 → insufficient long-term compatibility risk</div>
+          </div>
+        </div>
+        <div class="outcome-grid">
+          <div class="outcome-card pass">
+            <div class="outcome-label">Qualifies</div>
+            <div class="outcome-cond">Looks ≥ 7 AND Personality ≥ 7</div>
+            <div class="outcome-note">Both gates clear. Long-term candidacy is open.</div>
+          </div>
+          <div class="outcome-card fail">
+            <div class="outcome-label">Does not qualify</div>
+            <div class="outcome-cond">Either score falls below 7</div>
+            <div class="outcome-note">Long-term candidacy fails. One weak score disqualifies regardless of the other.</div>
+          </div>
+        </div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-message-quote"></i> Example logic</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>A person can be an 8 in personality and still fail long-term candidacy if physical attraction is a 6. Likewise, a 9 in looks does not rescue a personality score below the threshold. The rule blocks rationalized compromise on either side.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-pencil"></i> Commentary</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>The point of the 7–7 Rule is not perfectionism. It is preventing a relationship from being built on a missing pillar. Sustained desire and sustained personality fit both have to be independently good enough.</p></div></div>
+      </div>
+
+      <!-- Sub-5 -->
+      <div class="rf-entry" id="sub-5-rule">
+        <div class="rf-eyebrow">Hard floor gate</div>
+        <div class="rf-title">Sub-5 Auto Disqualification</div>
+        <div class="rf-sub">A score below 5 in Looks or Personality signals active incompatibility — not just weakness. No amount of strength in other areas compensates. The gate is immediate and non-negotiable.</div>
+        <div class="gate-grid">
+          <div class="gate-card looks">
+            <div class="gate-factor">Looks</div>
+            <div class="gate-threshold">&lt; 5</div>
+            <div class="gate-desc">Active lack of physical attraction. Below this floor, sustained desire cannot be reasonably expected.</div>
+          </div>
+          <div class="gate-card pers">
+            <div class="gate-factor">Personality</div>
+            <div class="gate-threshold">&lt; 5</div>
+            <div class="gate-desc">Active relational risk. Below this floor, the relationship dynamic itself becomes the problem.</div>
+          </div>
+        </div>
+        <div class="reasoning-box">
+          <div class="box-header">Reasoning</div>
+          <div class="box-body">
+            <div class="reason-row"><i class="ti ti-x reason-icon"></i><div class="reason-text"><strong>Active incompatibility.</strong> Sub-5 is not neutral — it is a negative signal that requires constant tolerance.</div></div>
+            <div class="reason-row"><i class="ti ti-x reason-icon"></i><div class="reason-text"><strong>Active lack of attraction.</strong> A looks score below 5 means physical engagement becomes an act of will, not desire.</div></div>
+            <div class="reason-row"><i class="ti ti-x reason-icon"></i><div class="reason-text"><strong>Severe relational risk.</strong> A personality score below 5 means the person's baseline behavior is actively harmful to the dynamic.</div></div>
+          </div>
+        </div>
+        <div class="box-body" style="border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.25rem;">
+          <div class="spectrum-track">
+            <div class="track-seg reject">1–4 · Auto reject</div>
+            <div class="track-seg threshold">5</div>
+            <div class="track-seg eligible">6–10 · Eligible for evaluation</div>
+          </div>
+          <div class="spectrum-labels">
+            <span class="spec-left">Immediate disqualification</span>
+            <span class="spec-mid">Floor</span>
+            <span class="spec-right">Proceed to 7–7 gate</span>
+          </div>
+        </div>
+        <div class="checker-box">
+          <div class="checker-header">Live checker</div>
+          <div class="checker-body">
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Looks</span><span class="slider-val" id="l-val" style="color:#BA7517">7</span></div>
+              <input type="range" min="1" max="10" step="1" value="7" id="l-slider" oninput="checkSub5()" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Personality</span><span class="slider-val" id="p-val" style="color:#7F77DD">7</span></div>
+              <input type="range" min="1" max="10" step="1" value="7" id="p-slider" oninput="checkSub5()" />
+            </div>
+            <div class="verdict pass" id="verdict">
+              <div class="verdict-title pass" id="v-title">Clears the floor</div>
+              <div class="verdict-sub pass" id="v-sub">Both scores meet the minimum. Proceed to the 7–7 evaluation gate.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Treatment Markup -->
+      <div class="rf-entry" id="treatment-markup">
+        <div class="rf-eyebrow">Behavioral amplification modifier</div>
+        <div class="rf-title">Treatment Markup System</div>
+        <div class="rf-sub">The bonus is competitive — not self-referential. When two people compete for the same partner, whoever wins the treatment comparison earns a markup on their base score. The loser gets nothing. The differential between their treatment scores determines the markup percentage.</div>
+        <div class="profiles-grid">
+          <div>
+            <div class="profile-heading a">Person A</div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Looks</span><span style="font-size:15px;color:#BA7517" id="la-val">6</span></div><input type="range" min="1" max="10" step="1" value="6" id="la" oninput="calcTreatment()" /></div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Treatment</span><span style="font-size:15px;color:#378ADD" id="ta-val">8</span></div><input type="range" min="1" max="10" step="1" value="8" id="ta" oninput="calcTreatment()" /></div>
+          </div>
+          <div>
+            <div class="profile-heading b">Person B</div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Looks</span><span style="font-size:15px;color:#BA7517" id="lb-val">5</span></div><input type="range" min="1" max="10" step="1" value="5" id="lb" oninput="calcTreatment()" /></div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Treatment</span><span style="font-size:15px;color:var(--scarlet)" id="tb-val">10</span></div><input type="range" min="1" max="10" step="1" value="10" id="tb" oninput="calcTreatment()" /></div>
+          </div>
+        </div>
+        <div class="treatment-battle">
+          <div class="battle-header">Treatment comparison</div>
+          <div class="battle-row"><span class="battle-label a">A</span><div class="battle-bar-wrap"><div class="battle-bar a" id="bar-a" style="width:80%"></div></div><span class="battle-score" id="ta-disp" style="color:#378ADD">8</span></div>
+          <div class="battle-row"><span class="battle-label b">B</span><div class="battle-bar-wrap"><div class="battle-bar b" id="bar-b" style="width:100%"></div></div><span class="battle-score" id="tb-disp" style="color:var(--scarlet)">10</span></div>
+          <div class="battle-result" id="battle-result"></div>
+        </div>
+        <div style="border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;" id="result-cols"></div>
+        </div>
+        <div class="bonus-scale">
+          <div class="bs-header"><div class="bs-header-title">Bonus scale</div><div class="bs-header-sub">Winner's treatment differential determines the markup. Applied to the winner's base score only.</div></div>
+          <div id="bonus-scale-rows"></div>
+        </div>
+      </div>
+
+      <!-- Looks Rating -->
+      <div class="rf-entry" id="looks-rating" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+        <div class="rf-eyebrow">Resistance &amp; support model</div>
+        <div class="rf-title">Looks Rating Evaluation System</div>
+        <div class="rf-sub">A looks score is not static, but it is not infinitely fluid either. Every rating carries a support floor and a resistance ceiling that bound how perception drifts over time. Initial evaluations are highly accurate — but bias, familiarity, and behavior all apply pressure within the band.</div>
+        <div class="checker-box mb-2">
+          <div class="checker-header">Rating band visualizer</div>
+          <div class="checker-body">
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Initial rating</span><span class="slider-val" style="color:var(--scarlet)" id="init-val">6.5</span></div>
+              <input type="range" min="1" max="10" step="0.5" value="6.5" id="init-slider" oninput="calcLooks()" />
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1rem;">
+              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><div style="width:12px;height:12px;border-radius:2px;background:var(--scarlet-pale);border:0.5px solid #E0A0A8;flex-shrink:0"></div>±2 deviation range</div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><div style="width:12px;height:12px;border-radius:2px;background:var(--scarlet);opacity:.3;flex-shrink:0"></div>Support–resistance band</div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><div style="width:12px;height:12px;border-radius:50%;background:var(--scarlet);flex-shrink:0"></div>Initial score</div>
+            </div>
+            <div class="band-visual">
+              <div class="band-track" id="band-track">
+                <div class="band-deviation" id="band-dev"></div>
+                <div class="band-sr" id="band-sr"></div>
+                <div class="band-score" id="band-score"><div class="band-score-dot"></div></div>
+                <div class="band-label" id="lbl-dev-lo" style="bottom:-18px;font-size:10px;"></div>
+                <div class="band-label" id="lbl-dev-hi" style="bottom:-18px;font-size:10px;"></div>
+              </div>
+              <div class="scale-ticks" id="scale-ticks"></div>
+            </div>
+            <div class="stats-grid mt-3" id="stats-grid"></div>
+          </div>
+        </div>
+        <div class="reasoning-box mb-2">
+          <div class="box-header">Degradation vs upgrade bias</div>
+          <div class="box-body">
+            <div class="bias-row"><span class="bias-outcome">−1 downgrade</span><div class="bias-bar-wrap"><div class="bias-bar common" style="width:75%"></div></div><span class="bias-freq common">Most common</span></div>
+            <div class="bias-row"><span class="bias-outcome">Stable / no change</span><div class="bias-bar-wrap"><div class="bias-bar rare" style="width:40%"></div></div><span class="bias-freq rare">Common</span></div>
+            <div class="bias-row"><span class="bias-outcome">+1 upgrade</span><div class="bias-bar-wrap"><div class="bias-bar rare" style="width:20%"></div></div><span class="bias-freq rare">Rare</span></div>
+            <div class="bias-row"><span class="bias-outcome">Downgrade &gt;1</span><div class="bias-bar-wrap"><div class="bias-bar veryrare" style="width:10%"></div></div><span class="bias-freq veryrare">Very rare</span></div>
+            <div class="bias-row" style="margin-bottom:0"><span class="bias-outcome">Upgrade &gt;1</span><div class="bias-bar-wrap"><div class="bias-bar veryrare" style="width:6%"></div></div><span class="bias-freq veryrare">Very rare</span></div>
+          </div>
+        </div>
+        <div class="impl-grid">
+          <div class="impl-card"><div class="impl-letter">A</div><div class="impl-title">Attraction is dynamic</div><div class="impl-desc">But not infinitely subjective and not random. The band bounds the drift — total category collapse is rare.</div></div>
+          <div class="impl-card"><div class="impl-letter">B</div><div class="impl-title">Treatment matters</div><div class="impl-desc">Behavior can elevate emotional desirability and attachment strength — applying upward pressure within the band.</div></div>
+          <div class="impl-card"><div class="impl-letter">C</div><div class="impl-title">Initial ratings anchor</div><div class="impl-desc">First impressions create anchoring effects, stability bands, and expectation baselines that persist.</div></div>
+          <div class="impl-card"><div class="impl-letter">D</div><div class="impl-title">System distinguishes</div><div class="impl-desc">Between raw looks, emotional treatment, long-term compatibility, and attraction persistence — each tracked separately.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+    function toggle(header) {
+      const body = header.nextElementSibling;
+      const chev = header.querySelector('.dos-chev');
+      const open = body.classList.contains('open');
+      body.classList.toggle('open', !open);
+      chev.classList.toggle('open', !open);
+    }
+
+    function checkSub5() {
+      const l = parseInt(document.getElementById('l-slider').value);
+      const p = parseInt(document.getElementById('p-slider').value);
+      document.getElementById('l-val').textContent = l;
+      document.getElementById('p-val').textContent = p;
+      const vEl = document.getElementById('verdict');
+      const tEl = document.getElementById('v-title');
+      const sEl = document.getElementById('v-sub');
+      if (l < 5 || p < 5) {
+        vEl.className = 'verdict reject';
+        tEl.className = 'verdict-title reject'; tEl.textContent = 'Immediate reject';
+        sEl.className = 'verdict-sub reject';
+        if (l < 5 && p < 5) sEl.textContent = `Both Looks (${l}) and Personality (${p}) fall below the floor. Dual disqualification.`;
+        else if (l < 5) sEl.textContent = `Looks score of ${l} falls below 5. Disqualified regardless of personality.`;
+        else sEl.textContent = `Personality score of ${p} falls below 5. Disqualified regardless of looks.`;
+      } else {
+        vEl.className = 'verdict pass';
+        tEl.className = 'verdict-title pass'; tEl.textContent = 'Clears the floor';
+        sEl.className = 'verdict-sub pass';
+        sEl.textContent = `Looks (${l}) and Personality (${p}) both meet the minimum. Proceed to the 7–7 evaluation gate.`;
+      }
+    }
+
+    const BONUS_SCALE = [{diff:1,pct:2},{diff:2,pct:4},{diff:3,pct:6},{diff:4,pct:8},{diff:5,pct:10}];
+    function renderBonusScale(activeDiff) {
+      document.getElementById('bonus-scale-rows').innerHTML = BONUS_SCALE.map(b => `
+        <div class="bs-row${activeDiff===b.diff?' active':''}">
+          <span class="bs-diff">Winner leads by ${b.diff} point${b.diff>1?'s':''}</span>
+          <div class="bs-bar-wrap"><div class="bs-bar" style="width:${b.pct*10}%"></div></div>
+          <span class="bs-pct">+${b.pct}%</span>
+          ${activeDiff===b.diff?'<span class="bs-badge">active</span>':''}
+        </div>`).join('');
+    }
+
+    function calcTreatment() {
+      const la=parseInt(document.getElementById('la').value), ta=parseInt(document.getElementById('ta').value);
+      const lb=parseInt(document.getElementById('lb').value), tb=parseInt(document.getElementById('tb').value);
+      document.getElementById('la-val').textContent=la; document.getElementById('ta-val').textContent=ta;
+      document.getElementById('lb-val').textContent=lb; document.getElementById('tb-val').textContent=tb;
+      document.getElementById('ta-disp').textContent=ta; document.getElementById('tb-disp').textContent=tb;
+      document.getElementById('bar-a').style.width=(ta/10*100)+'%';
+      document.getElementById('bar-b').style.width=(tb/10*100)+'%';
+      const baseA=la+ta, baseB=lb+tb, tDiff=ta-tb, absDiff=Math.abs(tDiff);
+      const clampedDiff=Math.min(absDiff,5);
+      const bonusPct=absDiff>=1?BONUS_SCALE.find(b=>b.diff===clampedDiff).pct:0;
+      let bonusA=0,bonusB=0,winner=null;
+      if(tDiff>0){winner='a';bonusA=parseFloat(((bonusPct/100)*baseA).toFixed(2));}
+      else if(tDiff<0){winner='b';bonusB=parseFloat(((bonusPct/100)*baseB).toFixed(2));}
+      const finalA=parseFloat((baseA+bonusA).toFixed(2)),finalB=parseFloat((baseB+bonusB).toFixed(2));
+      const br=document.getElementById('battle-result');
+      if(winner==='a') br.innerHTML=`<span class="winner-badge a">Person A wins treatment</span> leads by ${absDiff} — earns ${bonusPct}% markup`;
+      else if(winner==='b') br.innerHTML=`<span class="winner-badge b">Person B wins treatment</span> leads by ${absDiff} — earns ${bonusPct}% markup`;
+      else br.innerHTML=`<span class="winner-badge tie">Tie</span> — equal treatment, no bonus awarded`;
+      document.getElementById('result-cols').innerHTML = `
+        <div class="result-col"><div class="res-who a">Person A</div>
+          <div class="res-row"><span>Looks</span><span>${la}</span></div>
+          <div class="res-row"><span>Treatment</span><span>${ta}</span></div>
+          <div class="res-row"><span>Base</span><span>${baseA}</span></div>
+          <div class="res-row"><span>Bonus</span><span style="color:${bonusA>0?'#1D9E75':'var(--text-dim)'}">${bonusA>0?'+'+bonusA+' ('+bonusPct+'%)':'None'}</span></div>
+          <div class="res-divider"></div>
+          <div class="res-final a">${finalA}</div>
+          <div>${finalA>finalB?'<span class="res-outcome wins">Wins overall</span>':'<span class="res-outcome loses">Loses overall</span>'}</div>
+        </div>
+        <div class="result-col" style="border-left:0.5px solid var(--border)"><div class="res-who b">Person B</div>
+          <div class="res-row"><span>Looks</span><span>${lb}</span></div>
+          <div class="res-row"><span>Treatment</span><span>${tb}</span></div>
+          <div class="res-row"><span>Base</span><span>${baseB}</span></div>
+          <div class="res-row"><span>Bonus</span><span style="color:${bonusB>0?'#1D9E75':'var(--text-dim)'}">${bonusB>0?'+'+bonusB+' ('+bonusPct+'%)':'None'}</span></div>
+          <div class="res-divider"></div>
+          <div class="res-final b">${finalB}</div>
+          <div>${finalB>finalA?'<span class="res-outcome wins">Wins overall</span>':'<span class="res-outcome loses">Loses overall</span>'}</div>
+        </div>`;
+      renderBonusScale(winner?clampedDiff:-1);
+    }
+
+    function calcLooks() {
+      const raw=parseFloat(document.getElementById('init-slider').value);
+      document.getElementById('init-val').textContent=raw;
+      const MIN=1,MAX=10;
+      const resistance=Math.min(Math.ceil(raw),MAX), support=Math.max(Math.floor(raw),MIN);
+      const devLo=Math.max(raw-2,MIN), devHi=Math.min(raw+2,MAX);
+      const pct=v=>((v-MIN)/(MAX-MIN))*100;
+      const devLoP=pct(devLo),devHiP=pct(devHi),srLoP=pct(support),srHiP=pct(resistance),scoreP=pct(raw);
+      document.getElementById('band-dev').style.left=devLoP+'%';
+      document.getElementById('band-dev').style.width=(devHiP-devLoP)+'%';
+      document.getElementById('band-sr').style.left=srLoP+'%';
+      document.getElementById('band-sr').style.width=Math.max(srHiP-srLoP,0.5)+'%';
+      document.getElementById('band-score').style.left='calc('+scoreP+'% - 1.5px)';
+      document.getElementById('lbl-dev-lo').style.left=devLoP+'%';
+      document.getElementById('lbl-dev-lo').textContent=devLo;
+      document.getElementById('lbl-dev-hi').style.left='calc('+devHiP+'% - 16px)';
+      document.getElementById('lbl-dev-hi').textContent=devHi;
+      document.getElementById('scale-ticks').innerHTML=Array.from({length:10},(_,i)=>i+1).map(n=>`<span class="tick" style="color:${n>=devLo&&n<=devHi?'var(--text)':'var(--text-dim)'};font-weight:${n>=devLo&&n<=devHi?'500':'400'}">${n}</span>`).join('');
+      document.getElementById('stats-grid').innerHTML=`
+        <div class="stat-card"><div class="stat-label">Initial accuracy</div><div class="stat-val" style="color:#1D9E75">${raw===10||raw===1?98:95}%</div><div class="stat-sub">First impression</div></div>
+        <div class="stat-card"><div class="stat-label">Support floor</div><div class="stat-val" style="color:#378ADD">${support}</div><div class="stat-sub">Perception bottom</div></div>
+        <div class="stat-card"><div class="stat-label">Resistance ceiling</div><div class="stat-val" style="color:#7F77DD">${resistance}</div><div class="stat-sub">Perception top</div></div>
+        <div class="stat-card"><div class="stat-label">Deviation range</div><div class="stat-val" style="color:var(--scarlet)">${devLo}–${devHi}</div><div class="stat-sub">±2 possible drift</div></div>`;
+    }
+
+    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1);
+    window.addEventListener('resize', calcLooks);
+  </script>
+</body>
+</html>

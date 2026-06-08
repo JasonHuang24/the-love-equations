@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compatibility Calculator — The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .calc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+    .panel { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-soft); }
+    .panel-header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0.85rem 1.25rem; }
+    .panel-title { font-size: 11px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+    .panel-body { padding: 1.25rem; }
+
+    .tier-group { margin-bottom: 1.25rem; }
+    .tier-group:last-child { margin-bottom: 0; }
+    .tier-group-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .tier-group-label.t1 { color: var(--scarlet); }
+    .tier-group-label.t2 { color: #C07080; }
+    .tier-group-label.t3 { color: var(--text-dim); }
+    .tier-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .tier-dot.t1 { background: var(--scarlet); }
+    .tier-dot.t2 { background: #C07080; }
+    .tier-dot.t3 { background: var(--text-dim); }
+
+    .factor-row { margin-bottom: 12px; }
+    .factor-row:last-child { margin-bottom: 0; }
+    .factor-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+    .factor-name { font-size: 13px; color: var(--text); }
+    .factor-val { font-size: 14px; font-weight: 400; min-width: 20px; text-align: right; }
+    .factor-val.t1 { color: var(--scarlet); }
+    .factor-val.t2 { color: #C07080; }
+    .factor-val.t3 { color: var(--text-dim); }
+    input[type=range] { width: 100%; accent-color: var(--scarlet); }
+
+    .dealbreakers-panel { margin-top: 1.5rem; }
+    .db-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .db-item { display: flex; align-items: center; gap: 8px; padding: 0.6rem 0.85rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: all 0.12s; }
+    .db-item:hover { border-color: var(--scarlet); }
+    .db-item input[type=checkbox] { accent-color: var(--scarlet); width: 14px; height: 14px; cursor: pointer; flex-shrink: 0; }
+    .db-item.checked { background: var(--scarlet-pale); border-color: #E0A0A8; }
+    .db-label { font-size: 13px; color: var(--text-muted); cursor: pointer; }
+    .db-item.checked .db-label { color: var(--scarlet-dim); }
+
+    .result-panel { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; position: sticky; top: 80px; box-shadow: var(--shadow-soft); }
+    .result-header { padding: 1.25rem; border-bottom: 0.5px solid var(--border); }
+    .result-score-row { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 6px; }
+    .result-score { font-size: 52px; font-weight: 400; line-height: 1; }
+    .result-denom { font-size: 16px; color: var(--text-dim); margin-bottom: 10px; }
+    .result-tier { font-size: 13px; font-weight: 400; padding: 5px 14px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
+    .meter { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+    .meter-fill { height: 100%; border-radius: 3px; background: var(--scarlet); transition: width 0.4s ease; }
+    .result-body { padding: 1.25rem; }
+    .result-explanation { font-size: 14px; color: var(--text-muted); line-height: 1.75; margin-bottom: 1.25rem; }
+
+    .gate-status { display: flex; flex-direction: column; gap: 8px; }
+    .gate-row { display: flex; align-items: center; gap: 10px; padding: 0.6rem 0.85rem; border-radius: var(--radius-md); border: 0.5px solid transparent; }
+    .gate-row.pass { background: #E1F5EE; border-color: #9FE1CB; }
+    .gate-row.fail { background: var(--scarlet-pale); border-color: #E0A0A8; }
+    .gate-row.warn { background: #FAEEDA; border-color: #EFB840; }
+    .gate-row.neutral { background: var(--surface); border-color: var(--border); }
+    .gate-icon { font-size: 14px; flex-shrink: 0; }
+    .gate-row.pass .gate-icon { color: #0F6E56; }
+    .gate-row.fail .gate-icon { color: var(--scarlet-dim); }
+    .gate-row.warn .gate-icon { color: #854F0B; }
+    .gate-row.neutral .gate-icon { color: var(--text-dim); }
+    .gate-text { font-size: 12px; line-height: 1.4; }
+    .gate-row.pass .gate-text { color: #0F6E56; }
+    .gate-row.fail .gate-text { color: var(--scarlet-dim); }
+    .gate-row.warn .gate-text { color: #854F0B; }
+    .gate-row.neutral .gate-text { color: var(--text-muted); }
+
+    .factor-breakdown { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); }
+    .breakdown-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+    .breakdown-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .breakdown-name { font-size: 12px; color: var(--text-muted); width: 120px; flex-shrink: 0; }
+    .breakdown-bar-wrap { flex: 1; height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; }
+    .breakdown-bar { height: 100%; border-radius: 2px; transition: width 0.3s; }
+    .breakdown-score { font-size: 12px; color: var(--text-muted); width: 24px; text-align: right; }
+
+    @media (max-width: 680px) {
+      .calc-layout { grid-template-columns: 1fr; }
+      .result-panel { position: static; }
+      .db-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-page="compatibility">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Tool</div>
+      <div class="page-title">Compatibility Calculator</div>
+      <div class="page-sub">Score all nine Love Hierarchy factors across the three tiers. Gates are enforced in sequence — Sub-5 disqualification, Primary gate, 7–7 Rule, and dealbreaker overrides. The result reflects where someone actually lands in the framework.</div>
+    </div>
+
+    <div class="content">
+      <div class="calc-layout">
+
+        <!-- Left: Inputs -->
+        <div>
+          <div class="panel mb-2">
+            <div class="panel-header"><div class="panel-title">Score the nine factors</div></div>
+            <div class="panel-body">
+
+              <div class="tier-group">
+                <div class="tier-group-label t1"><span class="tier-dot t1"></span> Primary factors — core attraction gate</div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Physical attractiveness</span><span class="factor-val t1" id="v-pa">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-pa" oninput="update()" />
+                </div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Classiness</span><span class="factor-val t1" id="v-cl">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-cl" oninput="update()" />
+                </div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Attraction towards me</span><span class="factor-val t1" id="v-at">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-at" oninput="update()" />
+                </div>
+              </div>
+
+              <div class="tier-group">
+                <div class="tier-group-label t2"><span class="tier-dot t2"></span> Secondary factors — relationship energy layer</div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Fun &amp; Easygoing</span><span class="factor-val t2" id="v-fu">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-fu" oninput="update()" />
+                </div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Assertiveness / Initiative</span><span class="factor-val t2" id="v-as">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-as" oninput="update()" />
+                </div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Purity / Lack of Baggage</span><span class="factor-val t2" id="v-pu">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-pu" oninput="update()" />
+                </div>
+              </div>
+
+              <div class="tier-group">
+                <div class="tier-group-label t3"><span class="tier-dot t3"></span> Tertiary factors — long-term fit layer</div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Alignment in values</span><span class="factor-val t3" id="v-av">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-av" oninput="update()" />
+                </div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Common interests</span><span class="factor-val t3" id="v-ci">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-ci" oninput="update()" />
+                </div>
+                <div class="factor-row">
+                  <div class="factor-top"><span class="factor-name">Availability</span><span class="factor-val t3" id="v-av2">7</span></div>
+                  <input type="range" min="1" max="10" step="1" value="7" id="s-av2" oninput="update()" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="panel dealbreakers-panel">
+            <div class="panel-header"><div class="panel-title">Dealbreakers — any single check overrides the score</div></div>
+            <div class="panel-body">
+              <div class="db-grid">
+                <label class="db-item" id="db-dishonesty">
+                  <input type="checkbox" id="c-dishonesty" onchange="updateDb('db-dishonesty'); update()" />
+                  <span class="db-label">Dishonesty</span>
+                </label>
+                <label class="db-item" id="db-cheating">
+                  <input type="checkbox" id="c-cheating" onchange="updateDb('db-cheating'); update()" />
+                  <span class="db-label">Cheating</span>
+                </label>
+                <label class="db-item" id="db-affection">
+                  <input type="checkbox" id="c-affection" onchange="updateDb('db-affection'); update()" />
+                  <span class="db-label">Low affection</span>
+                </label>
+                <label class="db-item" id="db-chaos">
+                  <input type="checkbox" id="c-chaos" onchange="updateDb('db-chaos'); update()" />
+                  <span class="db-label">Constant chaos</span>
+                </label>
+                <label class="db-item" id="db-disrespect">
+                  <input type="checkbox" id="c-disrespect" onchange="updateDb('db-disrespect'); update()" />
+                  <span class="db-label">Disrespect</span>
+                </label>
+                <label class="db-item" id="db-addiction">
+                  <input type="checkbox" id="c-addiction" onchange="updateDb('db-addiction'); update()" />
+                  <span class="db-label">Active addiction</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Results -->
+        <div>
+          <div class="result-panel">
+            <div class="result-header">
+              <div class="result-score-row">
+                <div class="result-score" id="res-score" style="color:var(--scarlet)">70</div>
+                <div class="result-denom">/ 100</div>
+              </div>
+              <div class="result-tier" id="res-tier">Strong Potential</div>
+              <div class="meter"><div class="meter-fill" id="meter-fill" style="width:70%"></div></div>
+            </div>
+            <div class="result-body">
+              <div class="result-explanation" id="res-explanation">Passes the primary attraction gate and shows enough secondary and tertiary support to keep exploring.</div>
+
+              <div class="gate-status" id="gate-status"></div>
+
+              <div class="factor-breakdown">
+                <div class="breakdown-label">Factor breakdown</div>
+                <div id="breakdown-rows"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+    const FACTORS = [
+      { id: 's-pa', vid: 'v-pa', name: 'Physical attractiveness', tier: 1, weight: 0.16 },
+      { id: 's-cl', vid: 'v-cl', name: 'Classiness',              tier: 1, weight: 0.14 },
+      { id: 's-at', vid: 'v-at', name: 'Attraction towards me',   tier: 1, weight: 0.15 },
+      { id: 's-fu', vid: 'v-fu', name: 'Fun & Easygoing',         tier: 2, weight: 0.12 },
+      { id: 's-as', vid: 'v-as', name: 'Assertiveness / init.',   tier: 2, weight: 0.12 },
+      { id: 's-pu', vid: 'v-pu', name: 'Purity / Lack of Baggage',tier: 2, weight: 0.10 },
+      { id: 's-av', vid: 'v-av', name: 'Alignment in values',     tier: 3, weight: 0.09 },
+      { id: 's-ci', vid: 'v-ci', name: 'Common interests',        tier: 3, weight: 0.07 },
+      { id: 's-av2',vid: 'v-av2',name: 'Availability',               tier: 3, weight: 0.05 },
+    ];
+
+    const TIERS_OUT = [
+      { min: 85, label: 'Elite Match',         color: '#7F77DD', bg: '#EEEDFE', desc: 'All gates clear. Primary attraction is strong, secondary energy is healthy, and tertiary fit supports long-term potential.' },
+      { min: 70, label: 'Strong Potential',    color: '#1D9E75', bg: '#E1F5EE', desc: 'Passes the primary gate with solid secondary and tertiary support. Worth serious exploration.' },
+      { min: 55, label: 'Conditional Interest',color: '#BA7517', bg: '#FAEEDA', desc: 'There is enough to investigate, but at least one hierarchy layer needs more evidence before committing.' },
+      { min: 0,  label: 'Low Compatibility',   color: '#888780', bg: '#F1EFE8', desc: 'The combined hierarchy signal is not strong enough to justify serious romantic investment.' },
+    ];
+
+    const DEALBREAKER_IDS = ['c-dishonesty','c-cheating','c-affection','c-chaos','c-disrespect','c-addiction'];
+
+    function val(id) { return parseInt(document.getElementById(id).value); }
+    function hasAnyDealbreaker() { return DEALBREAKER_IDS.some(id => document.getElementById(id).checked); }
+
+    function updateDb(wrapId) {
+      const wrap = document.getElementById(wrapId);
+      const cb = wrap.querySelector('input[type=checkbox]');
+      wrap.classList.toggle('checked', cb.checked);
+    }
+
+    function update() {
+      FACTORS.forEach(f => {
+        document.getElementById(f.vid).textContent = val(f.id);
+      });
+
+      const scores = {};
+      FACTORS.forEach(f => { scores[f.id] = val(f.id); });
+
+      const pa = val('s-pa'), cl = val('s-cl'), at = val('s-at');
+      const fu = val('s-fu'), as = val('s-as'), pu = val('s-pu');
+      const av = val('s-av'), ci = val('s-ci'), av2 = val('s-av2');
+
+      const primaryMin = Math.min(pa, cl, at);
+      const personalityAvg = (cl + fu + as + pu + av + ci + av2) / 7;
+      const hasDealbreaker = hasAnyDealbreaker();
+
+      const rawScore = Math.round(FACTORS.reduce((sum, f) => sum + val(f.id) * f.weight, 0) * 10);
+
+      let finalScore, tierLabel, tierColor, tierBg, explanation;
+      const gates = [];
+
+      if (hasDealbreaker) {
+        finalScore = Math.min(rawScore, 30);
+        tierLabel = 'Rejected — Dealbreaker';
+        tierColor = '#A32D2D';
+        tierBg = '#FCEBEB';
+        explanation = 'A dealbreaker is present. The score is overridden regardless of how strong other factors are. Chemistry does not cancel non-negotiables.';
+        gates.push({ cls: 'fail', icon: 'ti-ban', text: 'Dealbreaker active — immediate disqualification' });
+      } else if (primaryMin < 5) {
+        finalScore = Math.min(rawScore, 35);
+        tierLabel = 'Rejected — Sub-5 Floor';
+        tierColor = '#A32D2D';
+        tierBg = '#FCEBEB';
+        explanation = `A primary factor scores below 5 (min: ${primaryMin}). Sub-5 in any primary factor signals active incompatibility — automatic disqualification.`;
+        gates.push({ cls: 'fail', icon: 'ti-x', text: `Sub-5 disqualification — primary floor not met (min score: ${primaryMin})` });
+      } else if (Math.min(pa, cl, at) < 7) {
+        finalScore = Math.min(rawScore, 55);
+        tierLabel = 'Fails Primary Gate';
+        tierColor = '#993C1D';
+        tierBg = '#FAECE7';
+        explanation = 'One or more primary factors fall below 7. The primary gate requires Physical Attractiveness, Classiness, and Attraction Towards Me to all clear 7.';
+        gates.push({ cls: 'fail', icon: 'ti-filter', text: `Primary gate not cleared — all three must reach 7 (min: ${Math.min(pa,cl,at)})` });
+      } else if (pa < 7 || personalityAvg < 7) {
+        finalScore = Math.min(rawScore, 58);
+        tierLabel = 'Fails 7–7 Rule';
+        tierColor = '#BA7517';
+        tierBg = '#FAEEDA';
+        explanation = 'The 7–7 Rule requires Physical Attractiveness ≥ 7 AND a personality composite ≥ 7. One side of this gate is not meeting the threshold.';
+        gates.push({ cls: 'warn', icon: 'ti-alert-triangle', text: `7–7 Rule not met — looks: ${pa}, personality composite: ${personalityAvg.toFixed(1)}` });
+      } else {
+        const tier = TIERS_OUT.find(t => rawScore >= t.min);
+        finalScore = rawScore;
+        tierLabel = tier.label;
+        tierColor = tier.color;
+        tierBg = tier.bg;
+        explanation = tier.desc;
+        gates.push({ cls: 'pass', icon: 'ti-check', text: 'Sub-5 floor cleared' });
+        gates.push({ cls: 'pass', icon: 'ti-check', text: 'Primary gate passed — all three factors ≥ 7' });
+        gates.push({ cls: 'pass', icon: 'ti-check', text: `7–7 Rule passed — looks: ${pa}, personality: ${personalityAvg.toFixed(1)}` });
+        const secMin = Math.min(fu, as, pu);
+        if (secMin >= 7) {
+          gates.push({ cls: 'pass', icon: 'ti-check', text: 'Secondary factors — all three qualify for long-term' });
+        } else {
+          gates.push({ cls: 'warn', icon: 'ti-alert-triangle', text: `Secondary factors — partial (min: ${secMin}), short-term eligible` });
+        }
+      }
+
+      document.getElementById('res-score').textContent = finalScore;
+      document.getElementById('res-score').style.color = tierColor;
+      const tierEl = document.getElementById('res-tier');
+      tierEl.textContent = tierLabel;
+      tierEl.style.background = tierBg;
+      tierEl.style.color = tierColor;
+      document.getElementById('meter-fill').style.width = finalScore + '%';
+      document.getElementById('meter-fill').style.background = tierColor;
+      document.getElementById('res-explanation').textContent = explanation;
+
+      document.getElementById('gate-status').innerHTML = gates.map(g => `
+        <div class="gate-row ${g.cls}">
+          <i class="ti ${g.icon} gate-icon"></i>
+          <span class="gate-text">${g.text}</span>
+        </div>`).join('');
+
+      const tierColors = { 1: 'var(--scarlet)', 2: '#C07080', 3: 'var(--text-dim)' };
+      document.getElementById('breakdown-rows').innerHTML = FACTORS.map(f => {
+        const v = val(f.id);
+        return `<div class="breakdown-row">
+          <span class="breakdown-name">${f.name}</span>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${v*10}%;background:${tierColors[f.tier]}"></div></div>
+          <span class="breakdown-score">${v}</span>
+        </div>`;
+      }).join('');
+    }
+
+    update();
+  </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .hier-preview {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      background: transparent;
+      border: none;
+    }
+    .hier-preview-inner {
+      background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(250,230,232,0.35));
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      align-items: center;
+      gap: 2rem;
+    }
+    .hier-left { min-width: 0; }
+    .hier-right { display: flex; flex-direction: column; gap: 8px; width: 260px; flex-shrink: 0; align-items:center; }
+    .pyramid-mini .tier-row { text-align:center; box-shadow:0 14px 34px rgba(82,43,29,0.10); }
+    .pyramid-mini .t1 { width:62%; }
+    .pyramid-mini .t2 { width:80%; }
+    .pyramid-mini .t3 { width:100%; }
+    .tier-row { border-radius: var(--radius-sm); padding: 10px 14px; }
+    .tier-row.t1 { background: var(--scarlet); }
+    .tier-row.t2 { background: var(--scarlet-pale); border: 0.5px solid #E8B8C0; }
+    .tier-row.t3 { background: var(--surface); border: 0.5px solid var(--border); }
+    .tier-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .tier-row.t1 .tier-label { color: var(--bg); }
+    .tier-row.t2 .tier-label { color: var(--scarlet-dim); }
+    .tier-row.t3 .tier-label { color: var(--text-muted); }
+    .tier-sub { font-size: 11px; margin-top: 3px; }
+    .tier-row.t1 .tier-sub { color: rgba(250,246,240,0.7); }
+    .tier-row.t2 .tier-sub { color: #B07080; }
+    .tier-row.t3 .tier-sub { color: var(--text-dim); }
+    .sections-area { padding: 2.5rem 2rem; background: var(--bg); }
+    .sc-num { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+    .sc-title { font-size: 15px; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+    .sc-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px; }
+    .rf-card { background: var(--card); padding: 1rem 1.15rem; display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+    .rf-card:hover { background: var(--surface); }
+    .rf-icon { width: 30px; height: 30px; border: 0.5px solid var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--scarlet); font-size: 14px; }
+    .rf-name { font-size: 13px; color: var(--text); margin-bottom: 2px; }
+    .rf-sub { font-size: 11px; color: var(--text-dim); }
+    .grid-cell a { text-decoration: none; display: block; }
+    @media (max-width: 720px) {
+      .hier-preview {
+        padding: 2rem 1rem;
+      }
+      .hier-preview-inner {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+      }
+      .hier-right {
+        width: min(100%, 280px);
+        justify-self: center;
+      }
+    }
+  </style>
+</head>
+<body data-page="home">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="hero">
+      <div class="hero-eyebrow">A framework for understanding attraction</div>
+      <div class="hero-title">The Love<br><em>Equations</em></div>
+      <div class="hero-divider"></div>
+      <div class="hero-sub">Attraction is not random. It follows patterns, obeys thresholds, and responds to variables. This is the map.</div>
+      <a href="hierarchy.html" class="hero-cta">Begin <i class="ti ti-arrow-right"></i></a>
+    </div>
+
+    <div class="hier-preview">
+      <div class="hier-preview-inner">
+        <div class="hier-left">
+        <div class="page-eyebrow" style="margin-bottom:8px;">Featured · The Love Hierarchy</div>
+        <div style="font-size:20px;color:var(--text);margin-bottom:10px;">Every relationship passes through a gate</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:1.25rem;">Three tiers — Primary, Secondary, Tertiary — determine who qualifies for what kind of relationship, and why. The funnel is unforgiving at the top and selective throughout.</div>
+        <a href="hierarchy.html" class="btn">Explore the hierarchy <i class="ti ti-arrow-right"></i></a>
+      </div>
+        <div class="hier-right pyramid-mini" aria-label="Love Hierarchy mini pyramid">
+        <div class="tier-row t1">
+          <div class="tier-label">Primary</div>
+          <div class="tier-sub">Core attraction gate</div>
+        </div>
+        <div class="tier-row t2">
+          <div class="tier-label">Secondary</div>
+          <div class="tier-sub">Relationship energy layer</div>
+        </div>
+        <div class="tier-row t3">
+          <div class="tier-label">Tertiary</div>
+          <div class="tier-sub">Long-term fit layer</div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sections-area">
+      <div class="section-label">All sections</div>
+      <div class="grid-3 mb-3">
+        <div class="grid-cell"><a href="hierarchy.html">
+          <div class="sc-num">01 · Hierarchy</div>
+          <div class="sc-title">The Love Hierarchy</div>
+          <div class="sc-desc">The three-tier funnel governing every relationship — short or long term.</div>
+          <span class="badge"><i class="ti ti-filter"></i> Framework</span>
+        </a></div>
+        <div class="grid-cell"><a href="smv.html">
+          <div class="sc-num">02 · SMV</div>
+          <div class="sc-title">The 5 Factors of SMV</div>
+          <div class="sc-desc">Looks, Money, Status, Charm, Exposure — the five axes of market value.</div>
+          <span class="badge"><i class="ti ti-chart-bar"></i> Model</span>
+        </a></div>
+        <div class="grid-cell"><a href="pills.html">
+          <div class="sc-num">03 · Pill Dossiers</div>
+          <div class="sc-title">Pill Dossiers</div>
+          <div class="sc-desc">Black, Red, Blue — three worldviews explored as deep-dive dossiers.</div>
+          <span class="badge"><i class="ti ti-file-text"></i> Dossier</span>
+        </a></div>
+        <div class="grid-cell"><a href="gender-dynamics.html">
+          <div class="sc-num">04 · Dynamics</div>
+          <div class="sc-title">Male &amp; Female Dynamics</div>
+          <div class="sc-desc">The offer and the chooser. How the market operates differently for each.</div>
+          <span class="badge"><i class="ti ti-arrows-exchange"></i> Analysis</span>
+        </a></div>
+        <div class="grid-cell"><a href="calculator.html">
+          <div class="sc-num">05 · Calculator</div>
+          <div class="sc-title">SMV Calculator</div>
+          <div class="sc-desc">Profile A rates yourself. Profile B rates a desired mate. Live scoring.</div>
+          <span class="badge"><i class="ti ti-calculator"></i> Tool</span>
+        </a></div>
+        <div class="grid-cell"><a href="frameworks.html">
+          <div class="sc-num">06 · R&amp;F</div>
+          <div class="sc-title">Rules &amp; Frameworks</div>
+          <div class="sc-desc">Scoring gates, markup systems, rating bands, and selection rules.</div>
+          <span class="badge"><i class="ti ti-book-2"></i> Reference</span>
+        </a></div>
+      </div>
+
+      <div class="section-label mt-3">Rules &amp; Frameworks — current entries</div>
+      <div class="grid-2">
+        <a class="grid-cell rf-card" href="frameworks.html#seven-seven-rule">
+          <div class="rf-icon"><i class="ti ti-filter"></i></div>
+          <div><div class="rf-name">The 7–7 Rule</div><div class="rf-sub">Long-term selection gate</div></div>
+        </a>
+        <a class="grid-cell rf-card" href="frameworks.html#sub-5-rule">
+          <div class="rf-icon"><i class="ti ti-ban"></i></div>
+          <div><div class="rf-name">Sub-5 Auto Disqualification</div><div class="rf-sub">Hard floor gate</div></div>
+        </a>
+        <a class="grid-cell rf-card" href="frameworks.html#treatment-markup">
+          <div class="rf-icon"><i class="ti ti-arrows-diff"></i></div>
+          <div><div class="rf-name">Treatment Markup System</div><div class="rf-sub">Behavioral amplification modifier</div></div>
+        </a>
+        <a class="grid-cell rf-card" href="frameworks.html#looks-rating">
+          <div class="rf-icon"><i class="ti ti-chart-candle"></i></div>
+          <div><div class="rf-name">Looks Rating Evaluation</div><div class="rf-sub">Resistance &amp; support model</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+</body>
+</html>

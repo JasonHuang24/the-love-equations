@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Male &amp; Female Dynamics — The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .dyn-page { display: none; }
+    .dyn-page.visible { display: block; }
+    .tab-btn.land-active { background: var(--surface); color: var(--text); border-color: var(--text-dim); }
+    .tab-btn.male-active { background: #EBF3FD; color: #0C447C; border-color: #85B7EB; }
+    .tab-btn.fem-active { background: var(--scarlet-pale); color: var(--scarlet-dim); border-color: #E09090; }
+    .dyn-hero { padding: 1.35rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 0.5px solid var(--border); }
+    .dyn-hero.land { background: var(--surface); }
+    .dyn-hero.male { background: #EBF3FD; border-color: #B5D4F4; }
+    .dyn-hero.fem { background: var(--scarlet-pale); border-color: #F0B0BC; }
+    .dyn-eyebrow { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .dyn-eyebrow.land { color: var(--text-dim); }
+    .dyn-eyebrow.male { color: #185FA5; }
+    .dyn-eyebrow.fem { color: var(--scarlet-dim); }
+    .dyn-title { font-size: 22px; margin-bottom: 10px; }
+    .dyn-title.land { color: var(--text); }
+    .dyn-title.male { color: #0C447C; }
+    .dyn-title.fem { color: var(--scarlet-dim); }
+    .dyn-sub { font-size: 14px; line-height: 1.75; }
+    .dyn-sub.land { color: var(--text-muted); }
+    .dyn-sub.male { color: #185FA5; }
+    .dyn-sub.fem { color: #8A2030; }
+    .inv-box { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+    .inv-header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0.75rem 1.1rem; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
+    .inv-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .inv-col { padding: 1.1rem 1.25rem; }
+    .inv-col + .inv-col { border-left: 0.5px solid var(--border); }
+    .inv-state { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; color: var(--text-dim); }
+    .inv-state.inverted { color: #BA7517; }
+    .inv-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .inv-pill { font-size: 12px; padding: 3px 10px; border-radius: 20px; }
+    .inv-pill.male { background: #EBF3FD; color: #185FA5; }
+    .inv-pill.fem { background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .inv-arrow { color: var(--text-dim); }
+    .inv-role { font-size: 13px; color: var(--text); }
+    .inv-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; }
+    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .qlink { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; cursor: pointer; transition: border-color 0.15s; }
+    .qlink:hover { border-color: var(--text-dim); }
+    .qlink-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+    .qlink-label.male { color: #378ADD; }
+    .qlink-label.fem { color: var(--scarlet); }
+    .qlink-title { font-size: 15px; color: var(--text); margin-bottom: 4px; }
+    .qlink-sub { font-size: 12px; color: var(--text-muted); }
+  </style>
+</head>
+<body data-page="gender-dynamics">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Analysis</div>
+      <div class="page-title">Male &amp; Female Dynamics</div>
+      <div class="page-sub">Men and women enter the dating market with different leverage, different incentives, and different windows of opportunity. Understanding both sides is the foundation of everything else on this site.</div>
+    </div>
+
+    <div class="content">
+      <div class="tab-nav">
+        <button class="tab-btn land-active" onclick="showPage('land', this)">Overview</button>
+        <button class="tab-btn" onclick="showPage('male', this)">Male Perspective</button>
+        <button class="tab-btn" onclick="showPage('fem', this)">Female Perspective</button>
+      </div>
+
+      <!-- Overview -->
+      <div class="dyn-page visible" id="page-land">
+        <div class="dyn-hero land">
+          <div class="dyn-eyebrow land">Male &amp; Female Dynamics</div>
+          <div class="dyn-title land">The market has two sides. They do not operate the same way.</div>
+          <div class="dyn-sub land">Men and women enter the dating market with different leverage, different incentives, and different windows of opportunity. Understanding both sides — and how they interact — is the foundation of everything else on this site.</div>
+        </div>
+        <div class="inv-box">
+          <div class="inv-header">The core dynamic — and its inversion</div>
+          <div class="inv-grid">
+            <div class="inv-col">
+              <div class="inv-state">Default state</div>
+              <div class="inv-row"><span class="inv-pill male">Men</span><span class="inv-arrow">→</span><span class="inv-role">The offer</span></div>
+              <div class="inv-row"><span class="inv-pill fem">Women</span><span class="inv-arrow">→</span><span class="inv-role">The choosers</span></div>
+              <div class="inv-note">Men compete. Women select. The default market dynamic places men in pursuit and women in the position of filtering.</div>
+            </div>
+            <div class="inv-col">
+              <div class="inv-state inverted">High-value inversion</div>
+              <div class="inv-row"><span class="inv-pill male">Men</span><span class="inv-arrow">→</span><span class="inv-role">The choosers</span></div>
+              <div class="inv-row"><span class="inv-pill fem">Women</span><span class="inv-arrow">→</span><span class="inv-role">The offer</span></div>
+              <div class="inv-note">When a man's SMV crosses a threshold, the dynamic flips. Women compete for access. He filters. The same market, entirely different experience.</div>
+            </div>
+          </div>
+        </div>
+        <div class="quick-links">
+          <div class="qlink" onclick="showPage('male', document.querySelectorAll('.tab-btn')[1])">
+            <div class="qlink-label male">Male perspective →</div>
+            <div class="qlink-title">The Male Experience</div>
+            <div class="qlink-sub">The climb, the grind, the threshold</div>
+          </div>
+          <div class="qlink" onclick="showPage('fem', document.querySelectorAll('.tab-btn')[2])">
+            <div class="qlink-label fem">Female perspective →</div>
+            <div class="qlink-title">The Female Experience</div>
+            <div class="qlink-sub">The window, the filter, the shift</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Male -->
+      <div class="dyn-page" id="page-male">
+        <div class="dyn-hero male">
+          <div class="dyn-eyebrow male">Male Perspective</div>
+          <div class="dyn-title male">The Male Experience</div>
+          <div class="dyn-sub male">By default, men are the offer. The market does not meet you where you are — it rewards what you build. The male journey is one of accumulation, threshold-crossing, and eventual inversion.</div>
+        </div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-book-2"></i> Men as the offer</span><i class="ti ti-chevron-down dos-chev open"></i></div><div class="dos-body open"><p>In the default market state, the man usually carries the burden of making interest legible. He approaches, risks rejection, creates momentum, and presents a reason to be chosen. This does not mean men have no standards. It means men often have to generate access before they can exercise those standards.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-trending-up"></i> The climb — building SMV</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>Male leverage is often accumulative. Looks can improve through fitness and presentation; money and status usually compound through time; charm improves through practice; exposure increases by entering more social arenas. The climb is uneven, but it is one of the few areas where disciplined self-improvement can materially change outcomes.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-arrows-exchange"></i> The inversion threshold</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>Once a man crosses a certain SMV threshold, the dynamic starts to invert. He is no longer only making offers; he is receiving them. Women compete for access, he filters more aggressively, and the same dating market starts behaving like a different machine.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-clock"></i> The male window</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>The male timeline can be back-loaded. A man may have weak leverage early and stronger leverage later if he builds competence, money, status, body, confidence, and social proof. The risk is using early rejection as proof of permanent value instead of treating it as a signal to build.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-pencil"></i> Commentary</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>The healthy male response is not bitterness. It is construction. If men are the offer by default, then the rational move is to make the offer stronger: better body, better skills, better emotional control, better standards, better exposure, and better calibration.</p></div></div>
+      </div>
+
+      <!-- Female -->
+      <div class="dyn-page" id="page-fem">
+        <div class="dyn-hero fem">
+          <div class="dyn-eyebrow fem">Female Perspective</div>
+          <div class="dyn-title fem">The Female Experience</div>
+          <div class="dyn-sub fem">By default, women are the choosers. The market grants access early — but the window is not permanent. The female journey is one of peak leverage, filtering decisions, and the consequences of timing.</div>
+        </div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-book-2"></i> Women as the choosers</span><i class="ti ti-chevron-down dos-chev open"></i></div><div class="dos-body open"><p>In the default market state, women usually receive more initial romantic attention and therefore perform more early-stage filtering. This creates chooser leverage, but also a burden: attention is not the same as commitment, and abundance can make signal quality harder to read.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-chart-line"></i> Peak leverage &amp; the filter</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>Female leverage is often strongest when youth, beauty, novelty, and attention converge. The critical skill is not merely attracting offers, but filtering them: distinguishing genuine commitment from temporary desire, high status from poor treatment, and chemistry from instability.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-clock"></i> The female window</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>The female timeline is more front-loaded in the dating market. That does not reduce women to youth or looks, but it does mean timing matters. The highest-attention phase is not automatically the highest-wisdom phase, which makes selection discipline especially important.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-arrows-exchange"></i> When the dynamic shifts</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>When high-value men become scarce relative to demand, women can experience the inversion: the men they most want become the choosers. At that level, attraction alone is not enough; classiness, low baggage, emotional stability, and genuine desire become differentiators.</p></div></div>
+        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-pencil"></i> Commentary</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>The healthy female response is not cynicism or passive entitlement. It is wise filtering while leverage is high, followed by relationship competence once a worthy offer appears: warmth, loyalty, honesty, class, and the ability to make desire feel mutual.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+    function showPage(id, btn) {
+      document.querySelectorAll('.dyn-page').forEach(p => p.classList.remove('visible'));
+      document.getElementById('page-' + id).classList.add('visible');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('land-active','male-active','fem-active'));
+      btn.classList.add(id + '-active');
+    }
+    function toggle(header) {
+      const body = header.nextElementSibling;
+      const chev = header.querySelector('.dos-chev');
+      const open = body.classList.contains('open');
+      body.classList.toggle('open', !open);
+      chev.classList.toggle('open', !open);
+    }
+  </script>
+</body>
+</html>

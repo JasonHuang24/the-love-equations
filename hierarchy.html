@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Love Hierarchy — The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .tier { margin-bottom: 1.75rem; }
+    .tier-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.85rem; }
+    .tier-badge { font-size: 11px; font-weight: 400; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+    .tier-badge.t1 { background: var(--scarlet); color: var(--bg); }
+    .tier-badge.t2 { background: var(--scarlet-pale); color: var(--scarlet-dim); border: 0.5px solid #E0B0B8; }
+    .tier-badge.t3 { background: var(--surface); color: var(--text-muted); border: 0.5px solid var(--border); }
+    .tier-sublabel { font-size: 13px; color: var(--text-muted); }
+    .factors-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+    .factor-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+    .factor-card.t1 { border-left: 2px solid var(--scarlet); }
+    .factor-card.t2 { border-left: 2px solid #E0A0A8; }
+    .factor-card.t3 { border-left: 2px solid var(--border); }
+    .factor-num { font-size: 11px; margin-bottom: 4px; }
+    .factor-num.t1 { color: var(--scarlet); }
+    .factor-num.t2 { color: #C07080; }
+    .factor-num.t3 { color: var(--text-dim); }
+    .factor-name { font-size: 14px; color: var(--text); line-height: 1.3; }
+    .factor-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .rule-box { border-left: 2px solid; padding: 0.7rem 1rem; margin-top: 10px; font-size: 13px; line-height: 1.6; border-radius: 0; }
+    .rule-box.t1 { border-color: var(--scarlet); background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .rule-box.t2 { border-color: #E0A0A8; background: #FDF5F6; color: #9A5060; }
+    .rule-box.t3 { border-color: var(--border); background: var(--surface); color: var(--text-muted); }
+    .connector { display: flex; align-items: center; gap: 10px; margin: 0.5rem 0 1.25rem; }
+    .connector-line { flex: 1; height: 0.5px; background: var(--border); }
+    .connector-label { font-size: 11px; color: var(--text-dim); white-space: nowrap; letter-spacing: 0.04em; }
+
+    /* Build your own hierarchy */
+    .builder-intro { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.5rem; }
+    .builder-tier { margin-bottom: 1.5rem; }
+    .builder-card { position: relative; padding-right: 2rem; }
+    .bf-remove { position: absolute; top: 6px; right: 8px; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 18px; line-height: 1; padding: 2px 6px; border-radius: 4px; }
+    .bf-remove:hover { color: var(--scarlet); background: var(--scarlet-pale); }
+    .bf-input { width: 100%; border: none; background: transparent; font-family: inherit; font-size: 14px; color: var(--text); padding: 0; outline: none; }
+    .bf-input:focus { border-bottom: 1px solid var(--scarlet); }
+    .bf-input::placeholder { color: var(--text-dim); font-style: italic; }
+    .builder-add { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border-style: dashed; color: var(--text-dim); min-height: 70px; transition: color 0.12s, border-color 0.12s, background 0.12s; }
+    .builder-add:hover { color: var(--scarlet); border-color: var(--scarlet); background: var(--scarlet-pale); }
+    .add-plus { font-size: 22px; line-height: 1; }
+    .add-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+    .builder-actions { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; }
+    .builder-panel { margin-top: 1rem; padding: 1rem 1.25rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-md); }
+    .bpanel-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .bpanel-text { width: 100%; min-height: 110px; padding: 0.75rem; border: 0.5px solid var(--border); border-radius: var(--radius-sm); background: var(--card); font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 12px; color: var(--text); resize: vertical; margin-bottom: 8px; box-sizing: border-box; }
+    .bpanel-msg { font-size: 12px; margin-left: 10px; }
+    .bpanel-msg.ok { color: #1D9E75; }
+    .bpanel-msg.err { color: var(--scarlet); }
+    .builder-divider { height: 0.5px; background: var(--border); margin: 2.5rem 0 1.5rem; }
+  </style>
+</head>
+<body data-page="hierarchy">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Framework</div>
+      <div class="page-title">The Love Hierarchy</div>
+      <div class="page-sub">A three-tier funnel governing qualification for any relationship — short or long term. Every tier must be passed in sequence. Failure at any level is disqualifying for that tier and everything above it.</div>
+    </div>
+
+    <div class="content">
+      <div class="hierarchy-synthesis-grid">
+        <section class="hierarchy-intro-card">
+          <div class="page-eyebrow">Visual model</div>
+          <h2>A pyramid of romantic selection.</h2>
+          <p>The Love Hierarchy is not just a list. It is a gate structure. The top tier decides whether attraction can start; the middle tier decides whether the dynamic has enough energy; the base tier determines whether a serious relationship has enough long-term support.</p>
+          <p>Primary failure blocks everything above casual interest. Secondary weakness limits long-term eligibility. Tertiary weakness does not always kill attraction, but it weakens the relationship’s ability to last.</p>
+        </section>
+
+        <section class="hierarchy-visual" aria-label="Love Hierarchy pyramid diagram">
+          <div class="pyramid-stage">
+            <div class="pyramid-tier pyramid-primary">
+              <span class="pyramid-kicker">Tier 1</span>
+              <h3>Primary Factors</h3>
+              <p>Physical attractiveness · Classiness · Attraction towards me</p>
+            </div>
+            <div class="pyramid-tier pyramid-secondary">
+              <span class="pyramid-kicker">Tier 2</span>
+              <h3>Secondary Factors</h3>
+              <p>Fun &amp; Easygoing · Assertiveness / Initiative · Purity / Lack of Baggage</p>
+            </div>
+            <div class="pyramid-tier pyramid-tertiary">
+              <span class="pyramid-kicker">Tier 3</span>
+              <h3>Tertiary Factors</h3>
+              <p>Alignment in values · Common interests · Availability</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="section-label">Sequential gates</div>
+<div class="tier">
+        <div class="tier-header">
+          <span class="tier-badge t1">Primary factors</span>
+          <span class="tier-sublabel">The core attraction gate</span>
+        </div>
+        <div class="factors-row">
+          <div class="factor-card t1">
+            <div class="factor-num t1">01</div>
+            <div class="factor-name">Physical attractiveness</div>
+          </div>
+          <div class="factor-card t1">
+            <div class="factor-num t1">02</div>
+            <div class="factor-name">Classiness</div>
+          </div>
+          <div class="factor-card t1">
+            <div class="factor-num t1">03</div>
+            <div class="factor-name">Attraction towards me</div>
+          </div>
+        </div>
+        <div class="rule-box t1">Any single factor unmet → immediate disqualification. No exceptions, short- or long-term.</div>
+      </div>
+
+      <div class="connector">
+        <div class="connector-line"></div>
+        <span class="connector-label">passes gate →</span>
+        <div class="connector-line"></div>
+      </div>
+
+      <div class="tier">
+        <div class="tier-header">
+          <span class="tier-badge t2">Secondary factors</span>
+          <span class="tier-sublabel">The relationship energy layer</span>
+        </div>
+        <div class="factors-row">
+          <div class="factor-card t2">
+            <div class="factor-num t2">01</div>
+            <div class="factor-name">Fun &amp; Easygoing</div>
+          </div>
+          <div class="factor-card t2">
+            <div class="factor-num t2">02</div>
+            <div class="factor-name">Assertiveness / Initiative</div>
+          </div>
+          <div class="factor-card t2">
+            <div class="factor-num t2">03</div>
+            <div class="factor-name">Purity / Lack of Baggage</div>
+          </div>
+        </div>
+        <div class="rule-box t2">All three met → long-term eligible. Partial → short-term only.</div>
+      </div>
+
+      <div class="connector">
+        <div class="connector-line"></div>
+        <span class="connector-label">long-term path →</span>
+        <div class="connector-line"></div>
+      </div>
+
+      <div class="tier">
+        <div class="tier-header">
+          <span class="tier-badge t3">Tertiary factors</span>
+          <span class="tier-sublabel">The long-term fit layer</span>
+        </div>
+        <div class="factors-row">
+          <div class="factor-card t3">
+            <div class="factor-num t3">01</div>
+            <div class="factor-name">Alignment in values</div>
+          </div>
+          <div class="factor-card t3">
+            <div class="factor-num t3">02</div>
+            <div class="factor-name">Common interests</div>
+          </div>
+          <div class="factor-card t3">
+            <div class="factor-num t3">03</div>
+            <div class="factor-name">Availability</div>
+          </div>
+        </div>
+        <div class="rule-box t3">Assumed in a long-term context — these factors sustain the relationship.</div>
+      </div>
+
+      <div class="builder-divider"></div>
+
+      <div class="section-label">Build your own hierarchy</div>
+      <p class="builder-intro">Design a custom hierarchy with up to five factors per tier. Saved automatically in your browser. Export or import as JSON to back up or share.</p>
+
+      <div class="builder-tier" data-tier="primary">
+        <div class="tier-header">
+          <span class="tier-badge t1">Primary factors</span>
+          <span class="tier-sublabel" id="bcount-primary">0 / 5</span>
+        </div>
+        <div class="factors-row" id="brow-primary"></div>
+      </div>
+
+      <div class="builder-tier" data-tier="secondary">
+        <div class="tier-header">
+          <span class="tier-badge t2">Secondary factors</span>
+          <span class="tier-sublabel" id="bcount-secondary">0 / 5</span>
+        </div>
+        <div class="factors-row" id="brow-secondary"></div>
+      </div>
+
+      <div class="builder-tier" data-tier="tertiary">
+        <div class="tier-header">
+          <span class="tier-badge t3">Tertiary factors</span>
+          <span class="tier-sublabel" id="bcount-tertiary">0 / 5</span>
+        </div>
+        <div class="factors-row" id="brow-tertiary"></div>
+      </div>
+
+      <div class="builder-actions">
+        <button class="btn" onclick="toggleBuilderPanel('export')">Export JSON</button>
+        <button class="btn" onclick="toggleBuilderPanel('import')">Import JSON</button>
+        <button class="btn" onclick="resetBuilder()">Reset</button>
+      </div>
+
+      <div class="builder-panel" id="bpanel-export" hidden>
+        <div class="bpanel-label">Copy this JSON to save or share:</div>
+        <textarea class="bpanel-text" id="export-text" readonly></textarea>
+        <button class="btn" onclick="copyExport()">Copy to clipboard</button>
+        <span class="bpanel-msg" id="export-msg"></span>
+      </div>
+
+      <div class="builder-panel" id="bpanel-import" hidden>
+        <div class="bpanel-label">Paste JSON below, then click Load:</div>
+        <textarea class="bpanel-text" id="import-text" placeholder='{"primary":[],"secondary":[],"tertiary":[]}'></textarea>
+        <button class="btn" onclick="loadImport()">Load</button>
+        <span class="bpanel-msg" id="import-msg"></span>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'loveHierarchyBuilder';
+      const MAX_PER_TIER = 5;
+      const TIERS = ['primary', 'secondary', 'tertiary'];
+      const TIER_CLASS = { primary: 't1', secondary: 't2', tertiary: 't3' };
+
+      function emptyState() {
+        return { primary: [], secondary: [], tertiary: [] };
+      }
+
+      function normalize(s) {
+        const out = emptyState();
+        if (!s || typeof s !== 'object') return out;
+        for (const tier of TIERS) {
+          if (Array.isArray(s[tier])) {
+            out[tier] = s[tier].map(String).slice(0, MAX_PER_TIER);
+          }
+        }
+        return out;
+      }
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? normalize(JSON.parse(raw)) : emptyState();
+        } catch (e) {
+          return emptyState();
+        }
+      }
+
+      function save() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      }
+
+      function escapeAttr(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+      }
+
+      let state = load();
+
+      function render() {
+        for (const tier of TIERS) {
+          const row = document.getElementById('brow-' + tier);
+          if (!row) continue;
+          const factors = state[tier];
+          const cls = TIER_CLASS[tier];
+          const cards = factors.map((name, i) => `
+            <div class="factor-card ${cls} builder-card">
+              <button class="bf-remove" onclick="window.__builder.remove('${tier}', ${i})" aria-label="Remove">&times;</button>
+              <div class="factor-num ${cls}">${String(i + 1).padStart(2, '0')}</div>
+              <input type="text" class="bf-input" value="${escapeAttr(name)}" oninput="window.__builder.rename('${tier}', ${i}, this.value)" placeholder="Factor name" />
+            </div>
+          `).join('');
+          const addCard = factors.length < MAX_PER_TIER ? `
+            <div class="factor-card builder-add" onclick="window.__builder.add('${tier}')">
+              <div class="add-plus">+</div>
+              <div class="add-label">Add factor</div>
+            </div>
+          ` : '';
+          row.innerHTML = cards + addCard;
+          document.getElementById('bcount-' + tier).textContent = `${factors.length} / ${MAX_PER_TIER}`;
+        }
+      }
+
+      window.__builder = {
+        add(tier) {
+          if (state[tier].length >= MAX_PER_TIER) return;
+          state[tier].push('');
+          save();
+          render();
+          const inputs = document.querySelectorAll(`#brow-${tier} .bf-input`);
+          if (inputs.length) inputs[inputs.length - 1].focus();
+        },
+        remove(tier, i) {
+          state[tier].splice(i, 1);
+          save();
+          render();
+        },
+        rename(tier, i, val) {
+          state[tier][i] = val;
+          save();
+        }
+      };
+
+      window.toggleBuilderPanel = function (which) {
+        const other = which === 'export' ? 'import' : 'export';
+        document.getElementById('bpanel-' + other).hidden = true;
+        const panel = document.getElementById('bpanel-' + which);
+        panel.hidden = !panel.hidden;
+        if (which === 'export' && !panel.hidden) {
+          document.getElementById('export-text').value = JSON.stringify(state, null, 2);
+          document.getElementById('export-msg').textContent = '';
+          document.getElementById('export-msg').className = 'bpanel-msg';
+        }
+        if (which === 'import' && !panel.hidden) {
+          document.getElementById('import-msg').textContent = '';
+          document.getElementById('import-msg').className = 'bpanel-msg';
+        }
+      };
+
+      window.copyExport = async function () {
+        const ta = document.getElementById('export-text');
+        const msg = document.getElementById('export-msg');
+        try {
+          await navigator.clipboard.writeText(ta.value);
+          msg.className = 'bpanel-msg ok';
+          msg.textContent = 'Copied';
+        } catch (e) {
+          ta.select();
+          try { document.execCommand('copy'); msg.className = 'bpanel-msg ok'; msg.textContent = 'Copied'; }
+          catch (err) { msg.className = 'bpanel-msg err'; msg.textContent = 'Copy failed'; }
+        }
+        setTimeout(() => { msg.textContent = ''; msg.className = 'bpanel-msg'; }, 2000);
+      };
+
+      window.loadImport = function () {
+        const msg = document.getElementById('import-msg');
+        msg.className = 'bpanel-msg';
+        msg.textContent = '';
+        try {
+          const text = document.getElementById('import-text').value.trim();
+          if (!text) { msg.className = 'bpanel-msg err'; msg.textContent = 'Empty input'; return; }
+          const parsed = JSON.parse(text);
+          if (!parsed || typeof parsed !== 'object') throw new Error('Not an object');
+          state = normalize(parsed);
+          save();
+          render();
+          msg.className = 'bpanel-msg ok';
+          msg.textContent = 'Loaded';
+        } catch (e) {
+          msg.className = 'bpanel-msg err';
+          msg.textContent = 'Invalid JSON';
+        }
+      };
+
+      window.resetBuilder = function () {
+        if (!confirm('Reset and clear all custom factors?')) return;
+        state = emptyState();
+        save();
+        render();
+      };
+
+      render();
+    })();
+  </script>
+</body>
+</html>

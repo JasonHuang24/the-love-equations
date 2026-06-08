@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMV Calculator — The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .calc-page { display: none; }
+    .calc-page.visible { display: block; }
+    .tab-btn.a-active { background: #EBF3FD; color: #0C447C; border-color: #85B7EB; }
+    .tab-btn.b-active { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
+    .screen { display: none; }
+    .screen.visible { display: block; }
+    .progress-bar { height: 3px; background: var(--surface); border-radius: 2px; margin-bottom: 1.75rem; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; background: var(--scarlet); transition: width 0.35s ease; }
+    .factor-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .question-title { font-size: 20px; color: var(--text); margin-bottom: 6px; line-height: 1.35; }
+    .question-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+    .options-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+    .opt { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem 1rem; cursor: pointer; font-size: 14px; font-family: Georgia, serif; color: var(--text); transition: all 0.12s; }
+    .opt:hover { border-color: var(--text-dim); background: var(--surface); }
+    .opt.selected { border-color: var(--scarlet); border-width: 1.5px; background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .btn-row { display: flex; gap: 10px; }
+    .score-hero { text-align: center; padding: 2rem 1rem 1.5rem; }
+    .score-ring { width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: flex-end; flex-direction: column; padding-bottom: 22px; margin: 0 auto 1rem; border: 3px solid; }
+    .score-num { font-size: 36px; line-height: 1; }
+    .score-denom { font-size: 13px; color: var(--text-muted); }
+    .tier-badge { display: inline-block; font-size: 12px; padding: 4px 14px; border-radius: 20px; margin-bottom: 10px; }
+    .score-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; max-width: 420px; margin: 0 auto; }
+    .factor-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1.5rem 0; }
+    .fb-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 0.85rem 1rem; }
+    .fb-name { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.04em; }
+    .fb-bar { height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-bottom: 5px; }
+    .fb-fill { height: 100%; border-radius: 2px; }
+    .fb-score { font-size: 13px; color: var(--text); }
+    .looks-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 8px; }
+    .look-tier { border-radius: var(--radius-md); border: 0.5px solid var(--border); padding: 0.6rem 0.5rem; text-align: center; }
+    .look-tier.selected { border-width: 1.5px; }
+    .look-num { font-size: 16px; }
+    .look-label { font-size: 10px; color: var(--text-dim); margin-top: 3px; }
+    .mates-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .mate-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .mate-img { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 26px; background: var(--surface); }
+    .mate-info { padding: 0.6rem 0.75rem; }
+    .mate-name { font-size: 13px; color: var(--text); }
+    .mate-smv { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .mate-desc { font-size: 11px; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+    .pb-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+    .pb-input { width: 100%; padding: 0.6rem 0.85rem; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--card); font-size: 14px; font-family: Georgia, serif; color: var(--text); margin-bottom: 1.25rem; }
+    .pb-input:focus { outline: none; border-color: var(--scarlet); }
+    .factor-slider-row { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 0.9rem 1.1rem; margin-bottom: 8px; }
+    .fs-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .fs-name { font-size: 13px; color: var(--text); }
+    .fs-val { font-size: 13px; color: var(--scarlet); }
+    .pb-result { background: var(--surface); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; display: flex; align-items: center; gap: 1.25rem; margin-top: 1.25rem; }
+    .pb-circle { width: 64px; height: 64px; border-radius: 50%; border: 2px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pb-score-num { font-size: 22px; line-height: 1; }
+    .pb-score-den { font-size: 10px; color: var(--text-dim); }
+    .pb-name { font-size: 16px; color: var(--text); margin-bottom: 4px; }
+    .pb-tier { font-size: 11px; padding: 2px 10px; border-radius: 20px; display: inline-block; }
+    .pb-breakdown { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+    .section-label-sm { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+  </style>
+</head>
+<body data-page="calculator">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Tool</div>
+      <div class="page-title">SMV Calculator</div>
+      <div class="page-sub">Profile A evaluates your own SMV through a structured questionnaire. Profile B rates a desired mate — manually adjustable across all five factors.</div>
+    </div>
+
+    <div class="content">
+      <div class="tab-nav">
+        <button class="tab-btn a-active" onclick="switchTab('a', this)">Profile A — Your SMV</button>
+        <button class="tab-btn" onclick="switchTab('b', this)">Profile B — Their SMV</button>
+      </div>
+
+      <!-- Profile A -->
+      <div class="calc-page visible" id="tab-a">
+        <div class="screen visible" id="a-intro">
+          <div style="padding:1rem 0 1.5rem;">
+            <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">Profile A · Self Assessment</div>
+            <div style="font-size:22px;color:var(--text);margin-bottom:10px;">What is your SMV?</div>
+            <div style="font-size:14px;color:var(--text-muted);line-height:1.75;margin-bottom:1.75rem;">Answer a short series of questions across your five factors — Looks, Money, Status, Charm, and Exposure. You'll receive a score, a tier placement, and a look at who you're realistically attracting right now.</div>
+            <button class="btn btn-scarlet" onclick="startA()">Begin assessment <i class="ti ti-arrow-right"></i></button>
+          </div>
+        </div>
+        <div class="screen" id="a-questions">
+          <div class="progress-bar"><div class="progress-fill" id="a-progress" style="width:0%"></div></div>
+          <div id="q-container"></div>
+          <div class="btn-row" style="margin-top:1rem;">
+            <button class="btn" onclick="prevQ()" id="btn-back" style="display:none">← Back</button>
+            <button class="btn btn-scarlet" onclick="nextQ()" id="btn-next" style="display:none">Next →</button>
+            <button class="btn btn-scarlet" onclick="finishA()" id="btn-finish" style="display:none">See my score →</button>
+          </div>
+        </div>
+        <div class="screen" id="a-results">
+          <div class="score-hero">
+            <div class="score-ring" id="res-ring"><div class="score-num" id="res-num">—</div><div class="score-denom">out of 10</div></div>
+            <div class="tier-badge" id="res-tier-badge">—</div>
+            <div class="score-desc" id="res-desc">—</div>
+          </div>
+          <div class="factor-breakdown" id="res-factors"></div>
+          <div class="divider"></div>
+          <div class="section-label-sm mb-1">Looks reference — where do you land?</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;line-height:1.6;">Use the tiers below to calibrate your looks rating at a glance.</div>
+          <div class="looks-grid mb-3" id="looks-grid"></div>
+          <div class="divider"></div>
+          <div class="section-label-sm mb-1">Realistic match range</div>
+          <div class="mates-grid" id="mates-grid"></div>
+          <button class="btn" onclick="resetA()">Retake assessment</button>
+        </div>
+      </div>
+
+      <!-- Profile B -->
+      <div class="calc-page" id="tab-b">
+        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">Profile B · Target Assessment</div>
+        <div style="font-size:20px;color:var(--text);margin-bottom:6px;">Rate someone's SMV</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:1.5rem;">Enter a name or description. Adjust each factor manually. The score updates in real time.</div>
+        <label class="pb-label">Name or description</label>
+        <input class="pb-input" id="pb-name" placeholder="e.g. Chris Hemsworth, coworker, ex..." oninput="updateB()" />
+        <div id="pb-sliders"></div>
+        <div class="pb-result" id="pb-result">
+          <div class="pb-circle" id="pb-circle"><div class="pb-score-num" id="pb-score">—</div><div class="pb-score-den">/ 10</div></div>
+          <div>
+            <div class="pb-name" id="pb-display-name">Enter a name above</div>
+            <span class="pb-tier" id="pb-tier-badge">—</span>
+            <div class="pb-breakdown" id="pb-breakdown">Adjust sliders to calculate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+    const FACTORS = ['Looks','Money','Status','Charm','Exposure'];
+    const FACTOR_COLORS = ['#EF9F27','#1D9E75','#7F77DD','#D4537E','#C41E3A'];
+    const QUESTIONS = [
+      { factor:0, text:'How would you honestly rate your physical appearance?', sub:'Consider height, face, build, style, and overall presentation.', opts:["Below average — I know I'm not conventionally attractive","Average — I blend in, nothing stands out","Above average — I get noticed, some compliments","Attractive — consistent attention, strong first impressions","Exceptional — top tier by most standards"] },
+      { factor:0, text:'How often do strangers react positively to your appearance?', sub:'Unprompted reactions — looks, comments, attention in public.', opts:['Rarely or never','Occasionally','Fairly often','Often — it\'s a regular occurrence','Very often — it\'s impossible to ignore'] },
+      { factor:1, text:'What best describes your current financial position?', sub:'Income, assets, and overall wealth picture.', opts:['Struggling — living paycheck to paycheck','Getting by — covering basics with little left','Comfortable — stable with some savings','Doing well — disposable income, building wealth','Wealthy — financially free or close to it'] },
+      { factor:1, text:'Does your financial situation give you options?', sub:'Can money buy you time, access, or experiences others can\'t afford?', opts:['No — money is a constant constraint','Somewhat — occasional flexibility','Yes — I can do most things I want','Definitely — money opens doors regularly','Absolutely — financial leverage is a reality'] },
+      { factor:2, text:'How would others describe your position in your social or professional circle?', sub:'Reputation, job title, and how peers perceive your standing.', opts:['Low — I have little influence or recognition','Below average — I\'m mostly unremarkable in my circles','Average — respected but not particularly notable','Above average — I carry weight in my environment','High — I have real influence, reputation, or fame'] },
+      { factor:2, text:'How strong is your social proof?', sub:'Pre-selection, reputation, and how others speak about you.', opts:['Non-existent or negative','Neutral — no strong impression either way','Mildly positive','Clearly positive — people vouch for me','Strong — my reputation precedes me'] },
+      { factor:3, text:'How do you perform in social situations with new people?', sub:'Conversation, ease, confidence in unfamiliar settings.', opts:['Anxious and withdrawn — I struggle','Awkward but functional','Decent — I hold my own','Good — people enjoy talking to me','Exceptional — I command rooms naturally'] },
+      { factor:3, text:'How engaging is your personality day to day?', sub:'Wit, warmth, humor, and your ability to hold attention.', opts:['Flat — I know I\'m not particularly engaging','Below average','Average — I\'m fine but not memorable','Above average — people genuinely enjoy my company','Highly engaging — people seek me out'] },
+      { factor:4, text:'Where do you live and socialize?', sub:'Location and environment are a proxy for opportunity volume.', opts:['Small town or rural — very limited pool','Small city — moderate exposure','Mid-sized city — decent options','Large city — high volume, diverse pool','Major metro or high-traffic lifestyle — maximum exposure'] },
+      { factor:4, text:'How often do you put yourself in front of new people?', sub:'Dating apps, events, social venues, hobbies with public exposure.', opts:['Rarely — I stay home most of the time','Occasionally — a few times a month','Regularly — I\'m out most weekends','Often — active social and dating life','Constantly — maximum surface area to the market'] },
+    ];
+    const TIERS = [
+      { min:0, max:2.9, label:'Low SMV', color:'#888780', bg:'#F1EFE8', desc:'Significant room to grow across multiple factors. Focus on foundational improvements.' },
+      { min:3, max:4.9, label:'Below Average', color:'#BA7517', bg:'#FAEEDA', desc:'Below the market midpoint but with clear levers to pull. Targeted work will move the needle quickly.' },
+      { min:5, max:6.4, label:'Average', color:'#C41E3A', bg:'#FAECEE', desc:'You are at the market midpoint. Competitive in the average range — improvement here has compounding returns.' },
+      { min:6.5, max:7.9, label:'Above Average', color:'#1D9E75', bg:'#E1F5EE', desc:'Above the median. You have real options. Continued improvement here begins the inversion process.' },
+      { min:8, max:9.4, label:'High Value', color:'#7F77DD', bg:'#EEEDFE', desc:'The market starts working differently for you at this level. You are entering the chooser position.' },
+      { min:9.5, max:10, label:'Elite', color:'#D4537E', bg:'#FBEAF0', desc:'Full inversion. The market competes for you. Maintenance and selection are the primary concerns.' },
+    ];
+    const MATE_DATA = [
+      [{name:'Profile Type A',smv:'1–2',desc:'Minimal effort, comfort zone',emoji:'😐'},{name:'Profile Type B',smv:'1–3',desc:'Significant baggage, limited options',emoji:'😶'},{name:'Profile Type C',smv:'2–3',desc:'Untapped potential',emoji:'🙂'}],
+      [{name:'Profile Type D',smv:'3–4',desc:'Average presentation',emoji:'😊'},{name:'Profile Type E',smv:'3–5',desc:'Some positive traits',emoji:'🙂'},{name:'Profile Type F',smv:'4–5',desc:'Decent baseline',emoji:'😄'}],
+      [{name:'Profile Type G',smv:'5–6',desc:'Market average',emoji:'😎'},{name:'Profile Type H',smv:'5–7',desc:'Solid baseline',emoji:'🤩'},{name:'Profile Type I',smv:'6–7',desc:'Above average',emoji:'😍'}],
+      [{name:'Profile Type J',smv:'7–8',desc:'High demand',emoji:'💫'},{name:'Profile Type K',smv:'7–9',desc:'Strong across factors',emoji:'⭐'},{name:'Profile Type L',smv:'8',desc:'Market top tier',emoji:'🌟'}],
+      [{name:'Profile Type M',smv:'8–9',desc:'Highly competitive',emoji:'💎'},{name:'Profile Type N',smv:'9',desc:'Near elite',emoji:'👑'},{name:'Profile Type O',smv:'9–10',desc:'Elite tier',emoji:'🏆'}],
+      [{name:'Profile Type P',smv:'9–10',desc:'Absolute top of market',emoji:'👑'},{name:'Profile Type Q',smv:'10',desc:'Cultural icon level',emoji:'💫'},{name:'Profile Type R',smv:'10',desc:'Generational outlier',emoji:'🌟'}],
+    ];
+    const LOOK_TIERS = [
+      {n:'1–2',label:'Below avg',color:'#888780'},{n:'3–4',label:'Average',color:'#BA7517'},
+      {n:'5–6',label:'Above avg',color:'#C41E3A'},{n:'7–8',label:'Attractive',color:'#1D9E75'},{n:'9–10',label:'Elite',color:'#7F77DD'}
+    ];
+
+    let curQ = 0, answers = Array(QUESTIONS.length).fill(null), scores = Array(5).fill(0);
+
+    function getTier(s) { return TIERS.find(t => s >= t.min && s <= t.max) || TIERS[0]; }
+
+    function startA() {
+      document.getElementById('a-intro').classList.remove('visible');
+      document.getElementById('a-questions').classList.add('visible');
+      curQ = 0; renderQ();
+    }
+
+    function renderQ() {
+      const q = QUESTIONS[curQ];
+      const pct = (curQ / QUESTIONS.length) * 100;
+      document.getElementById('a-progress').style.width = pct + '%';
+      document.getElementById('btn-back').style.display = curQ > 0 ? 'inline-flex' : 'none';
+      document.getElementById('btn-next').style.display = answers[curQ] !== null && curQ < QUESTIONS.length - 1 ? 'inline-flex' : 'none';
+      document.getElementById('btn-finish').style.display = answers[curQ] !== null && curQ === QUESTIONS.length - 1 ? 'inline-flex' : 'none';
+      document.getElementById('q-container').innerHTML = `
+        <div class="factor-label" style="color:${FACTOR_COLORS[q.factor]}">${FACTORS[q.factor]}</div>
+        <div class="question-title">${q.text}</div>
+        <div class="question-sub">${q.sub}</div>
+        <div class="options-grid">${q.opts.map((o,i)=>`<div class="opt${answers[curQ]===i?' selected':''}" onclick="selectOpt(${i})">${o}</div>`).join('')}</div>`;
+    }
+
+    function selectOpt(i) { answers[curQ] = i; renderQ(); }
+    function nextQ() { if (curQ < QUESTIONS.length-1) { curQ++; renderQ(); } }
+    function prevQ() { if (curQ > 0) { curQ--; renderQ(); } }
+
+    function finishA() {
+      for (let f = 0; f < 5; f++) {
+        const idxs = QUESTIONS.map((q,i) => q.factor===f ? i : -1).filter(i => i >= 0);
+        const qs = idxs.map(i => answers[i] !== null ? (answers[i] / (QUESTIONS[i].opts.length-1)) * 10 : 5);
+        scores[f] = Math.round((qs.reduce((a,b)=>a+b,0)/qs.length)*10)/10;
+      }
+      const total = Math.round((scores.reduce((a,b)=>a+b,0)/5)*10)/10;
+      const tier = getTier(total);
+      const tierIdx = TIERS.indexOf(tier);
+      document.getElementById('a-questions').classList.remove('visible');
+      document.getElementById('a-results').classList.add('visible');
+      document.getElementById('a-progress').style.width = '100%';
+      const ring = document.getElementById('res-ring');
+      ring.style.borderColor = tier.color;
+      ring.style.background = tier.bg;
+      document.getElementById('res-num').textContent = total;
+      document.getElementById('res-num').style.color = tier.color;
+      const tb = document.getElementById('res-tier-badge');
+      tb.textContent = tier.label; tb.style.background = tier.bg; tb.style.color = tier.color;
+      document.getElementById('res-desc').textContent = tier.desc;
+      document.getElementById('res-factors').innerHTML = FACTORS.map((f,i) => `
+        <div class="fb-card"><div class="fb-name">${f}</div>
+        <div class="fb-bar"><div class="fb-fill" style="width:${scores[i]*10}%;background:${FACTOR_COLORS[i]}"></div></div>
+        <div class="fb-score" style="color:${FACTOR_COLORS[i]}">${scores[i]} / 10</div></div>`).join('');
+      const looksScore = scores[0];
+      const ltIdx = looksScore < 3 ? 0 : looksScore < 5 ? 1 : looksScore < 7 ? 2 : looksScore < 9 ? 3 : 4;
+      document.getElementById('looks-grid').innerHTML = LOOK_TIERS.map((lt,i) => `
+        <div class="look-tier${i===ltIdx?' selected':''}" style="${i===ltIdx?`border-color:${lt.color};border-width:2px;background:${lt.color}15`:''}">
+          <div class="look-num" style="color:${lt.color}">${lt.n}</div>
+          <div class="look-label">${lt.label}</div></div>`).join('');
+      const mates = MATE_DATA[Math.min(tierIdx, MATE_DATA.length-1)];
+      document.getElementById('mates-grid').innerHTML = mates.map(m => `
+        <div class="mate-card"><div class="mate-img">${m.emoji}</div>
+        <div class="mate-info"><div class="mate-name">${m.name}</div>
+        <div class="mate-smv">SMV ${m.smv}</div>
+        <div class="mate-desc">${m.desc}</div></div></div>`).join('');
+    }
+
+    function resetA() {
+      answers = Array(QUESTIONS.length).fill(null); scores = Array(5).fill(0); curQ = 0;
+      document.getElementById('a-results').classList.remove('visible');
+      document.getElementById('a-intro').classList.add('visible');
+    }
+
+    const bVals = {0:5,1:5,2:5,3:5,4:5};
+
+    function initB() {
+      document.getElementById('pb-sliders').innerHTML = FACTORS.map((f,i) => `
+        <div class="factor-slider-row">
+          <div class="fs-top"><span class="fs-name">${f}</span><span class="fs-val" id="bval-${i}">${bVals[i]}.0</span></div>
+          <input type="range" min="1" max="10" step="0.5" value="${bVals[i]}" oninput="bSlide(${i},this.value)" />
+        </div>`).join('');
+      updateB();
+    }
+
+    function bSlide(i, v) {
+      bVals[i] = parseFloat(v);
+      document.getElementById('bval-'+i).textContent = parseFloat(v).toFixed(1);
+      updateB();
+    }
+
+    function updateB() {
+      const name = document.getElementById('pb-name').value.trim() || 'Unknown';
+      const total = Math.round((Object.values(bVals).reduce((a,b)=>a+b,0)/5)*10)/10;
+      const tier = getTier(total);
+      document.getElementById('pb-score').textContent = total;
+      document.getElementById('pb-score').style.color = tier.color;
+      document.getElementById('pb-circle').style.borderColor = tier.color;
+      document.getElementById('pb-circle').style.background = tier.bg;
+      document.getElementById('pb-display-name').textContent = name;
+      const ptb = document.getElementById('pb-tier-badge');
+      ptb.textContent = tier.label; ptb.style.background = tier.bg; ptb.style.color = tier.color;
+      document.getElementById('pb-breakdown').textContent = FACTORS.map((f,i)=>`${f}: ${bVals[i]}`).join(' · ');
+    }
+
+    function switchTab(id, btn) {
+      document.querySelectorAll('.calc-page').forEach(p => p.classList.remove('visible'));
+      document.getElementById('tab-'+id).classList.add('visible');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('a-active','b-active'));
+      btn.classList.add(id+'-active');
+      if (id === 'b') initB();
+    }
+
+    initB();
+  </script>
+</body>
+</html>
