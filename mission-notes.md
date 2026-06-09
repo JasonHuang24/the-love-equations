@@ -213,37 +213,51 @@ could feed future writing.
 
 *(Snapshot so the working state survives a context reset. Update as it changes.)*
 
-- **Repo:** `the-love-equations` · **Branch:** `claude/dynamics-qa-cards-vSXo0`
-  (all work committed + pushed per-batch; a stop hook requires a clean tree).
-- **Male tab:** `gender-dynamics.html`, **"Male Perspective"** — **101 cards**
-  across **11 sections**: (1) The default market · (2) Directness, delivery &
-  the indirect game · (3) Selection, hypocrisy & how guys respond · (4) Logic,
-  feelings & the cycle · (5) Facing reality & what attracts · (6) The
-  looks-first reality · (7) The female-approval engine & mixed signals ·
-  (8) Game, the mask & reading signals · (9) Standards, leverage & desperation
-  · (10) The cost of staying true · (11) The macro picture — why dating broke.
-- **Female tab:** **"The Female Experience"** — **35 cards** across 6 sections:
-  The choosing & the window (original 5) · The approval engine · Your standards
-  & your choices · How you choose — and what it does · Looks & attraction,
-  honestly · Timing, honesty & the mirror. All 30 new cards are **reframed
-  copies** of male-tab insights in a candid **second-person** voice (male
-  versions kept). The reframing pass is complete — essentially every male-tab
-  card with a female-experience angle now has a female-voiced counterpart.
+- **Repo:** `the-love-equations` · **Branch:** `main` locally. GitHub repo is
+  `JasonHuang24/the-love-equations`.
+- **Current dynamics inventory:** `gender-dynamics.html` has **189 cards** across
+  **22 sections** after the latest bucket pass.
+- **Male tab:** **120 cards** across **11 sections**: (1) The default market ·
+  (2) Directness, delivery & the indirect game · (3) Selection, hypocrisy & how
+  guys respond · (4) Logic, feelings & the cycle · (5) Facing reality & what
+  attracts · (6) The looks-first reality · (7) The female-approval engine &
+  mixed signals · (8) Game, the mask & reading signals · (9) Standards,
+  leverage & desperation · (10) The cost of staying true · (11) The macro
+  picture — why dating broke.
+- **Female tab:** **36 cards** across **6 sections**: The choosing & the window ·
+  The approval engine · Your standards & your choices · How you choose — and
+  what it does · Looks & attraction, honestly · Timing, honesty & the mirror.
+  The tab is intentionally written as candid second-person female self-audit,
+  with male-POV counterparts kept where they serve the male operating
+  environment.
+- **Both Sides tab:** **33 cards** across **5 sections**: The shared market ·
+  Standards, self-assessment & avoidance · How these conversations get distorted
+  · Meeting people & the odds · Regret, the missed window & seeing clearly.
+- **Latest bucket pass:** moved four POV-less mechanics from Male into the new
+  Both Sides section **Standards, self-assessment & avoidance**: *Most people are
+  average*, *The market prices you*, *Hell yes, or it's a hell no*, and *The
+  "I'll start when I'm better" trap*. Rewrote them into neutral/shared-mechanism
+  voice while keeping the Male section's narrative arc intact.
 - **Card markup:** collapsible `.dos-card` (`.dos-head` + `.dos-body`), Tabler
   icons (`ti-*`). Section dividers: `.dos-section` / `.dos-section.first`.
 - **Hero:** Male-tab intro rewritten to match the expanded content.
-- **Review pass done:** split the once-oversized "what attracts" section, folded
-  an orphan 1-card section, no duplicate icons/headers, markup balanced.
+- **Verification after latest move:** total card/body markup balanced at 189/189;
+  each tab still has exactly one open card.
 
 ## Working conventions
 
 - **Voice:** conversational, kept close to how it was said in the source.
-- **Placement:** append to the Male tab, into the matching themed section.
+- **Placement:** use the bucket rule. Male = male operating environment, burden,
+  risk, calibration, and what men observe/encounter. Female = female experience
+  and candid second-person self-audit. Both Sides = shared mechanics, reciprocal
+  dynamics, and market-level truths.
 - **Selectivity:** only extract genuine, generalizable nuggets; skip casual or
   purely personal filler; say so plainly rather than forcing cards.
 - **Merging:** combine overlapping screenshots; watch batch *seams* (the 5-image
   cap splits a continuous conversation) and propose retroactive merges.
 - **Process:** show drafts for approval before adding; route mission/meta and
   brainstorm material here instead of the cards.
-- **Milestone:** building toward **100 cards**, then a full review pass (trim
-  redundancy, rebalance the Female tab, consider finer sub-grouping).
+- **Milestone:** post-100-card review mode. Trim redundancy, keep bucket
+  placement honest, preserve the Male/Female mirror where useful, and consider
+  finer sub-grouping for oversized sections such as "Game, the mask & reading
+  signals."
