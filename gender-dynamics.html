@@ -48,16 +48,28 @@
     .inv-arrow { color: var(--text-dim); }
     .inv-role { font-size: 13px; color: var(--text); }
     .inv-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; }
-    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .quick-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
     .qlink { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; cursor: pointer; transition: border-color 0.15s; }
     .qlink:hover { border-color: var(--text-dim); }
     .qlink-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
     .qlink-label.male { color: #378ADD; }
     .qlink-label.fem { color: var(--scarlet); }
+    .qlink-label.both { color: #6D4FB8; }
     .qlink-title { font-size: 15px; color: var(--text); margin-bottom: 4px; }
     .qlink-sub { font-size: 12px; color: var(--text-muted); }
+    .overview-map { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .overview-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+    .overview-kicker { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+    .overview-title { font-size: 15px; color: var(--text); margin-bottom: 5px; }
+    .overview-copy { font-size: 12px; color: var(--text-muted); line-height: 1.65; }
     .dos-section { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin: 1.75rem 0 0.7rem; padding-bottom: 0.45rem; border-bottom: 0.5px solid var(--border); }
     .dos-section.first { margin-top: 0.25rem; }
+    @media (max-width: 760px) {
+      .quick-links,
+      .overview-map {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body data-page="gender-dynamics">
@@ -67,7 +79,7 @@
     <div class="page-header">
       <div class="page-eyebrow">Analysis</div>
       <div class="page-title">Male &amp; Female Dynamics</div>
-      <div class="page-sub">Men and women enter the dating market with different leverage, different incentives, and different windows of opportunity. Understanding both sides is the foundation of everything else on this site.</div>
+      <div class="page-sub">A three-lens map of the modern dating market: the male operating environment, the female self-audit, and the shared mechanics that shape both sides.</div>
     </div>
 
     <div class="content">
@@ -82,36 +94,63 @@
       <div class="dyn-page visible" id="page-land">
         <div class="dyn-hero land">
           <div class="dyn-eyebrow land">Male &amp; Female Dynamics</div>
-          <div class="dyn-title land">The market has two sides. They do not operate the same way.</div>
-          <div class="dyn-sub land">Men and women enter the dating market with different leverage, different incentives, and different windows of opportunity. Understanding both sides — and how they interact — is the foundation of everything else on this site.</div>
+          <div class="dyn-title land">The market is not one story. It is three lenses at once.</div>
+          <div class="dyn-sub land">This page maps the dating market from the inside: what men are forced to navigate, what women are incentivized to choose, and which pressures belong to everyone. It is not a scorekeeping exercise. It is a way to separate personal failure from market structure, false comfort from reality, and gendered experience from shared mechanics.</div>
         </div>
         <div class="inv-box">
-          <div class="inv-header">The core dynamic — and its inversion</div>
+          <div class="inv-header">The core dynamic — and why it is only the starting point</div>
           <div class="inv-grid">
             <div class="inv-col">
               <div class="inv-state">Default state</div>
               <div class="inv-row"><span class="inv-pill male">Men</span><span class="inv-arrow">→</span><span class="inv-role">The offer</span></div>
               <div class="inv-row"><span class="inv-pill fem">Women</span><span class="inv-arrow">→</span><span class="inv-role">The choosers</span></div>
-              <div class="inv-note">Men compete. Women select. The default market dynamic places men in pursuit and women in the position of filtering.</div>
+              <div class="inv-note">Men compete. Women select. The default market dynamic places men in pursuit and women in the position of filtering, which is why the Male tab focuses on burden, calibration, rejection risk, and the pressure to perform.</div>
             </div>
             <div class="inv-col">
               <div class="inv-state inverted">High-value inversion</div>
               <div class="inv-row"><span class="inv-pill male">Men</span><span class="inv-arrow">→</span><span class="inv-role">The choosers</span></div>
               <div class="inv-row"><span class="inv-pill fem">Women</span><span class="inv-arrow">→</span><span class="inv-role">The offer</span></div>
-              <div class="inv-note">When a man's SMV crosses a threshold, the dynamic flips. Women compete for access. He filters. The same market, entirely different experience.</div>
+              <div class="inv-note">When a man's SMV crosses a threshold, the dynamic flips. Women compete for access, he filters, and the same market starts behaving like a different machine. The Female and Both Sides tabs trace the consequences of that leverage, abundance, timing, standards, and self-deception.</div>
             </div>
+          </div>
+        </div>
+        <div class="overview-map">
+          <div class="overview-card">
+            <div class="overview-kicker">How to read it</div>
+            <div class="overview-title">Each tab has a different job.</div>
+            <div class="overview-copy">Male is the operating environment: what men have to do, risk, decode, and pay for. Female is the self-audit: how choice, approval, abundance, and timing look from the inside. Both Sides is where the mechanism stops being his or hers and becomes the market itself. The tabs are organized by lens, not equalized by count.</div>
+          </div>
+          <div class="overview-card">
+            <div class="overview-kicker">The mirror</div>
+            <div class="overview-title">Some truths need two angles.</div>
+            <div class="overview-copy">A pattern can appear once as what men observe and again as what women need to admit. That is intentional. The point is not to flatten the experience into neutral language, but to show how the same dynamic feels different depending on where you stand.</div>
+          </div>
+          <div class="overview-card">
+            <div class="overview-kicker">The diagnosis</div>
+            <div class="overview-title">Personal pain sits inside market structure.</div>
+            <div class="overview-copy">The page keeps separating individual mistakes from broader incentives: apps, social proof, scarcity, abundance, looks filters, standards, timing, and the vanished social runway. Some problems are personal. Some are structural. Most are both.</div>
+          </div>
+          <div class="overview-card">
+            <div class="overview-kicker">The tone</div>
+            <div class="overview-title">Neither rage nor cope.</div>
+            <div class="overview-copy">The goal is to tell the truth without turning it into bitterness, and to offer clarity without selling false comfort. If a card is harsh, it should still be useful. If it is validating, it should still stay honest.</div>
           </div>
         </div>
         <div class="quick-links">
           <div class="qlink" onclick="showPage('male', document.querySelectorAll('.tab-btn')[1])">
             <div class="qlink-label male">Male perspective →</div>
             <div class="qlink-title">The Male Experience</div>
-            <div class="qlink-sub">The climb, the grind, the threshold</div>
+            <div class="qlink-sub">Approach burden, game, rejection risk, honesty, leverage, and the cost of staying true.</div>
           </div>
           <div class="qlink" onclick="showPage('fem', document.querySelectorAll('.tab-btn')[2])">
             <div class="qlink-label fem">Female perspective →</div>
             <div class="qlink-title">The Female Experience</div>
-            <div class="qlink-sub">The window, the filter, the shift</div>
+            <div class="qlink-sub">Choice, abundance, approval, attraction, timing, and the mirror women rarely get handed cleanly.</div>
+          </div>
+          <div class="qlink" onclick="showPage('both', document.querySelectorAll('.tab-btn')[3])">
+            <div class="qlink-label both">Both sides →</div>
+            <div class="qlink-title">The Shared Market</div>
+            <div class="qlink-sub">Looks, standards, self-assessment, apps, social circles, regret, and the odds.</div>
           </div>
         </div>
       </div>
@@ -362,7 +401,7 @@
     function showPage(id, btn) {
       document.querySelectorAll('.dyn-page').forEach(p => p.classList.remove('visible'));
       document.getElementById('page-' + id).classList.add('visible');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('land-active','male-active','fem-active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('land-active','male-active','fem-active','both-active'));
       btn.classList.add(id + '-active');
     }
     function toggle(header) {
