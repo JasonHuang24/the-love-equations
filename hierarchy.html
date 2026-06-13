@@ -82,6 +82,20 @@
     .gates-blue .rule-box.t1 { border-color: #1E5AA0; background: #EAF2FB; color: #17467F; }
     .gates-blue .rule-box.t2 { border-color: #A9C6E6; background: #F2F7FC; color: #2E6FB5; }
 
+    /* ChatGPT's synthesis → teal */
+    .pyr-teal .pyramid-primary { background: linear-gradient(145deg, #18B98C, #0E8C6B); color: #f0fbf7; }
+    .pyr-teal .pyramid-secondary { background: linear-gradient(145deg, #CFEDE3, rgba(255,255,255,0.80)); }
+    .pyr-teal .pyramid-kicker { color: #0E8C6B; }
+    .pyr-teal .pyramid-primary .pyramid-kicker { color: #c8f3e6; }
+    .gates-teal .tier-badge.t1 { background: #0E8C6B; color: #fff; }
+    .gates-teal .tier-badge.t2 { background: #CFEDE3; color: #0B6B52; border-color: #9ED9C6; }
+    .gates-teal .factor-card.t1 { border-left-color: #0E8C6B; }
+    .gates-teal .factor-card.t2 { border-left-color: #5FBBA0; }
+    .gates-teal .factor-num.t1 { color: #0E8C6B; }
+    .gates-teal .factor-num.t2 { color: #18A37F; }
+    .gates-teal .rule-box.t1 { border-color: #0E8C6B; background: #E7F6F1; color: #0B6B52; }
+    .gates-teal .rule-box.t2 { border-color: #9ED9C6; background: #F1FAF7; color: #0E8C6B; }
+
     .pyr-note { max-width: 620px; margin: 1rem auto 0; text-align: center; font-size: 12px; color: var(--text-muted); line-height: 1.65; }
   </style>
 </head>
@@ -205,7 +219,7 @@
       </div><!-- /hier-block: yours -->
 
       <div class="hier-block">
-        <div class="section-label">A generic female — synthesized</div>
+        <div class="section-label">A generic female · Claude's take</div>
         <div class="pyramid-stage">
           <div class="pyramid-tier pyramid-primary">
             <span class="pyramid-kicker">Tier 1</span>
@@ -269,7 +283,74 @@
         </div>
         </div><!-- /gates-scarlet -->
         <p class="pyr-note">Synthesized from mate-preference research — central tendency, not any one person. Note the diagonal: status sits at her gate, and provision/commitment ride higher than they do on the male side.</p>
-      </div><!-- /hier-block: generic female -->
+      </div><!-- /hier-block: Claude's generic female -->
+
+      <div class="hier-block">
+        <div class="section-label">A generic female · ChatGPT's take</div>
+        <div class="pyramid-stage pyr-teal">
+          <div class="pyramid-tier pyramid-primary">
+            <span class="pyramid-kicker">Gate 1</span>
+            <h3>Desire</h3>
+            <p>Attraction · Masculine competence · Safety &amp; calibration</p>
+          </div>
+          <div class="pyramid-tier pyramid-secondary">
+            <span class="pyramid-kicker">Gate 2</span>
+            <h3>Trust</h3>
+            <p>Consistency · Emotional attunement · Selective investment</p>
+          </div>
+          <div class="pyramid-tier pyramid-tertiary">
+            <span class="pyramid-kicker">Gate 3</span>
+            <h3>Fit</h3>
+            <p>Provision capacity · Shared values &amp; lifestyle · Character under pressure</p>
+          </div>
+        </div>
+        <div class="gates-teal">
+        <div class="section-label" style="margin-top:1.5rem;">Sequential gates</div>
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t1">Gate 1 · Desire</span>
+            <span class="tier-sublabel">Can he enter the romantic frame at all?</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t1"><div class="factor-num t1">01</div><div class="factor-name">Attraction</div></div>
+            <div class="factor-card t1"><div class="factor-num t1">02</div><div class="factor-name">Masculine competence</div></div>
+            <div class="factor-card t1"><div class="factor-num t1">03</div><div class="factor-name">Safety &amp; calibration</div></div>
+          </div>
+          <div class="rule-box t1">Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it.</div>
+        </div>
+
+        <div class="connector"><div class="connector-line"></div><span class="connector-label">passes gate →</span><div class="connector-line"></div></div>
+
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t2">Gate 2 · Trust</span>
+            <span class="tier-sublabel">Is he worth the emotional risk?</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t2"><div class="factor-num t2">01</div><div class="factor-name">Consistency</div></div>
+            <div class="factor-card t2"><div class="factor-num t2">02</div><div class="factor-name">Emotional attunement</div></div>
+            <div class="factor-card t2"><div class="factor-num t2">03</div><div class="factor-name">Selective investment</div></div>
+          </div>
+          <div class="rule-box t2">Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive.</div>
+        </div>
+
+        <div class="connector"><div class="connector-line"></div><span class="connector-label">long-term path →</span><div class="connector-line"></div></div>
+
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t3">Gate 3 · Fit</span>
+            <span class="tier-sublabel">Could she build a life around him?</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t3"><div class="factor-num t3">01</div><div class="factor-name">Provision capacity</div></div>
+            <div class="factor-card t3"><div class="factor-num t3">02</div><div class="factor-name">Shared values &amp; lifestyle</div></div>
+            <div class="factor-card t3"><div class="factor-num t3">03</div><div class="factor-name">Character under pressure</div></div>
+          </div>
+          <div class="rule-box t3">Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts.</div>
+        </div>
+        </div><!-- /gates-teal -->
+        <p class="pyr-note">ChatGPT's framing: attraction opens the door, competence keeps the frame romantic, consistency lets her relax, stability makes him future-shaped. The asymmetry: kindness, loyalty, and emotional availability are real but rarely Gate-1 — they gain power only after attraction and competence clear the first filter.</p>
+      </div><!-- /hier-block: ChatGPT's generic female -->
 
       <div class="builder-divider"></div>
 
