@@ -55,6 +55,87 @@
     .bpanel-msg.ok { color: #1D9E75; }
     .bpanel-msg.err { color: var(--scarlet); }
     .builder-divider { height: 0.5px; background: var(--border); margin: 2.5rem 0 1.5rem; }
+
+    /* Flat full-width intro */
+    .hierarchy-intro-flat { max-width: 760px; margin: 0 auto 2.75rem; text-align: center; }
+    .hierarchy-intro-flat h2 { font-family: "Playfair Display", Georgia, serif; font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; margin: 0.4rem 0 1rem; }
+    .hierarchy-intro-flat p { color: var(--text-muted); margin-bottom: 0.9rem; }
+
+    /* Each hierarchy = pyramid resting on its own sequential gates */
+    .hier-block { margin-bottom: 2.5rem; }
+    .hier-block + .hier-block { border-top: 0.5px solid var(--border); padding-top: 2.25rem; }
+    .pyramid-stage { margin-left: auto; margin-right: auto; margin-bottom: 1rem; }
+
+    /* His pyramid → blue */
+    .pyr-blue .pyramid-primary { background: linear-gradient(145deg, #3A7CC0, #1E5AA0); color: #f3f8ff; }
+    .pyr-blue .pyramid-secondary { background: linear-gradient(145deg, #D2E3F5, rgba(255,255,255,0.80)); }
+    .pyr-blue .pyramid-kicker { color: #2E6FB5; }
+    .pyr-blue .pyramid-primary .pyramid-kicker { color: #cfe6ff; }
+
+    /* His gates → blue */
+    .gates-blue .tier-badge.t1 { background: #1E5AA0; color: #fff; }
+    .gates-blue .tier-badge.t2 { background: #D2E3F5; color: #1E5AA0; border-color: #A9C6E6; }
+    .gates-blue .factor-card.t1 { border-left-color: #1E5AA0; }
+    .gates-blue .factor-card.t2 { border-left-color: #7FA9D6; }
+    .gates-blue .factor-num.t1 { color: #1E5AA0; }
+    .gates-blue .factor-num.t2 { color: #4E86C6; }
+    .gates-blue .rule-box.t1 { border-color: #1E5AA0; background: #EAF2FB; color: #17467F; }
+    .gates-blue .rule-box.t2 { border-color: #A9C6E6; background: #F2F7FC; color: #2E6FB5; }
+
+    /* Claude's synthesis uses the default scarlet hierarchy palette. */
+    .gates-scarlet .tier-badge.t1 { background: var(--scarlet); color: var(--bg); }
+    .gates-scarlet .tier-badge.t2 { background: var(--scarlet-pale); color: var(--scarlet-dim); border-color: #E0B0B8; }
+    .gates-scarlet .factor-card.t1 { border-left-color: var(--scarlet); }
+    .gates-scarlet .factor-card.t2 { border-left-color: #E0A0A8; }
+    .gates-scarlet .factor-num.t1 { color: var(--scarlet); }
+    .gates-scarlet .factor-num.t2 { color: #C07080; }
+    .gates-scarlet .rule-box.t1 { border-color: var(--scarlet); background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .gates-scarlet .rule-box.t2 { border-color: #E0A0A8; background: #FDF5F6; color: #9A5060; }
+
+    /* ChatGPT's synthesis → wine */
+    .pyr-wine .pyramid-primary { background: linear-gradient(145deg, #8C3553, #66243C); color: #f7e9ef; }
+    .pyr-wine .pyramid-secondary { background: linear-gradient(145deg, #E7CEDA, rgba(255,255,255,0.80)); }
+    .pyr-wine .pyramid-kicker { color: #7C2C48; }
+    .pyr-wine .pyramid-primary .pyramid-kicker { color: #f0cedd; }
+    .gates-wine .tier-badge.t1 { background: #6E2742; color: #fff; }
+    .gates-wine .tier-badge.t2 { background: #E7CEDA; color: #6E2742; border-color: #D3A8BC; }
+    .gates-wine .factor-card.t1 { border-left-color: #6E2742; }
+    .gates-wine .factor-card.t2 { border-left-color: #B27D93; }
+    .gates-wine .factor-num.t1 { color: #6E2742; }
+    .gates-wine .factor-num.t2 { color: #97506B; }
+    .gates-wine .rule-box.t1 { border-color: #6E2742; background: #F6EAF0; color: #571B32; }
+    .gates-wine .rule-box.t2 { border-color: #D3A8BC; background: #FAF2F6; color: #7C2C48; }
+
+    /* Color/type legend */
+    .pyr-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin: 0 auto 2.25rem; max-width: 820px; font-size: 12px; color: var(--text-muted); }
+    .pyr-legend-item { display: inline-flex; align-items: center; gap: 7px; }
+    .pyr-dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+
+    /* Synthesized generic-male → indigo */
+    .pyr-indigo .pyramid-primary { background: linear-gradient(145deg, #6A55C4, #453396); color: #f3f0fc; }
+    .pyr-indigo .pyramid-secondary { background: linear-gradient(145deg, #E1DBF5, rgba(255,255,255,0.80)); }
+    .pyr-indigo .pyramid-kicker { color: #5A46B0; }
+    .pyr-indigo .pyramid-primary .pyramid-kicker { color: #ddd4f7; }
+    .gates-indigo .tier-badge.t1 { background: #4E3D9E; color: #fff; }
+    .gates-indigo .tier-badge.t2 { background: #E3DDF6; color: #463893; border-color: #C7BCEB; }
+    .gates-indigo .factor-card.t1 { border-left-color: #4E3D9E; }
+    .gates-indigo .factor-card.t2 { border-left-color: #9486CE; }
+    .gates-indigo .factor-num.t1 { color: #4E3D9E; }
+    .gates-indigo .factor-num.t2 { color: #6D5BC0; }
+    .gates-indigo .rule-box.t1 { border-color: #4E3D9E; background: #EEEAF9; color: #3A2D78; }
+    .gates-indigo .rule-box.t2 { border-color: #C7BCEB; background: #F5F2FC; color: #5A48A8; }
+
+    /* Collapsible gate stacks (length control) */
+    .gates-collapsible > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; padding: 6px 13px; border: 0.5px solid var(--border); border-radius: 20px; background: var(--surface); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin: 1.25rem 0 0.9rem; transition: border-color 0.12s, color 0.12s; }
+    .gates-collapsible > summary::-webkit-details-marker { display: none; }
+    .gates-collapsible > summary::before { content: "▸ show"; font-size: 10px; letter-spacing: 0.04em; }
+    .gates-collapsible[open] > summary::before { content: "▾ hide"; }
+    .gates-collapsible > summary:hover { border-color: var(--text-dim); color: var(--text); }
+
+    /* Author/model descriptor on block titles */
+    .label-desc { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--text-dim); margin-left: 8px; }
+
+    .pyr-note { max-width: 620px; margin: 1rem auto 0; text-align: center; font-size: 12px; color: var(--text-muted); line-height: 1.65; }
   </style>
 </head>
 <body data-page="hierarchy">
@@ -68,36 +149,42 @@
     </div>
 
     <div class="content">
-      <div class="hierarchy-synthesis-grid">
-        <section class="hierarchy-intro-card">
-          <div class="page-eyebrow">Visual model</div>
-          <h2>A pyramid of romantic selection.</h2>
-          <p>The Love Hierarchy is not just a list. It is a gate structure. The top tier decides whether attraction can start; the middle tier decides whether the dynamic has enough energy; the base tier determines whether a serious relationship has enough long-term support.</p>
-          <p>Primary failure blocks everything above casual interest. Secondary weakness limits long-term eligibility. Tertiary weakness does not always kill attraction, but it weakens the relationship’s ability to last.</p>
-        </section>
+      <section class="hierarchy-intro-flat">
+        <div class="page-eyebrow">Visual model</div>
+        <h2>A pyramid of romantic selection.</h2>
+        <p>The Love Hierarchy is not just a list. It is a gate structure. The top tier decides whether attraction can start; the middle tier decides whether the dynamic has enough energy; the base tier determines whether a serious relationship has enough long-term support.</p>
+        <p>Primary failure blocks everything above casual interest. Secondary weakness limits long-term eligibility. Tertiary weakness does not always kill attraction, but it weakens the relationship’s ability to last.</p>
+        <p style="font-size:13px;">Below: my own hierarchy, a synthesized generic-male baseline, then two takes on the generic female — <strong>Claude's</strong> as an attribute ranking, <strong>ChatGPT's</strong> as advancement gates. Same prompt, different lenses. Open any “Sequential gates” to expand its full breakdown.</p>
+      </section>
 
-        <section class="hierarchy-visual" aria-label="Love Hierarchy pyramid diagram">
-          <div class="pyramid-stage">
-            <div class="pyramid-tier pyramid-primary">
-              <span class="pyramid-kicker">Tier 1</span>
-              <h3>Primary Factors</h3>
-              <p>Physical attractiveness · Classiness · Attraction towards me</p>
-            </div>
-            <div class="pyramid-tier pyramid-secondary">
-              <span class="pyramid-kicker">Tier 2</span>
-              <h3>Secondary Factors</h3>
-              <p>Fun &amp; Easygoing · Assertiveness / Initiative · Purity / Lack of Baggage</p>
-            </div>
-            <div class="pyramid-tier pyramid-tertiary">
-              <span class="pyramid-kicker">Tier 3</span>
-              <h3>Tertiary Factors</h3>
-              <p>Alignment in values · Common interests · Availability</p>
-            </div>
-          </div>
-        </section>
+      <div class="pyr-legend">
+        <span class="pyr-legend-item"><span class="pyr-dot" style="background:#1E5AA0;"></span> Blue — your hierarchy</span>
+        <span class="pyr-legend-item"><span class="pyr-dot" style="background:#4E3D9E;"></span> Indigo — generic male (synthesis)</span>
+        <span class="pyr-legend-item"><span class="pyr-dot" style="background:var(--scarlet);"></span> Scarlet — female · Claude (attribute)</span>
+        <span class="pyr-legend-item"><span class="pyr-dot" style="background:#6E2742;"></span> Wine — female · ChatGPT (gates)</span>
       </div>
 
-      <div class="section-label">Sequential gates</div>
+      <div class="hier-block">
+        <div class="section-label">Your hierarchy <span class="label-desc">your own · attribute ranking</span></div>
+        <div class="pyramid-stage pyr-blue">
+          <div class="pyramid-tier pyramid-primary">
+            <span class="pyramid-kicker">Tier 1</span>
+            <h3>Primary Factors</h3>
+            <p>Physical attractiveness · Classiness · Attraction towards me</p>
+          </div>
+          <div class="pyramid-tier pyramid-secondary">
+            <span class="pyramid-kicker">Tier 2</span>
+            <h3>Secondary Factors</h3>
+            <p>Fun &amp; Easygoing · Assertiveness / Initiative · Purity / Lack of Baggage</p>
+          </div>
+          <div class="pyramid-tier pyramid-tertiary">
+            <span class="pyramid-kicker">Tier 3</span>
+            <h3>Tertiary Factors</h3>
+            <p>Alignment in values · Common interests · Availability</p>
+          </div>
+        </div>
+        <details class="gates-blue gates-collapsible">
+        <summary>Sequential gates</summary>
 <div class="tier">
         <div class="tier-header">
           <span class="tier-badge t1">Primary factors</span>
@@ -107,14 +194,17 @@
           <div class="factor-card t1">
             <div class="factor-num t1">01</div>
             <div class="factor-name">Physical attractiveness</div>
+            <div class="factor-sub">Face, body, and overall physical appeal — what registers first, before anything else.</div>
           </div>
           <div class="factor-card t1">
             <div class="factor-num t1">02</div>
             <div class="factor-name">Classiness</div>
+            <div class="factor-sub">Carries herself with grace and refinement — dignified, not crude or attention-seeking.</div>
           </div>
           <div class="factor-card t1">
             <div class="factor-num t1">03</div>
             <div class="factor-name">Attraction towards me</div>
+            <div class="factor-sub">The pull runs both ways — she's visibly drawn to me, not just tolerating interest.</div>
           </div>
         </div>
         <div class="rule-box t1">Any single factor unmet → immediate disqualification. No exceptions, short- or long-term.</div>
@@ -135,14 +225,17 @@
           <div class="factor-card t2">
             <div class="factor-num t2">01</div>
             <div class="factor-name">Fun &amp; Easygoing</div>
+            <div class="factor-sub">Light, playful, low-maintenance company — easy to be around, not tense or high-friction.</div>
           </div>
           <div class="factor-card t2">
             <div class="factor-num t2">02</div>
             <div class="factor-name">Assertiveness / Initiative</div>
+            <div class="factor-sub">Meets me halfway — initiates and contributes instead of leaving me to carry everything.</div>
           </div>
           <div class="factor-card t2">
             <div class="factor-num t2">03</div>
             <div class="factor-name">Purity / Lack of Baggage</div>
+            <div class="factor-sub">Little heavy history or unresolved damage; not dragging a chaotic past into the present.</div>
           </div>
         </div>
         <div class="rule-box t2">All three met → long-term eligible. Partial → short-term only.</div>
@@ -163,18 +256,224 @@
           <div class="factor-card t3">
             <div class="factor-num t3">01</div>
             <div class="factor-name">Alignment in values</div>
+            <div class="factor-sub">Agrees on the things that decide a shared life — how to live and where it's headed.</div>
           </div>
           <div class="factor-card t3">
             <div class="factor-num t3">02</div>
             <div class="factor-name">Common interests</div>
+            <div class="factor-sub">Enough overlap in how we like to spend time that the relationship has its own texture.</div>
           </div>
           <div class="factor-card t3">
             <div class="factor-num t3">03</div>
             <div class="factor-name">Availability</div>
+            <div class="factor-sub">Actually free to invest — emotionally, practically, and in timing.</div>
           </div>
         </div>
         <div class="rule-box t3">Assumed in a long-term context — these factors sustain the relationship.</div>
       </div>
+        </details><!-- /gates-blue -->
+      </div><!-- /hier-block: yours -->
+
+      <div class="hier-block">
+        <div class="section-label">A generic male <span class="label-desc">synthesis · advancement gates</span></div>
+        <div class="pyramid-stage pyr-indigo">
+          <div class="pyramid-tier pyramid-primary">
+            <span class="pyramid-kicker">Gate 1</span>
+            <h3>Desire</h3>
+            <p>Physical attractiveness &amp; vitality · Sexual receptivity · Low-friction presence</p>
+          </div>
+          <div class="pyramid-tier pyramid-secondary">
+            <span class="pyramid-kicker">Gate 2</span>
+            <h3>Attachment</h3>
+            <p>Warmth &amp; kindness · Loyalty &amp; exclusivity · Respect &amp; admiration</p>
+          </div>
+          <div class="pyramid-tier pyramid-tertiary">
+            <span class="pyramid-kicker">Gate 3</span>
+            <h3>Life Fit</h3>
+            <p>Shared values &amp; family · Emotional stability · Practical compatibility</p>
+          </div>
+        </div>
+        <details class="gates-indigo gates-collapsible">
+          <summary>Sequential gates</summary>
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge t1">Gate 1 · Desire</span>
+              <span class="tier-sublabel">Can she enter the romantic-sexual frame?</span>
+            </div>
+            <div class="factors-row">
+              <div class="factor-card t1"><div class="factor-num t1">01</div><div class="factor-name">Physical attractiveness &amp; vitality</div><div class="factor-sub">Face, body, femininity, grooming, and style — plus youth, health, and energy. The immediate "do I want her?" signal.</div></div>
+              <div class="factor-card t1"><div class="factor-num t1">02</div><div class="factor-name">Sexual receptivity</div><div class="factor-sub">She shows real attraction back — warmth, flirtation, touch, openness — not cold tolerance or passive evaluation.</div></div>
+              <div class="factor-card t1"><div class="factor-num t1">03</div><div class="factor-name">Low-friction presence</div><div class="factor-sub">Pleasant to be around: not combative, chaotic, contemptuous, or emotionally punishing from the start.</div></div>
+            </div>
+            <div class="rule-box t1">Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it.</div>
+          </div>
+
+          <div class="connector"><div class="connector-line"></div><span class="connector-label">passes gate →</span><div class="connector-line"></div></div>
+
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge t2">Gate 2 · Attachment</span>
+              <span class="tier-sublabel">Is she emotionally safe to invest in?</span>
+            </div>
+            <div class="factors-row">
+              <div class="factor-card t2"><div class="factor-num t2">01</div><div class="factor-name">Warmth &amp; kindness</div><div class="factor-sub">Affectionate, appreciative, gentle in tone; makes his life feel lighter rather than heavier.</div></div>
+              <div class="factor-card t2"><div class="factor-num t2">02</div><div class="factor-name">Loyalty &amp; exclusivity</div><div class="factor-sub">Not advertising constant availability or playing him against other men; no reason to doubt commitment.</div></div>
+              <div class="factor-card t2"><div class="factor-num t2">03</div><div class="factor-name">Respect &amp; admiration</div><div class="factor-sub">Genuinely likes him and values his effort; doesn't treat him as a utility, placeholder, or status accessory.</div></div>
+            </div>
+            <div class="rule-box t2">Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in.</div>
+          </div>
+
+          <div class="connector"><div class="connector-line"></div><span class="connector-label">long-term path →</span><div class="connector-line"></div></div>
+
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge t3">Gate 3 · Life Fit</span>
+              <span class="tier-sublabel">Can he build a stable life with her?</span>
+            </div>
+            <div class="factors-row">
+              <div class="factor-card t3"><div class="factor-num t3">01</div><div class="factor-name">Shared values &amp; family</div><div class="factor-sub">Aligned on commitment, children, domestic life, culture if relevant, and what a good life is for.</div></div>
+              <div class="factor-card t3"><div class="factor-num t3">02</div><div class="factor-name">Emotional stability</div><div class="factor-sub">Conflict doesn't curdle into cruelty, volatility, or endless drama; she repairs instead of escalating.</div></div>
+              <div class="factor-card t3"><div class="factor-num t3">03</div><div class="factor-name">Practical compatibility</div><div class="factor-sub">Lifestyle, habits, money behavior, social rhythm, and daily routines can actually coexist.</div></div>
+            </div>
+            <div class="rule-box t3">Where a life holds together — values, stability, and daily compatibility decide whether it lasts.</div>
+          </div>
+        </details><!-- /gates-indigo -->
+        <p class="pyr-note">A synthesis of two blind AI proposals (Claude + ChatGPT), arbitrated. The male asymmetry: status, income, and achievement — near the gate for women — rarely create desire on their own here. The male gate is blunter: do I want her, does she want me back, and is it safe to invest?</p>
+      </div><!-- /hier-block: generic male -->
+
+      <div class="hier-block">
+        <div class="section-label">A generic female · Claude's take <span class="label-desc">attribute ranking</span></div>
+        <div class="pyramid-stage">
+          <div class="pyramid-tier pyramid-primary">
+            <span class="pyramid-kicker">Tier 1</span>
+            <h3>Primary Factors</h3>
+            <p>Confidence &amp; frame · Status &amp; ambition · Physical attractiveness</p>
+          </div>
+          <div class="pyramid-tier pyramid-secondary">
+            <span class="pyramid-kicker">Tier 2</span>
+            <h3>Secondary Factors</h3>
+            <p>Spark &amp; chemistry · Leadership &amp; pursuit · Stability &amp; treatment</p>
+          </div>
+          <div class="pyramid-tier pyramid-tertiary">
+            <span class="pyramid-kicker">Tier 3</span>
+            <h3>Tertiary Factors</h3>
+            <p>Provision &amp; stability · Commitment &amp; loyalty · Shared values &amp; goals</p>
+          </div>
+        </div>
+        <details class="gates-scarlet gates-collapsible">
+        <summary>Sequential gates</summary>
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t1">Primary factors</span>
+            <span class="tier-sublabel">The core attraction gate</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t1"><div class="factor-num t1">01</div><div class="factor-name">Confidence &amp; frame</div><div class="factor-sub">Self-assured and non-needy; holds his own center instead of leaning on her for it.</div></div>
+            <div class="factor-card t1"><div class="factor-num t1">02</div><div class="factor-name">Status &amp; ambition</div><div class="factor-sub">Direction and drive — competent, going somewhere, commands a room without trying.</div></div>
+            <div class="factor-card t1"><div class="factor-num t1">03</div><div class="factor-name">Physical attractiveness</div><div class="factor-sub">Genuinely attractive to her — looks, grooming, the masculine presence she wants.</div></div>
+          </div>
+          <div class="rule-box t1">Any single factor unmet → no real attraction. Disqualifying, short- or long-term.</div>
+        </div>
+
+        <div class="connector"><div class="connector-line"></div><span class="connector-label">passes gate →</span><div class="connector-line"></div></div>
+
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t2">Secondary factors</span>
+            <span class="tier-sublabel">The relationship energy layer</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t2"><div class="factor-num t2">01</div><div class="factor-name">Spark &amp; chemistry</div><div class="factor-sub">That hard-to-fake electric pull — humor, tension, the feeling of being drawn in.</div></div>
+            <div class="factor-card t2"><div class="factor-num t2">02</div><div class="factor-name">Leadership &amp; pursuit</div><div class="factor-sub">Leads and pursues decisively; makes plans and makes her feel chosen, not kept waiting.</div></div>
+            <div class="factor-card t2"><div class="factor-num t2">03</div><div class="factor-name">Stability &amp; treatment</div><div class="factor-sub">Emotionally steady and kind in how he treats her — safe, consistent, no games.</div></div>
+          </div>
+          <div class="rule-box t2">All three met → long-term eligible. Partial → short-term / situationship only.</div>
+        </div>
+
+        <div class="connector"><div class="connector-line"></div><span class="connector-label">long-term path →</span><div class="connector-line"></div></div>
+
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t3">Tertiary factors</span>
+            <span class="tier-sublabel">The long-term fit layer</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t3"><div class="factor-num t3">01</div><div class="factor-name">Provision &amp; stability</div><div class="factor-sub">Materially reliable — can build and hold down a life, and provide if needed.</div></div>
+            <div class="factor-card t3"><div class="factor-num t3">02</div><div class="factor-name">Commitment &amp; loyalty</div><div class="factor-sub">Wants to commit and stays faithful — in it for real, not keeping options open.</div></div>
+            <div class="factor-card t3"><div class="factor-num t3">03</div><div class="factor-name">Shared values &amp; goals</div><div class="factor-sub">Aligned on the big questions — kids, lifestyle, where the relationship is going.</div></div>
+          </div>
+          <div class="rule-box t3">Weighted toward provision &amp; commitment for the long haul — these sustain the relationship.</div>
+        </div>
+        </details><!-- /gates-scarlet -->
+        <p class="pyr-note">Synthesized from mate-preference research — central tendency, not any one person. Note the diagonal: status sits at her gate, and provision/commitment ride higher than they do on the male side.</p>
+      </div><!-- /hier-block: Claude's generic female -->
+
+      <div class="hier-block">
+        <div class="section-label">A generic female · ChatGPT's take <span class="label-desc">advancement gates</span></div>
+        <div class="pyramid-stage pyr-wine">
+          <div class="pyramid-tier pyramid-primary">
+            <span class="pyramid-kicker">Gate 1</span>
+            <h3>Desire</h3>
+            <p>Attraction · Masculine competence · Safety &amp; calibration</p>
+          </div>
+          <div class="pyramid-tier pyramid-secondary">
+            <span class="pyramid-kicker">Gate 2</span>
+            <h3>Trust</h3>
+            <p>Consistency · Emotional attunement · Selective investment</p>
+          </div>
+          <div class="pyramid-tier pyramid-tertiary">
+            <span class="pyramid-kicker">Gate 3</span>
+            <h3>Fit</h3>
+            <p>Provision capacity · Shared values &amp; lifestyle · Character under pressure</p>
+          </div>
+        </div>
+        <details class="gates-wine gates-collapsible">
+        <summary>Sequential gates</summary>
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t1">Gate 1 · Desire</span>
+            <span class="tier-sublabel">Can he enter the romantic frame at all?</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t1"><div class="factor-num t1">01</div><div class="factor-name">Attraction</div><div class="factor-sub">Face, body, height, style, voice, smell, physical presence — the first filter, even when softened into "vibe."</div></div>
+            <div class="factor-card t1"><div class="factor-num t1">02</div><div class="factor-name">Masculine competence</div><div class="factor-sub">Confidence, social ease, decisiveness, status signals, self-command — does he seem like a capable man?</div></div>
+            <div class="factor-card t1"><div class="factor-num t1">03</div><div class="factor-name">Safety &amp; calibration</div><div class="factor-sub">Not creepy, not chaotic, not socially blind; shows interest without making her feel trapped or embarrassed.</div></div>
+          </div>
+          <div class="rule-box t1">Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it.</div>
+        </div>
+
+        <div class="connector"><div class="connector-line"></div><span class="connector-label">passes gate →</span><div class="connector-line"></div></div>
+
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t2">Gate 2 · Trust</span>
+            <span class="tier-sublabel">Is he worth the emotional risk?</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t2"><div class="factor-num t2">01</div><div class="factor-name">Consistency</div><div class="factor-sub">Follows through and communicates clearly; doesn't vanish and reappear or make her feel disposable.</div></div>
+            <div class="factor-card t2"><div class="factor-num t2">02</div><div class="factor-name">Emotional attunement</div><div class="factor-sub">Notices her, reads tone, makes her feel chosen — warm without becoming needy.</div></div>
+            <div class="factor-card t2"><div class="factor-num t2">03</div><div class="factor-name">Selective investment</div><div class="factor-sub">Not just chasing access to any woman; he makes her feel specifically valued.</div></div>
+          </div>
+          <div class="rule-box t2">Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive.</div>
+        </div>
+
+        <div class="connector"><div class="connector-line"></div><span class="connector-label">long-term path →</span><div class="connector-line"></div></div>
+
+        <div class="tier">
+          <div class="tier-header">
+            <span class="tier-badge t3">Gate 3 · Fit</span>
+            <span class="tier-sublabel">Could she build a life around him?</span>
+          </div>
+          <div class="factors-row">
+            <div class="factor-card t3"><div class="factor-num t3">01</div><div class="factor-name">Provision capacity</div><div class="factor-sub">Not just rich, but functional: direction, discipline, earning potential, handles adult life.</div></div>
+            <div class="factor-card t3"><div class="factor-num t3">02</div><div class="factor-name">Shared values &amp; lifestyle</div><div class="factor-sub">Family plans, social rhythm, religion/politics if relevant, ambition, long-term expectations.</div></div>
+            <div class="factor-card t3"><div class="factor-num t3">03</div><div class="factor-name">Character under pressure</div><div class="factor-sub">Conflict style, loyalty, honesty, patience — does he turn cruel, weak, or reckless when things get hard?</div></div>
+          </div>
+          <div class="rule-box t3">Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts.</div>
+        </div>
+        </details><!-- /gates-wine -->
+        <p class="pyr-note">ChatGPT's framing: attraction opens the door, competence keeps the frame romantic, consistency lets her relax, stability makes him future-shaped. The asymmetry: kindness, loyalty, and emotional availability are real but rarely Gate-1 — they gain power only after attraction and competence clear the first filter.</p>
+      </div><!-- /hier-block: ChatGPT's generic female -->
 
       <div class="builder-divider"></div>
 
