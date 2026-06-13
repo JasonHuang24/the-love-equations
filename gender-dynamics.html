@@ -70,6 +70,32 @@
         grid-template-columns: 1fr;
       }
     }
+    .tab-btn.charts-active { background: #E6F4F1; color: #1F6F5C; border-color: #A8D8CC; }
+    .dyn-hero.charts { background: #E9F5F2; border-color: #B8DDD3; }
+    .dyn-eyebrow.charts { color: #1F8068; }
+    .dyn-title.charts { color: #155C4A; }
+    .dyn-sub.charts { color: #1F6F5C; }
+    .chart-legend { border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; background: var(--surface); }
+    .chart-legend-title { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.6rem; }
+    .chart-legend-row { font-size: 12px; color: var(--text-muted); line-height: 1.9; }
+    .chart-tier { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: middle; }
+    .chart-tier.t1 { background: #E6F4EA; color: #1E7B34; }
+    .chart-tier.t2 { background: #FBF3E0; color: #9A6B12; }
+    .chart-tier.t3 { background: #FBEDE6; color: #B5541E; }
+    .chart-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.35rem; margin-bottom: 1rem; }
+    .chart-card.cut { background: var(--surface); }
+    .chart-kicker { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .chart-title { font-size: 16px; color: var(--text); margin-bottom: 5px; }
+    .chart-q { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.1rem; }
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .bar-label { width: 92px; flex-shrink: 0; font-size: 12px; color: var(--text); }
+    .bar-track { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: 6px; height: 28px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px 0 0 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 9px; font-size: 12px; font-weight: 600; color: #fff; min-width: 36px; box-sizing: border-box; }
+    .bar-fill.male { background: #378ADD; }
+    .bar-fill.fem { background: var(--scarlet); }
+    .bar-fill.muted { background: #9AA0A6; }
+    .chart-note { font-size: 12.5px; color: var(--text-muted); line-height: 1.7; margin-top: 0.85rem; }
+    .chart-source { font-size: 11px; color: var(--text-dim); margin-top: 0.85rem; padding-top: 0.7rem; border-top: 0.5px solid var(--border); }
   </style>
 </head>
 <body data-page="gender-dynamics">
@@ -88,6 +114,7 @@
         <button class="tab-btn" onclick="showPage('male', this)">Male Perspective</button>
         <button class="tab-btn" onclick="showPage('fem', this)">Female Perspective</button>
         <button class="tab-btn" onclick="showPage('both', this)">Both Sides</button>
+        <button class="tab-btn" onclick="showPage('charts', this)">Comparison Charts</button>
       </div>
 
       <!-- Overview -->
@@ -392,6 +419,57 @@
         <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-eye-cog"></i> Self-awareness isn't the same as change</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>There's a strange, rare posture worth naming: seeing your situation with total clarity — the mistakes you made, the environment you're in, exactly how you got here — and still choosing to mostly stay the same. In one sense that's genuinely uncommon. Most people do one of two things: cope hard, or stay flatly delusional about why they're single. Looking at the truth dead in the eyes, saying "yep, that's me," and then living with the consequences anyway is a third path most people can't manage — it takes real honesty to sit with an unflattering picture without papering over it with excuses. But here's the catch you can't dodge: understanding is not the same as change. Seeing the map doesn't walk the road. Self-awareness can quietly become its own most sophisticated cope — the quiet sense that because you finally <em>see</em> it clearly, you've somehow dealt with it. You haven't. "Too self-aware to lie to myself, too set in my ways to move" is honest, but it's still standing still — just with the lights on. Clarity only earns its keep if, at some point, it converts into a different move. Until then it's not a solution; it's a very accurate description of the spot you haven't left.</p></div></div>
         <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-tools"></i> Stop waiting for the other side to change</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>Notice how almost every proposed "solution" asks the other team to change. Women say men need to do better and stop objectifying them; redpill men say women need to lower their standards and stop chasing the top 10%. Both put the responsibility entirely on the other side — which is exactly why nothing moves. The honest truth is there's no societal fix coming any time soon: dating apps made the whole thing more superficial and lopsided, and most people have quietly accepted that this is just how it is now. The only people who actually improve their dating lives are the ones who stop waiting for the culture — or the opposite sex — to change, and start working on what they control: their game, their money, their looks, their social skills. You can't fix the market. You can fix your position in it.</p></div></div>
       </div>
+
+      <!-- Comparison Charts -->
+      <div class="dyn-page" id="page-charts">
+        <div class="dyn-hero charts">
+          <div class="dyn-eyebrow charts">Comparison Charts</div>
+          <div class="dyn-title charts">The same act, two different deals.</div>
+          <div class="dyn-sub charts">Men and women don't experience casual sex the same way — not in how much they want it, how much they enjoy it, or how they're judged for it. These charts put real numbers to that asymmetry, sourced and graded by how strong the evidence is. No vibes, no inflated ratios: where the data is solid we say so, and where it isn't we leave it off.</div>
+        </div>
+
+        <div class="chart-legend">
+          <div class="chart-legend-title">How to read the strength tags</div>
+          <div class="chart-legend-row"><span class="chart-tier t1">Tier 1</span> &nbsp;Replicated research or large representative surveys. Treat as solid.</div>
+          <div class="chart-legend-row"><span class="chart-tier t2">Tier 2</span> &nbsp;Real but mixed or context-dependent evidence. Directionally true.</div>
+          <div class="chart-legend-row"><span class="chart-tier t3">Tier 3</span> &nbsp;Single-source, self-reported, or marketing stats. Illustrative only.</div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-kicker">Openness <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-title">Casual sex as a major reason for recent dating-app use</div>
+          <div class="chart-q">Among current or recent dating-platform users, who says casual sex is a <em>major</em> reason they're there?</div>
+          <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:31%;">31%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:13%;">13%</div></div></div>
+          <div class="chart-note">Men out-cite women on casual sex by roughly two and a half to one — a real, consistent gap. But notice what it <em>isn't</em>: most men aren't primarily there for sex either, and men and women seek long-term partners at similar rates. The popular "men want sex, women want love" split is a caricature. The honest version is narrower: men are simply <em>more also-open</em> to casual on top of wanting a relationship.</div>
+          <div class="chart-source">Pew Research Center, July 2022 · N = 951 current/recent online dating users, from a survey of 6,034 U.S. adults.</div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-kicker">Pleasure <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-title">Women's odds of orgasm: casual vs. committed</div>
+          <div class="chart-q">Among heterosexual undergraduate women, how much does context change the payoff?</div>
+          <div class="bar-row"><div class="bar-label">First hookup</div><div class="bar-track"><div class="bar-fill muted" style="width:11%;">11%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Relationship</div><div class="bar-track"><div class="bar-fill fem" style="width:67%;">67%</div></div></div>
+          <div class="chart-note">In first-time hookups about one in nine women orgasm, versus two-thirds in committed sex — and even commitment doesn't fully close the gap: in a nationally representative sample, ~65% of women usually orgasm versus ~95% of men. This helps explain why lower casual openness can be rational rather than prudish. When researchers held expected pleasure <em>and</em> anticipated stigma constant, the gender gap in <em>accepting</em> casual-sex offers largely vanished — so women aren't less interested in pleasure, they're less interested in the version of it that reliably underdelivers.</div>
+          <div class="chart-source">11% / 67%: Armstrong, England &amp; Fogarty (2012), <em>American Sociological Review</em> — women respondents; analytic Ns = 6,881 hookup / 6,591 relationship events, 21 colleges. 65% / 95%: Frederick et al. (2018), <em>Archives of Sexual Behavior</em> — U.S. national sample, n &gt; 52,000. Mechanism: Conley (2011), <em>JPSP</em>.</div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-kicker">Social judgment <span class="chart-tier t2">Tier 2</span></div>
+          <div class="chart-title">"Player" vs. "slut" — the sexual double standard</div>
+          <div class="chart-q">Is a man really praised for the same sexual history a woman is shamed for?</div>
+          <div class="chart-note">This one we deliberately don't chart with hard numbers, because the evidence is genuinely mixed. Belief in the double standard is widespread, but controlled studies often find it weaker than expected — sometimes men <em>and</em> women both get judged for high partner counts. Still, it bites where it counts: anticipated stigma measurably lowers women's stated willingness to accept casual sex (Conley, 2011), which means the openness gap above is probably understated. The asymmetry is real as a social <em>perception</em> that shapes behavior — but anyone who tells you it's been cleanly measured at some exact ratio is selling you a number that doesn't exist.</div>
+          <div class="chart-source">Crawford &amp; Popp (2003) review; Marks &amp; Fraley (2005) — findings mixed; Conley (2011) on anticipated stigma.</div>
+        </div>
+
+        <div class="chart-card cut">
+          <div class="chart-kicker">On the cutting-room floor</div>
+          <div class="chart-title">Two numbers we refused to chart</div>
+          <div class="chart-note"><strong>"82% of women want relationships, 18% want casual."</strong> Traces to a single platform's self-reported marketing stat (Bumble) — Tier 3 — and it treats wanting a relationship and being open to casual as mutually exclusive, which the Pew data shows they aren't.</div>
+          <div class="chart-note"><strong>"75% of men are statistically left out."</strong> Built on a guessed input (≈80% of men seeking casual; Pew's solid major-reason benchmark is 31%) and a broken assumption: that casual sex pairs off one-to-one. It doesn't — that's the whole point of casual sex, and it's why the market concentrates around a minority of men rather than excluding a clean three-quarters. Both were dropped rather than dressed up.</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -401,7 +479,7 @@
     function showPage(id, btn) {
       document.querySelectorAll('.dyn-page').forEach(p => p.classList.remove('visible'));
       document.getElementById('page-' + id).classList.add('visible');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('land-active','male-active','fem-active','both-active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('land-active','male-active','fem-active','both-active','charts-active'));
       btn.classList.add(id + '-active');
     }
     function toggle(header) {
