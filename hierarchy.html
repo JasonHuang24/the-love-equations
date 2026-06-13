@@ -106,6 +106,30 @@
     .gates-teal .rule-box.t1 { border-color: #0E8C6B; background: #E7F6F1; color: #0B6B52; }
     .gates-teal .rule-box.t2 { border-color: #9ED9C6; background: #F1FAF7; color: #0E8C6B; }
 
+    /* Synthesized generic-male → indigo */
+    .pyr-indigo .pyramid-primary { background: linear-gradient(145deg, #6A55C4, #453396); color: #f3f0fc; }
+    .pyr-indigo .pyramid-secondary { background: linear-gradient(145deg, #E1DBF5, rgba(255,255,255,0.80)); }
+    .pyr-indigo .pyramid-kicker { color: #5A46B0; }
+    .pyr-indigo .pyramid-primary .pyramid-kicker { color: #ddd4f7; }
+    .gates-indigo .tier-badge.t1 { background: #4E3D9E; color: #fff; }
+    .gates-indigo .tier-badge.t2 { background: #E3DDF6; color: #463893; border-color: #C7BCEB; }
+    .gates-indigo .factor-card.t1 { border-left-color: #4E3D9E; }
+    .gates-indigo .factor-card.t2 { border-left-color: #9486CE; }
+    .gates-indigo .factor-num.t1 { color: #4E3D9E; }
+    .gates-indigo .factor-num.t2 { color: #6D5BC0; }
+    .gates-indigo .rule-box.t1 { border-color: #4E3D9E; background: #EEEAF9; color: #3A2D78; }
+    .gates-indigo .rule-box.t2 { border-color: #C7BCEB; background: #F5F2FC; color: #5A48A8; }
+
+    /* Collapsible gate stacks (length control) */
+    .gates-collapsible > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin: 1.25rem 0 0.9rem; }
+    .gates-collapsible > summary::-webkit-details-marker { display: none; }
+    .gates-collapsible > summary::before { content: "▸"; font-size: 10px; }
+    .gates-collapsible[open] > summary::before { content: "▾"; }
+    .gates-collapsible > summary:hover { color: var(--text); }
+
+    /* Author/model descriptor on block titles */
+    .label-desc { font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--text-dim); margin-left: 8px; }
+
     .pyr-note { max-width: 620px; margin: 1rem auto 0; text-align: center; font-size: 12px; color: var(--text-muted); line-height: 1.65; }
   </style>
 </head>
@@ -125,10 +149,11 @@
         <h2>A pyramid of romantic selection.</h2>
         <p>The Love Hierarchy is not just a list. It is a gate structure. The top tier decides whether attraction can start; the middle tier decides whether the dynamic has enough energy; the base tier determines whether a serious relationship has enough long-term support.</p>
         <p>Primary failure blocks everything above casual interest. Secondary weakness limits long-term eligibility. Tertiary weakness does not always kill attraction, but it weakens the relationship’s ability to last.</p>
+        <p style="font-size:13px;">Below: my own hierarchy, a synthesized generic-male baseline, then two takes on the generic female — <strong>Claude's</strong> as an attribute ranking, <strong>ChatGPT's</strong> as advancement gates. Same prompt, different lenses. Open any “Sequential gates” to expand its full breakdown.</p>
       </section>
 
       <div class="hier-block">
-        <div class="section-label">Your hierarchy</div>
+        <div class="section-label">Your hierarchy <span class="label-desc">your own</span></div>
         <div class="pyramid-stage pyr-blue">
           <div class="pyramid-tier pyramid-primary">
             <span class="pyramid-kicker">Tier 1</span>
@@ -146,8 +171,8 @@
             <p>Alignment in values · Common interests · Availability</p>
           </div>
         </div>
-        <div class="gates-blue">
-        <div class="section-label" style="margin-top:1.5rem;">Sequential gates</div>
+        <details class="gates-blue gates-collapsible">
+        <summary>Sequential gates</summary>
 <div class="tier">
         <div class="tier-header">
           <span class="tier-badge t1">Primary factors</span>
@@ -225,11 +250,78 @@
         </div>
         <div class="rule-box t3">Assumed in a long-term context — these factors sustain the relationship.</div>
       </div>
-        </div><!-- /gates-blue -->
+        </details><!-- /gates-blue -->
       </div><!-- /hier-block: yours -->
 
       <div class="hier-block">
-        <div class="section-label">A generic female · Claude's take</div>
+        <div class="section-label">A generic male <span class="label-desc">synthesis · advancement gates</span></div>
+        <div class="pyramid-stage pyr-indigo">
+          <div class="pyramid-tier pyramid-primary">
+            <span class="pyramid-kicker">Gate 1</span>
+            <h3>Desire</h3>
+            <p>Physical attractiveness &amp; vitality · Sexual receptivity · Low-friction presence</p>
+          </div>
+          <div class="pyramid-tier pyramid-secondary">
+            <span class="pyramid-kicker">Gate 2</span>
+            <h3>Attachment</h3>
+            <p>Warmth &amp; kindness · Loyalty &amp; exclusivity · Respect &amp; admiration</p>
+          </div>
+          <div class="pyramid-tier pyramid-tertiary">
+            <span class="pyramid-kicker">Gate 3</span>
+            <h3>Life Fit</h3>
+            <p>Shared values &amp; family · Emotional stability · Practical compatibility</p>
+          </div>
+        </div>
+        <details class="gates-indigo gates-collapsible">
+          <summary>Sequential gates</summary>
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge t1">Gate 1 · Desire</span>
+              <span class="tier-sublabel">Can she enter the romantic-sexual frame?</span>
+            </div>
+            <div class="factors-row">
+              <div class="factor-card t1"><div class="factor-num t1">01</div><div class="factor-name">Physical attractiveness &amp; vitality</div></div>
+              <div class="factor-card t1"><div class="factor-num t1">02</div><div class="factor-name">Sexual receptivity</div></div>
+              <div class="factor-card t1"><div class="factor-num t1">03</div><div class="factor-name">Low-friction presence</div></div>
+            </div>
+            <div class="rule-box t1">Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it.</div>
+          </div>
+
+          <div class="connector"><div class="connector-line"></div><span class="connector-label">passes gate →</span><div class="connector-line"></div></div>
+
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge t2">Gate 2 · Attachment</span>
+              <span class="tier-sublabel">Is she emotionally safe to invest in?</span>
+            </div>
+            <div class="factors-row">
+              <div class="factor-card t2"><div class="factor-num t2">01</div><div class="factor-name">Warmth &amp; kindness</div></div>
+              <div class="factor-card t2"><div class="factor-num t2">02</div><div class="factor-name">Loyalty &amp; exclusivity</div></div>
+              <div class="factor-card t2"><div class="factor-num t2">03</div><div class="factor-name">Respect &amp; admiration</div></div>
+            </div>
+            <div class="rule-box t2">Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in.</div>
+          </div>
+
+          <div class="connector"><div class="connector-line"></div><span class="connector-label">long-term path →</span><div class="connector-line"></div></div>
+
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge t3">Gate 3 · Life Fit</span>
+              <span class="tier-sublabel">Can he build a stable life with her?</span>
+            </div>
+            <div class="factors-row">
+              <div class="factor-card t3"><div class="factor-num t3">01</div><div class="factor-name">Shared values &amp; family</div></div>
+              <div class="factor-card t3"><div class="factor-num t3">02</div><div class="factor-name">Emotional stability</div></div>
+              <div class="factor-card t3"><div class="factor-num t3">03</div><div class="factor-name">Practical compatibility</div></div>
+            </div>
+            <div class="rule-box t3">Where a life holds together — values, stability, and daily compatibility decide whether it lasts.</div>
+          </div>
+        </details><!-- /gates-indigo -->
+        <p class="pyr-note">A synthesis of two blind AI proposals (Claude + ChatGPT), arbitrated. The male asymmetry: status, income, and achievement — near the gate for women — rarely create desire on their own here. The male gate is blunter: do I want her, does she want me back, and is it safe to invest?</p>
+      </div><!-- /hier-block: generic male -->
+
+      <div class="hier-block">
+        <div class="section-label">A generic female · Claude's take <span class="label-desc">attribute ranking</span></div>
         <div class="pyramid-stage">
           <div class="pyramid-tier pyramid-primary">
             <span class="pyramid-kicker">Tier 1</span>
@@ -247,8 +339,8 @@
             <p>Provision &amp; stability · Commitment &amp; loyalty · Shared values &amp; goals</p>
           </div>
         </div>
-        <div class="gates-scarlet">
-        <div class="section-label" style="margin-top:1.5rem;">Sequential gates</div>
+        <details class="gates-scarlet gates-collapsible">
+        <summary>Sequential gates</summary>
         <div class="tier">
           <div class="tier-header">
             <span class="tier-badge t1">Primary factors</span>
@@ -291,12 +383,12 @@
           </div>
           <div class="rule-box t3">Weighted toward provision &amp; commitment for the long haul — these sustain the relationship.</div>
         </div>
-        </div><!-- /gates-scarlet -->
+        </details><!-- /gates-scarlet -->
         <p class="pyr-note">Synthesized from mate-preference research — central tendency, not any one person. Note the diagonal: status sits at her gate, and provision/commitment ride higher than they do on the male side.</p>
       </div><!-- /hier-block: Claude's generic female -->
 
       <div class="hier-block">
-        <div class="section-label">A generic female · ChatGPT's take</div>
+        <div class="section-label">A generic female · ChatGPT's take <span class="label-desc">advancement gates</span></div>
         <div class="pyramid-stage pyr-teal">
           <div class="pyramid-tier pyramid-primary">
             <span class="pyramid-kicker">Gate 1</span>
@@ -314,8 +406,8 @@
             <p>Provision capacity · Shared values &amp; lifestyle · Character under pressure</p>
           </div>
         </div>
-        <div class="gates-teal">
-        <div class="section-label" style="margin-top:1.5rem;">Sequential gates</div>
+        <details class="gates-teal gates-collapsible">
+        <summary>Sequential gates</summary>
         <div class="tier">
           <div class="tier-header">
             <span class="tier-badge t1">Gate 1 · Desire</span>
@@ -358,7 +450,7 @@
           </div>
           <div class="rule-box t3">Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts.</div>
         </div>
-        </div><!-- /gates-teal -->
+        </details><!-- /gates-teal -->
         <p class="pyr-note">ChatGPT's framing: attraction opens the door, competence keeps the frame romantic, consistency lets her relax, stability makes him future-shaped. The asymmetry: kindness, loyalty, and emotional availability are real but rarely Gate-1 — they gain power only after attraction and competence clear the first filter.</p>
       </div><!-- /hier-block: ChatGPT's generic female -->
 
