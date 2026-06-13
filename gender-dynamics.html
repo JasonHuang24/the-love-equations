@@ -88,7 +88,9 @@
     .chart-title { font-size: 16px; color: var(--text); margin-bottom: 5px; }
     .chart-q { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.1rem; }
     .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-    .bar-label { width: 92px; flex-shrink: 0; font-size: 12px; color: var(--text); }
+    .bar-label { width: 110px; flex-shrink: 0; font-size: 12px; color: var(--text); }
+    .bar-group-label { font-size: 11px; font-weight: 600; color: var(--text-dim); margin: 0.95rem 0 0.5rem; }
+    .bar-group-label:first-of-type { margin-top: 0.2rem; }
     .bar-track { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: 6px; height: 28px; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 6px 0 0 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 9px; font-size: 12px; font-weight: 600; color: #fff; min-width: 36px; box-sizing: border-box; }
     .bar-fill.male { background: #378ADD; }
@@ -435,25 +437,84 @@
           <div class="chart-legend-row"><span class="chart-tier t3">Tier 3</span> &nbsp;Single-source, self-reported, or marketing stats. Illustrative only.</div>
         </div>
 
+        <div class="dos-section">What people say they want</div>
+
         <div class="chart-card">
-          <div class="chart-kicker">Openness <span class="chart-tier t1">Tier 1</span></div>
-          <div class="chart-title">Casual sex as a major reason for recent dating-app use</div>
-          <div class="chart-q">Among current or recent dating-platform users, who says casual sex is a <em>major</em> reason they're there?</div>
-          <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:31%;">31%</div></div></div>
-          <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:13%;">13%</div></div></div>
-          <div class="chart-note">Men out-cite women on casual sex by roughly two and a half to one — a real, consistent gap. But notice what it <em>isn't</em>: most men aren't primarily there for sex either, and men and women seek long-term partners at similar rates. The popular "men want sex, women want love" split is a caricature. The honest version is narrower: men are simply <em>more also-open</em> to casual on top of wanting a relationship.</div>
-          <div class="chart-source">Pew Research Center, July 2022 · N = 951 current/recent online dating users, from a survey of 6,034 U.S. adults.</div>
+          <div class="chart-kicker">Stated intent <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-title">Why people are actually on the apps</div>
+          <div class="chart-q">Share of recent dating-app users calling each a <em>major</em> reason — you can pick more than one:</div>
+          <div class="bar-row"><div class="bar-label">Long-term</div><div class="bar-track"><div class="bar-fill muted" style="width:44%;">44%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Casual dating</div><div class="bar-track"><div class="bar-fill muted" style="width:40%;">40%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Casual sex</div><div class="bar-track"><div class="bar-fill muted" style="width:24%;">24%</div></div></div>
+          <div class="bar-row"><div class="bar-label">New friends</div><div class="bar-track"><div class="bar-fill muted" style="width:22%;">22%</div></div></div>
+          <div class="chart-note">Before splitting anything by gender, look at the whole population: a long-term partner is the <em>top</em> major reason, and casual sex sits near the bottom. These don't sum to 100% because they aren't either/or — the same person can want a relationship <em>and</em> be open to casual. That overlap is exactly why the "82% want love / 18% want sex" framing (see the last group) is a category error.</div>
+          <div class="chart-source">Pew Research Center, July 2022 · N = 951 current/recent online dating users.</div>
         </div>
 
         <div class="chart-card">
-          <div class="chart-kicker">Pleasure <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-kicker">The one real gap <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-title">Casual sex is the only reason with a gender gap</div>
+          <div class="chart-q">Among current or recent dating-platform users, who calls casual sex a <em>major</em> reason?</div>
+          <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:31%;">31%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:13%;">13%</div></div></div>
+          <div class="chart-note">Casual sex is the one reason where men and women diverge — men out-cite it by about two and a half to one. On the other major reasons (long-term partner, casual dating, friends) Pew found no significant gender gap. So the honest story isn't "men want sex, women want love" — both rank a relationship first; men simply layer <em>more</em> casual openness on top. It's an overlay, not a different species.</div>
+          <div class="chart-source">Pew Research Center, July 2022 · N = 951 current/recent online dating users, from a survey of 6,034 U.S. adults.</div>
+        </div>
+
+        <div class="dos-section">What the deal actually pays</div>
+
+        <div class="chart-card">
+          <div class="chart-kicker">Pleasure · context <span class="chart-tier t1">Tier 1</span></div>
           <div class="chart-title">Women's odds of orgasm: casual vs. committed</div>
           <div class="chart-q">Among heterosexual undergraduate women, how much does context change the payoff?</div>
           <div class="bar-row"><div class="bar-label">First hookup</div><div class="bar-track"><div class="bar-fill muted" style="width:11%;">11%</div></div></div>
           <div class="bar-row"><div class="bar-label">Relationship</div><div class="bar-track"><div class="bar-fill fem" style="width:67%;">67%</div></div></div>
-          <div class="chart-note">In first-time hookups about one in nine women orgasm, versus two-thirds in committed sex — and even commitment doesn't fully close the gap: in a nationally representative sample, ~65% of women usually orgasm versus ~95% of men. This helps explain why lower casual openness can be rational rather than prudish. When researchers held expected pleasure <em>and</em> anticipated stigma constant, the gender gap in <em>accepting</em> casual-sex offers largely vanished — so women aren't less interested in pleasure, they're less interested in the version of it that reliably underdelivers.</div>
-          <div class="chart-source">11% / 67%: Armstrong, England &amp; Fogarty (2012), <em>American Sociological Review</em> — women respondents; analytic Ns = 6,881 hookup / 6,591 relationship events, 21 colleges. 65% / 95%: Frederick et al. (2018), <em>Archives of Sexual Behavior</em> — U.S. national sample, n &gt; 52,000. Mechanism: Conley (2011), <em>JPSP</em>.</div>
+          <div class="chart-note">In first-time hookups about one in nine women orgasm, versus two-thirds in committed sex. This helps explain why lower casual openness can be rational rather than prudish: when researchers held expected pleasure <em>and</em> anticipated stigma constant, the gender gap in <em>accepting</em> casual-sex offers largely vanished. Women aren't less interested in pleasure — they're less interested in the version of it that reliably underdelivers.</div>
+          <div class="chart-source">Armstrong, England &amp; Fogarty (2012), <em>American Sociological Review</em> — women respondents; analytic Ns = 6,881 hookup / 6,591 relationship events, 21 colleges. Mechanism: Conley (2011), <em>JPSP</em>.</div>
         </div>
+
+        <div class="chart-card">
+          <div class="chart-kicker">Pleasure · gender <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-title">Even in relationships, the gap doesn't close</div>
+          <div class="chart-q">In a nationally representative sample, who usually or always orgasms during partnered sex?</div>
+          <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:65%;">65%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:95%;">95%</div></div></div>
+          <div class="chart-note">Commitment narrows the gap but never erases it: ~95% of heterosexual men usually orgasm versus ~65% of heterosexual women. So "get into a relationship" genuinely improves women's odds — from the 11% hookup figure to roughly two-thirds — yet the payoff still differs by gender even under the best conditions. Casual isn't the only place the deal is lopsided; it's just the most lopsided.</div>
+          <div class="chart-source">Frederick et al. (2018), <em>Archives of Sexual Behavior</em> — U.S. national sample, n &gt; 52,000.</div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-kicker">Attention <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-title">The same market floods one side and starves the other</div>
+          <div class="chart-q">Recent dating-app users who said their experience left them feeling…</div>
+          <div class="bar-group-label">Overwhelmed by the number of messages</div>
+          <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:54%;">54%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:25%;">25%</div></div></div>
+          <div class="bar-group-label">Insecure because of a lack of messages</div>
+          <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:64%;">64%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:40%;">40%</div></div></div>
+          <div class="chart-note">This is the demand asymmetry made personal, and it cuts both ways. Women are far more likely to feel buried in attention; men are far more likely to feel invisible for the lack of it. Same market, opposite complaints — which is also why "she feels like a body, he feels like a wallet" has a quieter cousin: she feels swarmed, he feels ignored.</div>
+          <div class="chart-source">Pew Research Center, July 2022 · current/recent online dating users.</div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-kicker">Safety <span class="chart-tier t1">Tier 1</span></div>
+          <div class="chart-title">The safety tax skews young and female</div>
+          <div class="chart-q">Online daters who say this has happened to them — all users vs. women under 50:</div>
+          <div class="bar-group-label">Sent an unwanted sexually explicit image</div>
+          <div class="bar-row"><div class="bar-label">All users</div><div class="bar-track"><div class="bar-fill muted" style="width:38%;">38%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Women &lt;50</div><div class="bar-track"><div class="bar-fill fem" style="width:56%;">56%</div></div></div>
+          <div class="bar-group-label">Called an offensive name</div>
+          <div class="bar-row"><div class="bar-label">All users</div><div class="bar-track"><div class="bar-fill muted" style="width:24%;">24%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Women &lt;50</div><div class="bar-track"><div class="bar-fill fem" style="width:37%;">37%</div></div></div>
+          <div class="bar-group-label">Threatened with physical harm</div>
+          <div class="bar-row"><div class="bar-label">All users</div><div class="bar-track"><div class="bar-fill muted" style="width:6%;">6%</div></div></div>
+          <div class="bar-row"><div class="bar-label">Women &lt;50</div><div class="bar-track"><div class="bar-fill fem" style="width:11%;">11%</div></div></div>
+          <div class="chart-note">The all-user bars already include men, so the fact that women under 50 sit well above them tells you who carries the risk. This is the "danger" half of why casual openness differs: it isn't only about pleasure odds, it's that the downside — harassment, threats, unsolicited explicit content — lands disproportionately on younger women. Naming the male attention deficit above doesn't cancel this; both are true at once.</div>
+          <div class="chart-source">Pew Research Center, July 2022 · "ever used" online daters (n = 3,128); women-under-50 figures from Pew's gender/age breakdown.</div>
+        </div>
+
+        <div class="dos-section">What people get punished for</div>
 
         <div class="chart-card">
           <div class="chart-kicker">Social judgment <span class="chart-tier t2">Tier 2</span></div>
@@ -463,11 +524,14 @@
           <div class="chart-source">Crawford &amp; Popp (2003) review; Marks &amp; Fraley (2005) — findings mixed; Conley (2011) on anticipated stigma.</div>
         </div>
 
+        <div class="dos-section">Numbers that sound good but break</div>
+
         <div class="chart-card cut">
           <div class="chart-kicker">On the cutting-room floor</div>
-          <div class="chart-title">Two numbers we refused to chart</div>
-          <div class="chart-note"><strong>"82% of women want relationships, 18% want casual."</strong> Traces to a single platform's self-reported marketing stat (Bumble) — Tier 3 — and it treats wanting a relationship and being open to casual as mutually exclusive, which the Pew data shows they aren't.</div>
-          <div class="chart-note"><strong>"75% of men are statistically left out."</strong> Built on a guessed input (≈80% of men seeking casual; Pew's solid major-reason benchmark is 31%) and a broken assumption: that casual sex pairs off one-to-one. It doesn't — that's the whole point of casual sex, and it's why the market concentrates around a minority of men rather than excluding a clean three-quarters. Both were dropped rather than dressed up.</div>
+          <div class="chart-title">Stats we refused to chart</div>
+          <div class="chart-note"><strong>"82% of women want relationships, 18% want casual."</strong> Traces to a single platform's self-reported marketing stat (Bumble) — Tier 3 — and it treats wanting a relationship and being open to casual as mutually exclusive, which the Pew data in the first group shows they aren't.</div>
+          <div class="chart-note"><strong>"75% of men are statistically left out."</strong> Built on a guessed input (≈80% of men seeking casual; Pew's solid major-reason benchmark is 31%) and a broken assumption: that casual sex pairs off one-to-one. It doesn't — that's the whole point of casual sex, and it's why the market concentrates around a minority of men rather than excluding a clean three-quarters.</div>
+          <div class="chart-note">This group stays open on purpose. The next viral manosphere or TikTok stat that sounds too clean lands here until it earns a tier — we don't chart vibes as facts.</div>
         </div>
       </div>
     </div>
