@@ -3,40 +3,437 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pill Dossiers — The Love Equations</title>
+  <title>Pill Dossiers - The Love Equations</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
   <style>
+    .pills-shell {
+      display: grid;
+      gap: 1.35rem;
+    }
+
+    .dossier-hero {
+      position: relative;
+      overflow: hidden;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.86), rgba(255,246,238,0.62)),
+        var(--card);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.4rem, 4vw, 2.2rem);
+    }
+
+    .dossier-hero::after {
+      content: "";
+      position: absolute;
+      right: -8rem;
+      top: -8rem;
+      width: 20rem;
+      aspect-ratio: 1;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(196, 30, 58, 0.13), transparent 68%);
+      pointer-events: none;
+    }
+
+    .dossier-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--scarlet);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .dossier-title {
+      position: relative;
+      z-index: 1;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(2.2rem, 5.5vw, 4.3rem);
+      line-height: 0.96;
+      letter-spacing: -0.045em;
+      color: var(--text);
+      max-width: 760px;
+      margin-bottom: 0.9rem;
+    }
+
+    .dossier-title em {
+      color: var(--scarlet);
+      font-style: normal;
+    }
+
+    .dossier-copy {
+      position: relative;
+      z-index: 1;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.75;
+      max-width: 760px;
+    }
+
+    .dossier-visual {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 1.45rem;
+      max-width: 760px;
+    }
+
+    .pill-token {
+      min-height: 86px;
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      background: rgba(255,252,247,0.76);
+      padding: 0.85rem;
+      display: grid;
+      align-content: center;
+      gap: 0.35rem;
+    }
+
+    .pill-shape {
+      width: 58px;
+      height: 24px;
+      border-radius: 999px;
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.55), 0 10px 22px rgba(82,43,29,0.12);
+    }
+
+    .pill-shape.black { background: linear-gradient(135deg, #211716, #71615a); }
+    .pill-shape.red { background: linear-gradient(135deg, var(--scarlet-deep), var(--scarlet)); }
+    .pill-shape.blue { background: linear-gradient(135deg, #204f78, #8fb7d9); }
+
+    .pill-token-name {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .pill-token-text {
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .pill-nav {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pill-tab {
+      cursor: pointer;
+      text-align: left;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.86), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft);
+      padding: 1rem;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+    }
+
+    .pill-tab:hover {
+      transform: translateY(-2px);
+      border-color: rgba(196, 30, 58, 0.32);
+    }
+
+    .pill-tab.active {
+      border-color: var(--scarlet);
+      background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(250,230,232,0.62));
+    }
+
+    .pill-tab-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .pill-tab-name {
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .pill-tab-code {
+      color: var(--text-dim);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pill-tab-copy {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
     .pill-page { display: none; }
-    .pill-page.visible { display: block; }
-    .pill-hero { padding: 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 0.5px solid transparent; }
-    .pill-hero.bp { background: #EBF3FD; border-color: #B5D4F4; }
-    .pill-hero.rp { background: var(--scarlet-pale); border-color: #F0B0BC; }
-    .pill-hero.blk { background: var(--surface); border-color: var(--border); }
-    .pill-eyebrow { font-size: 10px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-    .pill-eyebrow.bp { color: #185FA5; }
-    .pill-eyebrow.rp { color: var(--scarlet-dim); }
-    .pill-eyebrow.blk { color: var(--text-muted); }
-    .pill-title { font-size: 26px; margin-bottom: 10px; }
-    .pill-title.bp { color: #0C447C; }
-    .pill-title.rp { color: var(--scarlet-dim); }
-    .pill-title.blk { color: var(--text); }
-    .pill-summary { font-size: 14px; line-height: 1.75; }
-    .pill-summary.bp { color: #185FA5; }
-    .pill-summary.rp { color: #8A2030; }
-    .pill-summary.blk { color: var(--text-muted); }
-    .tab-btn.bp-active { background: #EBF3FD; color: #0C447C; border-color: #85B7EB; }
-    .tab-btn.rp-active { background: var(--scarlet-pale); color: var(--scarlet-dim); border-color: #E09090; }
-    .tab-btn.blk-active { background: var(--surface); color: var(--text); border-color: var(--border); }
-    .wildcard-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--scarlet-pale); color: var(--scarlet-dim); padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
-    .mechanism-box { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
-    .mech-header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0.75rem 1.1rem; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
-    .mech-body { padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: 12px; }
-    .mech-step { display: flex; gap: 14px; align-items: flex-start; }
-    .mech-num { width: 24px; height: 24px; border-radius: 50%; background: var(--scarlet-pale); color: var(--scarlet-dim); font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-    .mech-text { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
-    .mech-text strong { color: var(--text); }
+    .pill-page.visible { display: grid; gap: 1rem; }
+
+    .dossier-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .dossier-card {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.1rem, 3vw, 1.45rem);
+    }
+
+    .dossier-card.feature {
+      min-height: 100%;
+    }
+
+    .pill-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.65rem;
+    }
+
+    .pill-heading {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+
+    .pill-heading.black span { color: #4a3832; }
+    .pill-heading.red span { color: var(--scarlet); }
+    .pill-heading.blue span { color: #2f6d9c; }
+
+    .pill-summary {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .truth-table {
+      display: grid;
+      gap: 9px;
+    }
+
+    .truth-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 0.85rem;
+      align-items: start;
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.62);
+      padding: 0.78rem 0.85rem;
+    }
+
+    .truth-label {
+      color: var(--scarlet);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+
+    .truth-copy {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .split-card {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.66);
+      padding: 0.95rem;
+    }
+
+    .split-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--scarlet);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .split-title {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.3;
+      margin-bottom: 0.35rem;
+    }
+
+    .split-copy {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.58;
+    }
+
+    .term-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .term-card {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.88), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft);
+      padding: 1rem;
+    }
+
+    .term-name {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.25;
+      margin-bottom: 0.35rem;
+    }
+
+    .term-copy {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .wildcard-card {
+      border: 0.5px solid rgba(196,30,58,0.22);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(135deg, rgba(250,230,232,0.54), rgba(255,252,247,0.86)),
+        var(--card);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.1rem, 3vw, 1.45rem);
+    }
+
+    .wildcard-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--scarlet);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+
+    .mechanism-box {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: rgba(255,252,247,0.74);
+      margin-top: 1rem;
+    }
+
+    .mech-header {
+      background: rgba(243,230,216,0.72);
+      border-bottom: 0.5px solid var(--border);
+      padding: 0.75rem 1rem;
+      color: var(--text-dim);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .mech-body {
+      display: grid;
+      gap: 10px;
+      padding: 1rem;
+    }
+
+    .mech-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .mech-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--scarlet-pale);
+      color: var(--scarlet);
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+
+    .mech-text {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .mech-text strong {
+      color: var(--text);
+    }
+
+    .synthesis-card {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.1rem, 3vw, 1.45rem);
+    }
+
+    .synthesis-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+
+    .synthesis-copy {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 820px;
+    }
+
+    .dossier-note {
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 860px) {
+      .dossier-grid,
+      .pill-nav,
+      .term-grid,
+      .split-grid,
+      .dossier-visual {
+        grid-template-columns: 1fr;
+      }
+
+      .truth-row {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+      }
+    }
   </style>
 </head>
 <body data-page="pills">
@@ -46,114 +443,219 @@
     <div class="page-header">
       <div class="page-eyebrow">Dossier</div>
       <div class="page-title">Pill Dossiers</div>
-      <div class="page-sub">Three worldviews on attraction, relationships, and the nature of the market. Each pill represents a distinct way of seeing. The goal is synthesis: honest about attraction, strategic about behavior, and still humane.</div>
+      <div class="page-sub">Three internet-born worldviews on attraction, leverage, and romantic reality. The point is not allegiance. The point is extraction: take the useful signal, name the poison, and return to a humane synthesis.</div>
     </div>
 
     <div class="content">
-      <div class="tab-nav">
-        <button class="tab-btn blk-active" onclick="showPill('blk', this)">The Black Pill</button>
-        <button class="tab-btn" onclick="showPill('rp', this)">The Red Pill</button>
-        <button class="tab-btn" onclick="showPill('bp', this)">The Blue Pill</button>
-      </div>
+      <div class="pills-shell">
+        <section class="dossier-hero">
+          <div class="dossier-kicker"><i class="ti ti-capsule"></i> Attraction ideology files</div>
+          <div class="dossier-title">Not tribes. <em>Lenses.</em></div>
+          <div class="dossier-copy">The pill language comes from the wider online dating and manosphere ecosystem: Blue as comforting idealism, Red as strategic awakening, Black as fatalistic determinism. This page treats them as lenses, not identities. Every lens sees something. Every lens also distorts.</div>
+          <div class="dossier-visual" aria-hidden="true">
+            <div class="pill-token">
+              <div class="pill-shape black"></div>
+              <div class="pill-token-name">Black Pill</div>
+              <div class="pill-token-text">constraint without mercy</div>
+            </div>
+            <div class="pill-token">
+              <div class="pill-shape red"></div>
+              <div class="pill-token-name">Red Pill</div>
+              <div class="pill-token-text">strategy without innocence</div>
+            </div>
+            <div class="pill-token">
+              <div class="pill-shape blue"></div>
+              <div class="pill-token-name">Blue Pill</div>
+              <div class="pill-token-text">romance without machinery</div>
+            </div>
+          </div>
+        </section>
 
-      <!-- Blue Pill -->
-      <div class="pill-page" id="page-bp">
-        <div class="pill-hero bp">
-          <div class="pill-eyebrow bp">Pill 03 · The Blue Pill</div>
-          <div class="pill-title bp">The Blue Pill</div>
-          <div class="pill-summary bp">The comfortable illusion. A worldview built on social conditioning, romantic idealism, and the belief that the system is fair and feelings are facts.</div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-book-2"></i> What it means</span><i class="ti ti-chevron-down dos-chev open"></i></div>
-          <div class="dos-body open">
-            <p>The Blue Pill treats romance as mostly fair, moral, and personality-driven. Its strongest version protects sincerity, kindness, trust, and emotional safety. Its weakest version denies that attraction has thresholds, competition, mate selection pressure, and visible value signals.</p>
-          </div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-bulb"></i> Useful signal</span><i class="ti ti-chevron-down dos-chev"></i></div>
-          <div class="dos-body">
-            <p>It preserves the human side of relationships. Affection, honesty, loyalty, warmth, and emotional presence still matter after attraction opens the door. A system that explains dating but destroys warmth is not an upgrade.</p>
-          </div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-alert-triangle"></i> Failure mode</span><i class="ti ti-chevron-down dos-chev"></i></div>
-          <div class="dos-body">
-            <p>It becomes naive when it tells people that being nice is enough, that desire is automatically earned by moral virtue, or that rejection is always unfair. It can hide attraction floors behind comforting stories.</p>
-          </div>
-        </div>
-        <div class="dossier-note"><strong>Best use:</strong> keep the compassion, sincerity, and emotional safety. Remove the denial of attraction mechanics.</div>
-      </div>
+        <nav class="pill-nav" aria-label="Pill dossier tabs">
+          <button class="pill-tab active" onclick="showPill('blk', this)">
+            <span class="pill-tab-top"><span class="pill-tab-name">Black Pill</span><span class="pill-tab-code">01</span></span>
+            <span class="pill-tab-copy">Looks, sorting, and hard constraints pushed toward fatalism.</span>
+          </button>
+          <button class="pill-tab" onclick="showPill('rp', this)">
+            <span class="pill-tab-top"><span class="pill-tab-name">Red Pill</span><span class="pill-tab-code">02</span></span>
+            <span class="pill-tab-copy">Incentives, leverage, self-improvement, and attraction strategy.</span>
+          </button>
+          <button class="pill-tab" onclick="showPill('bp', this)">
+            <span class="pill-tab-top"><span class="pill-tab-name">Blue Pill</span><span class="pill-tab-code">03</span></span>
+            <span class="pill-tab-copy">Romantic idealism, sincerity, kindness, and fair-world assumptions.</span>
+          </button>
+        </nav>
 
-      <!-- Red Pill -->
-      <div class="pill-page" id="page-rp">
-        <div class="pill-hero rp">
-          <div class="pill-eyebrow rp">Pill 02 · The Red Pill</div>
-          <div class="pill-title rp">The Red Pill</div>
-          <div class="pill-summary rp">The uncomfortable truth. A framework for seeing social and sexual dynamics as they actually operate — stripped of idealism, sentimentality, and conditioning.</div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-book-2"></i> What it means</span><i class="ti ti-chevron-down dos-chev open"></i></div>
-          <div class="dos-body open">
-            <p>The Red Pill treats dating as a strategic market shaped by incentives, leverage, self-presentation, competition, and mate-selection asymmetry. Its strongest version says attraction is not random and standards must be understood rather than wished away.</p>
-          </div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-bulb"></i> Useful signal</span><i class="ti ti-chevron-down dos-chev"></i></div>
-          <div class="dos-body">
-            <p>It emphasizes agency: improve the offer, understand signals, build competence, raise status, set boundaries, and stop relying on polite narratives that do not predict attraction.</p>
-          </div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-alert-triangle"></i> Failure mode</span><i class="ti ti-chevron-down dos-chev"></i></div>
-          <div class="dos-body">
-            <p>It can slide into resentment, overgeneralization, and adversarial gender thinking. Strategy becomes poison when it loses empathy or starts treating people as opponents instead of people with incentives.</p>
-          </div>
-        </div>
-        <div class="dossier-note"><strong>Best use:</strong> keep the agency, standards, signal awareness, and self-improvement. Reject contempt, manipulation, and blanket claims.</div>
-      </div>
+        <section class="pill-page visible" id="page-blk">
+          <div class="dossier-grid">
+            <article class="dossier-card feature">
+              <div class="pill-meta"><i class="ti ti-moon"></i> Dossier 01</div>
+              <div class="pill-heading black">The <span>Black Pill</span></div>
+              <p class="pill-summary">The Black Pill is constraint awareness pushed toward terminal certainty. It notices that looks, early impressions, social sorting, and fixed traits matter more than polite society admits. Its useful part is realism about hard floors. Its failure is turning disadvantage into destiny.</p>
+              <div class="truth-table mt-2">
+                <div class="truth-row">
+                  <div class="truth-label">Core claim</div>
+                  <div class="truth-copy">The market is heavily constrained by traits you do not fully control, especially physical attractiveness and social rank.</div>
+                </div>
+                <div class="truth-row">
+                  <div class="truth-label">Best use</div>
+                  <div class="truth-copy">Stop explaining every rejection as a technique problem. Some floors are real; some environments are hostile; some gaps are hard to bridge.</div>
+                </div>
+                <div class="truth-row">
+                  <div class="truth-label">Distortion</div>
+                  <div class="truth-copy">It mistakes limits for total impossibility and can turn accurate pain into surrender, bitterness, or social withdrawal.</div>
+                </div>
+              </div>
+            </article>
 
-      <!-- Black Pill -->
-      <div class="pill-page visible" id="page-blk">
-        <div class="pill-hero blk">
-          <div class="pill-eyebrow blk">Pill 01 · The Black Pill</div>
-          <div class="pill-title blk">The Black Pill</div>
-          <div class="pill-summary blk">The terminal position. The belief that outcomes are fixed, effort is futile, and the game was rigged before you entered it — biological determinism taken to its logical extreme.</div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-book-2"></i> What it means</span><i class="ti ti-chevron-down dos-chev open"></i></div>
-          <div class="dos-body open">
-            <p>The Black Pill is constraint awareness pushed toward fatalism. It correctly notices that looks, early impressions, social sorting, and fixed traits matter more than polite society admits. Its failure is treating disadvantage as destiny.</p>
+            <aside class="dossier-card">
+              <div class="split-grid">
+                <div class="split-card">
+                  <div class="split-label"><i class="ti ti-check"></i> Keep</div>
+                  <div class="split-title">Constraint literacy</div>
+                  <div class="split-copy">Attraction has thresholds. Looks matter. Timing matters. Some markets punish average people hard.</div>
+                </div>
+                <div class="split-card">
+                  <div class="split-label"><i class="ti ti-x"></i> Discard</div>
+                  <div class="split-title">Total fatalism</div>
+                  <div class="split-copy">A model that makes you less alive, less warm, and less capable has started eating the person using it.</div>
+                </div>
+              </div>
+              <div class="dossier-note"><strong>Operating rule:</strong> use Black Pill insight to identify real constraints, then return to the remaining agency. Do not confuse clear sight with a death sentence.</div>
+            </aside>
           </div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-bulb"></i> Useful signal</span><i class="ti ti-chevron-down dos-chev"></i></div>
-          <div class="dos-body">
-            <p>It is useful as a reality check against fantasy. Attraction has floors. Some gaps are hard to bridge. Some markets are brutally asymmetric. Not every rejection is caused by bad technique.</p>
-          </div>
-        </div>
-        <div class="dos-card">
-          <div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-alert-triangle"></i> Failure mode</span><i class="ti ti-chevron-down dos-chev"></i></div>
-          <div class="dos-body">
-            <p>It becomes destructive when it converts constraints into surrender. If a model makes you more accurate but less alive, less warm, less ambitious, and less socially capable, the model is starting to consume the person using it.</p>
-          </div>
-        </div>
-        <div class="dossier-note"><strong>Best use:</strong> use it to identify hard floors and honest constraints, then return to agency wherever agency still exists.</div>
 
-        <div class="divider mt-3"></div>
-        <div class="wildcard-tag"><i class="ti ti-cards"></i> Wildcard factor</div>
-        <div style="font-size:20px;color:var(--text);margin-bottom:10px;">Just Be First</div>
-        <div style="font-size:14px;color:var(--text-muted);line-height:1.75;margin-bottom:1.5rem;">A timing exploit that overrides normal SMV matching. The man who arrives before a woman has calibrated her own value can secure a pairing the open market would never produce.</div>
-        <div class="mechanism-box">
-          <div class="mech-header">How it works</div>
-          <div class="mech-body">
-            <div class="mech-step"><div class="mech-num">1</div><div class="mech-text"><strong>She enters before she knows her value.</strong> A young woman in high school or early college has not yet received full market feedback.</div></div>
-            <div class="mech-step"><div class="mech-num">2</div><div class="mech-text"><strong>He arrives before competition does.</strong> The man does not compete against a field of calibrated options.</div></div>
-            <div class="mech-step"><div class="mech-num">3</div><div class="mech-text"><strong>Emotional bonding precedes SMV awareness.</strong> Love and attachment form before she has reference points to evaluate the mismatch.</div></div>
-            <div class="mech-step"><div class="mech-num">4</div><div class="mech-text"><strong>Commitment locks it in.</strong> Proposal, marriage, or deep entanglement creates a structure that outlasts the window where the mismatch would have prevented things from starting.</div></div>
+          <article class="wildcard-card">
+            <div class="wildcard-tag"><i class="ti ti-cards"></i> Wildcard mechanic</div>
+            <div class="synthesis-title">Just Be First</div>
+            <p class="synthesis-copy">A timing exploit that can override normal SMV matching. The person who arrives before comparison pressure and full market calibration can form a bond that the open market might never have produced.</p>
+            <div class="mechanism-box">
+              <div class="mech-header">Sequence of the mechanic</div>
+              <div class="mech-body">
+                <div class="mech-step"><div class="mech-num">1</div><div class="mech-text"><strong>She enters before she knows her value.</strong> In high school, early college, or a low-feedback environment, she may not yet have full market calibration.</div></div>
+                <div class="mech-step"><div class="mech-num">2</div><div class="mech-text"><strong>He arrives before competition does.</strong> He is not competing against the fully exposed field of later options.</div></div>
+                <div class="mech-step"><div class="mech-num">3</div><div class="mech-text"><strong>Bonding precedes comparison.</strong> Attachment, habit, loyalty, and shared story form before a clean SMV comparison becomes salient.</div></div>
+                <div class="mech-step"><div class="mech-num">4</div><div class="mech-text"><strong>Commitment locks it in.</strong> Marriage, children, shared identity, or deep entanglement can preserve a match that would not start under full market exposure.</div></div>
+              </div>
+            </div>
+            <div class="dossier-note"><strong>Important:</strong> this is not a moral ideal or a seduction recommendation. It is a structural story about timing, calibration, and why some mismatches survive because they formed before the open market could price them.</div>
+          </article>
+        </section>
+
+        <section class="pill-page" id="page-rp">
+          <div class="dossier-grid">
+            <article class="dossier-card feature">
+              <div class="pill-meta"><i class="ti ti-flame"></i> Dossier 02</div>
+              <div class="pill-heading red">The <span>Red Pill</span></div>
+              <p class="pill-summary">The Red Pill treats dating as a market shaped by incentives, asymmetry, self-presentation, leverage, and strategic behavior. Its useful part is agency: improve the offer, read signals, understand incentives. Its failure mode is contempt dressed up as realism.</p>
+              <div class="truth-table mt-2">
+                <div class="truth-row">
+                  <div class="truth-label">Core claim</div>
+                  <div class="truth-copy">Attraction is not random, stated preferences often mislead, and romantic outcomes respond to leverage, value, confidence, and social proof.</div>
+                </div>
+                <div class="truth-row">
+                  <div class="truth-label">Best use</div>
+                  <div class="truth-copy">Build. Improve looks, money, status, charm, and exposure. Stop waiting for comforting advice to make the market fair.</div>
+                </div>
+                <div class="truth-row">
+                  <div class="truth-label">Distortion</div>
+                  <div class="truth-copy">It can turn strategic clarity into adversarial gender thinking, manipulation, resentment, and blanket claims about women or men.</div>
+                </div>
+              </div>
+            </article>
+
+            <aside class="dossier-card">
+              <div class="split-grid">
+                <div class="split-card">
+                  <div class="split-label"><i class="ti ti-check"></i> Keep</div>
+                  <div class="split-title">Agency and leverage</div>
+                  <div class="split-copy">The healthy move is construction: stronger body, better social skill, clearer standards, better environments.</div>
+                </div>
+                <div class="split-card">
+                  <div class="split-label"><i class="ti ti-x"></i> Discard</div>
+                  <div class="split-title">Contempt as doctrine</div>
+                  <div class="split-copy">Strategy becomes poison when it loses empathy and starts treating people as enemies instead of people with incentives.</div>
+                </div>
+              </div>
+              <div class="dossier-note"><strong>Operating rule:</strong> use Red Pill insight to become more effective, not less humane. If it makes you sharper but colder, you are losing part of the game.</div>
+            </aside>
           </div>
-        </div>
-        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-message-quote"></i> Anecdotes</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>Use this as a structural story rather than a recommendation: timing can produce relationships that would not happen under fully exposed market conditions. That does not make every early bond fake, but it explains why some mismatches survive when they formed before comparison pressure arrived.</p></div></div>
-        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-pencil"></i> Commentary</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>“Just Be First” is not a moral ideal. It is a timing mechanic. It belongs in the Black Pill dossier because it shows how sequence can override open-market matching, but the healthiest version of the framework still prefers mutual awareness, adult agency, and stable reciprocal desire.</p></div></div>
+
+          <div class="term-grid">
+            <div class="term-card">
+              <div class="term-name">Hypergamy</div>
+              <div class="term-copy">The tendency to seek upward in status, resources, desirability, or perceived mate value. Useful as a pressure concept; dangerous when treated as a cartoon law.</div>
+            </div>
+            <div class="term-card">
+              <div class="term-name">Preselection</div>
+              <div class="term-copy">Interest can rise when other people visibly want you. Social proof does not create all attraction, but it can change how value is read.</div>
+            </div>
+            <div class="term-card">
+              <div class="term-name">Frame</div>
+              <div class="term-copy">The ability to hold your center without begging the room to validate you. At its best, calm self-command; at its worst, performative dominance.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pill-page" id="page-bp">
+          <div class="dossier-grid">
+            <article class="dossier-card feature">
+              <div class="pill-meta"><i class="ti ti-cloud-heart"></i> Dossier 03</div>
+              <div class="pill-heading blue">The <span>Blue Pill</span></div>
+              <p class="pill-summary">The Blue Pill treats romance as sincere, fair, moral, and personality-driven. Its useful part is warmth: love is not just sorting math, and people need trust, affection, kindness, and safety. Its failure is denying the thresholds that decide who gets considered in the first place.</p>
+              <div class="truth-table mt-2">
+                <div class="truth-row">
+                  <div class="truth-label">Core claim</div>
+                  <div class="truth-copy">Be kind, be yourself, communicate honestly, and the right person will value you for who you are.</div>
+                </div>
+                <div class="truth-row">
+                  <div class="truth-label">Best use</div>
+                  <div class="truth-copy">Protect the human center: sincerity, affection, loyalty, repair, and emotional safety still matter once attraction opens the door.</div>
+                </div>
+                <div class="truth-row">
+                  <div class="truth-label">Distortion</div>
+                  <div class="truth-copy">It becomes naive when it pretends desire is earned by virtue alone or that rejection means the market failed morally.</div>
+                </div>
+              </div>
+            </article>
+
+            <aside class="dossier-card">
+              <div class="split-grid">
+                <div class="split-card">
+                  <div class="split-label"><i class="ti ti-check"></i> Keep</div>
+                  <div class="split-title">Warmth and trust</div>
+                  <div class="split-copy">No long-term framework works if it explains attraction while destroying affection, generosity, and emotional repair.</div>
+                </div>
+                <div class="split-card">
+                  <div class="split-label"><i class="ti ti-x"></i> Discard</div>
+                  <div class="split-title">Fair-world comfort</div>
+                  <div class="split-copy">Kindness is not a substitute for attraction. Personality matters, but usually after a first filter has been passed.</div>
+                </div>
+              </div>
+              <div class="dossier-note"><strong>Operating rule:</strong> keep the heart. Drop the denial. The synthesis needs romance, but it also needs eyes.</div>
+            </aside>
+          </div>
+
+          <div class="term-grid">
+            <div class="term-card">
+              <div class="term-name">Just be yourself</div>
+              <div class="term-copy">Healthy when it means authenticity. Harmful when it means refusing to improve presentation, social skill, standards, or exposure.</div>
+            </div>
+            <div class="term-card">
+              <div class="term-name">Personality matters</div>
+              <div class="term-copy">True but incomplete. Personality can deepen, convert, and sustain attraction. It does not always create initial consideration from nothing.</div>
+            </div>
+            <div class="term-card">
+              <div class="term-name">The right person</div>
+              <div class="term-copy">Useful as patience, dangerous as passivity. The right person still has to meet you, notice you, want you, and choose you.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="synthesis-card">
+          <div class="synthesis-title">The Love Equations synthesis</div>
+          <p class="synthesis-copy">Blue Pill keeps the heart. Red Pill restores agency. Black Pill names the hard constraints. The synthesis is not halfway mush. It is sharper than Blue, warmer than Red, and less fatalistic than Black: see the market clearly, improve where improvement is real, and refuse both rage and cope.</p>
+        </section>
       </div>
     </div>
   </div>
@@ -164,15 +666,8 @@
     function showPill(id, btn) {
       document.querySelectorAll('.pill-page').forEach(p => p.classList.remove('visible'));
       document.getElementById('page-' + id).classList.add('visible');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('bp-active','rp-active','blk-active'));
-      btn.classList.add(id + '-active');
-    }
-    function toggle(header) {
-      const body = header.nextElementSibling;
-      const chev = header.querySelector('.dos-chev');
-      const open = body.classList.contains('open');
-      body.classList.toggle('open', !open);
-      chev.classList.toggle('open', !open);
+      document.querySelectorAll('.pill-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
   </script>
 </body>
