@@ -3,66 +3,667 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SMV Calculator — The Love Equations</title>
+  <title>SMV Calculator &mdash; The Love Equations</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
   <style>
     .calc-page { display: none; }
     .calc-page.visible { display: block; }
-    .tab-btn.a-active { background: #EBF3FD; color: #0C447C; border-color: #85B7EB; }
-    .tab-btn.b-active { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
     .screen { display: none; }
     .screen.visible { display: block; }
-    .progress-bar { height: 3px; background: var(--surface); border-radius: 2px; margin-bottom: 1.75rem; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 2px; background: var(--scarlet); transition: width 0.35s ease; }
-    .factor-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-    .question-title { font-size: 20px; color: var(--text); margin-bottom: 6px; line-height: 1.35; }
-    .question-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
-    .options-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
-    .opt { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem 1rem; cursor: pointer; font-size: 14px; font-family: Georgia, serif; color: var(--text); transition: all 0.12s; }
-    .opt:hover { border-color: var(--text-dim); background: var(--surface); }
-    .opt.selected { border-color: var(--scarlet); border-width: 1.5px; background: var(--scarlet-pale); color: var(--scarlet-dim); }
-    .btn-row { display: flex; gap: 10px; }
-    .score-hero { text-align: center; padding: 2rem 1rem 1.5rem; }
-    .score-ring { width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: flex-end; flex-direction: column; padding-bottom: 22px; margin: 0 auto 1rem; border: 3px solid; }
-    .score-num { font-size: 36px; line-height: 1; }
-    .score-denom { font-size: 13px; color: var(--text-muted); }
-    .tier-badge { display: inline-block; font-size: 12px; padding: 4px 14px; border-radius: 20px; margin-bottom: 10px; }
-    .score-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; max-width: 420px; margin: 0 auto; }
-    .factor-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1.5rem 0; }
-    .fb-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 0.85rem 1rem; }
-    .fb-name { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.04em; }
-    .fb-bar { height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-bottom: 5px; }
-    .fb-fill { height: 100%; border-radius: 2px; }
-    .fb-score { font-size: 13px; color: var(--text); }
-    .looks-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 8px; }
-    .look-tier { border-radius: var(--radius-md); border: 0.5px solid var(--border); padding: 0.6rem 0.5rem; text-align: center; }
-    .look-tier.selected { border-width: 1.5px; }
-    .look-num { font-size: 16px; }
-    .look-label { font-size: 10px; color: var(--text-dim); margin-top: 3px; }
-    .mates-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
-    .mate-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-    .mate-img { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 26px; background: var(--surface); }
-    .mate-info { padding: 0.6rem 0.75rem; }
-    .mate-name { font-size: 13px; color: var(--text); }
-    .mate-smv { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .mate-desc { font-size: 11px; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
-    .pb-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
-    .pb-input { width: 100%; padding: 0.6rem 0.85rem; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--card); font-size: 14px; font-family: Georgia, serif; color: var(--text); margin-bottom: 1.25rem; }
-    .pb-input:focus { outline: none; border-color: var(--scarlet); }
-    .factor-slider-row { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 0.9rem 1.1rem; margin-bottom: 8px; }
-    .fs-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .fs-name { font-size: 13px; color: var(--text); }
-    .fs-val { font-size: 13px; color: var(--scarlet); }
-    .pb-result { background: var(--surface); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; display: flex; align-items: center; gap: 1.25rem; margin-top: 1.25rem; }
-    .pb-circle { width: 64px; height: 64px; border-radius: 50%; border: 2px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-    .pb-score-num { font-size: 22px; line-height: 1; }
-    .pb-score-den { font-size: 10px; color: var(--text-dim); }
-    .pb-name { font-size: 16px; color: var(--text); margin-bottom: 4px; }
-    .pb-tier { font-size: 11px; padding: 2px 10px; border-radius: 20px; display: inline-block; }
-    .pb-breakdown { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
-    .section-label-sm { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+    .calc-content { padding-bottom: 3rem; }
+    .calc-tabs { flex-wrap: wrap; }
+    .tab-btn.a-active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
+    .tab-btn.b-active { background: #5d4db4; color: #fffaf3; border-color: #5d4db4; }
+
+    .exam-panel {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.74));
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.25rem, 4vw, 2rem);
+    }
+    .exam-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--scarlet);
+      font-size: 11px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-bottom: 0.85rem;
+    }
+    .exam-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.35rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      margin-bottom: 0.8rem;
+    }
+    .exam-copy {
+      max-width: 760px;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+    .exam-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 1.35rem 0 1.6rem;
+    }
+    .exam-stat {
+      background: rgba(255,252,247,0.76);
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1rem;
+    }
+    .exam-stat-num {
+      color: var(--scarlet);
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .exam-stat-label {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .lens-selector {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      background: rgba(255,252,247,0.62);
+      padding: 1rem;
+      margin: 1.2rem 0 1.45rem;
+    }
+    .lens-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+    }
+    .lens-title {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+      margin-bottom: 0.15rem;
+    }
+    .lens-copy {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .lens-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 0.9rem;
+    }
+    .lens-btn {
+      border: 0.5px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.54);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      padding: 0.48rem 0.82rem;
+      transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+    }
+    .lens-btn.active {
+      background: var(--scarlet);
+      color: #fffaf3;
+      border-color: var(--scarlet);
+    }
+    .weight-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 7px;
+    }
+    .weight-chip {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.5);
+      padding: 0.55rem 0.65rem;
+      min-width: 0;
+    }
+    .weight-name {
+      color: var(--text-muted);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .weight-val {
+      color: var(--scarlet);
+      font-size: 18px;
+      line-height: 1.1;
+      margin-top: 0.1rem;
+    }
+    .score-formula {
+      color: var(--text-dim);
+      font-size: 11px;
+      line-height: 1.45;
+      margin-top: 0.8rem;
+    }
+    .factor-map {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 1.35rem;
+    }
+    .factor-map-card {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.62);
+      padding: 0.75rem 0.8rem;
+      min-height: 88px;
+    }
+    .factor-map-name {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text);
+      font-size: 13px;
+      margin-bottom: 0.3rem;
+    }
+    .factor-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      background: var(--scarlet);
+    }
+    .factor-map-text {
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .progress-shell {
+      background: rgba(255,252,247,0.72);
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: rgba(116, 79, 61, 0.12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--scarlet-deep), var(--scarlet), var(--gold));
+      transition: width 0.28s ease;
+    }
+    .factor-rail {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 0.85rem;
+    }
+    .factor-pill {
+      border: 0.5px solid var(--border-light);
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.45);
+      padding: 0.45rem 0.65rem;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.45rem;
+      min-width: 0;
+    }
+    .factor-pill.active {
+      border-color: currentColor;
+      background: rgba(255,255,255,0.9);
+      font-weight: 700;
+    }
+    .factor-pill span:first-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .question-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,250,243,0.76));
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.1rem, 4vw, 1.75rem);
+    }
+    .factor-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .question-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.55rem, 3.8vw, 2.35rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: var(--text);
+      margin-bottom: 0.7rem;
+    }
+    .question-sub {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+      margin-bottom: 1.15rem;
+      max-width: 760px;
+    }
+    .options-grid {
+      display: grid;
+      gap: 9px;
+      margin-bottom: 1.2rem;
+    }
+    .opt {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+      text-align: left;
+      background: rgba(255,252,247,0.86);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.82rem 1rem;
+      cursor: pointer;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+    }
+    .opt:hover {
+      transform: translateY(-1px);
+      border-color: rgba(196, 30, 58, 0.34);
+      background: rgba(255,255,255,0.98);
+      box-shadow: var(--shadow-soft);
+    }
+    .opt.selected {
+      border-color: var(--scarlet);
+      border-width: 1px;
+      background: var(--scarlet-pale);
+      color: var(--scarlet-deep);
+    }
+    .opt-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 0.5px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      line-height: 1;
+      margin-top: 0.1rem;
+      flex: 0 0 auto;
+    }
+    .opt-main {
+      display: grid;
+      gap: 0.18rem;
+      min-width: 0;
+    }
+    .opt-title {
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .opt-detail {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    .btn-subtle {
+      box-shadow: none;
+      background: transparent;
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn:disabled:hover {
+      transform: none;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.15fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .score-hero {
+      text-align: center;
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,250,243,0.72));
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 1.5rem 1.25rem;
+    }
+    .score-ring {
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin: 0 auto 1rem;
+      border: 3px solid;
+    }
+    .score-num {
+      font-size: 42px;
+      line-height: 1;
+    }
+    .score-denom {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 0.7rem;
+    }
+    .score-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .result-panel {
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.72));
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 1.25rem;
+    }
+    .result-title {
+      color: var(--text);
+      font-size: 18px;
+      margin-bottom: 0.45rem;
+    }
+    .result-copy {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .factor-breakdown {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+      margin: 1rem 0 1.2rem;
+    }
+    .fb-card {
+      background: rgba(255,252,247,0.78);
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 0.8rem;
+    }
+    .fb-name {
+      color: var(--text);
+      font-size: 12px;
+      margin-bottom: 0.45rem;
+    }
+    .fb-bar {
+      height: 5px;
+      background: rgba(116, 79, 61, 0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 0.4rem;
+    }
+    .fb-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+    .fb-score {
+      font-size: 12px;
+    }
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 1rem 0;
+    }
+    .insight-card {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.7);
+      padding: 0.85rem;
+    }
+    .insight-label {
+      color: var(--text-dim);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .insight-value {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .lever-list {
+      display: grid;
+      gap: 8px;
+    }
+    .lever-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.7rem;
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.68);
+      padding: 0.8rem 0.9rem;
+    }
+    .lever-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--scarlet-pale);
+      color: var(--scarlet);
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+    .lever-title {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+      margin-bottom: 0.15rem;
+    }
+    .lever-copy {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .score-note {
+      color: var(--text-dim);
+      font-size: 12px;
+      line-height: 1.55;
+      margin-top: 1rem;
+    }
+
+    .pb-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(240px, 0.92fr);
+      gap: 1rem;
+      align-items: start;
+    }
+    .pb-label {
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .pb-input {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--card);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 14px;
+      margin-bottom: 1rem;
+    }
+    .pb-input:focus {
+      outline: none;
+      border-color: var(--scarlet);
+    }
+    .factor-slider-row {
+      background: rgba(255,252,247,0.8);
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1rem;
+      margin-bottom: 8px;
+    }
+    .fs-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.35rem;
+    }
+    .fs-name {
+      color: var(--text);
+      font-size: 13px;
+    }
+    .fs-val {
+      color: var(--scarlet);
+      font-size: 13px;
+    }
+    .fs-desc {
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1.45;
+      margin-bottom: 0.5rem;
+    }
+    .pb-result {
+      position: sticky;
+      top: 96px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,250,243,0.74));
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 1.25rem;
+    }
+    .pb-circle {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      border: 2px solid;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.85rem;
+    }
+    .pb-score-num {
+      font-size: 30px;
+      line-height: 1;
+    }
+    .pb-score-den {
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+    .pb-name {
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.25;
+      margin-bottom: 0.45rem;
+    }
+    .pb-tier {
+      display: inline-flex;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+    .pb-breakdown {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .section-label-sm {
+      color: var(--text-dim);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 860px) {
+      .exam-stats,
+      .score-grid,
+      .pb-layout,
+      .insight-grid,
+      .weight-grid {
+        grid-template-columns: 1fr;
+      }
+      .factor-map,
+      .factor-rail,
+      .factor-breakdown {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .pb-result {
+        position: static;
+      }
+    }
+    @media (max-width: 540px) {
+      .factor-map,
+      .factor-rail,
+      .factor-breakdown {
+        grid-template-columns: 1fr;
+      }
+      .opt {
+        grid-template-columns: 1fr;
+      }
+      .opt-mark {
+        display: none;
+      }
+      .btn-row .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body data-page="calculator">
@@ -72,66 +673,130 @@
     <div class="page-header">
       <div class="page-eyebrow">Tool</div>
       <div class="page-title">SMV Calculator</div>
-      <div class="page-sub">Profile A evaluates your own SMV through a structured questionnaire. Profile B rates a desired mate — manually adjustable across all five factors.</div>
+      <div class="page-sub">A structured assessment of Looks, Money, Status, Charm, and Exposure. This is not a moral score. It is a market-position read: what creates attention, leverage, and realistic options.</div>
     </div>
 
-    <div class="content">
-      <div class="tab-nav">
-        <button class="tab-btn a-active" onclick="switchTab('a', this)">Profile A — Your SMV</button>
-        <button class="tab-btn" onclick="switchTab('b', this)">Profile B — Their SMV</button>
+    <div class="content calc-content">
+      <div class="tab-nav calc-tabs">
+        <button class="tab-btn a-active" onclick="switchTab('a', this)">Profile A - Your SMV</button>
+        <button class="tab-btn" onclick="switchTab('b', this)">Profile B - Their SMV</button>
       </div>
 
-      <!-- Profile A -->
       <div class="calc-page visible" id="tab-a">
         <div class="screen visible" id="a-intro">
-          <div style="padding:1rem 0 1.5rem;">
-            <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">Profile A · Self Assessment</div>
-            <div style="font-size:22px;color:var(--text);margin-bottom:10px;">What is your SMV?</div>
-            <div style="font-size:14px;color:var(--text-muted);line-height:1.75;margin-bottom:1.75rem;">Answer a short series of questions across your five factors — Looks, Money, Status, Charm, and Exposure. You'll receive a score, a tier placement, and a look at who you're realistically attracting right now.</div>
+          <div class="exam-panel">
+            <div class="exam-kicker"><i class="ti ti-clipboard-check"></i> Profile A - Self Assessment</div>
+            <div class="exam-title">Treat it like an entrance exam.</div>
+            <div class="exam-copy">The old version asked two questions per factor. This one uses twenty-five calibrated prompts: five per axis, from visible first impressions to the boring infrastructure that quietly decides how many chances you get. Answer by current reality, not potential.</div>
+            <div class="lens-selector">
+              <div class="lens-top">
+                <div>
+                  <div class="lens-title">Choose the scoring lens</div>
+                  <div class="lens-copy">The research does not support one uniform formula. Pick the market lens that best matches the profile being evaluated.</div>
+                </div>
+              </div>
+              <div class="lens-buttons" id="lens-buttons-a"></div>
+              <div class="weight-grid" id="weight-grid-a"></div>
+              <div class="score-formula" id="lens-note-a"></div>
+            </div>
+            <div class="exam-stats">
+              <div class="exam-stat">
+                <div class="exam-stat-num">25</div>
+                <div class="exam-stat-label">questions, no filler</div>
+              </div>
+              <div class="exam-stat">
+                <div class="exam-stat-num">5</div>
+                <div class="exam-stat-label">factor scores</div>
+              </div>
+              <div class="exam-stat">
+                <div class="exam-stat-num">3</div>
+                <div class="exam-stat-label">priority levers at the end</div>
+              </div>
+            </div>
             <button class="btn btn-scarlet" onclick="startA()">Begin assessment <i class="ti ti-arrow-right"></i></button>
+            <div class="factor-map" id="factor-map"></div>
           </div>
         </div>
+
         <div class="screen" id="a-questions">
-          <div class="progress-bar"><div class="progress-fill" id="a-progress" style="width:0%"></div></div>
-          <div id="q-container"></div>
-          <div class="btn-row" style="margin-top:1rem;">
-            <button class="btn" onclick="prevQ()" id="btn-back" style="display:none">← Back</button>
-            <button class="btn btn-scarlet" onclick="nextQ()" id="btn-next" style="display:none">Next →</button>
-            <button class="btn btn-scarlet" onclick="finishA()" id="btn-finish" style="display:none">See my score →</button>
+          <div class="progress-shell">
+            <div class="progress-top">
+              <span id="q-count">Question 1 of 25</span>
+              <span id="answered-count">0 answered</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="a-progress"></div></div>
+            <div class="factor-rail" id="factor-rail"></div>
+          </div>
+          <div class="question-card">
+            <div id="q-container"></div>
+            <div class="btn-row">
+              <button class="btn btn-subtle" onclick="prevQ()" id="btn-back"><i class="ti ti-arrow-left"></i> Back</button>
+              <button class="btn btn-subtle" onclick="resetA()" id="btn-reset">Restart</button>
+              <button class="btn btn-scarlet" onclick="nextQ()" id="btn-next">Next <i class="ti ti-arrow-right"></i></button>
+              <button class="btn btn-scarlet" onclick="finishA()" id="btn-finish">See my score <i class="ti ti-chart-bar"></i></button>
+            </div>
           </div>
         </div>
+
         <div class="screen" id="a-results">
-          <div class="score-hero">
-            <div class="score-ring" id="res-ring"><div class="score-num" id="res-num">—</div><div class="score-denom">out of 10</div></div>
-            <div class="tier-badge" id="res-tier-badge">—</div>
-            <div class="score-desc" id="res-desc">—</div>
+          <div class="score-grid">
+            <div class="score-hero">
+              <div class="score-ring" id="res-ring">
+                <div class="score-num" id="res-num">-</div>
+                <div class="score-denom">out of 10</div>
+              </div>
+              <div class="tier-badge" id="res-tier-badge">-</div>
+              <div class="score-desc" id="res-desc">-</div>
+            </div>
+            <div class="result-panel">
+              <div class="result-title">Your factor profile</div>
+              <div class="result-copy" id="res-summary">The total score matters, but the shape matters more. One strong factor can open doors; one weak factor can quietly cap everything else.</div>
+              <div class="factor-breakdown" id="res-factors"></div>
+              <div class="insight-grid" id="insight-grid"></div>
+            </div>
           </div>
-          <div class="factor-breakdown" id="res-factors"></div>
-          <div class="divider"></div>
-          <div class="section-label-sm mb-1">Looks reference — where do you land?</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;line-height:1.6;">Use the tiers below to calibrate your looks rating at a glance.</div>
-          <div class="looks-grid mb-3" id="looks-grid"></div>
-          <div class="divider"></div>
-          <div class="section-label-sm mb-1">Realistic match range</div>
-          <div class="mates-grid" id="mates-grid"></div>
-          <button class="btn" onclick="resetA()">Retake assessment</button>
+
+          <div class="result-panel mt-2">
+            <div class="result-title">Highest-return improvements</div>
+            <div class="result-copy">The calculator is blunt by design: improve the lowest meaningful levers first. They are the easiest places for the whole profile to stop leaking value.</div>
+            <div class="lever-list" id="lever-list"></div>
+            <div class="score-note">Self-report can lie in both directions. If your score feels off, compare it against revealed market feedback: who chooses you, who ignores you, and where the pattern repeats.</div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn" onclick="resetA()">Retake assessment</button>
+            <button class="btn btn-scarlet" onclick="switchTabFromResults('b')">Rate someone else <i class="ti ti-arrow-right"></i></button>
+          </div>
         </div>
       </div>
 
-      <!-- Profile B -->
       <div class="calc-page" id="tab-b">
-        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">Profile B · Target Assessment</div>
-        <div style="font-size:20px;color:var(--text);margin-bottom:6px;">Rate someone's SMV</div>
-        <div style="font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:1.5rem;">Enter a name or description. Adjust each factor manually. The score updates in real time.</div>
-        <label class="pb-label">Name or description</label>
-        <input class="pb-input" id="pb-name" placeholder="e.g. Chris Hemsworth, coworker, ex..." oninput="updateB()" />
-        <div id="pb-sliders"></div>
-        <div class="pb-result" id="pb-result">
-          <div class="pb-circle" id="pb-circle"><div class="pb-score-num" id="pb-score">—</div><div class="pb-score-den">/ 10</div></div>
-          <div>
-            <div class="pb-name" id="pb-display-name">Enter a name above</div>
-            <span class="pb-tier" id="pb-tier-badge">—</span>
-            <div class="pb-breakdown" id="pb-breakdown">Adjust sliders to calculate</div>
+        <div class="exam-panel">
+          <div class="exam-kicker"><i class="ti ti-adjustments"></i> Profile B - Target Assessment</div>
+          <div class="exam-title">Rate someone by the same five axes.</div>
+          <div class="exam-copy">Use this when you want a quick external read on a desired mate, an ex, a public figure, or the kind of person you keep choosing. The sliders are manual because sometimes the question is not "what is their score?" but "which factor am I overvaluing?"</div>
+          <div class="lens-selector">
+            <div class="lens-title">Scoring lens</div>
+            <div class="lens-copy">The same raw sliders will score differently depending on who is being evaluated and what the market tends to reward.</div>
+            <div class="lens-buttons" id="lens-buttons-b"></div>
+            <div class="weight-grid" id="weight-grid-b"></div>
+            <div class="score-formula" id="lens-note-b"></div>
+          </div>
+          <div class="pb-layout">
+            <div>
+              <label class="pb-label">Name or description</label>
+              <input class="pb-input" id="pb-name" placeholder="e.g. coworker, ex, ideal type..." oninput="updateB()" />
+              <div id="pb-sliders"></div>
+            </div>
+            <div class="pb-result" id="pb-result">
+              <div class="pb-circle" id="pb-circle">
+                <div class="pb-score-num" id="pb-score">-</div>
+                <div class="pb-score-den">/ 10</div>
+              </div>
+              <div class="pb-name" id="pb-display-name">Enter a name above</div>
+              <span class="pb-tier" id="pb-tier-badge">-</span>
+              <div class="pb-breakdown" id="pb-breakdown">Adjust sliders to calculate.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -141,152 +806,692 @@
   <div data-include="footer"></div>
 
   <script>
-    const FACTORS = ['Looks','Money','Status','Charm','Exposure'];
-    const FACTOR_COLORS = ['#EF9F27','#1D9E75','#7F77DD','#D4537E','#C41E3A'];
+    const FACTORS = [
+      {
+        key: 'looks',
+        name: 'Looks',
+        icon: 'ti-sparkles',
+        color: '#BA7517',
+        short: 'Visible first impression',
+        desc: 'Face, body, grooming, style, and the visual signal you send before personality gets a vote.',
+        lever: 'Tighten the visible package: fitness, grooming, hair, skin, clothes, posture, and photos. This factor usually compounds fastest when the work is concrete.'
+      },
+      {
+        key: 'money',
+        name: 'Money',
+        icon: 'ti-wallet',
+        color: '#1D9E75',
+        short: 'Resources and trajectory',
+        desc: 'Income, stability, independence, spending freedom, and whether the future looks upward or stalled.',
+        lever: 'Stabilize the floor first: income, debt, savings, and a credible career path. Flash matters less than proof that your life is under control.'
+      },
+      {
+        key: 'status',
+        name: 'Status',
+        icon: 'ti-crown',
+        color: '#7F77DD',
+        short: 'Reputation and social proof',
+        desc: 'Where you stand in your world, who respects you, and whether other people make you look chosen.',
+        lever: 'Build visible competence and social proof. Become useful, known, invited, and vouched for in a real environment.'
+      },
+      {
+        key: 'charm',
+        name: 'Charm',
+        icon: 'ti-messages',
+        color: '#D4537E',
+        short: 'Presence and calibration',
+        desc: 'Conversation, warmth, wit, flirtation, confidence, and your ability to create comfort and tension.',
+        lever: 'Get more live reps. Practice conversation, listening, teasing, escalation, and emotional steadiness around real people.'
+      },
+      {
+        key: 'exposure',
+        name: 'Exposure',
+        icon: 'ti-radar',
+        color: '#C41E3A',
+        short: 'Market surface area',
+        desc: 'How many qualified people actually encounter you: location, apps, events, circles, routines, and initiative.',
+        lever: 'Increase qualified surface area: better photos, stronger apps, recurring social spaces, events, introductions, and follow-through.'
+      }
+    ];
+
+    const LENSES = {
+      balanced: {
+        label: 'Balanced market',
+        desc: 'General-purpose score across mixed short-term and long-term contexts.',
+        weights: [0.30, 0.16, 0.18, 0.22, 0.14],
+        note: 'Default lens: looks and charm carry the most weight; status and money are secondary; exposure shapes opportunity volume.'
+      },
+      male: {
+        label: 'Male profile',
+        desc: 'A man being evaluated primarily by women in a heterosexual dating market.',
+        weights: [0.30, 0.18, 0.20, 0.22, 0.10],
+        note: 'Male-profile lens: looks stay central, while resource signals and status carry more load than they do in the female-profile lens, where charm and exposure rise instead.'
+      },
+      female: {
+        label: 'Female profile',
+        desc: 'A woman being evaluated primarily by men in a heterosexual dating market.',
+        weights: [0.34, 0.08, 0.10, 0.28, 0.20],
+        note: 'Female-profile lens: looks and charm/warmth carry the most weight; money and formal status matter less, while exposure still changes real opportunity volume.'
+      }
+    };
+
+    const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
+    const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E'];
+
     const QUESTIONS = [
-      { factor:0, text:'How would you honestly rate your physical appearance?', sub:'Consider height, face, build, style, and overall presentation.', opts:["Below average — I know I'm not conventionally attractive","Average — I blend in, nothing stands out","Above average — I get noticed, some compliments","Attractive — consistent attention, strong first impressions","Exceptional — top tier by most standards"] },
-      { factor:0, text:'How often do strangers react positively to your appearance?', sub:'Unprompted reactions — looks, comments, attention in public.', opts:['Rarely or never','Occasionally','Fairly often','Often — it\'s a regular occurrence','Very often — it\'s impossible to ignore'] },
-      { factor:1, text:'What best describes your current financial position?', sub:'Income, assets, and overall wealth picture.', opts:['Struggling — living paycheck to paycheck','Getting by — covering basics with little left','Comfortable — stable with some savings','Doing well — disposable income, building wealth','Wealthy — financially free or close to it'] },
-      { factor:1, text:'Does your financial situation give you options?', sub:'Can money buy you time, access, or experiences others can\'t afford?', opts:['No — money is a constant constraint','Somewhat — occasional flexibility','Yes — I can do most things I want','Definitely — money opens doors regularly','Absolutely — financial leverage is a reality'] },
-      { factor:2, text:'How would others describe your position in your social or professional circle?', sub:'Reputation, job title, and how peers perceive your standing.', opts:['Low — I have little influence or recognition','Below average — I\'m mostly unremarkable in my circles','Average — respected but not particularly notable','Above average — I carry weight in my environment','High — I have real influence, reputation, or fame'] },
-      { factor:2, text:'How strong is your social proof?', sub:'Pre-selection, reputation, and how others speak about you.', opts:['Non-existent or negative','Neutral — no strong impression either way','Mildly positive','Clearly positive — people vouch for me','Strong — my reputation precedes me'] },
-      { factor:3, text:'How do you perform in social situations with new people?', sub:'Conversation, ease, confidence in unfamiliar settings.', opts:['Anxious and withdrawn — I struggle','Awkward but functional','Decent — I hold my own','Good — people enjoy talking to me','Exceptional — I command rooms naturally'] },
-      { factor:3, text:'How engaging is your personality day to day?', sub:'Wit, warmth, humor, and your ability to hold attention.', opts:['Flat — I know I\'m not particularly engaging','Below average','Average — I\'m fine but not memorable','Above average — people genuinely enjoy my company','Highly engaging — people seek me out'] },
-      { factor:4, text:'Where do you live and socialize?', sub:'Location and environment are a proxy for opportunity volume.', opts:['Small town or rural — very limited pool','Small city — moderate exposure','Mid-sized city — decent options','Large city — high volume, diverse pool','Major metro or high-traffic lifestyle — maximum exposure'] },
-      { factor:4, text:'How often do you put yourself in front of new people?', sub:'Dating apps, events, social venues, hobbies with public exposure.', opts:['Rarely — I stay home most of the time','Occasionally — a few times a month','Regularly — I\'m out most weekends','Often — active social and dating life','Constantly — maximum surface area to the market'] },
+      {
+        factor: 0,
+        weight: 1.35,
+        text: 'What happens before you say a word?',
+        sub: 'Measure the raw visual first impression: face, frame, height/body proportion, posture, and how quickly attraction can spark.',
+        opts: [
+          ['I rarely create physical interest on sight', 'Most attraction would have to be built later.'],
+          ['I am passable but not visually memorable', 'I do not repel, but I do not pull much either.'],
+          ['I am solidly average in most rooms', 'Some people will like the look, many will not notice.'],
+          ['I get clear visual interest with some regularity', 'The first filter is usually not the main obstacle.'],
+          ['I create obvious attraction before personality enters', 'People notice the look immediately and treat me accordingly.']
+        ]
+      },
+      {
+        factor: 0,
+        weight: 1.20,
+        text: 'How disciplined is your body?',
+        sub: 'Fitness, body composition, posture, and physical energy. Not fantasy genetics - the part you actually maintain.',
+        opts: [
+          ['Neglected or visibly out of shape', 'Low energy, poor posture, or body composition works against me.'],
+          ['Some effort, inconsistent results', 'I try sometimes, but the body does not yet signal discipline.'],
+          ['Normal and presentable', 'Nothing dramatic either way; I look like a regular person.'],
+          ['Fit enough to help me', 'My body signals effort and raises my floor.'],
+          ['A serious asset', 'Fitness, build, and energy noticeably improve my market position.']
+        ]
+      },
+      {
+        factor: 0,
+        weight: 0.95,
+        text: 'How polished is your presentation?',
+        sub: 'Hair, grooming, clothes, scent, skin, dental care, photos, and whether the package looks intentional.',
+        opts: [
+          ['Unpolished or careless', 'The details quietly lower how people read me.'],
+          ['Basic maintenance, little style', 'Clean enough, but not especially attractive or coherent.'],
+          ['Competent and normal', 'I look presentable in most situations.'],
+          ['Well put together', 'Style and grooming actively help the first impression.'],
+          ['Distinctive and dialed in', 'Presentation feels curated without looking fake.']
+        ]
+      },
+      {
+        factor: 0,
+        weight: 0.95,
+        text: 'How well do photos capture your real attractiveness?',
+        sub: 'For modern dating, bad photos can erase real-world appeal. Count app photos, social photos, and how you appear on camera.',
+        opts: [
+          ['My photos hurt me', 'I look worse online than in person.'],
+          ['A few usable shots, mostly weak', 'The profile does not sell the best version of me.'],
+          ['Accurate but ordinary', 'Photos are fine, not a major advantage.'],
+          ['Strong photos that create interest', 'People can see the appeal quickly.'],
+          ['Photos are a force multiplier', 'My online presentation makes the market noticeably warmer.']
+        ]
+      },
+      {
+        factor: 0,
+        weight: 1.45,
+        text: 'What does revealed feedback say about your looks?',
+        sub: 'Ignore reassurance. Count unsolicited compliments, obvious checking-out, matches from attractive people, and repeated patterns.',
+        opts: [
+          ['Little to no positive feedback', 'The market rarely confirms physical appeal.'],
+          ['Occasional mild feedback', 'Some signs, but they are sporadic or ambiguous.'],
+          ['Moderate feedback', 'Enough evidence to say I am not invisible.'],
+          ['Consistent positive feedback', 'Interest is clear across multiple settings.'],
+          ['Strong, repeated feedback', 'Physical appeal is one of my obvious advantages.']
+        ]
+      },
+      {
+        factor: 1,
+        weight: 1.15,
+        text: 'How stable is your financial floor?',
+        sub: 'Rent, bills, debt pressure, emergency savings, and whether money anxiety controls your choices.',
+        opts: [
+          ['Unstable', 'Bills, debt, or dependence are a constant constraint.'],
+          ['Fragile', 'I get by, but one hit could destabilize me.'],
+          ['Stable enough', 'Basics are covered and life is manageable.'],
+          ['Comfortable', 'I have savings and room to make choices.'],
+          ['Very secure', 'Money rarely limits normal life decisions.']
+        ]
+      },
+      {
+        factor: 1,
+        weight: 1.30,
+        text: 'How attractive is your income right now?',
+        sub: 'Not just survival income - whether your earning power changes your dating leverage or lifestyle options.',
+        opts: [
+          ['Low or inconsistent', 'Income is a liability or non-factor.'],
+          ['Below the local adult norm', 'I can function, but it does not create much confidence.'],
+          ['Around average for my area', 'Respectable but not a differentiator.'],
+          ['Clearly above average', 'Income opens options and signals competence.'],
+          ['High earning', 'Money is an obvious advantage in how people evaluate me.']
+        ]
+      },
+      {
+        factor: 1,
+        weight: 0.95,
+        text: 'Does your lifestyle signal resources without looking desperate?',
+        sub: 'Housing, transportation, dates, travel, generosity, and taste. This is not flexing; it is visible stability.',
+        opts: [
+          ['My lifestyle signals scarcity', 'People can feel the constraint quickly.'],
+          ['Functional but limited', 'I can participate, but rarely elevate the experience.'],
+          ['Normal adult baseline', 'I can date without money being awkward.'],
+          ['Comfortable and tasteful', 'I can create good experiences without strain.'],
+          ['Abundant but controlled', 'Resources quietly enhance almost every setting.']
+        ]
+      },
+      {
+        factor: 1,
+        weight: 1.30,
+        text: 'What is your career trajectory?',
+        sub: 'The market reads direction: stuck, wandering, building, accelerating, or already established.',
+        opts: [
+          ['Stalled or unclear', 'No credible upward path is visible.'],
+          ['Early but shaky', 'Some motion, not yet convincing.'],
+          ['Steady path', 'I have a normal, believable direction.'],
+          ['Strong upward trajectory', 'Momentum is visible and persuasive.'],
+          ['Established or accelerating fast', 'The future is already partly proven.']
+        ]
+      },
+      {
+        factor: 1,
+        weight: 1.10,
+        text: 'How independently can you live?',
+        sub: 'Adult autonomy matters: logistics, responsibility, privacy, and whether a partner would feel they are joining a stable life.',
+        opts: [
+          ['Highly dependent', 'Family, roommates, debt, or disorder limit adult autonomy.'],
+          ['Partly independent', 'I handle some things, but the setup still feels incomplete.'],
+          ['Normally independent', 'I can run my life without much help.'],
+          ['Solid adult infrastructure', 'My life feels organized and self-directed.'],
+          ['High autonomy', 'I have control over time, space, money, and decisions.']
+        ]
+      },
+      {
+        factor: 2,
+        weight: 1.20,
+        text: 'How respected are you in your main environment?',
+        sub: 'Work, school, creative field, social circle, community, or any arena where people actually know you.',
+        opts: [
+          ['Little respect or recognition', 'I am invisible or not taken seriously.'],
+          ['Some respect, low influence', 'People are neutral, but I do not carry weight.'],
+          ['Normal respect', 'I am treated as competent and decent.'],
+          ['Clear respect', 'People listen, invite, or defer to me.'],
+          ['High respect', 'My reputation changes how people treat me before I speak.']
+        ]
+      },
+      {
+        factor: 2,
+        weight: 1.35,
+        text: 'How strong is your social proof?',
+        sub: 'Friends, invitations, being vouched for, being seen with desirable people, and the sense that others already chose you.',
+        opts: [
+          ['Weak or negative', 'There is little evidence that others value my presence.'],
+          ['Thin', 'I have some connections, but not much visible proof.'],
+          ['Normal', 'I have a decent social baseline.'],
+          ['Strong', 'People can see that I am liked, wanted, or included.'],
+          ['Very strong', 'My social proof creates attraction before I do much.']
+        ]
+      },
+      {
+        factor: 2,
+        weight: 1.00,
+        text: 'Do you lead anything?',
+        sub: 'Leadership can be formal or informal: teams, projects, scenes, communities, friend groups, events, or taste-making.',
+        opts: [
+          ['No leadership role', 'I mostly follow or stay peripheral.'],
+          ['Occasional responsibility', 'I lead small things when needed.'],
+          ['Some real ownership', 'People rely on me in at least one arena.'],
+          ['Recognized leader', 'I shape outcomes and people notice.'],
+          ['Center of gravity', 'I organize, direct, or define the room.']
+        ]
+      },
+      {
+        factor: 2,
+        weight: 1.05,
+        text: 'How attractive is your network?',
+        sub: 'The quality of people around you affects perceived value: ambitious friends, social access, taste, and opportunity.',
+        opts: [
+          ['Isolated or low-quality network', 'My circle does not help my value.'],
+          ['Limited network', 'A few decent ties, not much access.'],
+          ['Normal network', 'Good enough, but not a major advantage.'],
+          ['Strong network', 'My people make me look better and create opportunities.'],
+          ['High-value network', 'Access to me means access to an impressive world.']
+        ]
+      },
+      {
+        factor: 2,
+        weight: 1.30,
+        text: 'Do people talk about you positively when you are not in the room?',
+        sub: 'Status compounds through reputation: referrals, admiration, curiosity, and preselection.',
+        opts: [
+          ['Rarely or negatively', 'My reputation does not help.'],
+          ['Mildly positive', 'People think I am fine, but do not sell me.'],
+          ['Respectable', 'I have a decent name among people who know me.'],
+          ['People vouch for me', 'My reputation creates trust or intrigue.'],
+          ['My name carries weight', 'Reputation creates demand before direct contact.']
+        ]
+      },
+      {
+        factor: 3,
+        weight: 1.00,
+        text: 'How comfortable are you with new people?',
+        sub: 'First conversations, introductions, small talk, and whether unfamiliar social settings drain or sharpen you.',
+        opts: [
+          ['I freeze or avoid', 'New people feel threatening or exhausting.'],
+          ['I can function, but stiffly', 'I get through it, not smoothly.'],
+          ['Normal comfort', 'I can hold a basic conversation.'],
+          ['Easy and relaxed', 'People usually feel comfortable around me.'],
+          ['Instant social ease', 'I warm rooms quickly and naturally.']
+        ]
+      },
+      {
+        factor: 3,
+        weight: 1.35,
+        text: 'Can you create attraction through conversation?',
+        sub: 'Not just being nice: teasing, timing, curiosity, stories, humor, and emotional rhythm.',
+        opts: [
+          ['Conversation rarely helps me', 'I lose energy or become forgettable.'],
+          ['I am pleasant but flat', 'Safe, not especially compelling.'],
+          ['I can keep interest alive', 'Conversation usually does not hurt me.'],
+          ['I can build real pull', 'People become more interested as we talk.'],
+          ['Conversation is a weapon', 'I often create attraction that was not there at first.']
+        ]
+      },
+      {
+        factor: 3,
+        weight: 1.35,
+        text: 'How calibrated is your flirting?',
+        sub: 'Reading signals, escalating without lurching, creating tension, and knowing when to stop.',
+        opts: [
+          ['Poor calibration', 'I miss signals, overreach, or never move.'],
+          ['Inconsistent', 'Sometimes I get it, sometimes I make it awkward.'],
+          ['Adequate', 'I can flirt lightly when the path is clear.'],
+          ['Good', 'I can create tension and read the response.'],
+          ['Excellent', 'I escalate smoothly while making the other person feel chosen and safe.']
+        ]
+      },
+      {
+        factor: 3,
+        weight: 1.20,
+        text: 'How emotionally steady are you under pressure?',
+        sub: 'Rejection, ambiguity, delayed texts, teasing, conflict, jealousy, and not leaking neediness.',
+        opts: [
+          ['Reactive', 'Pressure quickly makes me needy, bitter, or chaotic.'],
+          ['Shaky', 'I can hold it together sometimes, but not reliably.'],
+          ['Mostly stable', 'Normal bumps do not derail me much.'],
+          ['Steady', 'I stay composed and warm even when uncertain.'],
+          ['Grounded', 'My calm becomes part of my attractiveness.']
+        ]
+      },
+      {
+        factor: 3,
+        weight: 1.10,
+        text: 'How memorable is your presence?',
+        sub: 'Voice, humor, taste, stories, confidence, and whether people remember the feeling of being around you.',
+        opts: [
+          ['Forgettable', 'People rarely remember much about me.'],
+          ['Mild', 'I am nice enough, but low impact.'],
+          ['Moderately memorable', 'Some people connect with my presence.'],
+          ['Distinctive', 'I leave a clear impression.'],
+          ['Magnetic', 'People seek my energy after one encounter.']
+        ]
+      },
+      {
+        factor: 4,
+        weight: 1.20,
+        text: 'How good is your dating geography?',
+        sub: 'City size, age pool, culture, venues, density, and whether the people you want are actually nearby.',
+        opts: [
+          ['Bad geography', 'The pool is tiny or mismatched.'],
+          ['Limited pool', 'Some options, but not enough volume.'],
+          ['Decent pool', 'There are workable opportunities.'],
+          ['Strong pool', 'The environment gives me many chances.'],
+          ['Prime geography', 'My location is a real dating advantage.']
+        ]
+      },
+      {
+        factor: 4,
+        weight: 1.40,
+        text: 'How often do you meet new qualified people?',
+        sub: 'Qualified means plausible attraction and availability, not random foot traffic.',
+        opts: [
+          ['Almost never', 'Weeks or months pass without real chances.'],
+          ['Occasionally', 'A few chances appear, but not often.'],
+          ['Regularly', 'I meet plausible people most months.'],
+          ['Often', 'New chances appear most weeks.'],
+          ['Constantly', 'The market is continuously feeding me options.']
+        ]
+      },
+      {
+        factor: 4,
+        weight: 1.10,
+        text: 'How strong is your app or online funnel?',
+        sub: 'Photos, profile, match quality, message flow, and whether online exposure creates real dates.',
+        opts: [
+          ['No useful funnel', 'Apps/social media produce little or nothing.'],
+          ['Weak funnel', 'Occasional matches, low quality or low conversion.'],
+          ['Average funnel', 'Some real options, some dead ends.'],
+          ['Strong funnel', 'Online exposure reliably creates dates or interest.'],
+          ['Excellent funnel', 'Digital presence gives me more options than I can use.']
+        ]
+      },
+      {
+        factor: 4,
+        weight: 1.10,
+        text: 'Do you have recurring social environments?',
+        sub: 'Repeated contact beats one-off events: classes, friend groups, work-adjacent circles, hobbies, scenes, communities.',
+        opts: [
+          ['No recurring environments', 'I mostly rely on luck or apps.'],
+          ['One weak environment', 'I show up somewhere, but not enough to build momentum.'],
+          ['A few normal circles', 'Repeated contact exists, but not a major engine.'],
+          ['Strong recurring circles', 'People get familiar with me over time.'],
+          ['Multiple high-quality circles', 'My life naturally creates repeated romantic exposure.']
+        ]
+      },
+      {
+        factor: 4,
+        weight: 1.35,
+        text: 'How much initiative do you actually take?',
+        sub: 'Approaching, messaging, asking, following up, making plans, and turning possibility into contact.',
+        opts: [
+          ['Almost none', 'I wait and hope.'],
+          ['Low', 'I act only when the signal is extremely obvious.'],
+          ['Moderate', 'I take some shots and make some plans.'],
+          ['High', 'I consistently create opportunities.'],
+          ['Very high and calibrated', 'I create many chances without becoming reckless or indiscriminate.']
+        ]
+      }
     ];
+
     const TIERS = [
-      { min:0, max:2.9, label:'Low SMV', color:'#888780', bg:'#F1EFE8', desc:'Significant room to grow across multiple factors. Focus on foundational improvements.' },
-      { min:3, max:4.9, label:'Below Average', color:'#BA7517', bg:'#FAEEDA', desc:'Below the market midpoint but with clear levers to pull. Targeted work will move the needle quickly.' },
-      { min:5, max:6.4, label:'Average', color:'#C41E3A', bg:'#FAECEE', desc:'You are at the market midpoint. Competitive in the average range — improvement here has compounding returns.' },
-      { min:6.5, max:7.9, label:'Above Average', color:'#1D9E75', bg:'#E1F5EE', desc:'Above the median. You have real options. Continued improvement here begins the inversion process.' },
-      { min:8, max:9.4, label:'High Value', color:'#7F77DD', bg:'#EEEDFE', desc:'The market starts working differently for you at this level. You are entering the chooser position.' },
-      { min:9.5, max:10, label:'Elite', color:'#D4537E', bg:'#FBEAF0', desc:'Full inversion. The market competes for you. Maintenance and selection are the primary concerns.' },
-    ];
-    const MATE_DATA = [
-      [{name:'Profile Type A',smv:'1–2',desc:'Minimal effort, comfort zone',emoji:'😐'},{name:'Profile Type B',smv:'1–3',desc:'Significant baggage, limited options',emoji:'😶'},{name:'Profile Type C',smv:'2–3',desc:'Untapped potential',emoji:'🙂'}],
-      [{name:'Profile Type D',smv:'3–4',desc:'Average presentation',emoji:'😊'},{name:'Profile Type E',smv:'3–5',desc:'Some positive traits',emoji:'🙂'},{name:'Profile Type F',smv:'4–5',desc:'Decent baseline',emoji:'😄'}],
-      [{name:'Profile Type G',smv:'5–6',desc:'Market average',emoji:'😎'},{name:'Profile Type H',smv:'5–7',desc:'Solid baseline',emoji:'🤩'},{name:'Profile Type I',smv:'6–7',desc:'Above average',emoji:'😍'}],
-      [{name:'Profile Type J',smv:'7–8',desc:'High demand',emoji:'💫'},{name:'Profile Type K',smv:'7–9',desc:'Strong across factors',emoji:'⭐'},{name:'Profile Type L',smv:'8',desc:'Market top tier',emoji:'🌟'}],
-      [{name:'Profile Type M',smv:'8–9',desc:'Highly competitive',emoji:'💎'},{name:'Profile Type N',smv:'9',desc:'Near elite',emoji:'👑'},{name:'Profile Type O',smv:'9–10',desc:'Elite tier',emoji:'🏆'}],
-      [{name:'Profile Type P',smv:'9–10',desc:'Absolute top of market',emoji:'👑'},{name:'Profile Type Q',smv:'10',desc:'Cultural icon level',emoji:'💫'},{name:'Profile Type R',smv:'10',desc:'Generational outlier',emoji:'🌟'}],
-    ];
-    const LOOK_TIERS = [
-      {n:'1–2',label:'Below avg',color:'#888780'},{n:'3–4',label:'Average',color:'#BA7517'},
-      {n:'5–6',label:'Above avg',color:'#C41E3A'},{n:'7–8',label:'Attractive',color:'#1D9E75'},{n:'9–10',label:'Elite',color:'#7F77DD'}
+      { min: 0, max: 2.9, label: 'Low SMV', color: '#888780', bg: '#F1EFE8', desc: 'Multiple core axes are suppressing your options. Do not moralize it; diagnose it. The next step is basic infrastructure and visible improvements.' },
+      { min: 3, max: 4.9, label: 'Below Average', color: '#BA7517', bg: '#FAEEDA', desc: 'You have some workable pieces, but the market is probably inconsistent and unforgiving. Focused work can move this tier faster than you think.' },
+      { min: 5, max: 6.4, label: 'Average', color: '#C41E3A', bg: '#FAECEE', desc: 'You are near the market midpoint. That means options exist, but selectivity and consistency are limited unless one factor clearly overperforms.' },
+      { min: 6.5, max: 7.9, label: 'Above Average', color: '#1D9E75', bg: '#E1F5EE', desc: 'You have real pull. The question is no longer whether you can get attention, but which bottleneck keeps you from getting the kind you want.' },
+      { min: 8, max: 9.4, label: 'High Value', color: '#7F77DD', bg: '#EEEDFE', desc: 'The market starts behaving differently here. You have leverage, but selection and maintenance matter more because attention is not the same as fit.' },
+      { min: 9.5, max: 10, label: 'Elite', color: '#D4537E', bg: '#FBEAF0', desc: 'This is outlier territory. You are not optimizing for access anymore; you are optimizing for discernment, boundaries, and choosing well.' }
     ];
 
-    let curQ = 0, answers = Array(QUESTIONS.length).fill(null), scores = Array(5).fill(0);
+    const bVals = [5.5, 5.5, 5.5, 5.5, 5.5];
+    let selectedLens = 'balanced';
+    let curQ = 0;
+    let answers = Array(QUESTIONS.length).fill(null);
+    let scores = Array(FACTORS.length).fill(0);
 
-    function getTier(s) { return TIERS.find(t => s >= t.min && s <= t.max) || TIERS[0]; }
+    function getTier(s) {
+      return TIERS.find(t => s >= t.min && s <= t.max) || TIERS[0];
+    }
+
+    function scoreLabel(s) {
+      if (s < 3) return 'drag factor';
+      if (s < 5) return 'weak lever';
+      if (s < 6.5) return 'baseline';
+      if (s < 8) return 'asset';
+      return 'major asset';
+    }
+
+    function weightedTotal(vals, weights = LENSES[selectedLens].weights) {
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+      return Math.round((vals.reduce((sum, v, i) => sum + (v * weights[i]), 0) / totalWeight) * 10) / 10;
+    }
+
+    function weightLabel(w) {
+      if (w >= 0.30) return 'Primary';
+      if (w >= 0.22) return 'High';
+      if (w >= 0.14) return 'Medium';
+      return 'Low';
+    }
+
+    function renderLensControls() {
+      const lens = LENSES[selectedLens];
+      const buttons = Object.entries(LENSES).map(([key, item]) => `
+        <button type="button" class="lens-btn${key === selectedLens ? ' active' : ''}" onclick="setLens('${key}')">${item.label}</button>
+      `).join('');
+      const weights = FACTORS.map((f, i) => `
+        <div class="weight-chip">
+          <div class="weight-name">${f.name}</div>
+          <div class="weight-val">${weightLabel(lens.weights[i])}</div>
+        </div>
+      `).join('');
+      ['a', 'b'].forEach(id => {
+        const btnTarget = document.getElementById(`lens-buttons-${id}`);
+        const weightTarget = document.getElementById(`weight-grid-${id}`);
+        const noteTarget = document.getElementById(`lens-note-${id}`);
+        if (btnTarget) btnTarget.innerHTML = buttons;
+        if (weightTarget) weightTarget.innerHTML = weights;
+        if (noteTarget) noteTarget.textContent = `${lens.note} The bands are directional, not measured coefficients; individual questions are weighted inside each factor so revealed feedback and direct market contact count more than softer support signals.`;
+      });
+    }
+
+    function setLens(key) {
+      selectedLens = key;
+      renderLensControls();
+      updateB();
+    }
+
+    function renderFactorMap() {
+      document.getElementById('factor-map').innerHTML = FACTORS.map(f => `
+        <div class="factor-map-card">
+          <div class="factor-map-name"><span class="factor-dot" style="background:${f.color}"></span>${f.name}</div>
+          <div class="factor-map-text">${f.short}. ${f.desc}</div>
+        </div>
+      `).join('');
+    }
 
     function startA() {
       document.getElementById('a-intro').classList.remove('visible');
+      document.getElementById('a-results').classList.remove('visible');
       document.getElementById('a-questions').classList.add('visible');
-      curQ = 0; renderQ();
+      curQ = 0;
+      renderQ();
+    }
+
+    function renderRail() {
+      document.getElementById('factor-rail').innerHTML = FACTORS.map((f, i) => {
+        const total = QUESTIONS.filter(q => q.factor === i).length;
+        const done = QUESTIONS.reduce((n, q, qi) => n + (q.factor === i && answers[qi] !== null ? 1 : 0), 0);
+        const active = QUESTIONS[curQ].factor === i;
+        return `<div class="factor-pill${active ? ' active' : ''}" style="${active ? `color:${f.color}` : ''}"><span>${f.name}</span><span>${done}/${total}</span></div>`;
+      }).join('');
     }
 
     function renderQ() {
       const q = QUESTIONS[curQ];
-      const pct = (curQ / QUESTIONS.length) * 100;
+      const f = FACTORS[q.factor];
+      const answered = answers.filter(a => a !== null).length;
+      const pct = (answered / QUESTIONS.length) * 100;
       document.getElementById('a-progress').style.width = pct + '%';
-      document.getElementById('btn-back').style.display = curQ > 0 ? 'inline-flex' : 'none';
-      document.getElementById('btn-next').style.display = answers[curQ] !== null && curQ < QUESTIONS.length - 1 ? 'inline-flex' : 'none';
-      document.getElementById('btn-finish').style.display = answers[curQ] !== null && curQ === QUESTIONS.length - 1 ? 'inline-flex' : 'none';
+      document.getElementById('q-count').textContent = `Question ${curQ + 1} of ${QUESTIONS.length}`;
+      document.getElementById('answered-count').textContent = `${answered} answered`;
+      document.getElementById('btn-back').style.visibility = curQ > 0 ? 'visible' : 'hidden';
+      document.getElementById('btn-next').style.display = curQ < QUESTIONS.length - 1 ? 'inline-flex' : 'none';
+      document.getElementById('btn-finish').style.display = curQ === QUESTIONS.length - 1 ? 'inline-flex' : 'none';
+      document.getElementById('btn-next').disabled = answers[curQ] === null;
+      document.getElementById('btn-finish').disabled = answers[curQ] === null;
+      renderRail();
       document.getElementById('q-container').innerHTML = `
-        <div class="factor-label" style="color:${FACTOR_COLORS[q.factor]}">${FACTORS[q.factor]}</div>
+        <div class="factor-label" style="color:${f.color}"><i class="ti ${f.icon}"></i>${f.name}</div>
         <div class="question-title">${q.text}</div>
         <div class="question-sub">${q.sub}</div>
-        <div class="options-grid">${q.opts.map((o,i)=>`<div class="opt${answers[curQ]===i?' selected':''}" onclick="selectOpt(${i})">${o}</div>`).join('')}</div>`;
+        <div class="options-grid">
+          ${q.opts.map((o, i) => `
+            <button type="button" class="opt${answers[curQ] === i ? ' selected' : ''}" onclick="selectOpt(${i})">
+              <span class="opt-mark">${OPTION_MARKS[i]}</span>
+              <span class="opt-main">
+                <span class="opt-title">${o[0]}</span>
+                <span class="opt-detail">${o[1]}</span>
+              </span>
+            </button>
+          `).join('')}
+        </div>
+      `;
     }
 
-    function selectOpt(i) { answers[curQ] = i; renderQ(); }
-    function nextQ() { if (curQ < QUESTIONS.length-1) { curQ++; renderQ(); } }
-    function prevQ() { if (curQ > 0) { curQ--; renderQ(); } }
+    function selectOpt(i) {
+      answers[curQ] = i;
+      renderQ();
+    }
+
+    function nextQ() {
+      if (answers[curQ] === null) return;
+      if (curQ < QUESTIONS.length - 1) {
+        curQ++;
+        renderQ();
+      }
+    }
+
+    function prevQ() {
+      if (curQ > 0) {
+        curQ--;
+        renderQ();
+      }
+    }
+
+    function calculateScores() {
+      scores = FACTORS.map((_, f) => {
+        const factorQs = QUESTIONS.map((q, i) => q.factor === f ? i : -1).filter(i => i >= 0);
+        const weighted = factorQs.map(i => {
+          const q = QUESTIONS[i];
+          return {
+            value: answers[i] === null ? 5.5 : DEFAULT_OPTION_SCORES[answers[i]],
+            weight: q.weight || 1
+          };
+        });
+        const totalWeight = weighted.reduce((a, item) => a + item.weight, 0);
+        return Math.round((weighted.reduce((a, item) => a + (item.value * item.weight), 0) / totalWeight) * 10) / 10;
+      });
+      return weightedTotal(scores);
+    }
 
     function finishA() {
-      for (let f = 0; f < 5; f++) {
-        const idxs = QUESTIONS.map((q,i) => q.factor===f ? i : -1).filter(i => i >= 0);
-        const qs = idxs.map(i => answers[i] !== null ? (answers[i] / (QUESTIONS[i].opts.length-1)) * 10 : 5);
-        scores[f] = Math.round((qs.reduce((a,b)=>a+b,0)/qs.length)*10)/10;
-      }
-      const total = Math.round((scores.reduce((a,b)=>a+b,0)/5)*10)/10;
+      if (answers[curQ] === null) return;
+      const total = calculateScores();
       const tier = getTier(total);
-      const tierIdx = TIERS.indexOf(tier);
+      const ranked = FACTORS.map((f, i) => ({ ...f, score: scores[i], index: i })).sort((a, b) => b.score - a.score);
+      const lowest = [...ranked].sort((a, b) => a.score - b.score).slice(0, 3);
+      const spread = ranked[0].score - lowest[0].score;
+      const flatProfile = spread < 0.5;
+
       document.getElementById('a-questions').classList.remove('visible');
       document.getElementById('a-results').classList.add('visible');
-      document.getElementById('a-progress').style.width = '100%';
+
       const ring = document.getElementById('res-ring');
       ring.style.borderColor = tier.color;
       ring.style.background = tier.bg;
-      document.getElementById('res-num').textContent = total;
+      document.getElementById('res-num').textContent = total.toFixed(1);
       document.getElementById('res-num').style.color = tier.color;
       const tb = document.getElementById('res-tier-badge');
-      tb.textContent = tier.label; tb.style.background = tier.bg; tb.style.color = tier.color;
+      tb.textContent = tier.label;
+      tb.style.background = tier.bg;
+      tb.style.color = tier.color;
       document.getElementById('res-desc').textContent = tier.desc;
-      document.getElementById('res-factors').innerHTML = FACTORS.map((f,i) => `
-        <div class="fb-card"><div class="fb-name">${f}</div>
-        <div class="fb-bar"><div class="fb-fill" style="width:${scores[i]*10}%;background:${FACTOR_COLORS[i]}"></div></div>
-        <div class="fb-score" style="color:${FACTOR_COLORS[i]}">${scores[i]} / 10</div></div>`).join('');
-      const looksScore = scores[0];
-      const ltIdx = looksScore < 3 ? 0 : looksScore < 5 ? 1 : looksScore < 7 ? 2 : looksScore < 9 ? 3 : 4;
-      document.getElementById('looks-grid').innerHTML = LOOK_TIERS.map((lt,i) => `
-        <div class="look-tier${i===ltIdx?' selected':''}" style="${i===ltIdx?`border-color:${lt.color};border-width:2px;background:${lt.color}15`:''}">
-          <div class="look-num" style="color:${lt.color}">${lt.n}</div>
-          <div class="look-label">${lt.label}</div></div>`).join('');
-      const mates = MATE_DATA[Math.min(tierIdx, MATE_DATA.length-1)];
-      document.getElementById('mates-grid').innerHTML = mates.map(m => `
-        <div class="mate-card"><div class="mate-img">${m.emoji}</div>
-        <div class="mate-info"><div class="mate-name">${m.name}</div>
-        <div class="mate-smv">SMV ${m.smv}</div>
-        <div class="mate-desc">${m.desc}</div></div></div>`).join('');
+      document.getElementById('res-summary').textContent = spread >= 2
+        ? `Scored through the ${LENSES[selectedLens].label.toLowerCase()} lens. Your profile is uneven; the weakest axis is probably capping the strongest one.`
+        : `Scored through the ${LENSES[selectedLens].label.toLowerCase()} lens. Your profile is fairly even, so broad improvement beats obsessing over one dramatic fix.`;
+
+      document.getElementById('res-factors').innerHTML = FACTORS.map((f, i) => `
+        <div class="fb-card">
+          <div class="fb-name">${f.name}</div>
+          <div class="fb-bar"><div class="fb-fill" style="width:${scores[i] * 10}%;background:${f.color}"></div></div>
+          <div class="fb-score" style="color:${f.color}">${scores[i].toFixed(1)} / 10 - ${scoreLabel(scores[i])}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('insight-grid').innerHTML = `
+        <div class="insight-card">
+          <div class="insight-label">Strongest axis</div>
+          <div class="insight-value">${flatProfile ? `No clear standout (${ranked[0].score.toFixed(1)})` : `${ranked[0].name} (${ranked[0].score.toFixed(1)})`}</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-label">Main bottleneck</div>
+          <div class="insight-value">${flatProfile ? `No single drag factor (${lowest[0].score.toFixed(1)})` : `${lowest[0].name} (${lowest[0].score.toFixed(1)})`}</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-label">Profile shape</div>
+          <div class="insight-value">${spread >= 2 ? 'Spiky: fix the drag factor' : 'Balanced: raise the whole floor'}</div>
+        </div>
+      `;
+
+      document.getElementById('lever-list').innerHTML = lowest.map((f, i) => `
+        <div class="lever-row">
+          <div class="lever-num">${i + 1}</div>
+          <div>
+            <div class="lever-title">${f.name}: ${f.score.toFixed(1)} / 10</div>
+            <div class="lever-copy">${f.lever}</div>
+          </div>
+        </div>
+      `).join('');
     }
 
     function resetA() {
-      answers = Array(QUESTIONS.length).fill(null); scores = Array(5).fill(0); curQ = 0;
+      answers = Array(QUESTIONS.length).fill(null);
+      scores = Array(FACTORS.length).fill(0);
+      curQ = 0;
       document.getElementById('a-results').classList.remove('visible');
+      document.getElementById('a-questions').classList.remove('visible');
       document.getElementById('a-intro').classList.add('visible');
     }
 
-    const bVals = {0:5,1:5,2:5,3:5,4:5};
-
     function initB() {
-      document.getElementById('pb-sliders').innerHTML = FACTORS.map((f,i) => `
+      document.getElementById('pb-sliders').innerHTML = FACTORS.map((f, i) => `
         <div class="factor-slider-row">
-          <div class="fs-top"><span class="fs-name">${f}</span><span class="fs-val" id="bval-${i}">${bVals[i]}.0</span></div>
-          <input type="range" min="1" max="10" step="0.5" value="${bVals[i]}" oninput="bSlide(${i},this.value)" />
-        </div>`).join('');
+          <div class="fs-top">
+            <span class="fs-name"><i class="ti ${f.icon}" style="color:${f.color}"></i> ${f.name}</span>
+            <span class="fs-val" id="bval-${i}" style="color:${f.color}">${bVals[i].toFixed(1)}</span>
+          </div>
+          <div class="fs-desc">${f.desc}</div>
+          <input type="range" min="1" max="10" step="0.5" value="${bVals[i]}" oninput="bSlide(${i}, this.value)" />
+        </div>
+      `).join('');
       updateB();
     }
 
     function bSlide(i, v) {
       bVals[i] = parseFloat(v);
-      document.getElementById('bval-'+i).textContent = parseFloat(v).toFixed(1);
+      document.getElementById('bval-' + i).textContent = bVals[i].toFixed(1);
       updateB();
     }
 
     function updateB() {
-      const name = document.getElementById('pb-name').value.trim() || 'Unknown';
-      const total = Math.round((Object.values(bVals).reduce((a,b)=>a+b,0)/5)*10)/10;
+      const name = document.getElementById('pb-name').value.trim() || 'Unknown profile';
+      const total = weightedTotal(bVals);
       const tier = getTier(total);
-      document.getElementById('pb-score').textContent = total;
+      document.getElementById('pb-score').textContent = total.toFixed(1);
       document.getElementById('pb-score').style.color = tier.color;
       document.getElementById('pb-circle').style.borderColor = tier.color;
       document.getElementById('pb-circle').style.background = tier.bg;
       document.getElementById('pb-display-name').textContent = name;
       const ptb = document.getElementById('pb-tier-badge');
-      ptb.textContent = tier.label; ptb.style.background = tier.bg; ptb.style.color = tier.color;
-      document.getElementById('pb-breakdown').textContent = FACTORS.map((f,i)=>`${f}: ${bVals[i]}`).join(' · ');
+      ptb.textContent = tier.label;
+      ptb.style.background = tier.bg;
+      ptb.style.color = tier.color;
+      const maxVal = Math.max(...bVals);
+      const minVal = Math.min(...bVals);
+      const high = FACTORS[bVals.indexOf(maxVal)].name;
+      const low = FACTORS[bVals.indexOf(minVal)].name;
+      const shape = maxVal - minVal < 0.5 ? 'Balanced profile: no single strongest or weakest read.' : `Strongest read: ${high}. Weakest read: ${low}.`;
+      document.getElementById('pb-breakdown').textContent = `${FACTORS.map((f, i) => `${f.name}: ${bVals[i].toFixed(1)}`).join(' | ')}. ${shape}`;
     }
 
     function switchTab(id, btn) {
       document.querySelectorAll('.calc-page').forEach(p => p.classList.remove('visible'));
-      document.getElementById('tab-'+id).classList.add('visible');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('a-active','b-active'));
-      btn.classList.add(id+'-active');
+      document.getElementById('tab-' + id).classList.add('visible');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('a-active', 'b-active'));
+      btn.classList.add(id + '-active');
       if (id === 'b') initB();
     }
 
+    function switchTabFromResults(id) {
+      const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes('their'));
+      switchTab(id, btn);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    renderFactorMap();
+    renderLensControls();
     initB();
   </script>
 </body>
