@@ -3,24 +3,235 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The 5 Factors of SMV — The Love Equations</title>
+  <title>The 5 Factors of SMV &mdash; The Love Equations</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
   <style>
-    .smv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
-    .smv-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; cursor: pointer; transition: all 0.12s; }
-    .smv-card:hover { border-color: var(--text-dim); }
-    .smv-card.active { border-width: 1.5px; border-color: var(--scarlet); background: var(--scarlet-pale); }
-    .smv-num { font-size: 11px; margin-bottom: 6px; letter-spacing: 0.05em; }
-    .smv-name { font-size: 17px; color: var(--text); margin-bottom: 6px; }
-    .smv-tagline { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
-    .c1 { color: #BA7517; } .c2 { color: #1D9E75; } .c3 { color: #7F77DD; } .c4 { color: #D4537E; } .c5 { color: var(--scarlet); }
-    .detail-box { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; min-height: 100px; }
-    .detail-label { font-size: 11px; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; }
-    .detail-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-    .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--card); border: 0.5px solid var(--border); color: var(--text-muted); }
+    .smv-shell { display: grid; gap: 1.35rem; }
+
+    /* ── Equation strip ── */
+    .equation-panel {
+      position: relative;
+      overflow: hidden;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.86), rgba(255,246,238,0.6)),
+        var(--card);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.4rem, 4vw, 2.1rem);
+    }
+    .equation-panel::after {
+      content: "";
+      position: absolute;
+      right: -8rem; top: -9rem;
+      width: 22rem; aspect-ratio: 1; border-radius: 999px;
+      background: radial-gradient(circle, rgba(196,30,58,0.12), transparent 68%);
+      pointer-events: none;
+    }
+    .eq-kicker {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      color: var(--scarlet); font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .eq-title {
+      position: relative; z-index: 1;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+      line-height: 1; letter-spacing: -0.04em; color: var(--text);
+      margin-bottom: 0.85rem; max-width: 720px;
+    }
+    .eq-title em { color: var(--scarlet); font-style: normal; }
+    .eq-copy {
+      position: relative; z-index: 1;
+      color: var(--text-muted); font-size: 14.5px; line-height: 1.75;
+      max-width: 760px; margin-bottom: 1.4rem;
+    }
+    .eq-formula {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 7px;
+      font-size: 13px; color: var(--text-muted); margin-bottom: 0.4rem;
+    }
+    .eq-chip {
+      border-radius: 999px; border: 0.5px solid var(--border-light);
+      background: rgba(255,255,255,0.6); padding: 0.32rem 0.7rem;
+      color: var(--text); font-size: 12px; white-space: nowrap;
+    }
+    .eq-chip b { font-weight: 700; }
+    .eq-op { color: var(--text-dim); font-size: 15px; padding: 0 1px; }
+    .eq-mult {
+      border-radius: 999px; padding: 0.32rem 0.7rem; font-size: 12px;
+      background: rgba(196,30,58,0.08); border: 0.5px solid rgba(196,30,58,0.2);
+      color: var(--scarlet-dim); white-space: nowrap;
+    }
+    .eq-note { color: var(--text-dim); font-size: 12px; line-height: 1.6; margin-top: 0.7rem; }
+
+    /* ── Evidence legend ── */
+    .ev-legend {
+      display: flex; flex-wrap: wrap; gap: 8px 16px;
+      font-size: 12px; color: var(--text-muted);
+      border: 0.5px solid var(--border-light); border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.55); padding: 0.85rem 1rem;
+    }
+    .ev-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+    .ev {
+      font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+    }
+    .ev.solid     { background: #E1F5EE; color: #1B7A57; }
+    .ev.mixed     { background: #FAEEDA; color: #98640F; }
+    .ev.contested { background: #FBE7DB; color: #B0501C; }
+    .ev.lens      { background: #EEE9F7; color: #5B4B8A; }
+
+    /* ── Factor selector ── */
+    .factor-nav {
+      display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px;
+    }
+    .factor-tab {
+      cursor: pointer; text-align: left;
+      border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.86), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft); padding: 0.95rem 0.9rem;
+      transition: transform 140ms ease, border-color 140ms ease;
+      font-family: Georgia, "Times New Roman", serif; color: var(--text); min-width: 0;
+    }
+    .factor-tab:hover { transform: translateY(-2px); }
+    .factor-tab.active { border-width: 1.5px; }
+    .ft-num {
+      font-size: 11px; letter-spacing: 0.06em; margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .ft-dot { width: 8px; height: 8px; border-radius: 999px; flex: 0 0 auto; }
+    .ft-name { font-size: 16px; line-height: 1.1; margin-bottom: 0.3rem; }
+    .ft-tag { color: var(--text-muted); font-size: 11px; line-height: 1.4; }
+
+    /* ── Dossier ── */
+    .dossier {
+      border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft);
+      padding: clamp(1.2rem, 3.4vw, 1.8rem);
+    }
+    .dossier-meta {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .dossier-name {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.2rem); line-height: 0.98;
+      letter-spacing: -0.04em; color: var(--text); margin-bottom: 0.7rem;
+    }
+    .dossier-def { color: var(--text-muted); font-size: 15px; line-height: 1.75; max-width: 760px; }
+
+    .block-label {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); font-weight: 700;
+      margin: 1.6rem 0 0.8rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .block-label::after { content: ""; flex: 1; height: 0.5px; background: var(--border-light); }
+
+    .sub-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+    }
+    .sub-card {
+      border: 0.5px solid var(--border-light); border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.64); padding: 0.85rem 0.95rem;
+    }
+    .sub-name { color: var(--text); font-size: 14px; line-height: 1.3; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.45rem; }
+    .sub-name .sub-dot { width: 7px; height: 7px; border-radius: 999px; flex: 0 0 auto; }
+    .sub-text { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; }
+
+    .research-list { display: grid; gap: 9px; }
+    .research-row {
+      display: grid; grid-template-columns: auto 1fr; gap: 0.8rem; align-items: start;
+      border: 0.5px solid var(--border-light); border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.6); padding: 0.8rem 0.9rem;
+    }
+    .research-claim { color: var(--text); font-size: 13px; line-height: 1.55; }
+    .research-cite { color: var(--text-dim); font-size: 11.5px; line-height: 1.4; margin-top: 0.25rem; font-style: italic; }
+
+    .split-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .split-card {
+      border: 0.5px solid var(--border-light); border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.66); padding: 0.95rem;
+    }
+    .split-head {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase;
+      margin-bottom: 0.5rem; font-weight: 700;
+    }
+    .split-head.fixed { color: #98640F; }
+    .split-head.malleable { color: #1B7A57; }
+    .split-text { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
+
+    .lever-box {
+      border: 0.5px solid rgba(196,30,58,0.22); border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(250,230,232,0.5), rgba(255,252,247,0.86));
+      padding: 1rem 1.1rem; margin-top: 0.85rem;
+    }
+    .lever-box .lb-head { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--scarlet); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem; }
+    .lever-box .lb-text { color: var(--text); font-size: 13.5px; line-height: 1.65; }
+
+    .curdle-box {
+      border: 0.5px solid var(--border); border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.7); padding: 1rem 1.1rem; margin-top: 0.7rem;
+    }
+    .curdle-box .cb-head { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-dim); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.45rem; }
+    .curdle-box .cb-text { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
+
+    /* ── Multipliers ── */
+    .mult-head {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.6rem, 4vw, 2.5rem); letter-spacing: -0.04em;
+      line-height: 1; color: var(--text); margin-bottom: 0.6rem;
+    }
+    .mult-intro { color: var(--text-muted); font-size: 14px; line-height: 1.7; max-width: 820px; margin-bottom: 1.2rem; }
+    .mult-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .mult-card {
+      border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft); padding: 1.15rem;
+    }
+    .mult-icon {
+      width: 38px; height: 38px; border-radius: 999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--scarlet-pale); color: var(--scarlet); font-size: 18px;
+      margin-bottom: 0.7rem;
+    }
+    .mult-name { color: var(--text); font-size: 17px; line-height: 1.2; margin-bottom: 0.2rem; }
+    .mult-tag { color: var(--text-dim); font-size: 12px; font-style: italic; margin-bottom: 0.7rem; }
+    .mult-text { color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-bottom: 0.7rem; }
+    .mult-cite { color: var(--text-dim); font-size: 11.5px; line-height: 1.45; font-style: italic; margin-bottom: 0.6rem; }
+    .mult-caveat { border-top: 0.5px solid var(--border-light); padding-top: 0.65rem; color: var(--text); font-size: 12.5px; line-height: 1.55; }
+    .mult-caveat strong { color: var(--scarlet-dim); }
+
+    /* ── Synthesis ── */
+    .synthesis-card {
+      border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.72));
+      box-shadow: var(--shadow-soft); padding: clamp(1.2rem, 3.4vw, 1.8rem);
+    }
+    .synthesis-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.7rem, 4vw, 2.7rem); letter-spacing: -0.04em;
+      line-height: 1; color: var(--text); margin-bottom: 0.8rem;
+    }
+    .synthesis-copy { color: var(--text-muted); font-size: 14px; line-height: 1.75; max-width: 820px; }
+    .synthesis-copy strong { color: var(--text); }
+
+    .smv-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.2rem; }
+
+    .smv-disclaimer { color: var(--text-dim); font-size: 12px; line-height: 1.6; margin-top: 0.9rem; }
+
+    @media (max-width: 860px) {
+      .factor-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .mult-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .factor-nav, .sub-grid, .split-grid { grid-template-columns: 1fr; }
+      .research-row { grid-template-columns: 1fr; gap: 0.45rem; }
+    }
   </style>
 </head>
 <body data-page="smv">
@@ -30,42 +241,101 @@
     <div class="page-header">
       <div class="page-eyebrow">Model</div>
       <div class="page-title">The 5 Factors of SMV</div>
-      <div class="page-sub">Sexual Market Value is composed of five distinct axes. Each factor contributes independently — and each can be improved. Click any factor to expand its breakdown.</div>
+      <div class="page-sub">Sexual Market Value is not one number you're born with. It's five inputs you can move and three multipliers you usually can't. This page breaks each one down to its parts, grades the evidence honestly, and names where each factor turns from a lever into an alibi.</div>
     </div>
 
     <div class="content">
-      <div class="smv-grid" id="cards">
-        <div class="smv-card" data-i="0" onclick="select(0)">
-          <div class="smv-num c1">01</div>
-          <div class="smv-name">Looks</div>
-          <div class="smv-tagline">Physical appearance in all its dimensions</div>
-        </div>
-        <div class="smv-card" data-i="1" onclick="select(1)">
-          <div class="smv-num c2">02</div>
-          <div class="smv-name">Money</div>
-          <div class="smv-tagline">Wealth — the more the better</div>
-        </div>
-        <div class="smv-card" data-i="2" onclick="select(2)">
-          <div class="smv-num c3">03</div>
-          <div class="smv-name">Status</div>
-          <div class="smv-tagline">Position, reputation, and social proof</div>
-        </div>
-        <div class="smv-card" data-i="3" onclick="select(3)">
-          <div class="smv-num c4">04</div>
-          <div class="smv-name">Charm</div>
-          <div class="smv-tagline">Personality, wit, and social presence</div>
-        </div>
-        <div class="smv-card" data-i="4" onclick="select(4)">
-          <div class="smv-num c5">05</div>
-          <div class="smv-name">Exposure</div>
-          <div class="smv-tagline">Visibility and surface area to the market</div>
-        </div>
-      </div>
+      <div class="smv-shell">
 
-      <div class="detail-box" id="detail">
-        <div class="detail-label" id="d-label" style="color:var(--text-dim)">Select a factor</div>
-        <div class="detail-text" id="d-text" style="color:var(--text-dim)">Click any card above to expand its breakdown.</div>
-        <div class="tags" id="d-tags"></div>
+        <!-- Equation strip -->
+        <section class="equation-panel">
+          <div class="eq-kicker"><i class="ti ti-math-function"></i> The model in one line</div>
+          <div class="eq-title">Five levers. <em>Three multipliers.</em></div>
+          <div class="eq-copy">Most "SMV" talk collapses a person into a single score and then argues about the decimal. The useful version is structural: your standing is built from five movable factors, then scaled by forces you mostly don't control &mdash; the clock, the market you're in, and what's actually being selected for. Raise the levers. Respect the multipliers.</div>
+          <div class="eq-formula">
+            <span class="eq-chip"><b>SMV</b></span>
+            <span class="eq-op">&asymp;</span>
+            <span class="eq-chip" style="border-color:rgba(186,117,23,0.4)">Looks</span>
+            <span class="eq-op">+</span>
+            <span class="eq-chip" style="border-color:rgba(29,158,117,0.4)">Money</span>
+            <span class="eq-op">+</span>
+            <span class="eq-chip" style="border-color:rgba(127,119,221,0.4)">Status</span>
+            <span class="eq-op">+</span>
+            <span class="eq-chip" style="border-color:rgba(212,83,126,0.4)">Charm</span>
+            <span class="eq-op">+</span>
+            <span class="eq-chip" style="border-color:rgba(196,30,58,0.4)">Exposure</span>
+            <span class="eq-op">&times;</span>
+            <span class="eq-mult">Clock</span>
+            <span class="eq-op">&times;</span>
+            <span class="eq-mult">Market</span>
+            <span class="eq-op">&times;</span>
+            <span class="eq-mult">Context</span>
+          </div>
+          <div class="eq-note">Not a real equation &mdash; a map. The "+" hides the fact that one weak factor can quietly cap the others, and the weights themselves shift with context. The arithmetic is illustrative; the structure is the point.</div>
+        </section>
+
+        <!-- Evidence legend -->
+        <div class="ev-legend">
+          <span><span class="ev solid">Solid</span> replicated across representative samples</span>
+          <span><span class="ev mixed">Mixed</span> real, but context-dependent</span>
+          <span><span class="ev contested">Contested</span> disputed or often overstated</span>
+          <span><span class="ev lens">Lens</span> a way of seeing, not a measurement</span>
+        </div>
+
+        <!-- Factor selector -->
+        <nav class="factor-nav" id="factor-nav" aria-label="SMV factor selector"></nav>
+
+        <!-- Dossier -->
+        <section class="dossier" id="dossier" aria-live="polite"></section>
+
+        <!-- Multipliers -->
+        <section class="synthesis-card" style="margin-top:0.6rem">
+          <div class="mult-head">The three multipliers</div>
+          <p class="mult-intro">The five factors are yours to build. These three are the terrain you build on. They don't add to your score &mdash; they scale it, sometimes brutally. Ignoring them is how people do everything "right" and still wonder why it isn't working.</p>
+          <div class="mult-grid">
+
+            <div class="mult-card">
+              <div class="mult-icon"><i class="ti ti-hourglass"></i></div>
+              <div class="mult-name">The Clock</div>
+              <div class="mult-tag">SMV is a curve, not a constant.</div>
+              <div class="mult-text">Every factor is time-stamped. Looks and fertility cues are front-loaded; money, status, and prestige accrue with age. Your score isn't a fixed point &mdash; it's a trajectory, and the slope can matter as much as the height.</div>
+              <div class="mult-cite"><span class="ev contested">Contested</span> &nbsp;The popular claim that men peak late and women peak early is grounded in stated age preferences and fertility cues, but routinely inflated into a cartoon expiry date. It's a soft, averaged trend &mdash; not a personal deadline.</div>
+              <div class="mult-caveat"><strong>Use it to respect timing, not to panic.</strong> The clock rewards starting now over starting "when you're finally ready."</div>
+            </div>
+
+            <div class="mult-card">
+              <div class="mult-icon"><i class="ti ti-scale"></i></div>
+              <div class="mult-name">The Market</div>
+              <div class="mult-tag">Your score is always relative.</div>
+              <div class="mult-text">There is no absolute SMV. The same profile is a 6 in one city and an 8 in another, depending on the sex ratio, the age pool, and the competition around it. The market sets the exchange rate; you just hold the currency.</div>
+              <div class="mult-cite"><span class="ev mixed">Mixed</span> &nbsp;Operational sex ratio shifts commitment norms and bargaining power for everyone in a market (Guttentag &amp; Secord, 1983). Online, the desirability hierarchy is steep and most people chase "up" (Bruch &amp; Newman, 2018).</div>
+              <div class="mult-caveat"><strong>A brutal local market is data, not a verdict.</strong> Sometimes the highest-return move isn't raising your score &mdash; it's changing the market you're scored in.</div>
+            </div>
+
+            <div class="mult-card">
+              <div class="mult-icon"><i class="ti ti-adjustments"></i></div>
+              <div class="mult-name">The Context</div>
+              <div class="mult-tag">The weights themselves change.</div>
+              <div class="mult-text">The five factors aren't weighted the same in every situation. For short-term attraction, Looks, dominance, and immediacy spike. For long-term, stability, prestige, warmth, and reliability take over. A profile tuned for one can underperform in the other.</div>
+              <div class="mult-cite"><span class="ev solid">Solid</span> &nbsp;Men and women run distinct short- vs long-term mating strategies, and preferences shift accordingly (Sexual Strategies Theory &mdash; Buss &amp; Schmitt, 1993).</div>
+              <div class="mult-caveat"><strong>Know which game you're playing.</strong> Optimizing your whole self for short-term metrics, then wondering why long-term keeps failing, is a category error.</div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Synthesis -->
+        <section class="synthesis-card">
+          <div class="synthesis-title">How to actually use this</div>
+          <p class="synthesis-copy">The point of breaking SMV into parts isn't to hand you a verdict &mdash; it's to find your <strong>cheapest high-return move</strong>. Most people are blocked on one factor, not all five, and it's rarely the one they obsess over. The man rewriting his face in his head usually has untouched Charm and near-zero Exposure. <strong>Diagnose the bottleneck, pull the lever that moves, and respect the multipliers you can't.</strong> That's the whole game: see the market clearly, build where building is real, and refuse both the rage and the cope.</p>
+          <div class="smv-links">
+            <a class="btn btn-scarlet" href="calculator.html">Score yourself <i class="ti ti-arrow-right"></i></a>
+            <a class="btn" href="pills.html">Read the Pill Dossiers</a>
+            <a class="btn" href="hierarchy.html">See the hierarchy</a>
+          </div>
+          <p class="smv-disclaimer">SMV is a market read, not a measure of human worth. It describes what tends to create attention, leverage, and options in a dating market &mdash; not who deserves love, who's a good person, or how any single human being will choose. Use it as a diagnostic, not an identity.</p>
+        </section>
+
       </div>
     </div>
   </div>
@@ -73,26 +343,200 @@
   <div data-include="footer"></div>
 
   <script>
-    const data = [
-      { label: 'Looks', color: '#BA7517', text: 'Your physical appearance across every axis — not just face, but the full picture of how you present physically.', tags: ['Height','Face','Race','Voice','Style'] },
-      { label: 'Money', color: '#1D9E75', text: 'Wealth is straightforward: the more you have, the more it amplifies everything else. It buys options, signals stability, and raises the floor on everything.', tags: ['Wealth','Income','Assets','Financial freedom'] },
-      { label: 'Status', color: '#7F77DD', text: 'Where you stand relative to others — in your field, your social circle, and the broader world. Reputation compounds over time.', tags: ['Job title','Reputation','Purity','Fame','Pre-selection'] },
-      { label: 'Charm', color: '#D4537E', text: 'The quality of how you engage: your wit, your personality, how you move in rooms. Hobbies that are social and visible add surface area here.', tags: ['Personality','Wit','Social hobbies','Way with words'] },
-      { label: 'Exposure', color: '#C41E3A', text: 'Raw volume of market contact. Where you live, how often you appear, how many new faces encounter you regularly — frequency and location both matter.', tags: ['Location','Visibility','Frequency','New faces','Putting yourself out there'] }
+    const FACTORS = [
+      {
+        key: 'looks', num: '01', name: 'Looks', color: '#BA7517', icon: 'ti-sparkles',
+        tagline: 'The signal that fires before you say a word.',
+        def: 'The visual packet the market reads in milliseconds &mdash; and the one place a stranger’s snap judgment is, statistically, doing real work. This isn’t vanity. It’s triage: looks decide who gets considered at all, before any other factor gets a vote.',
+        subs: [
+          ['Face', 'Averageness, symmetry, and sexual dimorphism. "Average" here means mathematically composite, not forgettable &mdash; blended faces read as more attractive (Langlois &amp; Roggman, 1990).'],
+          ['Body', 'Composition and shape carry more signal than raw weight. The female hourglass (waist-to-hip ~0.7) and the male V-taper (shoulder-to-hip ratio) are the dimorphic cues the eye is tuned to.'],
+          ['Height', 'A near one-directional lever for men: women’s preference for taller partners is stronger than men’s preference for shorter ones &mdash; but it’s a window, not a ladder. Very large gaps get dispreferred too.'],
+          ['Grooming &amp; style', 'The most malleable slice of Looks. Skin, hair, fit, scent, posture &mdash; the part you can move in weeks, not generations.'],
+          ['Voice', 'An overlooked cue. Lower-pitched male voices and higher-pitched female voices read as more attractive, signaling body size and dimorphism (Puts; Feinberg).'],
+          ['Age', 'Looks are time-stamped. This is where the Clock multiplier bites hardest &mdash; and the reason "start now" beats "start perfect."']
+        ],
+        research: [
+          ['Attractiveness ratings are strikingly consistent across raters, cultures, and ages. Beauty is far less "in the eye of the beholder" than the comforting version claims.', 'solid', 'Langlois et al., meta-analytic review'],
+          ['The halo effect is real and durable: attractive people are rated as more intelligent, trustworthy, and competent &mdash; "what is beautiful is good."', 'solid', 'Dion, Berscheid &amp; Walster, 1972; replicated in the beauty-filter era'],
+          ['The exact 0.7 waist-to-hip optimum is ecology-dependent &mdash; hunter-gatherer men prefer higher ratios. The shape preference is real; the precise number is not universal.', 'mixed', 'Singh, 1993; Marlowe et al.']
+        ],
+        fixed: 'Bone structure, height, base face. Past a point, genetics set the ceiling, and pretending otherwise just sells you surgery and serums.',
+        malleable: 'Body composition, grooming, style, skin, posture, and photos. For most people, the bulk of their untapped Looks score lives here &mdash; unspent.',
+        lever: 'Stop fighting the parts you can’t move and max the ones you can. Lean, groomed, well-dressed, and well-photographed beats "good bones, no effort" in the only arena that scores you: the first three seconds.',
+        curdle: 'Looksmaxxing into paralysis. When "I’m not attractive enough" becomes the reason to never enter the market, Looks has stopped being a lever and become an alibi for staying out of the game entirely.'
+      },
+      {
+        key: 'money', num: '02', name: 'Money', color: '#1D9E75', icon: 'ti-wallet',
+        tagline: 'Resources, stability, and the direction of both.',
+        def: 'Not the number in your account &mdash; the signal that you can provide, that your life is under control, and that the arrow points up. Money buys options and quietly raises the floor under every other factor.',
+        subs: [
+          ['Income', 'Current earning power &mdash; the visible, askable number. Matters, but reads as less attractive than people fear when the rest is stable.'],
+          ['Assets &amp; stability', 'The floor: savings, low debt, no money panic. Quietly more attractive than flash, because it signals a life someone could join without rescuing.'],
+          ['Trajectory', 'The market prices direction, not just position. "Building" and "accelerating" often beat "arrived but stalled."'],
+          ['Provisioning signal', 'Whether a partner reads you as a stable life to join or a project to fix. This is the part Money is really standing in for.'],
+          ['Spending freedom', 'The ability to create experiences without strain &mdash; taste, generosity, logistics. Not flexing; just not flinching.']
+        ],
+        research: [
+          ['Across 37 cultures, women weight a partner’s financial prospects and ambition more heavily than men do.', 'solid', 'Buss, 1989; replicated Walter et al., 2020'],
+          ['That sex difference shrinks in live, face-to-face settings. What people say they want and who they actually pick diverge &mdash; stated beats revealed here.', 'mixed', 'Eastwick &amp; Finkel, 2008'],
+          ['Money’s weight rises sharply for long-term mating and falls for short-term. It’s context-dependent, not a constant.', 'mixed', 'Sexual Strategies Theory']
+        ],
+        fixed: 'Where you start: family money, the local economy, your field’s ceiling. The opening hand is luck.',
+        malleable: 'Skills, earning trajectory, debt, and financial discipline. Slow to move, but it compounds, and over a span of years it’s almost entirely under your control.',
+        lever: 'Fix the floor before chasing the ceiling. Stable, low-debt, and clearly-rising reads better than a leased flex on a fragile base. Then treat earning power as a multi-year build, not a weekend hack.',
+        curdle: 'Two failure modes, opposite directions. The wallet-as-personality flex &mdash; and the inverse cope that "she only wants money," a story that conveniently excuses building any.'
+      },
+      {
+        key: 'status', num: '03', name: 'Status', color: '#7F77DD', icon: 'ti-crown',
+        tagline: 'Your rank &mdash; and crucially, how you got it.',
+        def: 'Where you sit in the eyes of others, and the route you took to get there. Status is the most socially-read factor: you see it less in the person than in how the room reacts to them.',
+        subs: [
+          ['Dominance', 'Rank through assertiveness, presence, and willingness to take space. One of two real routes to status (Henrich &amp; Gil-White, 2001) &mdash; potent, but read warily for the long term.'],
+          ['Prestige', 'Rank through competence and freely-given respect: being genuinely good at something people value. The other route, and the more durable one.'],
+          ['Reputation', 'What gets said about you when you’re not in the room. Compounds slowly, forfeits fast.'],
+          ['Preselection', 'Visible evidence that others already chose you. Being wanted makes you more wanted &mdash; humans copy observed mate choices (Place et al., 2010).'],
+          ['Leadership &amp; network', 'Whether you shape rooms or just fill them, and the quality of the people who vouch for you.']
+        ],
+        research: [
+          ['There are two psychologically distinct paths to status &mdash; dominance (fear, assertion) and prestige (respect, competence) &mdash; and they’re separable, measurable routes.', 'solid', 'Cheng et al., 2013, "Two Ways to the Top"'],
+          ['Women tend to favor dominance cues more for short-term partners and prestige more for long-term ones.', 'mixed', 'Snyder et al., 2008'],
+          ['Preselection is real, but may be domain-general social learning rather than a mate-specific instinct &mdash; we copy others’ choices about lots of things, not just partners.', 'contested', 'Street et al., 2018, Nature Sci. Rep.']
+        ],
+        fixed: 'Inherited status and the prestige of where you already stand. Slow to inherit; instant to squander.',
+        malleable: 'Competence, reputation, who you surround yourself with, and whether you lead. Prestige especially is buildable by anyone willing to get genuinely good at something real.',
+        lever: 'Chase prestige, not dominance theater. Get good at something people value, get vouched for, and let preselection talk for you. Borrowed dominance &mdash; the manufactured alpha act &mdash; reads as exactly the tell it is.',
+        curdle: 'Status-chasing that eats the self. When rank becomes the entire personality &mdash; performative dominance, status anxiety, treating people as audience &mdash; you’ve polished the signal and hollowed out the thing it was supposed to signal.'
+      },
+      {
+        key: 'charm', num: '04', name: 'Charm', color: '#D4537E', icon: 'ti-messages',
+        tagline: 'What you do with the attention once you have it.',
+        def: 'The live layer. Looks open the door; Charm decides whether you’re invited back through it. Presence, wit, warmth, calibration, and the ability to make another person actually feel something in your company.',
+        subs: [
+          ['Conversation &amp; wit', 'Making time spent with you better than time without you. Humor does more work here than almost anything else.'],
+          ['Calibration', 'Reading signals and escalating at the right speed. The gap between "smooth" and "creepy" is almost entirely timing, not content.'],
+          ['Emotional steadiness', 'Not leaking neediness under ambiguity. Calm is attractive precisely because it’s rare and hard to fake.'],
+          ['Warmth', 'The capacity to make someone feel safe, seen, and at ease &mdash; the half of Charm the strategy crowd keeps forgetting.'],
+          ['Presence', 'Whether people remember the feeling of being around you after you’ve left the room.']
+        ],
+        research: [
+          ['Humor ability correlates with intelligence and predicts mating success &mdash; a good sense of humor may be an honest, hard-to-fake signal of underlying mate quality.', 'mixed', 'Greengross &amp; Miller, 2011; Miller, 2000'],
+          ['The "humor as fitness indicator" mechanism is disputed: a speed-dating test failed to support it, and the male humor-production edge is smaller than first claimed.', 'contested', 'speed-dating replication, 2023; meta-analysis'],
+          ['Charm is the most trainable factor &mdash; it behaves like a skill built by reps, not a fixed trait.', 'lens', 'framing, not a single finding']
+        ],
+        fixed: 'Baseline temperament, social wiring, neurodivergence. Some people genuinely start with a steeper hill, and that’s worth naming honestly.',
+        malleable: 'Almost all of it, with reps. Conversation, calibration, escalation, and steadiness improve with deliberate practice the way any skill does.',
+        lever: 'Get live reps. Charm does not improve in your head &mdash; it improves in real conversations where you can be misread, recover, and recalibrate. For most introverted, principled men this is the single highest-return factor, because it’s pure skill and almost nobody trains it on purpose.',
+        curdle: 'Charm weaponized into manipulation &mdash; "game" that treats people as locks to be picked. The moment technique loses warmth it reads as exactly what it is, and it stops working on anyone worth keeping.'
+      },
+      {
+        key: 'exposure', num: '05', name: 'Exposure', color: '#C41E3A', icon: 'ti-radar',
+        tagline: 'How many qualified people actually encounter you.',
+        def: 'The factor nobody romantic wants to admit is decisive: surface area. The best profile in the world scores nothing if it’s never seen. Exposure is the denominator sitting under every other factor &mdash; and usually the most neglected.',
+        subs: [
+          ['Geography &amp; sex ratio', 'The local supply and demand you’re embedded in. Your value is relative to the ratio around you (Guttentag &amp; Secord, 1983).'],
+          ['Volume of contact', 'How many plausible, available people you actually cross paths with &mdash; qualified encounters, not raw foot traffic.'],
+          ['The online funnel', 'Apps as a high-volume, brutally-sorted channel: effective, and merciless about the desirability hierarchy.'],
+          ['Recurring environments', 'Repeated contact beats one-off events. Propinquity and mere exposure quietly manufacture attraction over time.'],
+          ['Initiative', 'The multiplier on everything above. Surface area you never act on is just scenery.']
+        ],
+        research: [
+          ['Online dating produces a pronounced desirability hierarchy; people pursue partners ~25% more desirable than themselves, and most "up" messages go unanswered.', 'solid', 'Bruch &amp; Newman, 2018, Science Advances'],
+          ['The operational sex ratio of a market shifts commitment norms and bargaining power for everyone in it.', 'mixed', 'Guttentag &amp; Secord, 1983'],
+          ['Mere repeated exposure reliably increases liking. Being consistently around is an underrated attraction strategy.', 'solid', 'Zajonc; propinquity research']
+        ],
+        fixed: 'The market you’re physically in right now &mdash; its size, age pool, and ratio. Real constraints, not excuses, but constraints.',
+        malleable: 'Almost everything else: which apps, how strong the photos, which rooms you’re in every week, and how much you initiate. The single most movable factor for anyone willing to act.',
+        lever: 'Increase qualified surface area and then act on it. Better photos, the right channels, recurring social environments, consistent initiative. For most people who feel stuck, the bottleneck isn’t their score &mdash; it’s that almost no one is seeing it.',
+        curdle: 'Spray-and-pray volume with zero standards &mdash; or its mirror image: treating low exposure as proof the market is rigged, rather than the one variable most under your own control.'
+      }
     ];
 
-    function select(i) {
-      document.querySelectorAll('.smv-card').forEach((c, idx) => {
-        c.classList.toggle('active', idx === i);
-      });
-      const d = data[i];
-      const lbl = document.getElementById('d-label');
-      lbl.textContent = d.label;
-      lbl.style.color = d.color;
-      document.getElementById('d-text').textContent = d.text;
-      document.getElementById('d-text').style.color = '';
-      document.getElementById('d-tags').innerHTML = d.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    function evPill(tag) {
+      const labels = { solid: 'Solid', mixed: 'Mixed', contested: 'Contested', lens: 'Lens' };
+      return `<span class="ev ${tag}">${labels[tag]}</span>`;
     }
+
+    function renderNav() {
+      document.getElementById('factor-nav').innerHTML = FACTORS.map((f, i) => `
+        <button type="button" class="factor-tab" id="tab-${i}" onclick="selectFactor(${i})"
+                style="${''}">
+          <div class="ft-num" style="color:${f.color}"><span class="ft-dot" style="background:${f.color}"></span>${f.num}</div>
+          <div class="ft-name">${f.name}</div>
+          <div class="ft-tag">${f.tagline}</div>
+        </button>
+      `).join('');
+    }
+
+    function selectFactor(i) {
+      const f = FACTORS[i];
+      document.querySelectorAll('.factor-tab').forEach((t, idx) => {
+        const on = idx === i;
+        t.classList.toggle('active', on);
+        t.style.borderColor = on ? f.color : '';
+        t.style.background = on
+          ? `linear-gradient(145deg, rgba(255,255,255,0.96), ${hexToSoft(f.color)})`
+          : '';
+      });
+
+      const subs = f.subs.map(s => `
+        <div class="sub-card">
+          <div class="sub-name"><span class="sub-dot" style="background:${f.color}"></span>${s[0]}</div>
+          <div class="sub-text">${s[1]}</div>
+        </div>`).join('');
+
+      const research = f.research.map(r => `
+        <div class="research-row">
+          <div>${evPill(r[1])}</div>
+          <div>
+            <div class="research-claim">${r[0]}</div>
+            ${r[2] ? `<div class="research-cite">${r[2]}</div>` : ''}
+          </div>
+        </div>`).join('');
+
+      document.getElementById('dossier').innerHTML = `
+        <div class="dossier-meta" style="color:${f.color}"><i class="ti ${f.icon}"></i> Factor ${f.num}</div>
+        <div class="dossier-name">${f.name}</div>
+        <p class="dossier-def">${f.def}</p>
+
+        <div class="block-label">Inside the factor</div>
+        <div class="sub-grid">${subs}</div>
+
+        <div class="block-label">What the research says</div>
+        <div class="research-list">${research}</div>
+
+        <div class="block-label">Fixed vs malleable</div>
+        <div class="split-grid">
+          <div class="split-card">
+            <div class="split-head fixed"><i class="ti ti-lock"></i> Mostly fixed</div>
+            <div class="split-text">${f.fixed}</div>
+          </div>
+          <div class="split-card">
+            <div class="split-head malleable"><i class="ti ti-arrows-move"></i> Movable</div>
+            <div class="split-text">${f.malleable}</div>
+          </div>
+        </div>
+
+        <div class="lever-box">
+          <div class="lb-head"><i class="ti ti-bolt"></i> The lever</div>
+          <div class="lb-text">${f.lever}</div>
+        </div>
+
+        <div class="curdle-box">
+          <div class="cb-head"><i class="ti ti-alert-triangle"></i> Where it curdles</div>
+          <div class="cb-text">${f.curdle}</div>
+        </div>
+      `;
+    }
+
+    function hexToSoft(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+      return `rgba(${r}, ${g}, ${b}, 0.1)`;
+    }
+
+    renderNav();
+    selectFactor(0);
   </script>
 </body>
 </html>
