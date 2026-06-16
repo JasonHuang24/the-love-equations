@@ -8,6 +8,16 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
   <style>
+    /* ── Hierarchy tab switcher ── */
+    .hier-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; background: rgba(255,252,247,0.55); border: 0.5px solid var(--border); border-radius: 999px; padding: 0.35rem; box-shadow: var(--shadow-soft); margin-bottom: 0.5rem; }
+    .hier-tab {
+      border: 0.5px solid transparent; border-radius: 999px; padding: 0.6rem 1.05rem;
+      background: transparent; color: var(--text-muted); font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px; font-weight: 700; cursor: pointer; transition: background 120ms ease, color 120ms ease; white-space: nowrap;
+    }
+    .hier-tab:hover { color: var(--text); }
+    .hier-cap { font-size: 13px; color: var(--text-muted); line-height: 1.7; max-width: 820px; margin: 0.4rem 0 1.4rem; }
+
     .calc-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr); gap: 1.35rem; align-items: start; }
 
     .panel {
@@ -15,47 +25,37 @@
       background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.72));
       box-shadow: var(--shadow-soft);
     }
-    .panel + .panel { margin-top: 1.1rem; }
-    .panel-header {
-      background: rgba(243,230,216,0.5); border-bottom: 0.5px solid var(--border);
-      padding: 0.85rem 1.25rem;
-    }
+    .panel-header { background: rgba(243,230,216,0.5); border-bottom: 0.5px solid var(--border); padding: 0.85rem 1.25rem; }
     .panel-title { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
     .panel-body { padding: 1.25rem; }
+
+    .hier-inputs { display: none; }
+    .hier-inputs.visible { display: block; }
 
     .tier-group { margin-bottom: 1.4rem; }
     .tier-group:last-child { margin-bottom: 0; }
     .tier-group-label {
       font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800;
-      margin-bottom: 0.85rem; padding-bottom: 8px; border-bottom: 0.5px solid var(--border);
+      margin-bottom: 0.4rem; padding-bottom: 8px; border-bottom: 0.5px solid var(--border);
       display: flex; align-items: center; gap: 8px;
     }
-    .tier-group-label.t1 { color: var(--scarlet); }
-    .tier-group-label.t2 { color: #C07080; }
-    .tier-group-label.t3 { color: var(--text-dim); }
     .tier-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .tier-dot.t1 { background: var(--scarlet); }
-    .tier-dot.t2 { background: #C07080; }
-    .tier-dot.t3 { background: var(--text-dim); }
+    .tier-rule { font-size: 11.5px; color: var(--text-dim); font-style: italic; line-height: 1.5; margin-bottom: 0.85rem; }
 
     .factor-row { margin-bottom: 1rem; }
     .factor-row:last-child { margin-bottom: 0; }
     .factor-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 7px; }
-    .factor-name { font-size: 13.5px; color: var(--text); }
+    .factor-name { font-size: 13.5px; color: var(--text); cursor: help; }
     .factor-box {
       width: 58px; text-align: center; font-family: Georgia, "Times New Roman", serif;
       font-size: 14px; font-weight: 700; padding: 0.3rem 0.4rem;
       border: 0.5px solid var(--border); border-radius: var(--radius-sm);
-      background: rgba(255,252,247,0.9); color: var(--text);
+      background: rgba(255,252,247,0.9);
     }
     .factor-box:focus { outline: none; border-color: var(--scarlet); }
-    .factor-box.t1 { color: var(--scarlet); }
-    .factor-box.t2 { color: #B05E70; }
-    .factor-box.t3 { color: var(--text-muted); }
-    /* hide number spinners for a cleaner look; arrows still work via keyboard */
     .factor-box::-webkit-outer-spin-button, .factor-box::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .factor-box { -moz-appearance: textfield; }
-    input[type=range] { width: 100%; accent-color: var(--scarlet); cursor: pointer; }
+    input[type=range] { width: 100%; cursor: pointer; }
 
     /* ── Result panel ── */
     .result-panel {
@@ -65,95 +65,49 @@
       box-shadow: var(--shadow);
     }
     .result-header { padding: 1.4rem 1.35rem; border-bottom: 0.5px solid var(--border); text-align: center; }
+    .result-context { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: var(--text-dim); margin-bottom: 0.8rem; }
     .result-score-row { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin-bottom: 8px; }
-    .result-score {
-      font-family: "Playfair Display", Georgia, serif; font-size: 64px; line-height: 0.9;
-      letter-spacing: -0.04em;
-    }
+    .result-score { font-family: "Playfair Display", Georgia, serif; font-size: 64px; line-height: 0.9; letter-spacing: -0.04em; }
     .result-denom { font-size: 17px; color: var(--text-dim); }
     .result-tier { font-size: 12.5px; font-weight: 700; padding: 5px 15px; border-radius: 999px; display: inline-block; margin-bottom: 14px; }
     .meter { height: 7px; background: rgba(116,79,61,0.12); border-radius: 999px; overflow: hidden; }
-    .meter-fill { height: 100%; border-radius: 999px; background: var(--scarlet); transition: width 0.4s ease, background 0.3s ease; }
+    .meter-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease, background 0.3s ease; }
     .result-body { padding: 1.25rem 1.35rem; }
     .result-explanation { font-size: 13.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; }
 
-    .gate-head {
-      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800;
-      color: var(--text-dim); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;
-    }
+    .gate-head { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: var(--text-dim); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem; }
     .gate-head .gate-hint { font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 11px; font-style: italic; }
     .gate-status { display: flex; flex-direction: column; gap: 7px; }
     .gate-row { display: flex; align-items: flex-start; gap: 9px; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); border: 0.5px solid transparent; }
     .gate-row.pass { background: #E6F5EF; border-color: #AEE0CD; }
     .gate-row.fail { background: var(--scarlet-pale); border-color: #E6B3BB; }
     .gate-row.warn { background: #FAEEDA; border-color: #EAC98A; }
+    .gate-row.neutral { background: rgba(116,79,61,0.06); border-color: var(--border-light); }
     .gate-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
     .gate-row.pass .gate-icon { color: #0F6E56; }
     .gate-row.fail .gate-icon { color: var(--scarlet-dim); }
     .gate-row.warn .gate-icon { color: #854F0B; }
+    .gate-row.neutral .gate-icon { color: var(--text-dim); }
     .gate-text { font-size: 12px; line-height: 1.45; }
     .gate-row.pass .gate-text { color: #0F6E56; }
     .gate-row.fail .gate-text { color: var(--scarlet-dim); }
     .gate-row.warn .gate-text { color: #854F0B; }
+    .gate-row.neutral .gate-text { color: var(--text-muted); }
 
     .factor-breakdown { margin-top: 1.3rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); }
     .breakdown-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: var(--text-dim); margin-bottom: 0.7rem; }
     .breakdown-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .breakdown-name { font-size: 12px; color: var(--text-muted); width: 130px; flex-shrink: 0; }
+    .breakdown-name { font-size: 12px; color: var(--text-muted); width: 140px; flex-shrink: 0; }
     .breakdown-bar-wrap { flex: 1; height: 5px; background: rgba(116,79,61,0.12); border-radius: 999px; overflow: hidden; }
     .breakdown-bar { height: 100%; border-radius: 999px; transition: width 0.3s; }
     .breakdown-score { font-size: 12px; color: var(--text-muted); width: 30px; text-align: right; }
 
-    /* ── Hierarchy tables ── */
-    .hier-section { margin-top: 2.5rem; }
-    .hier-intro { color: var(--text-muted); font-size: 13.5px; line-height: 1.7; max-width: 760px; margin: 0.4rem 0 1.25rem; }
-    .hier-tabs { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; background: rgba(255,252,247,0.55); border: 0.5px solid var(--border); border-radius: 999px; padding: 0.35rem; box-shadow: var(--shadow-soft); margin-bottom: 1.25rem; }
-    .hier-tab {
-      border: 0.5px solid transparent; border-radius: 999px; padding: 0.55rem 1rem;
-      background: transparent; color: var(--text-muted); font-family: Georgia, "Times New Roman", serif;
-      font-size: 13px; font-weight: 700; cursor: pointer; transition: background 120ms ease, color 120ms ease;
-    }
-    .hier-tab[data-theme="indigo"].active { background: #4E3D9E; color: #fff; border-color: #4E3D9E; }
-    .hier-tab[data-theme="scarlet"].active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
-    .hier-tab[data-theme="wine"].active { background: #6E2742; color: #fff; border-color: #6E2742; }
-
-    .hier-table-wrap { display: none; }
-    .hier-table-wrap.visible { display: block; }
-    .hier-cap { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.9rem; max-width: 780px; }
-    .hier-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; font-size: 13px; }
-    .hier-table th, .hier-table td { text-align: left; padding: 0.7rem 0.85rem; vertical-align: top; border-bottom: 0.5px solid var(--border-light); }
-    .hier-table thead th { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 800; color: #fffaf3; }
-    .hier-table .tier-cell { font-weight: 700; width: 150px; border-right: 0.5px solid var(--border-light); }
-    .hier-table .tier-cell .tier-sub { display: block; font-weight: 400; font-size: 11px; color: var(--text-dim); margin-top: 3px; font-style: italic; }
-    .hier-table .fac-name { color: var(--text); font-size: 13px; }
-    .hier-table .fac-desc { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; }
-    .hier-table .rule-row td { background: rgba(255,252,247,0.6); font-size: 12px; color: var(--text-muted); font-style: italic; }
-    .hier-table .rule-row td b { font-style: normal; }
-    .hier-table tr:last-child td { border-bottom: none; }
-
-    .hier-table.indigo thead { background: #4E3D9E; }
-    .hier-table.indigo .tier-cell { color: #463893; }
-    .hier-table.indigo tbody tr.t1 td:not(.tier-cell) { background: rgba(78,61,158,0.05); }
-    .hier-table.scarlet thead { background: var(--scarlet); }
-    .hier-table.scarlet .tier-cell { color: var(--scarlet-dim); }
-    .hier-table.scarlet tbody tr.t1 td:not(.tier-cell) { background: rgba(196,30,58,0.05); }
-    .hier-table.wine thead { background: #6E2742; }
-    .hier-table.wine .tier-cell { color: #6E2742; }
-    .hier-table.wine tbody tr.t1 td:not(.tier-cell) { background: rgba(110,39,66,0.05); }
-
-    .hier-note { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 1rem; }
-    .hier-note a { color: var(--scarlet-dim); }
+    .hier-foot-note { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 1.75rem; }
+    .hier-foot-note a { color: var(--scarlet-dim); }
 
     @media (max-width: 820px) {
       .calc-layout { grid-template-columns: 1fr; }
       .result-panel { position: static; }
-    }
-    @media (max-width: 560px) {
-      .hier-table .tier-cell { width: auto; }
-      .hier-table, .hier-table tbody, .hier-table tr, .hier-table td { display: block; width: 100%; }
-      .hier-table thead { display: none; }
-      .hier-table .tier-cell { border-right: none; border-bottom: 0.5px solid var(--border); }
-      .hier-table tr { border-bottom: 0.5px solid var(--border); padding: 0.3rem 0; }
     }
   </style>
 </head>
@@ -164,24 +118,27 @@
     <div class="page-header">
       <div class="page-eyebrow">Tool</div>
       <div class="page-title">Compatibility Calculator</div>
-      <div class="page-sub">Score all nine Love Hierarchy factors across the three tiers. The number is the full weighted picture &mdash; nothing is capped. The gate checks read out, for insight, which structural thresholds a profile clears or misses, so you can see <em>why</em> a score landed where it did without the gates overriding it.</div>
+      <div class="page-sub">Score any of the four Love Hierarchies, factor by factor. The number is the full weighted picture &mdash; nothing is capped. The gate checks read out, for insight, which structural thresholds a profile clears or misses, so you can see <em>why</em> a score landed where it did without the gates overriding it.</div>
     </div>
 
     <div class="content">
-      <div class="calc-layout">
+      <div class="hier-tabs" id="hier-tabs"></div>
+      <p class="hier-cap" id="hier-cap"></p>
 
+      <div class="calc-layout">
         <!-- Left: Inputs -->
         <div>
           <div class="panel">
-            <div class="panel-header"><div class="panel-title">Score the nine factors</div></div>
-            <div class="panel-body" id="factor-inputs"></div>
+            <div class="panel-header"><div class="panel-title" id="panel-title">Score the factors</div></div>
+            <div class="panel-body" id="inputs-host"></div>
           </div>
         </div>
 
-        <!-- Right: Results -->
+        <!-- Right: Result -->
         <div>
           <div class="result-panel">
             <div class="result-header">
+              <div class="result-context" id="res-context">Your hierarchy</div>
               <div class="result-score-row">
                 <div class="result-score" id="res-score" style="color:var(--scarlet)">70.0</div>
                 <div class="result-denom">/ 100</div>
@@ -202,130 +159,255 @@
             </div>
           </div>
         </div>
-
       </div>
 
-      <!-- The three other hierarchies, in tabular form -->
-      <section class="hier-section">
-        <div class="section-label">The other three hierarchies</div>
-        <p class="hier-intro">This calculator scores <strong>your</strong> hierarchy. For comparison, here are the other three from the framework in table form &mdash; a synthesized generic male, and two takes on the generic female. Each lists its tiers, the factors inside them, and the gate rule that governs advancement.</p>
-
-        <div class="hier-tabs" id="hier-tabs"></div>
-        <div id="hier-tables"></div>
-
-        <p class="hier-note">These mirror the pyramid diagrams on the <a href="hierarchy.html">Love Hierarchy</a> page, rendered as tables. Same content, different view.</p>
-      </section>
+      <p class="hier-foot-note">All four hierarchies are explained as pyramids and sequential gates on the <a href="hierarchy.html">Love Hierarchy</a> page. Weights for the three comparison hierarchies descend by tier (Gate&nbsp;1 &gt; Gate&nbsp;2 &gt; Gate&nbsp;3); they’re sensible defaults, not measured coefficients.</p>
     </div>
   </div>
 
   <div data-include="footer"></div>
 
   <script>
-    const FACTORS = [
-      { key: 'pa',  name: 'Physical attractiveness',    tier: 1, weight: 0.16 },
-      { key: 'cl',  name: 'Classiness',                 tier: 1, weight: 0.14 },
-      { key: 'at',  name: 'Attraction towards me',      tier: 1, weight: 0.15 },
-      { key: 'fu',  name: 'Fun & Easygoing',            tier: 2, weight: 0.12 },
-      { key: 'as',  name: 'Assertiveness / Initiative', tier: 2, weight: 0.12 },
-      { key: 'pu',  name: 'Purity / Lack of Baggage',   tier: 2, weight: 0.10 },
-      { key: 'av',  name: 'Alignment in values',        tier: 3, weight: 0.09 },
-      { key: 'ci',  name: 'Common interests',           tier: 3, weight: 0.07 },
-      { key: 'avl', name: 'Availability',               tier: 3, weight: 0.05 },
+    // Per-hierarchy tier color palettes [tier1, tier2, tier3]
+    const THEMES = {
+      blue:    { primary: '#1E5AA0', tiers: ['#1E5AA0', '#5E86C0', '#9AAFC8'] },
+      indigo:  { primary: '#4E3D9E', tiers: ['#4E3D9E', '#7D6FC0', '#A99FC8'] },
+      scarlet: { primary: '#C41E3A', tiers: ['#C41E3A', '#C07080', '#C9A0A8'] },
+      wine:    { primary: '#6E2742', tiers: ['#6E2742', '#9A5E74', '#B79AA4'] },
+    };
+
+    // weight template for the three comparison hierarchies (descending by tier, sums to 1.00)
+    const W = [0.16, 0.15, 0.14, 0.12, 0.11, 0.10, 0.09, 0.07, 0.06];
+
+    const HIERARCHIES = [
+      {
+        key: 'you', tab: 'Your hierarchy', theme: 'blue', special: true,
+        cap: 'Your own hierarchy, scored as an attribute ranking. The three primary factors form the core attraction gate; the secondary layer decides long-term eligibility; the tertiary layer sustains it.',
+        tiers: [
+          { name: 'Primary', sub: 'core attraction gate', rule: 'Any single factor unmet → no real attraction.',
+            factors: [
+              { name: 'Physical attractiveness', w: 0.16, desc: 'Face, body, and overall physical appeal — what registers first.' },
+              { name: 'Classiness', w: 0.14, desc: 'Carries herself with grace and refinement — dignified, not crude.' },
+              { name: 'Attraction towards me', w: 0.15, desc: 'The pull runs both ways — visibly drawn to me, not just tolerating interest.' },
+            ] },
+          { name: 'Secondary', sub: 'relationship energy layer', rule: 'All three met → long-term eligible. Partial → short-term only.',
+            factors: [
+              { name: 'Fun & Easygoing', w: 0.12, desc: 'Light, playful, low-maintenance company — easy to be around.' },
+              { name: 'Assertiveness / Initiative', w: 0.12, desc: 'Meets me halfway — initiates instead of leaving me to carry everything.' },
+              { name: 'Purity / Lack of Baggage', w: 0.10, desc: 'Little heavy history or unresolved damage dragged into the present.' },
+            ] },
+          { name: 'Tertiary', sub: 'long-term fit layer', rule: 'Assumed in a long-term context — these sustain the relationship.',
+            factors: [
+              { name: 'Alignment in values', w: 0.09, desc: 'Agrees on the things that decide a shared life.' },
+              { name: 'Common interests', w: 0.07, desc: 'Enough overlap in how we like to spend time.' },
+              { name: 'Availability', w: 0.05, desc: 'Actually free to invest — emotionally, practically, in timing.' },
+            ] },
+        ]
+      },
+      {
+        key: 'male', tab: 'Generic male', theme: 'indigo', special: false,
+        cap: 'A synthesized generic male, scored as sequential advancement gates. The male gate is blunt: do I want her, does she want me back, and is it safe to invest? Status and income rarely create desire on their own here.',
+        tiers: [
+          { name: 'Gate 1 · Desire', sub: 'can she enter the frame?', rule: 'Fail any one and she never enters the frame.',
+            factors: [
+              { name: 'Physical attractiveness & vitality', desc: 'Face, body, femininity, grooming, style — plus youth, health, and energy.' },
+              { name: 'Sexual receptivity', desc: 'Shows real attraction back — warmth, flirtation, openness — not cold tolerance.' },
+              { name: 'Low-friction presence', desc: 'Pleasant to be around: not combative, chaotic, or emotionally punishing.' },
+            ] },
+          { name: 'Gate 2 · Attachment', sub: 'safe to invest in?', rule: 'Clear it and he can attach. Fail it and she stays short-term.',
+            factors: [
+              { name: 'Warmth & kindness', desc: 'Affectionate, appreciative, gentle in tone; makes his life feel lighter.' },
+              { name: 'Loyalty & exclusivity', desc: 'Not playing him against other men; no reason to doubt commitment.' },
+              { name: 'Respect & admiration', desc: 'Values his effort; doesn’t treat him as a utility or status accessory.' },
+            ] },
+          { name: 'Gate 3 · Life Fit', sub: 'can he build a life with her?', rule: 'Values, stability, and daily compatibility decide whether it lasts.',
+            factors: [
+              { name: 'Shared values & family', desc: 'Aligned on commitment, children, domestic life, and what a good life is for.' },
+              { name: 'Emotional stability', desc: 'Conflict doesn’t curdle into cruelty or endless drama; she repairs.' },
+              { name: 'Practical compatibility', desc: 'Lifestyle, habits, money behavior, and routines can actually coexist.' },
+            ] },
+        ]
+      },
+      {
+        key: 'fem-claude', tab: 'Female · Claude', theme: 'scarlet', special: false,
+        cap: 'A generic female as an attribute ranking, synthesized from mate-preference research — central tendency, not any one person. Note the diagonal: status sits at her gate; provision and commitment ride higher than on the male side.',
+        tiers: [
+          { name: 'Tier 1 · Primary', sub: 'core attraction gate', rule: 'Any single factor unmet → no real attraction.',
+            factors: [
+              { name: 'Confidence & frame', desc: 'Self-assured and non-needy; holds his own center instead of leaning on her.' },
+              { name: 'Status & ambition', desc: 'Direction and drive — competent, going somewhere, commands a room.' },
+              { name: 'Physical attractiveness', desc: 'Genuinely attractive to her — looks, grooming, masculine presence.' },
+            ] },
+          { name: 'Tier 2 · Secondary', sub: 'relationship energy layer', rule: 'All three met → long-term eligible. Partial → short-term only.',
+            factors: [
+              { name: 'Spark & chemistry', desc: 'That hard-to-fake electric pull — humor, tension, being drawn in.' },
+              { name: 'Leadership & pursuit', desc: 'Leads and pursues decisively; makes her feel chosen, not kept waiting.' },
+              { name: 'Stability & treatment', desc: 'Emotionally steady and kind — safe, consistent, no games.' },
+            ] },
+          { name: 'Tier 3 · Tertiary', sub: 'long-term fit layer', rule: 'Weighted toward provision & commitment for the long haul.',
+            factors: [
+              { name: 'Provision & stability', desc: 'Materially reliable — can build and hold down a life.' },
+              { name: 'Commitment & loyalty', desc: 'Wants to commit and stays faithful — not keeping options open.' },
+              { name: 'Shared values & goals', desc: 'Aligned on the big questions — kids, lifestyle, direction.' },
+            ] },
+        ]
+      },
+      {
+        key: 'fem-gpt', tab: 'Female · ChatGPT', theme: 'wine', special: false,
+        cap: 'A generic female as sequential advancement gates (ChatGPT’s framing): attraction opens the door, competence keeps the frame romantic, consistency lets her relax, stability makes him future-shaped.',
+        tiers: [
+          { name: 'Gate 1 · Desire', sub: 'enter the romantic frame?', rule: 'Fail any one and he never enters the frame.',
+            factors: [
+              { name: 'Attraction', desc: 'Face, body, height, style, voice, presence — the first filter, even as "vibe."' },
+              { name: 'Masculine competence', desc: 'Confidence, social ease, decisiveness, self-command — a capable man?' },
+              { name: 'Safety & calibration', desc: 'Not creepy, chaotic, or socially blind; interest without pressure.' },
+            ] },
+          { name: 'Gate 2 · Trust', sub: 'worth the emotional risk?', rule: 'Clear all three and she relaxes into the risk.',
+            factors: [
+              { name: 'Consistency', desc: 'Follows through and communicates clearly; doesn’t make her feel disposable.' },
+              { name: 'Emotional attunement', desc: 'Reads tone, makes her feel chosen — warm without becoming needy.' },
+              { name: 'Selective investment', desc: 'Not just chasing access to any woman; makes her feel specifically valued.' },
+            ] },
+          { name: 'Gate 3 · Fit', sub: 'build a life around him?', rule: 'Values, provision capacity, and character under pressure decide if it lasts.',
+            factors: [
+              { name: 'Provision capacity', desc: 'Functional: direction, discipline, earning potential, handles adult life.' },
+              { name: 'Shared values & lifestyle', desc: 'Family plans, social rhythm, ambition, long-term expectations.' },
+              { name: 'Character under pressure', desc: 'Conflict style, loyalty, honesty — who he becomes when things get hard.' },
+            ] },
+        ]
+      },
     ];
 
-    const TIER_GROUPS = [
-      { tier: 1, cls: 't1', label: 'Primary factors — core attraction gate' },
-      { tier: 2, cls: 't2', label: 'Secondary factors — relationship energy layer' },
-      { tier: 3, cls: 't3', label: 'Tertiary factors — long-term fit layer' },
-    ];
+    // assign template weights to the comparison hierarchies (keep 'you' weights as authored)
+    HIERARCHIES.forEach(h => {
+      if (h.special) return;
+      let i = 0;
+      h.tiers.forEach(t => t.factors.forEach(f => { f.w = W[i++]; }));
+    });
 
     const TIERS_OUT = [
-      { min: 85, label: 'Elite Match',          color: '#7F77DD', bg: '#EEEDFE', desc: 'Strong across all three tiers. Primary attraction is high, secondary energy is healthy, and tertiary fit supports real long-term potential.' },
-      { min: 70, label: 'Strong Potential',     color: '#1D9E75', bg: '#E1F5EE', desc: 'A solid weighted profile with good support across the hierarchy. Worth serious exploration; check the gate diagnostics for any soft spots.' },
-      { min: 55, label: 'Conditional Interest', color: '#BA7517', bg: '#FAEEDA', desc: 'Enough to investigate, but at least one hierarchy layer is thin. The gate diagnostics show which thresholds aren’t being cleared.' },
+      { min: 85, label: 'Elite Match',          color: '#7F77DD', bg: '#EEEDFE', desc: 'Strong across all three tiers. Primary attraction is high, the middle layer is healthy, and the base supports real long-term potential.' },
+      { min: 70, label: 'Strong Potential',     color: '#1D9E75', bg: '#E1F5EE', desc: 'A solid weighted profile with good support across the hierarchy. Worth serious exploration; check the gate diagnostics for soft spots.' },
+      { min: 55, label: 'Conditional Interest', color: '#BA7517', bg: '#FAEEDA', desc: 'Enough to investigate, but at least one layer is thin. The gate diagnostics show which thresholds aren’t being cleared.' },
       { min: 0,  label: 'Low Compatibility',    color: '#888780', bg: '#F1EFE8', desc: 'The combined hierarchy signal is weak. The number isn’t capped — this is simply where the weighted factors land.' },
     ];
 
-    const TIER_BAR = { 1: 'var(--scarlet)', 2: '#C07080', 3: 'var(--text-dim)' };
-    const TIER_BOX = { 1: 't1', 2: 't2', 3: 't3' };
+    let activeKey = 'you';
+    const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
+    const fid = (key, ti, fi) => `${key}-${ti}-${fi}`;
+    const val = (key, ti, fi) => parseFloat(document.getElementById('s-' + fid(key, ti, fi)).value);
 
-    /* ── Input rendering ── */
+    function renderTabs() {
+      document.getElementById('hier-tabs').innerHTML = HIERARCHIES.map(h =>
+        `<button class="hier-tab" id="tab-${h.key}" onclick="switchHier('${h.key}')">${h.tab}</button>`
+      ).join('');
+    }
+
     function renderInputs() {
-      const host = document.getElementById('factor-inputs');
-      host.innerHTML = TIER_GROUPS.map(g => {
-        const rows = FACTORS.filter(f => f.tier === g.tier).map(f => `
-          <div class="factor-row">
-            <div class="factor-top">
-              <span class="factor-name">${f.name}</span>
-              <input class="factor-box ${g.cls}" type="number" min="1" max="10" step="0.1"
-                     value="7.0" id="b-${f.key}"
-                     oninput="onBox('${f.key}')" onchange="normBox('${f.key}')"
-                     aria-label="${f.name} score" />
-            </div>
-            <input type="range" min="1" max="10" step="0.1" value="7" id="s-${f.key}"
-                   oninput="onSlider('${f.key}')" aria-label="${f.name} slider" />
-          </div>`).join('');
-        return `<div class="tier-group">
-          <div class="tier-group-label ${g.cls}"><span class="tier-dot ${g.cls}"></span> ${g.label}</div>
-          ${rows}
-        </div>`;
+      document.getElementById('inputs-host').innerHTML = HIERARCHIES.map(h => {
+        const theme = THEMES[h.theme];
+        const groups = h.tiers.map((t, ti) => {
+          const color = theme.tiers[ti];
+          const rows = t.factors.map((f, fi) => {
+            const id = fid(h.key, ti, fi);
+            return `<div class="factor-row">
+              <div class="factor-top">
+                <span class="factor-name" title="${f.desc}">${f.name}</span>
+                <input class="factor-box" style="color:${color}" type="number" min="1" max="10" step="0.1"
+                       value="7.0" id="b-${id}" oninput="onBox('${id}')" onchange="normBox('${id}')" aria-label="${f.name} score" />
+              </div>
+              <input type="range" min="1" max="10" step="0.1" value="7" id="s-${id}"
+                     style="accent-color:${color}" oninput="onSlider('${id}')" aria-label="${f.name} slider" />
+            </div>`;
+          }).join('');
+          return `<div class="tier-group">
+            <div class="tier-group-label" style="color:${color}"><span class="tier-dot" style="background:${color}"></span> ${t.name} — ${t.sub}</div>
+            <div class="tier-rule">${t.rule}</div>
+            ${rows}
+          </div>`;
+        }).join('');
+        return `<div class="hier-inputs${h.key === activeKey ? ' visible' : ''}" id="inputs-${h.key}">${groups}</div>`;
       }).join('');
     }
 
-    function val(key) { return parseFloat(document.getElementById('s-' + key).value); }
-
-    function onSlider(key) {
-      document.getElementById('b-' + key).value = val(key).toFixed(1);
+    function switchHier(key) {
+      activeKey = key;
+      const h = HIERARCHIES.find(x => x.key === key);
+      const theme = THEMES[h.theme];
+      document.querySelectorAll('.hier-inputs').forEach(el => el.classList.toggle('visible', el.id === 'inputs-' + key));
+      document.querySelectorAll('.hier-tab').forEach(b => {
+        const on = b.id === 'tab-' + key;
+        b.style.background = on ? theme.primary : '';
+        b.style.color = on ? '#fffaf3' : '';
+        b.style.borderColor = on ? theme.primary : '';
+      });
+      document.getElementById('hier-cap').textContent = h.cap;
+      document.getElementById('panel-title').textContent = 'Score: ' + h.tab;
+      document.getElementById('res-context').textContent = h.tab;
       update();
     }
-    function onBox(key) {
-      const box = document.getElementById('b-' + key);
+
+    function onSlider(id) { document.getElementById('b-' + id).value = parseFloat(document.getElementById('s-' + id).value).toFixed(1); update(); }
+    function onBox(id) {
+      const box = document.getElementById('b-' + id);
       let v = parseFloat(box.value);
-      if (isNaN(v)) { update(); return; }      // mid-typing / invalid: keep last good slider value
+      if (isNaN(v)) { update(); return; }
       v = Math.min(10, Math.max(1, v));
-      document.getElementById('s-' + key).value = v;
+      document.getElementById('s-' + id).value = v;
       update();
     }
-    function normBox(key) {                      // on blur/commit, snap the box to the (clamped, stepped) slider value
-      document.getElementById('b-' + key).value = val(key).toFixed(1);
-      update();
+    function normBox(id) { document.getElementById('b-' + id).value = parseFloat(document.getElementById('s-' + id).value).toFixed(1); update(); }
+
+    function pass(text) { return { cls: 'pass', icon: 'ti-check', text }; }
+    function warn(text) { return { cls: 'warn', icon: 'ti-alert-triangle', text }; }
+    function fail(text) { return { cls: 'fail', icon: 'ti-alert-triangle', text }; }
+    function neutral(text) { return { cls: 'neutral', icon: 'ti-minus', text }; }
+
+    function diagnostics(h) {
+      const v = h.tiers.map((t, ti) => t.factors.map((f, fi) => val(h.key, ti, fi)));
+      const mins = v.map(tier => Math.min(...tier));
+      const g = [];
+
+      if (h.special) {
+        const pa = v[0][0];
+        const personalityAvg = (v[0][1] + v[1][0] + v[1][1] + v[1][2] + v[2][0] + v[2][1] + v[2][2]) / 7;
+        g.push(mins[0] >= 5 ? pass('Sub-5 floor cleared — no primary factor below 5.')
+          : fail(`Sub-5 floor missed — a primary factor is below 5 (min: ${fmt(mins[0])}).`));
+        g.push(mins[0] >= 7 ? pass('Primary gate cleared — all three primaries ≥ 7.')
+          : warn(`Primary gate not cleared — all three primaries should reach 7 (min: ${fmt(mins[0])}).`));
+        g.push((pa >= 7 && personalityAvg >= 7) ? pass(`7–7 Rule cleared — looks ${fmt(pa)}, personality composite ${fmt(personalityAvg)}.`)
+          : warn(`7–7 Rule not cleared — needs looks ≥ 7 AND personality ≥ 7 (looks ${fmt(pa)}, personality ${fmt(personalityAvg)}).`));
+        g.push(mins[1] >= 7 ? pass('Secondary layer healthy — all three ≥ 7, long-term eligible.')
+          : warn(`Secondary layer partial (min: ${fmt(mins[1])}) — reads more short-term.`));
+        return g;
+      }
+
+      // Sequential advancement gates for the comparison hierarchies
+      let openGate = false;
+      h.tiers.forEach((t, ti) => {
+        const cleared = mins[ti] >= 7;
+        if (openGate) {
+          g.push(neutral(`${t.name} — not reached; an earlier gate is still open.`));
+        } else if (cleared) {
+          g.push(pass(`${t.name} cleared — all three ≥ 7 (min: ${fmt(mins[ti])}).`));
+        } else {
+          g.push(warn(`${t.name} not cleared — all three must reach 7 (min: ${fmt(mins[ti])}).`));
+          openGate = true;
+        }
+      });
+      return g;
     }
 
-    /* ── Scoring ── */
     function update() {
-      const pa = val('pa'), cl = val('cl'), at = val('at');
-      const fu = val('fu'), as = val('as'), pu = val('pu');
-      const av = val('av'), ci = val('ci'), avl = val('avl');
+      const h = HIERARCHIES.find(x => x.key === activeKey);
+      const theme = THEMES[h.theme];
 
-      const primaryMin = Math.min(pa, cl, at);
-      const personalityAvg = (cl + fu + as + pu + av + ci + avl) / 7;
-      const secMin = Math.min(fu, as, pu);
-
-      // Weighted total — never capped, always the honest number.
-      const rawScore = FACTORS.reduce((sum, f) => sum + val(f.key) * f.weight, 0) * 10;
+      let rawScore = 0;
+      h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => { rawScore += val(h.key, ti, fi) * f.w; }));
+      rawScore *= 10;
       const score = Math.round(rawScore * 10) / 10;
-
       const tier = TIERS_OUT.find(t => score >= t.min) || TIERS_OUT[TIERS_OUT.length - 1];
 
-      // Gate diagnostics — informational only.
-      const gates = [];
-      gates.push(primaryMin >= 5
-        ? { cls: 'pass', icon: 'ti-check', text: 'Sub-5 floor cleared — no primary factor below 5.' }
-        : { cls: 'fail', icon: 'ti-alert-triangle', text: `Sub-5 floor missed — a primary factor is below 5 (min: ${fmt(primaryMin)}). Classic disqualifier in the strict framework.` });
-
-      gates.push(primaryMin >= 7
-        ? { cls: 'pass', icon: 'ti-check', text: 'Primary gate cleared — attractiveness, classiness, and mutual attraction all ≥ 7.' }
-        : { cls: 'warn', icon: 'ti-alert-triangle', text: `Primary gate not cleared — all three primaries should reach 7 (min: ${fmt(primaryMin)}).` });
-
-      gates.push((pa >= 7 && personalityAvg >= 7)
-        ? { cls: 'pass', icon: 'ti-check', text: `7–7 Rule cleared — looks ${fmt(pa)}, personality composite ${fmt(personalityAvg)}.` }
-        : { cls: 'warn', icon: 'ti-alert-triangle', text: `7–7 Rule not cleared — needs looks ≥ 7 AND personality composite ≥ 7 (looks ${fmt(pa)}, personality ${fmt(personalityAvg)}).` });
-
-      gates.push(secMin >= 7
-        ? { cls: 'pass', icon: 'ti-check', text: 'Secondary layer healthy — all three ≥ 7, long-term eligible.' }
-        : { cls: 'warn', icon: 'ti-alert-triangle', text: `Secondary layer partial (min: ${fmt(secMin)}) — reads more short-term than long-term.` });
-
-      // Paint
       document.getElementById('res-score').textContent = score.toFixed(1);
       document.getElementById('res-score').style.color = tier.color;
       const tierEl = document.getElementById('res-tier');
@@ -337,140 +419,27 @@
       fill.style.background = tier.color;
       document.getElementById('res-explanation').textContent = tier.desc;
 
-      document.getElementById('gate-status').innerHTML = gates.map(g => `
+      document.getElementById('gate-status').innerHTML = diagnostics(h).map(g => `
         <div class="gate-row ${g.cls}">
           <i class="ti ${g.icon} gate-icon"></i>
           <span class="gate-text">${g.text}</span>
         </div>`).join('');
 
-      document.getElementById('breakdown-rows').innerHTML = FACTORS.map(f => {
-        const v = val(f.key);
-        return `<div class="breakdown-row">
+      const rows = [];
+      h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {
+        const v = val(h.key, ti, fi);
+        rows.push(`<div class="breakdown-row">
           <span class="breakdown-name">${f.name}</span>
-          <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${v*10}%;background:${TIER_BAR[f.tier]}"></div></div>
+          <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${v*10}%;background:${theme.tiers[ti]}"></div></div>
           <span class="breakdown-score">${v.toFixed(1)}</span>
-        </div>`;
-      }).join('');
+        </div>`);
+      }));
+      document.getElementById('breakdown-rows').innerHTML = rows.join('');
     }
 
-    function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
-
-    /* ── The other three hierarchies (tabular) ── */
-    const HIERARCHIES = [
-      {
-        key: 'male', theme: 'indigo', tab: 'Generic male',
-        cap: 'A synthesis of two blind AI proposals, arbitrated. The male gate is blunt: do I want her, does she want me back, and is it safe to invest? Status and income rarely create desire on their own here.',
-        tiers: [
-          { name: 'Gate 1 · Desire', sub: 'Can she enter the romantic-sexual frame?', rule: 'Fail any one and she never enters the frame — warmth, values, or loyalty can’t manufacture desire.',
-            factors: [
-              ['Physical attractiveness & vitality', 'Face, body, femininity, grooming, style — plus youth, health, and energy. The immediate "do I want her?" signal.'],
-              ['Sexual receptivity', 'She shows real attraction back — warmth, flirtation, touch, openness — not cold tolerance or passive evaluation.'],
-              ['Low-friction presence', 'Pleasant to be around: not combative, chaotic, contemptuous, or emotionally punishing from the start.'],
-            ] },
-          { name: 'Gate 2 · Attachment', sub: 'Is she emotionally safe to invest in?', rule: 'Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in.',
-            factors: [
-              ['Warmth & kindness', 'Affectionate, appreciative, gentle in tone; makes his life feel lighter rather than heavier.'],
-              ['Loyalty & exclusivity', 'Not advertising constant availability or playing him against other men; no reason to doubt commitment.'],
-              ['Respect & admiration', 'Genuinely likes him and values his effort; doesn’t treat him as a utility, placeholder, or status accessory.'],
-            ] },
-          { name: 'Gate 3 · Life Fit', sub: 'Can he build a stable life with her?', rule: 'Where a life holds together — values, stability, and daily compatibility decide whether it lasts.',
-            factors: [
-              ['Shared values & family', 'Aligned on commitment, children, domestic life, culture if relevant, and what a good life is for.'],
-              ['Emotional stability', 'Conflict doesn’t curdle into cruelty, volatility, or endless drama; she repairs instead of escalating.'],
-              ['Practical compatibility', 'Lifestyle, habits, money behavior, social rhythm, and daily routines can actually coexist.'],
-            ] },
-        ]
-      },
-      {
-        key: 'fem-claude', theme: 'scarlet', tab: 'Female · Claude',
-        cap: 'Synthesized from mate-preference research as an attribute ranking — central tendency, not any one person. Note the diagonal: status sits at her gate; provision and commitment ride higher than on the male side.',
-        tiers: [
-          { name: 'Tier 1 · Primary', sub: 'The core attraction gate', rule: 'Any single factor unmet → no real attraction. Disqualifying, short- or long-term.',
-            factors: [
-              ['Confidence & frame', 'Self-assured and non-needy; holds his own center instead of leaning on her for it.'],
-              ['Status & ambition', 'Direction and drive — competent, going somewhere, commands a room without trying.'],
-              ['Physical attractiveness', 'Genuinely attractive to her — looks, grooming, the masculine presence she wants.'],
-            ] },
-          { name: 'Tier 2 · Secondary', sub: 'The relationship energy layer', rule: 'All three met → long-term eligible. Partial → short-term / situationship only.',
-            factors: [
-              ['Spark & chemistry', 'That hard-to-fake electric pull — humor, tension, the feeling of being drawn in.'],
-              ['Leadership & pursuit', 'Leads and pursues decisively; makes plans and makes her feel chosen, not kept waiting.'],
-              ['Stability & treatment', 'Emotionally steady and kind in how he treats her — safe, consistent, no games.'],
-            ] },
-          { name: 'Tier 3 · Tertiary', sub: 'The long-term fit layer', rule: 'Weighted toward provision & commitment for the long haul — these sustain the relationship.',
-            factors: [
-              ['Provision & stability', 'Materially reliable — can build and hold down a life, and provide if needed.'],
-              ['Commitment & loyalty', 'Wants to commit and stays faithful — in it for real, not keeping options open.'],
-              ['Shared values & goals', 'Aligned on the big questions — kids, lifestyle, where the relationship is going.'],
-            ] },
-        ]
-      },
-      {
-        key: 'fem-gpt', theme: 'wine', tab: 'Female · ChatGPT',
-        cap: 'ChatGPT’s framing as advancement gates: attraction opens the door, competence keeps the frame romantic, consistency lets her relax, stability makes him future-shaped. Kindness and loyalty matter — but rarely at Gate 1.',
-        tiers: [
-          { name: 'Gate 1 · Desire', sub: 'Can he enter the romantic frame at all?', rule: 'Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay.',
-            factors: [
-              ['Attraction', 'Face, body, height, style, voice, smell, physical presence — the first filter, even when softened into "vibe."'],
-              ['Masculine competence', 'Confidence, social ease, decisiveness, status signals, self-command — does he seem like a capable man?'],
-              ['Safety & calibration', 'Not creepy, not chaotic, not socially blind; shows interest without making her feel trapped or embarrassed.'],
-            ] },
-          { name: 'Gate 2 · Trust', sub: 'Is he worth the emotional risk?', rule: 'Clear all three and she relaxes into the risk. Gaps here keep him at arm’s length, however attractive.',
-            factors: [
-              ['Consistency', 'Follows through and communicates clearly; doesn’t vanish and reappear or make her feel disposable.'],
-              ['Emotional attunement', 'Notices her, reads tone, makes her feel chosen — warm without becoming needy.'],
-              ['Selective investment', 'Not just chasing access to any woman; he makes her feel specifically valued.'],
-            ] },
-          { name: 'Gate 3 · Fit', sub: 'Could she build a life around him?', rule: 'Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts.',
-            factors: [
-              ['Provision capacity', 'Not just rich, but functional: direction, discipline, earning potential, handles adult life.'],
-              ['Shared values & lifestyle', 'Family plans, social rhythm, religion/politics if relevant, ambition, long-term expectations.'],
-              ['Character under pressure', 'Conflict style, loyalty, honesty, patience — does he turn cruel, weak, or reckless when things get hard?'],
-            ] },
-        ]
-      },
-    ];
-
-    function renderHierarchies() {
-      const tabHost = document.getElementById('hier-tabs');
-      const tableHost = document.getElementById('hier-tables');
-      tabHost.innerHTML = HIERARCHIES.map((h, i) => `
-        <button class="hier-tab${i === 0 ? ' active' : ''}" data-theme="${h.theme}" onclick="showHier('${h.key}', this)">${h.tab}</button>
-      `).join('');
-
-      tableHost.innerHTML = HIERARCHIES.map((h, i) => {
-        const tierClass = ['t1', 't2', 't3'];
-        const body = h.tiers.map((t, ti) => {
-          const cls = tierClass[ti];
-          const facRows = t.factors.map((f, fi) => `
-            <tr class="${cls}">
-              ${fi === 0 ? `<td class="tier-cell" rowspan="${t.factors.length}">${t.name}<span class="tier-sub">${t.sub}</span></td>` : ''}
-              <td class="fac-name">${f[0]}</td>
-              <td class="fac-desc">${f[1]}</td>
-            </tr>`).join('');
-          const ruleRow = `<tr class="rule-row ${cls}"><td colspan="3"><b>Rule:</b> ${t.rule}</td></tr>`;
-          return facRows + ruleRow;
-        }).join('');
-        return `<div class="hier-table-wrap${i === 0 ? ' visible' : ''}" id="hw-${h.key}">
-          <p class="hier-cap">${h.cap}</p>
-          <table class="hier-table ${h.theme}">
-            <thead><tr><th>Tier / Gate</th><th>Factor</th><th>What it screens for</th></tr></thead>
-            <tbody>${body}</tbody>
-          </table>
-        </div>`;
-      }).join('');
-    }
-
-    function showHier(key, btn) {
-      document.querySelectorAll('.hier-table-wrap').forEach(w => w.classList.remove('visible'));
-      document.getElementById('hw-' + key).classList.add('visible');
-      document.querySelectorAll('.hier-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
+    renderTabs();
     renderInputs();
-    renderHierarchies();
-    update();
+    switchHier('you');
   </script>
 </body>
 </html>
