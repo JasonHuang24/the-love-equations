@@ -69,9 +69,10 @@
     .result-score-row { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin-bottom: 8px; }
     .result-score { font-family: "Playfair Display", Georgia, serif; font-size: 64px; line-height: 0.9; letter-spacing: -0.04em; }
     .result-denom { font-size: 17px; color: var(--text-dim); }
-    .result-tier { font-size: 12.5px; font-weight: 700; padding: 5px 15px; border-radius: 999px; display: inline-block; margin-bottom: 14px; }
+    .result-tier { font-size: 12.5px; font-weight: 700; padding: 5px 15px; border-radius: 999px; display: inline-block; margin-bottom: 12px; line-height: 1.3; }
     .meter { height: 7px; background: rgba(116,79,61,0.12); border-radius: 999px; overflow: hidden; }
     .meter-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease, background 0.3s ease; }
+    .result-band { font-size: 11px; font-weight: 700; letter-spacing: 0.03em; margin-top: 9px; }
     .result-body { padding: 1.25rem 1.35rem; }
     .result-explanation { font-size: 13.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; }
 
@@ -118,7 +119,7 @@
     <div class="page-header">
       <div class="page-eyebrow">Tool</div>
       <div class="page-title">Compatibility Calculator</div>
-      <div class="page-sub">Score any of the four Love Hierarchies, factor by factor. The number is the full weighted picture &mdash; nothing is capped. The gate checks read out, for insight, which structural thresholds a profile clears or misses, so you can see <em>why</em> a score landed where it did without the gates overriding it.</div>
+      <div class="page-sub">Score any of the four Love Hierarchies, factor by factor. The number is the full weighted picture &mdash; nothing is capped. But the <em>verdict</em> reflects the structural gates, so a high score can&rsquo;t hide a tanked core factor: a sub-5 anywhere, a failed 7&ndash;7 Rule, or a turbulent base rewrites the headline even when the math looks fine.</div>
     </div>
 
     <div class="content">
@@ -145,6 +146,7 @@
               </div>
               <div class="result-tier" id="res-tier">Strong Potential</div>
               <div class="meter"><div class="meter-fill" id="meter-fill" style="width:70%"></div></div>
+              <div class="result-band" id="res-band"></div>
             </div>
             <div class="result-body">
               <div class="result-explanation" id="res-explanation"></div>
@@ -285,12 +287,24 @@
       h.tiers.forEach(t => t.factors.forEach(f => { f.w = W[i++]; }));
     });
 
-    const TIERS_OUT = [
-      { min: 85, label: 'Elite Match',          color: '#7F77DD', bg: '#EEEDFE', desc: 'Strong across all three tiers. Primary attraction is high, the middle layer is healthy, and the base supports real long-term potential.' },
-      { min: 70, label: 'Strong Potential',     color: '#1D9E75', bg: '#E1F5EE', desc: 'A solid weighted profile with good support across the hierarchy. Worth serious exploration; check the gate diagnostics for soft spots.' },
-      { min: 55, label: 'Conditional Interest', color: '#BA7517', bg: '#FAEEDA', desc: 'Enough to investigate, but at least one layer is thin. The gate diagnostics show which thresholds aren’t being cleared.' },
-      { min: 0,  label: 'Low Compatibility',    color: '#888780', bg: '#F1EFE8', desc: 'The combined hierarchy signal is weak. The number isn’t capped — this is simply where the weighted factors land.' },
+    // Score bands describe where the raw weighted number lands (granular).
+    const SCORE_BANDS = [
+      { min: 85, label: 'Elite Match',          range: '85–100', color: '#7F77DD', bg: '#EEEDFE', desc: 'Strong across all three tiers. Primary attraction is high, the middle layer is healthy, and the base supports real long-term potential.' },
+      { min: 70, label: 'Strong Potential',     range: '70–84',  color: '#1D9E75', bg: '#E1F5EE', desc: 'A solid weighted profile with good support across the hierarchy. Worth serious exploration; check the gate diagnostics for soft spots.' },
+      { min: 55, label: 'Conditional Interest', range: '55–69',  color: '#BA7517', bg: '#FAEEDA', desc: 'Enough to investigate, but at least one layer is thin. The gate diagnostics show which thresholds aren’t being cleared.' },
+      { min: 40, label: 'Mediocre',             range: '40–54',  color: '#A0672E', bg: '#F3E8DC', desc: 'A thin profile across the board — workable in places, but not a strong overall match.' },
+      { min: 0,  label: 'Low Compatibility',    range: '0–39',   color: '#888780', bg: '#F1EFE8', desc: 'The combined hierarchy signal is weak. The number isn’t capped — this is simply where the weighted factors land.' },
     ];
+    const bandFor = score => SCORE_BANDS.find(b => score >= b.min) || SCORE_BANDS[SCORE_BANDS.length - 1];
+
+    // Verdict colors for structural gate failures (these subsume the score band).
+    const V = {
+      sub5:      { color: '#A32D2D', bg: '#FCEBEB' },
+      gate:      { color: '#993C1D', bg: '#FAECE7' },
+      sevenSeven:{ color: '#BA7517', bg: '#FAEEDA' },
+      shortTerm: { color: '#B5731F', bg: '#FBF0DA' },
+      turbulent: { color: '#6F7327', bg: '#EFF0DC' },
+    };
 
     let activeKey = 'you';
     const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
@@ -363,39 +377,83 @@
     function fail(text) { return { cls: 'fail', icon: 'ti-alert-triangle', text }; }
     function neutral(text) { return { cls: 'neutral', icon: 'ti-minus', text }; }
 
+    const tierMins = h => h.tiers.map((t, ti) => Math.min(...t.factors.map((f, fi) => val(h.key, ti, fi))));
+    const lowestFactor = h => {
+      let lo = { name: '', v: 99 };
+      h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => { const x = val(h.key, ti, fi); if (x < lo.v) lo = { name: f.name, v: x }; }));
+      return lo;
+    };
+    // 'you' personality composite = classiness + all secondary + all tertiary, averaged.
+    const personalityComposite = h => (val(h.key,0,1) + val(h.key,1,0) + val(h.key,1,1) + val(h.key,1,2) + val(h.key,2,0) + val(h.key,2,1) + val(h.key,2,2)) / 7;
+
     function diagnostics(h) {
-      const v = h.tiers.map((t, ti) => t.factors.map((f, fi) => val(h.key, ti, fi)));
-      const mins = v.map(tier => Math.min(...tier));
+      const mins = tierMins(h);
+      const low = lowestFactor(h);
       const g = [];
 
+      g.push(low.v >= 5 ? pass('No single metric below 5 — sub-5 floor clear.')
+        : fail(`“${low.name}” is below 5 (${fmt(low.v)}) — sub-5 floor breached. Counts as active incompatibility.`));
+
       if (h.special) {
-        const pa = v[0][0];
-        const personalityAvg = (v[0][1] + v[1][0] + v[1][1] + v[1][2] + v[2][0] + v[2][1] + v[2][2]) / 7;
-        g.push(mins[0] >= 5 ? pass('Sub-5 floor cleared — no primary factor below 5.')
-          : fail(`Sub-5 floor missed — a primary factor is below 5 (min: ${fmt(mins[0])}).`));
+        const pa = val(h.key, 0, 0), pers = personalityComposite(h);
         g.push(mins[0] >= 7 ? pass('Primary gate cleared — all three primaries ≥ 7.')
-          : warn(`Primary gate not cleared — all three primaries should reach 7 (min: ${fmt(mins[0])}).`));
-        g.push((pa >= 7 && personalityAvg >= 7) ? pass(`7–7 Rule cleared — looks ${fmt(pa)}, personality composite ${fmt(personalityAvg)}.`)
-          : warn(`7–7 Rule not cleared — needs looks ≥ 7 AND personality ≥ 7 (looks ${fmt(pa)}, personality ${fmt(personalityAvg)}).`));
+          : warn(`Primary gate not cleared — primaries should reach 7 (min ${fmt(mins[0])}).`));
+        g.push((pa >= 7 && pers >= 7) ? pass(`7–7 Rule cleared — looks ${fmt(pa)}, personality composite ${fmt(pers)}.`)
+          : warn(`7–7 Rule not cleared — needs looks ≥ 7 AND personality composite ≥ 7 (looks ${fmt(pa)}, personality ${fmt(pers)}).`));
         g.push(mins[1] >= 7 ? pass('Secondary layer healthy — all three ≥ 7, long-term eligible.')
-          : warn(`Secondary layer partial (min: ${fmt(mins[1])}) — reads more short-term.`));
+          : warn(`Secondary layer partial (min ${fmt(mins[1])}) — reads more short-term.`));
+        g.push(mins[2] >= 7 ? pass('Tertiary fit strong — values, interests, availability all ≥ 7.')
+          : mins[2] >= 5.5 ? warn(`Tertiary only adequate (min ${fmt(mins[2])}) — fine, not a strength.`)
+          : warn(`Tertiary below average (min ${fmt(mins[2])}) — long-term eligible, but turbulent.`));
         return g;
       }
 
       // Sequential advancement gates for the comparison hierarchies
       let openGate = false;
       h.tiers.forEach((t, ti) => {
-        const cleared = mins[ti] >= 7;
-        if (openGate) {
-          g.push(neutral(`${t.name} — not reached; an earlier gate is still open.`));
-        } else if (cleared) {
-          g.push(pass(`${t.name} cleared — all three ≥ 7 (min: ${fmt(mins[ti])}).`));
-        } else {
-          g.push(warn(`${t.name} not cleared — all three must reach 7 (min: ${fmt(mins[ti])}).`));
-          openGate = true;
-        }
+        if (openGate) { g.push(neutral(`${t.name} — not reached; an earlier gate is still open.`)); return; }
+        if (mins[ti] >= 7) { g.push(pass(`${t.name} cleared — all three ≥ 7 (min ${fmt(mins[ti])}).`)); return; }
+        if (ti === 2 && mins[2] < 5.5) g.push(warn(`${t.name} below average (min ${fmt(mins[2])}) — long-term eligible, but turbulent.`));
+        else g.push(warn(`${t.name} not cleared — all three must reach 7 (min ${fmt(mins[ti])}).`));
+        openGate = true;
       });
       return g;
+    }
+
+    // The verdict subsumes the raw score band when a structural gate is breached.
+    function verdict(h, score) {
+      const band = bandFor(score);
+      const mins = tierMins(h);
+      const low = lowestFactor(h);
+      const make = (label, v, desc) => ({ label, color: v.color, bg: v.bg, band, desc, override: true });
+
+      if (low.v < 5) return make('Sub-5 Disqualifier', V.sub5,
+        `“${low.name}” is below 5 (${fmt(low.v)}). The framework treats any single sub-5 metric as active incompatibility — the weighted number can look fine, but this fails the floor.`);
+
+      if (h.special) {
+        const pa = val(h.key, 0, 0), pers = personalityComposite(h);
+        if (mins[0] < 7) return make('Below the Primary Gate', V.gate,
+          `A primary factor is under 7 (min ${fmt(mins[0])}). Core attraction isn’t fully cleared, so the score overstates the real standing.`);
+        if (pa < 7 || pers < 7) {
+          const side = (pa < 7 && pers < 7) ? 'neither side is' : pa < 7 ? 'the looks side isn’t' : 'the personality side isn’t';
+          return make('Fails the 7–7 Rule', V.sevenSeven,
+            `The 7–7 Rule needs looks ≥ 7 and a personality composite ≥ 7 — ${side} clearing (looks ${fmt(pa)}, personality ${fmt(pers)}).`);
+        }
+        if (mins[1] < 7) return make('Short-Term Only', V.shortTerm,
+          `Attraction and the 7–7 Rule clear, but the secondary layer is partial (min ${fmt(mins[1])}). Reads short-term — not yet long-term eligible.`);
+        if (mins[2] < 5.5) return make('Long-Term Eligible — Turbulent', V.turbulent,
+          `All attraction and energy gates clear, so this is long-term eligible — but tertiary fit (values, interests, availability) is below average (min ${fmt(mins[2])}). Viable, but expect friction.`);
+        return { label: band.label, color: band.color, bg: band.bg, band, desc: band.desc, override: false };
+      }
+
+      const g = h.tiers.map(t => t.name);
+      if (mins[0] < 7) return make(`${g[0]} Not Cleared`, V.gate,
+        `${g[0]} isn’t cleared (min ${fmt(mins[0])}). In a gate model he never really enters the frame, so the score overstates the standing.`);
+      if (mins[1] < 7) return make('Short-Term Only', V.shortTerm,
+        `${g[0]} clears, but ${g[1]} doesn’t (min ${fmt(mins[1])}). Reads short-term — attractive, but not yet safe to invest long-term.`);
+      if (mins[2] < 5.5) return make('Long-Term Eligible — Turbulent', V.turbulent,
+        `${g[0]} and ${g[1]} both clear, so he’s long-term eligible — but ${g[2]} is below average (min ${fmt(mins[2])}). Viable, but expect friction.`);
+      return { label: band.label, color: band.color, bg: band.bg, band, desc: band.desc, override: false };
     }
 
     function update() {
@@ -406,18 +464,28 @@
       h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => { rawScore += val(h.key, ti, fi) * f.w; }));
       rawScore *= 10;
       const score = Math.round(rawScore * 10) / 10;
-      const tier = TIERS_OUT.find(t => score >= t.min) || TIERS_OUT[TIERS_OUT.length - 1];
+      const vd = verdict(h, score);
 
       document.getElementById('res-score').textContent = score.toFixed(1);
-      document.getElementById('res-score').style.color = tier.color;
+      document.getElementById('res-score').style.color = vd.color;
       const tierEl = document.getElementById('res-tier');
-      tierEl.textContent = tier.label;
-      tierEl.style.background = tier.bg;
-      tierEl.style.color = tier.color;
+      tierEl.textContent = vd.label;
+      tierEl.style.background = vd.bg;
+      tierEl.style.color = vd.color;
       const fill = document.getElementById('meter-fill');
       fill.style.width = score + '%';
-      fill.style.background = tier.color;
-      document.getElementById('res-explanation').textContent = tier.desc;
+      fill.style.background = vd.color;
+      document.getElementById('res-explanation').textContent = vd.desc;
+
+      // Band line: shows where the raw number lands, but only when the verdict has overridden it.
+      const bandEl = document.getElementById('res-band');
+      if (vd.override) {
+        bandEl.style.display = 'block';
+        bandEl.textContent = `Weighted score sits in: ${vd.band.label} (${vd.band.range})`;
+        bandEl.style.color = vd.band.color;
+      } else {
+        bandEl.style.display = 'none';
+      }
 
       document.getElementById('gate-status').innerHTML = diagnostics(h).map(g => `
         <div class="gate-row ${g.cls}">
