@@ -56,6 +56,20 @@
     .bpanel-msg.err { color: var(--scarlet); }
     .builder-divider { height: 0.5px; background: var(--border); margin: 2.5rem 0 1.5rem; }
 
+    /* Custom, editable tiers in the builder */
+    .bt-head { display: flex; align-items: center; gap: 10px; margin-bottom: 0.85rem; }
+    .bt-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .bt-dot.t1 { background: var(--scarlet); }
+    .bt-dot.t2 { background: #E0A0A8; }
+    .bt-dot.t3 { background: var(--border); }
+    .bt-name { font-size: 14px; font-weight: 700; color: var(--text); border: none; background: transparent; font-family: inherit; padding: 2px 0; outline: none; border-bottom: 1px solid transparent; min-width: 130px; max-width: 55%; }
+    .bt-name:focus { border-bottom-color: var(--scarlet); }
+    .bt-name::placeholder { color: var(--text-dim); font-style: italic; font-weight: 400; }
+    .bt-count { margin-left: auto; flex-shrink: 0; }
+    .bt-remove { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 11px; letter-spacing: 0.04em; padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
+    .bt-remove:hover { color: var(--scarlet); background: var(--scarlet-pale); }
+    .builder-add-tier { margin-top: 0.25rem; }
+
     /* Flat full-width intro */
     .hierarchy-intro-flat { max-width: 760px; margin: 0 auto 2.75rem; text-align: center; }
     .hierarchy-intro-flat h2 { font-family: "Playfair Display", Georgia, serif; font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; margin: 0.4rem 0 1rem; }
@@ -478,31 +492,11 @@
       <div class="builder-divider"></div>
 
       <div class="section-label">Build your own hierarchy</div>
-      <p class="builder-intro">Design a custom hierarchy with up to five factors per tier. Saved automatically in your browser. Export or import as JSON to back up or share.</p>
+      <p class="builder-intro">Design a custom hierarchy on your own terms &mdash; name your own tiers, add or remove them, with up to five factors each. No longer fixed to primary, secondary, and tertiary. Saved automatically in your browser. Export or import as JSON to back up or share.</p>
 
-      <div class="builder-tier" data-tier="primary">
-        <div class="tier-header">
-          <span class="tier-badge t1">Primary factors</span>
-          <span class="tier-sublabel" id="bcount-primary">0 / 5</span>
-        </div>
-        <div class="factors-row" id="brow-primary"></div>
-      </div>
+      <div id="builder-tiers"></div>
 
-      <div class="builder-tier" data-tier="secondary">
-        <div class="tier-header">
-          <span class="tier-badge t2">Secondary factors</span>
-          <span class="tier-sublabel" id="bcount-secondary">0 / 5</span>
-        </div>
-        <div class="factors-row" id="brow-secondary"></div>
-      </div>
-
-      <div class="builder-tier" data-tier="tertiary">
-        <div class="tier-header">
-          <span class="tier-badge t3">Tertiary factors</span>
-          <span class="tier-sublabel" id="bcount-tertiary">0 / 5</span>
-        </div>
-        <div class="factors-row" id="brow-tertiary"></div>
-      </div>
+      <button class="btn builder-add-tier" id="add-tier-btn" onclick="window.__builder.addTier()"><span class="add-plus" style="font-size:16px;">+</span> Add tier</button>
 
       <div class="builder-actions">
         <button class="btn" onclick="toggleBuilderPanel('export')">Export JSON</button>
@@ -519,7 +513,7 @@
 
       <div class="builder-panel" id="bpanel-import" hidden>
         <div class="bpanel-label">Paste JSON below, then click Load:</div>
-        <textarea class="bpanel-text" id="import-text" placeholder='{"primary":[],"secondary":[],"tertiary":[]}'></textarea>
+        <textarea class="bpanel-text" id="import-text" placeholder='[{"name":"Primary","factors":[]},{"name":"Secondary","factors":[]}]'></textarea>
         <button class="btn" onclick="loadImport()">Load</button>
         <span class="bpanel-msg" id="import-msg"></span>
       </div>
@@ -532,30 +526,45 @@
     (function () {
       const STORAGE_KEY = 'loveHierarchyBuilder';
       const MAX_PER_TIER = 5;
-      const TIERS = ['primary', 'secondary', 'tertiary'];
-      const TIER_CLASS = { primary: 't1', secondary: 't2', tertiary: 't3' };
+      const MAX_TIERS = 6;
+      const CYCLE = ['t1', 't2', 't3'];
+      const clsFor = i => CYCLE[i % CYCLE.length];
 
-      function emptyState() {
-        return { primary: [], secondary: [], tertiary: [] };
+      // Default scaffold — the three classic tiers, now fully editable and removable.
+      function defaultState() {
+        return [
+          { name: 'Primary', factors: [] },
+          { name: 'Secondary', factors: [] },
+          { name: 'Tertiary', factors: [] },
+        ];
       }
 
       function normalize(s) {
-        const out = emptyState();
-        if (!s || typeof s !== 'object') return out;
-        for (const tier of TIERS) {
-          if (Array.isArray(s[tier])) {
-            out[tier] = s[tier].map(String).slice(0, MAX_PER_TIER);
-          }
+        // Current schema: ordered array of { name, factors: [strings] }.
+        if (Array.isArray(s)) {
+          return s.slice(0, MAX_TIERS).map((t, i) => ({
+            name: (t && typeof t.name === 'string') ? t.name : `Tier ${i + 1}`,
+            factors: (t && Array.isArray(t.factors)) ? t.factors.map(String).slice(0, MAX_PER_TIER) : [],
+          }));
         }
-        return out;
+        // Legacy schema: { primary:[], secondary:[], tertiary:[] } — migrate to tiers.
+        if (s && typeof s === 'object') {
+          const legacy = [['primary', 'Primary'], ['secondary', 'Secondary'], ['tertiary', 'Tertiary']];
+          const out = [];
+          for (const [key, label] of legacy) {
+            if (Array.isArray(s[key])) out.push({ name: label, factors: s[key].map(String).slice(0, MAX_PER_TIER) });
+          }
+          if (out.length) return out;
+        }
+        return defaultState();
       }
 
       function load() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? normalize(JSON.parse(raw)) : emptyState();
+          return raw ? normalize(JSON.parse(raw)) : defaultState();
         } catch (e) {
-          return emptyState();
+          return defaultState();
         }
       }
 
@@ -570,46 +579,71 @@
       let state = load();
 
       function render() {
-        for (const tier of TIERS) {
-          const row = document.getElementById('brow-' + tier);
-          if (!row) continue;
-          const factors = state[tier];
-          const cls = TIER_CLASS[tier];
-          const cards = factors.map((name, i) => `
+        const host = document.getElementById('builder-tiers');
+        if (!host) return;
+        host.innerHTML = state.map((tier, ti) => {
+          const cls = clsFor(ti);
+          const cards = tier.factors.map((name, fi) => `
             <div class="factor-card ${cls} builder-card">
-              <button class="bf-remove" onclick="window.__builder.remove('${tier}', ${i})" aria-label="Remove">&times;</button>
-              <div class="factor-num ${cls}">${String(i + 1).padStart(2, '0')}</div>
-              <input type="text" class="bf-input" value="${escapeAttr(name)}" oninput="window.__builder.rename('${tier}', ${i}, this.value)" placeholder="Factor name" />
+              <button class="bf-remove" onclick="window.__builder.removeFactor(${ti}, ${fi})" aria-label="Remove factor">&times;</button>
+              <div class="factor-num ${cls}">${String(fi + 1).padStart(2, '0')}</div>
+              <input type="text" class="bf-input" value="${escapeAttr(name)}" oninput="window.__builder.renameFactor(${ti}, ${fi}, this.value)" placeholder="Factor name" />
             </div>
           `).join('');
-          const addCard = factors.length < MAX_PER_TIER ? `
-            <div class="factor-card builder-add" onclick="window.__builder.add('${tier}')">
+          const addCard = tier.factors.length < MAX_PER_TIER ? `
+            <div class="factor-card builder-add" onclick="window.__builder.addFactor(${ti})">
               <div class="add-plus">+</div>
               <div class="add-label">Add factor</div>
             </div>
           ` : '';
-          row.innerHTML = cards + addCard;
-          document.getElementById('bcount-' + tier).textContent = `${factors.length} / ${MAX_PER_TIER}`;
-        }
+          return `<div class="builder-tier">
+            <div class="bt-head">
+              <span class="bt-dot ${cls}"></span>
+              <input type="text" class="bt-name" value="${escapeAttr(tier.name)}" oninput="window.__builder.renameTier(${ti}, this.value)" placeholder="Tier name" aria-label="Tier name" />
+              <span class="tier-sublabel bt-count">${tier.factors.length} / ${MAX_PER_TIER}</span>
+              <button class="bt-remove" onclick="window.__builder.removeTier(${ti})" aria-label="Remove tier">Remove tier</button>
+            </div>
+            <div class="factors-row">${cards}${addCard}</div>
+          </div>`;
+        }).join('');
+        const addTierBtn = document.getElementById('add-tier-btn');
+        if (addTierBtn) addTierBtn.style.display = state.length >= MAX_TIERS ? 'none' : '';
       }
 
       window.__builder = {
-        add(tier) {
-          if (state[tier].length >= MAX_PER_TIER) return;
-          state[tier].push('');
+        addTier() {
+          if (state.length >= MAX_TIERS) return;
+          state.push({ name: '', factors: [] });
           save();
           render();
-          const inputs = document.querySelectorAll(`#brow-${tier} .bf-input`);
+          const names = document.querySelectorAll('#builder-tiers .bt-name');
+          if (names.length) names[names.length - 1].focus();
+        },
+        removeTier(ti) {
+          const t = state[ti];
+          if (!t) return;
+          if (t.factors.length && !confirm(`Remove this tier and its ${t.factors.length} factor(s)?`)) return;
+          state.splice(ti, 1);
+          save();
+          render();
+        },
+        renameTier(ti, val) {
+          if (state[ti]) { state[ti].name = val; save(); }
+        },
+        addFactor(ti) {
+          const t = state[ti];
+          if (!t || t.factors.length >= MAX_PER_TIER) return;
+          t.factors.push('');
+          save();
+          render();
+          const inputs = document.querySelectorAll(`#builder-tiers .builder-tier:nth-child(${ti + 1}) .bf-input`);
           if (inputs.length) inputs[inputs.length - 1].focus();
         },
-        remove(tier, i) {
-          state[tier].splice(i, 1);
-          save();
-          render();
+        removeFactor(ti, fi) {
+          if (state[ti]) { state[ti].factors.splice(fi, 1); save(); render(); }
         },
-        rename(tier, i, val) {
-          state[tier][i] = val;
-          save();
+        renameFactor(ti, fi, val) {
+          if (state[ti] && state[ti].factors[fi] !== undefined) { state[ti].factors[fi] = val; save(); }
         }
       };
 
@@ -665,8 +699,8 @@
       };
 
       window.resetBuilder = function () {
-        if (!confirm('Reset and clear all custom factors?')) return;
-        state = emptyState();
+        if (!confirm('Reset to the default three tiers and clear all custom factors?')) return;
+        state = defaultState();
         save();
         render();
       };
