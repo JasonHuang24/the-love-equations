@@ -41,6 +41,7 @@
     .reasoning-box { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem; }
     .box-header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 0.75rem 1.1rem; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
     .box-body { padding: 1rem 1.25rem; }
+    .box-body > p { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin: 0; }
     .reason-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
     .reason-row:last-child { margin-bottom: 0; }
     .reason-icon { font-size: 15px; color: var(--scarlet); margin-top: 2px; flex-shrink: 0; }
@@ -188,8 +189,14 @@
             <div class="outcome-note">Long-term candidacy fails. One weak side disqualifies regardless of the other.</div>
           </div>
         </div>
-        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-message-quote"></i> Example logic</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>A person can hold an 8 personality composite and still fail long-term candidacy if physical attraction is a 6. And a single charming trait — say a 9 in humor — doesn&rsquo;t rescue a composite that everything else has dragged to a 6. The rule blocks rationalized compromise on either side: sustained desire and a genuinely good overall personality both have to independently clear 7.</p></div></div>
-        <div class="dos-card"><div class="dos-head" onclick="toggle(this)"><span class="dos-head-label"><i class="ti ti-pencil"></i> Commentary</span><i class="ti ti-chevron-down dos-chev"></i></div><div class="dos-body"><p>The point of the 7–7 Rule is not perfectionism. It is preventing a relationship from being built on a missing pillar. Sustained desire and sustained personality fit both have to be independently good enough.</p></div></div>
+        <div class="reasoning-box">
+          <div class="box-header">Example logic</div>
+          <div class="box-body"><p>A person can hold an 8 personality composite and still fail long-term candidacy if physical attraction is a 6. And a single charming trait — say a 9 in humor — doesn&rsquo;t rescue a composite that everything else has dragged to a 6. The rule blocks rationalized compromise on either side: sustained desire and a genuinely good overall personality both have to independently clear 7.</p></div>
+        </div>
+        <div class="reasoning-box" style="margin-bottom:0;">
+          <div class="box-header">Reasoning</div>
+          <div class="box-body"><p>The point of the 7–7 Rule is not perfectionism. It is preventing a relationship from being built on a missing pillar. Sustained desire and sustained personality fit both have to be independently good enough.</p></div>
+        </div>
       </div>
 
       <!-- Sub-5 -->
@@ -334,14 +341,6 @@
   <div data-include="footer"></div>
 
   <script>
-    function toggle(header) {
-      const body = header.nextElementSibling;
-      const chev = header.querySelector('.dos-chev');
-      const open = body.classList.contains('open');
-      body.classList.toggle('open', !open);
-      chev.classList.toggle('open', !open);
-    }
-
     function checkSub5() {
       const l = parseInt(document.getElementById('l-slider').value);
       const p = parseInt(document.getElementById('p-slider').value);
