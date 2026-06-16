@@ -15,4 +15,24 @@
     const link = document.querySelector(`.nav-link[data-page="${page}"]`);
     if (link) link.classList.add('active');
   }
+
+  // Mobile hamburger toggle
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.getElementById('nav-links');
+  if (toggle && links) {
+    const setOpen = (open) => {
+      links.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    // Close after picking a destination, or on Escape
+    links.addEventListener('click', (e) => {
+      if (e.target.closest('.nav-link')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
 })();
