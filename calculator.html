@@ -686,8 +686,8 @@
         <div class="screen visible" id="a-intro">
           <div class="exam-panel">
             <div class="exam-kicker"><i class="ti ti-clipboard-check"></i> Profile A - Self Assessment</div>
-            <div class="exam-title">Treat it like an entrance exam.</div>
-            <div class="exam-copy">The old version asked two questions per factor. This one uses twenty-five calibrated prompts: five per axis, from visible first impressions to the boring infrastructure that quietly decides how many chances you get. Answer by current reality, not potential.</div>
+            <div class="exam-title">Map your market position across five factors.</div>
+            <div class="exam-copy">This calculator scores Looks, Money, Status, Charm, and Exposure through twenty-five prompts weighted by how directly each one tends to move attention, leverage, and realistic options. Answer by current reality, not potential.</div>
             <div class="lens-selector">
               <div class="lens-top">
                 <div>
@@ -1443,7 +1443,7 @@
             <span class="fs-val" id="bval-${i}" style="color:${f.color}">${bVals[i].toFixed(1)}</span>
           </div>
           <div class="fs-desc">${f.desc}</div>
-          <input type="range" min="1" max="10" step="0.5" value="${bVals[i]}" oninput="bSlide(${i}, this.value)" />
+          <input type="range" min="1" max="10" step="0.1" value="${bVals[i]}" oninput="bSlide(${i}, this.value)" />
         </div>
       `).join('');
       updateB();
