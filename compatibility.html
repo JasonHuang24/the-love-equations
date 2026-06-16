@@ -109,6 +109,8 @@
     @media (max-width: 820px) {
       .calc-layout { grid-template-columns: 1fr; }
       .result-panel { position: static; }
+      /* show the score before the 9 inputs on mobile so feedback isn't buried */
+      .calc-layout > div:last-child { order: -1; }
     }
   </style>
 </head>
@@ -119,7 +121,7 @@
     <div class="page-header">
       <div class="page-eyebrow">Tool</div>
       <div class="page-title">Compatibility Calculator</div>
-      <div class="page-sub">Score any of the four Love Hierarchies, factor by factor. The number is the full weighted picture &mdash; nothing is capped. But the <em>verdict</em> reflects the structural gates, so a high score can&rsquo;t hide a tanked core factor: a sub-5 anywhere, a failed 7&ndash;7 Rule, or a turbulent base rewrites the headline even when the math looks fine.</div>
+      <div class="page-sub">Score any of the four Love Hierarchies, factor by factor. The headline shows the full weighted score and its band &mdash; nothing is capped. The framework line beneath it names any structural breach the profile trips &mdash; a sub-5 metric, a failed 7&ndash;7 Rule, an uncleared gate &mdash; so a high number can&rsquo;t quietly hide a tanked core factor.</div>
     </div>
 
     <div class="content">
@@ -232,7 +234,7 @@
       },
       {
         key: 'fem-claude', tab: 'Female · Claude', theme: 'scarlet', special: false,
-        cap: 'A generic female as an attribute ranking, synthesized from mate-preference research — central tendency, not any one person. Note the diagonal: status sits at her gate; provision and commitment ride higher than on the male side.',
+        cap: 'A generic female as an attribute ranking, synthesized from mate-preference research — central tendency, not any one person. Note the diagonal: status sits at her gate, and provision and commitment stay explicit in the long-term layer rather than folding into general "fit."',
         tiers: [
           { name: 'Tier 1 · Primary', sub: 'core attraction gate', rule: 'Any single factor unmet → no real attraction.',
             factors: [
@@ -289,11 +291,11 @@
 
     // Score bands describe where the raw weighted number lands (granular).
     const SCORE_BANDS = [
-      { min: 85, label: 'Elite Match',          range: '85–100', color: '#7F77DD', bg: '#EEEDFE', desc: 'Strong across all three tiers. Primary attraction is high, the middle layer is healthy, and the base supports real long-term potential.' },
-      { min: 70, label: 'Strong Potential',     range: '70–84',  color: '#1D9E75', bg: '#E1F5EE', desc: 'A solid weighted profile with good support across the hierarchy. Worth serious exploration; check the gate diagnostics for soft spots.' },
-      { min: 55, label: 'Conditional Interest', range: '55–69',  color: '#BA7517', bg: '#FAEEDA', desc: 'Enough to investigate, but at least one layer is thin. The gate diagnostics show which thresholds aren’t being cleared.' },
-      { min: 40, label: 'Mediocre',             range: '40–54',  color: '#A0672E', bg: '#F3E8DC', desc: 'A thin profile across the board — workable in places, but not a strong overall match.' },
-      { min: 0,  label: 'Low Compatibility',    range: '0–39',   color: '#888780', bg: '#F1EFE8', desc: 'The combined hierarchy signal is weak. The number isn’t capped — this is simply where the weighted factors land.' },
+      { min: 85, label: 'Elite Match',          range: '85–100', color: '#7F77DD', bg: '#EEEDFE', desc: 'A very strong weighted profile — high marks across most factors. Check the framework line below for any structural breach.' },
+      { min: 70, label: 'Strong Potential',     range: '70–84',  color: '#1D9E75', bg: '#E1F5EE', desc: 'A solid weighted profile with broad support across the factors. Worth serious exploration; the framework line flags any soft spots.' },
+      { min: 55, label: 'Conditional Interest', range: '55–69',  color: '#BA7517', bg: '#FAEEDA', desc: 'A middling weighted profile — some real strengths, some thin areas. Worth investigating, with eyes open.' },
+      { min: 40, label: 'Mediocre',             range: '40–54',  color: '#A0672E', bg: '#F3E8DC', desc: 'A thin weighted profile — workable in places, but weak overall.' },
+      { min: 0,  label: 'Low Compatibility',    range: '0–39',   color: '#888780', bg: '#F1EFE8', desc: 'A weak weighted profile — most factors are scoring low. The number is never capped; this is simply where the weights land.' },
     ];
     const bandFor = score => SCORE_BANDS.find(b => score >= b.min) || SCORE_BANDS[SCORE_BANDS.length - 1];
 
@@ -313,7 +315,7 @@
 
     function renderTabs() {
       document.getElementById('hier-tabs').innerHTML = HIERARCHIES.map(h =>
-        `<button class="hier-tab" id="tab-${h.key}" onclick="switchHier('${h.key}')">${h.tab}</button>`
+        `<button class="hier-tab" id="tab-${h.key}" aria-pressed="false" onclick="switchHier('${h.key}')">${h.tab}</button>`
       ).join('');
     }
 
@@ -354,6 +356,7 @@
         b.style.background = on ? theme.primary : '';
         b.style.color = on ? '#fffaf3' : '';
         b.style.borderColor = on ? theme.primary : '';
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
       document.getElementById('hier-cap').textContent = h.cap;
       document.getElementById('panel-title').textContent = 'Score: ' + h.tab;
@@ -366,8 +369,9 @@
       const box = document.getElementById('b-' + id);
       let v = parseFloat(box.value);
       if (isNaN(v)) { update(); return; }
-      v = Math.min(10, Math.max(1, v));
-      document.getElementById('s-' + id).value = v;
+      const clamped = Math.min(10, Math.max(1, v));
+      document.getElementById('s-' + id).value = clamped;
+      if (clamped !== v) box.value = fmt(clamped);  // keep the box honest when out of range
       update();
     }
     function normBox(id) { document.getElementById('b-' + id).value = parseFloat(document.getElementById('s-' + id).value).toFixed(1); update(); }
@@ -431,13 +435,16 @@
 
       if (h.special) {
         const pa = val(h.key, 0, 0), pers = personalityComposite(h);
-        if (mins[0] < 7) return breach(V.gate.color, `Primary gate not cleared — a primary factor is under 7 (min ${fmt(mins[0])}).`);
+        // 7-7 is the specific rule for looks/personality; check it before the generic primary gate.
         if (pa < 7 || pers < 7) {
           const side = (pa < 7 && pers < 7) ? 'neither side clears' : pa < 7 ? 'the looks side is under 7' : 'the personality side is under 7';
           return breach(V.sevenSeven.color, `7–7 Rule breached — ${side} (looks ${fmt(pa)}, personality ${fmt(pers)}).`);
         }
+        // Remaining primary failure is necessarily "Attraction towards me" — the primary not in 7-7.
+        if (mins[0] < 7) return breach(V.gate.color, `Primary gate not cleared — a primary factor is under 7 (min ${fmt(mins[0])}).`);
         if (mins[1] < 7) return breach(V.shortTerm.color, `Secondary layer partial (min ${fmt(mins[1])}) — short-term only.`);
         if (mins[2] < 5.5) return breach(V.turbulent.color, `Tertiary below average (min ${fmt(mins[2])}) — long-term eligible, but turbulent.`);
+        if (mins[2] < 7) return breach(V.shortTerm.color, `Tertiary only adequate (min ${fmt(mins[2])}) — long-term support is thin.`);
         return { breached: false };
       }
 
@@ -445,6 +452,7 @@
       if (mins[0] < 7) return breach(V.gate.color, `${g[0]} not cleared (min ${fmt(mins[0])}) — never really enters the frame.`);
       if (mins[1] < 7) return breach(V.shortTerm.color, `${g[1]} not cleared (min ${fmt(mins[1])}) — short-term only.`);
       if (mins[2] < 5.5) return breach(V.turbulent.color, `${g[2]} below average (min ${fmt(mins[2])}) — long-term eligible, but turbulent.`);
+      if (mins[2] < 7) return breach(V.shortTerm.color, `${g[2]} not cleared (min ${fmt(mins[2])}) — long-term gate still open.`);
       return { breached: false };
     }
 
