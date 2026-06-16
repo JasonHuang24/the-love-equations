@@ -420,40 +420,32 @@
       return g;
     }
 
-    // The verdict subsumes the raw score band when a structural gate is breached.
-    function verdict(h, score) {
-      const band = bandFor(score);
+    // Breach annotation: the headline shows the weighted-score band; this names any
+    // framework rule the profile breaches (sub-5, 7-7, gates), shown below the meter.
+    function breachNote(h) {
       const mins = tierMins(h);
       const low = lowestFactor(h);
-      const make = (label, v, desc) => ({ label, color: v.color, bg: v.bg, band, desc, override: true });
+      const breach = (color, note) => ({ breached: true, color, note });
 
-      if (low.v < 5) return make('Sub-5 Disqualifier', V.sub5,
-        `“${low.name}” is below 5 (${fmt(low.v)}). The framework treats any single sub-5 metric as active incompatibility — the weighted number can look fine, but this fails the floor.`);
+      if (low.v < 5) return breach(V.sub5.color, `Sub-5 rule breached — “${low.name}” is below 5 (${fmt(low.v)}).`);
 
       if (h.special) {
         const pa = val(h.key, 0, 0), pers = personalityComposite(h);
-        if (mins[0] < 7) return make('Below the Primary Gate', V.gate,
-          `A primary factor is under 7 (min ${fmt(mins[0])}). Core attraction isn’t fully cleared, so the score overstates the real standing.`);
+        if (mins[0] < 7) return breach(V.gate.color, `Primary gate not cleared — a primary factor is under 7 (min ${fmt(mins[0])}).`);
         if (pa < 7 || pers < 7) {
-          const side = (pa < 7 && pers < 7) ? 'neither side is' : pa < 7 ? 'the looks side isn’t' : 'the personality side isn’t';
-          return make('Fails the 7–7 Rule', V.sevenSeven,
-            `The 7–7 Rule needs looks ≥ 7 and a personality composite ≥ 7 — ${side} clearing (looks ${fmt(pa)}, personality ${fmt(pers)}).`);
+          const side = (pa < 7 && pers < 7) ? 'neither side clears' : pa < 7 ? 'the looks side is under 7' : 'the personality side is under 7';
+          return breach(V.sevenSeven.color, `7–7 Rule breached — ${side} (looks ${fmt(pa)}, personality ${fmt(pers)}).`);
         }
-        if (mins[1] < 7) return make('Short-Term Only', V.shortTerm,
-          `Attraction and the 7–7 Rule clear, but the secondary layer is partial (min ${fmt(mins[1])}). Reads short-term — not yet long-term eligible.`);
-        if (mins[2] < 5.5) return make('Long-Term Eligible — Turbulent', V.turbulent,
-          `All attraction and energy gates clear, so this is long-term eligible — but tertiary fit (values, interests, availability) is below average (min ${fmt(mins[2])}). Viable, but expect friction.`);
-        return { label: band.label, color: band.color, bg: band.bg, band, desc: band.desc, override: false };
+        if (mins[1] < 7) return breach(V.shortTerm.color, `Secondary layer partial (min ${fmt(mins[1])}) — short-term only.`);
+        if (mins[2] < 5.5) return breach(V.turbulent.color, `Tertiary below average (min ${fmt(mins[2])}) — long-term eligible, but turbulent.`);
+        return { breached: false };
       }
 
       const g = h.tiers.map(t => t.name);
-      if (mins[0] < 7) return make(`${g[0]} Not Cleared`, V.gate,
-        `${g[0]} isn’t cleared (min ${fmt(mins[0])}). In a gate model he never really enters the frame, so the score overstates the standing.`);
-      if (mins[1] < 7) return make('Short-Term Only', V.shortTerm,
-        `${g[0]} clears, but ${g[1]} doesn’t (min ${fmt(mins[1])}). Reads short-term — attractive, but not yet safe to invest long-term.`);
-      if (mins[2] < 5.5) return make('Long-Term Eligible — Turbulent', V.turbulent,
-        `${g[0]} and ${g[1]} both clear, so he’s long-term eligible — but ${g[2]} is below average (min ${fmt(mins[2])}). Viable, but expect friction.`);
-      return { label: band.label, color: band.color, bg: band.bg, band, desc: band.desc, override: false };
+      if (mins[0] < 7) return breach(V.gate.color, `${g[0]} not cleared (min ${fmt(mins[0])}) — never really enters the frame.`);
+      if (mins[1] < 7) return breach(V.shortTerm.color, `${g[1]} not cleared (min ${fmt(mins[1])}) — short-term only.`);
+      if (mins[2] < 5.5) return breach(V.turbulent.color, `${g[2]} below average (min ${fmt(mins[2])}) — long-term eligible, but turbulent.`);
+      return { breached: false };
     }
 
     function update() {
@@ -464,27 +456,29 @@
       h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => { rawScore += val(h.key, ti, fi) * f.w; }));
       rawScore *= 10;
       const score = Math.round(rawScore * 10) / 10;
-      const vd = verdict(h, score);
+      const band = bandFor(score);
+      const b = breachNote(h);
 
+      // Headline = weighted-score band.
       document.getElementById('res-score').textContent = score.toFixed(1);
-      document.getElementById('res-score').style.color = vd.color;
+      document.getElementById('res-score').style.color = band.color;
       const tierEl = document.getElementById('res-tier');
-      tierEl.textContent = vd.label;
-      tierEl.style.background = vd.bg;
-      tierEl.style.color = vd.color;
+      tierEl.textContent = band.label;
+      tierEl.style.background = band.bg;
+      tierEl.style.color = band.color;
       const fill = document.getElementById('meter-fill');
       fill.style.width = score + '%';
-      fill.style.background = vd.color;
-      document.getElementById('res-explanation').textContent = vd.desc;
+      fill.style.background = band.color;
+      document.getElementById('res-explanation').textContent = band.desc;
 
-      // Band line: shows where the raw number lands, but only when the verdict has overridden it.
+      // Annotation below = framework breach (sub-5, 7-7, gates) or all-clear.
       const bandEl = document.getElementById('res-band');
-      if (vd.override) {
-        bandEl.style.display = 'block';
-        bandEl.textContent = `Weighted score sits in: ${vd.band.label} (${vd.band.range})`;
-        bandEl.style.color = vd.band.color;
+      if (b.breached) {
+        bandEl.textContent = 'Framework — ' + b.note;
+        bandEl.style.color = b.color;
       } else {
-        bandEl.style.display = 'none';
+        bandEl.textContent = 'Framework — all gates clear.';
+        bandEl.style.color = '#1B7A57';
       }
 
       document.getElementById('gate-status').innerHTML = diagnostics(h).map(g => `
