@@ -261,3 +261,31 @@ could feed future writing.
   placement honest, preserve the Male/Female mirror where useful, and consider
   finer sub-grouping for oversized sections such as "Game, the mask & reading
   signals."
+
+---
+
+# Build Attribution — who built what
+
+Two AI builders in the loop: **Claude** (Opus) and **Codex**. The loop is
+build → the other reviews → Jason decides.
+
+> **Why this ledger exists:** git `Co-Authored-By: Claude Opus 4.8` trailers are
+> **not** reliable for Claude-vs-Codex attribution. They track *who committed*,
+> not *who did the creative work* — Jason commits/merges everything, so Codex's
+> work also carries a Claude trailer (e.g. the SMV Calculator revamp `b87bf77`
+> reads as Claude but was Codex's). This ledger is the source of truth.
+
+| Section | File | Primary builder | Notes |
+|---|---|---|---|
+| SMV page — 5 Factors of SMV | `smv.html` | **Claude** | Full content + UI revamp with online research; evidence-graded factors/sub-variables + Clock/Market/Context multipliers. `bf6d1e4`, `693c128` |
+| SMV Calculator | `calculator.html` | **Codex** | Purely delegated to Codex. Claude only reviewed + fixed the backwards male-lens note. `b87bf77`, `64f1b99` |
+| Pill Dossiers | `pills.html` | **Codex** | Codex built the lens-based revamp; Claude reviewed and committed as-is (kept "Just Be First"). `61f946b` |
+| Compatibility Calculator | `compatibility.html` | **Claude** | Built the 4-way tabbed rebuild + scoring/breach model; Codex did a review pass, Claude applied the fixes. `91d2dae`, `52223b4`. Later "Jason's hierarchy" rename `6b0885d`. |
+| Rules & Frameworks | `frameworks.html` | **Claude** | 7-7 / Sub-5 alignment with the calculator + visible reasoning cards. `43bcf48`, `5900c96` |
+| The Love Hierarchy | `hierarchy.html` | **Claude** | "Jason's Hierarchy" rename + the custom-tier builder. |
+| Home | `index.html` | **Claude + Codex** | Claude did the refresh (doctrine band, section map); Codex reworked the UI to restore the mini-pyramid. |
+| Mobile-responsive nav/footer + no-cache dev server | `css/styles.css`, partials, `.claude/dev-server.py` | **Claude** | Hamburger nav, footer wrap/stack, dev-server no-cache fix. |
+
+*Going forward (straight-to-main workflow): name the builder in the work and keep
+this table updated whenever a section is substantially built or reworked, since
+the commit trailers won't disambiguate it.*
