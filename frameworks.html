@@ -144,6 +144,44 @@
     .impl-letter { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--scarlet); margin-bottom: 6px; }
     .impl-title { font-size: 14px; color: var(--text); margin-bottom: 6px; }
     .impl-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* SMV Matching mega-framework */
+    .smv-sub { margin: 2.25rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border); }
+    .smv-sub-eyebrow { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--scarlet); margin-bottom: 5px; }
+    .smv-sub-title { font-size: 18px; color: var(--text); }
+    .smv-sub-note { font-size: 12px; color: var(--text-dim); line-height: 1.55; margin-top: 3px; }
+    .smv-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 1.25rem; }
+    .smv-table { width: 100%; border-collapse: collapse; font-size: 13px; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .smv-table th { background: var(--surface); color: var(--text-dim); font-weight: 600; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; text-align: left; padding: 0.6rem 0.85rem; }
+    .smv-table td { padding: 0.6rem 0.85rem; border-top: 0.5px solid var(--border); color: var(--text-muted); line-height: 1.45; }
+    .smv-table td.num { color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .smv-table tr.pivot td { background: var(--surface); color: var(--text); }
+    .smv-band { font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; white-space: nowrap; display: inline-block; }
+    .smv-band.wide { background: #E1F5EE; color: #0F6E56; }
+    .smv-band.open { background: #ECF4DC; color: #5A6E0F; }
+    .smv-band.cracked { background: #FAEEDA; color: #854F0B; }
+    .smv-band.gated { background: #FBE4D7; color: #9B441B; }
+    .smv-band.closed { background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .smv-tag { font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
+    .smv-tag.t1 { background: #E1F5EE; color: #0F6E56; }
+    .smv-tag.t2 { background: #FAEEDA; color: #854F0B; }
+    .smv-tag.t3 { background: #FBE4D7; color: #9B441B; }
+    .smv-tag.est { background: #EEEDFE; color: #3C3489; }
+    .smv-callout { border: 0.5px solid var(--border); border-left: 2px solid var(--scarlet); border-radius: var(--radius-md); background: var(--card); padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+    .smv-callout strong { color: var(--text); }
+    .smv-direction { font-size: 11px; white-space: nowrap; }
+    .smv-direction.down { color: var(--scarlet-dim); }
+    .smv-direction.up { color: #0F6E56; }
+    .smv-direction.parity { color: var(--text-dim); }
+    .smv-checker-out { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .smv-out-card { background: var(--surface); border-radius: var(--radius-md); padding: 0.75rem 0.6rem; text-align: center; }
+    .smv-out-label { font-size: 10px; color: var(--text-dim); margin-bottom: 5px; line-height: 1.3; }
+    .smv-out-val { font-size: 20px; color: var(--text); }
+    @media (max-width: 620px) {
+      .smv-checker-out { grid-template-columns: 1fr 1fr; }
+      .smv-table { font-size: 12px; }
+      .smv-table th, .smv-table td { padding: 0.5rem 0.55rem; }
+    }
   </style>
 </head>
 <body data-page="frameworks">
@@ -288,7 +326,7 @@
       </div>
 
       <!-- Looks Rating -->
-      <div class="rf-entry" id="looks-rating" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+      <div class="rf-entry" id="looks-rating">
         <div class="rf-eyebrow">Resistance &amp; support model</div>
         <div class="rf-title">Looks Rating Evaluation System</div>
         <div class="rf-sub">A looks score is not static, but it is not infinitely fluid either. Every rating carries a support floor and a resistance ceiling that bound how perception drifts over time. Initial evaluations are highly accurate — but bias, familiarity, and behavior all apply pressure within the band.</div>
@@ -333,6 +371,102 @@
           <div class="impl-card"><div class="impl-letter">C</div><div class="impl-title">Initial ratings anchor</div><div class="impl-desc">First impressions create anchoring effects, stability bands, and expectation baselines that persist.</div></div>
           <div class="impl-card"><div class="impl-letter">D</div><div class="impl-title">System distinguishes</div><div class="impl-desc">Between raw looks, emotional treatment, long-term compatibility, and attraction persistence — each tracked separately.</div></div>
         </div>
+      </div>
+
+      <!-- SMV Matching (mega framework) -->
+      <div class="rf-entry" id="smv-matching" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+        <div class="rf-eyebrow">Market structure model</div>
+        <div class="rf-title">SMV Matching</div>
+        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of her own sex</em>, not an absolute. Across real couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> <span class="smv-tag t1">Tier 1</span> (Feingold&rsquo;s meta-analysis; a 2024 dyadic re-analysis confirms it) — strong matching, well short of identical. Two things follow: a <strong>Matching Curve</strong> that pulls every pairing toward the middle, and an <strong>Option Pool</strong> that is wildly asymmetric by sex. One correction up front: <strong>on looks alone, no one trades up — not even women.</strong> The &ldquo;trading up&rdquo; everyone notices is a <em>status</em> trade, and it lives in the later layers, not here.</div>
+
+        <div class="smv-sub">
+          <div class="smv-sub-eyebrow">Subcategory 1 · the aggregate</div>
+          <div class="smv-sub-title">The Matching Curve</div>
+          <div class="smv-sub-note">Where pairings land on average, given your own looks. Symmetric — the same curve for both sexes.</div>
+        </div>
+        <div class="smv-scroll">
+          <table class="smv-table">
+            <thead><tr><th>You</th><th>Your percentile</th><th>Expected partner</th><th>Direction</th></tr></thead>
+            <tbody>
+              <tr><td class="num">10</td><td>top ~2%</td><td class="num">~7.9</td><td><span class="smv-direction down">regresses down</span></td></tr>
+              <tr><td class="num">9</td><td>90th</td><td class="num">~7.0</td><td><span class="smv-direction down">down</span></td></tr>
+              <tr><td class="num">8</td><td>80th</td><td class="num">~6.3</td><td><span class="smv-direction down">down</span></td></tr>
+              <tr><td class="num">7</td><td>70th</td><td class="num">~5.8</td><td><span class="smv-direction down">down</span></td></tr>
+              <tr class="pivot"><td class="num">5</td><td>50th</td><td class="num">5.0</td><td><span class="smv-direction parity">the pivot</span></td></tr>
+              <tr><td class="num">4</td><td>40th</td><td class="num">~4.6</td><td><span class="smv-direction up">regresses up</span></td></tr>
+              <tr><td class="num">3</td><td>30th</td><td class="num">~4.2</td><td><span class="smv-direction up">up</span></td></tr>
+              <tr><td class="num">2</td><td>20th</td><td class="num">~3.7</td><td><span class="smv-direction up">up</span></td></tr>
+              <tr><td class="num">1</td><td>10th</td><td class="num">~3.0</td><td><span class="smv-direction up">up</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="smv-callout"><strong>The law:</strong> the further you sit from average, the harder your partner regresses toward it. A 10 pairs with an ~8; a 3 pairs with a ~4 (parity at the floor). Top dates down, bottom dates parity — <strong>no one escapes upward on looks.</strong></div>
+        <div class="smv-callout"><strong>The floor&rsquo;s one asymmetry is existential, not comparative.</strong> A below-median man&rsquo;s risk isn&rsquo;t a low-looks partner — it&rsquo;s no partner: young men are single about twice as often as young women <span class="smv-tag t1">Tier 1</span> (Pew: 63% vs 34%; the gap narrows once you account for men dating younger). A below-median woman still pairs — sometimes with a man trading status down on looks to be there.</div>
+
+        <div class="checker-box">
+          <div class="checker-header">Live checker · your looks → your likely partner</div>
+          <div class="checker-body">
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Your looks (within-sex percentile)</span><span class="slider-val" style="color:var(--scarlet)" id="smv-val">7.0</span></div>
+              <input type="range" min="1" max="10" step="0.5" value="7" id="smv-slider" oninput="smvMatch()" />
+            </div>
+            <div class="smv-checker-out">
+              <div class="smv-out-card"><div class="smv-out-label">Expected partner</div><div class="smv-out-val" id="smv-exp">5.8</div></div>
+              <div class="smv-out-card"><div class="smv-out-label">Partner is also a 10</div><div class="smv-out-val" id="smv-p10">—</div></div>
+              <div class="smv-out-card"><div class="smv-out-label">Partner ≥ 8</div><div class="smv-out-val" id="smv-p8">—</div></div>
+              <div class="smv-out-card"><div class="smv-out-label">Partner below you</div><div class="smv-out-val" id="smv-pbelow">—</div></div>
+            </div>
+            <div class="smv-callout" id="smv-readout" style="margin:1rem 0 0;"></div>
+          </div>
+        </div>
+
+        <div class="smv-sub">
+          <div class="smv-sub-eyebrow">Subcategory 2 · optionality</div>
+          <div class="smv-sub-title">The Option Pool</div>
+          <div class="smv-sub-note">Who&rsquo;s available to you — not who you end up with. Options and pairings are different things.</div>
+        </div>
+        <div class="smv-callout"><strong>Options are asymmetric; pairings are symmetric.</strong> Women drown in inbound interest, men starve: 57% of men who online-dated said they got too few messages, while women were 5&times; more likely to say <em>too many</em>, and 54% of women felt overwhelmed by the volume <span class="smv-tag t1">Tier 1</span> (Pew). For men the pool is also top-heavy — Tinder &ldquo;like&rdquo; inequality runs a Gini ~0.58 <span class="smv-tag t3">Tier 3</span>. Critical caveat: that measures <em>swipes in a free, looks-only context — interest, not couples</em>, and wildly overstates real pairing, which still regresses to matching. The famous &ldquo;bottom 80% of men&rdquo; line is swipe data, not relationships.</div>
+
+        <div class="smv-sub-note" style="margin-bottom:7px;">A 7/10 <strong>woman&rsquo;s</strong> pool — tilts <em>up</em> (men date down on looks freely):</div>
+        <div class="smv-scroll">
+          <table class="smv-table">
+            <thead><tr><th>Tier</th><th>Supply</th><th>Her real access</th><th>Band</th></tr></thead>
+            <tbody>
+              <tr><td class="num">10</td><td>top ~2–5%</td><td>short-term / situational; gated for commitment</td><td><span class="smv-band gated">Gated</span></td></tr>
+              <tr><td class="num">9</td><td>~10%</td><td>real, often short-term or trading on youth/looks</td><td><span class="smv-band cracked">Cracked</span></td></tr>
+              <tr><td class="num">8</td><td>~10%</td><td>strong — 8s date down on looks readily</td><td><span class="smv-band open">Open</span></td></tr>
+              <tr><td class="num">7</td><td>~10%</td><td>matched, mutual</td><td><span class="smv-band wide">Wide open</span></td></tr>
+              <tr><td class="num">5</td><td>~10%</td><td>near-total — they pursue up; rarely chosen</td><td><span class="smv-band wide">Wide open</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="smv-sub-note" style="margin-bottom:7px;">A 7/10 <strong>man&rsquo;s</strong> pool — sits <em>at or below</em> his line unless he buys up with status:</div>
+        <div class="smv-scroll">
+          <table class="smv-table">
+            <thead><tr><th>Tier</th><th>Supply</th><th>His real access</th><th>Band</th></tr></thead>
+            <tbody>
+              <tr><td class="num">10</td><td>top ~2–5%</td><td>~closed without major status</td><td><span class="smv-band closed">Closed</span></td></tr>
+              <tr><td class="num">9</td><td>~10%</td><td>gated; needs status</td><td><span class="smv-band closed">Closed</span></td></tr>
+              <tr><td class="num">8</td><td>~10%</td><td>needs status compensation</td><td><span class="smv-band gated">Gated</span></td></tr>
+              <tr><td class="num">7</td><td>~10%</td><td>matched — but must also clear her status filter</td><td><span class="smv-band open">Open</span></td></tr>
+              <tr><td class="num">5</td><td>~10%</td><td>high reciprocity — but he must initiate</td><td><span class="smv-band wide">Wide open</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="smv-callout">Same &ldquo;7,&rdquo; opposite pools: <strong>her pool reaches above her looks; his sits at or below his</strong> unless status lifts it. Both then <em>pair</em> by matching (Subcategory 1) — which is why she often <em>feels</em> like she pulled up: the higher-looks man beside her is usually compensating with status. Supply ≈ one decile per tier; 10s are the top sliver.</div>
+
+        <div class="reasoning-box" style="margin-bottom:0;">
+          <div class="box-header">Why you date within your pool, not at the top of it</div>
+          <div class="box-body">
+            <div class="reason-row"><i class="ti ti-arrow-up reason-icon"></i><div class="reason-text"><strong>&ldquo;The league above is intimidating&rdquo; — real.</strong> Remove rejection risk in the lab and people do chase the most attractive (Huston, 1973); under normal risk they aim at matched targets. And the tier above has better options, so it regresses to <em>its</em> match and genuinely reciprocates less. <span class="smv-tag t2">Tier 2</span></div></div>
+            <div class="reason-row"><i class="ti ti-heart reason-icon"></i><div class="reason-text"><strong>&ldquo;Matching is comfortable&rdquo; — real.</strong> Matched pairs carry less mate-guarding anxiety, and couples who knew each other longer before dating match <em>less</em> on looks (Hunt, Eastwick &amp; Finkel, 2015) — familiarity lets other value override the looks market. <span class="smv-tag t2">Tier 2</span></div></div>
+            <div class="reason-row"><i class="ti ti-arrow-down reason-icon"></i><div class="reason-text"><strong>&ldquo;Below feels beneath me&rdquo; — partly.</strong> A partner&rsquo;s looks signal your own mate value, so dating well down carries a real cost — but mostly people decline down simply because they can usually get <em>matched</em>, and matched beats settling. <span class="smv-tag t2">Tier 2</span></div></div>
+            <div class="reason-row"><i class="ti ti-stack-2 reason-icon"></i><div class="reason-text"><strong>Supply does the quiet work.</strong> The top of your pool is scarce and contested; the middle is abundant. Even with access to a few above you, you simply <em>meet</em> far more near the middle — so you land where the mass is. <span class="smv-tag t1">Tier 1</span></div></div>
+          </div>
+        </div>
+
+        <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Feingold (1988) and a 2024 dyadic re-analysis (partner attractiveness r&nbsp;&asymp;&nbsp;0.39); Langlois et al. (2000) on rating consensus; Pew Research (2020/2022) on online-dating volume and singlehood; Huston (1973); Hunt, Eastwick &amp; Finkel (2015). Decile probabilities are reasoned estimates on the r&nbsp;&asymp;&nbsp;0.4 anchor <span class="smv-tag est">Estimate</span>.</div>
       </div>
 
     </div>
@@ -441,7 +575,30 @@
         <div class="stat-card"><div class="stat-label">Deviation range</div><div class="stat-val" style="color:var(--scarlet)">${devLo}–${devHi}</div><div class="stat-sub">±2 possible drift</div></div>`;
     }
 
-    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1);
+    // SMV Matching — live checker (bivariate-normal matching, r ≈ 0.4)
+    const SMV_Z = {1:-1.282,1.5:-1.036,2:-0.842,2.5:-0.674,3:-0.524,3.5:-0.385,4:-0.253,4.5:-0.126,5:0,5.5:0.126,6:0.253,6.5:0.385,7:0.524,7.5:0.674,8:0.842,8.5:1.036,9:1.282,9.5:1.645,10:2.054};
+    const SMV_R = 0.4;
+    function smvErf(x){const t=1/(1+0.3275911*Math.abs(x));const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;}
+    function smvNcdf(z){return 0.5*(1+smvErf(z/Math.SQRT2));}
+    function smvMatch(){
+      const s=parseFloat(document.getElementById('smv-slider').value);
+      document.getElementById('smv-val').textContent=s.toFixed(1);
+      const z=SMV_Z[s], sd=Math.sqrt(1-SMV_R*SMV_R), mean=SMV_R*z;
+      const expScore=10*smvNcdf(mean);
+      const p10=1-smvNcdf((SMV_Z[10]-mean)/sd);
+      const p8=1-smvNcdf((SMV_Z[8]-mean)/sd);
+      const pbelow=smvNcdf((z-mean)/sd);
+      const pct=x=>Math.round(x*100)+'%';
+      document.getElementById('smv-exp').textContent=expScore.toFixed(1);
+      document.getElementById('smv-p10').textContent=pct(p10);
+      document.getElementById('smv-p8').textContent=pct(p8);
+      document.getElementById('smv-pbelow').textContent=pct(pbelow);
+      const dir = s>5.2 ? 'down toward the middle' : (s<4.8 ? 'up toward the middle' : 'to parity');
+      document.getElementById('smv-readout').innerHTML =
+        `A <strong>${s.toFixed(1)}</strong> most often pairs around <strong>${expScore.toFixed(1)}</strong> — regression pulls ${dir}. Partner is also a 10 ~${pct(p10)} of the time, an 8+ ~${pct(p8)}, and below you ~${pct(pbelow)}.`;
+    }
+
+    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch();
     window.addEventListener('resize', calcLooks);
   </script>
 </body>
