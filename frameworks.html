@@ -174,6 +174,7 @@
     .smv-direction.up { color: #0F6E56; }
     .smv-direction.parity { color: var(--text-dim); }
     .smv-checker-out { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .smv-checker-out.attn-checker-out { grid-template-columns: repeat(5, 1fr); }
     .smv-out-card { background: var(--surface); border-radius: var(--radius-md); padding: 0.75rem 0.6rem; text-align: center; }
     .smv-out-label { font-size: 10px; color: var(--text-dim); margin-bottom: 5px; line-height: 1.3; }
     .smv-out-val { font-size: 20px; color: var(--text); }
@@ -182,6 +183,7 @@
     .smv-toggle-btn.active { background: var(--scarlet); color: #fffaf3; }
     @media (max-width: 620px) {
       .smv-checker-out { grid-template-columns: 1fr 1fr; }
+      .smv-checker-out.attn-checker-out { grid-template-columns: 1fr 1fr; }
       .smv-table { font-size: 12px; }
       .smv-table th, .smv-table td { padding: 0.5rem 0.55rem; }
     }
@@ -234,9 +236,13 @@
           <div class="box-header">Example logic</div>
           <div class="box-body"><p>A person can hold an 8 personality composite and still fail long-term candidacy if physical attraction is a 6. And a single charming trait — say a 9 in humor — doesn&rsquo;t rescue a composite that everything else has dragged to a 6. The rule blocks rationalized compromise on either side: sustained desire and a genuinely good overall personality both have to independently clear 7.</p></div>
         </div>
-        <div class="reasoning-box" style="margin-bottom:0;">
+        <div class="reasoning-box">
           <div class="box-header">Reasoning</div>
           <div class="box-body"><p>The point of the 7–7 Rule is not perfectionism. It is preventing a relationship from being built on a missing pillar. Sustained desire and sustained personality fit both have to be independently good enough.</p></div>
+        </div>
+        <div class="reasoning-box" style="margin-bottom:0;">
+          <div class="box-header">A personal standard, on your own scale</div>
+          <div class="box-body"><p>The 7&ndash;7 Rule isn&rsquo;t a cosmic constant &mdash; it&rsquo;s a discipline you impose on your own ratings. The 1&ndash;10 is the eye of the beholder: your 7 can be someone else&rsquo;s 5, and the personality composite is softer still. That doesn&rsquo;t weaken the rule, it locates it. Its whole value is that you hold your own line and refuse to talk yourself beneath it &mdash; sustained desire and a genuinely good personality, both clearing the bar <em>you</em> actually set.</p></div>
         </div>
       </div>
 
@@ -264,6 +270,10 @@
             <div class="reason-row"><i class="ti ti-x reason-icon"></i><div class="reason-text"><strong>Any single axis can trip it.</strong> The floor applies to every factor independently — not to an overall average. One sub-5 metric is enough.</div></div>
             <div class="reason-row"><i class="ti ti-x reason-icon"></i><div class="reason-text"><strong>No compensation.</strong> Strength elsewhere can&rsquo;t offset a sub-5 factor; the weak point sets the ceiling for the whole match.</div></div>
           </div>
+        </div>
+        <div class="reasoning-box">
+          <div class="box-header">Whose 5? &mdash; the floor is yours, and it moves with you</div>
+          <div class="box-body"><p>This floor runs on your own eyes. A 4 to you is a 6 to someone else &mdash; &ldquo;below 5&rdquo; means below the line <em>you</em> draw, not a grade stamped on a person. So the rule is personal twice over: you set the scale, and the scale tracks where you sit. If you&rsquo;re a sub-5 yourself, parity is the realistic pairing &mdash; another sub-5 isn&rsquo;t a breach, it&rsquo;s your league. The auto-disqualification is the standard as applied <em>looking down</em> from at or above the floor; it never obliges you to reject your own level. See <a href="#smv-matching" style="color:var(--scarlet-dim)">SMV Matching</a> for why people pair near their own band.</p></div>
         </div>
         <div class="box-body" style="border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.25rem;">
           <div class="spectrum-track">
@@ -380,14 +390,14 @@
       <div class="rf-entry" id="smv-matching" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
         <div class="rf-eyebrow">Market structure model</div>
         <div class="rf-title">SMV Matching</div>
-        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of one&rsquo;s own sex</em>, not an absolute. Across already-paired couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> — moderate, real matching. That matching is well-established <span class="smv-tag t1">Tier 1</span>; pinning the working coefficient at 0.4 is a <span class="smv-tag t2">Tier 2</span> model anchor (the 2024 meta re-analyzes Feingold&rsquo;s 1980s samples, no new data). Two layers follow: a <strong>Matching Curve</strong> (who pairs with whom, on average) and an <strong>Option Pool</strong> (who&rsquo;s even available — wildly asymmetric by sex). One calibration up front: <strong>on looks alone the average pattern is assortative, not hypergamous</strong> — the &ldquo;trading up&rdquo; people notice usually enters through status, resources, or non-looks value, covered in the later layers.</div>
+        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of one&rsquo;s own sex</em>, not an absolute. Across already-paired couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> — moderate, real matching. That matching is well-established <span class="smv-tag t1">Tier 1</span>; pinning the working coefficient at 0.4 is a <span class="smv-tag t2">Tier 2</span> model anchor (the 2024 meta re-analyzes Feingold&rsquo;s 1980s samples, no new data). Three layers follow: a <strong>Matching Curve</strong> (who pairs with whom, on average), an <strong>Attention Market</strong> (who gets seen, liked, messaged, and ignored), and an <strong>Option Pool</strong> (who can realistically be converted into dates or commitment). One calibration up front: <strong>on looks alone the average pattern is assortative, not hypergamous</strong> — the &ldquo;trading up&rdquo; people notice usually enters through status, resources, or non-looks value, covered in the later layers.</div>
 
         <div class="smv-sub">
           <div class="smv-sub-eyebrow">Subcategory 1 · within-sex matching</div>
           <div class="smv-sub-title">The Matching Curve</div>
           <div class="smv-sub-note">Within-sex looks matching among <em>already-paired</em> couples. One curve — it applies identically to men and women.</div>
         </div>
-        <div class="smv-callout"><strong>One curve for both sexes — and that is not a discovered sex-difference.</strong> Scores are within-sex percentiles and a partner correlation is directionless, so the numbers come out identical for men and women <em>by construction</em> (and the real-world looks correlation is itself a single symmetric number, r&nbsp;&asymp;&nbsp;0.39). The genuine male/female asymmetry is <strong>not here</strong> — it&rsquo;s in the <strong>Option Pool</strong> (who&rsquo;s available) and in <strong>non-pairing risk</strong>, both below. This curve also only describes couples that <em>formed</em>; pair-formation is modeled separately.</div>
+        <div class="smv-callout"><strong>One curve for both sexes — and that is not a discovered sex-difference.</strong> Scores are within-sex percentiles and a partner correlation is directionless, so the numbers come out identical for men and women <em>by construction</em> (and the real-world looks correlation is itself a single symmetric number, r&nbsp;&asymp;&nbsp;0.39). The genuine male/female asymmetry is <strong>not here</strong> — it&rsquo;s in the <strong>Attention Market</strong> (who gets signal), the <strong>Option Pool</strong> (who is convertible), and <strong>non-pairing risk</strong>, below. This curve also only describes couples that <em>formed</em>; pair-formation is modeled separately.</div>
         <div class="smv-scroll">
           <table class="smv-table">
             <thead><tr><th>Looks (within-sex %ile)</th><th>Expected partner</th><th>Direction</th></tr></thead>
@@ -427,11 +437,47 @@
         </div>
 
         <div class="smv-sub">
-          <div class="smv-sub-eyebrow">Subcategory 2 · optionality</div>
-          <div class="smv-sub-title">The Option Pool</div>
-          <div class="smv-sub-note">Who&rsquo;s available to you — not who you end up with. Options and pairings are different things.</div>
+          <div class="smv-sub-eyebrow">Subcategory 2 · attention market</div>
+          <div class="smv-sub-title">The Attention Market</div>
+          <div class="smv-sub-note">Who gets noticed before anyone pairs. Attention is not the same thing as commitment.</div>
         </div>
-        <div class="smv-callout"><strong>Options are asymmetric; pairings are not.</strong> Women get inbound interest, men have to generate it: 57% of men who online-dated said they got <em>too few</em> messages vs 24% of women, and women were 5&times; more likely to say <em>too many</em> (30% vs 6%) <span class="smv-tag t1">Tier 1</span> (Pew 2020, n=4,860). On the apps the male side is steeply unequal — Tyson et al. (2016) collected ~480k profiles and found male match rates a tiny fraction of female ones <span class="smv-tag t2">Tier 2</span>. Critical caveat: these measure <em>interest in a free, looks-first context — not couples</em>, and overstate real pairing, which regresses to matching. The viral &ldquo;bottom 80% of men&rdquo; / Gini numbers come from a tiny self-selected swipe sample <span class="smv-tag t3">Tier 3</span> — folklore, not data.</div>
+        <div class="smv-callout"><strong>Attention is asymmetric before matching even starts.</strong> In Pew&rsquo;s online-dating survey, men were more than twice as likely to say they got <em>too few</em> messages (57% vs 24%), while women were five times as likely to say they got <em>too many</em> (30% vs 6%) <span class="smv-tag t1">Tier 1</span> (Pew 2020, n=4,860). Bruch &amp; Newman (2018) found both sexes message upward by roughly 25% in desirability, but replies fall as the reach rises <span class="smv-tag t2">Tier 2</span>. This layer is not who you end up with. It is who sees you, pings you, answers you, ghosts you, or keeps you as an option.</div>
+
+        <div class="checker-box">
+          <div class="checker-header">Live attention model · score → reachable bands</div>
+          <div class="checker-body">
+            <div class="smv-toggle" id="attn-toggle">
+              <button type="button" class="smv-toggle-btn active" data-sex="f" onclick="attnSetSex('f')">Woman</button>
+              <button type="button" class="smv-toggle-btn" data-sex="m" onclick="attnSetSex('m')">Man</button>
+            </div>
+            <div class="smv-sub-note" style="margin:-6px 0 12px;">Numbers below are <strong>reasoned bands</strong>, not measured guarantees. They combine the sourced attention gap with the looks-matching curve and the different filters for casual sex, dating, situationships, and commitment. <span class="smv-tag est">Estimate</span></div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Your looks (within-sex percentile)</span><span class="slider-val" style="color:var(--scarlet)" id="attn-val">7.0</span></div>
+              <input type="range" min="1" max="10" step="0.5" value="7" id="attn-slider" oninput="attnMarket()" />
+            </div>
+            <div class="smv-checker-out attn-checker-out">
+              <div class="smv-out-card"><div class="smv-out-label">Raw attention</div><div class="smv-out-val" id="attn-raw">—</div></div>
+              <div class="smv-out-card"><div class="smv-out-label">Date conversion</div><div class="smv-out-val" id="attn-date">—</div></div>
+              <div class="smv-out-card"><div class="smv-out-label">Fling access</div><div class="smv-out-val" id="attn-fling">—</div></div>
+              <div class="smv-out-card"><div class="smv-out-label">Situationship / FWB</div><div class="smv-out-val" id="attn-situ">—</div></div>
+              <div class="smv-out-card"><div class="smv-out-label">LTR access</div><div class="smv-out-val" id="attn-ltr">—</div></div>
+            </div>
+            <div class="smv-scroll" style="margin-top:1rem;">
+              <table class="smv-table">
+                <thead><tr><th>Market layer</th><th>Realistic partner looks band</th><th>Outer reach</th><th>Read</th></tr></thead>
+                <tbody id="attn-rows"></tbody>
+              </table>
+            </div>
+            <div class="smv-callout" id="attn-readout" style="margin:1rem 0 0;"></div>
+          </div>
+        </div>
+
+        <div class="smv-sub">
+          <div class="smv-sub-eyebrow">Subcategory 3 · optionality</div>
+          <div class="smv-sub-title">The Option Pool</div>
+          <div class="smv-sub-note">Who can be converted from attention into realistic dates or commitment. Options and pairings are different things.</div>
+        </div>
+        <div class="smv-callout"><strong>Options are asymmetric; pairings are not.</strong> The Attention Market tells you who reacts; the Option Pool asks who can actually be converted. A woman&rsquo;s raw pool usually reaches above her looks line, but commitment is gated. A man&rsquo;s pool usually sits at or below his looks line unless status, competence, familiarity, or context lifts it. Critical caveat: these rows are <em>reasoned access bands</em>, not measured couple outcomes. Real pairing still regresses toward matching.</div>
 
         <div class="smv-sub-note" style="margin-bottom:7px;">A 7/10 <strong>woman&rsquo;s</strong> pool — tilts <em>up</em> (men date down on looks freely):</div>
         <div class="smv-scroll">
@@ -460,7 +506,7 @@
             </tbody>
           </table>
         </div>
-        <div class="smv-callout">Same &ldquo;7,&rdquo; opposite pools: <strong>her pool reaches above her looks; his sits at or below his</strong> unless status lifts it. Both then <em>pair</em> by matching (Subcategory 1) — which is why she often <em>feels</em> like she pulled up: the higher-looks man beside her is usually compensating with status. Supply ≈ one decile per tier; 10s are the top sliver.</div>
+        <div class="smv-callout">Same &ldquo;7,&rdquo; opposite pools: <strong>her attention reaches above her looks line, but commitment gates narrow it; his attention sits at or below his line unless status lifts it.</strong> Both then <em>pair</em> by matching (Subcategory 1). Supply ≈ one decile per tier; 10s are the top sliver. <span class="smv-tag est">Estimate</span></div>
 
         <div class="smv-callout"><strong>Non-pairing risk — separate from the curve.</strong> Men stay single more than women, concentrated at the bottom — but the size is contested. Pew&rsquo;s headline (63% of men 18&ndash;29 single vs 34% of women, n=6,034) is an outlier; the GSS and the American Perspectives Survey put the gap nearer <strong>~10&ndash;12 points</strong>, and ~4 of Pew&rsquo;s points vanish once you account for men dating slightly younger. Direction: real. Magnitude: smaller than the meme. And it&rsquo;s <em>singlehood</em>, not proof of looks-floor exclusion. <span class="smv-tag t1">Tier 1</span> stat · contested magnitude.</div>
 
@@ -606,20 +652,70 @@
       const dir = s>5.2 ? 'down toward the middle' : (s<4.8 ? 'up toward the middle' : 'to parity');
       let g;
       if (smvSex === 'f') {
-        g = s>=6 ? ' The higher-looks man beside her is usually trading <strong>up on status</strong>, not down overall.'
-          : (s<5 ? ' She still pairs — often with a status-compensating or sub-5 man.'
-          : ' Near parity on looks; status decides which way it tilts.');
+        g = s>=6 ? ' If a real pairing lands above this looks curve, the missing variable is usually non-looks value: status, chemistry, familiarity, timing, or commitment frame.'
+          : (s<5 ? ' Attention may still arrive, but commitment access depends on who converts that attention into a real pairing.'
+          : ' Near parity on looks; non-looks value decides which way it tilts.');
       } else {
-        g = s>=6 ? ' Women trade up on <strong>status</strong>, not your looks — expect to add status just to hold this match.'
-          : (s<5 ? ' Below the median the real risk isn&rsquo;t a low-looks partner — it&rsquo;s <strong>not pairing at all</strong> (Pew).'
-          : ' Near parity on looks; status decides whether you clear it.');
+        g = s>=6 ? ' If you pair above this looks curve, the lift usually comes from non-looks value: status, competence, familiarity, or unusually strong fit.'
+          : (s<5 ? ' Below the median the real risk isn&rsquo;t a low-looks partner — it&rsquo;s <strong>not pairing at all</strong>.'
+          : ' Near parity on looks; status, competence, and fit decide whether you clear it.');
       }
       document.getElementById('smv-readout').innerHTML =
         `A <strong>${s.toFixed(1)}</strong> pairs around <strong>${expScore.toFixed(1)}</strong> on average (wide spread) — regression pulls ${dir}.` + g +
         ` Partner is also a 10 ~${pct(p10)}, an 8+ ~${pct(p8)}, below you ~${pct(pbelow)}.`;
     }
 
-    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch();
+    let attnSex = 'f';
+    function attnSetSex(sx){
+      attnSex = sx;
+      document.querySelectorAll('#attn-toggle .smv-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.sex === sx));
+      attnMarket();
+    }
+    function attnClamp(x){ return Math.max(1, Math.min(10, x)); }
+    function attnFmt(x){
+      const n = Math.round(attnClamp(x)*2)/2;
+      return Number.isInteger(n) ? String(n) : n.toFixed(1);
+    }
+    function attnRange(lo, hi){
+      const a = attnClamp(lo), b = attnClamp(Math.max(lo, hi));
+      return `${attnFmt(a)}–${attnFmt(b)}`;
+    }
+    function attnRows(s, sex){
+      if (sex === 'f') {
+        return [
+          ['Raw attention', attnRange(s-2.5, 10), '10s visible; high noise', 'Inbound pool is broadest here, but much of it is low-intent or short-term.'],
+          ['Date conversion', attnRange(s-1.5, s+1.5), `up to ${attnFmt(s+2)} with context`, 'A date is easier than commitment; chemistry and timing matter heavily.'],
+          ['Fling / casual', attnRange(s, s+2), `up to ${attnFmt(s+3)} situationally`, 'Men date down on looks more freely for short-term access.'],
+          ['Situationship / FWB', attnRange(s-0.5, s+1.5), `up to ${attnFmt(s+2)} if chemistry holds`, 'Accessible above-match, but stability drops as the reach rises.'],
+          ['LTR / commitment', attnRange(s-1, s+0.75), `up to ${attnFmt(s+1.5)} with fit`, 'Commitment compresses back toward matching; attention is not a ring.']
+        ];
+      }
+      return [
+        ['Raw attention', attnRange(s-2, s+0.5), `up to ${attnFmt(s+1.5)} with status`, 'Inbound signal is thinner; he usually has to create demand.'],
+        ['Date conversion', attnRange(s-1.5, s+0.5), `up to ${attnFmt(s+1.5)} with context`, 'Approach, social proof, and setting decide whether she reads him as viable.'],
+        ['Fling / casual', attnRange(s-2, s), `up to ${attnFmt(s+1)} with strong appeal`, 'Casual access is the harshest lane unless he is visibly high-looks or high-status.'],
+        ['Situationship / FWB', attnRange(s-1.5, s+0.5), `up to ${attnFmt(s+1.5)} with chemistry`, 'Can run slightly above looks if the vibe is strong, but it is unstable.'],
+        ['LTR / commitment', attnRange(s-1, s+1), `up to ${attnFmt(s+2)} with status/fit`, 'His best upward lane is usually commitment value, not raw sexual attention.']
+      ];
+    }
+    function attnMarket(){
+      const s = parseFloat(document.getElementById('attn-slider').value);
+      document.getElementById('attn-val').textContent = s.toFixed(1);
+      const rows = attnRows(s, attnSex);
+      document.getElementById('attn-raw').textContent = rows[0][1];
+      document.getElementById('attn-date').textContent = rows[1][1];
+      document.getElementById('attn-fling').textContent = rows[2][1];
+      document.getElementById('attn-situ').textContent = rows[3][1];
+      document.getElementById('attn-ltr').textContent = rows[4][1];
+      document.getElementById('attn-rows').innerHTML = rows.map(r => `<tr><td class="num">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+      const person = attnSex === 'f' ? 'woman' : 'man';
+      const read = attnSex === 'f'
+        ? `A <strong>${s.toFixed(1)}</strong> ${person} is overexposed above her looks line in raw attention (<strong>${rows[0][1]}</strong>), but LTR access compresses toward <strong>${rows[4][1]}</strong>. Casual access runs higher than commitment access; her tax is filtering intent.`
+        : `A <strong>${s.toFixed(1)}</strong> ${person} has a thinner raw attention band (<strong>${rows[0][1]}</strong>) and must create signal. LTR access (<strong>${rows[4][1]}</strong>) can outrun casual access (<strong>${rows[2][1]}</strong>) when status, competence, and fit are visible; his tax is initiation and non-response.`;
+      document.getElementById('attn-readout').innerHTML = read + ' <span class="smv-tag est">Estimate</span>';
+    }
+
+    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket();
     window.addEventListener('resize', calcLooks);
   </script>
 </body>
