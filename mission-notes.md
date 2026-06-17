@@ -285,7 +285,7 @@ build → the other reviews → Jason decides.
 | The Love Hierarchy | `hierarchy.html` | **Claude** | "Jason's Hierarchy" rename + the custom-tier builder. |
 | Home | `index.html` | **Claude + Codex** | Claude did the refresh (doctrine band, section map); Codex reworked the UI to restore the mini-pyramid. |
 | Mobile-responsive nav/footer + no-cache dev server | `css/styles.css`, partials, `.claude/dev-server.py` | **Claude** | Hamburger nav, footer wrap/stack, dev-server no-cache fix. |
-| SMV Matching framework | `frameworks.html` | **Claude** | Mega-framework w/ subcategories: The Matching Curve (looks regression, live checker) + The Option Pool (optionality asymmetry). Evidence-tagged, follows-the-data per Jason. Built from the looks-pairing thread; personality + overall-composite layers still to come. |
+| SMV Matching framework | `frameworks.html` | **Claude** (build) · **Codex** (adversarial review) | Mega-framework w/ subcategories: The Matching Curve + The Option Pool, live checker, evidence-tagged. Codex review + Claude parallel research reconciled: collapsed the mirrored male/female curves into one honest within-sex table (the symmetry was a math artifact, not a sex-finding), tiered r≈0.4 down to a model anchor, cut the junk Tinder-Gini (→ Tyson 2016 + Pew + Bruch/Newman), corrected the male non-pairing magnitude to ~10–12 pts. Personality + overall-composite layers still to come. |
 
 *Going forward (straight-to-main workflow): name the builder in the work and keep
 this table updated whenever a section is substantially built or reworked, since

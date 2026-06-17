@@ -380,44 +380,29 @@
       <div class="rf-entry" id="smv-matching" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
         <div class="rf-eyebrow">Market structure model</div>
         <div class="rf-title">SMV Matching</div>
-        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of her own sex</em>, not an absolute. Across real couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> <span class="smv-tag t1">Tier 1</span> (Feingold&rsquo;s meta-analysis; a 2024 dyadic re-analysis confirms it) — strong matching, well short of identical. Two things follow: a <strong>Matching Curve</strong> that pulls every pairing toward the middle, and an <strong>Option Pool</strong> that is wildly asymmetric by sex. One correction up front: <strong>on looks alone, no one trades up — not even women.</strong> The &ldquo;trading up&rdquo; everyone notices is a <em>status</em> trade, and it lives in the later layers, not here.</div>
+        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of one&rsquo;s own sex</em>, not an absolute. Across already-paired couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> — moderate, real matching. That matching is well-established <span class="smv-tag t1">Tier 1</span>; pinning the working coefficient at 0.4 is a <span class="smv-tag t2">Tier 2</span> model anchor (the 2024 meta re-analyzes Feingold&rsquo;s 1980s samples, no new data). Two layers follow: a <strong>Matching Curve</strong> (who pairs with whom, on average) and an <strong>Option Pool</strong> (who&rsquo;s even available — wildly asymmetric by sex). One calibration up front: <strong>on looks alone the average pattern is assortative, not hypergamous</strong> — the &ldquo;trading up&rdquo; people notice usually enters through status, resources, or non-looks value, covered in the later layers.</div>
 
         <div class="smv-sub">
-          <div class="smv-sub-eyebrow">Subcategory 1 · the aggregate</div>
+          <div class="smv-sub-eyebrow">Subcategory 1 · within-sex matching</div>
           <div class="smv-sub-title">The Matching Curve</div>
-          <div class="smv-sub-note">Where pairings land on average, given your own looks — read <em>per sex</em>, because what the regression means differs sharply by demographic.</div>
+          <div class="smv-sub-note">Within-sex looks matching among <em>already-paired</em> couples. One curve — it applies identically to men and women.</div>
         </div>
-        <div class="smv-callout"><strong>The looks math is symmetric; the meaning isn&rsquo;t.</strong> A 70th-percentile man and a 70th-percentile woman both regress to a ~58th-percentile partner — on looks <em>alone</em>, neither sex has an edge. The asymmetry lives entirely in <strong>(1) the status trade</strong> and <strong>(2) who pairs at all</strong>, which is why the two curves below read so differently even where the numbers match. <span class="smv-tag t1">Tier 1</span> anchor (r&nbsp;&asymp;&nbsp;0.4); per-row reads are reasoned <span class="smv-tag est">Estimate</span>.</div>
-
-        <div class="smv-sub-note" style="margin-bottom:7px;"><strong>Women</strong> — her looks vs. the man she pairs with:</div>
+        <div class="smv-callout"><strong>One curve for both sexes — and that is not a discovered sex-difference.</strong> Scores are within-sex percentiles and a partner correlation is directionless, so the numbers come out identical for men and women <em>by construction</em> (and the real-world looks correlation is itself a single symmetric number, r&nbsp;&asymp;&nbsp;0.39). The genuine male/female asymmetry is <strong>not here</strong> — it&rsquo;s in the <strong>Option Pool</strong> (who&rsquo;s available) and in <strong>non-pairing risk</strong>, both below. This curve also only describes couples that <em>formed</em>; pair-formation is modeled separately.</div>
         <div class="smv-scroll">
           <table class="smv-table">
-            <thead><tr><th>Her looks</th><th>His looks</th><th>What it means for her</th></tr></thead>
+            <thead><tr><th>Looks (within-sex %ile)</th><th>Expected partner</th><th>Direction</th></tr></thead>
             <tbody>
-              <tr><td class="num">10</td><td class="num">~7.9</td><td>Pairs down on looks — but the man beside her is usually trading <strong>up on status</strong>, so rarely down overall.</td></tr>
-              <tr><td class="num">8</td><td class="num">~6.3</td><td>Her looks-match is mid-tier; his status fills the visible gap.</td></tr>
-              <tr><td class="num">7</td><td class="num">~5.8</td><td>&ldquo;Punching above her weight&rdquo; is the status trade, not looks.</td></tr>
-              <tr class="pivot"><td class="num">5</td><td class="num">5.0</td><td>Parity — the pivot.</td></tr>
-              <tr><td class="num">3</td><td class="num">~4.2</td><td>Parity at the floor, and <strong>she still pairs</strong> — often with a status-compensating or sub-5 man.</td></tr>
-              <tr><td class="num">1</td><td class="num">~3.0</td><td>Regresses up toward the middle; the female pairing floor stays high.</td></tr>
+              <tr><td class="num">10</td><td class="num">~7.9</td><td><span class="smv-direction down">regresses down</span></td></tr>
+              <tr><td class="num">9</td><td class="num">~7.0</td><td><span class="smv-direction down">down</span></td></tr>
+              <tr><td class="num">8</td><td class="num">~6.3</td><td><span class="smv-direction down">down</span></td></tr>
+              <tr><td class="num">7</td><td class="num">~5.8</td><td><span class="smv-direction down">down</span></td></tr>
+              <tr class="pivot"><td class="num">5</td><td class="num">5.0</td><td><span class="smv-direction parity">pivot</span></td></tr>
+              <tr><td class="num">3</td><td class="num">~4.2</td><td><span class="smv-direction up">regresses up</span></td></tr>
+              <tr><td class="num">1</td><td class="num">~3.0</td><td><span class="smv-direction up">up</span></td></tr>
             </tbody>
           </table>
         </div>
-
-        <div class="smv-sub-note" style="margin-bottom:7px;"><strong>Men</strong> — his looks vs. the woman he pairs with:</div>
-        <div class="smv-scroll">
-          <table class="smv-table">
-            <thead><tr><th>His looks</th><th>Her looks</th><th>What it means for him</th></tr></thead>
-            <tbody>
-              <tr><td class="num">10</td><td class="num">~7.9</td><td>Pairs down on looks — and gets <strong>no status credit</strong> for them the way women do; looks alone don&rsquo;t buy up.</td></tr>
-              <tr><td class="num">8</td><td class="num">~6.3</td><td>His looks-match — but he typically needs status just to <em>hold</em> it.</td></tr>
-              <tr><td class="num">7</td><td class="num">~5.8</td><td>Women trade up on <strong>status</strong>, not his looks.</td></tr>
-              <tr class="pivot"><td class="num">5</td><td class="num">5.0</td><td>Parity — the pivot.</td></tr>
-              <tr><td class="num">3</td><td class="num">~4.2</td><td>Parity <em>if he pairs</em> — but the bigger risk is not pairing at all.</td></tr>
-              <tr><td class="num">1</td><td class="num">~3.0</td><td>Regression up is cold comfort; bottom-male non-pairing dominates (Pew: young men single ~2&times; women <span class="smv-tag t1">Tier 1</span>).</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="smv-callout"><strong>The law:</strong> the further from average you sit, the harder your partner regresses toward it — top toward the middle, bottom toward the middle (parity at the floor). <strong>Read the column as the <em>average</em> partner, not the typical one</strong> — the conditional spread is wide (SD&nbsp;&asymp;&nbsp;0.9 on this scale), so any one pairing varies a lot. And &ldquo;a 10 pairs with an ~8&rdquo; is cap-sensitive: if &ldquo;10&rdquo; means the 95th percentile the expected partner is ~7.5, at the 98th ~7.9, at the 99th ~8.2, at the 99.9th ~8.9. The regression <em>law</em> is the finding; the exact endpoint is an assumption. <span class="smv-tag est">Estimate</span></div>
 
         <div class="checker-box">
           <div class="checker-header">Live checker · your looks → your likely partner</div>
@@ -426,6 +411,7 @@
               <button type="button" class="smv-toggle-btn active" data-sex="f" onclick="smvSetSex('f')">Woman</button>
               <button type="button" class="smv-toggle-btn" data-sex="m" onclick="smvSetSex('m')">Man</button>
             </div>
+            <div class="smv-sub-note" style="margin:-6px 0 12px;">Same numbers either way — scores are within-sex; the toggle changes only the market context, not the math.</div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your looks (within-sex percentile)</span><span class="slider-val" style="color:var(--scarlet)" id="smv-val">7.0</span></div>
               <input type="range" min="1" max="10" step="0.5" value="7" id="smv-slider" oninput="smvMatch()" />
@@ -445,7 +431,7 @@
           <div class="smv-sub-title">The Option Pool</div>
           <div class="smv-sub-note">Who&rsquo;s available to you — not who you end up with. Options and pairings are different things.</div>
         </div>
-        <div class="smv-callout"><strong>Options are asymmetric; pairings are symmetric.</strong> Women drown in inbound interest, men starve: 57% of men who online-dated said they got too few messages, while women were 5&times; more likely to say <em>too many</em>, and 54% of women felt overwhelmed by the volume <span class="smv-tag t1">Tier 1</span> (Pew). For men the pool is also top-heavy — Tinder &ldquo;like&rdquo; inequality runs a Gini ~0.58 <span class="smv-tag t3">Tier 3</span>. Critical caveat: that measures <em>swipes in a free, looks-only context — interest, not couples</em>, and wildly overstates real pairing, which still regresses to matching. The famous &ldquo;bottom 80% of men&rdquo; line is swipe data, not relationships.</div>
+        <div class="smv-callout"><strong>Options are asymmetric; pairings are not.</strong> Women get inbound interest, men have to generate it: 57% of men who online-dated said they got <em>too few</em> messages vs 24% of women, and women were 5&times; more likely to say <em>too many</em> (30% vs 6%) <span class="smv-tag t1">Tier 1</span> (Pew 2020, n=4,860). On the apps the male side is steeply unequal — Tyson et al. (2016) collected ~480k profiles and found male match rates a tiny fraction of female ones <span class="smv-tag t2">Tier 2</span>. Critical caveat: these measure <em>interest in a free, looks-first context — not couples</em>, and overstate real pairing, which regresses to matching. The viral &ldquo;bottom 80% of men&rdquo; / Gini numbers come from a tiny self-selected swipe sample <span class="smv-tag t3">Tier 3</span> — folklore, not data.</div>
 
         <div class="smv-sub-note" style="margin-bottom:7px;">A 7/10 <strong>woman&rsquo;s</strong> pool — tilts <em>up</em> (men date down on looks freely):</div>
         <div class="smv-scroll">
@@ -476,17 +462,19 @@
         </div>
         <div class="smv-callout">Same &ldquo;7,&rdquo; opposite pools: <strong>her pool reaches above her looks; his sits at or below his</strong> unless status lifts it. Both then <em>pair</em> by matching (Subcategory 1) — which is why she often <em>feels</em> like she pulled up: the higher-looks man beside her is usually compensating with status. Supply ≈ one decile per tier; 10s are the top sliver.</div>
 
+        <div class="smv-callout"><strong>Non-pairing risk — separate from the curve.</strong> Men stay single more than women, concentrated at the bottom — but the size is contested. Pew&rsquo;s headline (63% of men 18&ndash;29 single vs 34% of women, n=6,034) is an outlier; the GSS and the American Perspectives Survey put the gap nearer <strong>~10&ndash;12 points</strong>, and ~4 of Pew&rsquo;s points vanish once you account for men dating slightly younger. Direction: real. Magnitude: smaller than the meme. And it&rsquo;s <em>singlehood</em>, not proof of looks-floor exclusion. <span class="smv-tag t1">Tier 1</span> stat · contested magnitude.</div>
+
         <div class="reasoning-box" style="margin-bottom:0;">
           <div class="box-header">Why you date within your pool, not at the top of it</div>
           <div class="box-body">
-            <div class="reason-row"><i class="ti ti-arrow-up reason-icon"></i><div class="reason-text"><strong>&ldquo;The league above is intimidating&rdquo; — real.</strong> Remove rejection risk in the lab and people do chase the most attractive (Huston, 1973); under normal risk they aim at matched targets. And the tier above has better options, so it regresses to <em>its</em> match and genuinely reciprocates less. <span class="smv-tag t2">Tier 2</span></div></div>
+            <div class="reason-row"><i class="ti ti-arrow-up reason-icon"></i><div class="reason-text"><strong>&ldquo;The league above is intimidating&rdquo; — real.</strong> People <em>do</em> reach up — Bruch &amp; Newman (2018) found both sexes message partners ~25% more desirable than themselves — but reply rates fall the higher they reach, so aspiration ≠ pairing. Remove rejection risk in the lab and people chase the most attractive (Huston, 1973); under normal risk they settle toward matched targets, who also have better options and reciprocate less. <span class="smv-tag t2">Tier 2</span></div></div>
             <div class="reason-row"><i class="ti ti-heart reason-icon"></i><div class="reason-text"><strong>&ldquo;Matching is comfortable&rdquo; — real.</strong> Matched pairs carry less mate-guarding anxiety, and couples who knew each other longer before dating match <em>less</em> on looks (Hunt, Eastwick &amp; Finkel, 2015) — familiarity lets other value override the looks market. <span class="smv-tag t2">Tier 2</span></div></div>
             <div class="reason-row"><i class="ti ti-arrow-down reason-icon"></i><div class="reason-text"><strong>&ldquo;Below feels beneath me&rdquo; — partly.</strong> A partner&rsquo;s looks signal your own mate value, so dating well down carries a real cost — but mostly people decline down simply because they can usually get <em>matched</em>, and matched beats settling. <span class="smv-tag t2">Tier 2</span></div></div>
             <div class="reason-row"><i class="ti ti-stack-2 reason-icon"></i><div class="reason-text"><strong>Supply does the quiet work.</strong> The top of your pool is scarce and contested; the middle is abundant. Even with access to a few above you, you simply <em>meet</em> far more near the middle — so you land where the mass is. <span class="smv-tag t1">Tier 1</span></div></div>
           </div>
         </div>
 
-        <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Feingold (1988) and a 2024 dyadic re-analysis (partner attractiveness r&nbsp;&asymp;&nbsp;0.39); Langlois et al. (2000) on rating consensus; Pew Research (2020/2022) on online-dating volume and singlehood; Huston (1973); Hunt, Eastwick &amp; Finkel (2015). Decile probabilities are reasoned estimates on the r&nbsp;&asymp;&nbsp;0.4 anchor <span class="smv-tag est">Estimate</span>.</div>
+        <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Per-row figures are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
       </div>
 
     </div>
@@ -627,7 +615,7 @@
           : ' Near parity on looks; status decides whether you clear it.');
       }
       document.getElementById('smv-readout').innerHTML =
-        `A <strong>${s.toFixed(1)}</strong> most often pairs around <strong>${expScore.toFixed(1)}</strong> — regression pulls ${dir}.` + g +
+        `A <strong>${s.toFixed(1)}</strong> pairs around <strong>${expScore.toFixed(1)}</strong> on average (wide spread) — regression pulls ${dir}.` + g +
         ` Partner is also a 10 ~${pct(p10)}, an 8+ ~${pct(p8)}, below you ~${pct(pbelow)}.`;
     }
 
