@@ -520,6 +520,104 @@
       line-height: 1.55;
       margin-top: 1rem;
     }
+    .import-panel {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      background: rgba(255,252,247,0.62);
+      padding: 1rem;
+      margin: 1.2rem 0 1.45rem;
+    }
+    .import-box {
+      width: 100%;
+      min-height: 86px;
+      resize: vertical;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.58);
+      color: var(--text-muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: 10.5px;
+      line-height: 1.45;
+      padding: 0.65rem 0.75rem;
+      margin: 0.65rem 0 0.75rem;
+    }
+    .import-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .import-status {
+      color: var(--text-dim);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .import-report {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.55;
+      margin-top: 0.75rem;
+    }
+    .import-report strong {
+      color: var(--text);
+    }
+    .manual-gap-grid {
+      display: grid;
+      gap: 0.65rem;
+      margin-top: 0.8rem;
+    }
+    .manual-gap-row {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.52);
+      padding: 0.75rem;
+    }
+    .manual-gap-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.45rem;
+    }
+    .manual-gap-name {
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .manual-gap-val {
+      color: var(--scarlet);
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 34px;
+      text-align: right;
+    }
+    .manual-gap-row input[type="range"] {
+      width: 100%;
+      accent-color: var(--scarlet);
+    }
+    .manual-gap-note {
+      color: var(--text-dim);
+      font-size: 11px;
+      line-height: 1.45;
+      margin-top: 0.35rem;
+    }
+    .manual-gap-weak {
+      border-color: var(--scarlet);
+      background: rgba(196,30,58,0.06);
+    }
+    .manual-gap-flag {
+      display: inline-block;
+      margin-left: 0.4rem;
+      padding: 0.05rem 0.4rem;
+      border-radius: 999px;
+      background: var(--scarlet);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
     .auto-next-control {
       display: inline-flex;
       align-items: center;
@@ -568,6 +666,12 @@
       color: var(--text-muted);
       font-size: 13px;
       line-height: 1.6;
+    }
+    .matchup-stats {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.72);
+      padding: 0.8rem 1rem;
     }
     .matchup-grid {
       display: grid;
@@ -804,6 +908,17 @@
               <div class="weight-grid" id="weight-grid-a"></div>
               <div class="score-formula" id="lens-note-a"></div>
             </div>
+            <div class="import-panel">
+              <div class="lens-title">Import from Compatibility</div>
+              <div class="lens-copy">Paste a copied compatibility package here to skip the quiz and map its factor scores into Profile A. The mapping is visible so you can challenge it.</div>
+              <textarea class="import-box" id="import-box-a" placeholder="Paste compatibility export package..." spellcheck="false"></textarea>
+              <div class="import-actions">
+                <button class="btn btn-scarlet" type="button" onclick="importCompatibilityProfile('a')"><i class="ti ti-upload"></i> Import to Profile A</button>
+                <button class="btn btn-subtle" type="button" onclick="clearSavedState()">Clear saved state</button>
+                <span class="import-status" id="import-status-a">Waiting for pasted package.</span>
+              </div>
+              <div class="import-report" id="import-report-a"></div>
+            </div>
             <div class="exam-stats">
               <div class="exam-stat">
                 <div class="exam-stat-num">25</div>
@@ -865,6 +980,12 @@
             </div>
           </div>
 
+          <div class="result-panel mt-2" id="import-result-a-panel" hidden>
+            <div class="result-title">Compatibility import mapping</div>
+            <div class="result-copy">The compatibility pyramid can skip the quiz, but it does not always measure every SMV axis. Fill any manual gaps below before treating the score as final.</div>
+            <div class="import-report" id="import-report-a-results"></div>
+          </div>
+
           <div class="result-panel mt-2">
             <div class="result-title">Highest-return improvements</div>
             <div class="result-copy">The calculator is blunt by design: improve the lowest meaningful levers first. They are the easiest places for the whole profile to stop leaking value.</div>
@@ -873,7 +994,7 @@
           </div>
 
           <div class="result-panel mt-2">
-            <div class="result-title">Matchup against Profile B</div>
+            <div class="result-title" id="matchup-title-a">Matchup against target profile</div>
             <div class="result-copy" id="matchup-intro">Profile B is the target profile. Adjust it, then this section tells you whether you are matching, overreaching, or leaving value on the table.</div>
             <div id="matchup-results"></div>
           </div>
@@ -897,6 +1018,17 @@
             <div class="weight-grid" id="weight-grid-b"></div>
             <div class="score-formula" id="lens-note-b"></div>
           </div>
+          <div class="import-panel">
+            <div class="lens-title">Import from Compatibility</div>
+            <div class="lens-copy">Paste a copied compatibility package here to fill Profile B&rsquo;s target sliders. You can still adjust the mapped scores afterward.</div>
+            <textarea class="import-box" id="import-box-b" placeholder="Paste compatibility export package..." spellcheck="false"></textarea>
+            <div class="import-actions">
+              <button class="btn btn-scarlet" type="button" onclick="importCompatibilityProfile('b')"><i class="ti ti-upload"></i> Import to Profile B</button>
+              <button class="btn btn-subtle" type="button" onclick="clearSavedState()">Clear saved state</button>
+              <span class="import-status" id="import-status-b">Waiting for pasted package.</span>
+            </div>
+            <div class="import-report" id="import-report-b"></div>
+          </div>
           <div class="pb-layout">
             <div>
               <label class="pb-label">Name or description</label>
@@ -914,7 +1046,7 @@
             </div>
           </div>
           <div class="result-panel mt-2">
-            <div class="result-title">How you compare</div>
+            <div class="result-title" id="matchup-title-b">How you compare</div>
             <div class="result-copy">This is the part Profile B is for: compare your current profile against the desired profile and see which gaps actually matter.</div>
             <div id="b-matchup-results"></div>
           </div>
@@ -997,6 +1129,7 @@
 
     const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
     const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E'];
+    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v1';
 
     const QUESTIONS = [
       {
@@ -1344,6 +1477,10 @@
     let autoNext = false;
     let aCompleted = false;
     let aTotal = null;
+    let aInputMode = 'quiz';
+    let profileAImportMeta = null;
+    let profileBImportMeta = null;
+    let restoringState = false;
 
     function getTier(s) {
       return TIERS.find(t => s >= t.min && s <= t.max) || TIERS[0];
@@ -1361,6 +1498,10 @@
       const weights = LENSES[lensKey].weights;
       const totalWeight = weights.reduce((a, b) => a + b, 0);
       return Math.round((vals.reduce((sum, v, i) => sum + (v * weights[i]), 0) / totalWeight) * 10) / 10;
+    }
+
+    function clampScore(v) {
+      return Math.max(1, Math.min(10, Number(v) || 5.5));
     }
 
     function weightLabel(w) {
@@ -1404,6 +1545,7 @@
         renderLensControls('a');
         if (aCompleted) renderAResults(false);
         else renderMatchup();
+        saveState();
       }
     }
 
@@ -1417,11 +1559,15 @@
     }
 
     function startA() {
+      aInputMode = 'quiz';
       document.getElementById('a-intro').classList.remove('visible');
       document.getElementById('a-results').classList.remove('visible');
       document.getElementById('a-questions').classList.add('visible');
+      const auto = document.getElementById('auto-next');
+      if (auto) auto.checked = autoNext;
       curQ = 0;
       renderQ();
+      saveState();
     }
 
     function renderRail() {
@@ -1468,6 +1614,7 @@
     function selectOpt(i) {
       answers[curQ] = i;
       renderQ();
+      saveState();
       if (autoNext) {
         window.setTimeout(() => {
           if (curQ === QUESTIONS.length - 1) finishA();
@@ -1478,6 +1625,7 @@
 
     function toggleAutoNext(checked) {
       autoNext = checked;
+      saveState();
     }
 
     function nextQ() {
@@ -1485,6 +1633,7 @@
       if (curQ < QUESTIONS.length - 1) {
         curQ++;
         renderQ();
+        saveState();
       }
     }
 
@@ -1492,10 +1641,15 @@
       if (curQ > 0) {
         curQ--;
         renderQ();
+        saveState();
       }
     }
 
     function calculateScores() {
+      if (aInputMode === 'import') {
+        scores = scores.map(clampScore);
+        return weightedTotal(scores, selectedLensA);
+      }
       scores = FACTORS.map((_, f) => {
         const factorQs = QUESTIONS.map((q, i) => q.factor === f ? i : -1).filter(i => i >= 0);
         const weighted = factorQs.map(i => {
@@ -1522,6 +1676,7 @@
       const flatProfile = spread < 0.5;
 
       if (showScreen) {
+        document.getElementById('a-intro').classList.remove('visible');
         document.getElementById('a-questions').classList.remove('visible');
         document.getElementById('a-results').classList.add('visible');
       }
@@ -1573,6 +1728,7 @@
         </div>
       `).join('');
       renderMatchup();
+      saveState();
     }
 
     function finishA() {
@@ -1586,13 +1742,29 @@
       curQ = 0;
       aCompleted = false;
       aTotal = null;
+      aInputMode = 'quiz';
+      profileAImportMeta = null;
       document.getElementById('a-results').classList.remove('visible');
       document.getElementById('a-questions').classList.remove('visible');
       document.getElementById('a-intro').classList.add('visible');
+      const resultPanel = document.getElementById('import-result-a-panel');
+      if (resultPanel) resultPanel.hidden = true;
+      const resultReport = document.getElementById('import-report-a-results');
+      if (resultReport) resultReport.innerHTML = '';
+      const report = document.getElementById('import-report-a');
+      if (report) report.innerHTML = '';
+      const status = document.getElementById('import-status-a');
+      if (status) status.textContent = 'Waiting for pasted package.';
       renderMatchup();
+      saveState();
     }
 
     function initB() {
+      const nameInput = document.getElementById('pb-name');
+      if (nameInput && typeof window.__pendingBName === 'string') {
+        nameInput.value = window.__pendingBName;
+        window.__pendingBName = undefined;
+      }
       document.getElementById('pb-sliders').innerHTML = FACTORS.map((f, i) => `
         <div class="factor-slider-row">
           <div class="fs-top">
@@ -1600,7 +1772,7 @@
             <span class="fs-val" id="bval-${i}" style="color:${f.color}">${bVals[i].toFixed(1)}</span>
           </div>
           <div class="fs-desc">${f.desc}</div>
-          <input type="range" min="1" max="10" step="0.1" value="${bVals[i]}" oninput="bSlide(${i}, this.value)" />
+          <input type="range" min="1" max="10" step="0.1" value="${bVals[i]}" id="bslider-${i}" oninput="bSlide(${i}, this.value)" />
         </div>
       `).join('');
       updateB();
@@ -1609,6 +1781,10 @@
     function bSlide(i, v) {
       bVals[i] = parseFloat(v);
       document.getElementById('bval-' + i).textContent = bVals[i].toFixed(1);
+      if (profileBImportMeta) {
+        profileBImportMeta = null;
+        setImportReport('b', '');
+      }
       updateB();
     }
 
@@ -1632,6 +1808,320 @@
       const shape = maxVal - minVal < 0.5 ? 'Balanced profile: no single strongest or weakest read.' : `Strongest read: ${high}. Weakest read: ${low}.`;
       document.getElementById('pb-breakdown').textContent = `${FACTORS.map((f, i) => `${f.name}: ${bVals[i].toFixed(1)}`).join(' | ')}. ${shape}`;
       renderMatchup();
+      saveState();
+    }
+
+    function saveState() {
+      if (restoringState) return;
+      try {
+        const nameInput = document.getElementById('pb-name');
+        localStorage.setItem(SMV_STORAGE_KEY, JSON.stringify({
+          selectedLensA,
+          selectedLensB,
+          answers,
+          scores,
+          curQ,
+          autoNext,
+          aCompleted,
+          aTotal,
+          aInputMode,
+          bVals,
+          bName: nameInput ? nameInput.value : '',
+          profileAImportMeta,
+          profileBImportMeta
+        }));
+      } catch (err) {}
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(SMV_STORAGE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        if (saved.selectedLensA && LENSES[saved.selectedLensA]) selectedLensA = saved.selectedLensA;
+        if (saved.selectedLensB && LENSES[saved.selectedLensB]) selectedLensB = saved.selectedLensB;
+        if (Array.isArray(saved.answers) && saved.answers.length === QUESTIONS.length) answers = saved.answers;
+        if (Array.isArray(saved.scores) && saved.scores.length === FACTORS.length) scores = saved.scores.map(clampScore);
+        if (Array.isArray(saved.bVals) && saved.bVals.length === FACTORS.length) saved.bVals.forEach((v, i) => { bVals[i] = clampScore(v); });
+        curQ = Number.isInteger(saved.curQ) ? Math.max(0, Math.min(QUESTIONS.length - 1, saved.curQ)) : 0;
+        autoNext = !!saved.autoNext;
+        aCompleted = !!saved.aCompleted;
+        aTotal = typeof saved.aTotal === 'number' ? saved.aTotal : null;
+        aInputMode = saved.aInputMode === 'import' ? 'import' : 'quiz';
+        profileAImportMeta = saved.profileAImportMeta || null;
+        profileBImportMeta = saved.profileBImportMeta || null;
+        if (profileAImportMeta && profileAImportMeta.pkg && !profileAImportMeta.displayName) {
+          profileAImportMeta.displayName = profileAImportMeta.pkg.importDisplayName || importedProfileName(profileAImportMeta.pkg);
+        }
+        const savedBName = saved.bName || '';
+        if (profileBImportMeta && profileBImportMeta.pkg) {
+          const derivedName = profileBImportMeta.displayName || profileBImportMeta.pkg.importDisplayName || importedProfileName(profileBImportMeta.pkg);
+          profileBImportMeta.displayName = derivedName;
+          const oldSourceName = profileBImportMeta.hierarchyLabel || profileBImportMeta.pkg.hierarchyLabel;
+          window.__pendingBName = (!savedBName || savedBName === oldSourceName) ? derivedName : savedBName;
+        } else {
+          window.__pendingBName = savedBName;
+        }
+      } catch (err) {}
+    }
+
+    function clearSavedState() {
+      try { localStorage.removeItem(SMV_STORAGE_KEY); } catch (err) {}
+      resetA();
+      bVals.forEach((_, i) => { bVals[i] = 5.5; });
+      selectedLensA = 'balanced';
+      selectedLensB = 'balanced';
+      profileBImportMeta = null;
+      renderLensControls();
+      initB();
+      setImportReport('a', '');
+      setImportReport('b', '');
+      saveState();
+    }
+
+    function parseCompatibilityPackage(text) {
+      const pkg = JSON.parse(text.trim());
+      if (!pkg || pkg.source !== 'love-equations.compatibility' || !Array.isArray(pkg.factors)) {
+        throw new Error('This does not look like a Love Equations compatibility export package.');
+      }
+      return pkg;
+    }
+
+    function importedSubjectLabel(pkg) {
+      if (pkg.subjectLabel) return pkg.subjectLabel;
+      if (pkg.subjectLensHint === 'male') return 'Generic male';
+      if (pkg.subjectLensHint === 'female') return 'Generic female';
+      return 'Imported profile';
+    }
+
+    function importedProfileName(pkg) {
+      const subject = importedSubjectLabel(pkg);
+      const source = pkg.hierarchyLabel ? ` (${pkg.hierarchyLabel})` : '';
+      return `${subject}${source}`;
+    }
+
+    // Factors describing shared values / life-fit / compatibility, not a market lever. These have
+    // no clean SMV-axis home, so they stay UNMAPPED. Matched on the factor NAME only, so an
+    // incidental keyword in another factor's description (e.g. "values his effort") can't trip it.
+    const UNMAPPED_FACTOR_NAME = /\bvalues\b|common interests|\bpurity\b|practical compatibility/;
+
+    // Drop negated spans before keyword matching, so "doesn't treat him as a status accessory" or
+    // "not keeping options open" no longer fire the Status/Exposure tokens those phrases mention.
+    // Strips from a negation cue to the next clause break (, ; . or em dash).
+    function stripNegations(text) {
+      return text.replace(/\b(?:not|no|never|without|cannot|can't|doesn't|doesn’t|don't|don’t|isn't|isn’t|won't|won’t)\b[^,;.—]*/g, ' ');
+    }
+
+    function factorAxisWeights(factor) {
+      const name = `${factor.name || ''}`.toLowerCase();
+      if (UNMAPPED_FACTOR_NAME.test(name)) return null;
+      const text = stripNegations(`${factor.name || ''} ${factor.description || ''}`.toLowerCase());
+      const weights = [0, 0, 0, 0, 0];
+      const add = (i, w) => { weights[i] += w; };
+      // Looks — "style" dropped entirely: it's ambiguous ("clothing style" = looks, but "lifestyle"
+      // and "conflict style" are not), and every genuine looks factor here already matches via
+      // face/body/height/physical/grooming. The bare "attraction" name rule is also gone —
+      // attraction-toward-the-evaluator is a chemistry signal, routed to Charm below.
+      if (/(physical|attractiveness|vitality|face|body|groom|height|feminin|masculine presence|youth|health)/.test(text)) add(0, 1);
+      if (/(money|income|provision|resource|financial|material|housing|career|earning|wealth)/.test(text)) add(1, 1);
+      // Status — "respect" dropped: across these hierarchies it means "she respects him" (a
+      // Charm/treatment signal), not his own standing.
+      if (/(status|ambition|confidence|frame|leadership|competence|reputation|direction|commands|established|drive)/.test(text)) add(2, 1);
+      // Charm — \bfun\b only (so "functional" no longer counts); "presence" dropped ("masculine
+      // presence" is Looks, "low-friction" already covers low-friction presence); pull/drawn catch
+      // attraction-toward / receptivity.
+      if (/(sexual|receptiv|low-friction|warmth|kindness|chemistry|treatment|emotional|attunement|safety|calibration|consistency|character|\bfun\b|easygoing|classiness|admiration|loyalty|exclusive|commitment|honesty|conflict|comfort|flirt|\bpull\b|drawn)/.test(text)) add(3, 1);
+      // Exposure — "chosen" dropped: "makes her feel chosen" is attunement/Charm, not market availability.
+      if (/(availability|available|pursuit|initiative|selective investment|nearby|timing|social rhythm|options)/.test(text)) add(4, 1);
+      const total = weights.reduce((a, b) => a + b, 0);
+      if (!total) return null;
+      return weights.map(w => w / total);
+    }
+
+    function importCompatibilityProfile(target) {
+      const box = document.getElementById(`import-box-${target}`);
+      const status = document.getElementById(`import-status-${target}`);
+      const report = document.getElementById(`import-report-${target}`);
+      try {
+        const pkg = parseCompatibilityPackage(box.value);
+        const mapped = mapCompatibilityToSmv(pkg);
+        const suggestedLens = LENSES[pkg.subjectLensHint] ? pkg.subjectLensHint : (target === 'b' ? selectedLensB : selectedLensA);
+        const displayName = pkg.importDisplayName || importedProfileName(pkg);
+        if (target === 'a') {
+          selectedLensA = suggestedLens;
+          scores = mapped.scores;
+          aInputMode = 'import';
+          aCompleted = true;
+          profileAImportMeta = { hierarchyLabel: pkg.hierarchyLabel, displayName, overall: pkg.overall, mappedScores: mapped.scores, pkg, mapped };
+          renderLensControls('a');
+          if (status) status.textContent = `Imported ${displayName} to Profile A. Quiz skipped.`;
+          renderAResults(true);
+          setImportReport('a', importReportHtml(pkg, mapped, 'a'));
+        } else {
+          selectedLensB = suggestedLens;
+          mapped.scores.forEach((v, i) => { bVals[i] = v; });
+          profileBImportMeta = { hierarchyLabel: pkg.hierarchyLabel, displayName, overall: pkg.overall, mappedScores: mapped.scores, pkg, mapped };
+          const nameInput = document.getElementById('pb-name');
+          if (nameInput) nameInput.value = displayName;
+          renderLensControls('b');
+          initB();
+          if (status) status.textContent = `Imported ${displayName} to Profile B.`;
+          setImportReport('b', importReportHtml(pkg, mapped, 'b'));
+        }
+        saveState();
+      } catch (err) {
+        if (status) status.textContent = err.message || 'Import failed.';
+      }
+    }
+
+    function mapCompatibilityToSmv(pkg) {
+      const acc = Array(FACTORS.length).fill(0);
+      const wt = Array(FACTORS.length).fill(0);
+      const totalFactorWeight = pkg.factors.reduce((sum, f) => sum + (Number(f.weight) || 1), 0);
+      const mapped = [];
+      const unmapped = [];
+
+      pkg.factors.forEach(f => {
+        const score = clampScore(f.score);
+        const sourceWeight = Number(f.weight) || 1;
+        const axes = factorAxisWeights(f);
+        if (!axes) {
+          unmapped.push(f.name);
+          return;
+        }
+        axes.forEach((axisWeight, i) => {
+          if (!axisWeight) return;
+          const w = sourceWeight * axisWeight;
+          acc[i] += score * w;
+          wt[i] += w;
+        });
+        mapped.push({
+          name: f.name,
+          axes: axes.map((w, i) => w ? `${FACTORS[i].name} ${Math.round(w * 100)}%` : '').filter(Boolean)
+        });
+      });
+
+      // An axis fed by less than ~0.6 of an average factor's weight is "weak" — touched only
+      // incidentally (a fractional share of a single factor). We still surface its computed value,
+      // but route it to a manual slider flagged for verification rather than presenting it as
+      // cleanly measured. Zero-coverage axes are "missing" and start neutral at 5.5.
+      const avgFactorWeight = totalFactorWeight / Math.max(pkg.factors.length, 1);
+      const weakThreshold = 0.6 * avgFactorWeight;
+      const coverageRatios = FACTORS.map((_, i) => wt[i] / Math.max(totalFactorWeight, 1));
+      const axisStatus = FACTORS.map((_, i) => {
+        if (!wt[i]) return 'missing';
+        if (wt[i] < weakThreshold) return 'weak';
+        return 'covered';
+      });
+      const manualAxes = FACTORS.map((_, i) => axisStatus[i] === 'covered' ? -1 : i).filter(i => i >= 0);
+      const scoresFromSource = FACTORS.map((_, i) => {
+        if (axisStatus[i] === 'missing') return 5.5;
+        return Math.round((acc[i] / wt[i]) * 10) / 10;
+      });
+      const coverage = FACTORS.map((f, i) => `${f.name}: ${Math.round(coverageRatios[i] * 100)}% source coverage`);
+      return { scores: scoresFromSource, mapped, unmapped, coverage, coverageRatios, axisStatus, manualAxes };
+    }
+
+    function escapeHtml(value) {
+      return `${value ?? ''}`.replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function manualGapHtml(target, mapped) {
+      if (!mapped.manualAxes.length) {
+        return '<div class="manual-gap-note">No missing SMV axes. The compatibility factors touched all five market levers with solid coverage.</div>';
+      }
+      return `
+        <div class="manual-gap-grid">
+          ${mapped.manualAxes.map(i => {
+            const weak = mapped.axisStatus && mapped.axisStatus[i] === 'weak';
+            const note = weak
+              ? 'Weak source — only a fractional share of one compatibility factor fed this axis. The estimate is shown, but verify it or adjust.'
+              : 'Not directly measured by this hierarchy. Starts neutral at 5.5; move it if you have real information.';
+            return `
+            <div class="manual-gap-row${weak ? ' manual-gap-weak' : ''}">
+              <div class="manual-gap-top">
+                <span class="manual-gap-name">${escapeHtml(FACTORS[i].name)}${weak ? ' <span class="manual-gap-flag">weak source</span>' : ''}</span>
+                <span class="manual-gap-val" data-mgap="${target}-${i}">${mapped.scores[i].toFixed(1)}</span>
+              </div>
+              <input type="range" min="1" max="10" step="0.1" value="${mapped.scores[i].toFixed(1)}" data-mgapslider="${target}-${i}" oninput="manualImportedAxis('${target}', ${i}, this.value)" />
+              <div class="manual-gap-note">${note}</div>
+            </div>
+          `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function importReportHtml(pkg, mapped, target = 'a') {
+      const mappingPreview = mapped.mapped.slice(0, 6)
+        .map(item => `${escapeHtml(item.name)} to ${escapeHtml(item.axes.join(', '))}`)
+        .join(' | ');
+      const subject = importedSubjectLabel(pkg);
+      return `
+        <strong>${escapeHtml(importedProfileName(pkg))}</strong> imported as a compatibility-derived SMV estimate. Represents: <strong>${escapeHtml(subject)}</strong>. Suggested lens: <strong>${escapeHtml(pkg.subjectLensHint || 'general')}</strong>.<br>
+        SMV factors: ${FACTORS.map((f, i) => `${escapeHtml(f.name)} ${mapped.scores[i].toFixed(1)}`).join(' | ')}<br>
+        Source coverage: ${mapped.coverage.map(escapeHtml).join(' | ')}<br>
+        Mapping: ${mappingPreview}${mapped.mapped.length > 6 ? ' | ...' : ''}<br>
+        ${mapped.unmapped.length ? `Compatibility-only traits left out of SMV: ${mapped.unmapped.map(escapeHtml).join(', ')}.` : 'No compatibility factors were left unmapped.'}
+        ${manualGapHtml(target, mapped)}
+      `;
+    }
+
+    function setImportReport(target, html) {
+      const report = document.getElementById(`import-report-${target}`);
+      if (report) report.innerHTML = html || '';
+      if (target === 'a') {
+        const resultPanel = document.getElementById('import-result-a-panel');
+        const resultReport = document.getElementById('import-report-a-results');
+        if (resultReport) resultReport.innerHTML = html || '';
+        if (resultPanel) resultPanel.hidden = !html;
+      }
+    }
+
+    function updateImportMetaScore(target, i, value) {
+      const meta = target === 'a' ? profileAImportMeta : profileBImportMeta;
+      if (meta && meta.mapped && Array.isArray(meta.mapped.scores)) meta.mapped.scores[i] = value;
+      if (meta && Array.isArray(meta.mappedScores)) meta.mappedScores[i] = value;
+    }
+
+    function manualImportedAxis(target, i, value) {
+      const v = clampScore(value);
+      // Profile A's report is mirrored into two containers, so update every copy by data-attr
+      // (the old unique-id lookup only refreshed the first, desyncing the visible slider's label).
+      document.querySelectorAll(`[data-mgap="${target}-${i}"]`).forEach(el => { el.textContent = v.toFixed(1); });
+      document.querySelectorAll(`[data-mgapslider="${target}-${i}"]`).forEach(el => { if (Number(el.value) !== v) el.value = v; });
+
+      if (target === 'a') {
+        scores[i] = v;
+        updateImportMetaScore('a', i, v);
+        if (aCompleted) renderAResults(false);
+      } else {
+        bVals[i] = v;
+        updateImportMetaScore('b', i, v);
+        const bVal = document.getElementById('bval-' + i);
+        const bSlider = document.getElementById('bslider-' + i);
+        if (bVal) bVal.textContent = v.toFixed(1);
+        if (bSlider) bSlider.value = v;
+        updateB();
+      }
+      saveState();
+    }
+
+    function renderSavedImportReports() {
+      if (profileAImportMeta && profileAImportMeta.pkg && profileAImportMeta.mapped) {
+        profileAImportMeta.mapped.scores = scores.slice();
+        setImportReport('a', importReportHtml(profileAImportMeta.pkg, profileAImportMeta.mapped, 'a'));
+      }
+      if (profileBImportMeta && profileBImportMeta.pkg && profileBImportMeta.mapped) {
+        profileBImportMeta.mapped.scores = bVals.slice();
+        setImportReport('b', importReportHtml(profileBImportMeta.pkg, profileBImportMeta.mapped, 'b'));
+      }
     }
 
     function getProfileBName() {
@@ -1646,7 +2136,7 @@
       };
       if (gap >= 0.3) return {
         label: 'You have a slight edge.',
-        copy: 'The target is realistic. Do not overcorrect from insecurity; improve selectively where Profile B beats you.'
+        copy: 'The target is realistic. Do not overcorrect from insecurity; pay attention to any factor where the target still beats you.'
       };
       if (gap > -0.3) return {
         label: 'Near parity.',
@@ -1654,12 +2144,177 @@
       };
       if (gap > -1.2) return {
         label: 'Reachable, but you are chasing upward.',
-        copy: 'This is not fantasy, but the target has leverage. You need to close the largest factor gaps or bring unusually strong chemistry, context, or commitment value.'
+        copy: 'The target has the leverage here, but this is a stretch, not a wall. Close the largest factor gaps, or bring unusually strong chemistry, context, or commitment value.'
       };
       return {
         label: 'Meaningful overreach.',
         copy: 'The target is materially above your current profile. You can still try, but the honest path is improvement first: close the biggest gaps before expecting consistent selection.'
       };
+    }
+
+    function gapLabel(gap) {
+      return gap >= 0 ? `+${gap.toFixed(1)}` : gap.toFixed(1);
+    }
+
+    // Ranked numeric summary for the "Priority & edge" stats band (deltas DO belong here — this is
+    // the stat readout, distinct from the number-free prescription prose).
+    function factorGapList(items, limit = 2) {
+      return items.slice(0, limit).map(f => `${escapeHtml(f.name)} ${gapLabel(f.gap)}`).join(', ');
+    }
+
+    // --- Synthesized matchup prescription -------------------------------------------------
+    // Two distinct jobs: matchupShapeRead() gives the top verdict a number-free read of the gap's
+    // shape (concentrated vs. spread), and matchupPrescription() gives the bottom box a coached,
+    // magnitude-scaled move. Raw deltas live only in the per-factor grid, so neither prose block
+    // parrots them.
+
+    // Short, on-brand action clauses distilled from each factor's full `lever` copy. `slow` marks a
+    // structural lever (follows time/reputation, not this-quarter effort) — used to frame timeline,
+    // NOT to demote priority: a slow lever can still be the #1 move.
+    const LEVER_PLAYS = {
+      looks:    { move: 'the visible package — fitness, grooming, hair, skin, clothes, posture, photos — and it compounds fastest when the work is concrete', slow: false },
+      money:    { move: 'the financial floor — income, stability, debt, a credible upward trajectory', slow: true },
+      status:   { move: 'visible competence and social proof — becoming useful, known, invited, and vouched for in a real environment', slow: true },
+      charm:    { move: 'live reps — conversation, listening, teasing, escalation, emotional steadiness around real people', slow: false },
+      exposure: { move: 'qualified surface area — better photos, stronger apps, recurring social spaces, events, introductions', slow: false }
+    };
+
+    // Deterministic phrasing picker: same matchup shape → stable copy (no flicker on slider drags),
+    // different shapes → different wording. Seeded by the factors in play, not by chance.
+    function pickPhrase(bank, seed) {
+      return bank[((seed % bank.length) + bank.length) % bank.length];
+    }
+
+    function matchupShapeRead(deficits, advantages) {
+      if (deficits.length && advantages.length) return 'The shape is uneven — you lead on some axes and trail on others.';
+      if (deficits.length >= 3) return 'The gap is spread thin across several axes rather than pinned to one.';
+      if (deficits.length === 2) return `The gap is concentrated in ${escapeHtml(deficits[0].name)} and ${escapeHtml(deficits[1].name)}.`;
+      if (deficits.length === 1) return `The gap is concentrated almost entirely in ${escapeHtml(deficits[0].name)}.`;
+      if (advantages.length) return 'You meet or beat the target on every measured axis.';
+      return 'The factor shape is flat — no axis stands out either way.';
+    }
+
+    function matchupPrescription(gap, deficits, advantages, lensWeights, targetName) {
+      const t = escapeHtml(targetName);
+      const idx = f => FACTORS.findIndex(x => x.key === f.key);
+      const wt = i => (lensWeights && lensWeights[i]) || 0.2;
+      const headroom = score => (10 - score) / 10;   // marginal-return proxy: low scores → most room
+      const playFor = key => LEVER_PLAYS[key] || { move: 'your weakest axis', slow: false };
+
+      // Per-axis read of YOUR profile, so advice tracks the actual shape, not just the gaps.
+      const axes = FACTORS.map((f, i) => ({ f, i, name: f.name, score: scores[i] }));
+      const lowest = axes.slice().sort((a, b) => a.score - b.score)[0];
+      const othersMean = axes.length > 1
+        ? (axes.reduce((s, a) => s + a.score, 0) - lowest.score) / (axes.length - 1)
+        : lowest.score;
+      // A "sinkhole": one axis sitting far below the rest AND low in absolute terms. A low floor like
+      // that caps the whole profile, so it's the binding constraint wherever the composite lands.
+      const sinkhole = (lowest.score < 4.5 && othersMean - lowest.score >= 2.5) ? lowest : null;
+
+      // Rank deficits by closeable gap × market weight × headroom. Headroom is the fix the old engine
+      // missed: a 2.6 has huge room and cheap early points (changeable inputs untouched), while a high
+      // score is expensive to raise (changeable inputs spent, fixed traits bite) — a COST/feasibility
+      // effect, not diminishing value. Speed is gone from the ranking — a slow lever can still top it.
+      const ranked = deficits.map(d => {
+        const i = idx(d);
+        return { d, i, play: playFor(d.key), score: d.a, priority: Math.abs(d.gap) * wt(i) * headroom(d.a) };
+      }).sort((a, b) => b.priority - a.priority);
+
+      // Lead lever: a sinkhole you're also behind on outranks everything; else the top-ranked gap.
+      const lead = (sinkhole && ranked.find(r => r.d.key === sinkhole.f.key)) || ranked[0];
+      const seed = (lead ? lead.i + 1 : 0) * 3 + (advantages[0] ? idx(advantages[0]) + 1 : 0);
+
+      // Shared, score-aware fragments --------------------------------------------------------
+      const leadBare = lead ? lead.play.move : '';                                   // no factor name
+      const leadNamed = lead ? `${escapeHtml(lead.d.name)} — ${lead.play.move}` : ''; // names the axis
+      const sinkholeNote = (sinkhole && lead && lead.d.key === sinkhole.f.key)
+        ? ` The gap isn't spread evenly: ${escapeHtml(lowest.name)} at ${lowest.score.toFixed(1)} is a sinkhole sitting far below your other axes, and a floor that low caps everything above it.`
+        : '';
+      // Headroom is about COST/feasibility, not value. Low scores are cheap to raise (changeable
+      // inputs untouched) and lift the floor most; high scores are expensive because you've spent the
+      // changeable inputs and are hitting the fixed ones — NOT because the returns diminish (in a
+      // tournament market the top-end returns can rise). So never frame a high lead as "not worth it."
+      const headroomNote = lead
+        ? (lead.score <= 4
+            ? ` At ${lead.score.toFixed(1)} the early points are the cheapest you'll ever buy, and lifting a floor that low does the most for the whole profile.`
+            : lead.score >= 7.5
+              ? ` You're already strong there at ${lead.score.toFixed(1)}; matching ${lead.d.b ? `a ${lead.d.b.toFixed(1)}` : 'the target'} means pushing into the top of the range, where the changeable inputs are spent and the fixed ones bite — hard-won yards, not a quick win, but it's where this gap lives.`
+              : '')
+        : '';
+      const slowNote = (lead && lead.play.slow)
+        ? ` It's structural and won't move overnight — which is the reason to start now, not to file it under "later."`
+        : '';
+      const second = ranked.find(r => lead && r.d.key !== lead.d.key);
+      const secondNote = second
+        ? ` Next lever once that's moving: ${escapeHtml(second.d.name)}${second.score >= 7.5 ? ' — already a strength, so lower priority' : ''}.`
+        : '';
+      // After sinkholeNote the axis is already named, so drop the name from the move to avoid "Money … Money".
+      const namedMove = sinkholeNote ? leadBare : leadNamed;
+      const moveBlock = lead
+        ? `${sinkholeNote} Put the work where the return is highest: ${namedMove}.${headroomNote}${slowNote}${secondNote}`
+        : ` The gap is broad rather than pinned to one axis — raise your two or three weakest levers together.`;
+
+      // AHEAD — praise, but push: don't coast.
+      if (gap >= 0.8) {
+        const frames = [
+          `You sit above ${t} on position — this isn't a reach, it's a question of taste and whether you actually want this profile.`,
+          `On the math you're the higher-value profile here; you're reaching down, not up.`
+        ];
+        if (sinkhole) {
+          return `${pickPhrase(frames, seed)} But don't let the lead hide the crack: ${escapeHtml(lowest.name)} at ${lowest.score.toFixed(1)} sits far below your other axes — push ${playFor(lowest.f.key).move}. A floor that low caps you no matter how strong the rest is.`;
+        }
+        const strongest = axes.slice().sort((a, b) => b.score - a.score)[0];
+        // No genuine weak spot to shore up: profile is flat (thinnest == strongest) or even the lowest
+        // axis is already strong. Avoid the nonsensical "push X … instead of coasting on X."
+        if (lowest.score >= 7.5 || lowest.f.key === strongest.f.key) {
+          return `${pickPhrase(frames, seed)} There's no lopsided weak spot to shore up — your edge is even across the axes, so what's left here is taste and fit, not more grinding.`;
+        }
+        return `${pickPhrase(frames, seed)} Don't read "ahead" as "done": your thinnest axis is ${escapeHtml(lowest.name)} at ${lowest.score.toFixed(1)} — push ${playFor(lowest.f.key).move}. Bank the lead by shoring that up instead of coasting on ${escapeHtml(strongest.name)}.`;
+      }
+
+      // SLIGHT EDGE — protect it, convert it.
+      if (gap >= 0.3) {
+        const frames = [
+          `You hold a real but slim edge over ${t}. Protect it — don't overcorrect out of insecurity.`,
+          `You're ahead of ${t}, but not by much; the margin is thin enough to respect.`
+        ];
+        if (lead) {
+          return `${pickPhrase(frames, seed)}${sinkholeNote} Even ahead overall, raising ${namedMove} is what turns a slim edge into a clear one.${headroomNote}${slowNote}`;
+        }
+        return `${pickPhrase(frames, seed)} No single axis drags you; if you want more volume, ${LEVER_PLAYS.exposure.move} is the cheapest lever to add.`;
+      }
+
+      // PARITY — the number stops deciding.
+      if (gap > -0.3) {
+        const frames = [
+          `You're effectively level with ${t}. At parity the composite stops deciding anything — chemistry, availability, and who's choosing whom take over.`,
+          `This is a true match zone with ${t}; the number is a wash, so the soft factors decide it.`
+        ];
+        if (sinkhole && lead && lead.d.key === sinkhole.f.key) {
+          return `${pickPhrase(frames, seed)} Even so, ${escapeHtml(lowest.name)} at ${lowest.score.toFixed(1)} is a soft spot worth raising on its own merits — ${leadBare}.${headroomNote}`;
+        }
+        if (lead) {
+          return `${pickPhrase(frames, seed)} If you want a tilt in your favor, the highest-return lever is ${leadNamed}.${headroomNote}`;
+        }
+        return `${pickPhrase(frames, seed)} Nothing to grind. The cheapest edge from here is ${LEVER_PLAYS.exposure.move}.`;
+      }
+
+      // REACHABLE — chasing up, but a closable stretch.
+      if (gap > -1.2) {
+        const frames = [
+          `Reachable, but you're chasing up — ${t} has the leverage right now.`,
+          `A genuine reach, but a closable one — ${t} just holds the leverage right now.`
+        ];
+        return `${pickPhrase(frames, seed)}${moveBlock} If you can't close the number yet, unusually strong chemistry or context is the other way in.`;
+      }
+
+      // OVERREACH — lead with work, not hope.
+      const frames = [
+        `You're a clear tier below ${t} — this is real distance, not noise.`,
+        `${t} is materially above your current profile; the honest read is overreach.`
+      ];
+      const reRun = lead ? ` Re-run this once ${escapeHtml(lead.d.name)} is up a point — the verdict should move.` : '';
+      return `${pickPhrase(frames, seed)} Lead with work, not hope.${moveBlock}${reRun}`;
     }
 
     function renderMatchup() {
@@ -1679,6 +2334,13 @@
       }
 
       const targetName = getProfileBName();
+      const safeTargetName = escapeHtml(targetName);
+      const matchupTitleA = document.getElementById('matchup-title-a');
+      const matchupTitleB = document.getElementById('matchup-title-b');
+      const matchupIntro = document.getElementById('matchup-intro');
+      if (matchupTitleA) matchupTitleA.textContent = `Matchup against ${targetName}`;
+      if (matchupTitleB) matchupTitleB.textContent = `How you compare to ${targetName}`;
+      if (matchupIntro) matchupIntro.textContent = `${targetName} is the target profile. Adjust it, then this section tells you whether you are matching, overreaching, or leaving value on the table.`;
       const bTotal = weightedTotal(bVals, selectedLensB);
       const gap = Math.round((aTotal - bTotal) * 10) / 10;
       const verdict = matchupVerdict(gap);
@@ -1688,25 +2350,28 @@
       const advantages = FACTORS.map((f, i) => ({ ...f, a: scores[i], b: bVals[i], gap: scores[i] - bVals[i] }))
         .filter(f => f.gap > 0.2)
         .sort((a, b) => b.gap - a.gap);
+      const lensWeights = (LENSES[selectedLensA] || LENSES.balanced).weights;
+      const shapeRead = matchupShapeRead(deficits, advantages);
+      const prescription = matchupPrescription(gap, deficits, advantages, lensWeights, targetName);
       const priority = deficits.length
-        ? `Priority gaps: ${deficits.slice(0, 3).map(f => `${f.name} ${f.gap.toFixed(1)}`).join(', ')}.`
+        ? `Priority gaps: ${factorGapList(deficits, 3)}.`
         : 'No meaningful factor deficit against this target.';
       const edge = advantages.length
-        ? `Your edge: ${advantages.slice(0, 2).map(f => `${f.name} +${f.gap.toFixed(1)}`).join(', ')}.`
-        : 'You do not have a clear factor edge; win through fit and execution.';
+        ? `Your edge: ${factorGapList(advantages, 2)}.`
+        : 'No clear factor edge; the profile is even or flat.';
 
       const rows = FACTORS.map((f, i) => {
         const delta = scores[i] - bVals[i];
-        const deltaText = delta >= 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1);
+        const deltaText = gapLabel(delta);
         const markerLeft = Math.max(0, Math.min(100, bVals[i] * 10));
         return `
           <div class="matchup-row">
-            <div class="matchup-name">${f.name}</div>
+            <div class="matchup-name">${escapeHtml(f.name)}</div>
             <div class="matchup-bar">
               <div class="matchup-fill" style="width:${scores[i] * 10}%;background:${f.color}"></div>
               <span class="matchup-target" style="left:calc(${markerLeft}% - 1px)"></span>
             </div>
-            <div class="matchup-delta">You ${scores[i].toFixed(1)} · B ${bVals[i].toFixed(1)} · ${deltaText}</div>
+            <div class="matchup-delta">You ${scores[i].toFixed(1)} | ${safeTargetName} ${bVals[i].toFixed(1)} | ${deltaText}</div>
           </div>
         `;
       }).join('');
@@ -1714,14 +2379,18 @@
       const html = `
         <div class="matchup-hero">
           <div class="matchup-verdict">
-            <div class="matchup-kicker">Your score vs ${targetName}</div>
+            <div class="matchup-kicker">Your score vs ${safeTargetName}</div>
             <div class="matchup-scoreline"><span>${aTotal.toFixed(1)}</span> / ${bTotal.toFixed(1)}</div>
-            <div class="matchup-copy"><strong>${verdict.label}</strong> ${verdict.copy}</div>
+            <div class="matchup-copy"><strong>${verdict.label}</strong> ${verdict.copy} ${shapeRead}</div>
           </div>
           <div class="matchup-verdict">
             <div class="matchup-kicker">What to do</div>
-            <div class="matchup-copy">${priority} ${edge}</div>
+            <div class="matchup-copy">${prescription}</div>
           </div>
+        </div>
+        <div class="matchup-stats mt-2">
+          <div class="matchup-kicker">Priority &amp; edge</div>
+          <div class="matchup-copy">${priority} ${edge}</div>
         </div>
         <div class="matchup-grid mt-2">${rows}</div>
       `;
@@ -1742,9 +2411,15 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    restoringState = true;
+    loadState();
     renderFactorMap();
     renderLensControls();
     initB();
+    if (aCompleted) renderAResults(true);
+    else renderMatchup();
+    renderSavedImportReports();
+    restoringState = false;
   </script>
 </body>
 </html>

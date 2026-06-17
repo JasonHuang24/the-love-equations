@@ -102,6 +102,15 @@
     .breakdown-bar-wrap { flex: 1; height: 5px; background: rgba(116,79,61,0.12); border-radius: 999px; overflow: hidden; }
     .breakdown-bar { height: 100%; border-radius: 999px; transition: width 0.3s; }
     .breakdown-score { font-size: 12px; color: var(--text-muted); width: 30px; text-align: right; }
+    .profile-export { margin-top: 1.3rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); }
+    .export-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.75rem 0; }
+    .export-box {
+      width: 100%; min-height: 88px; resize: vertical; border: 0.5px solid var(--border);
+      border-radius: var(--radius-md); background: rgba(255,252,247,0.86); color: var(--text-muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; font-size: 10.5px;
+      line-height: 1.45; padding: 0.7rem 0.8rem;
+    }
+    .export-status { font-size: 11px; color: var(--text-dim); }
 
     .hier-foot-note { font-size: 12px; color: var(--text-dim); line-height: 1.6; margin-top: 1.75rem; }
     .hier-foot-note a { color: var(--scarlet-dim); }
@@ -159,6 +168,17 @@
               <div class="factor-breakdown">
                 <div class="breakdown-label">Factor breakdown</div>
                 <div id="breakdown-rows"></div>
+              </div>
+
+              <div class="profile-export">
+                <div class="breakdown-label">SMV export package</div>
+                <div class="gate-hint">Copy the full package, not just the headline score. SMV Calc uses the factor breakdown and mapping metadata.</div>
+                <div class="export-actions">
+                  <button class="btn btn-scarlet" type="button" onclick="copyExportPackage()"><i class="ti ti-copy"></i> Copy for SMV Calc</button>
+                  <button class="btn btn-subtle" type="button" onclick="resetCompatibilityState()">Reset scores</button>
+                  <span class="export-status" id="export-status">Ready to copy.</span>
+                </div>
+                <textarea class="export-box" id="profile-export-box" readonly spellcheck="false"></textarea>
               </div>
             </div>
           </div>
@@ -308,10 +328,17 @@
       turbulent: { color: '#6F7327', bg: '#EFF0DC' },
     };
 
+    const COMPAT_STORAGE_KEY = 'loveEquations.compatibilityCalculator.v1';
     let activeKey = 'you';
+    let restoringState = false;
     const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
     const fid = (key, ti, fi) => `${key}-${ti}-${fi}`;
     const val = (key, ti, fi) => parseFloat(document.getElementById('s-' + fid(key, ti, fi)).value);
+    const subjectLensFor = key => (key === 'you' || key === 'male') ? 'female' : 'male';
+    const subjectLabelFor = key => (key === 'you' || key === 'male') ? 'Generic female' : 'Generic male';
+    const subjectHintFor = key => (key === 'you' || key === 'male')
+      ? 'This hierarchy is evaluating a woman or female target through a male-preference frame.'
+      : 'This hierarchy is evaluating a man or male target through a female-preference frame.';
 
     function renderTabs() {
       document.getElementById('hier-tabs').innerHTML = HIERARCHIES.map(h =>
@@ -375,6 +402,52 @@
       update();
     }
     function normBox(id) { document.getElementById('b-' + id).value = parseFloat(document.getElementById('s-' + id).value).toFixed(1); update(); }
+
+    function saveCompatState() {
+      if (restoringState) return;
+      try {
+        const values = {};
+        HIERARCHIES.forEach(h => h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {
+          const id = fid(h.key, ti, fi);
+          const slider = document.getElementById('s-' + id);
+          if (slider) values[id] = parseFloat(slider.value);
+        })));
+        localStorage.setItem(COMPAT_STORAGE_KEY, JSON.stringify({ activeKey, values }));
+      } catch (err) {}
+    }
+
+    function loadCompatState() {
+      try {
+        const raw = localStorage.getItem(COMPAT_STORAGE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        if (saved.activeKey && HIERARCHIES.some(h => h.key === saved.activeKey)) activeKey = saved.activeKey;
+        if (!saved.values || typeof saved.values !== 'object') return;
+        Object.entries(saved.values).forEach(([id, rawValue]) => {
+          const v = Math.max(1, Math.min(10, Number(rawValue) || 7));
+          const slider = document.getElementById('s-' + id);
+          const box = document.getElementById('b-' + id);
+          if (slider) slider.value = v;
+          if (box) box.value = fmt(v);
+        });
+      } catch (err) {}
+    }
+
+    function resetCompatibilityState() {
+      try { localStorage.removeItem(COMPAT_STORAGE_KEY); } catch (err) {}
+      HIERARCHIES.forEach(h => h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {
+        const id = fid(h.key, ti, fi);
+        const slider = document.getElementById('s-' + id);
+        const box = document.getElementById('b-' + id);
+        if (slider) slider.value = 7;
+        if (box) box.value = '7.0';
+      })));
+      activeKey = 'you';
+      switchHier('you');
+      const status = document.getElementById('export-status');
+      if (status) status.textContent = 'Scores reset. Package ready with defaults.';
+      saveCompatState();
+    }
 
     function pass(text) { return { cls: 'pass', icon: 'ti-check', text }; }
     function warn(text) { return { cls: 'warn', icon: 'ti-alert-triangle', text }; }
@@ -456,6 +529,60 @@
       return { breached: false };
     }
 
+    function exportPackage(h, score, band, breach, gateRows) {
+      const factors = [];
+      h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {
+        factors.push({
+          tier: t.name,
+          tierSub: t.sub,
+          name: f.name,
+          description: f.desc,
+          score: Number(val(h.key, ti, fi).toFixed(1)),
+          weight: Number(f.w.toFixed(3))
+        });
+      }));
+      return {
+        source: 'love-equations.compatibility',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        hierarchyKey: h.key,
+        hierarchyLabel: h.tab,
+        subjectLabel: subjectLabelFor(h.key),
+        importDisplayName: `${subjectLabelFor(h.key)} (${h.tab})`,
+        subjectLensHint: subjectLensFor(h.key),
+        subjectHint: subjectHintFor(h.key),
+        overall: Number(score.toFixed(1)),
+        scale: 100,
+        band: band.label,
+        framework: breach.breached ? breach.note : 'All gates clear.',
+        gates: gateRows.map(g => ({ status: g.cls, text: g.text })),
+        factors
+      };
+    }
+
+    function setExportPackage(pkg) {
+      const box = document.getElementById('profile-export-box');
+      if (!box) return;
+      box.value = JSON.stringify(pkg);
+      const status = document.getElementById('export-status');
+      if (status) status.textContent = `Package ready: ${pkg.importDisplayName} -> suggested SMV lens ${pkg.subjectLensHint}.`;
+    }
+
+    async function copyExportPackage() {
+      const box = document.getElementById('profile-export-box');
+      const status = document.getElementById('export-status');
+      if (!box) return;
+      try {
+        await navigator.clipboard.writeText(box.value);
+        if (status) status.textContent = 'Copied. Paste it into Profile A or Profile B on the SMV Calculator.';
+      } catch (err) {
+        box.focus();
+        box.select();
+        document.execCommand('copy');
+        if (status) status.textContent = 'Copied via text selection. Paste it into the SMV Calculator.';
+      }
+    }
+
     function update() {
       const h = HIERARCHIES.find(x => x.key === activeKey);
       const theme = THEMES[h.theme];
@@ -489,7 +616,8 @@
         bandEl.style.color = '#1B7A57';
       }
 
-      document.getElementById('gate-status').innerHTML = diagnostics(h).map(g => `
+      const gateRows = diagnostics(h);
+      document.getElementById('gate-status').innerHTML = gateRows.map(g => `
         <div class="gate-row ${g.cls}">
           <i class="ti ${g.icon} gate-icon"></i>
           <span class="gate-text">${g.text}</span>
@@ -505,11 +633,17 @@
         </div>`);
       }));
       document.getElementById('breakdown-rows').innerHTML = rows.join('');
+      setExportPackage(exportPackage(h, score, band, b, gateRows));
+      saveCompatState();
     }
 
     renderTabs();
     renderInputs();
-    switchHier('you');
+    restoringState = true;
+    loadCompatState();
+    switchHier(activeKey);
+    restoringState = false;
+    update();
   </script>
 </body>
 </html>
