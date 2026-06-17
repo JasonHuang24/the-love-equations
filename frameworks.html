@@ -492,7 +492,7 @@
         </div>
         <div class="smv-callout"><strong>Options are asymmetric; pairings are not.</strong> The Attention Market tells you who reacts; the Option Pool asks who can actually be converted. A woman&rsquo;s raw pool usually reaches above her looks line, but commitment is gated. A man&rsquo;s pool usually sits at or below his looks line unless status, competence, familiarity, or context lifts it. Critical caveat: these rows are <em>reasoned access bands</em>, not measured couple outcomes. Real pairing still regresses toward matching.</div>
 
-        <div class="smv-sub-note" style="margin-bottom:4px;">Open any rating to see <strong>both sexes&rsquo; realistic pools</strong> across the same ladder. Each row is access to a partner <em>tier</em>; the band grades how real that access is. Supply &asymp; one decile per tier; 10s are the top sliver. The 7/10 is open as the worked example.</div>
+        <div class="smv-sub-note" style="margin-bottom:4px;">Open any rating to see <strong>both sexes&rsquo; realistic pools</strong> across the same ladder. Each row is access to a partner <em>tier</em>; the band grades how real that access is. Supply &asymp; one decile per tier; 10s are the top sliver. Tap any rating to expand it.</div>
         <div class="smv-sub-note" style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;"><span class="smv-band wide">Wide open</span><span class="smv-band open">Open</span><span class="smv-band cracked">Cracked &middot; short-term</span><span class="smv-band gated">Gated &middot; status / commitment</span><span class="smv-band closed">Closed</span></div>
         <div id="pool-cards"></div>
 
@@ -704,7 +704,7 @@
     }
 
     // ── Option Pool · full-spectrum access (reasoned bands, Estimate) ──
-    const POOL_TIERS = [10, 9, 8, 7, 5, 3, 1];
+    const POOL_TIERS = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
     function poolSupply(t){ return t === 10 ? 'top ~2–5%' : (t === 1 ? 'bottom ~2–5%' : '~10%'); }
     // Woman's access to a man at tier t, given her looks R. Pool tilts up; commitment gates the top.
     function poolWoman(R, t){
@@ -768,7 +768,7 @@
     function renderPoolCards(){
       let html = '';
       for (let R = 10; R >= 1; R--){
-        const open = R === 7 ? ' open' : '';
+        const open = '';
         html += `<details class="pool-card"${open}>`
           + `<summary><span class="pool-rating">${R}/10</span><span class="pool-tagline">${poolTagline(R)}</span></summary>`
           + `<div class="pool-body">`
