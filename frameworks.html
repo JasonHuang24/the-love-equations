@@ -210,6 +210,10 @@
     .cc-verdict.pass { background: #E1F5EE; color: #0F6E56; }
     .cc-verdict.fail { background: var(--scarlet-pale); color: var(--scarlet-dim); }
     .cc-verdict strong { font-weight: 700; }
+    .cc-verdict.neutral { background: var(--surface); color: var(--text-muted); }
+    .cc-part { display: flex; align-items: baseline; gap: 0.6rem; margin: 1.75rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border); }
+    .cc-part-num { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--scarlet); }
+    .cc-part-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--text); }
     @media (max-width: 620px) {
       .cc-cols { grid-template-columns: 1fr; }
       .smv-checker-out { grid-template-columns: 1fr 1fr; }
@@ -530,8 +534,10 @@
         <div class="smv-sub">
           <div class="smv-sub-eyebrow">Subcategory 4 · claim vs. evidence</div>
           <div class="smv-sub-title">The Charm Ceiling</div>
-          <div class="smv-sub-note">How far can game / charm actually carry you, and where does it cap? We take a Blackpill creator&rsquo;s looks-vs-game model at face value, then check it against the research.</div>
+          <div class="smv-sub-note">How far can game / charm actually carry you, and where does it cap? <strong>Part 1</strong> takes a Blackpill creator&rsquo;s looks-vs-game model at face value; <strong>Part 2</strong> draws the research model on its own axes.</div>
         </div>
+
+        <div class="cc-part"><span class="cc-part-num">Part 1</span><span class="cc-part-title">The Claim</span></div>
 
         <div class="smv-callout" style="border-left-color:#51606F;"><strong>The artifact.</strong> Wheat Waffles, &ldquo;Looks Vs. Confidence For Dating &mdash; In-Depth Blackpill Analysis&rdquo; (uploaded under a 2023 title; the analysis is dated 2021 in-video). He plots every man on two axes &mdash; <strong>Looks</strong> (Sub-5 / Normie 5&ndash;7 / Chad 8+) and a <strong>Game</strong> scale he coined (0 = can&rsquo;t speak, 5 = average convo, 7+ = smooth / funny / dominant, 10 = never a misstep) &mdash; and draws an <em>acceptance line</em> = the minimum bar of &ldquo;most women&rdquo; (he brackets out both &ldquo;landwhales&rdquo; and &ldquo;mega-Stacies&rdquo;). The whole question: when does game move that line, and when is it dead weight?</div>
 
@@ -581,6 +587,28 @@
         </div>
 
         <div class="smv-callout"><strong>The verdict: charm is access-gated, not value-gated.</strong> His model isn&rsquo;t dumb &mdash; it&rsquo;s a faithful map of the <em>stranger-attraction</em> market (apps, cold approach), the one arena engineered to mute charm, and it has gotten <em>more</em> true as dating moved online. The error is generalizing it to all of dating and treating looks as a fixed gate. Step into a context with repeated exposure and the wall becomes a slope: the exchange rate eases from a vertical wall (online) to ~2:1 (cold) to ~1:1 (social), and the sub-5 dead zone shrinks to a soft floor. So &ldquo;how far does charm go&rdquo; resolves to <strong>it depends entirely on which arena you fight in</strong> &mdash; and most charm dies unused in the arena most people now start in. <span class="smv-tag est">Estimate</span></div>
+
+        <div class="cc-part"><span class="cc-part-num">Part 2</span><span class="cc-part-title">The Evidence Model</span></div>
+
+        <div class="smv-callout"><strong>What his graph leaves out: time.</strong> His map is a single first-impression snapshot &mdash; a static accept/reject line. But the research&rsquo;s core correction is that the weight of looks vs. personality <em>moves with exposure</em>. So the evidence model puts <strong>acquaintance on the x-axis</strong> and draws effective desirability as a <em>trajectory</em>, not a gate: it starts at your looks anchor (the glance, where he&rsquo;s right) and bends up or down as personality compounds &mdash; because personality raises <em>perceived</em> looks (Lewandowski 2007) and acquaintance dissolves looks-matching (Hunt 2015).</div>
+
+        <div class="checker-box">
+          <div class="checker-header">Live model &middot; effective desirability over exposure</div>
+          <div class="checker-body">
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Your looks</span><span class="slider-val" style="color:var(--scarlet)" id="cc2-looks-val">5</span></div>
+              <input type="range" min="1" max="10" step="1" value="5" id="cc2-looks" oninput="cc2Update()" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Your personality / charm</span><span class="slider-val" style="color:var(--scarlet)" id="cc2-pers-val">8</span></div>
+              <input type="range" min="1" max="10" step="1" value="8" id="cc2-pers" oninput="cc2Update()" />
+            </div>
+            <div class="cc-map-wrap"><div id="cc2-map"></div></div>
+            <div class="cc-verdict" id="cc2-read"></div>
+          </div>
+        </div>
+
+        <div class="smv-callout"><strong>He drew the first frame and called it the whole movie.</strong> The flat line is his world &mdash; looks, frozen at the glance. The curve is what the evidence shows: given exposure, personality moves your effective pull a bounded amount (a perfect 10 buys ~+2.5 points; a 7 about +1; weak personality drags you the other way). It is also the <em>mechanism</em> under Part 1&rsquo;s arenas &mdash; they differ mainly in how much exposure they grant before judgment: online judges at near-zero exposure (looks-only), a social circle judges after plenty (personality-weighted). Charm isn&rsquo;t weak; it&rsquo;s <strong>slow</strong> &mdash; it needs reps to pay out. <span class="smv-tag est">Estimate</span></div>
 
         <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Charm Ceiling: Wheat Waffles (2021/2023, YouTube) for the model under review; Eastwick &amp; Finkel (2008, JPSP) on looks dominating in-vivo first attraction for both sexes; Lewandowski, Aron &amp; Gee (2007) on personality raising rated physical attractiveness; Hunt, Eastwick &amp; Finkel (2015) on acquaintance reducing looks-matching; Rosenfeld et al. (2019, PNAS) on online becoming the leading way couples meet; McAndrew &amp; Koehnke (2016) on creepiness tracking unpredictability, not looks; OkCupid/Tinder match-rate asymmetries are industry figures (Tier 3). Per-row figures and all acceptance-map boundaries are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
       </div>
@@ -929,7 +957,62 @@
       ccUpdate();
     }
 
-    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards(); ccUpdate();
+    // ── Charm Ceiling Part 2 · evidence model: effective desirability over exposure (Estimate) ──
+    const CC2_STAGES = ['First glance', 'First convo', 'A few dates', 'Well-acquainted'];
+    const CC2_FRAC = [0, 0.34, 0.67, 1];
+    const CC2_LIFT = 0.5; // effective points per personality-point, at full exposure
+    function cc2Eff(looks, pers, f){ return Math.max(1, Math.min(10, looks + (pers - 5) * CC2_LIFT * f)); }
+    function cc2MapSVG(looks, pers){
+      const W=380,H=300, padL=38,padR=16,padT=14,padB=40;
+      const pw=W-padL-padR, ph=H-padT-padB, n=CC2_STAGES.length;
+      const X = i => padL + (n>1 ? i/(n-1) : 0)*pw;
+      const Y = v => padT + (1 - v/10)*ph;
+      const dir = pers>5 ? '#0F6E56' : (pers<5 ? '#C41E3A' : '#7A6055');
+      let grid='';
+      for (let t=0;t<=10;t+=2){
+        grid += '<line x1="'+padL+'" y1="'+Y(t)+'" x2="'+(padL+pw)+'" y2="'+Y(t)+'" stroke="#DDD0C4" stroke-width="0.5"/>';
+        grid += '<text x="'+(padL-6)+'" y="'+(Y(t)+3)+'" text-anchor="end" font-size="9" fill="#B4A090">'+t+'</text>';
+      }
+      let xlabels='';
+      for (let i=0;i<n;i++){
+        xlabels += '<line x1="'+X(i)+'" y1="'+Y(0)+'" x2="'+X(i)+'" y2="'+(Y(0)+3)+'" stroke="#B4A090" stroke-width="0.5"/>';
+        xlabels += '<text x="'+X(i)+'" y="'+(Y(0)+15)+'" text-anchor="middle" font-size="8.5" fill="#7A6055">'+CC2_STAGES[i]+'</text>';
+      }
+      const ref = '<line x1="'+padL+'" y1="'+Y(looks)+'" x2="'+(padL+pw)+'" y2="'+Y(looks)+'" stroke="#B4A090" stroke-width="1.25" stroke-dasharray="4 3"/>'
+        + '<text x="'+(padL+pw)+'" y="'+(Y(looks)-5)+'" text-anchor="end" font-size="8.5" fill="#B4A090">looks-only</text>';
+      let pts=[], dots='';
+      for (let i=0;i<n;i++){
+        const v = cc2Eff(looks,pers,CC2_FRAC[i]);
+        pts.push(X(i).toFixed(1)+','+Y(v).toFixed(1));
+        dots += '<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3.5" fill="'+dir+'"/>';
+      }
+      const traj = '<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+dir+'" stroke-width="2.5" stroke-linejoin="round"/>';
+      const titles = '<text x="'+(padL+pw/2)+'" y="'+(H-3)+'" text-anchor="middle" font-size="9.5" fill="#7A6055">Exposure / acquaintance &#8594;</text>'
+        + '<text x="12" y="'+Y(5)+'" text-anchor="middle" font-size="9.5" fill="#7A6055" transform="rotate(-90 12 '+Y(5)+')">Effective pull &#8594;</text>';
+      return '<svg class="cc-svg" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'
+        + grid + xlabels + ref + traj + dots + titles + '</svg>';
+    }
+    function cc2Update(){
+      const looks = parseInt(document.getElementById('cc2-looks').value);
+      const pers = parseInt(document.getElementById('cc2-pers').value);
+      document.getElementById('cc2-looks-val').textContent = looks;
+      document.getElementById('cc2-pers-val').textContent = pers;
+      document.getElementById('cc2-map').innerHTML = cc2MapSVG(looks, pers);
+      const fin = cc2Eff(looks, pers, 1), delta = fin - looks;
+      const rEl = document.getElementById('cc2-read');
+      let cls, txt;
+      if (pers > 5){ cls='pass';
+        txt = '<strong>Charm compounds.</strong> A '+looks+'-looks / '+pers+'-charm person reads ~'+looks+' at first glance, but climbs to ~'+fin.toFixed(1)+' once people actually know you &mdash; about +'+delta.toFixed(1)+' effective points. The catch: that lift only pays out with exposure, so it is nearly dead online and full-strength in a social circle.';
+      } else if (pers < 5){ cls='fail';
+        txt = '<strong>Charm cuts both ways.</strong> A '+looks+'-looks / '+pers+'-charm person may read ~'+looks+' at a glance, but weak personality drags effective pull down to ~'+fin.toFixed(1)+' ('+delta.toFixed(1)+') as people get to know you. Looks open the door; personality decides whether it stays open.';
+      } else { cls='neutral';
+        txt = '<strong>Flat.</strong> Average charm neither lifts nor sinks you &mdash; effective pull stays near your looks line (~'+looks+') across exposure. The movement comes from being notably above or below average on personality.';
+      }
+      rEl.className = 'cc-verdict ' + cls;
+      rEl.innerHTML = txt + ' <span class="smv-tag est">Estimate</span>';
+    }
+
+    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards(); ccUpdate(); cc2Update();
     window.addEventListener('resize', calcLooks);
   </script>
 </body>
