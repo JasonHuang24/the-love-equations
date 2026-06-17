@@ -177,6 +177,9 @@
     .smv-out-card { background: var(--surface); border-radius: var(--radius-md); padding: 0.75rem 0.6rem; text-align: center; }
     .smv-out-label { font-size: 10px; color: var(--text-dim); margin-bottom: 5px; line-height: 1.3; }
     .smv-out-val { font-size: 20px; color: var(--text); }
+    .smv-toggle { display: inline-flex; gap: 4px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 999px; padding: 3px; margin-bottom: 14px; }
+    .smv-toggle-btn { border: none; background: transparent; font-family: inherit; font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 5px 16px; border-radius: 999px; cursor: pointer; }
+    .smv-toggle-btn.active { background: var(--scarlet); color: #fffaf3; }
     @media (max-width: 620px) {
       .smv-checker-out { grid-template-columns: 1fr 1fr; }
       .smv-table { font-size: 12px; }
@@ -382,30 +385,47 @@
         <div class="smv-sub">
           <div class="smv-sub-eyebrow">Subcategory 1 · the aggregate</div>
           <div class="smv-sub-title">The Matching Curve</div>
-          <div class="smv-sub-note">Where pairings land on average, given your own looks. Symmetric — the same curve for both sexes.</div>
+          <div class="smv-sub-note">Where pairings land on average, given your own looks — read <em>per sex</em>, because what the regression means differs sharply by demographic.</div>
         </div>
+        <div class="smv-callout"><strong>The looks math is symmetric; the meaning isn&rsquo;t.</strong> A 70th-percentile man and a 70th-percentile woman both regress to a ~58th-percentile partner — on looks <em>alone</em>, neither sex has an edge. The asymmetry lives entirely in <strong>(1) the status trade</strong> and <strong>(2) who pairs at all</strong>, which is why the two curves below read so differently even where the numbers match. <span class="smv-tag t1">Tier 1</span> anchor (r&nbsp;&asymp;&nbsp;0.4); per-row reads are reasoned <span class="smv-tag est">Estimate</span>.</div>
+
+        <div class="smv-sub-note" style="margin-bottom:7px;"><strong>Women</strong> — her looks vs. the man she pairs with:</div>
         <div class="smv-scroll">
           <table class="smv-table">
-            <thead><tr><th>You</th><th>Your percentile</th><th>Expected partner</th><th>Direction</th></tr></thead>
+            <thead><tr><th>Her looks</th><th>His looks</th><th>What it means for her</th></tr></thead>
             <tbody>
-              <tr><td class="num">10</td><td>top ~2%</td><td class="num">~7.9</td><td><span class="smv-direction down">regresses down</span></td></tr>
-              <tr><td class="num">9</td><td>90th</td><td class="num">~7.0</td><td><span class="smv-direction down">down</span></td></tr>
-              <tr><td class="num">8</td><td>80th</td><td class="num">~6.3</td><td><span class="smv-direction down">down</span></td></tr>
-              <tr><td class="num">7</td><td>70th</td><td class="num">~5.8</td><td><span class="smv-direction down">down</span></td></tr>
-              <tr class="pivot"><td class="num">5</td><td>50th</td><td class="num">5.0</td><td><span class="smv-direction parity">the pivot</span></td></tr>
-              <tr><td class="num">4</td><td>40th</td><td class="num">~4.6</td><td><span class="smv-direction up">regresses up</span></td></tr>
-              <tr><td class="num">3</td><td>30th</td><td class="num">~4.2</td><td><span class="smv-direction up">up</span></td></tr>
-              <tr><td class="num">2</td><td>20th</td><td class="num">~3.7</td><td><span class="smv-direction up">up</span></td></tr>
-              <tr><td class="num">1</td><td>10th</td><td class="num">~3.0</td><td><span class="smv-direction up">up</span></td></tr>
+              <tr><td class="num">10</td><td class="num">~7.9</td><td>Pairs down on looks — but the man beside her is usually trading <strong>up on status</strong>, so rarely down overall.</td></tr>
+              <tr><td class="num">8</td><td class="num">~6.3</td><td>Her looks-match is mid-tier; his status fills the visible gap.</td></tr>
+              <tr><td class="num">7</td><td class="num">~5.8</td><td>&ldquo;Punching above her weight&rdquo; is the status trade, not looks.</td></tr>
+              <tr class="pivot"><td class="num">5</td><td class="num">5.0</td><td>Parity — the pivot.</td></tr>
+              <tr><td class="num">3</td><td class="num">~4.2</td><td>Parity at the floor, and <strong>she still pairs</strong> — often with a status-compensating or sub-5 man.</td></tr>
+              <tr><td class="num">1</td><td class="num">~3.0</td><td>Regresses up toward the middle; the female pairing floor stays high.</td></tr>
             </tbody>
           </table>
         </div>
-        <div class="smv-callout"><strong>The law:</strong> the further you sit from average, the harder your partner regresses toward it. A 10 pairs with an ~8; a 3 pairs with a ~4 (parity at the floor). Top dates down, bottom dates parity — <strong>no one escapes upward on looks.</strong></div>
-        <div class="smv-callout"><strong>The floor&rsquo;s one asymmetry is existential, not comparative.</strong> A below-median man&rsquo;s risk isn&rsquo;t a low-looks partner — it&rsquo;s no partner: young men are single about twice as often as young women <span class="smv-tag t1">Tier 1</span> (Pew: 63% vs 34%; the gap narrows once you account for men dating younger). A below-median woman still pairs — sometimes with a man trading status down on looks to be there.</div>
+
+        <div class="smv-sub-note" style="margin-bottom:7px;"><strong>Men</strong> — his looks vs. the woman he pairs with:</div>
+        <div class="smv-scroll">
+          <table class="smv-table">
+            <thead><tr><th>His looks</th><th>Her looks</th><th>What it means for him</th></tr></thead>
+            <tbody>
+              <tr><td class="num">10</td><td class="num">~7.9</td><td>Pairs down on looks — and gets <strong>no status credit</strong> for them the way women do; looks alone don&rsquo;t buy up.</td></tr>
+              <tr><td class="num">8</td><td class="num">~6.3</td><td>His looks-match — but he typically needs status just to <em>hold</em> it.</td></tr>
+              <tr><td class="num">7</td><td class="num">~5.8</td><td>Women trade up on <strong>status</strong>, not his looks.</td></tr>
+              <tr class="pivot"><td class="num">5</td><td class="num">5.0</td><td>Parity — the pivot.</td></tr>
+              <tr><td class="num">3</td><td class="num">~4.2</td><td>Parity <em>if he pairs</em> — but the bigger risk is not pairing at all.</td></tr>
+              <tr><td class="num">1</td><td class="num">~3.0</td><td>Regression up is cold comfort; bottom-male non-pairing dominates (Pew: young men single ~2&times; women <span class="smv-tag t1">Tier 1</span>).</td></tr>
+            </tbody>
+          </table>
+        </div>
 
         <div class="checker-box">
           <div class="checker-header">Live checker · your looks → your likely partner</div>
           <div class="checker-body">
+            <div class="smv-toggle" id="smv-toggle">
+              <button type="button" class="smv-toggle-btn active" data-sex="f" onclick="smvSetSex('f')">Woman</button>
+              <button type="button" class="smv-toggle-btn" data-sex="m" onclick="smvSetSex('m')">Man</button>
+            </div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your looks (within-sex percentile)</span><span class="slider-val" style="color:var(--scarlet)" id="smv-val">7.0</span></div>
               <input type="range" min="1" max="10" step="0.5" value="7" id="smv-slider" oninput="smvMatch()" />
@@ -580,6 +600,8 @@
     const SMV_R = 0.4;
     function smvErf(x){const t=1/(1+0.3275911*Math.abs(x));const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;}
     function smvNcdf(z){return 0.5*(1+smvErf(z/Math.SQRT2));}
+    let smvSex = 'f';
+    function smvSetSex(sx){ smvSex = sx; document.querySelectorAll('#smv-toggle .smv-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.sex === sx)); smvMatch(); }
     function smvMatch(){
       const s=parseFloat(document.getElementById('smv-slider').value);
       document.getElementById('smv-val').textContent=s.toFixed(1);
@@ -594,8 +616,19 @@
       document.getElementById('smv-p8').textContent=pct(p8);
       document.getElementById('smv-pbelow').textContent=pct(pbelow);
       const dir = s>5.2 ? 'down toward the middle' : (s<4.8 ? 'up toward the middle' : 'to parity');
+      let g;
+      if (smvSex === 'f') {
+        g = s>=6 ? ' The higher-looks man beside her is usually trading <strong>up on status</strong>, not down overall.'
+          : (s<5 ? ' She still pairs — often with a status-compensating or sub-5 man.'
+          : ' Near parity on looks; status decides which way it tilts.');
+      } else {
+        g = s>=6 ? ' Women trade up on <strong>status</strong>, not your looks — expect to add status just to hold this match.'
+          : (s<5 ? ' Below the median the real risk isn&rsquo;t a low-looks partner — it&rsquo;s <strong>not pairing at all</strong> (Pew).'
+          : ' Near parity on looks; status decides whether you clear it.');
+      }
       document.getElementById('smv-readout').innerHTML =
-        `A <strong>${s.toFixed(1)}</strong> most often pairs around <strong>${expScore.toFixed(1)}</strong> — regression pulls ${dir}. Partner is also a 10 ~${pct(p10)} of the time, an 8+ ~${pct(p8)}, and below you ~${pct(pbelow)}.`;
+        `A <strong>${s.toFixed(1)}</strong> most often pairs around <strong>${expScore.toFixed(1)}</strong> — regression pulls ${dir}.` + g +
+        ` Partner is also a 10 ~${pct(p10)}, an 8+ ~${pct(p8)}, below you ~${pct(pbelow)}.`;
     }
 
     checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch();
