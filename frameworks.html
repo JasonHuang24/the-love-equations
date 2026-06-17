@@ -192,7 +192,26 @@
     .pool-card[open] > summary::after { transform: rotate(-135deg); }
     .pool-body { padding: 0.9rem 1.05rem 0.4rem; }
     .pool-read { font-size: 12.5px; color: var(--text-muted); font-style: italic; line-height: 1.55; margin: 0 0 1.1rem; }
+    .cc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-bottom: 1.25rem; }
+    .cc-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); background: var(--card); padding: 1rem 1.1rem; }
+    .cc-card.claim { border-left: 2px solid #51606F; }
+    .cc-card.evidence { border-left: 2px solid #0F6E56; }
+    .cc-card-tag { display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-bottom: 0.65rem; }
+    .cc-card.claim .cc-card-tag { background: #ECEEF1; color: #51606F; }
+    .cc-card.evidence .cc-card-tag { background: #E1F5EE; color: #0F6E56; }
+    .cc-card h4 { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; margin: 0 0 0.5rem; color: var(--text); }
+    .cc-card ul { margin: 0.4rem 0 0; padding-left: 1.05rem; }
+    .cc-card li { font-size: 12px; color: var(--text-muted); line-height: 1.55; margin-bottom: 0.5rem; }
+    .cc-card li:last-child { margin-bottom: 0; }
+    .cc-card li strong { color: var(--text); }
+    .cc-map-wrap { background: var(--surface); border-radius: var(--radius-md); padding: 0.6rem; margin-bottom: 1rem; }
+    .cc-svg { width: 100%; height: auto; display: block; }
+    .cc-verdict { border-radius: var(--radius-md); padding: 0.75rem 0.95rem; font-size: 13px; line-height: 1.55; margin-top: 0.3rem; }
+    .cc-verdict.pass { background: #E1F5EE; color: #0F6E56; }
+    .cc-verdict.fail { background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .cc-verdict strong { font-weight: 700; }
     @media (max-width: 620px) {
+      .cc-cols { grid-template-columns: 1fr; }
       .smv-checker-out { grid-template-columns: 1fr 1fr; }
       .smv-checker-out.attn-checker-out { grid-template-columns: 1fr 1fr; }
       .smv-table { font-size: 12px; }
@@ -403,7 +422,7 @@
       <div class="rf-entry" id="smv-matching" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
         <div class="rf-eyebrow">Market structure model</div>
         <div class="rf-title">SMV Matching</div>
-        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of one&rsquo;s own sex</em>, not an absolute. Across already-paired couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> — moderate, real matching. That matching is well-established <span class="smv-tag t1">Tier 1</span>; pinning the working coefficient at 0.4 is a <span class="smv-tag t2">Tier 2</span> model anchor (the 2024 meta re-analyzes Feingold&rsquo;s 1980s samples, no new data). Three layers follow: a <strong>Matching Curve</strong> (who pairs with whom, on average), an <strong>Attention Market</strong> (who gets seen, liked, messaged, and ignored), and an <strong>Option Pool</strong> (who can realistically be converted into dates or commitment). One calibration up front: <strong>on looks alone the average pattern is assortative, not hypergamous</strong> — the &ldquo;trading up&rdquo; people notice usually enters through status, resources, or non-looks value, covered in the later layers.</div>
+        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of one&rsquo;s own sex</em>, not an absolute. Across already-paired couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> — moderate, real matching. That matching is well-established <span class="smv-tag t1">Tier 1</span>; pinning the working coefficient at 0.4 is a <span class="smv-tag t2">Tier 2</span> model anchor (the 2024 meta re-analyzes Feingold&rsquo;s 1980s samples, no new data). Four layers follow: a <strong>Matching Curve</strong> (who pairs with whom, on average), an <strong>Attention Market</strong> (who gets seen, liked, messaged, and ignored), an <strong>Option Pool</strong> (who can realistically be converted into dates or commitment), and a <strong>Charm Ceiling</strong> (how far game can actually carry you &mdash; a Blackpill model, fact-checked). One calibration up front: <strong>on looks alone the average pattern is assortative, not hypergamous</strong> — the &ldquo;trading up&rdquo; people notice usually enters through status, resources, or non-looks value, covered in the later layers.</div>
 
         <div class="smv-sub">
           <div class="smv-sub-eyebrow">Subcategory 1 · within-sex matching</div>
@@ -508,7 +527,62 @@
           </div>
         </div>
 
-        <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Per-row figures are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
+        <div class="smv-sub">
+          <div class="smv-sub-eyebrow">Subcategory 4 · claim vs. evidence</div>
+          <div class="smv-sub-title">The Charm Ceiling</div>
+          <div class="smv-sub-note">How far can game / charm actually carry you, and where does it cap? We take a Blackpill creator&rsquo;s looks-vs-game model at face value, then check it against the research.</div>
+        </div>
+
+        <div class="smv-callout" style="border-left-color:#51606F;"><strong>The artifact.</strong> Wheat Waffles, &ldquo;Looks Vs. Confidence For Dating &mdash; In-Depth Blackpill Analysis&rdquo; (uploaded under a 2023 title; the analysis is dated 2021 in-video). He plots every man on two axes &mdash; <strong>Looks</strong> (Sub-5 / Normie 5&ndash;7 / Chad 8+) and a <strong>Game</strong> scale he coined (0 = can&rsquo;t speak, 5 = average convo, 7+ = smooth / funny / dominant, 10 = never a misstep) &mdash; and draws an <em>acceptance line</em> = the minimum bar of &ldquo;most women&rdquo; (he brackets out both &ldquo;landwhales&rdquo; and &ldquo;mega-Stacies&rdquo;). The whole question: when does game move that line, and when is it dead weight?</div>
+
+        <div class="cc-cols">
+          <div class="cc-card claim">
+            <span class="cc-card-tag">The claim &middot; Blackpill</span>
+            <h4>Looks gate; game is a bounded bonus</h4>
+            <ul>
+              <li><strong>Online:</strong> a near-vertical wall at ~looks 8. &ldquo;Average or below = zero matches&rdquo;; 8+ are &ldquo;swamped.&rdquo; Game ≈ irrelevant &mdash; you never clear the photo screen to use it.</li>
+              <li><strong>Cold approach:</strong> game counts, but at a fixed rate &mdash; <strong>every 1 looks point you drop costs 2 points of game.</strong> A 6 needs ~8 game, a 7 needs ~6, an 8 needs ~4. A 5 needs a flawless 10; <strong>sub-5 is a dead zone</strong> at any game.</li>
+              <li><strong>Rulings:</strong> &ldquo;a 6 can mog a 7 with better game&rdquo; &mdash; but &ldquo;a 6 can&rsquo;t mog an 8 even with better game.&rdquo; Learning game saves a normie; for a sub-5 it &ldquo;only makes things worse&rdquo; (reads as creepy).</li>
+              <li><strong>Future:</strong> the line keeps steepening &mdash; sub-6 becomes the new sub-5. &ldquo;The Blackpill is the future.&rdquo;</li>
+            </ul>
+          </div>
+          <div class="cc-card evidence">
+            <span class="cc-card-tag">The evidence &middot; checked</span>
+            <h4>Right about the arena, wrong to generalize</h4>
+            <ul>
+              <li><strong>Concede:</strong> looks dominate first-impression attraction for <em>both</em> sexes <span class="smv-tag t1">Tier 1</span>; apps really are a looks-gated wall; and online is now the #1 way couples meet <span class="smv-tag t1">Tier 1</span> &mdash; so his map fits the modern entry point.</li>
+              <li><strong>But looks aren&rsquo;t fixed:</strong> positive personality raises <em>rated physical</em> attractiveness &mdash; same face, higher score <span class="smv-tag t2">Tier 2</span>. Off the app, &ldquo;she sees your face and it&rsquo;s decided&rdquo; is false.</li>
+              <li><strong>Acquaintance dissolves the gate:</strong> couples who knew each other longer match far <em>less</em> on looks <span class="smv-tag t2">Tier 2</span>. The arena he skips &mdash; social circles, repeated exposure &mdash; is where charm and character override the looks market.</li>
+              <li><strong>&ldquo;Sub-5 = it&rsquo;s over&rdquo; is false:</strong> below-average people pair and marry at high rates; the real non-pairing gap is ~10&ndash;12 pts, not a wall <span class="smv-tag t2">Tier 2</span>. And &ldquo;creepy&rdquo; tracks <em>unpredictable behavior</em>, not low looks <span class="smv-tag t2">Tier 2</span>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="checker-box">
+          <div class="checker-header">Live model &middot; the acceptance map, by arena</div>
+          <div class="checker-body">
+            <div class="smv-toggle" id="cc-toggle">
+              <button type="button" class="smv-toggle-btn" data-arena="online" onclick="ccSetArena('online')">Online</button>
+              <button type="button" class="smv-toggle-btn active" data-arena="cold" onclick="ccSetArena('cold')">Cold approach</button>
+              <button type="button" class="smv-toggle-btn" data-arena="social" onclick="ccSetArena('social')">Social circle</button>
+            </div>
+            <div class="smv-sub-note" style="margin:-6px 0 12px;">Online and Cold approach are <strong>his</strong> lines; Social circle / repeated exposure is the arena he omits. Boundaries are a reasoned model, not measured. <span class="smv-tag est">Estimate</span></div>
+            <div class="cc-map-wrap"><div id="cc-map"></div></div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Your looks</span><span class="slider-val" style="color:var(--scarlet)" id="cc-looks-val">5</span></div>
+              <input type="range" min="1" max="10" step="1" value="5" id="cc-looks" oninput="ccUpdate()" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Your game / charm</span><span class="slider-val" style="color:var(--scarlet)" id="cc-game-val">7</span></div>
+              <input type="range" min="1" max="10" step="1" value="7" id="cc-game" oninput="ccUpdate()" />
+            </div>
+            <div class="cc-verdict" id="cc-verdict"></div>
+          </div>
+        </div>
+
+        <div class="smv-callout"><strong>The verdict: charm is access-gated, not value-gated.</strong> His model isn&rsquo;t dumb &mdash; it&rsquo;s a faithful map of the <em>stranger-attraction</em> market (apps, cold approach), the one arena engineered to mute charm, and it has gotten <em>more</em> true as dating moved online. The error is generalizing it to all of dating and treating looks as a fixed gate. Step into a context with repeated exposure and the wall becomes a slope: the exchange rate eases from a vertical wall (online) to ~2:1 (cold) to ~1:1 (social), and the sub-5 dead zone shrinks to a soft floor. So &ldquo;how far does charm go&rdquo; resolves to <strong>it depends entirely on which arena you fight in</strong> &mdash; and most charm dies unused in the arena most people now start in. <span class="smv-tag est">Estimate</span></div>
+
+        <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Charm Ceiling: Wheat Waffles (2021/2023, YouTube) for the model under review; Eastwick &amp; Finkel (2008, JPSP) on looks dominating in-vivo first attraction for both sexes; Lewandowski, Aron &amp; Gee (2007) on personality raising rated physical attractiveness; Hunt, Eastwick &amp; Finkel (2015) on acquaintance reducing looks-matching; Rosenfeld et al. (2019, PNAS) on online becoming the leading way couples meet; McAndrew &amp; Koehnke (2016) on creepiness tracking unpredictability, not looks; OkCupid/Tinder match-rate asymmetries are industry figures (Tier 3). Per-row figures and all acceptance-map boundaries are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
       </div>
 
     </div>
@@ -784,7 +858,78 @@
       document.getElementById('pool-cards').innerHTML = html;
     }
 
-    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards();
+    // ── Charm Ceiling · arena-dependent acceptance map (reasoned model, Estimate) ──
+    let ccArena = 'cold';
+    const CC_ARENAS = {
+      online: { needed: function(L){ return 10 - 20*(L - 7.5); }, color: '#9B441B' },
+      cold:   { needed: function(L){ return 20 - 2*L; },          color: '#854F0B' },
+      social: { needed: function(L){ return 11 - L; },            color: '#0F6E56' }
+    };
+    function ccMapSVG(arena, looks, game){
+      const W=380,H=320, padL=40,padR=14,padT=14,padB=34;
+      const pw=W-padL-padR, ph=H-padT-padB;
+      const X = function(L){ return padL + (L/10)*pw; };
+      const Y = function(G){ return padT + (1 - G/10)*ph; };
+      const need = CC_ARENAS[arena].needed, col = CC_ARENAS[arena].color;
+      // accepted region: area above the boundary, up to game 10
+      let pts = [];
+      for (let L=0; L<=10.0001; L+=0.5){ pts.push(X(L).toFixed(1)+','+Y(Math.max(0, Math.min(10, need(L)))).toFixed(1)); }
+      pts.push(X(10).toFixed(1)+','+Y(10).toFixed(1));
+      pts.push(X(0).toFixed(1)+','+Y(10).toFixed(1));
+      // boundary line only where 0 <= need <= 10
+      let bl = [];
+      for (let L=0; L<=10.0001; L+=0.25){ const n=need(L); if (n>=0 && n<=10){ bl.push(X(L).toFixed(1)+','+Y(n).toFixed(1)); } }
+      const boundary = bl.length>1 ? '<polyline points="'+bl.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2.5" stroke-linejoin="round"/>' : '';
+      // gridlines + tick labels
+      let grid='';
+      for (let t=0;t<=10;t+=2){
+        grid += '<line x1="'+X(t)+'" y1="'+Y(0)+'" x2="'+X(t)+'" y2="'+Y(10)+'" stroke="#DDD0C4" stroke-width="0.5"/>';
+        grid += '<line x1="'+X(0)+'" y1="'+Y(t)+'" x2="'+X(10)+'" y2="'+Y(t)+'" stroke="#DDD0C4" stroke-width="0.5"/>';
+        grid += '<text x="'+X(t)+'" y="'+(Y(0)+14)+'" text-anchor="middle" font-size="9" fill="#B4A090">'+t+'</text>';
+        grid += '<text x="'+(padL-6)+'" y="'+(Y(t)+3)+'" text-anchor="end" font-size="9" fill="#B4A090">'+t+'</text>';
+      }
+      // marker + guide lines
+      const mx=X(looks), my=Y(game);
+      const pass = game >= need(looks) && need(looks) <= 10;
+      const mc = pass ? '#0F6E56' : '#C41E3A';
+      const marker = '<line x1="'+mx+'" y1="'+Y(0)+'" x2="'+mx+'" y2="'+my+'" stroke="'+mc+'" stroke-width="0.75" stroke-dasharray="3 2"/>'
+        + '<line x1="'+padL+'" y1="'+my+'" x2="'+mx+'" y2="'+my+'" stroke="'+mc+'" stroke-width="0.75" stroke-dasharray="3 2"/>'
+        + '<circle cx="'+mx+'" cy="'+my+'" r="5" fill="'+mc+'"/>';
+      const titles = '<text x="'+X(5)+'" y="'+(H-5)+'" text-anchor="middle" font-size="10" fill="#7A6055">Looks &#8594;</text>'
+        + '<text x="13" y="'+Y(5)+'" text-anchor="middle" font-size="10" fill="#7A6055" transform="rotate(-90 13 '+Y(5)+')">Game &#8594;</text>';
+      return '<svg class="cc-svg" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'
+        + '<rect x="'+X(0)+'" y="'+Y(10)+'" width="'+pw+'" height="'+ph+'" fill="#FAECEE"/>'
+        + '<polygon points="'+pts.join(' ')+'" fill="#E1F5EE"/>'
+        + grid + boundary + marker + titles + '</svg>';
+    }
+    function ccUpdate(){
+      const looks = parseInt(document.getElementById('cc-looks').value);
+      const game = parseInt(document.getElementById('cc-game').value);
+      document.getElementById('cc-looks-val').textContent = looks;
+      document.getElementById('cc-game-val').textContent = game;
+      document.getElementById('cc-map').innerHTML = ccMapSVG(ccArena, looks, game);
+      const need = CC_ARENAS[ccArena].needed(looks);
+      const pass = game >= need && need <= 10;
+      const vEl = document.getElementById('cc-verdict');
+      vEl.className = 'cc-verdict ' + (pass ? 'pass' : 'fail');
+      const arenaRead = {
+        online: 'Online, the boundary is a near-vertical wall around looks 8 &mdash; below it, game barely registers, because you don&rsquo;t clear the photo screen to use it. Largely accurate for apps.',
+        cold: 'Cold approach: about 1 looks point = 2 game points, with sub-5 a dead zone. His sharpest, most defensible claim &mdash; for pulling strangers.',
+        social: 'Social circle / repeated exposure: the floor drops and the rate eases to ~1:1 &mdash; familiarity lets charm and character override the looks market, and personality even raises perceived looks. The arena he leaves out.'
+      };
+      let verdict;
+      if (pass) verdict = '<strong>Accepted.</strong> A ' + looks + '/10 looks with ' + game + '/10 game clears the bar in this arena.';
+      else if (need > 10) verdict = '<strong>Looks-gated out.</strong> At ' + looks + '/10 looks, no amount of game clears this arena&rsquo;s bar.';
+      else verdict = '<strong>Rejected.</strong> A ' + looks + '/10 needs about ' + Math.ceil(need) + '/10 game here &mdash; ' + game + ' falls short.';
+      vEl.innerHTML = verdict + ' ' + arenaRead[ccArena] + ' <span class="smv-tag est">Estimate</span>';
+    }
+    function ccSetArena(a){
+      ccArena = a;
+      document.querySelectorAll('#cc-toggle .smv-toggle-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.arena === a); });
+      ccUpdate();
+    }
+
+    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards(); ccUpdate();
     window.addEventListener('resize', calcLooks);
   </script>
 </body>
