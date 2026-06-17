@@ -214,6 +214,20 @@
     .cc-part { display: flex; align-items: baseline; gap: 0.6rem; margin: 1.75rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--border); }
     .cc-part-num { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--scarlet); }
     .cc-part-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--text); }
+    .st-score-wrap { text-align: center; margin-bottom: 0.7rem; }
+    .st-score-num { font-family: 'Playfair Display', serif; font-size: 34px; color: var(--scarlet); line-height: 1; }
+    .st-score-lbl { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
+    .st-bar { display: flex; width: 100%; height: 30px; border-radius: 7px; overflow: hidden; border: 0.5px solid var(--border); margin-bottom: 0.5rem; }
+    .st-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fffaf3; white-space: nowrap; overflow: hidden; transition: flex-basis 0.15s ease; }
+    .st-seg.looks { background: #C41E3A; }
+    .st-seg.pers { background: #51606F; }
+    .st-seg.status { background: #BA7517; }
+    .st-legend { display: flex; gap: 1.1rem; flex-wrap: wrap; font-size: 10.5px; color: var(--text-muted); margin-bottom: 0.8rem; }
+    .st-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .st-dot { width: 9px; height: 9px; border-radius: 2px; }
+    .st-dot.looks { background: #C41E3A; }
+    .st-dot.pers { background: #51606F; }
+    .st-dot.status { background: #BA7517; }
     @media (max-width: 620px) {
       .cc-cols { grid-template-columns: 1fr; }
       .smv-checker-out { grid-template-columns: 1fr 1fr; }
@@ -426,7 +440,7 @@
       <div class="rf-entry" id="smv-matching" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
         <div class="rf-eyebrow">Market structure model</div>
         <div class="rf-title">SMV Matching</div>
-        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of one&rsquo;s own sex</em>, not an absolute. Across already-paired couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> — moderate, real matching. That matching is well-established <span class="smv-tag t1">Tier 1</span>; pinning the working coefficient at 0.4 is a <span class="smv-tag t2">Tier 2</span> model anchor (the 2024 meta re-analyzes Feingold&rsquo;s 1980s samples, no new data). Four layers follow: a <strong>Matching Curve</strong> (who pairs with whom, on average), an <strong>Attention Market</strong> (who gets seen, liked, messaged, and ignored), an <strong>Option Pool</strong> (who can realistically be converted into dates or commitment), and a <strong>Charm Ceiling</strong> (how far game can actually carry you &mdash; a Blackpill model, fact-checked). One calibration up front: <strong>on looks alone the average pattern is assortative, not hypergamous</strong> — the &ldquo;trading up&rdquo; people notice usually enters through status, resources, or non-looks value, covered in the later layers.</div>
+        <div class="rf-sub">How attractiveness sorts the market. Score looks as a <strong>within-sex percentile</strong> — a 7 is the 70th percentile <em>of one&rsquo;s own sex</em>, not an absolute. Across already-paired couples, partners&rsquo; rated looks correlate at <strong>r&nbsp;&asymp;&nbsp;0.4</strong> — moderate, real matching. That matching is well-established <span class="smv-tag t1">Tier 1</span>; pinning the working coefficient at 0.4 is a <span class="smv-tag t2">Tier 2</span> model anchor (the 2024 meta re-analyzes Feingold&rsquo;s 1980s samples, no new data). Five layers follow: a <strong>Matching Curve</strong> (who pairs with whom, on average), an <strong>Attention Market</strong> (who gets seen, liked, messaged, and ignored), an <strong>Option Pool</strong> (who can realistically be converted into dates or commitment), a <strong>Charm Ceiling</strong> (how far game can actually carry you &mdash; a Blackpill model, fact-checked), and the <strong>Status Trade</strong> (the full composite, and where the hypergamy claim resolves). One calibration up front: <strong>on looks alone the average pattern is assortative, not hypergamous</strong> — the &ldquo;trading up&rdquo; people notice usually enters through status, resources, or non-looks value, covered in the later layers.</div>
 
         <div class="smv-sub">
           <div class="smv-sub-eyebrow">Subcategory 1 · within-sex matching</div>
@@ -615,7 +629,77 @@
 
         <div class="smv-callout"><strong>He drew the first frame and called it the whole movie.</strong> The flat line is his world &mdash; looks, frozen at the glance. The curve is what the evidence shows: given exposure, personality moves your effective pull a bounded amount (a strong 10 buys roughly +2&ndash;2.5 points; weak personality drags you the other way). Toggle to the <strong>female</strong> view and the curve stays flat longer, then climbs late &mdash; a man&rsquo;s first read is more looks-locked, so a woman&rsquo;s warmth pays off mainly in retention and commitment, not the glance. It is also the <em>mechanism</em> under Part 1&rsquo;s arenas &mdash; they differ mainly in how much exposure they grant before judgment: online judges at near-zero exposure (looks-only), a social circle judges after plenty (personality-weighted). Charm isn&rsquo;t weak; it&rsquo;s <strong>slow</strong> &mdash; it needs reps to pay out. <span class="smv-tag est">Estimate</span></div>
 
-        <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Charm Ceiling: Wheat Waffles (2021/2023, YouTube) for the model under review; Eastwick &amp; Finkel (2008, JPSP) on looks dominating in-vivo first attraction for both sexes; Lewandowski, Aron &amp; Gee (2007) on personality raising rated physical attractiveness; Hunt, Eastwick &amp; Finkel (2015) on acquaintance reducing looks-matching; Rosenfeld et al. (2019, PNAS) on online becoming the leading way couples meet; McAndrew &amp; Koehnke (2016) on creepiness tracking unpredictability, not looks; OkCupid/Tinder match-rate asymmetries are industry figures (Tier 3). Per-row figures and all acceptance-map boundaries are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
+        <div class="smv-sub">
+          <div class="smv-sub-eyebrow">Subcategory 5 &middot; status &amp; hypergamy</div>
+          <div class="smv-sub-title">The Status Trade</div>
+          <div class="smv-sub-note">Beyond looks and charm, overall mate value is a blend &mdash; and this is where the framework&rsquo;s opening promise pays off: the &ldquo;trading up&rdquo; people notice enters through <strong>status</strong>. We take the canonical Red Pill hypergamy claim, then check it.</div>
+        </div>
+
+        <div class="cc-part"><span class="cc-part-num">Part 1</span><span class="cc-part-title">The Claim</span></div>
+
+        <div class="smv-callout" style="border-left-color:#51606F;"><strong>The claim.</strong> The Red Pill calls it <em>hypergamy</em>: women are wired to &ldquo;marry up&rdquo; &mdash; to chase the highest-status man they can secure, never sideways or down. The strong version: women rate ~80% of men below average and funnel desire to the top fifth (&ldquo;a 6 can hold out for a 9&rdquo;); they run a <em>dual mating strategy</em> &mdash; &ldquo;alpha fucks, beta bucks&rdquo; &mdash; taking sex from hot, dominant men and commitment from stable providers; and the instinct is immutable, so a woman &ldquo;branch-swings&rdquo; the moment a better option appears. In this model, <strong>status is to a man what looks are to a woman</strong> &mdash; &ldquo;money is a man&rsquo;s looks.&rdquo;</div>
+
+        <div class="cc-cols">
+          <div class="cc-card claim">
+            <span class="cc-card-tag">The claim &middot; Red Pill</span>
+            <h4>Women trade up on status, always</h4>
+            <ul>
+              <li><strong>Innate &amp; immutable:</strong> women seek up, never sideways or down; the drive can&rsquo;t be switched off.</li>
+              <li><strong>The 80/20:</strong> desire funnels to the top fifth of men &mdash; &ldquo;a 6 can hold out for a 9.&rdquo;</li>
+              <li><strong>Dual mating (&ldquo;AF/BB&rdquo;):</strong> alpha genes for the fertile window, a beta provider for the bills.</li>
+              <li><strong>Status = a man&rsquo;s looks:</strong> money, height, rank are his SMV; statusmaxxing beats looksmaxxing.</li>
+            </ul>
+          </div>
+          <div class="cc-card evidence">
+            <span class="cc-card-tag">The evidence &middot; checked</span>
+            <h4>Real as a tilt, false as an iron law</h4>
+            <ul>
+              <li><strong>Concede:</strong> women do weight status / resources more than men &mdash; robust across 37 then 45 countries <span class="smv-tag t1">Tier 1</span>. Status genuinely lifts a man&rsquo;s value (the Option-Pool lever).</li>
+              <li><strong>But &ldquo;marrying up&rdquo; reversed:</strong> women now out-educate men in most countries and partner <em>down</em> on education more than up <span class="smv-tag t1">Tier 1</span>.</li>
+              <li><strong>The provider norm is halving:</strong> male sole/primary breadwinner 85% &rarr; 55% since 1972; ~45% of marriages are now equal- or female-earning <span class="smv-tag t1">Tier 1</span>.</li>
+              <li><strong>&ldquo;AF/BB&rdquo; doesn&rsquo;t replicate:</strong> the ovulatory &ldquo;good-genes&rdquo; shift behind it fails pre-registered tests <span class="smv-tag t2">Tier 2</span>. And &ldquo;a 6 chasing 9s&rdquo; is online <em>attention</em>, not <em>pairing</em> &mdash; which sorts assortatively <span class="smv-tag t1">Tier 1</span>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cc-part"><span class="cc-part-num">Part 2</span><span class="cc-part-title">The Evidence Model</span></div>
+
+        <div class="smv-callout">Overall mate value is a weighted blend of <strong>looks, personality, and status</strong> &mdash; and the weights differ by sex. <em>That difference is the whole of what&rsquo;s true in &ldquo;hypergamy&rdquo;</em>: status is a bigger slice of a man&rsquo;s value, looks / youth a bigger slice of a woman&rsquo;s. Set the three and toggle the sex to see the composite shift &mdash; and the beauty-for-status trade fall out of the weights.</div>
+
+        <div class="checker-box">
+          <div class="checker-header">Live model &middot; the composite, weighted by sex</div>
+          <div class="checker-body">
+            <div class="smv-toggle" id="st-toggle">
+              <button type="button" class="smv-toggle-btn active" data-sex="m" onclick="stSetSex('m')">Male</button>
+              <button type="button" class="smv-toggle-btn" data-sex="f" onclick="stSetSex('f')">Female</button>
+            </div>
+            <div class="smv-sub-note" style="margin:-6px 0 12px;">The weights are reasoned (status ~40% of a man&rsquo;s value, ~20% of a woman&rsquo;s; looks the reverse); the <em>direction</em> of the asymmetry is the sourced part. <span class="smv-tag est">Estimate</span></div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Looks</span><span class="slider-val" style="color:var(--scarlet)" id="st-looks-val">5</span></div>
+              <input type="range" min="1" max="10" step="1" value="5" id="st-looks" oninput="stUpdate()" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Personality</span><span class="slider-val" style="color:var(--scarlet)" id="st-pers-val">5</span></div>
+              <input type="range" min="1" max="10" step="1" value="5" id="st-pers" oninput="stUpdate()" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-top"><span class="slider-label">Status / resources</span><span class="slider-val" style="color:var(--scarlet)" id="st-status-val">8</span></div>
+              <input type="range" min="1" max="10" step="1" value="8" id="st-status" oninput="stUpdate()" />
+            </div>
+            <div class="st-score-wrap"><div class="st-score-num" id="st-score">&mdash;</div><div class="st-score-lbl">Overall mate value</div></div>
+            <div class="st-bar">
+              <div class="st-seg looks" id="st-seg-looks"></div>
+              <div class="st-seg pers" id="st-seg-pers"></div>
+              <div class="st-seg status" id="st-seg-status"></div>
+            </div>
+            <div class="st-legend"><span><span class="st-dot looks"></span>Looks</span><span><span class="st-dot pers"></span>Personality</span><span><span class="st-dot status"></span>Status</span></div>
+            <div class="cc-verdict" id="st-read"></div>
+          </div>
+        </div>
+
+        <div class="smv-callout"><strong>The verdict: hypergamy is real as a weighting, false as an iron law.</strong> Women do weight status more, and a man&rsquo;s value is genuinely more status-elastic &mdash; that asymmetry, beauty traded for status, is the kernel the Red Pill is feeling. But the iron-law version fails the data: educational hypergamy has reversed, the provider norm is halving, the dual-mating mechanism doesn&rsquo;t replicate, and people still pair assortatively on the <em>whole</em> composite rather than by relentless trading-up. The trade was always partly about provision &mdash; so as women&rsquo;s own status climbs, it is <strong>fading, not hardening.</strong> <span class="smv-tag est">Estimate</span></div>
+
+        <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Charm Ceiling: Wheat Waffles (2021/2023, YouTube) for the model under review; Eastwick &amp; Finkel (2008, JPSP) on looks dominating in-vivo first attraction for both sexes; Lewandowski, Aron &amp; Gee (2007) on personality raising rated physical attractiveness; Hunt, Eastwick &amp; Finkel (2015) on acquaintance reducing looks-matching; Rosenfeld et al. (2019, PNAS) on online becoming the leading way couples meet; McAndrew &amp; Koehnke (2016) on creepiness tracking unpredictability, not looks; OkCupid/Tinder match-rate asymmetries are industry figures (Tier 3). Status Trade: Buss (1989, 37 cultures) and Walter et al. (2020, 45 countries, N=14,399) on women weighting resources/status more (gap shrinks with gender equality); Esteve et al. (2016, "The End of Hypergamy," 120 countries) on the reversal of educational hypergamy; Pew Research (2023) on breadwinner shares (male sole/primary 85%&rarr;55% since 1972); Wood et al. (2014) and Stern et al. (2021, pre-registered) on the failure of the ovulatory-shift / dual-mating ("AF/BB") hypothesis to replicate (Gildersleeve et al. 2014 dissents). Composite weights are reasoned; the asymmetry's direction is the sourced part. Per-row figures, acceptance-map boundaries, and composite weights are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
       </div>
 
     </div>
@@ -1042,7 +1126,49 @@
       cc2Update();
     }
 
-    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards(); ccUpdate(); cc2Update();
+    // ── Status Trade · sex-weighted composite mate value (reasoned weights, Estimate) ──
+    let stSex = 'm';
+    const ST_WEIGHTS = {
+      m: { looks: 0.30, pers: 0.30, status: 0.40 },
+      f: { looks: 0.50, pers: 0.30, status: 0.20 }
+    };
+    function stUpdate(){
+      const looks = +document.getElementById('st-looks').value;
+      const pers = +document.getElementById('st-pers').value;
+      const status = +document.getElementById('st-status').value;
+      document.getElementById('st-looks-val').textContent = looks;
+      document.getElementById('st-pers-val').textContent = pers;
+      document.getElementById('st-status-val').textContent = status;
+      const w = ST_WEIGHTS[stSex];
+      const cL = w.looks*looks, cP = w.pers*pers, cS = w.status*status;
+      const total = cL + cP + cS;
+      document.getElementById('st-score').textContent = total.toFixed(1);
+      const pct = c => total>0 ? (c/total*100) : 0;
+      const setSeg = (id, c, label, minPct) => {
+        const el = document.getElementById(id);
+        el.style.flexBasis = pct(c).toFixed(1)+'%';
+        el.textContent = pct(c) > minPct ? label : '';
+      };
+      setSeg('st-seg-looks', cL, 'Looks', 13);
+      setSeg('st-seg-pers', cP, 'Personality', 16);
+      setSeg('st-seg-status', cS, 'Status', 13);
+      const rEl = document.getElementById('st-read');
+      rEl.className = 'cc-verdict neutral';
+      let txt;
+      if (stSex === 'm'){
+        txt = '<strong>As a man, status is the heaviest lever</strong> (weighted ~40% here, vs ~20% for a woman). A high-status, average-looking man clears his looks line &mdash; the kernel of truth in &ldquo;money is a man&rsquo;s looks.&rdquo; But pairing still sorts on the <em>whole</em> composite, not relentless trading-up, and the status premium is shrinking: educational hypergamy has reversed and ~45% of marriages are now equal- or female-earning.';
+      } else {
+        txt = '<strong>As a woman, looks carry the most weight</strong> (~50% here) and status the least (~20%) &mdash; men weight a partner&rsquo;s resources least of the three. Her lever upward is looks / youth; his is status. That mutual swap &mdash; beauty for status &mdash; is the real, and shrinking, core of &ldquo;hypergamy.&rdquo;';
+      }
+      rEl.innerHTML = txt + ' <span class="smv-tag est">Estimate</span>';
+    }
+    function stSetSex(s){
+      stSex = s;
+      document.querySelectorAll('#st-toggle .smv-toggle-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.sex === s); });
+      stUpdate();
+    }
+
+    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards(); ccUpdate(); cc2Update(); stUpdate();
     window.addEventListener('resize', calcLooks);
   </script>
 </body>
