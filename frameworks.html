@@ -181,11 +181,24 @@
     .smv-toggle { display: inline-flex; gap: 4px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 999px; padding: 3px; margin-bottom: 14px; }
     .smv-toggle-btn { border: none; background: transparent; font-family: inherit; font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 5px 16px; border-radius: 999px; cursor: pointer; }
     .smv-toggle-btn.active { background: var(--scarlet); color: #fffaf3; }
+    .pool-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); background: var(--card); margin-bottom: 0.6rem; overflow: hidden; }
+    .pool-card > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.7rem; padding: 0.8rem 1.05rem; }
+    .pool-card > summary::-webkit-details-marker { display: none; }
+    .pool-card > summary:hover { background: var(--surface); }
+    .pool-rating { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; min-width: 3.1rem; padding: 3px 9px; border-radius: 6px; background: var(--scarlet-pale); color: var(--scarlet-dim); font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; }
+    .pool-tagline { flex: 1 1 auto; font-size: 12.5px; color: var(--text-muted); line-height: 1.4; }
+    .pool-card > summary::after { content: ''; flex-shrink: 0; width: 7px; height: 7px; border-right: 1.5px solid var(--text-dim); border-bottom: 1.5px solid var(--text-dim); transform: rotate(45deg); transition: transform 0.2s ease; margin-left: 4px; }
+    .pool-card[open] > summary { border-bottom: 0.5px solid var(--border); }
+    .pool-card[open] > summary::after { transform: rotate(-135deg); }
+    .pool-body { padding: 0.9rem 1.05rem 0.4rem; }
+    .pool-read { font-size: 12.5px; color: var(--text-muted); font-style: italic; line-height: 1.55; margin: 0 0 1.1rem; }
     @media (max-width: 620px) {
       .smv-checker-out { grid-template-columns: 1fr 1fr; }
       .smv-checker-out.attn-checker-out { grid-template-columns: 1fr 1fr; }
       .smv-table { font-size: 12px; }
       .smv-table th, .smv-table td { padding: 0.5rem 0.55rem; }
+      .pool-tagline { font-size: 11.5px; }
+      .pool-body { padding: 0.8rem 0.7rem 0.4rem; }
     }
   </style>
 </head>
@@ -479,34 +492,9 @@
         </div>
         <div class="smv-callout"><strong>Options are asymmetric; pairings are not.</strong> The Attention Market tells you who reacts; the Option Pool asks who can actually be converted. A woman&rsquo;s raw pool usually reaches above her looks line, but commitment is gated. A man&rsquo;s pool usually sits at or below his looks line unless status, competence, familiarity, or context lifts it. Critical caveat: these rows are <em>reasoned access bands</em>, not measured couple outcomes. Real pairing still regresses toward matching.</div>
 
-        <div class="smv-sub-note" style="margin-bottom:7px;">A 7/10 <strong>woman&rsquo;s</strong> pool — tilts <em>up</em> (men date down on looks freely):</div>
-        <div class="smv-scroll">
-          <table class="smv-table">
-            <thead><tr><th>Tier</th><th>Supply</th><th>Her real access</th><th>Band</th></tr></thead>
-            <tbody>
-              <tr><td class="num">10</td><td>top ~2–5%</td><td>short-term / situational; gated for commitment</td><td><span class="smv-band gated">Gated</span></td></tr>
-              <tr><td class="num">9</td><td>~10%</td><td>real, often short-term or trading on youth/looks</td><td><span class="smv-band cracked">Cracked</span></td></tr>
-              <tr><td class="num">8</td><td>~10%</td><td>strong — 8s date down on looks readily</td><td><span class="smv-band open">Open</span></td></tr>
-              <tr><td class="num">7</td><td>~10%</td><td>matched, mutual</td><td><span class="smv-band wide">Wide open</span></td></tr>
-              <tr><td class="num">5</td><td>~10%</td><td>near-total — they pursue up; rarely chosen</td><td><span class="smv-band wide">Wide open</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="smv-sub-note" style="margin-bottom:7px;">A 7/10 <strong>man&rsquo;s</strong> pool — sits <em>at or below</em> his line unless he buys up with status:</div>
-        <div class="smv-scroll">
-          <table class="smv-table">
-            <thead><tr><th>Tier</th><th>Supply</th><th>His real access</th><th>Band</th></tr></thead>
-            <tbody>
-              <tr><td class="num">10</td><td>top ~2–5%</td><td>~closed without major status</td><td><span class="smv-band closed">Closed</span></td></tr>
-              <tr><td class="num">9</td><td>~10%</td><td>gated; needs status</td><td><span class="smv-band closed">Closed</span></td></tr>
-              <tr><td class="num">8</td><td>~10%</td><td>needs status compensation</td><td><span class="smv-band gated">Gated</span></td></tr>
-              <tr><td class="num">7</td><td>~10%</td><td>matched — but must also clear her status filter</td><td><span class="smv-band open">Open</span></td></tr>
-              <tr><td class="num">5</td><td>~10%</td><td>high reciprocity — but he must initiate</td><td><span class="smv-band wide">Wide open</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="smv-callout">Same &ldquo;7,&rdquo; opposite pools: <strong>her attention reaches above her looks line, but commitment gates narrow it; his attention sits at or below his line unless status lifts it.</strong> Both then <em>pair</em> by matching (Subcategory 1). Supply ≈ one decile per tier; 10s are the top sliver. <span class="smv-tag est">Estimate</span></div>
+        <div class="smv-sub-note" style="margin-bottom:4px;">Open any rating to see <strong>both sexes&rsquo; realistic pools</strong> across the same ladder. Each row is access to a partner <em>tier</em>; the band grades how real that access is. Supply &asymp; one decile per tier; 10s are the top sliver. The 7/10 is open as the worked example.</div>
+        <div class="smv-sub-note" style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;"><span class="smv-band wide">Wide open</span><span class="smv-band open">Open</span><span class="smv-band cracked">Cracked &middot; short-term</span><span class="smv-band gated">Gated &middot; status / commitment</span><span class="smv-band closed">Closed</span></div>
+        <div id="pool-cards"></div>
 
         <div class="smv-callout"><strong>Non-pairing risk — separate from the curve.</strong> Men stay single more than women, concentrated at the bottom — but the size is contested. Pew&rsquo;s headline (63% of men 18&ndash;29 single vs 34% of women, n=6,034) is an outlier; the GSS and the American Perspectives Survey put the gap nearer <strong>~10&ndash;12 points</strong>, and ~4 of Pew&rsquo;s points vanish once you account for men dating slightly younger. Direction: real. Magnitude: smaller than the meme. And it&rsquo;s <em>singlehood</em>, not proof of looks-floor exclusion. <span class="smv-tag t1">Tier 1</span> stat · contested magnitude.</div>
 
@@ -715,7 +703,88 @@
       document.getElementById('attn-readout').innerHTML = read + ' <span class="smv-tag est">Estimate</span>';
     }
 
-    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket();
+    // ── Option Pool · full-spectrum access (reasoned bands, Estimate) ──
+    const POOL_TIERS = [10, 9, 8, 7, 5, 3, 1];
+    function poolSupply(t){ return t === 10 ? 'top ~2–5%' : (t === 1 ? 'bottom ~2–5%' : '~10%'); }
+    // Woman's access to a man at tier t, given her looks R. Pool tilts up; commitment gates the top.
+    function poolWoman(R, t){
+      const d = t - R;
+      if (d >= 6)  return ['negligible — beyond even short-term looks-access', 'closed'];
+      if (d >= 3)  return ['short-term / situational; commitment gated', 'gated'];
+      if (d === 2) return ['real but usually short-term — trades on looks/novelty', 'cracked'];
+      if (d === 1) return ['strong — he dates down on looks readily', 'open'];
+      if (d === 0) return ['matched, mutual', 'wide'];
+      if (d === -1) return ['near-total — he reciprocates; rarely her pick', 'wide'];
+      return ['near-total reciprocity; she rarely dates this far down', 'wide'];
+    }
+    // Man's access to a woman at tier t, given his looks R. Pool sits at/below his line; up needs status.
+    function poolMan(R, t){
+      const d = t - R;
+      if (d >= 3)  return ['~closed without major status', 'closed'];
+      if (d === 2) return ['gated — needs real status', 'closed'];
+      if (d === 1) return ['needs status compensation', 'gated'];
+      if (d === 0) return ['matched — must clear her status filter &amp; initiate', 'open'];
+      if (d === -1) return ['strong reciprocity — she reaches up; he must initiate', 'wide'];
+      return ['high reciprocity — but he must initiate', 'wide'];
+    }
+    function poolBandLabel(b){ return b === 'wide' ? 'Wide open' : b.charAt(0).toUpperCase() + b.slice(1); }
+    function poolTable(sex, R){
+      const fn = sex === 'f' ? poolWoman : poolMan;
+      const head = sex === 'f' ? 'Her real access' : 'His real access';
+      const rows = POOL_TIERS.map(t => {
+        const [read, band] = fn(R, t);
+        const pivot = t === R ? ' class="pivot"' : '';
+        return `<tr${pivot}><td class="num">${t}</td><td>${poolSupply(t)}</td><td>${read}</td><td><span class="smv-band ${band}">${poolBandLabel(band)}</span></td></tr>`;
+      }).join('');
+      return `<div class="smv-scroll"><table class="smv-table"><thead><tr><th>Partner tier</th><th>Supply</th><th>${head}</th><th>Band</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    }
+    function poolTagline(R){
+      if (R === 10) return 'Top of the market — everyone below reciprocates; matched at the peak.';
+      if (R >= 8)  return 'Upper tier — she can reach the top short-term; he needs status to.';
+      if (R >= 6)  return 'Above average — she dates up casually; he buys up only with status.';
+      if (R === 5) return 'Median — she tends to pursue up; he has to initiate down.';
+      if (R >= 3)  return 'Below average — her reach upward thins; his all but closes.';
+      return 'Bottom — parity pairing dominates; non-pairing risk peaks (men most).';
+    }
+    function poolReadWoman(R){
+      if (R >= 9) return 'Near the ceiling: matched at the top, wide open below. Her only constraint is the top man&rsquo;s optionality, not access.';
+      if (R >= 6) return 'Reaches up for attention and short-term access; commitment compresses back toward her line.';
+      if (R === 5) return 'Pursues up and gets short-term looks-access; matched and below reciprocate freely.';
+      if (R >= 3) return 'Short-term reach upward thins fast; her reliable pool is parity and below.';
+      return 'Mostly parity; thin short-term reach up on novelty, but commitment is parity. Subjective floor — see the Sub-5 rule.';
+    }
+    function poolReadMan(R){
+      if (R >= 9) return 'Matched at the top, wide open below; his only tax is initiation and her status filter.';
+      if (R >= 6) return 'Sits at his line; buys above it only with status or competence; wide reciprocity below.';
+      if (R === 5) return 'Must initiate; matched women are often busy reaching up, so he wins on initiative and value.';
+      if (R >= 3) return 'Upward is largely closed without status; his realistic pool is parity and below.';
+      return 'Near-closed upward; realistic pool is parity, and this is where non-pairing risk is highest. Subjective floor — see the Sub-5 rule.';
+    }
+    function poolSynth(R){
+      if (R === 10) return 'Same 10, mirrored peaks: both matched at the top and wide open below — the rare tier where the two pools nearly converge.';
+      if (R >= 3)  return `Same ${R}, opposite pools: her access tilts up and gates at the top; his sits at or below and opens only downward. Both still pair by matching.`;
+      return `Same ${R}: both pools collapse toward parity — and this is where staying unpaired, his risk especially, is most real.`;
+    }
+    function renderPoolCards(){
+      let html = '';
+      for (let R = 10; R >= 1; R--){
+        const open = R === 7 ? ' open' : '';
+        html += `<details class="pool-card"${open}>`
+          + `<summary><span class="pool-rating">${R}/10</span><span class="pool-tagline">${poolTagline(R)}</span></summary>`
+          + `<div class="pool-body">`
+          + `<div class="smv-sub-note" style="margin:0.4rem 0 7px;">A <strong>${R}/10 woman</strong> — pool tilts <em>up</em>; men date down on looks freely, but commitment pulls back to match.</div>`
+          + poolTable('f', R)
+          + `<p class="pool-read">${poolReadWoman(R)}</p>`
+          + `<div class="smv-sub-note" style="margin:0 0 7px;">A <strong>${R}/10 man</strong> — pool sits <em>at or below</em> his line unless status, competence, familiarity, or context lifts it.</div>`
+          + poolTable('m', R)
+          + `<p class="pool-read">${poolReadMan(R)}</p>`
+          + `<div class="smv-callout" style="margin:0 0 0.5rem;">${poolSynth(R)} <span class="smv-tag est">Estimate</span></div>`
+          + `</div></details>`;
+      }
+      document.getElementById('pool-cards').innerHTML = html;
+    }
+
+    checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards();
     window.addEventListener('resize', calcLooks);
   </script>
 </body>
