@@ -534,7 +534,7 @@
         <div class="smv-sub">
           <div class="smv-sub-eyebrow">Subcategory 4 · claim vs. evidence</div>
           <div class="smv-sub-title">The Charm Ceiling</div>
-          <div class="smv-sub-note">How far can game / charm actually carry you, and where does it cap? <strong>Part 1</strong> takes a Blackpill creator&rsquo;s looks-vs-game model at face value; <strong>Part 2</strong> draws the research model on its own axes. Both run from the <strong>male perspective</strong> &mdash; the man being judged, women as the acceptors &mdash; because that is the frame the source uses.</div>
+          <div class="smv-sub-note">How far can game / charm actually carry you, and where does it cap? <strong>Part 1</strong> takes a Blackpill creator&rsquo;s looks-vs-game model at face value; <strong>Part 2</strong> draws the research model on its own axes. The source is strictly <strong>male-perspective</strong> (the man judged, women as acceptors), so Part 1 follows that; <strong>Part 2 is tabbable</strong> to either the male or female view.</div>
         </div>
 
         <div class="cc-part"><span class="cc-part-num">Part 1</span><span class="cc-part-title">The Claim</span></div>
@@ -593,14 +593,19 @@
         <div class="smv-callout"><strong>What his graph leaves out: time.</strong> His map is a single first-impression snapshot &mdash; a static accept/reject line. But the research&rsquo;s core correction is that the weight of looks vs. personality <em>moves with exposure</em>. So the evidence model puts <strong>acquaintance on the x-axis</strong> and draws effective desirability as a <em>trajectory</em>, not a gate: it starts at your looks anchor (the glance, where he&rsquo;s right) and bends up or down as personality compounds &mdash; because personality raises <em>perceived</em> looks (Lewandowski 2007) and acquaintance dissolves looks-matching (Hunt 2015).</div>
 
         <div class="checker-box">
-          <div class="checker-header">Live model &middot; a man&rsquo;s effective pull over exposure</div>
+          <div class="checker-header">Live model &middot; effective pull over exposure</div>
           <div class="checker-body">
+            <div class="smv-toggle" id="cc2-toggle">
+              <button type="button" class="smv-toggle-btn active" data-sex="m" onclick="cc2SetSex('m')">Male</button>
+              <button type="button" class="smv-toggle-btn" data-sex="f" onclick="cc2SetSex('f')">Female</button>
+            </div>
+            <div class="smv-sub-note" style="margin:-6px 0 12px;">Same curve, recalibrated: a man&rsquo;s charm lifts roughly evenly with exposure; a woman&rsquo;s warmth pays off later and a touch smaller, because a man&rsquo;s first read is more looks-locked. <span class="smv-tag est">Estimate</span></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your looks</span><span class="slider-val" style="color:var(--scarlet)" id="cc2-looks-val">5</span></div>
               <input type="range" min="1" max="10" step="1" value="5" id="cc2-looks" oninput="cc2Update()" />
             </div>
             <div class="slider-row">
-              <div class="slider-top"><span class="slider-label">Your personality / charm</span><span class="slider-val" style="color:var(--scarlet)" id="cc2-pers-val">8</span></div>
+              <div class="slider-top"><span class="slider-label" id="cc2-pers-label">Your personality / charm</span><span class="slider-val" style="color:var(--scarlet)" id="cc2-pers-val">8</span></div>
               <input type="range" min="1" max="10" step="1" value="8" id="cc2-pers" oninput="cc2Update()" />
             </div>
             <div class="cc-map-wrap"><div id="cc2-map"></div></div>
@@ -608,7 +613,7 @@
           </div>
         </div>
 
-        <div class="smv-callout"><strong>He drew the first frame and called it the whole movie.</strong> The flat line is his world &mdash; looks, frozen at the glance. The curve is what the evidence shows: given exposure, personality moves your effective pull a bounded amount (a perfect 10 buys ~+2.5 points; a 7 about +1; weak personality drags you the other way). It is also the <em>mechanism</em> under Part 1&rsquo;s arenas &mdash; they differ mainly in how much exposure they grant before judgment: online judges at near-zero exposure (looks-only), a social circle judges after plenty (personality-weighted). Charm isn&rsquo;t weak; it&rsquo;s <strong>slow</strong> &mdash; it needs reps to pay out. <span class="smv-tag est">Estimate</span></div>
+        <div class="smv-callout"><strong>He drew the first frame and called it the whole movie.</strong> The flat line is his world &mdash; looks, frozen at the glance. The curve is what the evidence shows: given exposure, personality moves your effective pull a bounded amount (a strong 10 buys roughly +2&ndash;2.5 points; weak personality drags you the other way). Toggle to the <strong>female</strong> view and the curve stays flat longer, then climbs late &mdash; a man&rsquo;s first read is more looks-locked, so a woman&rsquo;s warmth pays off mainly in retention and commitment, not the glance. It is also the <em>mechanism</em> under Part 1&rsquo;s arenas &mdash; they differ mainly in how much exposure they grant before judgment: online judges at near-zero exposure (looks-only), a social circle judges after plenty (personality-weighted). Charm isn&rsquo;t weak; it&rsquo;s <strong>slow</strong> &mdash; it needs reps to pay out. <span class="smv-tag est">Estimate</span></div>
 
         <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Charm Ceiling: Wheat Waffles (2021/2023, YouTube) for the model under review; Eastwick &amp; Finkel (2008, JPSP) on looks dominating in-vivo first attraction for both sexes; Lewandowski, Aron &amp; Gee (2007) on personality raising rated physical attractiveness; Hunt, Eastwick &amp; Finkel (2015) on acquaintance reducing looks-matching; Rosenfeld et al. (2019, PNAS) on online becoming the leading way couples meet; McAndrew &amp; Koehnke (2016) on creepiness tracking unpredictability, not looks; OkCupid/Tinder match-rate asymmetries are industry figures (Tier 3). Per-row figures and all acceptance-map boundaries are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
       </div>
@@ -957,11 +962,19 @@
       ccUpdate();
     }
 
-    // ── Charm Ceiling Part 2 · evidence model: effective desirability over exposure (Estimate) ──
+    // ── Charm Ceiling Part 2 · evidence model: effective pull over exposure (Estimate) ──
     const CC2_STAGES = ['First glance', 'First convo', 'A few dates', 'Well-acquainted'];
-    const CC2_FRAC = [0, 0.34, 0.67, 1];
-    const CC2_LIFT = 0.5; // effective points per personality-point, at full exposure
-    function cc2Eff(looks, pers, f){ return Math.max(1, Math.min(10, looks + (pers - 5) * CC2_LIFT * f)); }
+    let cc2Sex = 'm';
+    // Male: charm lifts ~linearly with exposure, ceiling 0.5/pt. Female: men read looks-locked early,
+    // so warmth is back-loaded (flat then late climb) and a touch lower ceiling (men weight looks more).
+    const CC2_PARAMS = {
+      m: { frac: [0, 0.34, 0.67, 1], lift: 0.5,  axis: 'personality / charm' },
+      f: { frac: [0, 0.12, 0.40, 1], lift: 0.42, axis: 'warmth / charm' }
+    };
+    function cc2Eff(looks, pers, i){
+      const p = CC2_PARAMS[cc2Sex];
+      return Math.max(1, Math.min(10, looks + (pers - 5) * p.lift * p.frac[i]));
+    }
     function cc2MapSVG(looks, pers){
       const W=380,H=300, padL=38,padR=16,padT=14,padB=40;
       const pw=W-padL-padR, ph=H-padT-padB, n=CC2_STAGES.length;
@@ -983,7 +996,7 @@
         + '<text x="'+(padL+pw)+'" y="'+(Y(looks)-5)+'" text-anchor="end" font-size="8.5" fill="#B4A090">looks-only</text>';
       let pts=[], dots='';
       for (let i=0;i<n;i++){
-        const v = cc2Eff(looks,pers,CC2_FRAC[i]);
+        const v = cc2Eff(looks,pers,i);
         pts.push(X(i).toFixed(1)+','+Y(v).toFixed(1));
         dots += '<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3.5" fill="'+dir+'"/>';
       }
@@ -998,19 +1011,35 @@
       const pers = parseInt(document.getElementById('cc2-pers').value);
       document.getElementById('cc2-looks-val').textContent = looks;
       document.getElementById('cc2-pers-val').textContent = pers;
+      document.getElementById('cc2-pers-label').textContent = 'Your ' + CC2_PARAMS[cc2Sex].axis;
       document.getElementById('cc2-map').innerHTML = cc2MapSVG(looks, pers);
-      const fin = cc2Eff(looks, pers, 1), delta = fin - looks;
+      const fin = cc2Eff(looks, pers, CC2_STAGES.length-1), delta = fin - looks;
       const rEl = document.getElementById('cc2-read');
       let cls, txt;
-      if (pers > 5){ cls='pass';
-        txt = '<strong>Charm compounds.</strong> A '+looks+'-looks / '+pers+'-charm man reads ~'+looks+' at first glance, but climbs to ~'+fin.toFixed(1)+' once people actually know you &mdash; about +'+delta.toFixed(1)+' effective points. The catch: that lift only pays out with exposure, so it is nearly dead online and full-strength in a social circle.';
-      } else if (pers < 5){ cls='fail';
-        txt = '<strong>Charm cuts both ways.</strong> A '+looks+'-looks / '+pers+'-charm man may read ~'+looks+' at a glance, but weak personality drags effective pull down to ~'+fin.toFixed(1)+' ('+delta.toFixed(1)+') as people get to know you. Looks open the door; personality decides whether it stays open.';
-      } else { cls='neutral';
-        txt = '<strong>Flat.</strong> Average charm neither lifts nor sinks you &mdash; effective pull stays near your looks line (~'+looks+') across exposure. The movement comes from being notably above or below average on personality.';
+      if (cc2Sex === 'm') {
+        if (pers > 5){ cls='pass';
+          txt = '<strong>Charm compounds.</strong> A '+looks+'-looks / '+pers+'-charm man reads ~'+looks+' at first glance, but climbs to ~'+fin.toFixed(1)+' once people actually know you &mdash; about +'+delta.toFixed(1)+' effective points. The catch: that lift only pays out with exposure, so it is nearly dead online and full-strength in a social circle.';
+        } else if (pers < 5){ cls='fail';
+          txt = '<strong>Charm cuts both ways.</strong> A '+looks+'-looks / '+pers+'-charm man may read ~'+looks+' at a glance, but weak personality drags effective pull down to ~'+fin.toFixed(1)+' ('+delta.toFixed(1)+') as people get to know you. Looks open the door; personality decides whether it stays open.';
+        } else { cls='neutral';
+          txt = '<strong>Flat.</strong> Average charm neither lifts nor sinks you &mdash; effective pull stays near your looks line (~'+looks+') across exposure. The movement comes from being notably above or below average on personality.';
+        }
+      } else {
+        if (pers > 5){ cls='pass';
+          txt = '<strong>Warmth compounds &mdash; but later.</strong> A '+looks+'-looks / '+pers+'-warmth woman reads ~'+looks+' at a glance (a man&rsquo;s first read is looks-locked) and barely moves through the first date, then climbs to ~'+fin.toFixed(1)+' as he gets to know her &mdash; about +'+delta.toFixed(1)+'. Looks open the door wider for a woman; warmth decides whether he commits.';
+        } else if (pers < 5){ cls='fail';
+          txt = '<strong>Coldness surfaces.</strong> A '+looks+'-looks / '+pers+'-warmth woman may read ~'+looks+' at a glance, but low warmth erodes her effective pull to ~'+fin.toFixed(1)+' ('+delta.toFixed(1)+') as he gets to know her. Looks open the door; coldness or difficulty closes it.';
+        } else { cls='neutral';
+          txt = '<strong>Flat.</strong> Average warmth neither lifts nor sinks her &mdash; effective pull stays near her looks line (~'+looks+') across exposure. The movement comes from being notably warm or notably cold / difficult.';
+        }
       }
       rEl.className = 'cc-verdict ' + cls;
       rEl.innerHTML = txt + ' <span class="smv-tag est">Estimate</span>';
+    }
+    function cc2SetSex(s){
+      cc2Sex = s;
+      document.querySelectorAll('#cc2-toggle .smv-toggle-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.sex === s); });
+      cc2Update();
     }
 
     checkSub5(); calcTreatment(); calcLooks(); renderBonusScale(-1); smvMatch(); attnMarket(); renderPoolCards(); ccUpdate(); cc2Update();
