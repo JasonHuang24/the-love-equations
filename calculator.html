@@ -520,6 +520,99 @@
       line-height: 1.55;
       margin-top: 1rem;
     }
+    .auto-next-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-size: 12px;
+      user-select: none;
+      cursor: pointer;
+    }
+    .auto-next-control input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--scarlet);
+    }
+    .matchup-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 1rem;
+      align-items: stretch;
+      margin-top: 1rem;
+    }
+    .matchup-verdict {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.72);
+      padding: 1rem;
+    }
+    .matchup-kicker {
+      color: var(--text-dim);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .matchup-scoreline {
+      color: var(--text);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.55rem;
+    }
+    .matchup-scoreline span {
+      color: var(--scarlet);
+    }
+    .matchup-copy {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .matchup-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .matchup-row {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 0.75rem;
+      align-items: center;
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.7);
+      padding: 0.7rem 0.8rem;
+    }
+    .matchup-name {
+      color: var(--text);
+      font-size: 12px;
+    }
+    .matchup-bar {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(116, 79, 61, 0.12);
+      overflow: hidden;
+      position: relative;
+    }
+    .matchup-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+    .matchup-target {
+      position: absolute;
+      top: -2px;
+      bottom: -2px;
+      width: 2px;
+      border-radius: 999px;
+      background: var(--text);
+      opacity: 0.72;
+    }
+    .matchup-delta {
+      color: var(--text-muted);
+      font-size: 12px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
 
     .pb-layout {
       display: grid;
@@ -634,6 +727,7 @@
       .exam-stats,
       .score-grid,
       .pb-layout,
+      .matchup-hero,
       .insight-grid,
       .weight-grid {
         grid-template-columns: 1fr;
@@ -662,6 +756,17 @@
       .btn-row .btn {
         width: 100%;
         justify-content: center;
+      }
+      .auto-next-control {
+        width: 100%;
+        justify-content: center;
+      }
+      .matchup-row {
+        grid-template-columns: 1fr;
+        gap: 0.45rem;
+      }
+      .matchup-delta {
+        white-space: normal;
       }
     }
   </style>
@@ -731,6 +836,10 @@
             <div id="q-container"></div>
             <div class="btn-row">
               <button class="btn btn-subtle" onclick="prevQ()" id="btn-back"><i class="ti ti-arrow-left"></i> Back</button>
+              <label class="auto-next-control">
+                <input type="checkbox" id="auto-next" onchange="toggleAutoNext(this.checked)" />
+                Auto-next after answer
+              </label>
               <button class="btn btn-subtle" onclick="resetA()" id="btn-reset">Restart</button>
               <button class="btn btn-scarlet" onclick="nextQ()" id="btn-next">Next <i class="ti ti-arrow-right"></i></button>
               <button class="btn btn-scarlet" onclick="finishA()" id="btn-finish">See my score <i class="ti ti-chart-bar"></i></button>
@@ -761,6 +870,12 @@
             <div class="result-copy">The calculator is blunt by design: improve the lowest meaningful levers first. They are the easiest places for the whole profile to stop leaking value.</div>
             <div class="lever-list" id="lever-list"></div>
             <div class="score-note">Self-report can lie in both directions. If your score feels off, compare it against revealed market feedback: who chooses you, who ignores you, and where the pattern repeats.</div>
+          </div>
+
+          <div class="result-panel mt-2">
+            <div class="result-title">Matchup against Profile B</div>
+            <div class="result-copy" id="matchup-intro">Profile B is the target profile. Adjust it, then this section tells you whether you are matching, overreaching, or leaving value on the table.</div>
+            <div id="matchup-results"></div>
           </div>
 
           <div class="btn-row">
@@ -797,6 +912,11 @@
               <span class="pb-tier" id="pb-tier-badge">-</span>
               <div class="pb-breakdown" id="pb-breakdown">Adjust sliders to calculate.</div>
             </div>
+          </div>
+          <div class="result-panel mt-2">
+            <div class="result-title">How you compare</div>
+            <div class="result-copy">This is the part Profile B is for: compare your current profile against the desired profile and see which gaps actually matter.</div>
+            <div id="b-matchup-results"></div>
           </div>
         </div>
       </div>
@@ -856,10 +976,10 @@
 
     const LENSES = {
       balanced: {
-        label: 'Balanced market',
-        desc: 'General-purpose score across mixed short-term and long-term contexts.',
+        label: 'General / mixed context',
+        desc: 'General-purpose score across mixed short-term, long-term, unknown, or multi-gender contexts.',
         weights: [0.30, 0.16, 0.18, 0.22, 0.14],
-        note: 'Default lens: looks and charm carry the most weight; status and money are secondary; exposure shapes opportunity volume.'
+        note: 'General lens: use when the context is mixed, unknown, bisexual/multi-market, or you do not want sex-specific weighting. Looks and charm carry the most weight; status and money are secondary; exposure shapes opportunity volume.'
       },
       male: {
         label: 'Male profile',
@@ -1216,10 +1336,14 @@
     ];
 
     const bVals = [5.5, 5.5, 5.5, 5.5, 5.5];
-    let selectedLens = 'balanced';
+    let selectedLensA = 'balanced';
+    let selectedLensB = 'balanced';
     let curQ = 0;
     let answers = Array(QUESTIONS.length).fill(null);
     let scores = Array(FACTORS.length).fill(0);
+    let autoNext = false;
+    let aCompleted = false;
+    let aTotal = null;
 
     function getTier(s) {
       return TIERS.find(t => s >= t.min && s <= t.max) || TIERS[0];
@@ -1233,7 +1357,8 @@
       return 'major asset';
     }
 
-    function weightedTotal(vals, weights = LENSES[selectedLens].weights) {
+    function weightedTotal(vals, lensKey = selectedLensA) {
+      const weights = LENSES[lensKey].weights;
       const totalWeight = weights.reduce((a, b) => a + b, 0);
       return Math.round((vals.reduce((sum, v, i) => sum + (v * weights[i]), 0) / totalWeight) * 10) / 10;
     }
@@ -1245,10 +1370,14 @@
       return 'Low';
     }
 
-    function renderLensControls() {
-      const lens = LENSES[selectedLens];
+    function renderLensControls(id) {
+      const ids = id ? [id] : ['a', 'b'];
+      ids.forEach(profileId => {
+        const selectedLens = profileId === 'b' ? selectedLensB : selectedLensA;
+        const lens = LENSES[selectedLens];
+        const profileLabel = profileId === 'b' ? 'Profile B' : 'Profile A';
       const buttons = Object.entries(LENSES).map(([key, item]) => `
-        <button type="button" class="lens-btn${key === selectedLens ? ' active' : ''}" onclick="setLens('${key}')">${item.label}</button>
+          <button type="button" class="lens-btn${key === selectedLens ? ' active' : ''}" onclick="setLens('${profileId}', '${key}')">${item.label}</button>
       `).join('');
       const weights = FACTORS.map((f, i) => `
         <div class="weight-chip">
@@ -1256,20 +1385,26 @@
           <div class="weight-val">${weightLabel(lens.weights[i])}</div>
         </div>
       `).join('');
-      ['a', 'b'].forEach(id => {
-        const btnTarget = document.getElementById(`lens-buttons-${id}`);
-        const weightTarget = document.getElementById(`weight-grid-${id}`);
-        const noteTarget = document.getElementById(`lens-note-${id}`);
+        const btnTarget = document.getElementById(`lens-buttons-${profileId}`);
+        const weightTarget = document.getElementById(`weight-grid-${profileId}`);
+        const noteTarget = document.getElementById(`lens-note-${profileId}`);
         if (btnTarget) btnTarget.innerHTML = buttons;
         if (weightTarget) weightTarget.innerHTML = weights;
-        if (noteTarget) noteTarget.textContent = `${lens.note} The bands are directional, not measured coefficients; individual questions are weighted inside each factor so revealed feedback and direct market contact count more than softer support signals.`;
+        if (noteTarget) noteTarget.textContent = `${profileLabel} lens scores that profile as the person being evaluated, not who they are dating. ${lens.note} The bands are directional, not measured coefficients; individual questions are weighted inside each factor so revealed feedback and direct market contact count more than softer support signals.`;
       });
     }
 
-    function setLens(key) {
-      selectedLens = key;
-      renderLensControls();
-      updateB();
+    function setLens(id, key) {
+      if (id === 'b') {
+        selectedLensB = key;
+        renderLensControls('b');
+        updateB();
+      } else {
+        selectedLensA = key;
+        renderLensControls('a');
+        if (aCompleted) renderAResults(false);
+        else renderMatchup();
+      }
     }
 
     function renderFactorMap() {
@@ -1333,6 +1468,16 @@
     function selectOpt(i) {
       answers[curQ] = i;
       renderQ();
+      if (autoNext) {
+        window.setTimeout(() => {
+          if (curQ === QUESTIONS.length - 1) finishA();
+          else nextQ();
+        }, 150);
+      }
+    }
+
+    function toggleAutoNext(checked) {
+      autoNext = checked;
     }
 
     function nextQ() {
@@ -1363,20 +1508,23 @@
         const totalWeight = weighted.reduce((a, item) => a + item.weight, 0);
         return Math.round((weighted.reduce((a, item) => a + (item.value * item.weight), 0) / totalWeight) * 10) / 10;
       });
-      return weightedTotal(scores);
+      return weightedTotal(scores, selectedLensA);
     }
 
-    function finishA() {
-      if (answers[curQ] === null) return;
+    function renderAResults(showScreen = true) {
       const total = calculateScores();
+      aCompleted = true;
+      aTotal = total;
       const tier = getTier(total);
       const ranked = FACTORS.map((f, i) => ({ ...f, score: scores[i], index: i })).sort((a, b) => b.score - a.score);
       const lowest = [...ranked].sort((a, b) => a.score - b.score).slice(0, 3);
       const spread = ranked[0].score - lowest[0].score;
       const flatProfile = spread < 0.5;
 
-      document.getElementById('a-questions').classList.remove('visible');
-      document.getElementById('a-results').classList.add('visible');
+      if (showScreen) {
+        document.getElementById('a-questions').classList.remove('visible');
+        document.getElementById('a-results').classList.add('visible');
+      }
 
       const ring = document.getElementById('res-ring');
       ring.style.borderColor = tier.color;
@@ -1389,8 +1537,8 @@
       tb.style.color = tier.color;
       document.getElementById('res-desc').textContent = tier.desc;
       document.getElementById('res-summary').textContent = spread >= 2
-        ? `Scored through the ${LENSES[selectedLens].label.toLowerCase()} lens. Your profile is uneven; the weakest axis is probably capping the strongest one.`
-        : `Scored through the ${LENSES[selectedLens].label.toLowerCase()} lens. Your profile is fairly even, so broad improvement beats obsessing over one dramatic fix.`;
+        ? `Scored through the ${LENSES[selectedLensA].label.toLowerCase()} lens. Your profile is uneven; the weakest axis is probably capping the strongest one.`
+        : `Scored through the ${LENSES[selectedLensA].label.toLowerCase()} lens. Your profile is fairly even, so broad improvement beats obsessing over one dramatic fix.`;
 
       document.getElementById('res-factors').innerHTML = FACTORS.map((f, i) => `
         <div class="fb-card">
@@ -1424,15 +1572,24 @@
           </div>
         </div>
       `).join('');
+      renderMatchup();
+    }
+
+    function finishA() {
+      if (answers[curQ] === null) return;
+      renderAResults(true);
     }
 
     function resetA() {
       answers = Array(QUESTIONS.length).fill(null);
       scores = Array(FACTORS.length).fill(0);
       curQ = 0;
+      aCompleted = false;
+      aTotal = null;
       document.getElementById('a-results').classList.remove('visible');
       document.getElementById('a-questions').classList.remove('visible');
       document.getElementById('a-intro').classList.add('visible');
+      renderMatchup();
     }
 
     function initB() {
@@ -1457,7 +1614,7 @@
 
     function updateB() {
       const name = document.getElementById('pb-name').value.trim() || 'Unknown profile';
-      const total = weightedTotal(bVals);
+      const total = weightedTotal(bVals, selectedLensB);
       const tier = getTier(total);
       document.getElementById('pb-score').textContent = total.toFixed(1);
       document.getElementById('pb-score').style.color = tier.color;
@@ -1474,6 +1631,101 @@
       const low = FACTORS[bVals.indexOf(minVal)].name;
       const shape = maxVal - minVal < 0.5 ? 'Balanced profile: no single strongest or weakest read.' : `Strongest read: ${high}. Weakest read: ${low}.`;
       document.getElementById('pb-breakdown').textContent = `${FACTORS.map((f, i) => `${f.name}: ${bVals[i].toFixed(1)}`).join(' | ')}. ${shape}`;
+      renderMatchup();
+    }
+
+    function getProfileBName() {
+      const input = document.getElementById('pb-name');
+      return input && input.value.trim() ? input.value.trim() : 'Profile B';
+    }
+
+    function matchupVerdict(gap) {
+      if (gap >= 0.8) return {
+        label: 'You are above the target profile.',
+        copy: 'This does not guarantee fit or attraction, but on market-position math you are not chasing up. The question becomes taste, timing, and whether you actually want this profile.'
+      };
+      if (gap >= 0.3) return {
+        label: 'You have a slight edge.',
+        copy: 'The target is realistic. Do not overcorrect from insecurity; improve selectively where Profile B beats you.'
+      };
+      if (gap > -0.3) return {
+        label: 'Near parity.',
+        copy: 'This is a plausible match zone. Small factor differences matter less than chemistry, availability, standards, and how the two profiles actually interact.'
+      };
+      if (gap > -1.2) return {
+        label: 'Reachable, but you are chasing upward.',
+        copy: 'This is not fantasy, but the target has leverage. You need to close the largest factor gaps or bring unusually strong chemistry, context, or commitment value.'
+      };
+      return {
+        label: 'Meaningful overreach.',
+        copy: 'The target is materially above your current profile. You can still try, but the honest path is improvement first: close the biggest gaps before expecting consistent selection.'
+      };
+    }
+
+    function renderMatchup() {
+      const targets = ['matchup-results', 'b-matchup-results']
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+      if (!targets.length) return;
+      if (!aCompleted) {
+        const empty = `
+          <div class="matchup-verdict">
+            <div class="matchup-kicker">Waiting on Profile A</div>
+            <div class="matchup-copy">Complete your self-assessment first. Then Profile B becomes a real comparison: score gap, factor gaps, and what you would need to improve to match the target.</div>
+          </div>
+        `;
+        targets.forEach(t => t.innerHTML = empty);
+        return;
+      }
+
+      const targetName = getProfileBName();
+      const bTotal = weightedTotal(bVals, selectedLensB);
+      const gap = Math.round((aTotal - bTotal) * 10) / 10;
+      const verdict = matchupVerdict(gap);
+      const deficits = FACTORS.map((f, i) => ({ ...f, a: scores[i], b: bVals[i], gap: scores[i] - bVals[i] }))
+        .filter(f => f.gap < -0.2)
+        .sort((a, b) => a.gap - b.gap);
+      const advantages = FACTORS.map((f, i) => ({ ...f, a: scores[i], b: bVals[i], gap: scores[i] - bVals[i] }))
+        .filter(f => f.gap > 0.2)
+        .sort((a, b) => b.gap - a.gap);
+      const priority = deficits.length
+        ? `Priority gaps: ${deficits.slice(0, 3).map(f => `${f.name} ${f.gap.toFixed(1)}`).join(', ')}.`
+        : 'No meaningful factor deficit against this target.';
+      const edge = advantages.length
+        ? `Your edge: ${advantages.slice(0, 2).map(f => `${f.name} +${f.gap.toFixed(1)}`).join(', ')}.`
+        : 'You do not have a clear factor edge; win through fit and execution.';
+
+      const rows = FACTORS.map((f, i) => {
+        const delta = scores[i] - bVals[i];
+        const deltaText = delta >= 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1);
+        const markerLeft = Math.max(0, Math.min(100, bVals[i] * 10));
+        return `
+          <div class="matchup-row">
+            <div class="matchup-name">${f.name}</div>
+            <div class="matchup-bar">
+              <div class="matchup-fill" style="width:${scores[i] * 10}%;background:${f.color}"></div>
+              <span class="matchup-target" style="left:calc(${markerLeft}% - 1px)"></span>
+            </div>
+            <div class="matchup-delta">You ${scores[i].toFixed(1)} · B ${bVals[i].toFixed(1)} · ${deltaText}</div>
+          </div>
+        `;
+      }).join('');
+
+      const html = `
+        <div class="matchup-hero">
+          <div class="matchup-verdict">
+            <div class="matchup-kicker">Your score vs ${targetName}</div>
+            <div class="matchup-scoreline"><span>${aTotal.toFixed(1)}</span> / ${bTotal.toFixed(1)}</div>
+            <div class="matchup-copy"><strong>${verdict.label}</strong> ${verdict.copy}</div>
+          </div>
+          <div class="matchup-verdict">
+            <div class="matchup-kicker">What to do</div>
+            <div class="matchup-copy">${priority} ${edge}</div>
+          </div>
+        </div>
+        <div class="matchup-grid mt-2">${rows}</div>
+      `;
+      targets.forEach(t => t.innerHTML = html);
     }
 
     function switchTab(id, btn) {
