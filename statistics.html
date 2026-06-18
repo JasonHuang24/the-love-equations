@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistics &mdash; The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css?v=1.6" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .stats-intro { font-size: 14px; color: var(--text-muted); line-height: 1.8; max-width: 820px; margin-bottom: 1.5rem; }
+    .stats-intro strong { color: var(--text); }
+    .chart-legend { border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; background: var(--surface); }
+    .chart-legend-title { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.6rem; }
+    .chart-legend-row { font-size: 12px; color: var(--text-muted); line-height: 1.9; }
+    .chart-tier { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: middle; }
+    .chart-tier.t1 { background: #E6F4EA; color: #1E7B34; }
+    .chart-tier.t2 { background: #FBF3E0; color: #9A6B12; }
+    .chart-tier.t3 { background: #FBEDE6; color: #B5541E; }
+    .dos-section { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin: 1.75rem 0 0.7rem; padding-bottom: 0.45rem; border-bottom: 0.5px solid var(--border); }
+    .dos-section.first { margin-top: 0.25rem; }
+    .chart-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.35rem; margin-bottom: 1rem; }
+    .chart-card.cut { background: var(--surface); }
+    .chart-kicker { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .chart-title { font-size: 16px; color: var(--text); margin-bottom: 5px; }
+    .chart-q { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.1rem; }
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .bar-label { width: 110px; flex-shrink: 0; font-size: 12px; color: var(--text); }
+    .bar-group-label { font-size: 11px; font-weight: 600; color: var(--text-dim); margin: 0.95rem 0 0.5rem; }
+    .bar-group-label:first-of-type { margin-top: 0.2rem; }
+    .bar-track { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: 6px; height: 28px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px 0 0 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 9px; font-size: 12px; font-weight: 600; color: #fff; min-width: 36px; box-sizing: border-box; }
+    .bar-fill.male { background: #378ADD; }
+    .bar-fill.fem { background: var(--scarlet); }
+    .bar-fill.muted { background: #9AA0A6; }
+    .chart-note { font-size: 12.5px; color: var(--text-muted); line-height: 1.7; margin-top: 0.85rem; }
+    .chart-source { font-size: 11px; color: var(--text-dim); margin-top: 0.85rem; padding-top: 0.7rem; border-top: 0.5px solid var(--border); }
+  </style>
+</head>
+<body data-page="statistics">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Statistics</div>
+      <div class="page-title">By the Numbers</div>
+      <div class="page-sub">Where the dating market can be measured, it should be &mdash; and graded by how good the evidence is. These charts put real, sourced numbers to the asymmetries men and women actually face.</div>
+    </div>
+
+    <div class="content">
+      <p class="stats-intro">No vibes, no inflated ratios. Where the data is solid we say so; where it&rsquo;s mixed we flag it; and where a viral stat breaks under scrutiny, we show the break instead of charting it. Every number traces to a primary source and carries a strength tag.</p>
+
+      <div class="chart-legend">
+        <div class="chart-legend-title">How to read the strength tags</div>
+        <div class="chart-legend-row"><span class="chart-tier t1">Tier 1</span> &nbsp;Replicated research or large representative surveys. Treat as solid.</div>
+        <div class="chart-legend-row"><span class="chart-tier t2">Tier 2</span> &nbsp;Real but mixed or context-dependent evidence. Directionally true.</div>
+        <div class="chart-legend-row"><span class="chart-tier t3">Tier 3</span> &nbsp;Single-source, self-reported, or marketing stats. Illustrative only.</div>
+      </div>
+
+      <div class="dos-section first">What people say they want</div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Stated intent <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">Why people are actually on the apps</div>
+        <div class="chart-q">Share of recent dating-app users calling each a <em>major</em> reason — you can pick more than one:</div>
+        <div class="bar-row"><div class="bar-label">Long-term</div><div class="bar-track"><div class="bar-fill muted" style="width:44%;">44%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Casual dating</div><div class="bar-track"><div class="bar-fill muted" style="width:40%;">40%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Casual sex</div><div class="bar-track"><div class="bar-fill muted" style="width:24%;">24%</div></div></div>
+        <div class="bar-row"><div class="bar-label">New friends</div><div class="bar-track"><div class="bar-fill muted" style="width:22%;">22%</div></div></div>
+        <div class="chart-note">Before splitting anything by gender, look at the whole population: a long-term partner is the <em>top</em> major reason, and casual sex sits near the bottom. These don't sum to 100% because they aren't either/or — the same person can want a relationship <em>and</em> be open to casual. That overlap is exactly why the "82% want love / 18% want sex" framing (see the last group) is a category error.</div>
+        <div class="chart-source">Pew Research Center, July 2022 · N = 951 current/recent online dating users.</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">The one real gap <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">Casual sex is the only reason with a gender gap</div>
+        <div class="chart-q">Among current or recent dating-platform users, who calls casual sex a <em>major</em> reason?</div>
+        <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:31%;">31%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:13%;">13%</div></div></div>
+        <div class="chart-note">Casual sex is the one reason where men and women diverge — men out-cite it by about two and a half to one. On the other major reasons (long-term partner, casual dating, friends) Pew found no significant gender gap. So the honest story isn't "men want sex, women want love" — both rank a relationship first; men simply layer <em>more</em> casual openness on top. It's an overlay, not a different species.</div>
+        <div class="chart-source">Pew Research Center, July 2022 · N = 951 current/recent online dating users, from a survey of 6,034 U.S. adults.</div>
+      </div>
+
+      <div class="dos-section">What the deal actually pays</div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Pleasure · context <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">Women's odds of orgasm: casual vs. committed</div>
+        <div class="chart-q">Among heterosexual undergraduate women, how much does context change the payoff? <span style="color:var(--text-dim);">(College sample — solid, but not nationally representative, so Tier 2.)</span></div>
+        <div class="bar-row"><div class="bar-label">First hookup</div><div class="bar-track"><div class="bar-fill muted" style="width:11%;">11%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Relationship</div><div class="bar-track"><div class="bar-fill fem" style="width:67%;">67%</div></div></div>
+        <div class="chart-note">In first-time hookups about one in nine women orgasm, versus two-thirds in committed sex. This helps explain why lower casual openness can be rational rather than prudish: when researchers held expected pleasure <em>and</em> anticipated stigma constant, the gender gap in <em>accepting</em> casual-sex offers largely vanished. Women aren't less interested in pleasure — they're less interested in the version of it that reliably underdelivers.</div>
+        <div class="chart-source">Armstrong, England &amp; Fogarty (2012), <em>American Sociological Review</em> — women respondents; analytic Ns = 6,881 hookup / 6,591 relationship events, 21 colleges. Mechanism: Conley (2011), <em>JPSP</em>.</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Pleasure · gender <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">Across sexual intimacy, the gender gap persists</div>
+        <div class="chart-q">In a large U.S. sample, who usually or always orgasms when sexually intimate?</div>
+        <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:65%;">65%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:95%;">95%</div></div></div>
+        <div class="chart-note">The broader gender gap persists beyond the hookup context: ~95% of heterosexual men usually orgasm versus ~65% of heterosexual women when sexually intimate. So the Armstrong chart can show that relationships improve women's odds without implying commitment fully solves the gap. Casual isn't the only place the deal is lopsided; it's just the most lopsided.</div>
+        <div class="chart-source">Frederick et al. (2018), <em>Archives of Sexual Behavior</em> — U.S. national sample, n &gt; 52,000.</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Attention <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">The same market floods one side and starves the other</div>
+        <div class="chart-q">Recent dating-app users who said their experience left them feeling…</div>
+        <div class="bar-group-label">Overwhelmed by the number of messages</div>
+        <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:54%;">54%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:25%;">25%</div></div></div>
+        <div class="bar-group-label">Insecure because of a lack of messages</div>
+        <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:64%;">64%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:40%;">40%</div></div></div>
+        <div class="chart-note">This is the demand asymmetry made personal, and it cuts both ways. Women are far more likely to feel buried in attention; men are far more likely to feel invisible for the lack of it. Same market, opposite complaints — which is also why "she feels like a body, he feels like a wallet" has a quieter cousin: she feels swarmed, he feels ignored.</div>
+        <div class="chart-source">Pew Research Center, July 2022 · current/recent online dating users.</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Safety <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">Where the safety risk concentrates</div>
+        <div class="chart-q">Online daters who say this has happened to them — overall baseline vs. women under 50:</div>
+        <div class="bar-group-label">Sent an unwanted sexually explicit image</div>
+        <div class="bar-row"><div class="bar-label">All users</div><div class="bar-track"><div class="bar-fill muted" style="width:38%;">38%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Women &lt;50</div><div class="bar-track"><div class="bar-fill fem" style="width:56%;">56%</div></div></div>
+        <div class="bar-group-label">Called an offensive name</div>
+        <div class="bar-row"><div class="bar-label">All users</div><div class="bar-track"><div class="bar-fill muted" style="width:24%;">24%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Women &lt;50</div><div class="bar-track"><div class="bar-fill fem" style="width:37%;">37%</div></div></div>
+        <div class="bar-group-label">Threatened with physical harm</div>
+        <div class="bar-row"><div class="bar-label">All users</div><div class="bar-track"><div class="bar-fill muted" style="width:6%;">6%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Women &lt;50</div><div class="bar-track"><div class="bar-fill fem" style="width:11%;">11%</div></div></div>
+        <div class="chart-note">Read this as a baseline-vs-subgroup comparison, not a clean gender split: the all-user bars already include these women, and Pew doesn't publish a tidy men-vs-women breakdown here — but women under 50 run well above the overall rate, and Pew reports men experience all three at lower rates. This is the "danger" half of why casual openness differs: the downside — harassment, threats, unsolicited explicit content — concentrates on younger women. Naming the male attention deficit above doesn't cancel this; both are true at once.</div>
+        <div class="chart-source">Pew Research Center, July 2022 · "ever used" online daters (n = 3,128); women-under-50 figures from Pew's gender/age breakdown.</div>
+      </div>
+
+      <div class="dos-section">Who pairs, who&rsquo;s left out, who leaves</div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Access · the sex recession <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">More young adults are going without sex entirely</div>
+        <div class="chart-q">Share of 18-to-34-year-olds reporting <em>no</em> sex in the past year:</div>
+        <div class="bar-row"><div class="bar-label">2008</div><div class="bar-track"><div class="bar-fill muted" style="width:7%;">7%</div></div></div>
+        <div class="bar-row"><div class="bar-label">2018</div><div class="bar-track"><div class="bar-fill muted" style="width:18%;">18%</div></div></div>
+        <div class="chart-note">No-sex-in-a-year among young adults roughly <strong>2.5×ed</strong> in a decade — and the rise skews male. Jean Twenge's analysis of the same GSS data puts men under 30 reporting no sex in the past year near <strong>~28%</strong> by 2018, a far steeper climb than women the same age. <span style="color:var(--text-dim);">(The precise under-30-male figure is one analysis of the data — Tier 2, directional.)</span> It's the attention deficit made literal: more young men aren't just feeling ignored on the market, they're falling out of it.</div>
+        <div class="chart-source">General Social Survey · 18–34 figures (7% → 18%) via Institute for Family Studies (Wolfinger, 2019); under-30 male figure via Twenge, GSS 2018.</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Exits · who ends it <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">Women file for most divorces — but not most breakups</div>
+        <div class="chart-q">Among heterosexual <em>marriages</em> that ended, who wanted the divorce?</div>
+        <div class="bar-row"><div class="bar-label">Women</div><div class="bar-track"><div class="bar-fill fem" style="width:69%;">69%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Men</div><div class="bar-track"><div class="bar-fill male" style="width:31%;">31%</div></div></div>
+        <div class="chart-note">Women initiate roughly 69% of divorces — a finding that's held across decades of court records. But the same study found a surprise: <em>non-marital</em> breakups split close to evenly between the sexes. So "women always leave" is really "women leave <em>marriages</em> more" — the gap is specific to the institution, not to women, which points at marriage carrying costs wives disproportionately feel rather than a simple branch-swing instinct.</div>
+        <div class="chart-source">Rosenfeld (2015/2018), "Who Wants the Breakup?" — How Couples Meet and Stay Together, nationally representative panel; via the American Sociological Association.</div>
+      </div>
+
+      <div class="dos-section">What people get punished for</div>
+
+      <div class="chart-card">
+        <div class="chart-kicker">Social judgment <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">"Player" vs. "slut" — the sexual double standard</div>
+        <div class="chart-q">Is a man really praised for the same sexual history a woman is shamed for?</div>
+        <div class="chart-note">This one we deliberately don't chart with hard numbers, because the evidence is genuinely mixed. Belief in the double standard is widespread, but controlled studies often find it weaker than expected — sometimes men <em>and</em> women both get judged for high partner counts. Still, it bites where it counts: anticipated stigma measurably lowers women's stated willingness to accept casual sex (Conley, 2011), which means the openness gap above is probably understated. The asymmetry is real as a social <em>perception</em> that shapes behavior — but anyone who tells you it's been cleanly measured at some exact ratio is selling you a number that doesn't exist.</div>
+        <div class="chart-source">Crawford &amp; Popp (2003) review; Marks &amp; Fraley (2005) — findings mixed; Conley (2011) on anticipated stigma.</div>
+      </div>
+
+      <div class="dos-section">Numbers that sound good but break</div>
+
+      <div class="chart-card cut">
+        <div class="chart-kicker">On the cutting-room floor</div>
+        <div class="chart-title">Stats we refused to chart</div>
+        <div class="chart-note"><strong>"82% of women want relationships, 18% want casual."</strong> Traces to a single platform's self-reported marketing stat (Bumble) — Tier 3 — and it treats wanting a relationship and being open to casual as mutually exclusive, which the Pew data in the first group shows they aren't.</div>
+        <div class="chart-note"><strong>"75% of men are statistically left out."</strong> Built on a guessed input (≈80% of men seeking casual; Pew's solid major-reason benchmark is 31%) and a broken assumption: that casual sex pairs off one-to-one. It doesn't — that's the whole point of casual sex, and it's why the market concentrates around a minority of men rather than excluding a clean three-quarters.</div>
+        <div class="chart-note">This group stays open on purpose. The next viral manosphere or TikTok stat that sounds too clean lands here until it earns a tier — we don't chart vibes as facts.</div>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+</body>
+</html>
