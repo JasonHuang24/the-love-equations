@@ -34,7 +34,7 @@ urllib.request.urlretrieve(
 
 # 2. build + load (defensive: unwrap state_dict / strip DataParallel prefixes)
 model = torchvision.models.resnet18(num_classes=1)
-sd = torch.load("resnet18_py3.pth", map_location="cpu")
+sd = torch.load("resnet18_py3.pth", map_location="cpu", weights_only=False)  # PyTorch 2.6+ needs this
 if isinstance(sd, dict) and "state_dict" in sd: sd = sd["state_dict"]
 sd = {k.replace("module.", ""): v for k, v in sd.items()}
 model.load_state_dict(sd, strict=False)
