@@ -1872,6 +1872,9 @@
       selectedLensA = 'balanced';
       selectedLensB = 'balanced';
       profileBImportMeta = null;
+      window.__pendingBName = '';
+      const nameInput = document.getElementById('pb-name');
+      if (nameInput) nameInput.value = '';
       renderLensControls();
       initB();
       setImportReport('a', '');
@@ -2090,6 +2093,16 @@
       if (meta && Array.isArray(meta.mappedScores)) meta.mappedScores[i] = value;
     }
 
+    function refreshImportMeta(meta, currentScores) {
+      if (!meta || !meta.pkg) return meta;
+      const refreshed = mapCompatibilityToSmv(meta.pkg);
+      refreshed.scores = currentScores.map(clampScore);
+      meta.mapped = refreshed;
+      meta.mappedScores = refreshed.scores.slice();
+      meta.displayName = meta.displayName || meta.pkg.importDisplayName || importedProfileName(meta.pkg);
+      return meta;
+    }
+
     function manualImportedAxis(target, i, value) {
       const v = clampScore(value);
       // Profile A's report is mirrored into two containers, so update every copy by data-attr
@@ -2114,12 +2127,12 @@
     }
 
     function renderSavedImportReports() {
-      if (profileAImportMeta && profileAImportMeta.pkg && profileAImportMeta.mapped) {
-        profileAImportMeta.mapped.scores = scores.slice();
+      if (profileAImportMeta && profileAImportMeta.pkg) {
+        profileAImportMeta = refreshImportMeta(profileAImportMeta, scores);
         setImportReport('a', importReportHtml(profileAImportMeta.pkg, profileAImportMeta.mapped, 'a'));
       }
-      if (profileBImportMeta && profileBImportMeta.pkg && profileBImportMeta.mapped) {
-        profileBImportMeta.mapped.scores = bVals.slice();
+      if (profileBImportMeta && profileBImportMeta.pkg) {
+        profileBImportMeta = refreshImportMeta(profileBImportMeta, bVals);
         setImportReport('b', importReportHtml(profileBImportMeta.pkg, profileBImportMeta.mapped, 'b'));
       }
     }
