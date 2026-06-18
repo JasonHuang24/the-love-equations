@@ -18,25 +18,45 @@ runs on the transparent geometry heuristic, and the geometry stays the breakdown
 If your model differs (e.g. 0–100 output, different normalization, 112×112 input), edit those
 five constants — no other code changes.
 
-## Producing `face-beauty.onnx` (one-time, your machine)
-```bash
-pip install torch torchvision onnx
-```
+## Producing `face-beauty.onnx` — easiest path: Google Colab (no local install)
+Open <https://colab.research.google.com> → New notebook → paste this one cell → Run (Shift+Enter).
+It downloads a clean ResNet18 SCUT-FBP5500 checkpoint, exports ONNX, and downloads the file to you.
+
 ```python
-import torch, torchvision
-# Use a SCUT-FBP5500 checkpoint. Match the architecture to the checkpoint you grabbed —
-# e.g. HCIILAB's ResNet18 (single regression head) from
-# github.com/HCIILAB/SCUT-FBP5500-Database-Release (see their trained_models_for_pytorch/forward.py).
+# Google Colab — torch is preinstalled, nothing to set up.
+import torch, torchvision, urllib.request
+from google.colab import files
+
+# 1. clean ResNet18 SCUT-FBP5500 checkpoint (standard arch, single regression head)
+urllib.request.urlretrieve(
+  "https://huggingface.co/Gustrd/SCUT-FBP5500-PyTorch-Model/resolve/main/resnet18_py3.pth",
+  "resnet18_py3.pth")
+
+# 2. build + load (defensive: unwrap state_dict / strip DataParallel prefixes)
 model = torchvision.models.resnet18(num_classes=1)
-model.load_state_dict(torch.load('resnet18.pth', map_location='cpu'))
+sd = torch.load("resnet18_py3.pth", map_location="cpu")
+if isinstance(sd, dict) and "state_dict" in sd: sd = sd["state_dict"]
+sd = {k.replace("module.", ""): v for k, v in sd.items()}
+model.load_state_dict(sd, strict=False)
 model.eval()
-torch.onnx.export(
-    model, torch.randn(1, 3, 224, 224), 'face-beauty.onnx',
-    input_names=['input'], output_names=['score'], opset_version=12)
+
+# 3. export ONNX (224x224 RGB NCHW — the contract this page expects)
+torch.onnx.export(model, torch.randn(1, 3, 224, 224), "face-beauty.onnx",
+                  input_names=["input"], output_names=["score"], opset_version=12)
+
+# 4. download to your computer
+files.download("face-beauty.onnx")
 ```
-Drop the resulting `face-beauty.onnx` in this folder. (~45 MB for ResNet18 — fine to commit, or
-host on a CDN and point `MODEL_CONFIG.url` at it.) A MobileNet/EfficientNet backbone gives a
-smaller, web-friendlier file if the checkpoint is available.
+Then drop `face-beauty.onnx` into this `models/` folder and reload the Looks Calc page. (~45 MB —
+fine to commit, or host on a CDN and point `MODEL_CONFIG.url` at it.)
+
+**Local alternative (if you prefer):** `pip install torch torchvision`, save the same code (minus the
+`google.colab` lines) as `convert.py`, run `python convert.py`. Run it *inside Python* — it is not
+Windows-command-prompt code.
+
+**Sanity check after loading:** SCUT-FBP5500 scores run ~1–5, which is what `MODEL_CONFIG.outMin/outMax`
+assume. If real faces produce a sane spread, you're set. If scores look random, the checkpoint/arch
+didn't match (tell Claude); if they're on a different scale, adjust the two output constants.
 
 ## Notes
 - The page crops the face box from the MediaPipe landmarks (with margin) before feeding the model,
