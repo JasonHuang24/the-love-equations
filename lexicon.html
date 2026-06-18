@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Lexicon &mdash; The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css?v=1.6" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <style>
+    .lex-intro { font-size: 14px; color: var(--text-muted); line-height: 1.8; max-width: 820px; margin-bottom: 1.4rem; }
+    .lex-intro strong { color: var(--text); }
+    .lex-filter { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.4rem; }
+    .lex-fbtn {
+      cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700;
+      border: 0.5px solid var(--border); background: var(--card); color: var(--text-muted);
+      border-radius: 999px; padding: 6px 15px; transition: all 120ms ease;
+    }
+    .lex-fbtn:hover { border-color: var(--text-dim); }
+    .lex-fbtn.active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
+    .lex-count { font-size: 12px; color: var(--text-dim); margin: -0.6rem 0 1.2rem; }
+    .lex-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .lex-card {
+      border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      background: var(--card); padding: 1.05rem 1.15rem; display: flex; flex-direction: column;
+    }
+    .lex-card.lens-black { border-left: 2px solid #4a3832; }
+    .lex-card.lens-red { border-left: 2px solid var(--scarlet); }
+    .lex-card.lens-blue { border-left: 2px solid #2f6d9c; }
+    .lex-card.lens-shared { border-left: 2px solid #51606F; }
+    .lex-top { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; margin-bottom: 0.5rem; }
+    .lex-term { font-family: "Playfair Display", Georgia, serif; font-size: 17px; color: var(--text); line-height: 1.15; }
+    .lex-chip { font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
+    .lex-chip.black { background: #ECEAE8; color: #4a3832; }
+    .lex-chip.red { background: var(--scarlet-pale); color: var(--scarlet-dim); }
+    .lex-chip.blue { background: #E4EEF6; color: #2f6d9c; }
+    .lex-chip.shared { background: #ECEEF1; color: #51606F; }
+    .lex-def { font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1; }
+    .lex-def strong { color: var(--text); }
+    .lex-link { margin-top: 0.7rem; font-size: 12px; color: var(--scarlet-dim); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; }
+    .lex-link:hover { text-decoration: underline; }
+    .lex-link.none { color: var(--text-dim); font-weight: 400; font-style: italic; cursor: default; }
+    .lex-link.none:hover { text-decoration: none; }
+    @media (max-width: 720px) { .lex-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body data-page="lexicon">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Reference</div>
+      <div class="page-title">The Lexicon</div>
+      <div class="page-sub">The manosphere&rsquo;s vocabulary, defined without the spin. Every term gets an honest one-line read &mdash; what&rsquo;s true in it, what&rsquo;s cope &mdash; and links to where the site takes it apart in full.</div>
+    </div>
+
+    <div class="content">
+      <p class="lex-intro">The language here is borrowed from the pills &mdash; <strong>Black</strong>, <strong>Red</strong>, <strong>Blue</strong> &mdash; but the definitions aren&rsquo;t. Each term carries the lens that owns it; the ones marked <strong>Shared</strong> cut across all three. Filter by lens, and follow any link to the dossier, framework, or chart where the claim gets tested.</p>
+
+      <div class="lex-filter" id="lex-filter">
+        <button class="lex-fbtn active" data-lens="all" onclick="lexFilter('all', this)">All</button>
+        <button class="lex-fbtn" data-lens="shared" onclick="lexFilter('shared', this)">Shared</button>
+        <button class="lex-fbtn" data-lens="black" onclick="lexFilter('black', this)">Black Pill</button>
+        <button class="lex-fbtn" data-lens="red" onclick="lexFilter('red', this)">Red Pill</button>
+        <button class="lex-fbtn" data-lens="blue" onclick="lexFilter('blue', this)">Blue Pill</button>
+      </div>
+      <div class="lex-count" id="lex-count"></div>
+
+      <div class="lex-grid" id="lex-grid"></div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+    const LEX = [
+      // ── Shared ──
+      ['SMV (Sexual Market Value)', 'shared', 'Your desirability as priced by the dating market &mdash; looks, money, status, charm, exposure, scaled by timing and competition. A market read, not a measure of human worth.', 'smv.html', 'The 5 Factors'],
+      ['Assortative mating', 'shared', 'The tendency to pair with someone of similar overall value. On looks alone the average couple <strong>matches</strong> (r&nbsp;&asymp;&nbsp;0.4) rather than one side relentlessly trading up.', 'frameworks.html#smv-matching', 'SMV Matching'],
+      ['The Wall', 'shared', 'The claim that a woman&rsquo;s value falls off a cliff around 30. <strong>Real as a slope, false as a cliff</strong> &mdash; and it measures stranger-attention, not whether she actually pairs.', 'frameworks.html#the-wall', 'The Wall'],
+      ['Cope', 'shared', 'Any comforting story used to dodge a hard truth. A useful scalpel &mdash; but &ldquo;that&rsquo;s cope&rdquo; is itself often used to wave away evidence that complicates the blackpill.', '', ''],
+
+      // ── Black Pill ──
+      ['The Black Pill', 'black', 'Constraint awareness pushed to fatalism: looks and fixed traits matter more than polite society admits (true), so it&rsquo;s hopeless (false).', 'pills.html#page-blk', 'Black Pill dossier'],
+      ['The Height Pill', 'black', 'Height as destiny. The premium is real and fixed &mdash; but &ldquo;it&rsquo;s over under six feet&rdquo; is fatalism. The curve is a <strong>window, not a ladder</strong>.', 'pills.html#height-pill', 'The Height Pill'],
+      ['Looksmaxxing', 'black', 'Maximizing physical attractiveness. Soft-maxxing (grooming, fitness, style) genuinely works; surgery-chasing and PSL despair is mostly cope.', 'smv.html', 'The Looks factor'],
+      ['Mogging', 'black', 'To visibly outrank someone on looks, height, or status in a shared space. A real perception effect, inflated into constant ranking anxiety.', 'frameworks.html#smv-matching', 'The Charm Ceiling'],
+      ['LMS (Looks &middot; Money &middot; Status)', 'black', 'The blackpill&rsquo;s claim that attraction reduces to three things you can&rsquo;t change. They matter &mdash; but it drops charm and exposure, the two you <em>can</em> move.', 'smv.html', 'The 5 Factors'],
+
+      // ── Red Pill ──
+      ['The Red Pill', 'red', 'Dating as a market of incentives and leverage. Its gift is agency &mdash; build your value, read signals. Its poison is contempt dressed up as realism.', 'pills.html#page-rp', 'Red Pill dossier'],
+      ['Hypergamy', 'red', 'The drive to &ldquo;marry up&rdquo; in status. <strong>Real as a tilt</strong> (women weight status more), <strong>false as an iron law</strong> (educational hypergamy has reversed).', 'frameworks.html#smv-matching', 'The Status Trade'],
+      ['Body count', 'red', 'A partner&rsquo;s number of prior lovers, claimed to wreck pair-bonding. Real as a confounded correlation with divorce; false as the &ldquo;oxytocin runs out&rdquo; mechanism.', 'frameworks.html#body-count', 'Body Count duality'],
+      ['AF/BB (Alpha Fucks, Beta Bucks)', 'red', 'The dual-mating claim that women take genes from hot men and provision from stable ones. The ovulatory-shift mechanism behind it fails to replicate.', 'frameworks.html#smv-matching', 'The Status Trade'],
+      ['AWALT (All Women Are Like That)', 'red', 'The doctrine that women share one hidden nature. Where strategy curdles into contempt &mdash; a blanket claim that can&rsquo;t survive contact with actual people.', '', ''],
+      ['Frame', 'red', 'Holding your own center instead of begging the room to validate you. At its best, calm self-command; at its worst, performative dominance.', 'pills.html#page-rp', 'Red Pill dossier'],
+      ['Preselection', 'red', 'Being visibly wanted makes you more wanted. Real social proof &mdash; but it shifts how value is <em>read</em>, it doesn&rsquo;t create attraction from nothing.', 'smv.html', 'The Status factor'],
+      ['Statusmaxxing', 'red', 'Building status and resources as a man&rsquo;s main lever. Sound &mdash; a man&rsquo;s value is status-elastic &mdash; but prestige beats borrowed dominance theater.', 'frameworks.html#smv-matching', 'The Status Trade'],
+      ['The Charm Ceiling', 'red', 'How far &ldquo;game&rdquo; can carry you past looks. Access-gated, not value-gated: near-zero online, full-strength in a social circle.', 'frameworks.html#smv-matching', 'The Charm Ceiling'],
+
+      // ── Blue Pill ──
+      ['The Blue Pill', 'blue', 'Romance as sincere, fair, and personality-driven. Keeps the human center &mdash; warmth, trust &mdash; but denies the thresholds that decide who gets considered.', 'pills.html#page-bp', 'Blue Pill dossier'],
+      ['Just be yourself', 'blue', 'Healthy as authenticity; harmful when it means refusing to improve presentation, social skill, or exposure.', 'pills.html#page-bp', 'Blue Pill dossier'],
+      ['There&rsquo;s someone for everyone', 'blue', 'Comforting, but not what the base rates show &mdash; especially for below-average men. Patience is wise; passivity isn&rsquo;t.', 'gender-dynamics.html', 'Gender Dynamics'],
+      ['Personality matters', 'blue', 'True but incomplete. Personality deepens and sustains attraction &mdash; usually <em>after</em> a first physical filter is passed.', 'pills.html#page-bp', 'Blue Pill dossier'],
+      ['The One / the right person', 'blue', 'Useful as patience, dangerous as passivity. The right person still has to meet you, notice you, want you, and choose you.', 'pills.html#page-bp', 'Blue Pill dossier']
+    ];
+
+    const LENS_LABEL = { black: 'Black Pill', red: 'Red Pill', blue: 'Blue Pill', shared: 'Shared' };
+
+    function renderLex(filter) {
+      const grid = document.getElementById('lex-grid');
+      const shown = LEX.filter(t => filter === 'all' || t[1] === filter);
+      grid.innerHTML = shown.map(t => {
+        const [term, lens, def, href, label] = t;
+        const link = href
+          ? `<a class="lex-link" href="${href}">${label} <i class="ti ti-arrow-right"></i></a>`
+          : `<span class="lex-link none">No deeper page yet</span>`;
+        return `<div class="lex-card lens-${lens}">
+            <div class="lex-top"><span class="lex-term">${term}</span><span class="lex-chip ${lens}">${LENS_LABEL[lens]}</span></div>
+            <div class="lex-def">${def}</div>
+            ${link}
+          </div>`;
+      }).join('');
+      document.getElementById('lex-count').textContent =
+        `Showing ${shown.length} of ${LEX.length} terms` + (filter === 'all' ? '' : ` · ${LENS_LABEL[filter]}`);
+    }
+
+    function lexFilter(lens, btn) {
+      document.querySelectorAll('.lex-fbtn').forEach(b => b.classList.toggle('active', b === btn));
+      renderLex(lens);
+    }
+
+    // Honor a #lens hash (e.g. lexicon.html#red) coming from a dossier "Go deeper" link.
+    (function () {
+      const h = (location.hash || '').replace('#', '');
+      const valid = ['shared', 'black', 'red', 'blue'];
+      if (valid.includes(h)) {
+        const btn = document.querySelector(`.lex-fbtn[data-lens="${h}"]`);
+        document.querySelectorAll('.lex-fbtn').forEach(b => b.classList.toggle('active', b === btn));
+        renderLex(h);
+      } else {
+        renderLex('all');
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -420,6 +420,37 @@
       margin-top: 1rem;
     }
 
+    .go-deeper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
+      border-top: 0.5px solid var(--border);
+      margin-top: 1.1rem;
+      padding-top: 0.9rem;
+    }
+
+    .gd-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+
+    .go-deeper a {
+      font-size: 12.5px;
+      color: var(--scarlet-dim);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .go-deeper a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 860px) {
       .dossier-grid,
       .pill-nav,
@@ -525,6 +556,25 @@
             </aside>
           </div>
 
+          <article class="dossier-card" id="height-pill">
+            <div class="pill-meta"><i class="ti ti-ruler-2"></i> Illustrative case &middot; a fixed trait</div>
+            <div class="pill-heading black">The <span>Height Pill</span></div>
+            <p class="pill-summary">Height is the Black Pill&rsquo;s favorite exhibit, and not by accident: it is a real, measurable advantage you genuinely cannot change. Women pull toward taller men more than men pull toward shorter women, and the male-taller norm shows up in almost every couple &mdash; far beyond what chance alone would produce. The lens is right that it matters and right that it&rsquo;s fixed. Where it curdles is the leap from &ldquo;height matters&rdquo; to &ldquo;it&rsquo;s over.&rdquo;</p>
+            <div class="split-grid mt-2">
+              <div class="split-card">
+                <div class="split-label"><i class="ti ti-check"></i> Keep</div>
+                <div class="split-title">The premium is real &mdash; and fixed</div>
+                <div class="split-copy">The man is taller in ~92% of couples, roughly 14&times; more often than chance predicts (Gillis &amp; Avis; 2013 replication). Women&rsquo;s preference for taller partners is stronger than men&rsquo;s for shorter ones (Stulp et al., 2013). And height pays beyond dating &mdash; each inch above average is worth ~$800 a year in earnings (Judge &amp; Cable, 2004). You can&rsquo;t train it. The Black Pill names a true, immovable constraint.</div>
+              </div>
+              <div class="split-card">
+                <div class="split-label"><i class="ti ti-x"></i> Discard</div>
+                <div class="split-title">&ldquo;It&rsquo;s over under six feet&rdquo; is fatalism</div>
+                <div class="split-copy">The premium is a window, not a ladder. The height&ndash;success curve is curvilinear: the very shortest men are penalized, but the optimum is only <em>moderately</em> above average &mdash; and extremely tall men get screened out too, by shorter women. Most below-average-height men still partner and marry; height is one input among five, not a gate. Turning a real edge into &ldquo;heightcel, it&rsquo;s over&rdquo; is the lens eating the person.</div>
+              </div>
+            </div>
+            <div class="dossier-note"><strong>Operating rule:</strong> count height honestly as a fixed input you can&rsquo;t move &mdash; then stop relitigating it and spend the effort on the four factors you can. See the <a href="statistics.html#height-pref" style="color:var(--scarlet-dim)">height-preference data</a> and the <a href="smv.html" style="color:var(--scarlet-dim)">Looks factor</a>.</div>
+          </article>
+
           <article class="wildcard-card">
             <div class="wildcard-tag"><i class="ti ti-cards"></i> Wildcard mechanic</div>
             <div class="synthesis-title">Just Be First</div>
@@ -540,6 +590,13 @@
             </div>
             <div class="dossier-note"><strong>Important:</strong> this is not a moral ideal or a seduction recommendation. It is a structural story about timing, calibration, and why some mismatches survive because they formed before the open market could price them.</div>
           </article>
+
+          <div class="go-deeper">
+            <span class="gd-label">Go deeper</span>
+            <a href="frameworks.html#the-wall">The Wall &mdash; the age curve, checked <i class="ti ti-arrow-right"></i></a>
+            <a href="#height-pill">The Height Pill <i class="ti ti-arrow-right"></i></a>
+            <a href="lexicon.html#black">Black Pill terms <i class="ti ti-arrow-right"></i></a>
+          </div>
         </section>
 
         <section class="pill-page" id="page-rp">
@@ -594,6 +651,13 @@
               <div class="term-name">Frame</div>
               <div class="term-copy">The ability to hold your center without begging the room to validate you. At its best, calm self-command; at its worst, performative dominance.</div>
             </div>
+          </div>
+
+          <div class="go-deeper">
+            <span class="gd-label">Go deeper</span>
+            <a href="frameworks.html#smv-matching">Hypergamy &mdash; the Status Trade <i class="ti ti-arrow-right"></i></a>
+            <a href="frameworks.html#body-count">Body count &mdash; the data <i class="ti ti-arrow-right"></i></a>
+            <a href="lexicon.html#red">Red Pill terms <i class="ti ti-arrow-right"></i></a>
           </div>
         </section>
 
@@ -650,6 +714,12 @@
               <div class="term-copy">Useful as patience, dangerous as passivity. The right person still has to meet you, notice you, want you, and choose you.</div>
             </div>
           </div>
+
+          <div class="go-deeper">
+            <span class="gd-label">Go deeper</span>
+            <a href="gender-dynamics.html">The base rates, honestly <i class="ti ti-arrow-right"></i></a>
+            <a href="lexicon.html#blue">Blue Pill terms <i class="ti ti-arrow-right"></i></a>
+          </div>
         </section>
 
         <section class="synthesis-card">
@@ -669,6 +739,28 @@
       document.querySelectorAll('.pill-tab').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     }
+
+    // Activate a dossier tab by code (no button needed) — used by inbound deep links.
+    function activatePill(code) {
+      document.querySelectorAll('.pill-page').forEach(p => p.classList.remove('visible'));
+      const page = document.getElementById('page-' + code);
+      if (page) page.classList.add('visible');
+      const idx = { blk: 0, rp: 1, bp: 2 }[code];
+      document.querySelectorAll('.pill-tab').forEach((b, i) => b.classList.toggle('active', i === idx));
+    }
+
+    // Honor inbound hashes from the Lexicon / Go-deeper strips so the right dossier opens.
+    (function () {
+      const h = (location.hash || '').replace('#', '');
+      const map = { 'page-blk': 'blk', 'page-rp': 'rp', 'page-bp': 'bp', 'height-pill': 'blk' };
+      if (map[h]) {
+        activatePill(map[h]);
+        if (h === 'height-pill') {
+          const el = document.getElementById('height-pill');
+          if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+        }
+      }
+    })();
   </script>
 </body>
 </html>
