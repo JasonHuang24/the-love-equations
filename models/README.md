@@ -24,6 +24,7 @@ It downloads a clean ResNet18 SCUT-FBP5500 checkpoint, exports ONNX, and downloa
 
 ```python
 # Google Colab — torch is preinstalled, nothing to set up.
+!pip install -q onnxscript          # PyTorch's ONNX exporter needs this; Colab doesn't ship it
 import torch, torchvision, urllib.request
 from google.colab import files
 
