@@ -35,4 +35,19 @@
       if (e.key === 'Escape') setOpen(false);
     });
   }
+
+  // Back-to-top button — long reference pages only
+  const TOP_PAGES = ['frameworks', 'statistics'];
+  if (TOP_PAGES.includes(page)) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'back-to-top';
+    btn.setAttribute('aria-label', 'Back to top');
+    btn.innerHTML = '<i class="ti ti-arrow-up" aria-hidden="true"></i>';
+    document.body.appendChild(btn);
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    const onScroll = () => btn.classList.toggle('show', window.scrollY > 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
 })();

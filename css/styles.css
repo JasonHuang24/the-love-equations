@@ -886,3 +886,75 @@ body {
     gap: 12px 20px;
   }
 }
+
+/* ── On-page table of contents (frameworks, statistics) ── */
+.smv-sub,
+.chart-card,
+.dos-section { scroll-margin-top: 96px; }
+
+.page-toc {
+  max-width: var(--container);
+  margin: 1.6rem auto 0.4rem;
+  background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.74));
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 1.2rem 1.4rem 1.3rem;
+}
+.page-toc-head {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 850; color: var(--text-dim);
+  cursor: pointer; list-style: none;
+}
+.page-toc-head::-webkit-details-marker { display: none; }
+.page-toc-head:hover { color: var(--text); }
+.page-toc-head i { color: var(--scarlet); font-size: 15px; }
+.page-toc-head .toc-chevron { margin-left: auto; color: var(--text-dim); font-size: 16px; transition: transform 0.22s ease; }
+.page-toc[open] .toc-chevron { transform: rotate(180deg); }
+.toc-groups { display: none; }
+.page-toc[open] .toc-groups { display: flex; flex-wrap: wrap; gap: 1.25rem 2.5rem; margin-top: 1rem; }
+.toc-group { flex: 1 1 250px; min-width: 0; }
+.toc-group-label {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim);
+  padding-bottom: 0.42rem; margin-bottom: 0.5rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.toc-entry {
+  display: flex; align-items: baseline; gap: 9px;
+  text-decoration: none; color: var(--text-muted);
+  font-size: 13px; line-height: 1.5; padding: 3.5px 0;
+  transition: color 140ms ease;
+}
+.toc-entry:hover,
+.toc-entry:hover .toc-num { color: var(--scarlet); }
+.toc-num {
+  flex-shrink: 0; min-width: 1.5em; text-align: right;
+  color: var(--scarlet-dim); font-weight: 800; font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.toc-entry.sub { padding-left: 1.35rem; font-size: 12.5px; }
+.toc-entry.sub .toc-num { min-width: 2em; color: var(--text-dim); font-weight: 700; }
+
+/* ── Back-to-top floating button (injected on long pages) ── */
+.back-to-top {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--scarlet); color: #fffaf3;
+  border: none; border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(196,30,58,0.34);
+  cursor: pointer; font-size: 20px;
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s, background 0.2s ease;
+  z-index: 30;
+}
+.back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.back-to-top:hover { background: var(--scarlet-dim); transform: translateY(-2px); }
+.back-to-top:focus-visible { outline: 2px solid var(--scarlet-dim); outline-offset: 3px; }
+@media (max-width: 720px) {
+  .back-to-top { width: 42px; height: 42px; font-size: 18px; }
+}
