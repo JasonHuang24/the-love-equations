@@ -43,7 +43,8 @@ model.eval()
 
 # 3. export ONNX (224x224 RGB NCHW — the contract this page expects)
 torch.onnx.export(model, torch.randn(1, 3, 224, 224), "face-beauty.onnx",
-                  input_names=["input"], output_names=["score"], opset_version=12)
+                  input_names=["input"], output_names=["score"],
+                  opset_version=12, dynamo=False)   # legacy exporter = one self-contained ~45MB file
 
 # 4. download to your computer
 files.download("face-beauty.onnx")
