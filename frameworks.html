@@ -70,6 +70,35 @@
     .verdict-sub { font-size: 13px; line-height: 1.55; }
     .verdict-sub.reject { color: #8A2030; }
     .verdict-sub.pass { color: #0F6E56; }
+
+    /* Claim verdict stamps — grade the tested manosphere claims */
+    .claim-stamp {
+      display: inline-flex; flex-direction: column; gap: 1px;
+      margin: 0.15rem 0 1.4rem; padding: 0.55rem 0.95rem 0.6rem;
+      border: 2px solid currentColor; border-radius: 7px;
+      background: var(--stamp-bg, #F6F1DC);
+      transform: rotate(-1.3deg); max-width: 540px;
+      box-shadow: 0 1px 0 rgba(82,43,29,0.04);
+    }
+    .claim-stamp .stamp-kicker { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 800; opacity: 0.7; }
+    .claim-stamp .stamp-grade { font-size: 20px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 900; line-height: 1.05; }
+    .claim-stamp .stamp-line { font-size: 12px; line-height: 1.45; color: var(--text-muted); font-weight: 500; letter-spacing: 0; text-transform: none; margin-top: 4px; }
+    .claim-stamp.g-holds       { color: #0F6E56; --stamp-bg: #E4F3EC; }
+    .claim-stamp.g-overgen     { color: #51606F; --stamp-bg: #ECF1F4; }
+    .claim-stamp.g-overstated  { color: #A06A12; --stamp-bg: #FBEFD6; }
+    .claim-stamp.g-absolutized { color: #B5531A; --stamp-bg: #FBE6D6; }
+    .claim-stamp.g-confounded  { color: #A82238; --stamp-bg: #F7DEE2; }
+    .claim-stamp.g-myth        { color: var(--scarlet-dim); --stamp-bg: var(--scarlet-pale); }
+
+    /* Grade legend in the page intro */
+    .grade-key { margin: 1rem auto 0.2rem; padding: 0.85rem 1.1rem; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: rgba(255,252,247,0.6); text-align: center; }
+    .grade-key .gk-intro { font-size: 12px; color: var(--text); font-weight: 700; margin-bottom: 0.7rem; }
+    .gk-row { display: flex; flex-wrap: wrap; gap: 9px 20px; align-items: center; justify-content: center; }
+    .gk-item { display: inline-flex; align-items: baseline; gap: 6px; font-size: 11px; }
+    .gk-dot { width: 9px; height: 9px; border-radius: 2px; background: currentColor; align-self: center; }
+    .gk-item .gk-word { font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+    .gk-item .gk-def { color: var(--text-muted); }
+    .gk-item.g-holds { color: #0F6E56; } .gk-item.g-overgen { color: #51606F; } .gk-item.g-overstated { color: #A06A12; } .gk-item.g-absolutized { color: #B5531A; } .gk-item.g-confounded { color: #A82238; } .gk-item.g-myth { color: var(--scarlet-dim); }
     .profiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.25rem; }
     .profile-heading { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); }
     .profile-heading.a { color: #378ADD; }
@@ -246,7 +275,18 @@
     <div class="page-header">
       <div class="page-eyebrow">Reference</div>
       <div class="page-title">Rules &amp; Frameworks</div>
-      <div class="page-sub">Working models — scoring gates, markup systems, rating bands, and selection rules. These concepts are staged here until each finds a permanent home in the framework.</div>
+      <div class="page-sub">Working models — scoring gates, markup systems, rating bands, and selection rules — staged here until each finds a permanent home. Further down, a running series of <strong>tested claims</strong>: popular manosphere theories taken at face value, then graded with a verdict stamp.</div>
+      <div class="grade-key" aria-label="How tested claims are graded">
+        <div class="gk-intro">How each claim is graded — named for the specific way it fails, or whether it holds up</div>
+        <div class="gk-row">
+          <span class="gk-item g-holds"><span class="gk-dot"></span><span class="gk-word">Holds up</span> <span class="gk-def">survives the evidence</span></span>
+          <span class="gk-item g-overgen"><span class="gk-dot"></span><span class="gk-word">Over-generalized</span> <span class="gk-def">true in one arena, wrong everywhere else</span></span>
+          <span class="gk-item g-overstated"><span class="gk-dot"></span><span class="gk-word">Overstated</span> <span class="gk-def">real effect, inflated magnitude</span></span>
+          <span class="gk-item g-absolutized"><span class="gk-dot"></span><span class="gk-word">Absolutized</span> <span class="gk-def">a tendency sold as an iron law</span></span>
+          <span class="gk-item g-confounded"><span class="gk-dot"></span><span class="gk-word">Confounded</span> <span class="gk-def">real correlation, invented cause</span></span>
+          <span class="gk-item g-myth"><span class="gk-dot"></span><span class="gk-word">Myth</span> <span class="gk-def">no real basis</span></span>
+        </div>
+      </div>
     </div>
 
     <div class="content">
@@ -551,6 +591,12 @@
           <div class="smv-sub-note">How far can game / charm actually carry you, and where does it cap? <strong>Part 1</strong> takes a Blackpill creator&rsquo;s looks-vs-game model at face value; <strong>Part 2</strong> draws the research model on its own axes. The source is strictly <strong>male-perspective</strong> (the man judged, women as acceptors), so Part 1 follows that; <strong>Part 2 is tabbable</strong> to either the male or female view.</div>
         </div>
 
+        <div class="claim-stamp g-overgen">
+          <span class="stamp-kicker">Verdict &middot; tested claim</span>
+          <span class="stamp-grade">Over-generalized</span>
+          <span class="stamp-line">Right about the stranger-market arena it maps &mdash; apps, cold approach &mdash; but false generalized to all of dating. Charm is access-gated, not value-gated.</span>
+        </div>
+
         <div class="cc-part"><span class="cc-part-num">Part 1</span><span class="cc-part-title">The Claim</span></div>
 
         <div class="smv-callout" style="border-left-color:#51606F;"><strong>The artifact.</strong> Wheat Waffles, &ldquo;Looks Vs. Confidence For Dating &mdash; In-Depth Blackpill Analysis&rdquo; (uploaded under a 2023 title; the analysis is dated 2021 in-video). He plots every man on two axes &mdash; <strong>Looks</strong> (Sub-5 / Normie 5&ndash;7 / Chad 8+) and a <strong>Game</strong> scale he coined (0 = can&rsquo;t speak, 5 = average convo, 7+ = smooth / funny / dominant, 10 = never a misstep) &mdash; and draws an <em>acceptance line</em> = the minimum bar of &ldquo;most women&rdquo; (he brackets out both &ldquo;landwhales&rdquo; and &ldquo;mega-Stacies&rdquo;). The whole question: when does game move that line, and when is it dead weight?</div>
@@ -635,6 +681,12 @@
           <div class="smv-sub-note">Beyond looks and charm, overall mate value is a blend &mdash; and this is where the framework&rsquo;s opening promise pays off: the &ldquo;trading up&rdquo; people notice enters through <strong>status</strong>. We take the canonical Red Pill hypergamy claim, then check it.</div>
         </div>
 
+        <div class="claim-stamp g-absolutized">
+          <span class="stamp-kicker">Verdict &middot; tested claim</span>
+          <span class="stamp-grade">Absolutized</span>
+          <span class="stamp-line">A real status tilt treated as an innate, immutable iron law. Women do weight status more &mdash; but educational hypergamy has reversed and the provider norm is halving, so it is fading, not hardening.</span>
+        </div>
+
         <div class="cc-part"><span class="cc-part-num">Part 1</span><span class="cc-part-title">The Claim</span></div>
 
         <div class="smv-callout" style="border-left-color:#51606F;"><strong>The claim.</strong> The Red Pill calls it <em>hypergamy</em>: women are wired to &ldquo;marry up&rdquo; &mdash; to chase the highest-status man they can secure, never sideways or down. The strong version: women rate ~80% of men below average and funnel desire to the top fifth (&ldquo;a 6 can hold out for a 9&rdquo;); they run a <em>dual mating strategy</em> &mdash; &ldquo;alpha fucks, beta bucks&rdquo; &mdash; taking sex from hot, dominant men and commitment from stable providers; and the instinct is immutable, so a woman &ldquo;branch-swings&rdquo; the moment a better option appears. In this model, <strong>status is to a man what looks are to a woman</strong> &mdash; &ldquo;money is a man&rsquo;s looks.&rdquo;</div>
@@ -708,6 +760,12 @@
         <div class="rf-title">The Wall</div>
         <div class="rf-sub">The most-cited claim about women and age: that a woman&rsquo;s market value falls off a <em>cliff</em> around 30. We take the canonical version at face value, then check it &mdash; same two-part format as the Charm Ceiling and the Status Trade above. The short version: there is a real curve here, but it is a <strong>slope, not a cliff</strong> &mdash; and it measures the one thing that decides least.</div>
 
+        <div class="claim-stamp g-overstated">
+          <span class="stamp-kicker">Verdict &middot; tested claim</span>
+          <span class="stamp-grade">Overstated</span>
+          <span class="stamp-line">A real age slope inflated into a cliff with fertility numbers from the 1700s &mdash; and it prices stranger attention, not pairing, which stays high well past 30.</span>
+        </div>
+
         <div class="cc-part"><span class="cc-part-num">Part 1</span><span class="cc-part-title">The Claim</span></div>
 
         <div class="smv-callout" style="border-left-color:#51606F;"><strong>The claim.</strong> In the Red/Black Pill telling it is &ldquo;the Wall&rdquo;: a woman&rsquo;s sexual market value is built on youth and looks, both peak in her early 20s, and both drop off a cliff around 30 &mdash; after which she is &ldquo;post-wall&rdquo; and her options collapse. The advice that rides on it: lock down a high-value man <em>at the peak</em>, because the men who would have wanted her move on and the years spent &ldquo;riding the carousel&rdquo; are wasted capital. The mirror claim: <strong>men age like wine</strong> &mdash; status and resources accrue, so a man&rsquo;s value <em>rises</em> with age, widening the gap.</div>
@@ -766,6 +824,12 @@
         <div class="rf-eyebrow">Claim vs. evidence &middot; partner count</div>
         <div class="rf-title">Body Count &amp; Pair-Bonding</div>
         <div class="rf-sub">The Red Pill claim that a high &ldquo;body count&rdquo; &mdash; a woman&rsquo;s number of prior sexual partners &mdash; wears out her ability to bond, predicting cheating and divorce. Same two-part format as the dualities above. The short version: the correlation is <strong>real but confounded</strong>, the dose-response is the wrong shape, and the biology underneath it is invented.</div>
+
+        <div class="claim-stamp g-confounded">
+          <span class="stamp-kicker">Verdict &middot; tested claim</span>
+          <span class="stamp-grade">Confounded</span>
+          <span class="stamp-line">A real but confounded correlation sold as depleted-&ldquo;bonding hormone&rdquo; biology that doesn&rsquo;t exist &mdash; and the dose-response is the wrong shape (non-monotonic, not a per-partner ramp).</span>
+        </div>
 
         <div class="cc-part"><span class="cc-part-num">Part 1</span><span class="cc-part-title">The Claim</span></div>
 
