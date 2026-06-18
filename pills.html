@@ -451,7 +451,137 @@
       text-decoration: underline;
     }
 
+    /* ── Face Pill · annotated face-anatomy carousel ── */
+    .face-carousel {
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.62);
+      padding: 1rem 1rem 0.85rem;
+      margin-top: 1.1rem;
+    }
+    .fc-stage {
+      display: grid;
+      grid-template-columns: minmax(200px, 250px) 1fr;
+      gap: 1.1rem;
+      align-items: start;
+    }
+    .fc-face { position: relative; }
+    .fc-svg { width: 100%; height: auto; display: block; }
+    .fc-layer-head { margin-bottom: 0.6rem; }
+    .fc-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 10px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--tone, var(--scarlet));
+      background: color-mix(in srgb, var(--tone, var(--scarlet)) 12%, transparent);
+      border-radius: 999px;
+      padding: 3px 9px;
+      margin-bottom: 0.45rem;
+    }
+    .fc-layer-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.25rem;
+      line-height: 1.1;
+      color: var(--text);
+    }
+    .fc-layer-sub { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-top: 0.25rem; }
+    .fc-feat {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 0.55rem;
+      padding: 0.5rem 0;
+      border-top: 0.5px solid var(--border-light);
+    }
+    .fc-feat:first-of-type { border-top: 0; }
+    .fc-feat-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--tone, var(--scarlet));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .fc-feat-name { font-size: 13.5px; color: var(--text); font-weight: 600; }
+    .fc-tag {
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: 1px;
+    }
+    .fc-tag.t-fixed { color: #51606F; background: #ECF1F4; }
+    .fc-tag.t-mod   { color: #A06A12; background: #FBEFD6; }
+    .fc-tag.t-free  { color: #0F6E56; background: #E4F3EC; }
+    .fc-tag.t-whole { color: #5B4BA0; background: #ECE8F7; }
+    .fc-imp {
+      font-size: 9px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      white-space: nowrap;
+      vertical-align: 1px;
+    }
+    .fc-imp .imp-dots { letter-spacing: -1px; margin-right: 2px; }
+    .fc-imp.imp-high { color: #C41E3A; background: #FBE3E7; }
+    .fc-imp.imp-mod  { color: #A06A12; background: #FBEFD6; }
+    .fc-imp.imp-low  { color: #6E6258; background: #EFEAE3; }
+    .fc-imp.imp-lens { color: #5B4BA0; background: #ECE8F7; }
+    .fc-feat-note { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-top: 2px; }
+    .fc-foot {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-top: 0.75rem;
+      border-top: 0.5px solid var(--border-light);
+      padding-top: 0.6rem;
+    }
+    .fc-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+      border-top: 0.5px solid var(--border);
+      padding-top: 0.7rem;
+    }
+    .fc-arrow {
+      border: 0.5px solid var(--border);
+      background: rgba(255,255,255,0.7);
+      color: var(--scarlet-dim);
+      border-radius: 8px;
+      width: 34px; height: 30px;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .fc-arrow:hover { background: var(--scarlet-pale); border-color: var(--scarlet); }
+    .fc-dots { display: flex; gap: 7px; align-items: center; }
+    .fc-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .fc-dot.active { background: var(--scarlet); transform: scale(1.25); }
+    .fc-counter { font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; min-width: 78px; text-align: center; }
+
     @media (max-width: 860px) {
+      .fc-stage { grid-template-columns: 1fr; }
+      .fc-face { max-width: 240px; margin: 0 auto; }
       .dossier-grid,
       .pill-nav,
       .term-grid,
@@ -575,6 +705,49 @@
             <div class="dossier-note"><strong>Operating rule:</strong> count height honestly as a fixed input you can&rsquo;t move &mdash; then stop relitigating it and spend the effort on the four factors you can. See the <a href="statistics.html#height-pref" style="color:var(--scarlet-dim)">height-preference data</a> and the <a href="smv.html" style="color:var(--scarlet-dim)">Looks factor</a>.</div>
           </article>
 
+          <article class="dossier-card" id="face-pill">
+            <div class="pill-meta"><i class="ti ti-face-id"></i> Illustrative case &middot; a stack, not a single trait</div>
+            <div class="pill-heading black">The <span>Face Pill</span></div>
+            <p class="pill-summary">The Black Pill&rsquo;s deepest fixation is the face &mdash; and its core mistake is treating it as <em>one</em> thing: bone. But a face is a stack of layers. The skull is the bottom one; on top sit skin and soft tissue, then framing and grooming, then the harmony of the whole &mdash; plus a side profile a front photo never shows. Raters integrate the stack, not the cephalogram. Flip through the five views below: every feature is <strong>ranked and graded by impact</strong>, so you can see at a glance what actually moves the needle &mdash; and only the bottom layer is truly fixed.</p>
+
+            <div class="face-carousel" id="faceCarousel">
+              <div class="fc-stage">
+                <div class="fc-face"><div id="fc-svg-wrap"></div></div>
+                <div class="fc-legend">
+                  <div class="fc-layer-head">
+                    <span class="fc-chip" id="fc-chip"></span>
+                    <div class="fc-layer-title" id="fc-title"></div>
+                    <div class="fc-layer-sub" id="fc-sub"></div>
+                  </div>
+                  <div id="fc-feats"></div>
+                </div>
+              </div>
+              <div class="fc-controls">
+                <button type="button" class="fc-arrow" id="fc-prev" aria-label="Previous layer">&#8249;</button>
+                <div style="display:flex;align-items:center;gap:0.9rem;">
+                  <div class="fc-dots" id="fc-dots"></div>
+                  <span class="fc-counter" id="fc-counter"></span>
+                </div>
+                <button type="button" class="fc-arrow" id="fc-next" aria-label="Next layer">&#8250;</button>
+              </div>
+              <div class="fc-foot">Pins are <strong>numbered by impact</strong> &mdash; <strong>1</strong> matters most. Each feature carries two tags: <strong>impact</strong> (&#9679;&#9679;&#9679; High &rarr; &#9679;&#9675;&#9675; Low &mdash; how much it moves the first impression) and <strong>movability</strong> (Fixed / Modifiable / Free). These are reasoned bands, not the bogus PSL decimal we take apart in <a href="frameworks.html#bone-pill" style="color:var(--scarlet-dim)">The Bone Pill</a> &mdash; deliberately coarse. <span style="color:#5B4BA0;font-weight:700">Lens</span> marks a measure the forums oversell.</div>
+            </div>
+
+            <div class="split-grid mt-2">
+              <div class="split-card">
+                <div class="split-label"><i class="ti ti-check"></i> Keep</div>
+                <div class="split-title">Attractiveness is real &mdash; and it&rsquo;s a stack</div>
+                <div class="split-copy">People genuinely agree on who&rsquo;s attractive (Langlois 2000), and the face carries real weight. But it&rsquo;s built from four layers, not one bone &mdash; and three of them <em>move</em>: skin and condition, framing and grooming, and the proportion of the whole. The Black Pill is right that the face matters. It just refuses to look past the first layer.</div>
+              </div>
+              <div class="split-card">
+                <div class="split-label"><i class="ti ti-x"></i> Discard</div>
+                <div class="split-title">&ldquo;Your bone-score is your fate&rdquo;</div>
+                <div class="split-copy">The looksmaxxing pill collapses all four layers into the skull, freezes it, and scores it to a PSL decimal that &ldquo;ends&rdquo; you. Three of the four layers are improvable, single bones explain little alone, and the shared score itself dissolves once someone actually knows you. A real input is laundered into a sealed verdict.</div>
+              </div>
+            </div>
+            <div class="dossier-note"><strong>Operating rule:</strong> count the bone honestly as the one fixed layer &mdash; then stop relitigating it and work the three that move. And remember even the bone mostly prices the first glance. See <a href="frameworks.html#bone-pill" style="color:var(--scarlet-dim)">The Bone Pill, checked</a> and the <a href="smv.html" style="color:var(--scarlet-dim)">Looks factor</a>.</div>
+          </article>
+
           <article class="wildcard-card">
             <div class="wildcard-tag"><i class="ti ti-cards"></i> Wildcard mechanic</div>
             <div class="synthesis-title">Just Be First</div>
@@ -595,6 +768,8 @@
             <span class="gd-label">Go deeper</span>
             <a href="frameworks.html#the-wall">The Wall &mdash; the age curve, checked <i class="ti ti-arrow-right"></i></a>
             <a href="#height-pill">The Height Pill <i class="ti ti-arrow-right"></i></a>
+            <a href="#face-pill">The Face Pill <i class="ti ti-arrow-right"></i></a>
+            <a href="frameworks.html#bone-pill">The Bone Pill &mdash; checked <i class="ti ti-arrow-right"></i></a>
             <a href="lexicon.html#black">Black Pill terms <i class="ti ti-arrow-right"></i></a>
           </div>
         </section>
@@ -749,14 +924,155 @@
       document.querySelectorAll('.pill-tab').forEach((b, i) => b.classList.toggle('active', i === idx));
     }
 
+    // ── Face Pill · annotated face-anatomy carousel ──
+    // A face is a stack of layers; only the bottom one (bone) is truly fixed. Each slide pins one
+    // layer's features onto a shared line-art face and tags it by how movable it is.
+    const FACE_BASE = ''
+      + '<path d="M120 40 C82 40 54 72 54 124 C54 168 62 206 90 236 C102 252 111 262 120 262 C129 262 138 252 150 236 C178 206 186 168 186 124 C186 72 158 40 120 40 Z" fill="#FBF6EF" stroke="#C3B2A2" stroke-width="1.6"/>'
+      + '<ellipse cx="54" cy="150" rx="7" ry="15" fill="#FBF6EF" stroke="#C3B2A2" stroke-width="1.4"/>'
+      + '<ellipse cx="186" cy="150" rx="7" ry="15" fill="#FBF6EF" stroke="#C3B2A2" stroke-width="1.4"/>'
+      + '<path d="M58 104 C72 66 168 66 182 104" fill="none" stroke="#D8C9BA" stroke-width="1.3"/>'
+      + '<path d="M76 118 Q92 110 108 117" fill="none" stroke="#B9A99B" stroke-width="3" stroke-linecap="round"/>'
+      + '<path d="M132 117 Q148 110 164 118" fill="none" stroke="#B9A99B" stroke-width="3" stroke-linecap="round"/>'
+      + '<path d="M78 133 Q92 125 106 132 Q92 141 78 133 Z" fill="#fff" stroke="#B9A99B" stroke-width="1.3"/>'
+      + '<path d="M134 132 Q148 125 162 133 Q148 141 134 132 Z" fill="#fff" stroke="#B9A99B" stroke-width="1.3"/>'
+      + '<circle cx="92" cy="133" r="3.4" fill="#9A887A"/><circle cx="148" cy="133" r="3.4" fill="#9A887A"/>'
+      + '<path d="M120 134 L114 176 Q120 183 126 176" fill="none" stroke="#C3B2A2" stroke-width="1.5" stroke-linecap="round"/>'
+      + '<path d="M100 205 Q120 198 140 205" fill="none" stroke="#B9A99B" stroke-width="1.6"/>'
+      + '<path d="M100 205 Q120 217 140 205" fill="none" stroke="#B9A99B" stroke-width="1.6"/>'
+      + '<path d="M104 206 Q120 209 136 206" fill="none" stroke="#C9B9AA" stroke-width="1.2"/>';
+    const FACE_GUIDES = ''
+      + '<line x1="120" y1="44" x2="120" y2="260" stroke="#5B4BA0" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.5"/>'
+      + '<line x1="56" y1="104" x2="184" y2="104" stroke="#5B4BA0" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.4"/>'
+      + '<line x1="50" y1="138" x2="190" y2="138" stroke="#5B4BA0" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.4"/>'
+      + '<line x1="58" y1="205" x2="182" y2="205" stroke="#5B4BA0" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.4"/>';
+    // Left-facing profile silhouette — the dimension a front photo can't show.
+    const FACE_PROFILE = ''
+      + '<path d="M152 50 C116 46 90 70 90 110 C89 116 90 120 92 124 L70 150 L92 160 L86 170 L94 182 C96 190 96 198 102 204 L110 212 C126 222 148 218 156 204 C170 188 180 168 180 132 C180 96 176 58 152 50 Z" fill="#FBF6EF" stroke="#C3B2A2" stroke-width="1.6"/>'
+      + '<path d="M150 140 C142 142 141 160 151 164 C157 161 156 149 150 140 Z" fill="none" stroke="#C3B2A2" stroke-width="1.3"/>'
+      + '<path d="M86 124 Q96 120 108 124" fill="none" stroke="#B9A99B" stroke-width="2.6" stroke-linecap="round"/>'
+      + '<path d="M86 132 Q95 128 104 132 Q95 137 86 132 Z" fill="#fff" stroke="#B9A99B" stroke-width="1.2"/>'
+      + '<circle cx="95" cy="132" r="2.8" fill="#9A887A"/>'
+      + '<path d="M85 172 Q91 175 98 178" fill="none" stroke="#B9A99B" stroke-width="1.4"/>'
+      + '<path d="M156 206 C154 226 152 240 152 252" fill="none" stroke="#C3B2A2" stroke-width="1.5"/>'
+      + '<path d="M110 213 C116 230 122 240 130 252" fill="none" stroke="#C3B2A2" stroke-width="1.5"/>';
+    const PROFILE_GUIDES = ''
+      + '<line x1="92" y1="120" x2="100" y2="204" stroke="#B5531A" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.5"/>'
+      + '<line x1="70" y1="150" x2="110" y2="212" stroke="#B5531A" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.4"/>';
+    // impact = reasoned weight on first-impression attractiveness (coarse bands, not measured). move = how changeable.
+    const IMP = { high:{label:'High',dots:'●●●'}, mod:{label:'Moderate',dots:'●●○'}, low:{label:'Low',dots:'●○○'}, lens:{label:'Lens · oversold',dots:'◐○○'} };
+    const MOVE = { fixed:'Fixed', mod:'Modifiable', free:'Free', whole:'Gestalt' };
+    const FACE_LAYERS = [
+      { color:'#51606F', tagLabel:'Fixed', chip:'Layer 1 · the bone', title:'Bone & structure',
+        sub:'The skull the Black Pill obsesses over. Real, mostly fixed — and only one layer of five.',
+        pins:[
+          {n:1,x:120,y:150,imp:'high',m:'fixed',name:'Nose',note:'Bridge, projection and width. Central and salient — deviations are the first thing the eye snags on.'},
+          {n:2,x:158,y:230,imp:'high',m:'fixed',name:'Jaw & gonial angle',note:'Mandible width and the angle at the jaw corner. A defined jaw reads strong and lean.'},
+          {n:3,x:150,y:150,imp:'high',m:'fixed',name:'Eye area & orbital vector',note:'How far the under-eye rim sits ahead of the eyeball. A positive vector reads supported and youthful; negative shows the under-eye.'},
+          {n:4,x:100,y:182,imp:'high',m:'fixed',name:'Midface & maxilla',note:'Forward maxillary growth and a compact midface. Sets the whole front-on impression.'},
+          {n:5,x:64,y:162,imp:'mod',m:'fixed',name:'Cheekbones (zygomatic)',note:'Height and width of the malar bone. High, wide cheekbones catch light and photograph well.'},
+          {n:6,x:162,y:128,imp:'mod',m:'fixed',name:'Canthal tilt',note:'The upward cant from inner to outer eye corner. Positive tilt reads youthful and alert.'},
+          {n:7,x:88,y:113,imp:'mod',m:'fixed',name:'Brow ridge',note:'The supraorbital bony shelf. A heavier, more forward brow reads masculine and “hunter.”'},
+          {n:8,x:120,y:258,imp:'mod',m:'fixed',name:'Chin',note:'Projection and height. Balances the lower third; a recessed chin throws it off.'}
+        ]},
+      { color:'#A06A12', tagLabel:'Modifiable', chip:'Layer 2 · skin & soft tissue', title:'Skin & soft tissue',
+        sub:'Sits on top of the bone — and most of it you can actually move.',
+        pins:[
+          {n:1,x:158,y:176,imp:'high',m:'mod',name:'Skin quality',note:'Clarity, texture, even tone, low scarring. Heavy first-impression weight — and the most treatable thing here.'},
+          {n:2,x:92,y:212,imp:'high',m:'mod',name:'Facial leanness',note:'Body-fat shows in the face. Lower adiposity reveals structure and reads healthier (Coetzee 2009).'},
+          {n:3,x:120,y:268,imp:'mod',m:'mod',name:'Jaw–neck definition',note:'The submental / chin-to-neck line. The soft-tissue side of the jaw — driven hard by body-fat.'},
+          {n:4,x:150,y:148,imp:'mod',m:'mod',name:'Under-eye',note:'Hollows, bags, dark circles. Driven by sleep, allergies, fat loss and age — partly fixable.'},
+          {n:5,x:120,y:209,imp:'mod',m:'fixed',name:'Lips',note:'Fullness and border definition. Mostly fixed, but hydration and body-fat nudge it.'},
+          {n:6,x:104,y:190,imp:'low',m:'mod',name:'Nasolabial folds',note:'The smile lines bracketing the mouth. Deepen with age and body-fat.'},
+          {n:7,x:92,y:133,imp:'low',m:'mod',name:'Eye whites',note:'Bright, clear sclera reads young and healthy; redness or yellowing reads the opposite.'}
+        ]},
+      { color:'#0F6E56', tagLabel:'Free / grooming', chip:'Layer 3 · framing & grooming', title:'Framing & grooming',
+        sub:'The cheapest, fastest levers — and the ones the “it’s over” crowd never mentions.',
+        pins:[
+          {n:1,x:120,y:72,imp:'high',m:'free',name:'Hairline & hairstyle',note:'Cut, density and how the hairline frames the face. The single biggest cheap lever on perceived attractiveness.'},
+          {n:2,x:120,y:210,imp:'high',m:'free',name:'Teeth & smile',note:'Straightness, colour, and the smile itself. Orthodontics and whitening, high payoff.'},
+          {n:3,x:120,y:244,imp:'mod',m:'free',name:'Facial hair',note:'A beard can build a jawline the bone didn’t give you — or soften a heavy one.'},
+          {n:4,x:148,y:117,imp:'mod',m:'free',name:'Eyebrows',note:'Shape, grooming and density. Frames the eyes; minutes to improve.'},
+          {n:5,x:92,y:133,imp:'low',m:'free',name:'Eyewear',note:'Frames reshape the perceived face — wrong pair fights it, right pair flatters it.'}
+        ]},
+      { color:'#5B4BA0', tagLabel:'Gestalt', chip:'Layer 4 · proportion & harmony', title:'Proportion & harmony',
+        sub:'What raters actually integrate: not any one part, but how the whole face hangs together.', guides:true,
+        pins:[
+          {n:1,x:120,y:150,imp:'high',m:'whole',name:'Symmetry',note:'Left/right correspondence. Mild asymmetry is universal and fine; gross asymmetry costs.'},
+          {n:2,x:150,y:108,imp:'high',m:'whole',name:'Averageness',note:'Closeness to the population-mean face — counter-intuitively attractive (Rhodes 2006).'},
+          {n:3,x:120,y:178,imp:'mod',m:'whole',name:'Dimorphism balance',note:'Sex-typical cues in the right dose — balanced, not maxed.'},
+          {n:4,x:60,y:138,imp:'mod',m:'whole',name:'Facial thirds',note:'Hairline–brow, brow–nose, nose–chin in roughly equal thirds.'},
+          {n:5,x:88,y:92,imp:'low',m:'whole',name:'Facial fifths',note:'The face reads as about five eye-widths across.'},
+          {n:6,x:170,y:150,imp:'lens',m:'whole',name:'Width-to-height (FWHR)',note:'Bizygomatic width ÷ upper-face height. Popular online, but it tracks perceived dominance more than attractiveness.'},
+          {n:7,x:104,y:120,imp:'lens',m:'whole',name:'Golden ratio / phi mask',note:'The “1.618 face.” A forum favourite the evidence does not support as a real predictor.'}
+        ]},
+      { color:'#B5531A', tagLabel:'Mixed', chip:'Side view · the profile', title:'Profile & projection', profile:true, guides:true,
+        sub:'The whole dimension a front photo hides: how far the face projects forward, and the jaw-to-neck line.',
+        pins:[
+          {n:1,x:104,y:210,imp:'high',m:'fixed',name:'Chin & jaw projection',note:'How far the chin and jaw come forward. A recessed (weak) chin or retruded jaw shows up only side-on.'},
+          {n:2,x:76,y:142,imp:'high',m:'fixed',name:'Nasal profile',note:'Bridge straightness, dorsal hump, tip projection and rotation. Far more visible in profile than head-on.'},
+          {n:3,x:96,y:188,imp:'high',m:'fixed',name:'Facial convexity',note:'The overall straightness of the profile from brow to lip to chin — forward-grown vs. flat or convex.'},
+          {n:4,x:130,y:238,imp:'mod',m:'mod',name:'Jaw–neck (cervicomental) angle',note:'The angle from chin to neck. A crisp ~90° reads as a jawline; soft and obtuse reads as a double chin — and it moves with body-fat.'},
+          {n:5,x:92,y:166,imp:'mod',m:'fixed',name:'Nasolabial angle',note:'The angle between the base of the nose and the upper lip. Sets how the lower nose meets the mouth.'}
+        ]}
+    ];
+    function faceSVG(L){
+      const base = L.profile ? FACE_PROFILE : FACE_BASE;
+      const guides = L.guides ? (L.profile ? PROFILE_GUIDES : FACE_GUIDES) : '';
+      const pins = L.pins.map(function(p){
+        return '<circle cx="'+p.x+'" cy="'+p.y+'" r="10.5" fill="'+L.color+'" stroke="#fff" stroke-width="1.5"/>'
+          + '<text x="'+p.x+'" y="'+(p.y+3.7)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">'+p.n+'</text>';
+      }).join('');
+      return '<svg class="fc-svg" viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">'
+        + base + guides + pins + '</svg>';
+    }
+    let faceIdx = 0;
+    function renderFace(i){
+      const L = FACE_LAYERS[i];
+      const root = document.getElementById('faceCarousel');
+      if (!root) return;
+      root.style.setProperty('--tone', L.color);
+      document.getElementById('fc-svg-wrap').innerHTML = faceSVG(L);
+      document.getElementById('fc-chip').textContent = L.chip;
+      document.getElementById('fc-title').textContent = L.title;
+      document.getElementById('fc-sub').textContent = L.sub;
+      document.getElementById('fc-feats').innerHTML = L.pins.map(function(p){
+        const imp = IMP[p.imp];
+        return '<div class="fc-feat"><div class="fc-feat-num">'+p.n+'</div><div>'
+          + '<span class="fc-feat-name">'+p.name+'</span>'
+          + '<span class="fc-imp imp-'+p.imp+'"><span class="imp-dots">'+imp.dots+'</span> '+imp.label+'</span>'
+          + '<span class="fc-tag t-'+p.m+'">'+MOVE[p.m]+'</span>'
+          + '<div class="fc-feat-note">'+p.note+'</div></div></div>';
+      }).join('');
+      document.getElementById('fc-counter').textContent = (i+1)+' / '+FACE_LAYERS.length+' · '+L.tagLabel;
+      document.querySelectorAll('#fc-dots .fc-dot').forEach(function(d, di){ d.classList.toggle('active', di===i); });
+      faceIdx = i;
+    }
+    function faceStep(d){ renderFace((faceIdx + d + FACE_LAYERS.length) % FACE_LAYERS.length); }
+    (function initFace(){
+      const dotsEl = document.getElementById('fc-dots');
+      if (!dotsEl) return;
+      FACE_LAYERS.forEach(function(L, i){
+        const dot = document.createElement('span');
+        dot.className = 'fc-dot';
+        dot.setAttribute('role', 'button');
+        dot.setAttribute('aria-label', 'Layer ' + (i+1));
+        dot.addEventListener('click', function(){ renderFace(i); });
+        dotsEl.appendChild(dot);
+      });
+      document.getElementById('fc-prev').addEventListener('click', function(){ faceStep(-1); });
+      document.getElementById('fc-next').addEventListener('click', function(){ faceStep(1); });
+      renderFace(0);
+    })();
+
     // Honor inbound hashes from the Lexicon / Go-deeper strips so the right dossier opens.
     (function () {
       const h = (location.hash || '').replace('#', '');
-      const map = { 'page-blk': 'blk', 'page-rp': 'rp', 'page-bp': 'bp', 'height-pill': 'blk' };
+      const map = { 'page-blk': 'blk', 'page-rp': 'rp', 'page-bp': 'bp', 'height-pill': 'blk', 'face-pill': 'blk' };
       if (map[h]) {
         activatePill(map[h]);
-        if (h === 'height-pill') {
-          const el = document.getElementById('height-pill');
+        if (h === 'height-pill' || h === 'face-pill') {
+          const el = document.getElementById(h);
           if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
         }
       }
