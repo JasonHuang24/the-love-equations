@@ -11,9 +11,11 @@ A static website presenting a personal framework for attraction, selection, and 
 - `smv.html` — The 5 Factors of SMV
 - `pills.html` — Pill Dossiers
 - `gender-dynamics.html` — Male & Female Dynamics
+- `statistics.html` — Statistics
 - `calculator.html` — SMV Calculator
 - `compatibility.html` — Compatibility Calculator
 - `frameworks.html` — Rules & Frameworks
+- `lexicon.html` — The Lexicon
 - `partials/` — shared `navigation-bar.html` and `footer.html`, injected at runtime
 - `js/include.js` — fetches the partials and sets the active nav link
 - `css/` — styles

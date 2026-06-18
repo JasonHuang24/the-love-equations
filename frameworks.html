@@ -99,6 +99,126 @@
     .gk-item .gk-word { font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
     .gk-item .gk-def { color: var(--text-muted); }
     .gk-item.g-holds { color: #0F6E56; } .gk-item.g-overgen { color: #51606F; } .gk-item.g-overstated { color: #A06A12; } .gk-item.g-absolutized { color: #B5531A; } .gk-item.g-confounded { color: #A82238; } .gk-item.g-myth { color: var(--scarlet-dim); }
+    .ladder-graph {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+      margin: 1.15rem 0 1.2rem;
+      padding: 1rem;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,250,243,0.74)),
+        var(--card);
+      box-shadow: var(--shadow-soft);
+    }
+    .ladder-stage {
+      position: relative;
+      min-height: 164px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 0.42rem;
+      padding: 0.9rem 0.85rem;
+      border: 0.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.72);
+    }
+    .ladder-stage::after {
+      content: "";
+      position: absolute;
+      right: -11px;
+      top: 50%;
+      width: 14px;
+      height: 2px;
+      transform: translateY(-50%);
+      background: var(--scarlet-pale);
+      border-top: 0.5px solid rgba(196,30,58,0.18);
+      border-bottom: 0.5px solid rgba(196,30,58,0.18);
+      z-index: 1;
+    }
+    .ladder-stage:last-child::after { display: none; }
+    .ladder-num {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--scarlet);
+      color: #fffaf3;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .ladder-name {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: -0.035em;
+      color: var(--text);
+    }
+    .ladder-job {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .ladder-drivers {
+      align-self: end;
+      padding-top: 0.55rem;
+      border-top: 0.5px solid var(--border-light);
+      color: var(--text-dim);
+      font-size: 10.5px;
+      line-height: 1.45;
+    }
+    .ladder-drivers strong {
+      display: block;
+      color: var(--scarlet-dim);
+      font-size: 9.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .ladder-read-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 1.15rem;
+    }
+    .ladder-read {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(255,252,247,0.68);
+      padding: 0.85rem 0.95rem;
+    }
+    .ladder-read-title {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--scarlet);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .ladder-read p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.58;
+    }
+    @media (max-width: 860px) {
+      .ladder-graph,
+      .ladder-read-grid { grid-template-columns: 1fr; }
+      .ladder-stage { min-height: auto; }
+      .ladder-stage::after {
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: -11px;
+        width: 2px;
+        height: 14px;
+        transform: translateX(-50%);
+      }
+    }
     .profiles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.25rem; }
     .profile-heading { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); }
     .profile-heading.a { color: #378ADD; }
@@ -309,11 +429,12 @@
             <a class="toc-entry sub" href="#option-pool"><span class="toc-num">5.3</span> The Option Pool</a>
             <a class="toc-entry sub" href="#charm-ceiling"><span class="toc-num">5.4</span> The Charm Ceiling</a>
             <a class="toc-entry sub" href="#status-trade"><span class="toc-num">5.5</span> The Status Trade</a>
+            <a class="toc-entry" href="#conversion-ladder"><span class="toc-num">6</span> The Conversion Ladder</a>
           </div>
           <div class="toc-group">
             <div class="toc-group-label">Tested claims</div>
-            <a class="toc-entry" href="#the-wall"><span class="toc-num">6</span> The Wall</a>
-            <a class="toc-entry" href="#body-count"><span class="toc-num">7</span> Body Count &amp; Pair-Bonding</a>
+            <a class="toc-entry" href="#the-wall"><span class="toc-num">7</span> The Wall</a>
+            <a class="toc-entry" href="#body-count"><span class="toc-num">8</span> Body Count &amp; Pair-Bonding</a>
           </div>
         </div>
       </details>
@@ -779,6 +900,63 @@
         <div class="smv-callout"><strong>The verdict: hypergamy is real as a weighting, false as an iron law.</strong> Women do weight status more, and a man&rsquo;s value is genuinely more status-elastic &mdash; that asymmetry, beauty traded for status, is the kernel the Red Pill is feeling. But the iron-law version fails the data: educational hypergamy has reversed, the provider norm is halving, the dual-mating mechanism doesn&rsquo;t replicate, and people still pair assortatively on the <em>whole</em> composite rather than by relentless trading-up. The trade was always partly about provision &mdash; so as women&rsquo;s own status climbs, it is <strong>fading, not hardening.</strong> <span class="smv-tag est">Estimate</span></div>
 
         <div class="smv-sub-note" style="margin-top:1.25rem;">Sources: Webster et al. (2024) dyadic re-analysis of Feingold (1988) — partner attractiveness r&nbsp;&asymp;&nbsp;.39 (k=27, N=1,295 couples); matching is Tier 1, but r&nbsp;&asymp;&nbsp;.4 as a current coefficient is a Tier 2 model anchor. Hitsch, Hortaçsu &amp; Ariely (2010) and Hunt, Eastwick &amp; Finkel (2015, n=167) on sorting; Huston (1973) on rejection-risk; Bruch &amp; Newman (2018) — both sexes pursue ~25% more desirable than themselves; Tyson et al. (2016) on app match asymmetry; Pew Research (2020, n=4,860; 2022, n=6,034); Langlois et al. (2000) on rating consensus; Esteve et al. (2016) on the reversal of educational hypergamy. Charm Ceiling: Wheat Waffles (2021/2023, YouTube) for the model under review; Eastwick &amp; Finkel (2008, JPSP) on looks dominating in-vivo first attraction for both sexes; Lewandowski, Aron &amp; Gee (2007) on personality raising rated physical attractiveness; Hunt, Eastwick &amp; Finkel (2015) on acquaintance reducing looks-matching; Rosenfeld et al. (2019, PNAS) on online becoming the leading way couples meet; McAndrew &amp; Koehnke (2016) on creepiness tracking unpredictability, not looks; OkCupid/Tinder match-rate asymmetries are industry figures (Tier 3). Status Trade: Buss (1989, 37 cultures) and Walter et al. (2020, 45 countries, N=14,399) on women weighting resources/status more (gap shrinks with gender equality); Esteve et al. (2016, "The End of Hypergamy," 120 countries) on the reversal of educational hypergamy; Pew Research (2023) on breadwinner shares (male sole/primary 85%&rarr;55% since 1972); Wood et al. (2014) and Stern et al. (2021, pre-registered) on the failure of the ovulatory-shift / dual-mating ("AF/BB") hypothesis to replicate (Gildersleeve et al. 2014 dissents). Composite weights are reasoned; the asymmetry's direction is the sourced part. Per-row figures, acceptance-map boundaries, and composite weights are reasoned estimates <span class="smv-tag est">Estimate</span>.</div>
+      </div>
+
+      <!-- Conversion Ladder -->
+      <div class="rf-entry" id="conversion-ladder">
+        <div class="rf-eyebrow">Market structure lens</div>
+        <div class="rf-title">The Conversion Ladder</div>
+        <div class="rf-sub">A stage model for separating attention, desire, choice, and durability. It is not a universal love equation; it is a debugging tool. A person can win one rung and fail the next, which is why app attention, sexual interest, commitment, and relationship stability should never be treated as the same signal.</div>
+
+        <div class="ladder-graph" aria-label="The Conversion Ladder: Seen, Noticed, Desired, Chosen, Kept">
+          <div class="ladder-stage">
+            <div class="ladder-num">1</div>
+            <div class="ladder-name">Seen</div>
+            <div class="ladder-job">You enter the field. The market has a chance to encounter you at all.</div>
+            <div class="ladder-drivers"><strong>Drivers</strong> Exposure, geography, apps, social circles, repeated proximity.</div>
+          </div>
+          <div class="ladder-stage">
+            <div class="ladder-num">2</div>
+            <div class="ladder-name">Noticed</div>
+            <div class="ladder-job">You create signal. Someone registers you instead of skimming past.</div>
+            <div class="ladder-drivers"><strong>Drivers</strong> Photos, style, status cues, confidence, context, approach.</div>
+          </div>
+          <div class="ladder-stage">
+            <div class="ladder-num">3</div>
+            <div class="ladder-name">Desired</div>
+            <div class="ladder-job">Attraction opens. You become wanted, not merely approved of.</div>
+            <div class="ladder-drivers"><strong>Drivers</strong> Looks, chemistry, charm, polarity, fantasy, sexual tension.</div>
+          </div>
+          <div class="ladder-stage">
+            <div class="ladder-num">4</div>
+            <div class="ladder-name">Chosen</div>
+            <div class="ladder-job">You beat the option set. Desire converts into selection.</div>
+            <div class="ladder-drivers"><strong>Drivers</strong> Fit, timing, standards, reciprocity, status, emotional safety.</div>
+          </div>
+          <div class="ladder-stage">
+            <div class="ladder-num">5</div>
+            <div class="ladder-name">Kept</div>
+            <div class="ladder-job">The bond survives contact. The match becomes stable enough to last.</div>
+            <div class="ladder-drivers"><strong>Drivers</strong> Trust, repair, values, low chaos, loyalty, Lack of Baggage.</div>
+          </div>
+        </div>
+
+        <div class="ladder-read-grid">
+          <div class="ladder-read">
+            <div class="ladder-read-title"><i class="ti ti-cut"></i> The category error</div>
+            <p>Attention is not desire. Desire is not commitment. Commitment is not retention. Most bad dating arguments smuggle evidence from one rung into another and call the case closed.</p>
+          </div>
+          <div class="ladder-read">
+            <div class="ladder-read-title"><i class="ti ti-route"></i> Where the site maps</div>
+            <p>SMV mostly explains Seen, Noticed, and Desired. The Love Hierarchy explains what qualifies someone for Chosen and Kept. Compatibility tests the upper rungs, where attraction has to stabilize.</p>
+          </div>
+          <div class="ladder-read">
+            <div class="ladder-read-title"><i class="ti ti-tool"></i> How to use it</div>
+            <p>Diagnose the failing rung before prescribing the fix. Better photos can solve Noticed and do nothing for Kept; better communication can repair Kept and do nothing for Seen.</p>
+          </div>
+        </div>
+
+        <div class="smv-callout"><strong>The rule: fix the rung that is actually failing.</strong> If nobody encounters you, the problem is exposure. If people see you but pass, it is presentation or first-impression value. If they like you but do not want you, it is desire. If they want you but will not select you, it is fit, timing, or option pressure. If they choose you but it decays, it is trust, repair, values, or baggage. The ladder keeps the analysis honest by refusing to let one kind of success masquerade as another.</div>
       </div>
 
       <!-- The Wall -->
