@@ -353,7 +353,7 @@
 
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
-    const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelReady:false };
+    const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false };
 
     document.querySelectorAll('.lc-src').forEach(function(tab){
       tab.addEventListener('click', function(){
@@ -411,6 +411,7 @@
         + '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">'+prof.unit+'</span></div>'
         + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score)+'</div>'
         + srcBadge
+        + (usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
         + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore)+').</div>'
         + '</div>'
         + geoRows + softRows
@@ -424,7 +425,7 @@
       if (soft && soft.brightness < 45) note += ' · lighting looks off — results less reliable.';
       setStatus(note); renderResult();
     };
-    window.lcSetModelScore = function(t){ LC.model = t; setStatus('Scored with the trained model.'); renderResult(); };
+    window.lcSetModelScore = function(t, raw){ LC.model = t; LC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.lcModelReady = function(ok){ LC.modelReady = ok; };
     window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; renderResult(); };
     window.lcSetStatus = setStatus;
@@ -507,7 +508,7 @@
         const oName=MODEL_CONFIG.outputName || session.outputNames[0];
         const raw=Number(out[oName].data[0]);
         const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
-        window.lcSetModelScore(norm);
+        window.lcSetModelScore(norm, raw);
       } catch(e){ window.lcSetStatus('Trained-model inference failed: '+e.message, true); }
     }
 
