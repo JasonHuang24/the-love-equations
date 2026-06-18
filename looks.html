@@ -562,12 +562,13 @@
         }
         const lm = r.faceLandmarks[0];
         if (!lm || lm.length < 468){ window.lcSetStatus('Incomplete face mesh — try another photo.', true); window.lcResetResult(); return; }
-        // tiny-face / heavy-crop reject (small faces produce confident-looking junk)
+        // tiny-face reject — permissive; only genuinely small faces. (numbers shown for diagnosis)
         const fx = i => lm[i].x*W, fy = i => lm[i].y*H;
         const faceW = Math.hypot(fx(234)-fx(454), fy(234)-fy(454));
-        const faceH = Math.hypot(fx(10)-fx(152), fy(10)-fy(152));
-        if (faceW < 140 || faceH < 180 || faceW < 0.28*W){
-          window.lcSetStatus('Face too small or cropped for a reliable read — use a closer, larger photo.', true); window.lcResetResult(); return;
+        const fwFrac = faceW / W;
+        if (faceW < 55 || fwFrac < 0.10){
+          window.lcSetStatus('Face too small (' + Math.round(faceW) + 'px wide, ' + Math.round(fwFrac*100) + '% of a ' + W + '×' + H + ' frame) — use a closer photo.', true);
+          window.lcResetResult(); return;
         }
         const geo = window.lcComputeMetrics(lm, W, H);
         if (!geo || !Object.values(geo).every(Number.isFinite)){
