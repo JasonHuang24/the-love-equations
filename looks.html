@@ -197,8 +197,14 @@
     };
 
     function computeMetrics(lm, W, H){
-      const P = i => ({ x: lm[i].x * W, y: lm[i].y * H });
+      const raw = i => ({ x: lm[i].x * W, y: lm[i].y * H });
       const d = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+      // roll-normalize: level the inter-eye axis so tilt / symmetry / thirds / midface aren't corrupted by head roll
+      const ec0 = (a,b) => ({ x:(a.x+b.x)/2, y:(a.y+b.y)/2 });
+      const ecR0 = ec0(raw(IDX.reOuter), raw(IDX.reInner)), ecL0 = ec0(raw(IDX.leOuter), raw(IDX.leInner));
+      const roll = Math.atan2(ecL0.y-ecR0.y, ecL0.x-ecR0.x);
+      const cs = Math.cos(-roll), sn = Math.sin(-roll), cx = (ecR0.x+ecL0.x)/2, cy = (ecR0.y+ecL0.y)/2;
+      const P = i => { const p=raw(i), dx=p.x-cx, dy=p.y-cy; return { x: cx + dx*cs - dy*sn, y: cy + dx*sn + dy*cs }; };
       const reI=P(IDX.reInner), reO=P(IDX.reOuter), leI=P(IDX.leInner), leO=P(IDX.leOuter);
       const tiltR = Math.atan2(reI.y-reO.y, Math.abs(reO.x-reI.x)) * 180/Math.PI;
       const tiltL = Math.atan2(leI.y-leO.y, Math.abs(leO.x-leI.x)) * 180/Math.PI;
@@ -226,22 +232,27 @@
       const ecR={x:(reO.x+reI.x)/2,y:(reO.y+reI.y)/2}, ecL={x:(leO.x+leI.x)/2,y:(leO.y+leI.y)/2};
       const midface = Math.abs(subn.y - (ecR.y+ecL.y)/2) / d(ecR,ecL);
       const leanness = d(P(IDX.jawR),P(IDX.jawL)) / d(foreTop, chin);
-      return { symmetry:asym, jaw, midface, fwhr, canthal, thirdsDev, eyeSpacing, lips, leanness };
+      const poseSkew = Math.abs(Math.abs(cheekR.x-mid) - Math.abs(cheekL.x-mid)) / faceW; // yaw proxy (not scored)
+      return { symmetry:asym, jaw, midface, fwhr, canthal, thirdsDev, eyeSpacing, lips, leanness, poseSkew };
     }
 
     // raw geometric metrics: ideal + tolerance (reasoned, prototype — tune against real photos)
+    // tol = symmetric tolerance; lowTol/highTol = asymmetric (don't punish above-ideal as hard as weak — e.g. a strong jaw)
     const METRICS = [
-      { key:'symmetry',   label:'Symmetry',             ideal:0,    tol:0.10, prov:'Geometry' },
-      { key:'jaw',        label:'Jaw width',            ideal:0.80, tol:0.11, prov:'Geometry' },
-      { key:'midface',    label:'Midface compactness',  ideal:0.92, tol:0.18, prov:'Geometry' },
-      { key:'fwhr',       label:'Width-to-height',      ideal:1.90, tol:0.30, prov:'Geometry' },
-      { key:'canthal',    label:'Canthal tilt',         ideal:5,    tol:7,    prov:'Geometry' },
-      { key:'thirdsDev',  label:'Facial thirds',        ideal:0,    tol:0.13, prov:'Geometry' },
-      { key:'eyeSpacing', label:'Eye spacing',          ideal:1.0,  tol:0.14, prov:'Geometry' },
-      { key:'lips',       label:'Lip fullness',         ideal:0.50, tol:0.15, prov:'Geometry' },
-      { key:'leanness',   label:'Facial leanness',      ideal:0.46, tol:0.11, prov:'Geometry' }
+      { key:'symmetry',   label:'Symmetry',                ideal:0,    tol:0.10, prov:'Geometry' },
+      { key:'jaw',        label:'Jaw width',               ideal:0.86, lowTol:0.13, highTol:0.24, prov:'Geometry' },
+      { key:'midface',    label:'Midface compactness',     ideal:0.92, tol:0.18, prov:'Geometry' },
+      { key:'fwhr',       label:'Width-to-height (proxy)', ideal:2.05, lowTol:0.30, highTol:0.42, prov:'Geometry' },
+      { key:'canthal',    label:'Canthal tilt',            ideal:5,    tol:7,    prov:'Geometry' },
+      { key:'thirdsDev',  label:'Facial thirds',           ideal:0,    tol:0.13, prov:'Geometry' },
+      { key:'eyeSpacing', label:'Eye spacing',             ideal:1.0,  tol:0.18, prov:'Geometry' },
+      { key:'lips',       label:'Lip fullness',            ideal:0.50, tol:0.15, prov:'Geometry' },
+      { key:'leanness',   label:'Lower-face ratio',        ideal:0.52, lowTol:0.13, highTol:0.16, prov:'Geometry' }
     ];
-    function scoreMetric(v, m){ return 100 * Math.exp(-Math.pow((v - m.ideal)/m.tol, 2)); }
+    function scoreMetric(v, m){
+      const tol = v < m.ideal ? (m.lowTol || m.tol) : (m.highTol || m.tol);
+      return 100 * Math.exp(-Math.pow((v - m.ideal)/tol, 2));
+    }
 
     // pixel-read features (already 0..100). pixelStats from the page's canvas sampling.
     function computeSoft(px){
@@ -269,7 +280,7 @@
     const PROFILES = {
       // contrast = sigmoid exponent (>1 spreads toward extremes). gamma shifts the middle.
       blackpill: { name:'Black Pill · PSL', unit:'PSL', gamma:1.0, contrast:1.75, scaleMax:8.6,
-        w:{ symmetry:1.3, jaw:1.4, midface:1.3, fwhr:1.2, canthal:1.0, thirdsDev:0.8, eyeSpacing:0.7, lips:0.5, leanness:1.1,
+        w:{ symmetry:1.3, jaw:1.4, midface:1.3, fwhr:1.2, canthal:1.0, thirdsDev:0.8, eyeSpacing:0.7, lips:0.3, leanness:1.1,
             skin:0.5, evenness:0.4, undereye:0.4 } },
       conventional: { name:'Conventional', unit:'/ 10', gamma:0.9, contrast:1.35, scaleMax:10,
         w:{ symmetry:1.0, jaw:0.6, midface:0.6, fwhr:0.5, canthal:0.5, thirdsDev:0.7, eyeSpacing:0.5, lips:0.7, leanness:1.0,
@@ -379,9 +390,11 @@
     window.lcAnalyze = function(geo, soft){
       LC.geo = geo; LC.soft = soft;
       let note = 'Face measured: ' + METRICS.length + ' geometric + ' + SOFT.length + ' pixel reads.';
+      if (geo && geo.poseSkew > 0.12) note += ' · head looks turned — front-on gives a better read.';
       if (soft && soft.brightness < 45) note += ' · lighting looks off — results less reliable.';
       setStatus(note); renderResult();
     };
+    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; renderResult(); };
     window.lcSetStatus = setStatus;
     window.lcComputeMetrics = computeMetrics;
     window.lcComputeSoft = computeSoft;
@@ -438,7 +451,7 @@
       const ecR = { x:(P(33).x+P(133).x)/2, y:(P(33).y+P(133).y)/2 };
       const ecL = { x:(P(263).x+P(362).x)/2, y:(P(263).y+P(362).y)/2 };
       const eyeW = (d(P(33),P(133))+d(P(263),P(362)))/2;
-      const underEyeR = { x:ecR.x, y:ecR.y + eyeW*0.75 }, underEyeL = { x:ecL.x, y:ecL.y + eyeW*0.75 };
+      const underEyeR = { x:ecR.x, y:ecR.y + eyeW*0.30 }, underEyeL = { x:ecL.x, y:ecL.y + eyeW*0.30 };
       const faceW = d(P(234),P(454));
       const r = Math.max(3, faceW*0.05);
       const img = ctx.getImageData(0,0,W,H).data;
@@ -448,26 +461,45 @@
                underEyeL:patchStats(img,W,H,underEyeL.x,underEyeL.y,r*0.7) };
     }
 
+    let lcBusy = false;
     function drawAndScore(srcEl, W, H){
-      canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
-      const ctx = canvas.getContext('2d', { willReadFrequently:true });
-      ctx.drawImage(srcEl, 0, 0, W, H);
-      if (!landmarker){ window.lcSetStatus('Model not ready yet — try again in a moment.', true); return; }
-      let r;
-      try { r = landmarker.detect(canvas); } catch(e){ window.lcSetStatus('Detection error: '+e.message, true); return; }
-      if (!r || !r.faceLandmarks || !r.faceLandmarks.length){
-        window.lcSetStatus('No face found — try a clearer, front-facing shot.', true); return;
+      if (lcBusy) return;                       // guard against double-submit
+      lcBusy = true;
+      try {
+        canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
+        const ctx = canvas.getContext('2d', { willReadFrequently:true });
+        ctx.drawImage(srcEl, 0, 0, W, H);
+        if (!landmarker){ window.lcSetStatus('Model not ready yet — try again in a moment.', true); window.lcResetResult(); return; }
+        let r;
+        try { r = landmarker.detect(canvas); } catch(e){ window.lcSetStatus('Detection error: '+e.message, true); window.lcResetResult(); return; }
+        if (!r || !r.faceLandmarks || !r.faceLandmarks.length){
+          window.lcSetStatus('No face found — try a clearer, front-facing shot.', true); window.lcResetResult(); return;
+        }
+        const lm = r.faceLandmarks[0];
+        if (!lm || lm.length < 468){ window.lcSetStatus('Incomplete face mesh — try another photo.', true); window.lcResetResult(); return; }
+        // tiny-face / heavy-crop reject (small faces produce confident-looking junk)
+        const fx = i => lm[i].x*W, fy = i => lm[i].y*H;
+        const faceW = Math.hypot(fx(234)-fx(454), fy(234)-fy(454));
+        const faceH = Math.hypot(fx(10)-fx(152), fy(10)-fy(152));
+        if (faceW < 140 || faceH < 180 || faceW < 0.28*W){
+          window.lcSetStatus('Face too small or cropped for a reliable read — use a closer, larger photo.', true); window.lcResetResult(); return;
+        }
+        const geo = window.lcComputeMetrics(lm, W, H);
+        if (!geo || !Object.values(geo).every(Number.isFinite)){
+          window.lcSetStatus('Could not measure this face (bad landmarks).', true); window.lcResetResult(); return;
+        }
+        const pixelStats = samplePixels(ctx, lm, W, H);   // sample BEFORE drawing overlay
+        const soft = window.lcComputeSoft(pixelStats);
+        const du = new DrawingUtils(ctx);
+        du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
+        du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
+        du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
+        window.lcAnalyze(geo, soft);
+      } catch(e){
+        window.lcSetStatus('Analysis failed: '+e.message, true); window.lcResetResult();
+      } finally {
+        lcBusy = false;
       }
-      const lm = r.faceLandmarks[0];
-      const geo = window.lcComputeMetrics(lm, W, H);
-      const pixelStats = samplePixels(ctx, lm, W, H);   // sample BEFORE drawing overlay
-      const soft = window.lcComputeSoft(pixelStats);
-      // overlay
-      const du = new DrawingUtils(ctx);
-      du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
-      du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
-      du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
-      window.lcAnalyze(geo, soft);
     }
 
     function handleImage(img){
@@ -483,7 +515,8 @@
     fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
     function loadFile(file){
       const img=new Image();
-      img.onload=()=>handleImage(img); img.onerror=()=>window.lcSetStatus('Could not read that image.', true);
+      img.onload=()=>{ handleImage(img); URL.revokeObjectURL(img.src); };
+      img.onerror=()=>{ window.lcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
       img.src=URL.createObjectURL(file);
     }
 
