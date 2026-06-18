@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
   <style>
     .lc-content { padding-bottom: 3rem; }
 
@@ -91,6 +92,9 @@
     .lc-score { font-family: "Playfair Display", Georgia, serif; font-size: clamp(3.2rem, 12vw, 5rem); line-height: 0.9; color: var(--text); }
     .lc-score .unit { font-size: 0.36em; color: var(--text-dim); letter-spacing: 0.04em; }
     .lc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
+    .lc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
+    .lc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
+    .lc-srcbadge.heur  { color: #A06A12; background: #FBEFD6; }
     .lc-other { font-size: 12px; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5; }
     .lc-empty { text-align: center; color: var(--text-dim); font-size: 13px; padding: 2.4rem 1rem; line-height: 1.6; }
     .lc-empty i { font-size: 30px; display: block; margin-bottom: 0.5rem; color: var(--border); }
@@ -121,7 +125,7 @@
 
     <div class="content lc-content">
       <div class="lc-caveat">
-        <strong>Read this first.</strong> This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. Everything runs locally; the image never leaves your browser.
+        <strong>Read this first.</strong> This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the heuristic scores both. Everything runs locally; the image never leaves your browser.
       </div>
 
       <div class="lc-grid">
@@ -302,6 +306,26 @@
       return { score: 1 + (prof.scaleMax-1)*x, raw:x*100, subs:subs };
     }
 
+    // ── Trained-model path ── one objective CNN score t∈[0,1] interpreted through each lens's curve,
+    // so the two variants survive (the CNN measures; the lens interprets). Heuristic stays the breakdown.
+    function mapModelScore(t, profKey){
+      const prof = PROFILES[profKey];
+      let x = Math.max(0, Math.min(1, t));
+      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
+      x = Math.pow(x, prof.gamma);
+      return 1 + (prof.scaleMax-1)*x;
+    }
+    // RGBA bytes (size×size) → CHW float32 tensor, ImageNet-normalized. (DOM-free, testable.)
+    function preprocessToTensor(rgba, size, mean, std){
+      const n = size*size, out = new Float32Array(3*n);
+      for (let i=0;i<n;i++){
+        out[i]       = (rgba[i*4]  /255 - mean[0]) / std[0];
+        out[n+i]     = (rgba[i*4+1]/255 - mean[1]) / std[1];
+        out[2*n+i]   = (rgba[i*4+2]/255 - mean[2]) / std[2];
+      }
+      return out;
+    }
+
     function pslTier(s){
       if (s<2.5) return 'Sub-tier';
       if (s<3.5) return 'Incel-tier';
@@ -324,12 +348,12 @@
     }
     function tierFor(p, s){ return p === 'blackpill' ? pslTier(s) : convTier(s); }
 
-    if (typeof module !== 'undefined') { module.exports = { computeMetrics, computeSoft, gradeFace, scoreMetric, METRICS, SOFT, PROFILES, pslTier, convTier }; }
+    if (typeof module !== 'undefined') { module.exports = { computeMetrics, computeSoft, gradeFace, scoreMetric, mapModelScore, preprocessToTensor, METRICS, SOFT, PROFILES, pslTier, convTier }; }
   </script>
 
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
-    const LC = { profile:'blackpill', geo:null, soft:null };
+    const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelReady:false };
 
     document.querySelectorAll('.lc-src').forEach(function(tab){
       tab.addEventListener('click', function(){
@@ -367,36 +391,45 @@
         return;
       }
       const prof = PROFILES[LC.profile];
-      const res = gradeFace(LC.geo, LC.soft, LC.profile);
       const other = LC.profile === 'blackpill' ? 'conventional' : 'blackpill';
-      const ores = gradeFace(LC.geo, LC.soft, other);
       const accent = LC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
+      const heur = gradeFace(LC.geo, LC.soft, LC.profile);   // always the breakdown; also the fallback score
+      const usingModel = LC.model != null;
+      const score  = usingModel ? mapModelScore(LC.model, LC.profile) : heur.score;
+      const oscore = usingModel ? mapModelScore(LC.model, other) : gradeFace(LC.geo, LC.soft, other).score;
 
+      const srcBadge = usingModel
+        ? '<div class="lc-srcbadge model">Trained CNN score &middot; the breakdown below is the transparent geometry</div>'
+        : '<div class="lc-srcbadge heur">Geometry heuristic &middot; no trained model loaded (see note)</div>';
       const geoRows = '<div class="lc-bd-h">Bone &amp; proportions &middot; from geometry</div>'
-        + METRICS.map(m => featRow(m.label, res.subs[m.key], accent, m.prov)).join('');
+        + METRICS.map(m => featRow(m.label, heur.subs[m.key], accent, m.prov)).join('');
       const softRows = LC.soft ? ('<div class="lc-bd-h">Skin &amp; soft tissue &middot; read from pixels</div>'
-        + SOFT.map(s => featRow(s.label, res.subs[s.key], accent, s.prov)).join('')) : '';
+        + SOFT.map(s => featRow(s.label, heur.subs[s.key], accent, s.prov)).join('')) : '';
 
       host.innerHTML =
         '<div class="lc-score-wrap">'
-        + '<div class="lc-score" style="color:'+accent+'">'+fmt(res.score)+' <span class="unit">'+prof.unit+'</span></div>'
-        + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, res.score)+'</div>'
-        + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(ores.score)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, ores.score)+').</div>'
+        + '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">'+prof.unit+'</span></div>'
+        + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score)+'</div>'
+        + srcBadge
+        + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore)+').</div>'
         + '</div>'
         + geoRows + softRows
-        + '<div class="lc-missing"><strong>Not in this number:</strong> hairline / hair, beard, eye-whites and the <em>profile</em> (chin &amp; jaw projection, orbital vector) &mdash; a front still can&rsquo;t read them, and they move the real score. These are reasoned bands, not measured truth &mdash; see <a href="frameworks.html#bone-pill">The Bone Pill</a>.</div>';
+        + '<div class="lc-missing"><strong>About the breakdown:</strong> the bars are always the transparent geometry+pixel read. With a trained model loaded, the headline number is the CNN&rsquo;s (a black box) and the bars explain the geometry beneath it; without one, the heuristic scores both. Either way, hairline/beard/eye-whites and the <em>profile</em> aren&rsquo;t captured &mdash; see <a href="frameworks.html#bone-pill">The Bone Pill</a>.</div>';
     }
 
     window.lcAnalyze = function(geo, soft){
-      LC.geo = geo; LC.soft = soft;
+      LC.geo = geo; LC.soft = soft; LC.model = null;   // new face: heuristic shows first, model score arrives async
       let note = 'Face measured: ' + METRICS.length + ' geometric + ' + SOFT.length + ' pixel reads.';
       if (geo && geo.poseSkew > 0.12) note += ' · head looks turned — front-on gives a better read.';
       if (soft && soft.brightness < 45) note += ' · lighting looks off — results less reliable.';
       setStatus(note); renderResult();
     };
-    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; renderResult(); };
+    window.lcSetModelScore = function(t){ LC.model = t; setStatus('Scored with the trained model.'); renderResult(); };
+    window.lcModelReady = function(ok){ LC.modelReady = ok; };
+    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; renderResult(); };
     window.lcSetStatus = setStatus;
     window.lcComputeMetrics = computeMetrics;
+    window.lcPreprocess = preprocessToTensor;
     window.lcComputeSoft = computeSoft;
   </script>
 
@@ -425,6 +458,58 @@
       }
     }
     init();
+
+    // ── Trained beauty model (onnxruntime-web, on-device). Drop models/face-beauty.onnx to enable. ──
+    const MODEL_CONFIG = {
+      url: 'models/face-beauty.onnx',
+      inputSize: 224,
+      mean: [0.485, 0.456, 0.406],   // ImageNet
+      std:  [0.229, 0.224, 0.225],
+      outMin: 1, outMax: 5,          // SCUT-FBP5500 raw range
+      inputName: null, outputName: null   // null → first graph input/output
+    };
+    let session = null;
+    async function initModel(){
+      const ort = window.ort;
+      if (!ort){ return; }                          // ORT lib not loaded → heuristic carries it
+      try {
+        ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
+        const head = await fetch(MODEL_CONFIG.url, { method:'HEAD' });
+        if (!head.ok) throw new Error('no model file at ' + MODEL_CONFIG.url);
+        session = await ort.InferenceSession.create(MODEL_CONFIG.url, { executionProviders:['wasm'] });
+        window.lcModelReady(true);
+      } catch(e){
+        session = null; window.lcModelReady(false);  // graceful: page runs on the heuristic
+      }
+    }
+    initModel();
+
+    // crop the face box from the CLEAN (pre-overlay) canvas → normalized CHW tensor data
+    function cropFaceTensor(srcCanvas, lm, W, H){
+      let minx=1,miny=1,maxx=0,maxy=0;
+      for (let i=0;i<lm.length;i++){ const p=lm[i]; if(p.x<minx)minx=p.x; if(p.y<miny)miny=p.y; if(p.x>maxx)maxx=p.x; if(p.y>maxy)maxy=p.y; }
+      let x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H;
+      const mw=(x1-x0)*0.18, mh=(y1-y0)*0.18;
+      x0=Math.max(0,x0-mw); y0=Math.max(0,y0-mh*1.3); x1=Math.min(W,x1+mw); y1=Math.min(H,y1+mh*0.4);
+      const S=MODEL_CONFIG.inputSize;
+      const off=document.createElement('canvas'); off.width=S; off.height=S;
+      const octx=off.getContext('2d',{ willReadFrequently:true });
+      octx.drawImage(srcCanvas, x0,y0, Math.max(1,x1-x0), Math.max(1,y1-y0), 0,0, S,S);
+      const rgba=octx.getImageData(0,0,S,S).data;
+      return window.lcPreprocess(rgba, S, MODEL_CONFIG.mean, MODEL_CONFIG.std);
+    }
+    async function inferAndSet(data){
+      const ort=window.ort; if (!ort || !session) return;
+      try {
+        const S=MODEL_CONFIG.inputSize;
+        const inName=MODEL_CONFIG.inputName || session.inputNames[0];
+        const out=await session.run({ [inName]: new ort.Tensor('float32', data, [1,3,S,S]) });
+        const oName=MODEL_CONFIG.outputName || session.outputNames[0];
+        const raw=Number(out[oName].data[0]);
+        const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
+        window.lcSetModelScore(norm);
+      } catch(e){ window.lcSetStatus('Trained-model inference failed: '+e.message, true); }
+    }
 
     // sample a square patch -> mean luminance + coefficient of variation (texture)
     function patchStats(data, W, H, cx, cy, r){
@@ -490,11 +575,15 @@
         }
         const pixelStats = samplePixels(ctx, lm, W, H);   // sample BEFORE drawing overlay
         const soft = window.lcComputeSoft(pixelStats);
+        // crop the trained-model tensor from the clean image, also BEFORE the overlay is drawn
+        let tensorData = null;
+        if (session){ try { tensorData = cropFaceTensor(canvas, lm, W, H); } catch(_){ tensorData = null; } }
         const du = new DrawingUtils(ctx);
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
         window.lcAnalyze(geo, soft);
+        if (tensorData){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData); }
       } catch(e){
         window.lcSetStatus('Analysis failed: '+e.message, true); window.lcResetResult();
       } finally {
