@@ -469,18 +469,22 @@
       outMin: 1, outMax: 5,          // SCUT-FBP5500 raw range
       inputName: null, outputName: null   // null → first graph input/output
     };
-    let session = null;
+    let session = null, modelState = 'loading', pendingTensor = null;
     async function initModel(){
       const ort = window.ort;
-      if (!ort){ return; }                          // ORT lib not loaded → heuristic carries it
+      if (!ort){ modelState='absent'; window.lcModelReady(false); return; }
       try {
         ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
         const head = await fetch(MODEL_CONFIG.url, { method:'HEAD' });
         if (!head.ok) throw new Error('no model file at ' + MODEL_CONFIG.url);
+        window.lcSetStatus('Loading the trained model (~45 MB, re-downloads each reload)…');
         session = await ort.InferenceSession.create(MODEL_CONFIG.url, { executionProviders:['wasm'] });
-        window.lcModelReady(true);
+        modelState='ready'; window.lcModelReady(true);
+        window.lcSetStatus('Trained model ready.');
+        if (pendingTensor) inferAndSet(pendingTensor);   // auto-score a face dropped before the model finished
       } catch(e){
-        session = null; window.lcModelReady(false);  // graceful: page runs on the heuristic
+        session = null; modelState='absent'; window.lcModelReady(false);
+        window.lcSetStatus('Trained model failed to load — running on the geometry heuristic. (' + (e && e.message ? e.message : 'error') + ')', true);
       }
     }
     initModel();
@@ -577,15 +581,18 @@
         }
         const pixelStats = samplePixels(ctx, lm, W, H);   // sample BEFORE drawing overlay
         const soft = window.lcComputeSoft(pixelStats);
-        // crop the trained-model tensor from the clean image, also BEFORE the overlay is drawn
+        // crop the model tensor from the clean image BEFORE the overlay — always, so it's ready to
+        // score the instant the model finishes loading (the 45MB model can lag behind a face drop)
         let tensorData = null;
-        if (session){ try { tensorData = cropFaceTensor(canvas, lm, W, H); } catch(_){ tensorData = null; } }
+        try { tensorData = cropFaceTensor(canvas, lm, W, H); } catch(_){ tensorData = null; }
+        pendingTensor = tensorData;
         const du = new DrawingUtils(ctx);
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
         window.lcAnalyze(geo, soft);
-        if (tensorData){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData); }
+        if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData); }
+        else if (tensorData && modelState === 'loading'){ window.lcSetStatus('Face measured — trained model still loading, the score will update automatically…'); }
       } catch(e){
         window.lcSetStatus('Analysis failed: '+e.message, true); window.lcResetResult();
       } finally {
