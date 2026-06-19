@@ -147,7 +147,7 @@
 
     <div class="content lc-content">
       <div class="lc-caveat">
-        <strong>Read this first.</strong> This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the heuristic scores both. Everything runs locally; the image never leaves your browser.
+        <strong>Read this first.</strong> This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the heuristic scores both. <strong>That model learned from SCUT-FBP5500</strong> &mdash; a fixed panel of raters scoring one specific set of faces &mdash; so its scale carries their tastes, era and demographic skew, not a universal truth. Everything runs locally; the image never leaves your browser.
       </div>
 
       <div class="lc-grid">
@@ -187,13 +187,13 @@
           <div class="lc-panel">
             <div class="lc-h"><i class="ti ti-eye-search"></i> What it reads &mdash; and how</div>
             <div class="lc-how">
-              <div class="lc-how-row"><i class="ti ti-vector-triangle"></i><div><b>Bone &amp; proportions</b> &mdash; from 478 face landmarks: symmetry, jaw width, midface, width-to-height, canthal tilt, thirds, eye spacing, lips.</div></div>
+              <div class="lc-how-row"><i class="ti ti-vector-triangle"></i><div><b>Bone &amp; proportions</b> &mdash; from 478 face landmarks: symmetry, jaw, midface, eye size, nose width, eye spacing, lips, plus the proportional-typicality and dimorphic-cue proxies. Width-to-height &amp; canthal tilt are shown as weak-evidence &ldquo;lens&rdquo; reads, not weighted.</div></div>
               <div class="lc-how-row"><i class="ti ti-line-height"></i><div><b>Facial leanness</b> &mdash; lower-face width against face height.</div></div>
               <div class="lc-how-row"><i class="ti ti-sparkles"></i><div><b>Skin clarity</b> &mdash; fine-texture variance sampled from forehead and cheek patches (rough proxy for smoothness / blemishes).</div></div>
               <div class="lc-how-row"><i class="ti ti-palette"></i><div><b>Skin-tone evenness</b> &mdash; how much colour drifts across those patches.</div></div>
               <div class="lc-how-row"><i class="ti ti-eye"></i><div><b>Under-eye</b> &mdash; brightness under the eyes versus the cheeks (darkness / bags proxy).</div></div>
             </div>
-            <div class="lc-note"><strong>Left out, not guessed:</strong> hairline &amp; hair, beard, eye-whites, and the profile features (chin / jaw projection, orbital vector) &mdash; a front still can&rsquo;t read them. These move the real score and aren&rsquo;t in this number. See <a href="pills.html#face-pill">The Face Pill</a>.</div>
+            <div class="lc-note"><strong>Left out, not faked:</strong> hairline &amp; hair, beard, eye-whites, and the profile (chin / jaw projection, orbital vector) &mdash; visible in the photo, but not something a front-view mesh can <em>measure</em>, so the panel omits them rather than guess. They still move the real score. See <a href="pills.html#face-pill">The Face Pill</a>.</div>
           </div>
         </div>
 
@@ -329,9 +329,10 @@
       { key:'midface',   group:'prop', tier:'Tier 3', label:'Midface length',
         band:[0.80,1.05], disp:[0.55,1.30], below:'Compact', above:'Long', fmt:v=>v.toFixed(2) },
       { key:'eyeSpacing',group:'prop', tier:'Tier 3', label:'Eye spacing',
-        band:[0.92,1.08], disp:[0.76,1.24], below:'Close-set', above:'Wide-set', fmt:v=>v.toFixed(2) },
+        band:[1.10,1.45], disp:[0.85,1.70], below:'Close-set', above:'Wide-set', fmt:v=>v.toFixed(2) },
       { key:'leanness',  group:'prop', tier:'Tier 3', label:'Lower-face ratio',
-        band:{ f:[0.44,0.56], m:[0.50,0.64] }, disp:[0.34,0.72], below:'Long', above:'Wide', fmt:v=>v.toFixed(2) },
+        band:{ f:[0.58,0.69], m:[0.63,0.74] }, disp:[0.45,0.85], below:'Long', above:'Wide', fmt:v=>v.toFixed(2),
+        note:'face-height term still uses landmark 10 (not the hairline) — provisional, excluded from the composites' },
       // Lens — popular in looksmaxxing, weak in the attractiveness literature
       { key:'fwhr',      group:'lens', tier:'Lens', label:'Width-to-height (fWHR)',
         band:[1.75,2.05], disp:[1.45,2.45], below:'Long', above:'Wide', fmt:v=>v.toFixed(2),
@@ -341,14 +342,14 @@
         note:'PSL-popular; its attractiveness link is essentially unstudied' }
     ];
     function bandFor(m, sex){ return Array.isArray(m.band) ? m.band : m.band[sex === 'm' ? 'm' : 'f']; }
-    // Signed sexual-dimorphism index: + = masculine, − = feminine. Leans on the two most reliable
-    // front-view cues (jaw width, eye size); lips & nose are noisier so they're light secondary terms.
-    // `leanness` is deliberately EXCLUDED — its face-height term uses landmark 10 (mid-forehead, not the
-    // hairline), which inflates the ratio and was biasing the auto sex-guess masculine on female faces.
+    // Structural sexual-dimorphism cue index (+ masculine / − feminine), feeding the dimorphism composite.
+    // Jaw + nose dominate; eye-openness and lips are kept only as LIGHT terms because they're expression/
+    // camera-noisy (a squint or smile shifts them ~20pts at the old weights). `leanness` stays excluded —
+    // its face-height term uses landmark 10 (mid-forehead, not the hairline), which inflates it. Provisional.
     function mascIndex(geo){
       if (!geo) return 0;
       const z = (k, ref, sc) => geo[k] == null ? 0 : (geo[k]-ref)/sc;
-      return 1.2*z('jaw',0.80,0.10) - 1.2*z('eyeOpen',0.33,0.06) + 0.4*z('noseWidth',1.20,0.18) - 0.4*z('lips',0.38,0.12);
+      return 1.0*z('jaw',0.80,0.10) + 0.6*z('noseWidth',1.20,0.18) - 0.4*z('eyeOpen',0.33,0.07) - 0.3*z('lips',0.38,0.12);
     }
     // Tier-1 composites — the two most replicated drivers, derived (reasoned) from the features above.
     function computeComposites(geo, sex){
@@ -366,7 +367,14 @@
       const dimorphism = Math.max(0, Math.min(100, 50 + typ * 16));
       return { averageness, dimorphism };
     }
-    function guessSex(geo){ return mascIndex(geo) > 0 ? 'm' : 'f'; }
+    // Fallback sex guess ONLY (used when the classifier isn't loaded — unreliable by nature, front-view
+    // ratios barely separate sex). Uses the two least expression-noisy cues, jaw + nose, against the
+    // midpoint of the female/male band centres. The classifier overrides this whenever present.
+    function guessSex(geo){
+      if (!geo) return 'f';
+      const jaw = geo.jaw==null ? 0.835 : geo.jaw, nose = geo.noseWidth==null ? 1.1975 : geo.noseWidth;
+      return ((jaw - 0.835)/0.055 + 0.6*(nose - 1.1975)/0.10) > 0 ? 'm' : 'f';
+    }
     // What a single front photo structurally cannot read — see frameworks.html#bone-pill
     const CANT_READ = [
       'Facial thirds &amp; forehead height — needs the hairline, which has no landmark',
@@ -428,8 +436,8 @@
     }
     // genderage output → 'm'/'f' + confidence. out[0]=female logit, out[1]=male logit, out[2]=age/100. (testable)
     function sexFromLogits(out){
-      const female=out[0], male=out[1];
-      const e0=Math.exp(female), e1=Math.exp(male), z=(e0+e1)||1;
+      const female=out[0], male=out[1], mx=Math.max(female, male);   // shift for numerical stability
+      const e0=Math.exp(female-mx), e1=Math.exp(male-mx), z=(e0+e1)||1;
       return { sex: male>female ? 'm' : 'f', conf: Math.max(e0,e1)/z };
     }
 
@@ -462,7 +470,7 @@
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
     const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
-                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false };
+                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'' };
 
     document.querySelectorAll('.lc-src').forEach(function(tab){
       tab.addEventListener('click', function(){
@@ -545,13 +553,13 @@
         '<div class="lc-sex"><button data-sex="f"'+(sex==='f'?' class="active"':'')+'>Read as female</button>'
         + '<button data-sex="m"'+(sex==='m'?' class="active"':'')+'>Read as male</button></div>'
         + '<div class="lc-sexnote">'+sexSrcNote
-        + 'This only re-bases the typical ranges below (dimorphism is sex-conditional); the headline score is sex-agnostic.</div>';
+        + 'This only re-bases the typical ranges below (dimorphism is sex-conditional); it does <em>not</em> change the headline score (the model scores the same either way &mdash; though that model carries its training set&rsquo;s own demographic biases).</div>';
 
       const drivers = '<div class="lc-bd-h">Strongest drivers &middot; Tier 1</div>'
-        + '<div class="lc-note-line">Averageness and sexual dimorphism are the most replicated predictors of facial attractiveness (Rhodes 2006). Composites, reasoned from the features below.</div>'
-        + compRow('Averageness', comp.averageness, [55,85], 'Distinctive', 'Very average')
-        + compRow((sex==='m'?'Masculinity':'Femininity')+' &middot; dimorphism', comp.dimorphism, [45,80], 'Androgynous', (sex==='m'?'Masculine':'Feminine'),
-            (sex==='m'?'male masculinity preference is mixed / context-dependent':'femininity reliably predicts attractiveness in both sexes'));
+        + '<div class="lc-note-line">Averageness and sexual dimorphism are the most replicated predictors of attractiveness (Rhodes 2006). Shown here as <strong>reasoned proxies, not population-fitted</strong>: <em>proportional typicality</em> stands in for averageness (closeness to typical proportions, not distance from a mean face); a <em>dimorphic-cue index</em> stands in for sex-typicality.</div>'
+        + compRow('Proportional typicality', comp.averageness, [55,85], 'Distinctive', 'Very typical')
+        + compRow((sex==='m'?'Masculinity':'Femininity')+' &middot; dimorphic cues', comp.dimorphism, [45,80], 'Androgynous', (sex==='m'?'Masculine':'Feminine'),
+            (sex==='m'?'expression-sensitive proxy · male masculinity preference is mixed':'expression-sensitive proxy · femininity reliably predicts attractiveness'));
 
       const grp = g => MEASURES.filter(m => m.group === g);
       const featRows = '<div class="lc-bd-h">Sex-typical features &middot; Tier 2</div>'
@@ -563,7 +571,7 @@
       const lensRows = '<div class="lc-bd-h">PSL lens &middot; weak attractiveness evidence</div>'
         + '<div class="lc-note-line">Popular in looksmaxxing, thin in the literature. fWHR tracks <em>dominance</em> (larger is, if anything, <em>less</em> attractive to women &mdash; Geniole 2015); canthal tilt&rsquo;s attractiveness link is essentially unstudied. Shown for completeness, not weight.</div>'
         + grp('lens').map(m => measureRow(resolve(m), LC.geo[m.key])).join('');
-      const cantRows = '<div class="lc-bd-h">A front photo can&rsquo;t read</div>'
+      const cantRows = '<div class="lc-bd-h">What this panel cannot measure</div>'
         + '<ul class="lc-cant">' + CANT_READ.map(t => '<li>'+t+'</li>').join('') + '</ul>';
 
       host.innerHTML =
@@ -571,6 +579,7 @@
         + '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">'+prof.unit+'</span></div>'
         + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score, sex)+'</div>'
         + srcBadge
+        + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Low-res read.</strong> '+LC.reliability.replace(/^ · small\/distant face /, '').replace(/^ · /, '')+'</div>' : '')
         + (usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
         + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+').</div>'
         + '</div>'
@@ -584,13 +593,15 @@
       });
     }
 
-    window.lcAnalyze = function(geo, soft){
+    window.lcAnalyze = function(geo, soft, reliability){
       LC.geo = geo; LC.soft = soft; LC.model = null;   // new face: heuristic shows first, model score arrives async
+      LC.reliability = reliability || '';              // persistent low-res caveat (survives the async model re-render)
       LC.sex = guessSex(geo); LC.sexAuto = true;       // geometry guess shows instantly; the sex model refines it async
       LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false;
       let note = 'Face measured. Sex auto-read: ' + (LC.sex==='m'?'male':'female') + ' — flip it in the panel if wrong.';
       if (geo && geo.poseSkew > 0.12) note += ' · head looks turned — front-on gives a better read.';
       if (soft && soft.brightness < 45) note += ' · lighting looks off — results less reliable.';
+      note += LC.reliability;
       setStatus(note); renderResult();
     };
     window.lcSetModelScore = function(t, raw){ LC.model = t; LC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
@@ -601,7 +612,7 @@
       LC.sex = (sex==='m'?'m':'f'); LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
       renderResult();
     };
-    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; renderResult(); };
+    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; renderResult(); };
     window.lcSetStatus = setStatus;
     window.lcComputeMetrics = computeMetrics;
     window.lcPreprocess = preprocessToTensor;
@@ -642,69 +653,70 @@
       inputSize: 224,
       mean: [0.485, 0.456, 0.406],   // ImageNet
       std:  [0.229, 0.224, 0.225],
-      outMin: 2.0, outMax: 4.2,      // realistic SCUT range: real faces cluster ~2–4, a literal 1 or 5 ~never occurs (provisional — calibrated off a handful of faces)
+      outMin: 1.5, outMax: 4.5,      // conservative interim range (min-max off ~3 faces is fragile; replace with holdout quantiles when a real calibration set exists)
       inputName: null, outputName: null   // null → first graph input/output
     };
-    let session = null, modelState = 'loading', pendingTensor = null;
+    let currentGen = 0;   // bumped per analysis; async inferences tag themselves and self-discard if superseded
+    let session = null, modelState = 'loading', pendingTensor = null, pendingTensorGen = 0;
     async function initModel(){
       const ort = window.ort;
       if (!ort){ modelState='absent'; window.lcModelReady(false); return; }
       try {
         ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
-        const head = await fetch(MODEL_CONFIG.url, { method:'HEAD' });
-        if (!head.ok) throw new Error('no model file at ' + MODEL_CONFIG.url);
         window.lcSetStatus('Loading the trained model (~45 MB, re-downloads each reload)…');
+        // no HEAD pre-check — some static hosts reject HEAD while serving GET; let create() GET it and catch
         session = await ort.InferenceSession.create(MODEL_CONFIG.url, { executionProviders:['wasm'] });
         modelState='ready'; window.lcModelReady(true);
         window.lcSetStatus('Trained model ready.');
-        if (pendingTensor) inferAndSet(pendingTensor);   // auto-score a face dropped before the model finished
+        if (pendingTensor) inferAndSet(pendingTensor, pendingTensorGen);   // auto-score a face dropped before the model finished
       } catch(e){
         session = null; modelState='absent'; window.lcModelReady(false);
-        window.lcSetStatus('Trained model failed to load — running on the geometry heuristic. (' + (e && e.message ? e.message : 'error') + ')', true);
+        window.lcSetStatus('No trained beauty model loaded — running on the geometry heuristic. Drop models/face-beauty.onnx to enable it.');
       }
     }
     initModel();
 
-    // crop the face box from the CLEAN (pre-overlay) canvas → normalized CHW tensor data
+    // SQUARE, aspect-preserving face crop from the CLEAN (pre-overlay) canvas → 224 ImageNet CHW.
+    // SCUT trained on 256→224 (roughly square, undistorted); stretching a tall mesh rect to 224² is a
+    // distribution shift, so we take a square box (1.4× the face, nudged up a touch for forehead/hair).
     function cropFaceTensor(srcCanvas, lm, W, H){
       let minx=1,miny=1,maxx=0,maxy=0;
       for (let i=0;i<lm.length;i++){ const p=lm[i]; if(p.x<minx)minx=p.x; if(p.y<miny)miny=p.y; if(p.x>maxx)maxx=p.x; if(p.y>maxy)maxy=p.y; }
-      let x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H;
-      const mw=(x1-x0)*0.18, mh=(y1-y0)*0.18;
-      x0=Math.max(0,x0-mw); y0=Math.max(0,y0-mh*1.3); x1=Math.min(W,x1+mw); y1=Math.min(H,y1+mh*0.4);
+      const x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H;
+      const cx=(x0+x1)/2, cy=(y0+y1)/2 - (y1-y0)*0.06, side=Math.max(x1-x0, y1-y0)*1.4;
       const S=MODEL_CONFIG.inputSize;
       const off=document.createElement('canvas'); off.width=S; off.height=S;
       const octx=off.getContext('2d',{ willReadFrequently:true });
-      octx.drawImage(srcCanvas, x0,y0, Math.max(1,x1-x0), Math.max(1,y1-y0), 0,0, S,S);
-      const rgba=octx.getImageData(0,0,S,S).data;
-      return window.lcPreprocess(rgba, S, MODEL_CONFIG.mean, MODEL_CONFIG.std);
+      octx.drawImage(srcCanvas, cx-side/2, cy-side/2, side, side, 0,0, S,S);   // square→square, aspect preserved
+      return window.lcPreprocess(octx.getImageData(0,0,S,S).data, S, MODEL_CONFIG.mean, MODEL_CONFIG.std);
     }
-    async function inferAndSet(data){
+    async function inferAndSet(data, gen){
       const ort=window.ort; if (!ort || !session) return;
       try {
         const S=MODEL_CONFIG.inputSize;
         const inName=MODEL_CONFIG.inputName || session.inputNames[0];
         const out=await session.run({ [inName]: new ort.Tensor('float32', data, [1,3,S,S]) });
+        if (gen !== currentGen) return;                 // a newer face arrived mid-inference — discard this result
         const oName=MODEL_CONFIG.outputName || session.outputNames[0];
         const raw=Number(out[oName].data[0]);
+        if (!Number.isFinite(raw)) throw new Error('model returned a non-finite value');   // don't render NaN
         const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
         window.lcSetModelScore(norm, raw);
-      } catch(e){ window.lcSetStatus('Trained-model inference failed: '+e.message, true); }
+      } catch(e){ if (gen === currentGen) window.lcSetStatus('Trained-model inference failed: '+e.message, true); }   // a stale rejection must not clobber the current face
     }
 
     // ── Sex classifier (InsightFace genderage.onnx, on-device). Drop models/face-sex.onnx to enable. ──
     // Replaces the unreliable geometry guess; if absent, the geometry guess silently remains the default.
     const SEX_MODEL_CONFIG = { url: 'models/face-sex.onnx', inputSize: 96, cropScale: 1.5 };
-    let sexSession = null, sexState = 'loading', pendingSexTensor = null;
+    let sexSession = null, sexState = 'loading', pendingSexTensor = null, pendingSexGen = 0;
     async function initSexModel(){
       const ort = window.ort;
       if (!ort){ sexState = 'absent'; return; }
       try {
-        const head = await fetch(SEX_MODEL_CONFIG.url, { method:'HEAD' });
-        if (!head.ok) throw new Error('no sex model');
+        // no HEAD pre-check (some hosts reject HEAD) — let create() GET it and fall back on error
         sexSession = await ort.InferenceSession.create(SEX_MODEL_CONFIG.url, { executionProviders:['wasm'] });
         sexState = 'ready';
-        if (pendingSexTensor) inferSex(pendingSexTensor);   // a face arrived before the classifier finished loading
+        if (pendingSexTensor) inferSex(pendingSexTensor, pendingSexGen);   // a face arrived before the classifier loaded
       } catch(e){ sexSession = null; sexState = 'absent'; }   // silent — the geometry guess stays the default
     }
     initSexModel();
@@ -721,11 +733,12 @@
       octx.drawImage(srcCanvas, cx-side/2, cy-side/2, side, side, 0,0, S,S);
       return window.lcPreprocessSex(octx.getImageData(0,0,S,S).data, S);
     }
-    async function inferSex(data){
+    async function inferSex(data, gen){
       const ort = window.ort; if (!ort || !sexSession) return;
       try {
         const S = SEX_MODEL_CONFIG.inputSize;
         const out = await sexSession.run({ [sexSession.inputNames[0]]: new ort.Tensor('float32', data, [1,3,S,S]) });
+        if (gen !== currentGen) return;                 // discard if a newer face superseded this one
         const r = window.lcSexFromLogits(out[sexSession.outputNames[0]].data);
         window.lcSetSex(r.sex, r.conf);
       } catch(e){ /* leave the geometry guess in place */ }
@@ -770,6 +783,7 @@
     function drawAndScore(srcEl, W, H){
       if (lcBusy) return;                       // guard against double-submit
       lcBusy = true;
+      const gen = ++currentGen;                 // this analysis owns `gen`; stale async results self-discard
       try {
         canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
         const ctx = canvas.getContext('2d', { willReadFrequently:true });
@@ -782,12 +796,15 @@
         }
         const lm = r.faceLandmarks[0];
         if (!lm || lm.length < 468){ window.lcSetStatus('Incomplete face mesh — try another photo.', true); window.lcResetResult(); return; }
-        // tiny-face reject — permissive; only genuinely small faces. (numbers shown for diagnosis)
+        // tiny-face reject — fraction-of-frame is the ONLY gate (a face lost in a big scene). 10% minimum.
+        // No absolute-px floor: we crop to the face box and upscale to 224, MediaPipe already confirmed a full
+        // mesh (checked above), and genuinely-soft small faces are flagged non-blockingly below ("⚠ Low-res read")
+        // rather than rejected. (px shown in the message for diagnosis only)
         const fx = i => lm[i].x*W, fy = i => lm[i].y*H;
         const faceW = Math.hypot(fx(234)-fx(454), fy(234)-fy(454));
         const fwFrac = faceW / W;
-        if (faceW < 55 || fwFrac < 0.10){
-          window.lcSetStatus('Face too small (' + Math.round(faceW) + 'px wide, ' + Math.round(fwFrac*100) + '% of a ' + W + '×' + H + ' frame) — use a closer photo.', true);
+        if (fwFrac < 0.10){
+          window.lcSetStatus('Face too small (' + Math.round(faceW) + 'px wide, ' + Math.round(fwFrac*100) + '% of a ' + W + '×' + H + ' frame) — use a closer, higher-res photo.', true);
           window.lcResetResult(); return;
         }
         const geo = window.lcComputeMetrics(lm, W, H);
@@ -796,21 +813,31 @@
         }
         const pixelStats = samplePixels(ctx, lm, W, H);   // sample BEFORE drawing overlay
         const soft = window.lcComputeSoft(pixelStats);
-        // crop the model tensor from the clean image BEFORE the overlay — always, so it's ready to
-        // score the instant the model finishes loading (the 45MB model can lag behind a face drop)
+        // Crop the model tensors from the ORIGINAL-resolution source, not the 520px working canvas.
+        // The canvas is downscaled for fast detection + the overlay, but the CNN/sex crops should pull
+        // full-res pixels so a distant face in a high-res photo keeps its detail. Landmarks are normalized
+        // [0,1], so the same lm map onto srcEl's native frame exactly as onto the canvas.
+        const srcW = srcEl.naturalWidth || srcEl.width || W;
+        const srcH = srcEl.naturalHeight || srcEl.height || H;
         let tensorData = null;
-        try { tensorData = cropFaceTensor(canvas, lm, W, H); } catch(_){ tensorData = null; }
-        pendingTensor = tensorData;
+        try { tensorData = cropFaceTensor(srcEl, lm, srcW, srcH); } catch(_){ tensorData = null; }
+        pendingTensor = tensorData; pendingTensorGen = gen;
         let sexData = null;
-        try { sexData = cropSexTensor(canvas, lm, W, H); } catch(_){ sexData = null; }
-        pendingSexTensor = sexData;
+        try { sexData = cropSexTensor(srcEl, lm, srcW, srcH); } catch(_){ sexData = null; }
+        pendingSexTensor = sexData; pendingSexGen = gen;
+        // Non-blocking reliability note: how many REAL source pixels span the face (native, not the
+        // 520-canvas measure). Below this the CNN crop is upscaled and softer — score still shown, just flagged.
+        const nativeFaceW = fwFrac * srcW;
+        const relWarn = (nativeFaceW < 110 || fwFrac < 0.14)
+          ? ' · small/distant face (~' + Math.round(nativeFaceW) + 'px of real detail) — score is rougher than a tight, sharp headshot.'
+          : '';
         const du = new DrawingUtils(ctx);
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
-        window.lcAnalyze(geo, soft);
-        if (sexData && sexSession) inferSex(sexData);   // refine the geometry sex-guess with the classifier
-        if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData); }
+        window.lcAnalyze(geo, soft, relWarn);
+        if (sexData && sexSession) inferSex(sexData, gen);   // refine the geometry sex-guess with the classifier
+        if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
         else if (tensorData && modelState === 'loading'){ window.lcSetStatus('Face measured — trained model still loading, the score will update automatically…'); }
       } catch(e){
         window.lcSetStatus('Analysis failed: '+e.message, true); window.lcResetResult();
