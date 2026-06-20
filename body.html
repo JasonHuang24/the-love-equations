@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Body Calculator &mdash; The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <script src="js/composite-score.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
+  <style>
+    .bc-content { padding-bottom: 3rem; }
+
+    .bc-caveat {
+      border: 0.5px solid var(--border);
+      border-left: 3px solid var(--scarlet);
+      border-radius: var(--radius-md);
+      background: rgba(255,250,243,0.7);
+      padding: 0.85rem 1rem;
+      font-size: 12.5px; line-height: 1.6; color: var(--text-muted); margin-bottom: 1.4rem;
+    }
+    .bc-caveat strong { color: var(--text); }
+    .bc-caveat a { color: var(--scarlet-dim); }
+
+    .bc-grid { display: grid; grid-template-columns: minmax(0, 360px) 1fr; gap: 1.4rem; align-items: start; }
+
+    .bc-panel {
+      border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,250,243,0.74));
+      box-shadow: var(--shadow-soft); padding: clamp(1.1rem, 3vw, 1.4rem);
+    }
+    .bc-panel + .bc-panel { margin-top: 1.2rem; }
+    .bc-h {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      color: var(--scarlet); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase;
+      margin-bottom: 0.7rem; font-weight: 700;
+    }
+
+    .bc-srcs { display: flex; gap: 6px; margin-bottom: 0.85rem; flex-wrap: wrap; }
+    .bc-src {
+      border: 0.5px solid var(--border); background: rgba(255,255,255,0.6);
+      border-radius: 8px; padding: 6px 11px; font-size: 12px; cursor: pointer; color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .bc-src.active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
+
+    .bc-drop {
+      border: 1.5px dashed var(--border); border-radius: var(--radius-md);
+      padding: 1.4rem 1rem; text-align: center; color: var(--text-dim); font-size: 13px;
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    }
+    .bc-drop:hover { border-color: var(--scarlet); background: var(--scarlet-pale); }
+    .bc-drop i { font-size: 26px; display: block; margin-bottom: 0.4rem; color: var(--scarlet-dim); }
+    .bc-url-row { display: flex; gap: 6px; }
+    .bc-url-row input {
+      flex: 1; border: 0.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12.5px;
+      background: #fff; color: var(--text); font-family: inherit;
+    }
+    .bc-btn {
+      border: 0.5px solid var(--scarlet); background: var(--scarlet); color: #fffaf3;
+      border-radius: 8px; padding: 8px 14px; font-size: 13px; cursor: pointer; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .bc-btn:hover { background: var(--scarlet-deep); }
+    .bc-btn.ghost { background: transparent; color: var(--scarlet-dim); }
+
+    /* full-body shot → portrait stage */
+    .bc-stage { position: relative; margin-top: 0.9rem; border-radius: var(--radius-md); overflow: hidden; background: #2c2622; min-height: 180px; display: none; }
+    .bc-stage.show { display: block; }
+    .bc-stage canvas, .bc-stage video { width: 100%; display: block; max-height: 60vh; object-fit: contain; }
+    .bc-stage video { transform: scaleX(-1); }
+    .bc-status { font-size: 12px; color: var(--text-dim); margin-top: 0.6rem; min-height: 1.2em; }
+    .bc-status.err { color: var(--scarlet); }
+
+    /* "what it reads" disclosure */
+    .bc-how { display: grid; gap: 0.5rem; }
+    .bc-how-row { display: grid; grid-template-columns: 18px 1fr; gap: 0.5rem; font-size: 12.5px; line-height: 1.5; }
+    .bc-how-row i { color: var(--scarlet-dim); font-size: 15px; margin-top: 1px; }
+    .bc-how-row b { color: var(--text); font-weight: 600; }
+    .bc-note { font-size: 11px; color: var(--text-dim); line-height: 1.55; margin-top: 0.7rem; border-top: 0.5px solid var(--border-light); padding-top: 0.6rem; }
+    .bc-note a { color: var(--scarlet-dim); }
+
+    .bc-variant { display: flex; gap: 6px; margin-bottom: 1rem; }
+    .bc-variant button {
+      flex: 1; border: 0.5px solid var(--border); background: rgba(255,255,255,0.6);
+      border-radius: 9px; padding: 9px 10px; font-size: 13px; cursor: pointer; color: var(--text-muted); font-weight: 600;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .bc-variant button.active.bp { background: #51606F; color: #fff; border-color: #51606F; }
+    .bc-variant button.active.cv { background: #0F6E56; color: #fff; border-color: #0F6E56; }
+
+    .bc-score-wrap { text-align: center; padding: 0.5rem 0 0.2rem; }
+    .bc-score { font-family: "Playfair Display", Georgia, serif; font-size: clamp(3.2rem, 12vw, 5rem); line-height: 0.9; color: var(--text); }
+    .bc-score .unit { font-size: 0.36em; color: var(--text-dim); letter-spacing: 0.04em; }
+    .bc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
+    .bc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
+    .bc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
+    .bc-srcbadge.heur  { color: #A06A12; background: #FBEFD6; }
+    .bc-other { font-size: 12px; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5; }
+    .bc-empty { text-align: center; color: var(--text-dim); font-size: 13px; padding: 2.4rem 1rem; line-height: 1.6; }
+    .bc-empty i { font-size: 30px; display: block; margin-bottom: 0.5rem; color: var(--border); }
+
+    .bc-bd-h { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin: 1.2rem 0 0.5rem; }
+    /* measured-vs-typical readings — descriptive, not graded */
+    .bc-note-line { font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin: 0 0 0.7rem; }
+    .bc-meas { margin: 0.6rem 0; }
+    .bc-meas-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; margin-bottom: 4px; gap: 8px; }
+    .bc-meas-name { color: var(--text); }
+    .bc-meas-name .mtag { font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; color: var(--text-dim); margin-left: 5px; }
+    .bc-meas-name .mtag.t1 { color: #0F6E56; }
+    .bc-meas-name .mtag.lens { color: var(--scarlet-dim); }
+    .bc-sex { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 0.6rem 0 0.15rem; }
+    .bc-sex button { background: transparent; border: 0; padding: 4px 13px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: var(--text-muted); cursor: pointer; }
+    .bc-sex button.active { background: var(--text); color: #fff; }
+    .bc-sexnote { font-size: 10.5px; color: var(--text-dim); line-height: 1.5; margin-bottom: 0.3rem; }
+    .bc-meas-where { font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+    .bc-meas-where.out { color: var(--scarlet-dim); }
+    .bc-meas-where .bc-meas-val { font-weight: 600; margin-left: 4px; }
+    .bc-meas-val { font-size: 11px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+    .bc-meas-track { position: relative; height: 9px; border-radius: 5px; background: #ece3d8; }
+    .bc-meas-band { position: absolute; top: 0; bottom: 0; background: #d8cdbd; border-radius: 5px; }
+    .bc-meas-dot { position: absolute; top: -2px; width: 3px; height: 13px; border-radius: 2px; background: var(--text); transform: translateX(-1.5px); }
+    /* "a photo can't read" list */
+    .bc-cant { margin: 0.2rem 0 0; padding: 0; }
+    .bc-cant li { font-size: 12px; color: var(--text-dim); line-height: 1.5; list-style: none; padding-left: 1rem; position: relative; margin: 0.15rem 0; }
+    .bc-cant li::before { content: "\2014"; position: absolute; left: 0; color: var(--border); }
+    .bc-missing { font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin-top: 1rem; border-top: 0.5px solid var(--border-light); padding-top: 0.7rem; }
+    .bc-missing a { color: var(--scarlet-dim); }
+
+    @media (max-width: 880px) { .bc-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body data-page="body">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Tool &middot; prototype</div>
+      <div class="page-title">Body Calculator</div>
+      <div class="page-sub">Drop in a full-body photo &mdash; on your device, nothing uploaded &mdash; and it reads the frame it can from the silhouette, then scores it two ways: the <strong>Black Pill</strong> lens and a <strong>conventional</strong> one. No sliders. It pairs with the <a href="face.html">Face Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
+    </div>
+
+    <div class="content bc-content">
+      <div class="bc-caveat">
+        <strong>Read this first &mdash; the body is harder to read than the face.</strong> This is a mirror of two methodologies, not a verdict on a person. It estimates the frame straight from the image &mdash; joint positions from 33 pose landmarks, plus the body outline from an on-device segmentation mask &mdash; to compute ratios the literature actually uses: <strong>waist-to-hip</strong> (Singh 1993), a <strong>waist-to-height adiposity proxy</strong> (Tov&eacute;e &amp; Cornelissen show body-fat is the single strongest cue for female bodies), the <strong>shoulder-to-waist V-taper</strong> (Dixson) and leg-to-torso (Sorokowski). But the ceiling is lower than the face: <strong>clothing, pose, camera angle and arms-at-your-sides all corrupt the silhouette</strong>, a single frontal view has no depth (it can&rsquo;t see a gut side-on), and true body-fat / muscle / height can&rsquo;t be measured from pixels &mdash; only proxied. Unsupported crops and seated, bent, or side-on poses are refused rather than graded from extrapolated joints. When a trained model (<code>models/body-beauty.onnx</code>) is present it scores the headline &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the geometry scores both. Everything runs locally; the image never leaves your browser. For best results: <strong>face forward, full body in frame, arms slightly away from your sides, fitted clothing.</strong>
+      </div>
+
+      <div class="bc-grid">
+        <!-- INPUT COLUMN -->
+        <div>
+          <div class="bc-panel">
+            <div class="bc-h"><i class="ti ti-camera"></i> Give it a body</div>
+            <div class="bc-srcs">
+              <span class="bc-src active" data-src="upload"><i class="ti ti-upload"></i> Upload</span>
+              <span class="bc-src" data-src="camera"><i class="ti ti-camera"></i> Camera</span>
+              <span class="bc-src" data-src="url"><i class="ti ti-link"></i> URL</span>
+            </div>
+
+            <div class="bc-src-panel" data-panel="upload">
+              <input type="file" id="bc-file" accept="image/*" hidden />
+              <div class="bc-drop" id="bc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing photo here &mdash; full body, or upper body to the hips. Click to choose. Stays on your device.</div>
+            </div>
+            <div class="bc-src-panel" data-panel="camera" hidden>
+              <button class="bc-btn" id="bc-cam-start"><i class="ti ti-video"></i> Start camera</button>
+              <button class="bc-btn ghost" id="bc-cam-shot" hidden><i class="ti ti-capture"></i> Capture</button>
+            </div>
+            <div class="bc-src-panel" data-panel="url" hidden>
+              <div class="bc-url-row">
+                <input type="text" id="bc-url" placeholder="https://&hellip;/body.jpg" />
+                <button class="bc-btn" id="bc-url-go">Load</button>
+              </div>
+              <div class="bc-note">Some hosts block cross-origin loads; if it fails, download and upload instead.</div>
+            </div>
+
+            <div class="bc-stage" id="bc-stage">
+              <video id="bc-video" playsinline hidden></video>
+              <canvas id="bc-canvas" hidden></canvas>
+            </div>
+            <div class="bc-status" id="bc-status">Loading the on-device pose model&hellip;</div>
+          </div>
+
+          <div class="bc-panel">
+            <div class="bc-h"><i class="ti ti-eye-search"></i> What it reads &mdash; and how</div>
+            <div class="bc-how">
+              <div class="bc-how-row"><i class="ti ti-body-scan"></i><div><b>Frame &amp; proportions</b> &mdash; from 33 pose landmarks: shoulder span, hip span, torso vs. leg length, and left/right symmetry.</div></div>
+              <div class="bc-how-row"><i class="ti ti-arrows-horizontal"></i><div><b>Silhouette widths</b> &mdash; from an on-device segmentation mask, the body&rsquo;s actual width at the shoulders, the narrowest waist, and the widest hips &mdash; which is what makes waist-to-hip and the V-taper measurable at all.</div></div>
+              <div class="bc-how-row"><i class="ti ti-ruler-2"></i><div><b>Adiposity proxy</b> &mdash; waist width against standing height: an <em>uncalibrated frontal waist-width-to-height proxy</em>, displayed but <strong>not scored</strong>. A front photo can&rsquo;t see depth, so it doesn&rsquo;t convert to the real waist-<em>circumference</em> adiposity index &mdash; not true body-fat or BMI, and clothing and angle move it.</div></div>
+            </div>
+            <div class="bc-note"><strong>Proxied, not measured:</strong> true body-fat %, muscle vs. fat, absolute height and weight, and anything depth-dependent (a gut, posture, glutes) that a single frontal photo physically cannot see. The panel proxies what it can and flags the rest rather than faking a number. See <a href="frameworks.html#bone-pill">The Bone Pill</a> for why one number is a mirror, not a verdict.</div>
+          </div>
+        </div>
+
+        <!-- RESULT COLUMN -->
+        <div class="bc-panel">
+          <div class="bc-variant">
+            <button class="active bp" data-prof="blackpill"><i class="ti ti-skull"></i> Black Pill &middot; Frame</button>
+            <button class="cv" data-prof="conventional"><i class="ti ti-mood-smile"></i> Conventional</button>
+          </div>
+          <div id="bc-result">
+            <div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo and the score appears here &mdash; switch lenses any time.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="composite-section"></div>
+
+  <div data-include="footer"></div>
+
+  <!-- ===== Pure scoring core (DOM-free, testable) ===== -->
+  <script>
+    // BlazePose 33-landmark topology (indices are the subject's left/right; mirrored vs. the viewer, which
+    // doesn't matter for widths or symmetry). Only the structurally useful joints are named.
+    const PIDX = {
+      nose:0, earR:8, earL:7,
+      shoulderR:12, shoulderL:11, elbowR:14, elbowL:13, wristR:16, wristL:15,
+      hipR:24, hipL:23, kneeR:26, kneeL:25, ankleR:28, ankleL:27
+    };
+
+    // Skeleton metrics from the pose landmarks alone (normalized coords; within-axis ratios cancel image
+    // aspect). These are the joint-to-joint proportions a photo CAN read without the silhouette.
+    function poseSkeleton(lm){
+      if (!lm || lm.length < 29) return null;
+      const X = i => lm[i].x, Y = i => lm[i].y, V = i => (lm[i].visibility==null?1:lm[i].visibility);
+      const mid = (a,b) => ({ x:(X(a)+X(b))/2, y:(Y(a)+Y(b))/2 });
+      const sh = mid(PIDX.shoulderR, PIDX.shoulderL);
+      const hp = mid(PIDX.hipR, PIDX.hipL);
+      const kn = mid(PIDX.kneeR, PIDX.kneeL);
+      const an = mid(PIDX.ankleR, PIDX.ankleL);
+      const shoulderJointW = Math.abs(X(PIDX.shoulderR) - X(PIDX.shoulderL));
+      const hipJointW      = Math.abs(X(PIDX.hipR) - X(PIDX.hipL));
+      const torsoLen = Math.abs(hp.y - sh.y);
+      const legLen   = Math.abs(an.y - hp.y);
+      const legTorso = torsoLen ? legLen / torsoLen : null;
+      const shoulderHipSkel = hipJointW ? shoulderJointW / hipJointW : null;   // skeletal V (bony, not silhouette)
+      // left/right symmetry: mean vertical mismatch of paired joints, normalized by shoulder span
+      const span = shoulderJointW || 1;
+      const dy = (a,b) => Math.abs(Y(a) - Y(b));
+      const symmetry = (dy(PIDX.shoulderR,PIDX.shoulderL) + dy(PIDX.hipR,PIDX.hipL)
+                      + dy(PIDX.kneeR,PIDX.kneeL) + dy(PIDX.wristR,PIDX.wristL)) / 4 / span;
+      // crude validity: shoulders & hips roughly level (frontal, upright) and the key joints visible
+      const tilt = (Math.abs(Y(PIDX.shoulderR)-Y(PIDX.shoulderL)) + Math.abs(Y(PIDX.hipR)-Y(PIDX.hipL))) / 2 / span;
+      const vis = (V(PIDX.shoulderR)+V(PIDX.shoulderL)+V(PIDX.hipR)+V(PIDX.hipL)+V(PIDX.ankleR)+V(PIDX.ankleL))/6;
+      // arms-in flag: a wrist tucked against the torso near waist height corrupts the silhouette waist
+      const waistY = sh.y + 0.6*(hp.y - sh.y);
+      const armNearWaist = (Math.abs(Y(PIDX.wristR)-waistY) < 0.12 && Math.abs(X(PIDX.wristR)-hp.x) < hipJointW*1.3)
+                        || (Math.abs(Y(PIDX.wristL)-waistY) < 0.12 && Math.abs(X(PIDX.wristL)-hp.x) < hipJointW*1.3);
+      return { shoulderJointW, hipJointW, torsoLen, legLen, legTorso, shoulderHipSkel,
+               symmetry, tilt, vis, armNearWaist, shoulderMidX: sh.x };
+    }
+
+    // Combine silhouette widths (mask PIXELS — so the cross-axis waist-to-height ratio is correct) with the
+    // skeleton into the final metric object the rubric reads. All ratios; no absolute scale is needed.
+    function bodyRatios(px, skel){
+      const out = {};
+      if (px){
+        if (px.waistW>0 && px.hipW>0)      out.whr        = px.waistW / px.hipW;            // Singh waist-to-hip
+        if (px.shoulderW>0 && px.waistW>0) out.vTaper     = px.shoulderW / px.waistW;        // shoulder-to-waist V
+        if (px.shoulderW>0 && px.hipW>0)   out.shoulderHip= px.shoulderW / px.hipW;          // broadness
+        if (px.waistW>0 && px.height>0)    out.whtr       = px.waistW / px.height;           // adiposity proxy (WHtR)
+      }
+      if (skel){
+        if (skel.legTorso!=null) out.legTorso = skel.legTorso;
+        if (skel.symmetry!=null) out.symmetry = skel.symmetry;
+        // NOTE: we deliberately do NOT substitute the bony skeletal shoulder:hip for the silhouette one.
+        // They are different measurements on different scales — joint-to-joint width is ~1.5-1.7 for almost
+        // everyone (shoulders sit wider than hips at the bone, in both sexes), whereas the breadth BANDS are
+        // calibrated for the soft-tissue silhouette (women ≈1.0, men ≈1.4). Feeding the bony value into the
+        // silhouette band over-credits every man and wrongly reads women as "freakishly broad". With no
+        // silhouette, breadth is simply unmeasured — honest, rather than confidently wrong.
+      }
+      return out;
+    }
+
+    // ── Descriptive geometry readings, EVIDENCE-RANKED (the panel is a measurement, NOT a rival score) ──
+    // tier  = how much the literature says this drives body attractiveness (Tier 1 strongest → Lens = folklore).
+    // band  = the typical/attractive range; `{f,m}` = sex-conditional (the attractive value genuinely differs).
+    // disp  = display window. Outside the band is *noted*, never penalized — facts, and the model may disagree.
+    // All bands are reasoned/provisional. Sources in the page copy. Frontal silhouette widths approximate the
+    // circumference ratios under an elliptical assumption — a proxy, disclosed as such.
+    // dir = how the cue maps to ATTRACTIVENESS (not to "typical"): 'low' = leaner/smaller is better,
+    // 'high' = bigger is better, 'band' = a true optimum (both extremes worse). A function = sex-conditional.
+    // This is the fix for the inversion bug: a symmetric "closeness to the band" score punished an elite
+    // physique's broad shoulders / deep taper as hard as the opposite failing. Most body cues are monotonic.
+    const MEASURES = [
+      // Tier 1 — the two most replicated drivers of body attractiveness
+      { key:'whtr',       group:'core', tier:'Uncalibrated', label:'Frontal waist-width &divide; height (proxy)', dir:'low',
+        scored:false, uncalibrated:true,
+        band:{ f:[0.40,0.48], m:[0.43,0.50] }, disp:[0.34,0.64], below:'Narrower', above:'Wider', fmt:v=>v.toFixed(2),
+        note:'<strong>Measured, not scored.</strong> This is a frontal <em>width</em>-to-height ratio, but the only honest adiposity bands (Tov&eacute;e &amp; Cornelissen) are waist <em>circumference</em>-to-height &mdash; a front photo can&rsquo;t see depth, so the two don&rsquo;t convert (a normal body reads ~0.15&ndash;0.25 here, not 0.4&ndash;0.5). Shown raw until image-calibrated.' },
+      { key:'whr',        group:'core', tier:'Tier 1', label:'Waist-to-hip ratio', dir:s=>s==='m'?'low':'band',
+        band:{ f:[0.67,0.78], m:[0.85,0.96] }, disp:[0.55,1.05], below:'Very curvy', above:'Straight', fmt:v=>v.toFixed(2),
+        note:'~0.7 women / ~0.9 men (Singh 1993); from frontal width, a proxy for the circumference ratio' },
+      // Tier 2 — well-supported, strongly sex-specific frame cues
+      { key:'vTaper',     group:'feature', tier:'Tier 2', label:'V-taper &middot; shoulder-to-waist', dir:'high',
+        band:{ f:[1.25,1.55], m:[1.45,1.80] }, disp:[1.05,2.05], below:'Straight', above:'Tapered', fmt:v=>v.toFixed(2),
+        note:'the dominant male body cue (Dixson); for women it reads as the hourglass' },
+      { key:'shoulderHip',group:'feature', tier:'Tier 2', label:'Shoulder-to-hip breadth', dir:s=>s==='m'?'high':'band',
+        band:{ f:[0.95,1.12], m:[1.30,1.55] }, disp:[0.80,1.75], below:'Narrow', above:'Broad', fmt:v=>v.toFixed(2),
+        note:'broad shoulders are the masculine direction; for women, shoulders ≈ hips' },
+      // Tier 3 — thinner / context-dependent evidence
+      { key:'legTorso',   group:'prop', tier:'Tier 3', label:'Leg-to-torso ratio', dir:'band',
+        band:[1.35,1.70], disp:[1.05,2.05], below:'Short-legged', above:'Long-legged', fmt:v=>v.toFixed(2),
+        note:'slightly-above-average legs preferred, curvilinear (Sorokowski) — longer is not always better' },
+      { key:'symmetry',   group:'prop', tier:'Tier 3', label:'Left–right symmetry', dir:'low', tol:4,
+        band:[0,0.05], disp:[0,0.14], below:'Very even', above:'Asymmetric', fmt:null,
+        note:'pose-sensitive — a hip cock or weight shift inflates it, so it is read leniently and weighted low' }
+    ];
+    function bandFor(m, sex){ return Array.isArray(m.band) ? m.band : m.band[sex === 'm' ? 'm' : 'f']; }
+    function dirFor(m, sex){ return typeof m.dir === 'function' ? m.dir(sex === 'm' ? 'm' : 'f') : (m.dir || 'band'); }
+
+    // Structural sexual-dimorphism cue index (+ masculine / − feminine), feeding the dimorphism composite and
+    // the fallback sex guess. Broad shoulders + strong V + higher WHR = masculine; the inverse = feminine.
+    function bodyMascIndex(m){
+      if (!m) return 0;
+      const z = (k, ref, sc) => m[k] == null ? 0 : (m[k]-ref)/sc;
+      return 1.0*z('shoulderHip',1.22,0.20) + 0.7*z('vTaper',1.55,0.22) + 0.5*z('whr',0.82,0.09);
+    }
+    // Tier-1 composites — proportional typicality + body dimorphism, reasoned from the ratios above.
+    function computeComposites(m, sex){
+      sex = sex === 'm' ? 'm' : 'f';
+      const keys = ['whr','vTaper','shoulderHip','legTorso'];   // WHtR excluded: its width/height units don't match the circumference bands
+      let dev = 0, n = 0;
+      keys.forEach(function(k){
+        const meas = MEASURES.find(x => x.key === k); if (!meas || m[k] == null) return;
+        const b = bandFor(meas, sex), c = (b[0]+b[1])/2, half = ((b[1]-b[0])/2) || 1;
+        dev += Math.min(2.2, Math.abs(m[k]-c)/half); n++;
+      });
+      const typicality = Math.max(0, Math.min(100, 100 - (n ? dev/n : 0) * 38));
+      const masc = bodyMascIndex(m);
+      const typ = sex === 'm' ? masc : -masc;                        // + = typical for the chosen sex
+      const dimorphism = Math.max(0, Math.min(100, 50 + typ * 16));
+      return { typicality, dimorphism };
+    }
+    // Fallback sex guess (used until the user flips it). Body frame separates sex far better than a front
+    // face does, but it's still a guess — clothing and pose blur it. The toggle is the backstop.
+    // Returns null in a deadzone around 0 — an ambiguous or evidence-poor frame must read "undetermined",
+    // NOT silently default to female (a zero index used to return 'f', mis-basing the bands and, on the
+    // bare-physique geometry headline, the score itself). A reliable face read or a manual pick resolves it.
+    function guessSex(m){ const idx = bodyMascIndex(m); return Math.abs(idx) < 0.15 ? null : (idx > 0 ? 'm' : 'f'); }
+
+    // What a single frontal photo structurally cannot read — see frameworks.html#bone-pill
+    const CANT_READ = [
+      'True body-fat % or BMI &mdash; only the waist-to-height visual proxy above',
+      'Muscle vs. fat &mdash; a lean frame and a soft one can share an outline',
+      'Absolute height &amp; weight &mdash; there is no scale reference in a photo',
+      'Depth: a gut, posture, or glutes a frontal view sees edge-on or not at all',
+      'Anything under clothing &mdash; baggy or structured clothes redraw the silhouette'
+    ];
+
+    const PROFILES = {
+      // contrast = sigmoid exponent (>1 spreads toward extremes). gamma shifts the middle.
+      // Black Pill = the looksmaxxing "frame" lens: V-taper, broad shoulders, leanness dominate.
+      blackpill: { name:'Black Pill · Frame', unit:'/ 10', gamma:1.0, contrast:1.7, scaleMax:9.0,
+        w:{ whtr:1.3, whr:0.8, vTaper:1.5, shoulderHip:1.3, legTorso:0.7, symmetry:0.3 } },
+      // Conventional = balanced health/proportion read: leanness + waist-to-hip + symmetry weigh more evenly.
+      conventional: { name:'Conventional', unit:'/ 10', gamma:0.95, contrast:1.4, scaleMax:10,
+        w:{ whtr:1.4, whr:1.2, vTaper:0.8, shoulderHip:0.7, legTorso:0.7, symmetry:0.5 } }
+    };
+
+    // per-metric attractiveness score → 0..100 (the fallback breakdown score). Directional, NOT
+    // closeness-to-typical: a 'band' cue (true optimum) is a gaussian on band-distance; a 'low'/'high'
+    // cue is a saturating logistic that rewards the attractive direction and only penalizes the wrong
+    // one — so an elite physique's deep taper / broad shoulders are credited, never punished as "atypical".
+    function scoreMeasure(v, m, sex){
+      if (v == null) return null;
+      const b = bandFor(m, sex), c = (b[0]+b[1])/2, half = ((b[1]-b[0])/2) || 1;
+      const dir = dirFor(m, sex);
+      if (dir === 'band') return 100 * Math.exp(-Math.pow((v - c) / (half*1.6), 2));
+      const scale = half * (m.tol || 1.3);
+      const t = (dir === 'high' ? (v - c) : (c - v)) / scale;   // + = toward the attractive pole
+      return 100 / (1 + Math.exp(-t));                          // 50 at band centre, →100 good way, →0 bad way
+    }
+    function gradeBody(metrics, sex, profKey){
+      const prof = PROFILES[profKey];
+      let num=0, den=0; const subs={};
+      if (metrics){ MEASURES.forEach(function(m){
+        if (m.scored === false) return;                 // measured-but-not-scored (uncalibrated WHtR units bug)
+        const s = scoreMeasure(metrics[m.key], m, sex); if (s==null) return;
+        subs[m.key]=s; num += prof.w[m.key]*s; den += prof.w[m.key];
+      }); }
+      let x = (den ? num/den : 0) / 100;
+      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
+      x = Math.pow(x, prof.gamma);
+      return { score: 1 + (prof.scaleMax-1)*x, raw:x*100, subs:subs };
+    }
+
+    // ── Trained-model path ── one objective CNN score t∈[0,1] interpreted through each lens's curve, so the
+    // two variants survive (the CNN measures; the lens interprets). Geometry stays the breakdown + fallback.
+    function mapModelScore(t, profKey){
+      const prof = PROFILES[profKey];
+      let x = Math.max(0, Math.min(1, t));
+      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
+      x = Math.pow(x, prof.gamma);
+      return 1 + (prof.scaleMax-1)*x;
+    }
+    // RGBA bytes (size×size) → CHW float32 tensor, ImageNet-normalized. (DOM-free, testable.)
+    function preprocessToTensor(rgba, size, mean, std){
+      const n = size*size, out = new Float32Array(3*n);
+      for (let i=0;i<n;i++){
+        out[i]     = (rgba[i*4]  /255 - mean[0]) / std[0];
+        out[n+i]   = (rgba[i*4+1]/255 - mean[1]) / std[1];
+        out[2*n+i] = (rgba[i*4+2]/255 - mean[2]) / std[2];
+      }
+      return out;
+    }
+    // ── Sex from the FACE, not the frame ── the bony shoulder:hip is ~1.6 for everyone (shoulders are
+    // wider than hips bone-to-bone), so the body frame mis-reads women as male whenever the silhouette is
+    // missing. The face classifier is clothing- and pose-independent, so it overrides the frame guess.
+    // RGBA → CHW float32, RGB, RAW 0–255 (no normalization). InsightFace genderage's contract. (testable)
+    function preprocessSex(rgba, size){
+      const n = size*size, out = new Float32Array(3*n);
+      for (let i=0;i<n;i++){ out[i]=rgba[i*4]; out[n+i]=rgba[i*4+1]; out[2*n+i]=rgba[i*4+2]; }
+      return out;
+    }
+    // genderage output → 'm'/'f' + confidence. out[0]=female logit, out[1]=male logit, out[2]=age/100. (testable)
+    function sexFromLogits(out){
+      const female=out[0], male=out[1], mx=Math.max(female, male);   // shift for numerical stability
+      const e0=Math.exp(female-mx), e1=Math.exp(male-mx), z=(e0+e1)||1;
+      return { sex: male>female ? 'm' : 'f', conf: Math.max(e0,e1)/z };
+    }
+    // face-keypoint indices in BlazePose's 33-point set (0 nose · 1-6 eyes · 7-8 ears · 9-10 mouth)
+    const FACE_PIDX = [0,1,2,3,4,5,6,7,8,9,10];
+
+    // Body tiers. Black Pill ladder is sex-aware (the body-looksmaxxing vocabulary); conventional is plain.
+    function frameTier(s, sex){
+      const f = sex === 'f';
+      if (s<3.0) return 'Sub-tier';
+      if (s<4.5) return f ? 'Soft / unbuilt' : 'Dyel · unbuilt';
+      if (s<5.5) return 'Average frame';
+      if (s<6.5) return f ? 'Toned' : 'Fit';
+      if (s<7.5) return f ? 'Fit · hourglass' : 'Lean · aesthetic';
+      if (s<8.5) return f ? 'Stacy-tier physique' : 'Chad-tier physique';
+      return f ? 'Elite / IG-tier' : 'Elite / Zyzz-tier';
+    }
+    function convTier(s){
+      if (s<3) return 'Well below average';
+      if (s<4.5) return 'Below average';
+      if (s<5.5) return 'About average';
+      if (s<6.5) return 'Above average';
+      if (s<8) return 'Fit / attractive';
+      if (s<9) return 'Very fit';
+      return 'Exceptional';
+    }
+    function tierFor(p, s, sex){ return p === 'blackpill' ? frameTier(s, sex) : convTier(s); }
+
+    if (typeof module !== 'undefined') { module.exports = { poseSkeleton, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX }; }
+  </script>
+
+  <!-- ===== UI wiring (no MediaPipe) ===== -->
+  <script>
+    const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
+                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
+                 bareGeometry:false, skinFrac:null };
+
+    document.querySelectorAll('.bc-src').forEach(function(tab){
+      tab.addEventListener('click', function(){
+        document.querySelectorAll('.bc-src').forEach(t => t.classList.toggle('active', t===tab));
+        const src = tab.dataset.src;
+        document.querySelectorAll('.bc-src-panel').forEach(p => p.hidden = (p.dataset.panel !== src));
+        if (src !== 'camera' && window.bcStopCamera) window.bcStopCamera();
+      });
+    });
+
+    document.querySelectorAll('.bc-variant button').forEach(function(b){
+      b.addEventListener('click', function(){
+        document.querySelectorAll('.bc-variant button').forEach(x => x.classList.toggle('active', x===b));
+        BC.profile = b.dataset.prof; renderResult();
+      });
+    });
+
+    function setStatus(msg, isErr){
+      const el = document.getElementById('bc-status'); el.textContent = msg; el.classList.toggle('err', !!isErr);
+    }
+    function fmt(n){ return (Math.round(n*10)/10).toFixed(1); }
+
+    // descriptive reading: marker placed against the typical band — no good/bad colouring
+    function measureRow(m, v){
+      // Uncalibrated cue: show the raw value + the honesty note, but NO band/marker — comparing a
+      // width-ratio against circumference bands would falsely flag every body as "very lean".
+      if (m.uncalibrated){
+        const uval = m.fmt ? '<span class="bc-meas-val">'+m.fmt(v)+'</span>' : '';
+        const ut = m.tier || ''; const utc = ut==='Tier 1' ? 't1' : ut==='Lens' ? 'lens' : '';
+        return '<div class="bc-meas"><div class="bc-meas-top">'
+          + '<span class="bc-meas-name">'+m.label+'<span class="mtag '+utc+'">'+ut+'</span></span>'
+          + '<span class="bc-meas-where">'+uval+'</span></div>'
+          + (m.note ? '<div class="bc-meas-val" style="margin-top:3px">'+m.note+'</div>' : '')
+          + '</div>';
+      }
+      const lo=m.band[0], hi=m.band[1], dlo=m.disp[0], span=(m.disp[1]-m.disp[0])||1;
+      const clamp = x => Math.max(0, Math.min(100, x));
+      const pos = clamp((v-dlo)/span*100);
+      const bL = clamp((lo-dlo)/span*100), bR = clamp((hi-dlo)/span*100);
+      const out = v<lo || v>hi;
+      const where = v<lo ? m.below : v>hi ? m.above : 'Typical';
+      const val = m.fmt ? ' <span class="bc-meas-val">'+m.fmt(v)+'</span>' : '';
+      const tier = m.tier || '';
+      const tcls = tier==='Tier 1' ? 't1' : tier==='Lens' ? 'lens' : '';
+      return '<div class="bc-meas"><div class="bc-meas-top">'
+        + '<span class="bc-meas-name">'+m.label+'<span class="mtag '+tcls+'">'+tier+'</span></span>'
+        + '<span class="bc-meas-where'+(out?' out':'')+'">'+where+val+'</span></div>'
+        + '<div class="bc-meas-track">'
+        + '<span class="bc-meas-band" style="left:'+bL+'%;width:'+Math.max(2,bR-bL)+'%"></span>'
+        + '<span class="bc-meas-dot" style="left:'+pos+'%"></span></div>'
+        + (m.note ? '<div class="bc-meas-val" style="margin-top:3px">'+m.note+'</div>' : '')
+        + '</div>';
+    }
+    // composite row (0..100 scale) — reuses the band marker
+    function compRow(label, val, band, below, above, note){
+      return measureRow({ label:label, band:band, disp:[0,100], below:below, above:above, fmt:v=>Math.round(v), tier:'Tier 1', note:note }, val);
+    }
+
+    function renderResult(){
+      const host = document.getElementById('bc-result');
+      // Verbose red calibration rows (skin %, model raw, face read): shown on localhost (the dev/calibration
+      // build) or with ?debug, hidden in a deployed build. See also LE_DEBUG note on the Face Calc.
+      const BC_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      if (!BC.metrics){
+        host.innerHTML = '<div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo and the score appears here &mdash; switch lenses any time.</div>';
+        return;
+      }
+      const prof = PROFILES[BC.profile];
+      const other = BC.profile === 'blackpill' ? 'conventional' : 'blackpill';
+      const accent = BC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
+      const sex = BC.sex === 'm' ? 'm' : 'f';
+      const heur  = gradeBody(BC.metrics, sex, BC.profile);
+      const usingModel = BC.model != null;
+      const score  = usingModel ? mapModelScore(BC.model, BC.profile) : heur.score;
+      const oscore = usingModel ? mapModelScore(BC.model, other) : gradeBody(BC.metrics, sex, other).score;
+      // Sex-range headline: a GEOMETRY headline is scored against sex-specific bands, so an undetermined sex
+      // can't yield one honest number. Show the male–female range until a reliable read or manual pick resolves
+      // it (the model headline is sex-agnostic, so it needs no range). Collapses to a single score when sex is set.
+      const sexKnown = BC.sex === 'm' || BC.sex === 'f';
+      const usingRange = !usingModel && !sexKnown;
+      let rng = null;
+      if (usingRange){
+        const sM = gradeBody(BC.metrics,'m',BC.profile).score, sF = gradeBody(BC.metrics,'f',BC.profile).score;
+        const oM = gradeBody(BC.metrics,'m',other).score,      oF = gradeBody(BC.metrics,'f',other).score;
+        rng = { lo:Math.min(sM,sF), hi:Math.max(sM,sF), m:sM, f:sF, oLo:Math.min(oM,oF), oHi:Math.max(oM,oF) };
+      }
+
+      const srcBadge = usingModel
+        ? '<div class="bc-srcbadge model">Trained model score &middot; the breakdown below is the transparent geometry</div>'
+        : BC.bareGeometry
+        ? '<div class="bc-srcbadge heur">Bare-physique read &middot; the trained model is clothed-trained, so a shirtless / swimwear shot is scored from the silhouette geometry instead</div>'
+        : '<div class="bc-srcbadge heur">Geometry score &middot; no trained model loaded (see note)</div>';
+      const skinDebug = (BC_DEBUG && BC.skinFrac != null)
+        ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; torso skin = '+Math.round(BC.skinFrac*100)+'%</strong> &mdash; '+(BC.bareGeometry?'bare &rarr; geometry headline':'clothed &rarr; model headline')+(BC.skinFrac>=0.35&&BC.skinFrac<0.55?' &middot; <strong>borderline</strong>':'')+' (switch 45%, 35&ndash;55% borderline)</div>'
+        : '';
+
+      const comp = computeComposites(BC.metrics, sex);
+      const sexSrcNote = BC.sexSource === 'model'
+        ? 'Sex detected on-device from the face'+(BC.sexConf ? ' ('+Math.round(BC.sexConf*100)+'% confident)' : '')+' &mdash; flip it if wrong. '
+        : BC.sexSource === 'manual'
+        ? 'Sex set by you. '
+        : BC.sexSource === 'unknown'
+        ? '<strong>Sex undetermined</strong> &mdash; '+(BC.sexUnknownReason || 'the face wasn&rsquo;t clear enough to read and the body frame is ambiguous')+'. Set it below'+(usingModel ? '.' : ' (it feeds the geometry headline, so a bare-physique read needs it).')+' '
+        : 'Sex guessed from the body frame (face unclear or classifier not loaded) &mdash; the bony frame mis-reads sex, so flip if wrong. ';
+      const sexCtl =
+        '<div class="bc-sex"><button data-sex="f"'+(BC.sex==='f'?' class="active"':'')+'>Read as female</button>'
+        + '<button data-sex="m"'+(BC.sex==='m'?' class="active"':'')+'>Read as male</button></div>'
+        + '<div class="bc-sexnote">'+sexSrcNote
+        + (usingModel
+          ? 'This only re-bases the typical ranges below (sex-specific waist-to-hip, V-taper, breadth); it does <em>not</em> change the model headline score.'
+          : 'This re-bases the typical ranges below <em>and</em> the geometry headline above &mdash; the sex-specific bands feed the score whenever the model isn&rsquo;t the headline, so set it correctly for a bare-physique read.')
+        + '</div>';
+
+      const drivers = '<div class="bc-bd-h">Strongest drivers &middot; Tier 1</div>'
+        + '<div class="bc-note-line">Waist-to-hip and overall leanness are the most replicated predictors of body attractiveness &mdash; but a front photo can&rsquo;t see depth, so leanness is shown below only as an <strong>uncalibrated</strong> frontal proxy (measured, not scored). Shown here as <strong>reasoned proxies, not population-fitted</strong>: <em>proportional typicality</em> is closeness to the sex-typical bands; a <em>dimorphic-cue index</em> reads broad-and-tapered (masculine) vs. hourglass (feminine).</div>'
+        + compRow('Proportional typicality', comp.typicality, [55,85], 'Distinctive', 'Very typical')
+        + compRow((sex==='m'?'Masculinity':'Femininity')+' &middot; dimorphic cues', comp.dimorphism, [45,80], 'Androgynous', (sex==='m'?'Masculine':'Feminine'));
+
+      const grp = g => MEASURES.filter(m => m.group === g && BC.metrics[m.key] != null);
+      const resolve = m => Object.assign({}, m, { band: bandFor(m, sex) });
+      const coreRows = '<div class="bc-bd-h">Waist-to-hip &amp; adiposity proxy &middot; Tier 1</div>'
+        + grp('core').map(m => measureRow(resolve(m), BC.metrics[m.key])).join('');
+      const featRows = '<div class="bc-bd-h">Sex-typical frame &middot; Tier 2</div>'
+        + grp('feature').map(m => measureRow(resolve(m), BC.metrics[m.key])).join('');
+      const propRows = '<div class="bc-bd-h">Proportions &middot; Tier 3</div>'
+        + grp('prop').map(m => measureRow(resolve(m), BC.metrics[m.key])).join('');
+      const cantRows = '<div class="bc-bd-h">What a photo cannot measure</div>'
+        + '<ul class="bc-cant">' + CANT_READ.map(t => '<li>'+t+'</li>').join('') + '</ul>';
+
+      host.innerHTML =
+        '<div class="bc-score-wrap">'
+        + '<div class="bc-score" style="color:'+accent+'">'+(usingRange ? fmt(rng.lo)+'&ndash;'+fmt(rng.hi) : fmt(score))+' <span class="unit">'+prof.unit+'</span></div>'
+        + '<div class="bc-tier" style="color:'+accent+'">'+(usingRange
+            ? 'Depends on sex &mdash; &#9794; '+fmt(rng.m)+' '+tierFor(BC.profile,rng.m,'m')+' &middot; &#9792; '+fmt(rng.f)+' '+tierFor(BC.profile,rng.f,'f')
+            : tierFor(BC.profile, score, sex))+'</div>'
+        + srcBadge
+        + (usingRange ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to resolve the score.</strong> A bare-physique read is scored against sex-specific bands, so until sex is set the headline is the male&ndash;female range above &mdash; pick one below.</div>' : '')
+        + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental model.</strong> Validated to <em>rank</em> bodies, not to pinpoint &mdash; read it as a broad band (roughly &plusmn;1.5), not a precise grade, especially on casual photos unlike its studio training set.</div>' : '')
+        + (BC.framing === 'torso' ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Upper-body read.</strong> Scored on frame cues only &mdash; waist-to-hip, V-taper, shoulder breadth. Leanness (needs full height) and leg proportion are cropped out, and a draped top softens the waist; a full-body shot in fitted clothing reads more.</div>' : '')
+        + (BC.reliability ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+BC.reliability+'</div>' : '')
+        + (BC_DEBUG && usingModel && BC.modelRaw!=null ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+BC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
+        + skinDebug
+        + (BC_DEBUG && window.__bcSex ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; face read = '+(window.__bcSex.reason||'pending')+'</strong>'+(window.__bcSex.facePx!=null?' &middot; face '+window.__bcSex.facePx+'px, vis '+window.__bcSex.avgVis:'')+(window.__bcSex.sex?' &rarr; '+window.__bcSex.sex+' '+Math.round((window.__bcSex.conf||0)*100)+'%':'')+'</div>' : '')
+        + '<div class="bc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+(usingRange ? fmt(rng.oLo)+'&ndash;'+fmt(rng.oHi)+' '+PROFILES[other].unit+'</strong> (depends on sex).' : fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+').')+'</div>'
+        + '</div>'
+        + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
+        + sexCtl
+        + drivers + coreRows + featRows + propRows + cantRows
+        + '<div class="bc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box) when one is loaded; the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a single frontal silhouette misses depth, muscle-vs-fat, and everything under clothing &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. And the sex bands encode <em>one</em> ideal apiece, so an athletic, non-hourglass frame can read low partly because the lens rewards the curvy/tapered optimum &mdash; the rubric, not just the body. With no model loaded, the geometry scores the headline too (badged above).</div>';
+
+      host.querySelectorAll('.bc-sex button').forEach(function(b){
+        b.addEventListener('click', function(){ BC.sex = b.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote()); renderResult(); });
+      });
+
+      // persist this body score for the Face × Body composite. The CNN headline is sex-agnostic; a geometry
+      // headline needs a known sex (an unresolved male–female range can't yield one honest number → needsSex).
+      if (window.leComposite){
+        if (usingModel){
+          window.leComposite.saveBody({
+            bp: mapModelScore(BC.model,'blackpill'), cv: mapModelScore(BC.model,'conventional'),
+            bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
+            source: 'model', sex: (sexKnown ? sex : null), ts: Date.now()
+          });
+        } else if (sexKnown){
+          window.leComposite.saveBody({
+            bp: gradeBody(BC.metrics, sex,'blackpill').score, cv: gradeBody(BC.metrics, sex,'conventional').score,
+            bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
+            source: 'geometry', sex: sex, ts: Date.now()
+          });
+        } else {
+          window.leComposite.saveBody({ needsSex: true, ts: Date.now() });
+        }
+      }
+    }
+
+    // ── hooks the MediaPipe module calls ──
+    // The caption under the photo, rebuilt from current state — so it stays in sync when the async face
+    // classifier (or a manual flip) changes the sex AFTER the initial measure. (The old note was set once
+    // in bcAnalyze with the frame guess and never updated, so it was stuck on the stale/first-photo value.)
+    function bcStatusNote(){
+      const sx = BC.sex==='m' ? 'male' : 'female';
+      let how;
+      if (BC.sexSource==='unknown' || !BC.sex) how = 'sex undetermined — set it below';
+      else if (BC.sexSource==='model') how = 'sex read from the face: ' + sx + (BC.sexConf!=null ? ' ('+Math.round(BC.sexConf*100)+'%)' : '') + ' — flip if wrong';
+      else if (BC.sexSource==='manual') how = 'sex set to ' + sx;
+      else how = 'sex (provisional, from frame): ' + sx + ' — the face read will refine it';
+      return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + (BC.reliability ? ' · ' + BC.reliability : '');
+    }
+    window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac){
+      BC.metrics = metrics; BC.model = null;
+      BC.framing = framing === 'torso' ? 'torso' : 'full';
+      BC.bareGeometry = !!bareGeometry; BC.skinFrac = (skinFrac==null ? null : skinFrac);
+      BC.reliability = reliability || '';
+      const g = guessSex(metrics);
+      BC.sex = g; BC.sexAuto = true; BC.sexSource = g ? 'guess' : 'unknown'; BC.sexConf = null; BC.sexManual = false; BC.sexUnknownReason = '';
+      setStatus(bcStatusNote()); renderResult();
+    };
+    // the on-device face sex classifier reports in async — overrides the unreliable frame guess unless the
+    // user has flipped it manually. (The headline score is unchanged; sex only re-bases the typical bands.)
+    window.bcSetSex = function(sex, conf){
+      if (BC.sexManual) return;
+      BC.sex = (sex==='m'?'m':'f'); BC.sexSource = 'model'; BC.sexConf = conf; BC.sexAuto = true; BC.sexUnknownReason = '';
+      setStatus(bcStatusNote()); renderResult();
+    };
+    // the face sex read is untrustworthy when the eyes are hidden (sunglasses) — decline to guess rather than
+    // assert a confident-wrong sex; the user sets it. Won't override a manual pick.
+    window.bcSetSexUnknown = function(reason){
+      if (BC.sexManual) return;
+      BC.sex = null; BC.sexSource = 'unknown'; BC.sexConf = null; BC.sexUnknownReason = reason || '';
+      setStatus(bcStatusNote()); renderResult();
+    };
+    window.bcSetModelScore = function(t, raw){ BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
+    window.bcModelReady = function(ok){ BC.modelReady = ok; };
+    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; renderResult(); };
+    window.bcSetStatus = setStatus;
+    window.bcPoseSkeleton = poseSkeleton;
+    window.bcBodyRatios = bodyRatios;
+    window.bcPreprocess = preprocessToTensor;
+    window.bcPreprocessSex = preprocessSex;
+    window.bcSexFromLogits = sexFromLogits;
+    window.bcFacePidx = FACE_PIDX;
+  </script>
+
+  <!-- ===== MediaPipe Pose Landmarker (on-device) ===== -->
+  <script type="module">
+    import { PoseLandmarker, DrawingUtils }
+      from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
+
+    const stage = document.getElementById('bc-stage');
+    const canvas = document.getElementById('bc-canvas');
+    const video = document.getElementById('bc-video');
+    const POSE_WORKER_URL = 'js/body-pose-worker.js';
+    const POSE_INIT_TIMEOUT_MS = 45000;
+    const POSE_ANALYSIS_TIMEOUT_MS = 12000;
+    let poseWorker = null, poseReady = null, activePose = null;
+
+    function recyclePoseWorker(worker){
+      if (worker !== poseWorker) return;
+      try { worker.terminate(); } catch(_){ }
+      poseWorker = null;
+      poseReady = null;
+    }
+
+    function finishActivePose(active, outcome, value){
+      if (!active || active !== activePose) return;
+      clearTimeout(active.timer);
+      activePose = null;
+      active[outcome](value);
+    }
+
+    function handlePoseMessage(worker, message){
+      if (worker !== poseWorker || !message) return;
+      if (message.type === 'trace'){
+        if (activePose && message.id === activePose.id) activePose.lastStage = message.stage;
+        console.debug('[Body pose worker]', message.stage, Math.round(message.elapsedMs || 0) + 'ms');
+        return;
+      }
+      if (!activePose || message.id !== activePose.id) return;
+      const active = activePose;
+      if (message.type === 'landmarks'){
+        active.landmarks = message.landmarks;
+        return;
+      }
+      if (message.type === 'result'){
+        finishActivePose(active, 'resolve', {
+          landmarks:message.landmarks || active.landmarks,
+          silhouette:message.silhouette || null,
+          quality:message.quality || null,
+          warning:message.warning || '',
+          elapsedMs:message.elapsedMs
+        });
+        // Keep the worker warm after a normal result. A task-level failure flags recycle so the next image
+        // gets fresh WASM state; this image is refused rather than scored from skeletal Tier-3 remnants.
+        if (message.recycle) recyclePoseWorker(worker);
+        return;
+      }
+      if (message.type === 'error'){
+        const error = new Error(message.message || 'pose analysis failed');
+        error.stage = message.stage || active.lastStage || 'detect';
+        console.warn('[Body pose worker] failed during ' + error.stage + ':', error.message);
+        if (active.landmarks && error.stage !== 'detect'){
+          finishActivePose(active, 'resolve', {
+            landmarks:active.landmarks,
+            silhouette:null,
+            warning:'silhouette task failed - no score was produced'
+          });
+        } else {
+          finishActivePose(active, 'reject', error);
+        }
+        recyclePoseWorker(worker);
+      }
+    }
+
+    function ensurePoseWorker(){
+      if (poseWorker && poseReady) return poseReady;
+      if (!window.Worker || !window.createImageBitmap || !window.OffscreenCanvas){
+        return Promise.reject(new Error('This browser does not support isolated pose analysis.'));
+      }
+      // MediaPipe's WASM loader uses importScripts(), so this must remain a classic worker.
+      const worker = new Worker(POSE_WORKER_URL);
+      poseWorker = worker;
+      poseReady = new Promise(function(resolve, reject){
+        let settled = false;
+        const timer = setTimeout(function(){
+          if (settled || worker !== poseWorker) return;
+          settled = true;
+          recyclePoseWorker(worker);
+          reject(new Error('Pose engine initialization timed out.'));
+        }, POSE_INIT_TIMEOUT_MS);
+        worker.onmessage = function(event){
+          const message = event.data || {};
+          if (message.type === 'ready' && !settled){
+            worker.segmentationReady = Boolean(message.segmentation);
+            settled = true; clearTimeout(timer); resolve(worker); return;
+          }
+          if (message.type === 'init-error' && !settled){
+            settled = true; clearTimeout(timer); recyclePoseWorker(worker);
+            reject(new Error(message.message || 'Pose engine failed to initialize.')); return;
+          }
+          handlePoseMessage(worker, message);
+        };
+        worker.onerror = function(event){
+          const error = new Error(event.message || 'Pose worker crashed.');
+          if (!settled){
+            settled = true; clearTimeout(timer); recyclePoseWorker(worker); reject(error);
+          } else if (activePose){
+            const active = activePose;
+            if (active.landmarks){
+              finishActivePose(active, 'resolve', {
+                landmarks:active.landmarks,
+                silhouette:null,
+                warning:'silhouette worker crashed - no score was produced'
+              });
+            } else {
+              finishActivePose(active, 'reject', error);
+            }
+            recyclePoseWorker(worker);
+          } else {
+            recyclePoseWorker(worker);
+          }
+        };
+      });
+      return poseReady;
+    }
+
+    async function runPoseInWorker(bitmap, id){
+      let worker;
+      try { worker = await ensurePoseWorker(); }
+      catch(error){ try { bitmap.close(); } catch(_){ } throw error; }
+      return new Promise(function(resolve, reject){
+        const active = { id, resolve, reject, landmarks:null, lastStage:'queued', timer:null };
+        active.timer = setTimeout(function(){
+          if (active !== activePose) return;
+          const stage = active.lastStage;
+          const landmarks = active.landmarks;
+          activePose = null;
+          recyclePoseWorker(worker);                 // kills a native spin; next upload gets a clean WASM runtime
+          if (landmarks){
+            resolve({ landmarks, silhouette:null,
+              warning:'silhouette analysis timed out - no score was produced' });
+          } else {
+            const error = new Error('Pose analysis timed out during ' + stage + '.');
+            error.stage = stage; reject(error);
+          }
+        }, POSE_ANALYSIS_TIMEOUT_MS);
+        activePose = active;
+        try { worker.postMessage({ type:'analyze', id, bitmap }, [bitmap]); }
+        catch(error){ clearTimeout(active.timer); activePose = null; recyclePoseWorker(worker); reject(error); }
+      });
+    }
+
+    ensurePoseWorker().then(function(worker){
+      window.bcSetStatus(worker.segmentationReady
+        ? 'Ready. Drop, capture, or paste a full-body photo.'
+        : 'Pose model loaded, but the silhouette model is unavailable. A score requires both.', !worker.segmentationReady);
+    }).catch(function(error){
+      window.bcSetStatus('Pose model failed to load (needs internet for the CDN). ' + error.message, true);
+    });
+
+    // ── Trained body model (onnxruntime-web, on-device). Drop models/body-beauty.onnx to enable. ──
+    const MODEL_CONFIG = {
+      url: 'models/body-beauty.onnx',
+      inputSize: 224,
+      mean: [0.485, 0.456, 0.406],   // ImageNet
+      std:  [0.229, 0.224, 0.225],
+      outMin: 26.234, outMax: 69.261, // RETRAINED model, 2026-06-20. Spearman 0.716 on a SINGLE grouped-holdout split —
+                                     // one split, with the best epoch AND these calibration percentiles both read off
+                                     // that same val set. Encouraging, but NOT cross-validation, NOT an independent test,
+                                     // and it does not settle whether the CNN is strong enough to own the headline.
+                                     // These are that split's held-out 2nd/98th-pct STUDIO predictions — a START, not
+                                     // validated real-photo calibration. The previous net compressed real photos ~10–20 pts
+                                     // below its studio range, so studio percentiles flatten average bodies; watch the
+                                     // on-screen `model raw` debug — if raws cluster below ~26, re-anchor down so
+                                     // average≈4–5, athletic≈8. Re-fit per real-photo batch; do NOT assume studio transfers.
+      inputName: null, outputName: null
+    };
+    let currentGen = 0;
+    let session = null, modelState = 'loading', pendingTensor = null, pendingTensorGen = 0;
+    async function initModel(){
+      const ort = window.ort;
+      if (!ort){ modelState='absent'; window.bcModelReady(false); console.warn('[body] CNN init: window.ort NOT ready → absent'); return; }
+      try {
+        ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
+        session = await ort.InferenceSession.create(MODEL_CONFIG.url, { executionProviders:['wasm'] });
+        modelState='ready'; window.bcModelReady(true); console.info('[body] CNN model loaded');
+        if (pendingTensor) inferAndSet(pendingTensor, pendingTensorGen);
+      } catch(e){
+        session = null; modelState='absent'; window.bcModelReady(false); console.warn('[body] CNN model load FAILED:', e.message);
+        window.bcSetStatus('No trained body model loaded — running on the geometry. Drop models/body-beauty.onnx to enable it.');
+      }
+    }
+    initModel();
+
+    // square, aspect-preserving crop of the person box (from full-res srcEl) → 224 ImageNet CHW
+    function cropBodyTensor(srcEl, lm, W, H){
+      // Bound the crop to CONFIDENT, in-frame joints only: an extrapolated off-image ankle or an
+      // extended wrist would otherwise blow up the square box and shrink the torso inside it (a
+      // train/infer framing shift the CNN reads as "smaller person"). Clamp to [0,1], skip low-visibility.
+      let minx=1, miny=1, maxx=0, maxy=0, used=0;
+      for (let i=0;i<lm.length;i++){ const p=lm[i]; if (!p) continue;
+        const vis = p.visibility==null ? 1 : p.visibility;
+        if (vis < 0.3) continue;
+        const x=Math.max(0,Math.min(1,p.x)), y=Math.max(0,Math.min(1,p.y));
+        if (x<minx)minx=x; if (y<miny)miny=y; if (x>maxx)maxx=x; if (y>maxy)maxy=y; used++; }
+      if (used < 4){ minx=0; miny=0; maxx=1; maxy=1; }     // too few confident joints → whole frame
+      const x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H;
+      const cx=(x0+x1)/2, cy=(y0+y1)/2, side=Math.max(x1-x0, y1-y0)*1.15;   // pad the box, keep it square
+      const S=MODEL_CONFIG.inputSize;
+      const off=document.createElement('canvas'); off.width=S; off.height=S;
+      const octx=off.getContext('2d',{ willReadFrequently:true });
+      octx.drawImage(srcEl, cx-side/2, cy-side/2, side, side, 0,0, S,S);
+      return window.bcPreprocess(octx.getImageData(0,0,S,S).data, S, MODEL_CONFIG.mean, MODEL_CONFIG.std);
+    }
+
+    // Fraction of the central torso that reads as bare skin (YCbCr, fairly tone-robust). The CNN is CLOTHED-trained
+    // (Connor studio shots), so a shirtless/swimwear photo is out-of-distribution — it scores "skin ≈ attractive"
+    // regardless of physique (an overweight and a jacked shirtless body both read ~high). When the torso is mostly
+    // skin we hand the headline to the geometry silhouette instead — the right tool for a bare body, since it
+    // measures the real V-taper/breadth/leanness. The central torso column is always body, so no mask is needed;
+    // call this BEFORE drawing the skeleton overlay (red landmarks would pollute the sample).
+    const SKIN_HEADLINE_THRESHOLD = 0.45;                  // default clothed→model / bare→geometry cutoff
+    const SKIN_AMBIG_LO = 0.35, SKIN_AMBIG_HI = 0.55;      // borderline band → flag the routing as uncertain (M4)
+    function torsoSkinFraction(ctx, lm, W, H){
+      try {
+        const sy=(lm[11].y+lm[12].y)/2, hy=(lm[23].y+lm[24].y)/2;
+        const cx=((lm[11].x+lm[12].x)/2 + (lm[23].x+lm[24].x)/2)/2;
+        const halfW=Math.max(Math.abs(lm[11].x-lm[12].x)*0.22, 0.035);
+        const x0=Math.max(0,Math.round((cx-halfW)*W)), x1=Math.min(W,Math.round((cx+halfW)*W));
+        const y0=Math.max(0,Math.round((sy+0.30*(hy-sy))*H)), y1=Math.min(H,Math.round((sy+0.85*(hy-sy))*H));
+        if (x1-x0<4 || y1-y0<4) return 0;
+        const d=ctx.getImageData(x0,y0,x1-x0,y1-y0).data;
+        let skin=0, tot=0;
+        for (let i=0;i<d.length;i+=4){
+          const r=d[i],g=d[i+1],b=d[i+2];
+          const Cb=128-0.168736*r-0.331264*g+0.5*b, Cr=128+0.5*r-0.418688*g-0.081312*b;
+          if (Cb>=77 && Cb<=127 && Cr>=133 && Cr<=173) skin++;
+          tot++;
+        }
+        return tot ? skin/tot : 0;
+      } catch(_){ return 0; }
+    }
+    async function inferAndSet(data, gen){
+      const ort=window.ort; if (!ort || !session) return;
+      try {
+        const S=MODEL_CONFIG.inputSize;
+        const inName=MODEL_CONFIG.inputName || session.inputNames[0];
+        const out=await session.run({ [inName]: new ort.Tensor('float32', data, [1,3,S,S]) });
+        if (gen !== currentGen) return;                 // a newer body arrived mid-inference — discard
+        const oName=MODEL_CONFIG.outputName || session.outputNames[0];
+        const raw=Number(out[oName].data[0]);
+        if (!Number.isFinite(raw)) throw new Error('model returned a non-finite value');
+        const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
+        window.bcSetModelScore(norm, raw);
+      } catch(e){ if (gen === currentGen) window.bcSetStatus('Trained-model inference failed: '+e.message, true); }
+    }
+
+    // ── Sex classifier (InsightFace genderage.onnx, on-device). Drop models/face-sex.onnx to enable. ──
+    // Reads sex from the FACE — cropped via the pose's own face keypoints — so it stays right even when the
+    // bony frame/silhouette can't. Absent model → the frame guess silently remains the default.
+    const SEX_MODEL_CONFIG = { url: 'models/face-sex.onnx', inputSize: 96, cropScale: 1.9 };
+    let sexSession = null, sexState = 'loading', pendingSexTensor = null, pendingSexGen = 0;
+    async function initSexModel(){
+      const ort = window.ort;
+      if (!ort){ sexState = 'absent'; console.warn('[body] sex-classifier init: window.ort NOT ready → absent'); return; }
+      try {
+        sexSession = await ort.InferenceSession.create(SEX_MODEL_CONFIG.url, { executionProviders:['wasm'] });
+        sexState = 'ready'; console.info('[body] sex classifier loaded');
+        if (pendingSexTensor) inferSex(pendingSexTensor, pendingSexGen);   // a body arrived before the classifier loaded
+      } catch(e){ sexSession = null; sexState = 'absent'; console.warn('[body] sex classifier load FAILED:', e.message); }
+    }
+    initSexModel();
+
+    // mean luminance of a small box around a normalized point, sampled from the full-res source
+    function sampleLum(octx, srcEl, nx, ny, W, H, rad){
+      try {
+        octx.clearRect(0,0,8,8);
+        octx.drawImage(srcEl, nx*W-rad, ny*H-rad, rad*2, rad*2, 0,0, 8,8);
+        const d = octx.getImageData(0,0,8,8).data;
+        let s=0, n=0; for (let i=0;i<d.length;i+=4){ s += 0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]; n++; }
+        return n ? s/n : -1;
+      } catch(_){ return -1; }
+    }
+    // genderage is confidently WRONG when the eyes are hidden (sunglasses remove its strongest sex cue, so it
+    // reads a woman in shades as male at high confidence). Detect it the only way a front photo can: the eye
+    // band reading much darker than that same face's cheeks → decline to guess rather than assert. Conservative
+    // (only very dark eyes vs cheeks), tone-robust (a ratio on the SAME face, not an absolute), manually overridable.
+    function faceEyesOccluded(srcEl, lm, W, H){
+      const le=lm[2], re=lm[5], nose=lm[0], ml=lm[9], mr=lm[10];
+      if (!le||!re||!nose||!ml||!mr) return false;
+      const off=document.createElement('canvas'); off.width=8; off.height=8;
+      const octx=off.getContext('2d',{ willReadFrequently:true });
+      const rad=Math.max(2, Math.abs(le.x-re.x)*W*0.12);
+      const eyeLum=(sampleLum(octx,srcEl,le.x,le.y,W,H,rad)+sampleLum(octx,srcEl,re.x,re.y,W,H,rad))/2;
+      // cheeks: below each eye, toward the mouth and pulled a touch in toward the nose
+      const lcx=le.x+0.3*(nose.x-le.x), lcy=le.y+0.55*(ml.y-le.y);
+      const rcx=re.x+0.3*(nose.x-re.x), rcy=re.y+0.55*(mr.y-re.y);
+      const cheekLum=(sampleLum(octx,srcEl,lcx,lcy,W,H,rad)+sampleLum(octx,srcEl,rcx,rcy,W,H,rad))/2;
+      const ratio = cheekLum>10 ? eyeLum/cheekLum : 1;
+      window.__bcEyeRatio = +ratio.toFixed(3);
+      // Threshold from samples: clear open eyes ~0.99 (sclera is bright), dark/reflective sunglasses ~0.5–0.65.
+      // 0.70 catches the sunglasses band with a wide margin below clear faces. Reasoned from a small sample —
+      // tunable; biased to catch (a false "undetermined → set sex" is honest, a false "confident male" is the bug).
+      return eyeLum>=0 && cheekLum>10 && ratio < 0.70;
+    }
+
+    // crop the face box from the pose's face keypoints (0 nose · 1-6 eyes · 7-8 ears · 9-10 mouth), padded to
+    // take in forehead + chin, from the full-res source → 96×96 raw-RGB tensor. null if the face is turned
+    // away / occluded (low visibility) — then the frame guess stays and the panel says so.
+    function cropSexFaceTensor(srcEl, lm, W, H){
+      const idx = window.bcFacePidx;
+      let minx=1, miny=1, maxx=0, maxy=0, vis=0, n=0;
+      for (let k=0;k<idx.length;k++){
+        const p = lm[idx[k]]; if (!p) continue;
+        if (p.x<minx)minx=p.x; if (p.y<miny)miny=p.y; if (p.x>maxx)maxx=p.x; if (p.y>maxy)maxy=p.y;
+        vis += (p.visibility==null?1:p.visibility); n++;
+      }
+      const avgVis = vis/Math.max(1,n);
+      const x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H, bw=x1-x0, bh=y1-y0;
+      const faceBox = Math.max(bw,bh);
+      const side = faceBox*SEX_MODEL_CONFIG.cropScale;   // the actual native px we sample into the 96² crop
+      window.__bcSex = { n, avgVis:+avgVis.toFixed(3), bwPx:Math.round(bw), bhPx:Math.round(bh), facePx:Math.round(faceBox), sampledPx:Math.round(side), reason:'' };
+      if (n < idx.length || avgVis < 0.5){ window.__bcSex.reason='low-visibility'; return null; }   // face not reliably visible
+      // genderage tolerates small faces (it's built to read detector crops). The face-KEYPOINT bbox (inner face only)
+      // is far smaller than the head, and we pad it 1.9× before sampling — so gate on the SAMPLED region, not the raw
+      // bbox. The old raw-40px gate rejected normal single-subject shots (inner-face bbox reads ~25–45px) and dumped
+      // them onto the unreliable frame guess — the prime cause of the mis-sexing. Reject only when the sampled square
+      // is so small the 96² crop is pure upscaled mush.
+      if (side < 40){ window.__bcSex.reason='face-too-small'; return null; }
+      if (!(bw>1 && bh>1)){ window.__bcSex.reason='degenerate-bbox'; return null; }
+      const cx=(x0+x1)/2, cy=(y0+y1)/2;
+      const S=SEX_MODEL_CONFIG.inputSize;
+      const off=document.createElement('canvas'); off.width=S; off.height=S;
+      const octx=off.getContext('2d',{ willReadFrequently:true });
+      octx.drawImage(srcEl, cx-side/2, cy-side/2, side, side, 0,0, S,S);
+      return window.bcPreprocessSex(octx.getImageData(0,0,S,S).data, S);
+    }
+    // genderage is unreliable on small / angled / partly-occluded faces and SAYS SO via a soft confidence.
+    // Correct reads cluster ~0.87–1.0; a low-confidence read (e.g. a tiny sunglasses face that the occlusion
+    // guard can't resolve) is barely a coin-flip — don't let it drive the headline, decline and ask instead.
+    const SEX_CONF_MIN = 0.75;
+    async function inferSex(data, gen){
+      const ort = window.ort; if (!ort || !sexSession) return;
+      try {
+        const S = SEX_MODEL_CONFIG.inputSize;
+        const out = await sexSession.run({ [sexSession.inputNames[0]]: new ort.Tensor('float32', data, [1,3,S,S]) });
+        if (gen !== currentGen){ if(window.__bcSex) window.__bcSex.reason='stale-gen'; return; }   // discard if a newer body superseded this one
+        const r = window.bcSexFromLogits(out[sexSession.outputNames[0]].data);
+        if (r.conf < SEX_CONF_MIN){
+          if (window.__bcSex){ window.__bcSex.reason='low-confidence'; window.__bcSex.sex=r.sex; window.__bcSex.conf=+r.conf.toFixed(3); }
+          window.bcSetSexUnknown('the face is small or unclear, so the on-device model&rsquo;s sex read is low-confidence (only '+Math.round(r.conf*100)+'% model confidence, not a calibrated probability)');
+          return;
+        }
+        if (window.__bcSex){ window.__bcSex.reason='fired'; window.__bcSex.sex=r.sex; window.__bcSex.conf=+r.conf.toFixed(3); }
+        window.bcSetSex(r.sex, r.conf);
+      } catch(e){ if(window.__bcSex) window.__bcSex.reason='infer-error:'+e.message; }
+    }
+
+    let bcBusy = false;
+    async function drawAndScore(srcEl, W, H){
+      if (bcBusy) return;
+      bcBusy = true;
+      const gen = ++currentGen;
+      try {
+        canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
+        const ctx = canvas.getContext('2d', { willReadFrequently:true });
+        ctx.drawImage(srcEl, 0, 0, W, H);
+        window.bcSetStatus('Reading pose and silhouette on-device…');
+        const bitmap = await createImageBitmap(canvas);
+        let poseResult;
+        try { poseResult = await runPoseInWorker(bitmap, gen); }
+        catch(error){
+          if (gen !== currentGen) return;
+          console.warn('[Body calculator] isolated pose analysis failed:', error.stage || 'startup', error.message);
+          window.bcSetStatus('Couldn’t read that photo — the isolated pose engine stalled or aborted. Try a clearer, front-facing, full-body shot; the next photo will start a fresh engine automatically.', true);
+          window.bcResetResult(); return;
+        }
+        if (gen !== currentGen) return;
+        if (!poseResult || !poseResult.landmarks){
+          window.bcSetStatus('No body found — use a clear, full-body, front-facing photo.', true); window.bcResetResult(); return;
+        }
+        const lm = poseResult.landmarks;
+        const skel = window.bcPoseSkeleton(lm);
+        if (!skel){ window.bcSetStatus('Could not read the pose — try a fuller, clearer shot.', true); window.bcResetResult(); return; }
+
+        // The worker evaluates framing in image pixels, joint confidence, stance, and frontal breadth before
+        // asking the silhouette model to run. Do not score extrapolated feet or seated/profile geometry.
+        if (poseResult.quality && !poseResult.quality.ok){
+          window.bcSetStatus(poseResult.quality.message, true); window.bcResetResult(); return;
+        }
+        if (!poseResult.quality && skel.vis < 0.5){
+          window.bcSetStatus('The lower body is cropped or uncertain. Include the whole body from head to feet.', true); window.bcResetResult(); return;
+        }
+
+        // Upper-body / cropped shot: the silhouette can still read the frame cues (waist-to-hip, V-taper,
+        // shoulder breadth), but leg:torso and whole-body symmetry come from off-frame, extrapolated joints —
+        // drop them so they aren't scored as if measured. The composite renormalizes over what's left.
+        const framing = (poseResult.quality && poseResult.quality.framing) || 'full';
+        if (framing === 'torso'){ skel.legTorso = null; skel.symmetry = null; }
+
+        // Resolution / distance gate (M2). A subject filling little of the frame gives a coarse mask,
+        // imprecise joints (width ratios compress toward 1.0 → a real V-taper flattens) and an upscaled CNN
+        // crop — all of which UNDERSTATE an athletic build. Refuse when far too small; warn when merely small.
+        // personFrac = the body's share of the frame (resolution-independent); personNativePx = real detail.
+        const clamp01 = x => Math.max(0, Math.min(1, x));
+        let pMinX=1,pMinY=1,pMaxX=0,pMaxY=0,pUsed=0;
+        for (let i=0;i<lm.length;i++){ const p=lm[i]; if(!p) continue;
+          const vis = p.visibility==null ? 1 : p.visibility;
+          if (vis < 0.3) continue;                              // skip extrapolated/off-frame joints — a stray low-confidence
+          const x=clamp01(p.x), y=clamp01(p.y);                 // wrist/ankle would inflate the box and admit a distant subject
+          if(x<pMinX)pMinX=x; if(y<pMinY)pMinY=y; if(x>pMaxX)pMaxX=x; if(y>pMaxY)pMaxY=y; pUsed++; }
+        if (pUsed < 4){ pMinX=0; pMinY=0; pMaxX=1; pMaxY=1; }   // too few confident joints → assume full frame (don't false-reject; skel.vis already gated)
+        const personFrac = Math.max(pMaxX-pMinX, pMaxY-pMinY);
+        const srcNatW = srcEl.naturalWidth||srcEl.width||W, srcNatH = srcEl.naturalHeight||srcEl.height||H;
+        const personNativePx = Math.max((pMaxX-pMinX)*srcNatW, (pMaxY-pMinY)*srcNatH);
+        if (personFrac < 0.14){
+          window.bcSetStatus('The subject is too small / far away to read reliably — they fill only '+Math.round(personFrac*100)+'% of the frame. Retake closer so the body fills most of the height.', true);
+          window.bcResetResult(); return;
+        }
+
+        // With a trained model loaded, the CNN headline scores from the whole-body crop and needs NEITHER the
+        // silhouette NOR a readable waist — so the geometry's "no outline" / "an arm hid the waist" refusals apply
+        // ONLY when there is no model (geometry is then the headline). When the model carries it, those become
+        // breakdown caveats and an arms-down / no-silhouette body still gets a score — the whole point of the CNN.
+        // Bare-physique routing: the CNN owns CLOTHED shots; a shirtless/swimwear torso is OOD for it, so hand
+        // the headline to the geometry silhouette there (and apply the geometry gates). Computed before the overlay.
+        const skinFrac = torsoSkinFraction(ctx, lm, W, H);
+        const bareBody = skinFrac >= SKIN_HEADLINE_THRESHOLD;
+        const useModel = (!!session || modelState === 'loading') && !bareBody;
+        const px = poseResult.silhouette || null;
+        if (!px && !useModel){
+          window.bcSetStatus('The pose was readable, but the body outline was not reliable enough to score. No number was produced; try a neutral standing photo with clear contrast and fitted clothing.', true);
+          window.bcResetResult(); return;
+        }
+        const metrics = window.bcBodyRatios(px, skel);
+        // The waist read (V-taper / waist-to-hip) is the discriminating frame cue; shoulder breadth + Tier-3
+        // proportions alone are too thin for an honest GEOMETRY headline. If an arm hid the waist the worker drops
+        // those cues upstream — so (no model) refuse with a fix-it rather than score the remnants.
+        const hasWaist = metrics.vTaper != null || metrics.whr != null;
+        if (!hasWaist && !useModel){
+          const which = px && px.waistArm ? (px.hipArm ? 'across your waist and hips' : 'across your waist')
+                      : px && px.hipArm ? 'resting on your hip' : '';
+          window.bcSetStatus(which
+            ? 'An arm is '+which+', which hides your waistline — the frame can’t be read from a silhouette. Retake standing with your arms a few inches out from your sides.'
+            : 'The body outline wasn’t reliable enough to score. Try a neutral standing photo, arms a few inches out, fitted clothing.', true);
+          window.bcResetResult(); return;
+        }
+
+        // reliability caveats (non-blocking) — the body has more ways to read soft than the face
+        const warns = [];
+        if (px && (px.waistArm || px.hipArm)) warns.push('an arm covered part of your waist or hips, so that cue was skipped — arms a few inches out reads the full frame');
+        else if (skel.armNearWaist) warns.push('an arm is by your waist, which can widen the silhouette — stand with arms slightly out');
+        if (skel.tilt > 0.06) warns.push('shoulders/hips look tilted — stand square to the camera');
+        if (personFrac < 0.32 || personNativePx < 220) warns.push('the subject is small or distant in the frame, so fine width ratios and the model read are less reliable — fill more of the frame for a sharper read');
+        if (skinFrac >= SKIN_AMBIG_LO && skinFrac < SKIN_AMBIG_HI) warns.push('the torso reads as borderline clothed/bare ('+Math.round(skinFrac*100)+'% skin), so the headline may be routed to the wrong instrument (model vs. silhouette) — if the score looks off, that is likely why');
+        const relWarn = warns.length ? warns.join(' · ') : '';
+
+        // crop the model tensor from the full-res source (pose landmarks are normalized) before any overlay
+        const fullW = srcEl.naturalWidth||srcEl.width||W, fullH = srcEl.naturalHeight||srcEl.height||H;
+        let tensorData = null;
+        try { tensorData = cropBodyTensor(srcEl, lm, fullW, fullH); } catch(_){ tensorData = null; }
+        // Only stash for a deferred (still-loading) model run when this image actually routes to the model.
+        // A bare-physique image routes to geometry, so a late model-load must NOT silently override its headline.
+        if (useModel){ pendingTensor = tensorData; pendingTensorGen = gen; }
+        else { pendingTensor = null; }
+
+        // read sex from the face (overrides the unreliable frame guess); skipped if the face isn't visible OR if
+        // the eyes are hidden (sunglasses make genderage confidently mis-sex women → don't trust it, ask instead)
+        let sexData = null, eyesHidden = false;
+        try { eyesHidden = faceEyesOccluded(srcEl, lm, fullW, fullH); } catch(_){ eyesHidden = false; }
+        if (eyesHidden){
+          window.__bcSex = { reason:'eyes-occluded', eyeCheekRatio: window.__bcEyeRatio };
+        } else {
+          try { sexData = cropSexFaceTensor(srcEl, lm, fullW, fullH); } catch(_){ sexData = null; }
+          if (sexData){
+            if (sexSession) inferSex(sexData, gen);
+            else if (sexState === 'loading'){ pendingSexTensor = sexData; pendingSexGen = gen; }   // classifier still loading
+          }
+        }
+
+        // overlay the skeleton for feedback
+        try {
+          const du = new DrawingUtils(ctx);
+          du.drawConnectors(lm, PoseLandmarker.POSE_CONNECTIONS, { color:'#ffffffaa', lineWidth:2 });
+          du.drawLandmarks(lm, { color:'#C41E3A', lineWidth:1, radius:3 });
+        } catch(_){ /* overlay is cosmetic */ }
+
+        window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac);
+        if (eyesHidden) window.bcSetSexUnknown('the eyes are hidden (sunglasses?), so the face sex read isn&rsquo;t reliable');
+        if (tensorData && session && useModel){ window.bcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
+        else if (tensorData && modelState === 'loading' && !bareBody){ window.bcSetStatus('Body measured — trained model still loading, the score will update automatically…'); }
+      } catch(e){
+        window.bcSetStatus('Analysis failed: '+e.message, true); window.bcResetResult();
+      } finally {
+        bcBusy = false;
+      }
+    }
+
+    async function handleImage(img){
+      const maxW=620, scale=Math.min(1, maxW/img.naturalWidth);
+      await drawAndScore(img, Math.round(img.naturalWidth*scale), Math.round(img.naturalHeight*scale));
+    }
+
+    const fileInput=document.getElementById('bc-file'), drop=document.getElementById('bc-drop');
+    drop.addEventListener('click', () => fileInput.click());
+    ['dragover','dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor='var(--scarlet)'; }));
+    ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor=''; }));
+    drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
+    function loadFile(file){
+      const img=new Image();
+      img.onload=async()=>{ try { await handleImage(img); } finally { URL.revokeObjectURL(img.src); } };
+      img.onerror=()=>{ window.bcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
+      img.src=URL.createObjectURL(file);
+    }
+
+    document.getElementById('bc-url-go').addEventListener('click', () => {
+      const u=document.getElementById('bc-url').value.trim(); if (!u) return;
+      const img=new Image(); img.crossOrigin='anonymous';
+      img.onload=()=>{ handleImage(img); };
+      img.onerror=()=>window.bcSetStatus('That URL would not load (cross-origin block?). Download and upload instead.', true);
+      img.src=u;
+    });
+
+    let stream=null;
+    const camStart=document.getElementById('bc-cam-start'), camShot=document.getElementById('bc-cam-shot');
+    camStart.addEventListener('click', async () => {
+      try {
+        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
+        video.srcObject=stream; await video.play();
+        video.hidden=false; canvas.hidden=true; stage.classList.add('show');
+        camShot.hidden=false; window.bcSetStatus('Camera live — step back so your whole body is in frame, then capture.');
+      } catch(e){ window.bcSetStatus('Camera blocked or unavailable: '+e.message, true); }
+    });
+    camShot.addEventListener('click', () => {
+      const w=video.videoWidth, h=video.videoHeight;
+      const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+      tmp.getContext('2d').drawImage(video, 0, 0, w, h);
+      const maxW=620, scale=Math.min(1, maxW/w);
+      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale));
+      window.bcStopCamera();
+    });
+    window.bcStopCamera=function(){
+      if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+      camShot.hidden=true; video.hidden=true;
+    };
+  </script>
+</body>
+</html>

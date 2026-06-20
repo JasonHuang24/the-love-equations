@@ -10,6 +10,8 @@
       console.error(`include: failed to load partials/${name}.html`, e);
     }
   }));
+  // Let page scripts know the partials are now in the DOM (e.g. the composite-section host).
+  document.dispatchEvent(new Event('partials:loaded'));
   const page = document.body.dataset.page;
   if (page) {
     const link = document.querySelector(`.nav-link[data-page="${page}"]`);

@@ -11,5 +11,9 @@ desktop.ini
 # Logs / temp
 *.log
 
+# Python (model training scripts)
+__pycache__/
+*.py[cod]
+
 # Local tooling
 .claude/

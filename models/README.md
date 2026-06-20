@@ -1,11 +1,11 @@
-# Looks Calc — trained beauty model
+# Face Calc — trained beauty model
 
-Drop a converted model here as **`face-beauty.onnx`** and the Looks Calculator will use it
+Drop a converted model here as **`face-beauty.onnx`** and the Face Calculator will use it
 for the headline score automatically (on-device, via onnxruntime-web). Until then the page
 runs on the transparent geometry heuristic, and the geometry stays the breakdown either way.
 
 ## The contract the page expects
-`looks.html` → `MODEL_CONFIG` (top of the MediaPipe `<script type="module">`):
+`face.html` → `MODEL_CONFIG` (top of the MediaPipe `<script type="module">`):
 
 | Field        | Default                | Meaning |
 |--------------|------------------------|---------|
@@ -106,7 +106,7 @@ torch.onnx.export(model, torch.randn(1, 3, 224, 224), "face-beauty.onnx",
 # 4. download to your computer
 files.download("face-beauty.onnx")
 ```
-Then drop `face-beauty.onnx` into this `models/` folder and reload the Looks Calc page. (~43 MB —
+Then drop `face-beauty.onnx` into this `models/` folder and reload the Face Calc page. (~43 MB —
 fine to commit, or host on a CDN and point `MODEL_CONFIG.url` at it.)
 
 **Local alternative (if you prefer):** `pip install torch`, save the same code (minus the
@@ -127,7 +127,7 @@ output constants.
 
 ---
 
-# Looks Calc — sex classifier (optional, recommended)
+# Face Calc — sex classifier (optional, recommended)
 
 Drop **`face-sex.onnx`** here and the panel auto-detects sex on-device to pick the sex-conditional
 typical bands (jaw, lips, eyes, nose, dimorphism). Without it, the page falls back to a geometry guess,
@@ -159,3 +159,67 @@ Then drop `face-sex.onnx` into this `models/` folder and reload. The page's `SEX
 Output contract the page assumes: `[female_logit, male_logit, age/100]` — `argmax` of the first two
 is the sex. If your model's output order differs (male first, or a single sigmoid), tell Claude and the
 3-line `sexFromLogits` reader gets adjusted.
+
+---
+
+# Body Calc — trained body model (optional; geometry runs without it)
+
+Drop a converted model here as **`body-beauty.onnx`** and `body.html` will use it for the headline
+score automatically (on-device, via onnxruntime-web). Until then the page runs on the transparent
+**pose-geometry** composite, and the geometry stays the breakdown either way.
+
+## The contract the page expects
+`body.html` → `MODEL_CONFIG` (top of the MediaPipe Pose `<script type="module">`):
+
+| Field        | Default                | Meaning |
+|--------------|------------------------|---------|
+| `url`        | `models/body-beauty.onnx` | where the page fetches the model |
+| `inputSize`  | `224`                  | square RGB input, **NCHW** `[1,3,224,224]` |
+| `mean`/`std` | ImageNet               | `[0.485,0.456,0.406]` / `[0.229,0.224,0.225]` |
+| `outMin/outMax` | `26.234` / `69.261` | current anchors — one grouped-**holdout** split's 2nd/98th-pct studio predictions (provisional, *not* validated real-photo calibration). **Re-anchor** from your own holdout prediction quantiles per real-photo batch. |
+| `inputName`/`outputName` | `null`     | `null` = use the graph's first input/output |
+
+The page crops a **square, aspect-preserving box around the detected person** (pose-landmark
+bounding box × 1.15) from the **original-resolution** image and feeds that — match your training crop
+(full-body framing) if it differs. If your model wants a different size / normalization / a tall
+(non-square) body aspect, edit those constants.
+
+## Building `body-beauty.onnx` — train it (no turnkey checkpoint exists)
+SCUT-FBP5500 gave the face calc a ready, validated checkpoint. **Body attractiveness has no drop-in
+public equivalent** — every "score a physique" product is closed SaaS, and the public bodyfat repos
+have no released weights (full sweep in `body-cnn-scoping-brief.md`). So you **train a small
+regressor**, which **`train_body_beauty.py`** (next to this file) does end-to-end:
+
+1. **Data — the Connor full-body stimulus set** (OSF `egj7c`, <https://osf.io/egj7c/>): 726 clothed
+   full-body photos, *attractiveness* among 24 rated traits, ~490k ratings from ~3,311 US adults.
+   Downloadable; cite Connor et al. (2020), *Pers. Soc. Psychol. Bull.* 47(1):89–105.
+2. **Run it in Google Colab** (free GPU): New notebook → paste `train_body_beauty.py` into one cell →
+   set runtime to GPU → run. It downloads the OSF data, fine-tunes an ImageNet ResNet18 to regress the
+   mean attractiveness, reports a held-out **Pearson/Spearman**, exports `body-beauty.onnx` with the
+   contract above, and **prints the `outMin`/`outMax` to set** (held-out prediction quantiles).
+   - Verify the export path first with `python train_body_beauty.py --smoke` (no data, ~10 s) — it
+     builds the net, exports ONNX, and runs an onnxruntime parity check.
+   - The script is **defensive about the OSF schema** (it auto-discovers files and prints the ratings
+     columns); confirm the printed `attr_col` / `image_col` mapping before trusting the model.
+3. **Drop it in.** Put `body-beauty.onnx` in this `models/` folder, set the printed `outMin`/`outMax`
+   in `body.html` `MODEL_CONFIG`, reload.
+
+**Don't ship a weak model.** N=726 is small; if the held-out Spearman is poor, the geometry fallback is
+more honest than a noisy black box — the script warns you and the page degrades to geometry automatically
+when no `.onnx` is present (a later drop-in is a pure upgrade). Caveats to keep on the page: the raters /
+targets are a fixed US sample (bias is baked in — **label the training population**); 272 targets are
+Photoshop head-swaps (the script can drop them); a clothed photo learns *clothed-silhouette*
+attractiveness, not physique-under-clothing. The geometry composite (waist-to-hip, the waist-to-height
+adiposity proxy, V-taper, breadth, leg-to-torso, symmetry) stays the **black-box-free, evidence-ranked
+breakdown** regardless — see `frameworks.html#bone-pill`.
+
+## Notes on the geometry (works today, no model needed)
+- **Silhouette, not just skeleton.** BlazePose's 33 keypoints give joint positions but **no waist**
+  (waist is soft tissue with no landmark — the body's analog of "the hairline has no landmark"). So the
+  page also reads the **segmentation mask**: pose landmarks set the vertical levels (shoulder line, hip
+  line), and the silhouette gives the body's actual width at each level. That's what makes waist-to-hip,
+  the waist-to-height adiposity proxy, and the V-taper measurable from one photo.
+- **Frontal widths ≈ circumference ratios** under an elliptical assumption — a disclosed proxy.
+- **Confounds the page flags** (non-blocking): arms at your sides widen the waist silhouette; a tilted
+  stance inflates asymmetry; clothing redraws the outline. Best input: facing forward, full body in
+  frame, arms slightly out, fitted clothing.

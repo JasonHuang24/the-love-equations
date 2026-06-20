@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Calculator &mdash; The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <script src="js/composite-score.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
+  <style>
+    .lc-content { padding-bottom: 3rem; }
+
+    .lc-caveat {
+      border: 0.5px solid var(--border);
+      border-left: 3px solid var(--scarlet);
+      border-radius: var(--radius-md);
+      background: rgba(255,250,243,0.7);
+      padding: 0.85rem 1rem;
+      font-size: 12.5px; line-height: 1.6; color: var(--text-muted); margin-bottom: 1.4rem;
+    }
+    .lc-caveat strong { color: var(--text); }
+    .lc-caveat a { color: var(--scarlet-dim); }
+
+    .lc-grid { display: grid; grid-template-columns: minmax(0, 360px) 1fr; gap: 1.4rem; align-items: start; }
+
+    .lc-panel {
+      border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,250,243,0.74));
+      box-shadow: var(--shadow-soft); padding: clamp(1.1rem, 3vw, 1.4rem);
+    }
+    .lc-panel + .lc-panel { margin-top: 1.2rem; }
+    .lc-h {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      color: var(--scarlet); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase;
+      margin-bottom: 0.7rem; font-weight: 700;
+    }
+
+    .lc-srcs { display: flex; gap: 6px; margin-bottom: 0.85rem; flex-wrap: wrap; }
+    .lc-src {
+      border: 0.5px solid var(--border); background: rgba(255,255,255,0.6);
+      border-radius: 8px; padding: 6px 11px; font-size: 12px; cursor: pointer; color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .lc-src.active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
+
+    .lc-drop {
+      border: 1.5px dashed var(--border); border-radius: var(--radius-md);
+      padding: 1.4rem 1rem; text-align: center; color: var(--text-dim); font-size: 13px;
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    }
+    .lc-drop:hover { border-color: var(--scarlet); background: var(--scarlet-pale); }
+    .lc-drop i { font-size: 26px; display: block; margin-bottom: 0.4rem; color: var(--scarlet-dim); }
+    .lc-url-row { display: flex; gap: 6px; }
+    .lc-url-row input {
+      flex: 1; border: 0.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12.5px;
+      background: #fff; color: var(--text); font-family: inherit;
+    }
+    .lc-btn {
+      border: 0.5px solid var(--scarlet); background: var(--scarlet); color: #fffaf3;
+      border-radius: 8px; padding: 8px 14px; font-size: 13px; cursor: pointer; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .lc-btn:hover { background: var(--scarlet-deep); }
+    .lc-btn.ghost { background: transparent; color: var(--scarlet-dim); }
+
+    .lc-stage { position: relative; margin-top: 0.9rem; border-radius: var(--radius-md); overflow: hidden; background: #2c2622; min-height: 120px; display: none; }
+    .lc-stage.show { display: block; }
+    .lc-stage canvas, .lc-stage video { width: 100%; display: block; }
+    .lc-stage video { transform: scaleX(-1); }
+    .lc-status { font-size: 12px; color: var(--text-dim); margin-top: 0.6rem; min-height: 1.2em; }
+    .lc-status.err { color: var(--scarlet); }
+
+    /* "what it reads" disclosure */
+    .lc-how { display: grid; gap: 0.5rem; }
+    .lc-how-row { display: grid; grid-template-columns: 18px 1fr; gap: 0.5rem; font-size: 12.5px; line-height: 1.5; }
+    .lc-how-row i { color: var(--scarlet-dim); font-size: 15px; margin-top: 1px; }
+    .lc-how-row b { color: var(--text); font-weight: 600; }
+    .lc-note { font-size: 11px; color: var(--text-dim); line-height: 1.55; margin-top: 0.7rem; border-top: 0.5px solid var(--border-light); padding-top: 0.6rem; }
+    .lc-note a { color: var(--scarlet-dim); }
+
+    .lc-variant { display: flex; gap: 6px; margin-bottom: 1rem; }
+    .lc-variant button {
+      flex: 1; border: 0.5px solid var(--border); background: rgba(255,255,255,0.6);
+      border-radius: 9px; padding: 9px 10px; font-size: 13px; cursor: pointer; color: var(--text-muted); font-weight: 600;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .lc-variant button.active.bp { background: #51606F; color: #fff; border-color: #51606F; }
+    .lc-variant button.active.cv { background: #0F6E56; color: #fff; border-color: #0F6E56; }
+
+    .lc-score-wrap { text-align: center; padding: 0.5rem 0 0.2rem; }
+    .lc-score { font-family: "Playfair Display", Georgia, serif; font-size: clamp(3.2rem, 12vw, 5rem); line-height: 0.9; color: var(--text); }
+    .lc-score .unit { font-size: 0.36em; color: var(--text-dim); letter-spacing: 0.04em; }
+    .lc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
+    .lc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
+    .lc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
+    .lc-srcbadge.heur  { color: #A06A12; background: #FBEFD6; }
+    .lc-other { font-size: 12px; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5; }
+    .lc-empty { text-align: center; color: var(--text-dim); font-size: 13px; padding: 2.4rem 1rem; line-height: 1.6; }
+    .lc-empty i { font-size: 30px; display: block; margin-bottom: 0.5rem; color: var(--border); }
+
+    .lc-bd-h { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin: 1.2rem 0 0.5rem; }
+    /* measured-vs-typical readings — descriptive, not graded */
+    .lc-note-line { font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin: 0 0 0.7rem; }
+    .lc-meas { margin: 0.6rem 0; }
+    .lc-meas-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; margin-bottom: 4px; gap: 8px; }
+    .lc-meas-name { color: var(--text); }
+    .lc-meas-name .mtag { font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; color: var(--text-dim); margin-left: 5px; }
+    .lc-meas-name .mtag.t1 { color: #0F6E56; }
+    .lc-meas-name .mtag.lens { color: var(--scarlet-dim); }
+    .lc-sex { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 0.6rem 0 0.15rem; }
+    .lc-sex button { background: transparent; border: 0; padding: 4px 13px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: var(--text-muted); cursor: pointer; }
+    .lc-sex button.active { background: var(--text); color: #fff; }
+    .lc-sexnote { font-size: 10.5px; color: var(--text-dim); line-height: 1.5; margin-bottom: 0.3rem; }
+    .lc-meas-where { font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+    .lc-meas-where.out { color: var(--scarlet-dim); }
+    .lc-meas-where .lc-meas-val { font-weight: 600; margin-left: 4px; }
+    .lc-meas-val { font-size: 11px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+    .lc-meas-track { position: relative; height: 9px; border-radius: 5px; background: #ece3d8; }
+    .lc-meas-band { position: absolute; top: 0; bottom: 0; background: #d8cdbd; border-radius: 5px; }
+    .lc-meas-dot { position: absolute; top: -2px; width: 3px; height: 13px; border-radius: 2px; background: var(--text); transform: translateX(-1.5px); }
+    /* pixel reads — demoted to lighting / image-quality proxies */
+    .lc-px { display: flex; align-items: center; gap: 9px; font-size: 12px; margin: 0.4rem 0; color: var(--text-muted); }
+    .lc-px-name { flex-basis: 8.5rem; }
+    .lc-px-bar { flex: 1; height: 5px; border-radius: 3px; background: #ece3d8; overflow: hidden; }
+    .lc-px-bar > span { display: block; height: 100%; background: #c9bda9; }
+    .lc-px-val { color: var(--text-dim); width: 1.8rem; text-align: right; font-variant-numeric: tabular-nums; }
+    /* "a front photo can't read" list */
+    .lc-cant { margin: 0.2rem 0 0; padding: 0; }
+    .lc-cant li { font-size: 12px; color: var(--text-dim); line-height: 1.5; list-style: none; padding-left: 1rem; position: relative; margin: 0.15rem 0; }
+    .lc-cant li::before { content: "\2014"; position: absolute; left: 0; color: var(--border); }
+    .lc-missing { font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin-top: 1rem; border-top: 0.5px solid var(--border-light); padding-top: 0.7rem; }
+    .lc-missing a { color: var(--scarlet-dim); }
+
+    @media (max-width: 880px) { .lc-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body data-page="face">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Tool &middot; prototype</div>
+      <div class="page-title">Face Calculator</div>
+      <div class="page-sub">Drop in a face &mdash; on your device, nothing uploaded &mdash; and it reads everything it can from the photo, then scores it two ways: the <strong>Black Pill (PSL)</strong> lens and a <strong>conventional</strong> one. No sliders. It pairs with the <a href="body.html">Body Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
+    </div>
+
+    <div class="content lc-content">
+      <div class="lc-caveat">
+        <strong>Read this first.</strong> This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the heuristic scores both. <strong>That model learned from SCUT-FBP5500</strong> &mdash; a fixed panel of raters scoring one specific set of faces &mdash; so its scale carries their tastes, era and demographic skew, not a universal truth. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; for a professionally-built facial assessment, see <a href="https://www.qoves.com/" target="_blank" rel="noopener">QOVES</a>.
+      </div>
+
+      <div class="lc-grid">
+        <!-- INPUT COLUMN -->
+        <div>
+          <div class="lc-panel">
+            <div class="lc-h"><i class="ti ti-camera"></i> Give it a face</div>
+            <div class="lc-srcs">
+              <span class="lc-src active" data-src="upload"><i class="ti ti-upload"></i> Upload</span>
+              <span class="lc-src" data-src="camera"><i class="ti ti-camera"></i> Camera</span>
+              <span class="lc-src" data-src="url"><i class="ti ti-link"></i> URL</span>
+            </div>
+
+            <div class="lc-src-panel" data-panel="upload">
+              <input type="file" id="lc-file" accept="image/*" hidden />
+              <div class="lc-drop" id="lc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, well-lit photo here, or click to choose. Stays on your device.</div>
+            </div>
+            <div class="lc-src-panel" data-panel="camera" hidden>
+              <button class="lc-btn" id="lc-cam-start"><i class="ti ti-video"></i> Start camera</button>
+              <button class="lc-btn ghost" id="lc-cam-shot" hidden><i class="ti ti-capture"></i> Capture</button>
+            </div>
+            <div class="lc-src-panel" data-panel="url" hidden>
+              <div class="lc-url-row">
+                <input type="text" id="lc-url" placeholder="https://&hellip;/face.jpg" />
+                <button class="lc-btn" id="lc-url-go">Load</button>
+              </div>
+              <div class="lc-note">Some hosts block cross-origin loads; if it fails, download and upload instead.</div>
+            </div>
+
+            <div class="lc-stage" id="lc-stage">
+              <video id="lc-video" playsinline hidden></video>
+              <canvas id="lc-canvas" hidden></canvas>
+            </div>
+            <div class="lc-status" id="lc-status">Loading the on-device face model&hellip;</div>
+          </div>
+
+          <div class="lc-panel">
+            <div class="lc-h"><i class="ti ti-eye-search"></i> What it reads &mdash; and how</div>
+            <div class="lc-how">
+              <div class="lc-how-row"><i class="ti ti-vector-triangle"></i><div><b>Bone &amp; proportions</b> &mdash; from 478 face landmarks: symmetry, jaw, midface, eye size, nose width, eye spacing, lips, plus the proportional-typicality and dimorphic-cue proxies. Width-to-height &amp; canthal tilt are shown as weak-evidence &ldquo;lens&rdquo; reads, not weighted.</div></div>
+              <div class="lc-how-row"><i class="ti ti-line-height"></i><div><b>Facial leanness</b> &mdash; lower-face width against face height.</div></div>
+              <div class="lc-how-row"><i class="ti ti-sparkles"></i><div><b>Skin clarity</b> &mdash; fine-texture variance sampled from forehead and cheek patches (rough proxy for smoothness / blemishes).</div></div>
+              <div class="lc-how-row"><i class="ti ti-palette"></i><div><b>Skin-tone evenness</b> &mdash; how much colour drifts across those patches.</div></div>
+              <div class="lc-how-row"><i class="ti ti-eye"></i><div><b>Under-eye</b> &mdash; brightness under the eyes versus the cheeks (darkness / bags proxy).</div></div>
+            </div>
+            <div class="lc-note"><strong>Left out, not faked:</strong> hairline &amp; hair, beard, eye-whites, and the profile (chin / jaw projection, orbital vector) &mdash; visible in the photo, but not something a front-view mesh can <em>measure</em>, so the panel omits them rather than guess. They still move the real score. See <a href="pills.html#face-pill">The Face Pill</a>.</div>
+          </div>
+        </div>
+
+        <!-- RESULT COLUMN -->
+        <div class="lc-panel">
+          <div class="lc-variant">
+            <button class="active bp" data-prof="blackpill"><i class="ti ti-skull"></i> Black Pill &middot; PSL</button>
+            <button class="cv" data-prof="conventional"><i class="ti ti-mood-smile"></i> Conventional</button>
+          </div>
+          <div id="lc-result">
+            <div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; switch lenses any time.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-include="composite-section"></div>
+
+  <div data-include="footer"></div>
+
+  <!-- ===== Pure scoring core (DOM-free, testable) ===== -->
+  <script>
+    const IDX = {
+      reInner:133, reOuter:33, leInner:362, leOuter:263,
+      browR:105, browL:334, foreTop:10,
+      subnasale:2, chin:152, cheekR:234, cheekL:454, jawR:172, jawL:397,
+      mouthR:61, mouthL:291, lipTop:0, lipBot:17,
+      alarR:129, alarL:358,                                  // nose-wing (alar) width
+      reLidTop:159, reLidBot:145, leLidTop:386, leLidBot:374 // eyelid open height (EAR points)
+    };
+
+    function computeMetrics(lm, W, H){
+      const raw = i => ({ x: lm[i].x * W, y: lm[i].y * H });
+      const d = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+      // roll-normalize: level the inter-eye axis so tilt / symmetry / thirds / midface aren't corrupted by head roll
+      const ec0 = (a,b) => ({ x:(a.x+b.x)/2, y:(a.y+b.y)/2 });
+      const ecR0 = ec0(raw(IDX.reOuter), raw(IDX.reInner)), ecL0 = ec0(raw(IDX.leOuter), raw(IDX.leInner));
+      const roll = Math.atan2(ecL0.y-ecR0.y, ecL0.x-ecR0.x);
+      const cs = Math.cos(-roll), sn = Math.sin(-roll), cx = (ecR0.x+ecL0.x)/2, cy = (ecR0.y+ecL0.y)/2;
+      const P = i => { const p=raw(i), dx=p.x-cx, dy=p.y-cy; return { x: cx + dx*cs - dy*sn, y: cy + dx*sn + dy*cs }; };
+      const reI=P(IDX.reInner), reO=P(IDX.reOuter), leI=P(IDX.leInner), leO=P(IDX.leOuter);
+      const tiltR = Math.atan2(reI.y-reO.y, Math.abs(reO.x-reI.x)) * 180/Math.PI;
+      const tiltL = Math.atan2(leI.y-leO.y, Math.abs(leO.x-leI.x)) * 180/Math.PI;
+      const canthal = (tiltR+tiltL)/2;
+      const eyeW = (d(reO,reI) + d(leO,leI)) / 2;
+      const eyeSpacing = d(reI,leI) / eyeW;
+      const cheekR=P(IDX.cheekR), cheekL=P(IDX.cheekL), faceW = d(cheekR,cheekL);
+      const brow = { x:(P(IDX.browR).x+P(IDX.browL).x)/2, y:(P(IDX.browR).y+P(IDX.browL).y)/2 };
+      const lipTop=P(IDX.lipTop), lipBot=P(IDX.lipBot);
+      const fwhr = faceW / Math.abs(lipTop.y - brow.y);
+      const foreTop=P(IDX.foreTop), subn=P(IDX.subnasale), chin=P(IDX.chin);
+      const t1=brow.y-foreTop.y, t2=subn.y-brow.y, t3=chin.y-subn.y, meanT=(t1+t2+t3)/3;
+      const thirdsDev = Math.sqrt(((t1-meanT)**2+(t2-meanT)**2+(t3-meanT)**2)/3) / meanT;
+      const mid = (foreTop.x + chin.x) / 2;
+      const pairs = [[IDX.reOuter,IDX.leOuter],[IDX.mouthR,IDX.mouthL],[IDX.cheekR,IDX.cheekL],[IDX.jawR,IDX.jawL],[IDX.browR,IDX.browL]];
+      let asym = 0;
+      pairs.forEach(function(pr){
+        const a=P(pr[0]), b=P(pr[1]);
+        const da=Math.abs(a.x-mid), db=Math.abs(b.x-mid);
+        asym += Math.abs(da-db)/(((da+db)/2)||1)*0.6 + Math.abs(a.y-b.y)/faceW*0.6;
+      });
+      asym /= pairs.length;
+      const jaw = d(P(IDX.jawR),P(IDX.jawL)) / faceW;
+      const lips = d(lipTop,lipBot) / d(P(IDX.mouthR),P(IDX.mouthL));
+      const ecR={x:(reO.x+reI.x)/2,y:(reO.y+reI.y)/2}, ecL={x:(leO.x+leI.x)/2,y:(leO.y+leI.y)/2};
+      const midface = Math.abs(subn.y - (ecR.y+ecL.y)/2) / d(ecR,ecL);
+      const leanness = d(P(IDX.jawR),P(IDX.jawL)) / d(foreTop, chin);
+      const noseWidth = d(P(IDX.alarR), P(IDX.alarL)) / d(reI, leI);    // alar width ÷ intercanthal
+      const eyeOpen = ((d(P(IDX.reLidTop),P(IDX.reLidBot)) + d(P(IDX.leLidTop),P(IDX.leLidBot))) / 2) / eyeW; // lid aperture ÷ eye width
+      const poseSkew = Math.abs(Math.abs(cheekR.x-mid) - Math.abs(cheekL.x-mid)) / faceW; // yaw proxy (not scored)
+      return { symmetry:asym, jaw, midface, fwhr, canthal, thirdsDev, eyeSpacing, lips, leanness, noseWidth, eyeOpen, poseSkew };
+    }
+
+    // raw geometric metrics: ideal + tolerance (reasoned, prototype — tune against real photos)
+    // tol = symmetric tolerance; lowTol/highTol = asymmetric (don't punish above-ideal as hard as weak — e.g. a strong jaw)
+    const METRICS = [
+      { key:'symmetry',   label:'Symmetry',                ideal:0,    tol:0.10, prov:'Geometry' },
+      { key:'jaw',        label:'Jaw width',               ideal:0.86, lowTol:0.13, highTol:0.24, prov:'Geometry' },
+      { key:'midface',    label:'Midface compactness',     ideal:0.92, tol:0.18, prov:'Geometry' },
+      { key:'fwhr',       label:'Width-to-height (proxy)', ideal:2.05, lowTol:0.30, highTol:0.42, prov:'Geometry' },
+      { key:'canthal',    label:'Canthal tilt',            ideal:5,    tol:7,    prov:'Geometry' },
+      { key:'eyeSpacing', label:'Eye spacing',             ideal:1.0,  tol:0.18, prov:'Geometry' },
+      { key:'lips',       label:'Lip fullness',            ideal:0.50, tol:0.15, prov:'Geometry' },
+      { key:'leanness',   label:'Lower-face ratio',        ideal:0.52, lowTol:0.13, highTol:0.16, prov:'Geometry' }
+    ];
+    function scoreMetric(v, m){
+      const tol = v < m.ideal ? (m.lowTol || m.tol) : (m.highTol || m.tol);
+      return 100 * Math.exp(-Math.pow((v - m.ideal)/tol, 2));
+    }
+
+    // pixel-read features (already 0..100). pixelStats from the page's canvas sampling.
+    function computeSoft(px){
+      if (!px) return null;
+      const mean = a => a.reduce((s,x)=>s+x,0)/a.length;
+      const std  = a => { const m=mean(a); return Math.sqrt(mean(a.map(x=>(x-m)*(x-m)))); };
+      const Ls = [px.fore.L, px.cheekR.L, px.cheekL.L];
+      const tex = mean([px.fore.cov, px.cheekR.cov, px.cheekL.cov]);
+      const skin = 100 * Math.exp(-Math.pow(Math.max(0, tex - 0.025) / 0.055, 2));
+      const spread = std(Ls) / (mean(Ls) || 1);
+      const evenness = 100 * Math.exp(-Math.pow(spread / 0.13, 2));
+      const cheekM = (px.cheekR.L + px.cheekL.L) / 2;
+      const ue = (px.underEyeR.L + px.underEyeL.L) / 2;
+      const dark = Math.max(0, (cheekM - ue) / (cheekM || 1));
+      const undereye = 100 * Math.exp(-Math.pow(dark / 0.20, 2));
+      const brightness = 100 * Math.exp(-Math.pow((mean(Ls) - 165) / 80, 2)); // confidence, not beauty
+      return { skin, evenness, undereye, brightness };
+    }
+    const SOFT = [
+      { key:'skin',     label:'Skin clarity',     prov:'Pixels' },
+      { key:'evenness', label:'Skin-tone evenness', prov:'Pixels' },
+      { key:'undereye', label:'Under-eye',        prov:'Pixels' }
+    ];
+
+    // ── Descriptive geometry readings, EVIDENCE-RANKED (the panel is a measurement, NOT a rival score) ──
+    // tier  = how much the literature says this drives attractiveness (Tier 1 strongest → Lens = folklore).
+    // band  = the typical range; `{f,m}` = sex-conditional (the attractive value genuinely differs by sex).
+    // disp  = display window. Outside the band is *noted*, never penalized — facts, and the CNN may disagree.
+    // All bands are reasoned/provisional; see frameworks.html#bone-pill. Sources in the page copy.
+    const MEASURES = [
+      // Tier 2 — the measurable sex-dimorphic features (averageness + dimorphism composites are built from these)
+      { key:'jaw',       group:'feature', tier:'Tier 2', label:'Jaw & lower face',
+        band:{ f:[0.72,0.84], m:[0.82,0.96] }, disp:[0.60,1.06], below:'Narrow', above:'Wide', fmt:v=>v.toFixed(2) },
+      { key:'lips',      group:'feature', tier:'Tier 2', label:'Lip fullness',
+        band:{ f:[0.34,0.50], m:[0.26,0.40] }, disp:[0.16,0.60], below:'Thinner', above:'Fuller', fmt:v=>v.toFixed(2),
+        note:'fuller is the feminine direction · shifts with mouth openness' },
+      { key:'eyeOpen',   group:'feature', tier:'Tier 2', label:'Eye size / openness',
+        band:{ f:[0.30,0.40], m:[0.25,0.34] }, disp:[0.16,0.48], below:'Hooded', above:'Large', fmt:v=>v.toFixed(2) },
+      { key:'noseWidth', group:'feature', tier:'Tier 2', label:'Nose width',
+        band:{ f:[1.00,1.25], m:[1.12,1.42] }, disp:[0.80,1.65], below:'Narrow', above:'Wide', fmt:v=>v.toFixed(2),
+        note:'narrower reads more attractive — esp. on a feminine face' },
+      { key:'symmetry',  group:'feature', tier:'Tier 2', label:'Symmetry',
+        band:[0,0.05], disp:[0,0.13], below:'Very even', above:'Asymmetric', fmt:null },
+      // Tier 3 — proportions with thinner / context-dependent evidence
+      { key:'midface',   group:'prop', tier:'Tier 3', label:'Midface length',
+        band:[0.80,1.05], disp:[0.55,1.30], below:'Compact', above:'Long', fmt:v=>v.toFixed(2) },
+      { key:'eyeSpacing',group:'prop', tier:'Tier 3', label:'Eye spacing',
+        band:[1.10,1.45], disp:[0.85,1.70], below:'Close-set', above:'Wide-set', fmt:v=>v.toFixed(2) },
+      { key:'leanness',  group:'prop', tier:'Tier 3', label:'Lower-face ratio',
+        band:{ f:[0.58,0.69], m:[0.63,0.74] }, disp:[0.45,0.85], below:'Long', above:'Wide', fmt:v=>v.toFixed(2),
+        note:'face-height term still uses landmark 10 (not the hairline) — provisional, excluded from the composites' },
+      // Lens — popular in looksmaxxing, weak in the attractiveness literature
+      { key:'fwhr',      group:'lens', tier:'Lens', label:'Width-to-height (fWHR)',
+        band:[1.75,2.05], disp:[1.45,2.45], below:'Long', above:'Wide', fmt:v=>v.toFixed(2),
+        note:'tracks perceived dominance/aggression — not attractiveness (Geniole 2015)' },
+      { key:'canthal',   group:'lens', tier:'Lens', label:'Canthal tilt',
+        band:[2,8], disp:[-7,17], below:'Downturned', above:'Upturned', fmt:v=>v.toFixed(1)+'°',
+        note:'PSL-popular; its attractiveness link is essentially unstudied' }
+    ];
+    function bandFor(m, sex){ return Array.isArray(m.band) ? m.band : m.band[sex === 'm' ? 'm' : 'f']; }
+    // Structural sexual-dimorphism cue index (+ masculine / − feminine), feeding the dimorphism composite.
+    // Jaw + nose dominate; eye-openness and lips are kept only as LIGHT terms because they're expression/
+    // camera-noisy (a squint or smile shifts them ~20pts at the old weights). `leanness` stays excluded —
+    // its face-height term uses landmark 10 (mid-forehead, not the hairline), which inflates it. Provisional.
+    function mascIndex(geo){
+      if (!geo) return 0;
+      const z = (k, ref, sc) => geo[k] == null ? 0 : (geo[k]-ref)/sc;
+      return 1.0*z('jaw',0.80,0.10) + 0.6*z('noseWidth',1.20,0.18) - 0.4*z('eyeOpen',0.33,0.07) - 0.3*z('lips',0.38,0.12);
+    }
+    // Tier-1 composites — the two most replicated drivers, derived (reasoned) from the features above.
+    function computeComposites(geo, sex){
+      sex = sex === 'm' ? 'm' : 'f';
+      const keys = ['jaw','lips','eyeOpen','noseWidth','midface','eyeSpacing'];   // no leanness (foreTop-biased)
+      let dev = 0, n = 0;
+      keys.forEach(function(k){
+        const m = MEASURES.find(x => x.key === k); if (!m || geo[k] == null) return;
+        const b = bandFor(m, sex), c = (b[0]+b[1])/2, half = ((b[1]-b[0])/2) || 1;
+        dev += Math.min(2.2, Math.abs(geo[k]-c)/half); n++;
+      });
+      const averageness = Math.max(0, Math.min(100, 100 - (n ? dev/n : 0) * 38));
+      const masc = mascIndex(geo);
+      const typ = sex === 'm' ? masc : -masc;                            // + = typical for the chosen sex
+      const dimorphism = Math.max(0, Math.min(100, 50 + typ * 16));
+      return { averageness, dimorphism };
+    }
+    // Fallback sex guess ONLY (used when the classifier isn't loaded — unreliable by nature, front-view
+    // ratios barely separate sex). Uses the two least expression-noisy cues, jaw + nose, against the
+    // midpoint of the female/male band centres. The classifier overrides this whenever present.
+    function guessSex(geo){
+      if (!geo) return 'f';
+      const jaw = geo.jaw==null ? 0.835 : geo.jaw, nose = geo.noseWidth==null ? 1.1975 : geo.noseWidth;
+      return ((jaw - 0.835)/0.055 + 0.6*(nose - 1.1975)/0.10) > 0 ? 'm' : 'f';
+    }
+    // What a single front photo structurally cannot read — see frameworks.html#bone-pill
+    const CANT_READ = [
+      'Facial thirds &amp; forehead height — needs the hairline, which has no landmark',
+      'Profile: chin &amp; jaw projection, nasofrontal angle, orbital vector',
+      'Eye-whites / scleral show, iris colour',
+      'Hair, beard, brow density — soft tissue a mesh ignores',
+      'Skin quality at any real level — only the lighting-grade proxy below'
+    ];
+
+    const PROFILES = {
+      // contrast = sigmoid exponent (>1 spreads toward extremes). gamma shifts the middle.
+      blackpill: { name:'Black Pill · PSL', unit:'PSL', gamma:1.0, contrast:1.75, scaleMax:8.6,
+        w:{ symmetry:1.1, jaw:1.4, midface:1.0, fwhr:0.3, canthal:0.3, eyeSpacing:0.6, lips:0.6, leanness:1.0,
+            skin:0.5, evenness:0.4, undereye:0.4 } },
+      conventional: { name:'Conventional', unit:'/ 10', gamma:0.9, contrast:1.35, scaleMax:10,
+        w:{ symmetry:1.0, jaw:0.6, midface:0.5, fwhr:0.2, canthal:0.2, eyeSpacing:0.4, lips:0.8, leanness:0.9,
+            skin:1.5, evenness:1.0, undereye:0.8 } }
+    };
+
+    function gradeFace(geo, soft, profKey){
+      const prof = PROFILES[profKey];
+      let num=0, den=0; const subs={};
+      if (geo){ METRICS.forEach(function(m){
+        const s = scoreMetric(geo[m.key], m); subs[m.key]=s; num += prof.w[m.key]*s; den += prof.w[m.key];
+      }); }
+      if (soft){ SOFT.forEach(function(s){
+        const v = soft[s.key]; subs[s.key]=v; num += prof.w[s.key]*v; den += prof.w[s.key];
+      }); }
+      let x = (den ? num/den : 0) / 100;
+      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
+      x = Math.pow(x, prof.gamma);
+      return { score: 1 + (prof.scaleMax-1)*x, raw:x*100, subs:subs };
+    }
+
+    // ── Trained-model path ── one objective CNN score t∈[0,1] interpreted through each lens's curve,
+    // so the two variants survive (the CNN measures; the lens interprets). Heuristic stays the breakdown.
+    function mapModelScore(t, profKey){
+      const prof = PROFILES[profKey];
+      let x = Math.max(0, Math.min(1, t));
+      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
+      x = Math.pow(x, prof.gamma);
+      return 1 + (prof.scaleMax-1)*x;
+    }
+    // RGBA bytes (size×size) → CHW float32 tensor, ImageNet-normalized. (DOM-free, testable.)
+    function preprocessToTensor(rgba, size, mean, std){
+      const n = size*size, out = new Float32Array(3*n);
+      for (let i=0;i<n;i++){
+        out[i]       = (rgba[i*4]  /255 - mean[0]) / std[0];
+        out[n+i]     = (rgba[i*4+1]/255 - mean[1]) / std[1];
+        out[2*n+i]   = (rgba[i*4+2]/255 - mean[2]) / std[2];
+      }
+      return out;
+    }
+    // RGBA → CHW float32, RGB, RAW 0–255 (no normalization). InsightFace genderage's contract. (testable)
+    function preprocessSex(rgba, size){
+      const n = size*size, out = new Float32Array(3*n);
+      for (let i=0;i<n;i++){ out[i]=rgba[i*4]; out[n+i]=rgba[i*4+1]; out[2*n+i]=rgba[i*4+2]; }
+      return out;
+    }
+    // genderage output → 'm'/'f' + confidence. out[0]=female logit, out[1]=male logit, out[2]=age/100. (testable)
+    function sexFromLogits(out){
+      const female=out[0], male=out[1], mx=Math.max(female, male);   // shift for numerical stability
+      const e0=Math.exp(female-mx), e1=Math.exp(male-mx), z=(e0+e1)||1;
+      return { sex: male>female ? 'm' : 'f', conf: Math.max(e0,e1)/z };
+    }
+
+    function pslTier(s, sex){
+      const f = sex === 'f';                       // female ladder swaps the sex-coded rungs (Chad→Stacy, incel→femcel)
+      if (s<2.5) return 'Sub-tier';
+      if (s<3.5) return f ? 'Femcel-tier' : 'Incel-tier';
+      if (s<4.5) return 'Below average';
+      if (s<5.0) return 'LTN · Low-Tier Normie';
+      if (s<5.5) return 'MTN · Mid-Tier Normie';
+      if (s<6.5) return 'HTN · High-Tier Normie';
+      if (s<7.5) return f ? 'Stacylite' : 'Chadlite';
+      if (s<8.5) return f ? 'Stacy' : 'Chad';
+      return f ? 'Gigastacy / Model' : 'Gigachad / Model';
+    }
+    function convTier(s){
+      if (s<3) return 'Well below average';
+      if (s<4.5) return 'Below average';
+      if (s<5.5) return 'About average';
+      if (s<6.5) return 'Above average';
+      if (s<8) return 'Attractive';
+      if (s<9) return 'Very attractive';
+      return 'Exceptional';
+    }
+    function tierFor(p, s, sex){ return p === 'blackpill' ? pslTier(s, sex) : convTier(s); }
+
+    if (typeof module !== 'undefined') { module.exports = { computeMetrics, computeSoft, gradeFace, scoreMetric, mapModelScore, preprocessToTensor, METRICS, SOFT, MEASURES, CANT_READ, PROFILES, bandFor, mascIndex, computeComposites, guessSex, preprocessSex, sexFromLogits, pslTier, convTier }; }
+  </script>
+
+  <!-- ===== UI wiring (no MediaPipe) ===== -->
+  <script>
+    const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
+                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'' };
+
+    document.querySelectorAll('.lc-src').forEach(function(tab){
+      tab.addEventListener('click', function(){
+        document.querySelectorAll('.lc-src').forEach(t => t.classList.toggle('active', t===tab));
+        const src = tab.dataset.src;
+        document.querySelectorAll('.lc-src-panel').forEach(p => p.hidden = (p.dataset.panel !== src));
+        if (src !== 'camera' && window.lcStopCamera) window.lcStopCamera();
+      });
+    });
+
+    document.querySelectorAll('.lc-variant button').forEach(function(b){
+      b.addEventListener('click', function(){
+        document.querySelectorAll('.lc-variant button').forEach(x => x.classList.toggle('active', x===b));
+        LC.profile = b.dataset.prof; renderResult();
+      });
+    });
+
+    function setStatus(msg, isErr){
+      const el = document.getElementById('lc-status'); el.textContent = msg; el.classList.toggle('err', !!isErr);
+    }
+    function fmt(n){ return (Math.round(n*10)/10).toFixed(1); }
+
+    // descriptive reading: marker placed against the typical band — no good/bad colouring
+    function measureRow(m, v){
+      const lo=m.band[0], hi=m.band[1], dlo=m.disp[0], span=(m.disp[1]-m.disp[0])||1;
+      const clamp = x => Math.max(0, Math.min(100, x));
+      const pos = clamp((v-dlo)/span*100);
+      const bL = clamp((lo-dlo)/span*100), bR = clamp((hi-dlo)/span*100);
+      const out = v<lo || v>hi;
+      const where = v<lo ? m.below : v>hi ? m.above : 'Typical';
+      const val = m.fmt ? ' <span class="lc-meas-val">'+m.fmt(v)+'</span>' : '';
+      const tier = m.tier || m.prov || '';
+      const tcls = tier==='Tier 1' ? 't1' : tier==='Lens' ? 'lens' : '';
+      return '<div class="lc-meas"><div class="lc-meas-top">'
+        + '<span class="lc-meas-name">'+m.label+'<span class="mtag '+tcls+'">'+tier+'</span></span>'
+        + '<span class="lc-meas-where'+(out?' out':'')+'">'+where+val+'</span></div>'
+        + '<div class="lc-meas-track">'
+        + '<span class="lc-meas-band" style="left:'+bL+'%;width:'+Math.max(2,bR-bL)+'%"></span>'
+        + '<span class="lc-meas-dot" style="left:'+pos+'%"></span></div>'
+        + (m.note ? '<div class="lc-meas-val" style="margin-top:3px">'+m.note+'</div>' : '')
+        + '</div>';
+    }
+    // pixel read: demoted, muted — a lighting/image-quality proxy, not a grade
+    function pxRow(label, val){
+      const v = Math.max(0, Math.min(100, val));
+      return '<div class="lc-px"><span class="lc-px-name">'+label+'</span>'
+        + '<span class="lc-px-bar"><span style="width:'+v+'%"></span></span>'
+        + '<span class="lc-px-val">'+Math.round(v)+'</span></div>';
+    }
+
+    function renderResult(){
+      const host = document.getElementById('lc-result');
+      // Verbose red calibration row (model raw output): shown on localhost (the dev/calibration build) or
+      // with ?debug, hidden in a deployed build.
+      const LE_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      if (!LC.geo){
+        host.innerHTML = '<div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; switch lenses any time.</div>';
+        return;
+      }
+      const prof = PROFILES[LC.profile];
+      const other = LC.profile === 'blackpill' ? 'conventional' : 'blackpill';
+      const accent = LC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
+      const heur = gradeFace(LC.geo, LC.soft, LC.profile);   // always the breakdown; also the fallback score
+      const usingModel = LC.model != null;
+      const score  = usingModel ? mapModelScore(LC.model, LC.profile) : heur.score;
+      const oscore = usingModel ? mapModelScore(LC.model, other) : gradeFace(LC.geo, LC.soft, other).score;
+
+      const srcBadge = usingModel
+        ? '<div class="lc-srcbadge model">Trained CNN score &middot; the breakdown below is the transparent geometry</div>'
+        : '<div class="lc-srcbadge heur">Geometry heuristic &middot; no trained model loaded (see note)</div>';
+      const sex = LC.sex === 'm' ? 'm' : 'f';
+      const comp = computeComposites(LC.geo, sex);
+      const resolve = m => Object.assign({}, m, { band: bandFor(m, sex) });
+      const compRow = (label, val, band, below, above, note) =>
+        measureRow({ label:label, band:band, disp:[0,100], below:below, above:above, fmt:v=>Math.round(v), tier:'Tier 1', note:note }, val);
+
+      const sexSrcNote = LC.sexSource === 'model'
+        ? 'Sex detected on-device'+(LC.sexConf ? ' ('+Math.round(LC.sexConf*100)+'% confident)' : '')+' &mdash; flip it if wrong. '
+        : LC.sexSource === 'manual'
+        ? 'Sex set by you. '
+        : 'Sex guessed from geometry (classifier not loaded &mdash; drop <code>models/face-sex.onnx</code>) &mdash; flip if wrong. ';
+      const sexCtl =
+        '<div class="lc-sex"><button data-sex="f"'+(sex==='f'?' class="active"':'')+'>Read as female</button>'
+        + '<button data-sex="m"'+(sex==='m'?' class="active"':'')+'>Read as male</button></div>'
+        + '<div class="lc-sexnote">'+sexSrcNote
+        + 'This only re-bases the typical ranges below (dimorphism is sex-conditional); it does <em>not</em> change the headline score (the model scores the same either way &mdash; though that model carries its training set&rsquo;s own demographic biases).</div>';
+
+      const drivers = '<div class="lc-bd-h">Strongest drivers &middot; Tier 1</div>'
+        + '<div class="lc-note-line">Averageness and sexual dimorphism are the most replicated predictors of attractiveness (Rhodes 2006). Shown here as <strong>reasoned proxies, not population-fitted</strong>: <em>proportional typicality</em> stands in for averageness (closeness to typical proportions, not distance from a mean face); a <em>dimorphic-cue index</em> stands in for sex-typicality.</div>'
+        + compRow('Proportional typicality', comp.averageness, [55,85], 'Distinctive', 'Very typical')
+        + compRow((sex==='m'?'Masculinity':'Femininity')+' &middot; dimorphic cues', comp.dimorphism, [45,80], 'Androgynous', (sex==='m'?'Masculine':'Feminine'),
+            (sex==='m'?'expression-sensitive proxy · male masculinity preference is mixed':'expression-sensitive proxy · femininity reliably predicts attractiveness'));
+
+      const grp = g => MEASURES.filter(m => m.group === g);
+      const featRows = '<div class="lc-bd-h">Sex-typical features &middot; Tier 2</div>'
+        + grp('feature').map(m => measureRow(resolve(m), LC.geo[m.key])).join('')
+        + (LC.soft ? pxRow('Skin clarity', LC.soft.skin) + pxRow('Skin-tone evenness', LC.soft.evenness) + pxRow('Under-eye', LC.soft.undereye)
+            + '<div class="lc-note-line" style="margin:0.4rem 0 0">Skin &amp; adiposity is a genuine Tier-2 cue, but read from pixels it&rsquo;s lighting-dependent &mdash; a clean studio shot scores higher than a candid. Photo quality, not dermatology.</div>' : '');
+      const propRows = '<div class="lc-bd-h">Proportions &middot; Tier 3</div>'
+        + grp('prop').map(m => measureRow(resolve(m), LC.geo[m.key])).join('');
+      const lensRows = '<div class="lc-bd-h">PSL lens &middot; weak attractiveness evidence</div>'
+        + '<div class="lc-note-line">Popular in looksmaxxing, thin in the literature. fWHR tracks <em>dominance</em> (larger is, if anything, <em>less</em> attractive to women &mdash; Geniole 2015); canthal tilt&rsquo;s attractiveness link is essentially unstudied. Shown for completeness, not weight.</div>'
+        + grp('lens').map(m => measureRow(resolve(m), LC.geo[m.key])).join('');
+      const cantRows = '<div class="lc-bd-h">What this panel cannot measure</div>'
+        + '<ul class="lc-cant">' + CANT_READ.map(t => '<li>'+t+'</li>').join('') + '</ul>';
+
+      host.innerHTML =
+        '<div class="lc-score-wrap">'
+        + '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">'+prof.unit+'</span></div>'
+        + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score, sex)+'</div>'
+        + srcBadge
+        + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Low-res read.</strong> '+LC.reliability.replace(/^ · small\/distant face /, '').replace(/^ · /, '')+'</div>' : '')
+        + (LE_DEBUG && usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
+        + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+').</div>'
+        + '</div>'
+        + '<div class="lc-note-line" style="margin-top:0.8rem">Where this face sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
+        + sexCtl
+        + drivers + featRows + propRows + lensRows + cantRows
+        + '<div class="lc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box); the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a front-on measure misses gestalt and the whole profile &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. With no model loaded, the geometry scores the headline too (badged above).</div>';
+
+      host.querySelectorAll('.lc-sex button').forEach(function(b){
+        b.addEventListener('click', function(){ LC.sex = b.dataset.sex; LC.sexAuto = false; LC.sexManual = true; LC.sexSource = 'manual'; renderResult(); });
+      });
+
+      // persist this face score for the Face × Body composite (both lenses; the composite normalises them)
+      if (window.leComposite){
+        window.leComposite.saveFace({
+          bp: usingModel ? mapModelScore(LC.model,'blackpill') : gradeFace(LC.geo, LC.soft,'blackpill').score,
+          cv: usingModel ? mapModelScore(LC.model,'conventional') : gradeFace(LC.geo, LC.soft,'conventional').score,
+          bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
+          source: usingModel ? 'model' : 'heuristic', sex: sex, ts: Date.now()
+        });
+      }
+    }
+
+    window.lcAnalyze = function(geo, soft, reliability){
+      LC.geo = geo; LC.soft = soft; LC.model = null;   // new face: heuristic shows first, model score arrives async
+      LC.reliability = reliability || '';              // persistent low-res caveat (survives the async model re-render)
+      LC.sex = guessSex(geo); LC.sexAuto = true;       // geometry guess shows instantly; the sex model refines it async
+      LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false;
+      let note = 'Face measured. Sex auto-read: ' + (LC.sex==='m'?'male':'female') + ' — flip it in the panel if wrong.';
+      if (geo && geo.poseSkew > 0.12) note += ' · head looks turned — front-on gives a better read.';
+      if (soft && soft.brightness < 45) note += ' · lighting looks off — results less reliable.';
+      note += LC.reliability;
+      setStatus(note); renderResult();
+    };
+    window.lcSetModelScore = function(t, raw){ LC.model = t; LC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
+    window.lcModelReady = function(ok){ LC.modelReady = ok; };
+    // the on-device sex classifier reports in — overrides the geometry guess unless the user picked manually
+    window.lcSetSex = function(sex, conf){
+      if (LC.sexManual) return;
+      LC.sex = (sex==='m'?'m':'f'); LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
+      renderResult();
+    };
+    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; renderResult(); };
+    window.lcSetStatus = setStatus;
+    window.lcComputeMetrics = computeMetrics;
+    window.lcPreprocess = preprocessToTensor;
+    window.lcPreprocessSex = preprocessSex;
+    window.lcSexFromLogits = sexFromLogits;
+    window.lcComputeSoft = computeSoft;
+  </script>
+
+  <!-- ===== MediaPipe Face Landmarker (on-device) ===== -->
+  <script type="module">
+    import { FaceLandmarker, FilesetResolver, DrawingUtils }
+      from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
+
+    let landmarker = null;
+    const stage = document.getElementById('lc-stage');
+    const canvas = document.getElementById('lc-canvas');
+    const video = document.getElementById('lc-video');
+
+    async function init(){
+      try {
+        const fileset = await FilesetResolver.forVisionTasks(
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+        landmarker = await FaceLandmarker.createFromOptions(fileset, {
+          baseOptions: { modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task" },
+          runningMode: "IMAGE", numFaces: 1
+        });
+        window.lcSetStatus('Ready. Drop, capture, or paste a face.');
+      } catch (e){
+        window.lcSetStatus('Face model failed to load (needs internet for the CDN). ' + e.message, true);
+      }
+    }
+    init();
+
+    // ── Trained beauty model (onnxruntime-web, on-device). Drop models/face-beauty.onnx to enable. ──
+    const MODEL_CONFIG = {
+      url: 'models/face-beauty.onnx',
+      inputSize: 224,
+      mean: [0.485, 0.456, 0.406],   // ImageNet
+      std:  [0.229, 0.224, 0.225],
+      outMin: 1.5, outMax: 4.5,      // conservative interim range (min-max off ~3 faces is fragile; replace with holdout quantiles when a real calibration set exists)
+      inputName: null, outputName: null   // null → first graph input/output
+    };
+    let currentGen = 0;   // bumped per analysis; async inferences tag themselves and self-discard if superseded
+    let session = null, modelState = 'loading', pendingTensor = null, pendingTensorGen = 0;
+    async function initModel(){
+      const ort = window.ort;
+      if (!ort){ modelState='absent'; window.lcModelReady(false); return; }
+      try {
+        ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
+        window.lcSetStatus('Loading the trained model (~45 MB, re-downloads each reload)…');
+        // no HEAD pre-check — some static hosts reject HEAD while serving GET; let create() GET it and catch
+        session = await ort.InferenceSession.create(MODEL_CONFIG.url, { executionProviders:['wasm'] });
+        modelState='ready'; window.lcModelReady(true);
+        window.lcSetStatus('Trained model ready.');
+        if (pendingTensor) inferAndSet(pendingTensor, pendingTensorGen);   // auto-score a face dropped before the model finished
+      } catch(e){
+        session = null; modelState='absent'; window.lcModelReady(false);
+        window.lcSetStatus('No trained beauty model loaded — running on the geometry heuristic. Drop models/face-beauty.onnx to enable it.');
+      }
+    }
+    initModel();
+
+    // SQUARE, aspect-preserving face crop from the CLEAN (pre-overlay) canvas → 224 ImageNet CHW.
+    // SCUT trained on 256→224 (roughly square, undistorted); stretching a tall mesh rect to 224² is a
+    // distribution shift, so we take a square box (1.4× the face, nudged up a touch for forehead/hair).
+    function cropFaceTensor(srcCanvas, lm, W, H){
+      let minx=1,miny=1,maxx=0,maxy=0;
+      for (let i=0;i<lm.length;i++){ const p=lm[i]; if(p.x<minx)minx=p.x; if(p.y<miny)miny=p.y; if(p.x>maxx)maxx=p.x; if(p.y>maxy)maxy=p.y; }
+      const x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H;
+      const cx=(x0+x1)/2, cy=(y0+y1)/2 - (y1-y0)*0.06, side=Math.max(x1-x0, y1-y0)*1.4;
+      const S=MODEL_CONFIG.inputSize;
+      const off=document.createElement('canvas'); off.width=S; off.height=S;
+      const octx=off.getContext('2d',{ willReadFrequently:true });
+      octx.drawImage(srcCanvas, cx-side/2, cy-side/2, side, side, 0,0, S,S);   // square→square, aspect preserved
+      return window.lcPreprocess(octx.getImageData(0,0,S,S).data, S, MODEL_CONFIG.mean, MODEL_CONFIG.std);
+    }
+    async function inferAndSet(data, gen){
+      const ort=window.ort; if (!ort || !session) return;
+      try {
+        const S=MODEL_CONFIG.inputSize;
+        const inName=MODEL_CONFIG.inputName || session.inputNames[0];
+        const out=await session.run({ [inName]: new ort.Tensor('float32', data, [1,3,S,S]) });
+        if (gen !== currentGen) return;                 // a newer face arrived mid-inference — discard this result
+        const oName=MODEL_CONFIG.outputName || session.outputNames[0];
+        const raw=Number(out[oName].data[0]);
+        if (!Number.isFinite(raw)) throw new Error('model returned a non-finite value');   // don't render NaN
+        const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
+        window.lcSetModelScore(norm, raw);
+      } catch(e){ if (gen === currentGen) window.lcSetStatus('Trained-model inference failed: '+e.message, true); }   // a stale rejection must not clobber the current face
+    }
+
+    // ── Sex classifier (InsightFace genderage.onnx, on-device). Drop models/face-sex.onnx to enable. ──
+    // Replaces the unreliable geometry guess; if absent, the geometry guess silently remains the default.
+    const SEX_MODEL_CONFIG = { url: 'models/face-sex.onnx', inputSize: 96, cropScale: 1.5 };
+    let sexSession = null, sexState = 'loading', pendingSexTensor = null, pendingSexGen = 0;
+    async function initSexModel(){
+      const ort = window.ort;
+      if (!ort){ sexState = 'absent'; return; }
+      try {
+        // no HEAD pre-check (some hosts reject HEAD) — let create() GET it and fall back on error
+        sexSession = await ort.InferenceSession.create(SEX_MODEL_CONFIG.url, { executionProviders:['wasm'] });
+        sexState = 'ready';
+        if (pendingSexTensor) inferSex(pendingSexTensor, pendingSexGen);   // a face arrived before the classifier loaded
+      } catch(e){ sexSession = null; sexState = 'absent'; }   // silent — the geometry guess stays the default
+    }
+    initSexModel();
+
+    // loose centred square crop (face box × 1.5) → 96×96 raw-RGB tensor — matches genderage's framing
+    function cropSexTensor(srcCanvas, lm, W, H){
+      let minx=1,miny=1,maxx=0,maxy=0;
+      for (let i=0;i<lm.length;i++){ const p=lm[i]; if(p.x<minx)minx=p.x; if(p.y<miny)miny=p.y; if(p.x>maxx)maxx=p.x; if(p.y>maxy)maxy=p.y; }
+      const x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H;
+      const cx=(x0+x1)/2, cy=(y0+y1)/2, side=Math.max(x1-x0, y1-y0)*SEX_MODEL_CONFIG.cropScale;
+      const S=SEX_MODEL_CONFIG.inputSize;
+      const off=document.createElement('canvas'); off.width=S; off.height=S;
+      const octx=off.getContext('2d',{ willReadFrequently:true });
+      octx.drawImage(srcCanvas, cx-side/2, cy-side/2, side, side, 0,0, S,S);
+      return window.lcPreprocessSex(octx.getImageData(0,0,S,S).data, S);
+    }
+    async function inferSex(data, gen){
+      const ort = window.ort; if (!ort || !sexSession) return;
+      try {
+        const S = SEX_MODEL_CONFIG.inputSize;
+        const out = await sexSession.run({ [sexSession.inputNames[0]]: new ort.Tensor('float32', data, [1,3,S,S]) });
+        if (gen !== currentGen) return;                 // discard if a newer face superseded this one
+        const r = window.lcSexFromLogits(out[sexSession.outputNames[0]].data);
+        window.lcSetSex(r.sex, r.conf);
+      } catch(e){ /* leave the geometry guess in place */ }
+    }
+
+    // sample a square patch -> mean luminance + coefficient of variation (texture)
+    function patchStats(data, W, H, cx, cy, r){
+      let n=0, sum=0, sumSq=0;
+      const x0=Math.max(0,(cx-r)|0), x1=Math.min(W-1,(cx+r)|0), y0=Math.max(0,(cy-r)|0), y1=Math.min(H-1,(cy+r)|0);
+      for (let y=y0;y<=y1;y++) for (let x=x0;x<=x1;x++){
+        const i=(y*W+x)*4;
+        const L=0.299*data[i]+0.587*data[i+1]+0.114*data[i+2];
+        n++; sum+=L; sumSq+=L*L;
+      }
+      if (!n) return { L:0, cov:0 };
+      const m=sum/n, v=Math.max(0, sumSq/n - m*m);
+      return { L:m, cov: m? Math.sqrt(v)/m : 0 };
+    }
+
+    function samplePixels(ctx, lm, W, H){
+      const P = i => ({ x: lm[i].x*W, y: lm[i].y*H });
+      const lerp = (a,b,t) => ({ x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t });
+      const d=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+      const browMid = { x:(P(105).x+P(334).x)/2, y:(P(105).y+P(334).y)/2 };
+      const fore = lerp(browMid, P(10), 0.5);
+      const subn = P(2);
+      const cheekR = lerp(P(234), subn, 0.42), cheekL = lerp(P(454), subn, 0.42);
+      const ecR = { x:(P(33).x+P(133).x)/2, y:(P(33).y+P(133).y)/2 };
+      const ecL = { x:(P(263).x+P(362).x)/2, y:(P(263).y+P(362).y)/2 };
+      const eyeW = (d(P(33),P(133))+d(P(263),P(362)))/2;
+      const underEyeR = { x:ecR.x, y:ecR.y + eyeW*0.30 }, underEyeL = { x:ecL.x, y:ecL.y + eyeW*0.30 };
+      const faceW = d(P(234),P(454));
+      const r = Math.max(3, faceW*0.05);
+      const img = ctx.getImageData(0,0,W,H).data;
+      const S = c => patchStats(img, W, H, c.x, c.y, r);
+      return { fore:S(fore), cheekR:S(cheekR), cheekL:S(cheekL),
+               underEyeR:patchStats(img,W,H,underEyeR.x,underEyeR.y,r*0.7),
+               underEyeL:patchStats(img,W,H,underEyeL.x,underEyeL.y,r*0.7) };
+    }
+
+    let lcBusy = false;
+    function drawAndScore(srcEl, W, H){
+      if (lcBusy) return;                       // guard against double-submit
+      lcBusy = true;
+      const gen = ++currentGen;                 // this analysis owns `gen`; stale async results self-discard
+      try {
+        canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
+        const ctx = canvas.getContext('2d', { willReadFrequently:true });
+        ctx.drawImage(srcEl, 0, 0, W, H);
+        if (!landmarker){ window.lcSetStatus('Model not ready yet — try again in a moment.', true); window.lcResetResult(); return; }
+        let r;
+        try { r = landmarker.detect(canvas); } catch(e){ window.lcSetStatus('Detection error: '+e.message, true); window.lcResetResult(); return; }
+        if (!r || !r.faceLandmarks || !r.faceLandmarks.length){
+          window.lcSetStatus('No face found — try a clearer, front-facing shot.', true); window.lcResetResult(); return;
+        }
+        const lm = r.faceLandmarks[0];
+        if (!lm || lm.length < 468){ window.lcSetStatus('Incomplete face mesh — try another photo.', true); window.lcResetResult(); return; }
+        // tiny-face reject — fraction-of-frame is the ONLY gate (a face lost in a big scene). 10% minimum.
+        // No absolute-px floor: we crop to the face box and upscale to 224, MediaPipe already confirmed a full
+        // mesh (checked above), and genuinely-soft small faces are flagged non-blockingly below ("⚠ Low-res read")
+        // rather than rejected. (px shown in the message for diagnosis only)
+        const fx = i => lm[i].x*W, fy = i => lm[i].y*H;
+        const faceW = Math.hypot(fx(234)-fx(454), fy(234)-fy(454));
+        const fwFrac = faceW / W;
+        if (fwFrac < 0.10){
+          window.lcSetStatus('Face too small (' + Math.round(faceW) + 'px wide, ' + Math.round(fwFrac*100) + '% of a ' + W + '×' + H + ' frame) — use a closer, higher-res photo.', true);
+          window.lcResetResult(); return;
+        }
+        const geo = window.lcComputeMetrics(lm, W, H);
+        if (!geo || !Object.values(geo).every(Number.isFinite)){
+          window.lcSetStatus('Could not measure this face (bad landmarks).', true); window.lcResetResult(); return;
+        }
+        const pixelStats = samplePixels(ctx, lm, W, H);   // sample BEFORE drawing overlay
+        const soft = window.lcComputeSoft(pixelStats);
+        // Crop the model tensors from the ORIGINAL-resolution source, not the 520px working canvas.
+        // The canvas is downscaled for fast detection + the overlay, but the CNN/sex crops should pull
+        // full-res pixels so a distant face in a high-res photo keeps its detail. Landmarks are normalized
+        // [0,1], so the same lm map onto srcEl's native frame exactly as onto the canvas.
+        const srcW = srcEl.naturalWidth || srcEl.width || W;
+        const srcH = srcEl.naturalHeight || srcEl.height || H;
+        let tensorData = null;
+        try { tensorData = cropFaceTensor(srcEl, lm, srcW, srcH); } catch(_){ tensorData = null; }
+        pendingTensor = tensorData; pendingTensorGen = gen;
+        let sexData = null;
+        try { sexData = cropSexTensor(srcEl, lm, srcW, srcH); } catch(_){ sexData = null; }
+        pendingSexTensor = sexData; pendingSexGen = gen;
+        // Non-blocking reliability note: how many REAL source pixels span the face (native, not the
+        // 520-canvas measure). Below this the CNN crop is upscaled and softer — score still shown, just flagged.
+        const nativeFaceW = fwFrac * srcW;
+        const relWarn = (nativeFaceW < 110 || fwFrac < 0.14)
+          ? ' · small/distant face (~' + Math.round(nativeFaceW) + 'px of real detail) — score is rougher than a tight, sharp headshot.'
+          : '';
+        const du = new DrawingUtils(ctx);
+        du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
+        du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
+        du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
+        window.lcAnalyze(geo, soft, relWarn);
+        if (sexData && sexSession) inferSex(sexData, gen);   // refine the geometry sex-guess with the classifier
+        if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
+        else if (tensorData && modelState === 'loading'){ window.lcSetStatus('Face measured — trained model still loading, the score will update automatically…'); }
+      } catch(e){
+        window.lcSetStatus('Analysis failed: '+e.message, true); window.lcResetResult();
+      } finally {
+        lcBusy = false;
+      }
+    }
+
+    function handleImage(img){
+      const maxW=520, scale=Math.min(1, maxW/img.naturalWidth);
+      drawAndScore(img, Math.round(img.naturalWidth*scale), Math.round(img.naturalHeight*scale));
+    }
+
+    const fileInput=document.getElementById('lc-file'), drop=document.getElementById('lc-drop');
+    drop.addEventListener('click', () => fileInput.click());
+    ['dragover','dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor='var(--scarlet)'; }));
+    ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor=''; }));
+    drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
+    function loadFile(file){
+      const img=new Image();
+      img.onload=()=>{ handleImage(img); URL.revokeObjectURL(img.src); };
+      img.onerror=()=>{ window.lcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
+      img.src=URL.createObjectURL(file);
+    }
+
+    document.getElementById('lc-url-go').addEventListener('click', () => {
+      const u=document.getElementById('lc-url').value.trim(); if (!u) return;
+      const img=new Image(); img.crossOrigin='anonymous';
+      img.onload=()=>handleImage(img);
+      img.onerror=()=>window.lcSetStatus('That URL would not load (cross-origin block?). Download and upload instead.', true);
+      img.src=u;
+    });
+
+    let stream=null;
+    const camStart=document.getElementById('lc-cam-start'), camShot=document.getElementById('lc-cam-shot');
+    camStart.addEventListener('click', async () => {
+      try {
+        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
+        video.srcObject=stream; await video.play();
+        video.hidden=false; canvas.hidden=true; stage.classList.add('show');
+        camShot.hidden=false; window.lcSetStatus('Camera live — frame your face and capture.');
+      } catch(e){ window.lcSetStatus('Camera blocked or unavailable: '+e.message, true); }
+    });
+    camShot.addEventListener('click', () => {
+      const w=video.videoWidth, h=video.videoHeight;
+      const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+      tmp.getContext('2d').drawImage(video, 0, 0, w, h);
+      const maxW=520, scale=Math.min(1, maxW/w);
+      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale));
+      window.lcStopCamera();
+    });
+    window.lcStopCamera=function(){
+      if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+      camShot.hidden=true; video.hidden=true;
+    };
+  </script>
+</body>
+</html>
