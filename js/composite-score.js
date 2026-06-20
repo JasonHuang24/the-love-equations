@@ -179,6 +179,10 @@
   window.leComposite = {
     saveFace: function (obj) { writeScore(FACE_KEY, obj); render(); },
     saveBody: function (obj) { writeScore(BODY_KEY, obj); render(); },
+    // a calc invalidates its own result (failed/cleared photo) → drop its composite score so the blend
+    // never shows a number for an emptied calculator
+    clearFace: function () { try { localStorage.removeItem(FACE_KEY); } catch (e) {} render(); },
+    clearBody: function () { try { localStorage.removeItem(BODY_KEY); } catch (e) {} render(); },
     reset: function () {
       try {
         localStorage.removeItem(FACE_KEY); localStorage.removeItem(BODY_KEY);

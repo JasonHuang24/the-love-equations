@@ -332,7 +332,21 @@
       const masc = bodyMascIndex(m);
       const typ = sex === 'm' ? masc : -masc;                        // + = typical for the chosen sex
       const dimorphism = Math.max(0, Math.min(100, 50 + typ * 16));
-      return { typicality, dimorphism };
+      return { typicality, dimorphism, athletic: athleticIndex(m, sex) };
+    }
+    // Athletic-structure index (sex-RELATIVE): how tapered + broad-shouldered the frame is, scored against its
+    // OWN sex's athletic range (an athletic woman is broad FOR A WOMAN). This is the credit the hourglass-weighted
+    // conventional lens withholds — surfaced as a separate read, NEVER fed into the score. (Codex's "athletic
+    // frame" idea; the weight-sensitivity pass confirmed the female shoulder band mildly under-credits it.)
+    function athleticIndex(m, sex){
+      sex = sex==='m' ? 'm' : 'f';
+      const ref = sex==='m'
+        ? { vTaper:[1.45,1.85], shoulderHip:[1.30,1.58] }
+        : { vTaper:[1.25,1.60], shoulderHip:[0.98,1.22] };
+      const norm = k => { if (!m || m[k]==null) return null; const b=ref[k]; return Math.max(0, Math.min(1, (m[k]-b[0])/(b[1]-b[0]))); };
+      const t = norm('vTaper'), s = norm('shoulderHip');
+      if (t == null || s == null) return null;     // need BOTH cues — one alone (e.g. an arm hid the waist band) can't claim a tapered frame
+      return Math.round(100 * Math.sqrt(t * s));   // conjunctive (geometric mean): one strong cue can't carry the read to 100
     }
     // Fallback sex guess (used until the user flips it). Body frame separates sex far better than a front
     // face does, but it's still a guess — clothing and pose blur it. The toggle is the backstop.
@@ -453,7 +467,7 @@
   <script>
     const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
-                 bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null };
+                 bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null };
 
     document.querySelectorAll('.bc-src').forEach(function(tab){
       tab.addEventListener('click', function(){
@@ -513,6 +527,19 @@
     function compRow(label, val, band, below, above, note){
       return measureRow({ label:label, band:band, disp:[0,100], below:below, above:above, fmt:v=>Math.round(v), tier:'Tier 1', note:note }, val);
     }
+    // Athletic-structure read — POSITIVE (more = more athletic), so no out-of-band scarlet flag: a high value
+    // here is good, not "atypical". Shaded zone = an athletic frame; the dot is this body. Never fed into the score.
+    function athleticRow(val){
+      if (val == null) return '';
+      const lvl = val>=70 ? 'Strongly tapered' : val>=48 ? 'Tapered' : val>=25 ? 'Moderate taper' : 'Straight / soft';
+      const pos = Math.max(0, Math.min(100, val));
+      return '<div class="bc-meas"><div class="bc-meas-top">'
+        + '<span class="bc-meas-name">Tapered structure<span class="mtag lens">Observation</span></span>'
+        + '<span class="bc-meas-where"><strong>'+lvl+'</strong> <span class="bc-meas-val">'+Math.round(val)+'</span></span></div>'
+        + '<div class="bc-meas-track"><span class="bc-meas-band" style="left:60%;width:40%"></span><span class="bc-meas-dot" style="left:'+pos+'%"></span></div>'
+        + '<div class="bc-meas-val" style="margin-top:3px">V-taper + shoulder breadth, read <em>for this sex</em> (shaded zone = a strongly tapered frame). A reasoned, unfitted structural cue &mdash; shown <strong>separately from the rubric</strong>, not part of the score.</div>'
+        + '</div>';
+    }
 
     function renderResult(){
       const host = document.getElementById('bc-result');
@@ -557,7 +584,7 @@
       const sexOther = sex === 'm' ? 'f' : 'm', sexOtherWord = sexOther === 'm' ? 'male' : 'female';
       const flipPrompt = '<strong><a href="#" class="bc-sexflip" data-sex="'+sexOther+'" style="color:var(--scarlet)">Wrong? Switch to '+sexOtherWord+' &rarr;</a></strong>';
       const sexSrcNote = BC.sexSource === 'model'
-        ? 'Read from the face: <strong>'+sexWord+'</strong>'+(BC.sexConf ? ' (<strong>'+Math.round(BC.sexConf*100)+'% confident</strong>)' : '')+'. '+flipPrompt+' '
+        ? 'Read from the face: <strong>'+sexWord+'</strong>'+(BC.sexConf ? ' (<strong>'+Math.round(BC.sexConf*100)+'% model confidence</strong>'+(BC.sexConf<0.75?', <strong style="color:var(--scarlet)">tentative</strong>':'')+')' : '')+'. '+flipPrompt+' '
         : BC.sexSource === 'manual'
         ? 'Sex set by you: <strong>'+sexWord+'</strong>. '+flipPrompt+' '
         : BC.sexSource === 'unknown'
@@ -606,8 +633,10 @@
         + '</div>'
         + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
-        + drivers + coreRows + featRows + propRows + cantRows
-        + '<div class="bc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box) when one is loaded; the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a single frontal silhouette misses depth, muscle-vs-fat, and everything under clothing &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. A fit body that still reads middling is usually an <em>input</em> problem, not the rubric: a mis-read sex (toggle it) or a distant/occluded silhouette flattens the very ratios the score leans on &mdash; the scorer ranks a clean, correctly-sexed read fine. With no model loaded, the geometry scores the headline too (badged above).</div>';
+        + drivers + coreRows + featRows + propRows
+        + (comp.athletic == null ? '' : '<div class="bc-bd-h">Tapered structure &middot; observation (not scored)</div>' + athleticRow(comp.athletic))
+        + cantRows
+        + '<div class="bc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box) when one is loaded; the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a single frontal silhouette misses depth, muscle-vs-fat, and everything under clothing &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. A fit body that reads middling usually traces to the <em>input</em> &mdash; a mis-read sex (toggle it) or a distant/occluded silhouette that flattens the ratios &mdash; more than the score; a clean, correctly-sexed read ranks roughly right. The one rubric caveat: the female bands reward the hourglass, so a broad, tapered frame is mildly under-credited &mdash; surfaced as <em>Tapered structure</em> below (a labelled choice, left out of the score, not a bug). With no model loaded, the geometry scores the headline too (badged above).</div>';
 
       host.querySelectorAll('.bc-sex button').forEach(function(b){
         b.addEventListener('click', function(){ BC.sex = b.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderResult(); });
@@ -623,16 +652,16 @@
           window.leComposite.saveBody({
             bp: mapModelScore(BC.model,'blackpill'), cv: mapModelScore(BC.model,'conventional'),
             bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
-            source: 'model', sex: (sexKnown ? sex : null), ts: Date.now()
+            source: 'model', sex: (sexKnown ? sex : null), ts: BC.measuredAt
           });
         } else if (sexKnown){
           window.leComposite.saveBody({
             bp: gradeBody(BC.metrics, sex,'blackpill').score, cv: gradeBody(BC.metrics, sex,'conventional').score,
             bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
-            source: 'geometry', sex: sex, ts: Date.now()
+            source: 'geometry', sex: sex, ts: BC.measuredAt
           });
         } else {
-          window.leComposite.saveBody({ needsSex: true, ts: Date.now() });
+          window.leComposite.saveBody({ needsSex: true, ts: BC.measuredAt });
         }
       }
       bcSaveShot();   // persist the photo + this result across page switches
@@ -646,13 +675,13 @@
       const sx = BC.sex==='m' ? 'male' : 'female';
       let how;
       if (BC.sexSource==='unknown' || !BC.sex) how = 'sex undetermined — <strong>set it below</strong>';
-      else if (BC.sexSource==='model') how = 'sex read from the face: <strong>' + sx + (BC.sexConf!=null ? ' ('+Math.round(BC.sexConf*100)+'%)' : '') + '</strong> — <strong>flip if wrong</strong>';
+      else if (BC.sexSource==='model') how = 'sex read from the face: <strong>' + sx + (BC.sexConf!=null ? ' ('+Math.round(BC.sexConf*100)+'% model confidence'+(BC.sexConf<0.75?', tentative':'')+')' : '') + '</strong> — <strong>flip if wrong</strong>';
       else if (BC.sexSource==='manual') how = 'sex set to <strong>' + sx + '</strong>';
       else how = 'sex from the frame: <strong>' + sx + '</strong> — <strong>flip if wrong</strong>';
       return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + (BC.reliability ? ' · ' + BC.reliability : '');
     }
     window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac){
-      BC.metrics = metrics; BC.model = null;
+      BC.metrics = metrics; BC.model = null; BC.measuredAt = Date.now();   // stable stamp: a new photo, reused on every re-render so age stays honest
       BC.framing = framing === 'torso' ? 'torso' : 'full';
       BC.bareGeometry = !!bareGeometry; BC.skinFrac = (skinFrac==null ? null : skinFrac);
       BC.reliability = reliability || '';
@@ -676,7 +705,7 @@
     };
     window.bcSetModelScore = function(t, raw){ BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.bcModelReady = function(ok){ BC.modelReady = ok; };
-    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.shotDataURL = null; bcClearShot(); renderResult(); };
+    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
@@ -685,23 +714,25 @@
       const state = { profile:BC.profile, metrics:BC.metrics, model:BC.model, modelRaw:BC.modelRaw,
         sex:BC.sex, sexAuto:BC.sexAuto, sexSource:BC.sexSource, sexConf:BC.sexConf, sexManual:BC.sexManual,
         sexUnknownReason:BC.sexUnknownReason||'', reliability:BC.reliability, framing:BC.framing,
-        bareGeometry:BC.bareGeometry, skinFrac:BC.skinFrac };
-      try { localStorage.setItem(BC_SHOT_KEY, JSON.stringify({ img:BC.shotDataURL, state, ts:Date.now() })); }
-      catch(e){ /* storage full — skip persistence, non-fatal */ }
+        bareGeometry:BC.bareGeometry, skinFrac:BC.skinFrac, measuredAt:BC.measuredAt };
+      try { localStorage.setItem(BC_SHOT_KEY, JSON.stringify({ img:BC.shotDataURL, state, ts:BC.measuredAt })); }
+      catch(e){ try { localStorage.removeItem(BC_SHOT_KEY); } catch(_){} }   // quota: drop the stale shot so a reload can't pair an old photo with a fresh score
     }
     function bcClearShot(){ try { localStorage.removeItem(BC_SHOT_KEY); } catch(e){} }
     // the MediaPipe module owns the canvas; it hands us the snapshot, we hold it for bcSaveShot
     window.bcSetShot = function(dataURL){ BC.shotDataURL = dataURL || null; };
     // restore the saved analysis into BC + re-render the panel (the module repaints the canvas separately)
     window.bcRestoreState = function(s){
-      if (!s || !s.metrics) return;
-      BC.profile = s.profile || 'blackpill'; BC.metrics = s.metrics;
-      BC.model = (s.model==null?null:s.model); BC.modelRaw = (s.modelRaw==null?null:s.modelRaw);
+      if (!s || typeof s !== 'object' || !s.metrics || typeof s.metrics !== 'object') return;   // schema guard
+      const fin = (x, d) => (typeof x==='number' && isFinite(x)) ? x : d;
+      BC.profile = s.profile==='conventional' ? 'conventional' : 'blackpill'; BC.metrics = s.metrics;
+      BC.measuredAt = fin(s.measuredAt, Date.now());
+      BC.model = fin(s.model, null); BC.modelRaw = fin(s.modelRaw, null);
       BC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; BC.sexAuto = !!s.sexAuto;
-      BC.sexSource = s.sexSource || 'guess'; BC.sexConf = (s.sexConf==null?null:s.sexConf);
+      BC.sexSource = s.sexSource || 'guess'; BC.sexConf = fin(s.sexConf, null);
       BC.sexManual = !!s.sexManual; BC.sexUnknownReason = s.sexUnknownReason || '';
-      BC.reliability = s.reliability || ''; BC.framing = s.framing || 'full';
-      BC.bareGeometry = !!s.bareGeometry; BC.skinFrac = (s.skinFrac==null?null:s.skinFrac);
+      BC.reliability = s.reliability || ''; BC.framing = s.framing==='torso' ? 'torso' : 'full';
+      BC.bareGeometry = !!s.bareGeometry; BC.skinFrac = fin(s.skinFrac, null);
       document.querySelectorAll('.bc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===BC.profile); });
       setStatus(bcStatusNote(), false, true); renderResult();
     };
@@ -1283,6 +1314,7 @@
     function bcRestoreShot(){
       let saved; try { saved = JSON.parse(localStorage.getItem('loveEquations.bodyShot.v1') || 'null'); } catch(_){ saved = null; }
       if (!saved || !saved.img || !saved.state || !saved.state.metrics) return;
+      if (window.bcSetShot) window.bcSetShot(saved.img);               // so later sex/lens changes re-persist (Codex F1)
       if (window.bcRestoreState) window.bcRestoreState(saved.state);   // sets BC + renders the panel
       const im = new Image();
       im.onload = () => {

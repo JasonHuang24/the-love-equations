@@ -473,7 +473,7 @@
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
     const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
-                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', shotDataURL:null };
+                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', shotDataURL:null, measuredAt:null };
 
     document.querySelectorAll('.lc-src').forEach(function(tab){
       tab.addEventListener('click', function(){
@@ -604,14 +604,14 @@
           bp: usingModel ? mapModelScore(LC.model,'blackpill') : gradeFace(LC.geo, LC.soft,'blackpill').score,
           cv: usingModel ? mapModelScore(LC.model,'conventional') : gradeFace(LC.geo, LC.soft,'conventional').score,
           bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
-          source: usingModel ? 'model' : 'heuristic', sex: sex, ts: Date.now()
+          source: usingModel ? 'model' : 'heuristic', sex: sex, ts: LC.measuredAt
         });
       }
       lcSaveShot();   // persist the photo + this result across page switches
     }
 
     window.lcAnalyze = function(geo, soft, reliability){
-      LC.geo = geo; LC.soft = soft; LC.model = null;   // new face: heuristic shows first, model score arrives async
+      LC.geo = geo; LC.soft = soft; LC.model = null; LC.measuredAt = Date.now();   // new face: heuristic shows first, model score arrives async
       LC.reliability = reliability || '';              // persistent low-res caveat (survives the async model re-render)
       LC.sex = guessSex(geo); LC.sexAuto = true;       // geometry guess shows instantly; the sex model refines it async
       LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false;
@@ -629,7 +629,7 @@
       LC.sex = (sex==='m'?'m':'f'); LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
       renderResult();
     };
-    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.shotDataURL = null; lcClearShot(); renderResult(); };
+    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const LC_SHOT_KEY = 'loveEquations.faceShot.v1';
@@ -637,20 +637,22 @@
       if (!LC.geo || !LC.shotDataURL) return;          // only persist a real, analysed result
       const state = { profile:LC.profile, geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
         sex:LC.sex, sexAuto:LC.sexAuto, sexSource:LC.sexSource, sexConf:LC.sexConf, sexManual:LC.sexManual,
-        reliability:LC.reliability };
-      try { localStorage.setItem(LC_SHOT_KEY, JSON.stringify({ img:LC.shotDataURL, state, ts:Date.now() })); }
-      catch(e){ /* storage full — skip persistence, non-fatal */ }
+        reliability:LC.reliability, measuredAt:LC.measuredAt };
+      try { localStorage.setItem(LC_SHOT_KEY, JSON.stringify({ img:LC.shotDataURL, state, ts:LC.measuredAt })); }
+      catch(e){ try { localStorage.removeItem(LC_SHOT_KEY); } catch(_){} }   // quota: drop the stale shot so a reload can't pair an old photo with a fresh score
     }
     function lcClearShot(){ try { localStorage.removeItem(LC_SHOT_KEY); } catch(e){} }
     // the MediaPipe module owns the canvas; it hands us the snapshot, we hold it for lcSaveShot
     window.lcSetShot = function(dataURL){ LC.shotDataURL = dataURL || null; };
     // restore the saved analysis into LC + re-render the panel (the module repaints the canvas separately)
     window.lcRestoreState = function(s){
-      if (!s || !s.geo) return;
-      LC.profile = s.profile || 'blackpill'; LC.geo = s.geo; LC.soft = s.soft || null;
-      LC.model = (s.model==null?null:s.model); LC.modelRaw = (s.modelRaw==null?null:s.modelRaw);
+      if (!s || typeof s !== 'object' || !s.geo || typeof s.geo !== 'object') return;   // schema guard
+      const fin = (x, d) => (typeof x==='number' && isFinite(x)) ? x : d;
+      LC.profile = s.profile==='conventional' ? 'conventional' : 'blackpill'; LC.geo = s.geo; LC.soft = (s.soft && typeof s.soft==='object') ? s.soft : null;
+      LC.measuredAt = fin(s.measuredAt, Date.now());
+      LC.model = fin(s.model, null); LC.modelRaw = fin(s.modelRaw, null);
       LC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; LC.sexAuto = !!s.sexAuto;
-      LC.sexSource = s.sexSource || 'guess'; LC.sexConf = (s.sexConf==null?null:s.sexConf);
+      LC.sexSource = s.sexSource || 'guess'; LC.sexConf = fin(s.sexConf, null);
       LC.sexManual = !!s.sexManual; LC.reliability = s.reliability || '';
       document.querySelectorAll('.lc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===LC.profile); });
       renderResult();
@@ -962,6 +964,7 @@
     function lcRestoreShot(){
       let saved; try { saved = JSON.parse(localStorage.getItem('loveEquations.faceShot.v1') || 'null'); } catch(_){ saved = null; }
       if (!saved || !saved.img || !saved.state || !saved.state.geo) return;
+      if (window.lcSetShot) window.lcSetShot(saved.img);               // so later sex/lens changes re-persist (Codex F1)
       if (window.lcRestoreState) window.lcRestoreState(saved.state);   // sets LC + renders the panel
       const im = new Image();
       im.onload = () => {
