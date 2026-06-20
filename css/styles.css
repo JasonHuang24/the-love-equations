@@ -960,7 +960,15 @@ body {
 }
 
 /* ===== Face × Body composite ("Overall looks rating") ===== */
-.composite-section { max-width: var(--container); margin: 0 auto; padding: 2.4rem 2rem 0; }
+.composite-section { max-width: var(--container); margin: 0 auto; padding: 2.4rem 2rem 2.8rem; }
+.composite-lens { display: flex; gap: 6px; max-width: 340px; margin: 0 auto 1rem; }
+.composite-lensbtn {
+  flex: 1; border: 0.5px solid var(--border); background: rgba(255,255,255,0.6); border-radius: 9px;
+  padding: 8px 10px; font-family: inherit; font-size: 12.5px; font-weight: 600; color: var(--text-muted);
+  cursor: pointer; transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.composite-lensbtn[data-lens="blackpill"].active { background: #51606F; color: #fff; border-color: #51606F; }
+.composite-lensbtn[data-lens="conventional"].active { background: #0F6E56; color: #fff; border-color: #0F6E56; }
 .composite-panel {
   border: 0.5px solid var(--border); border-radius: var(--radius-lg);
   background: linear-gradient(145deg, rgba(255,255,255,0.92), rgba(255,250,243,0.74));
@@ -1004,4 +1012,4 @@ body {
 .composite-row.todo a { color: var(--scarlet-dim); font-weight: 600; text-decoration: none; }
 .composite-row.todo a:hover { text-decoration: underline; }
 .composite-row.todo i { color: var(--text-dim); }
-@media (max-width: 880px) { .composite-section { padding: 1.6rem 1rem 0; } }
+@media (max-width: 880px) { .composite-section { padding: 1.6rem 1rem 2.2rem; } }

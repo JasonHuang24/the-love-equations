@@ -453,7 +453,7 @@
   <script>
     const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
-                 bareGeometry:false, skinFrac:null };
+                 bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null };
 
     document.querySelectorAll('.bc-src').forEach(function(tab){
       tab.addEventListener('click', function(){
@@ -471,8 +471,10 @@
       });
     });
 
-    function setStatus(msg, isErr){
-      const el = document.getElementById('bc-status'); el.textContent = msg; el.classList.toggle('err', !!isErr);
+    function setStatus(msg, isErr, isHtml){
+      const el = document.getElementById('bc-status');
+      if (isHtml) el.innerHTML = msg; else el.textContent = msg;   // isHtml only for our own controlled bcStatusNote markup
+      el.classList.toggle('err', !!isErr);
     }
     function fmt(n){ return (Math.round(n*10)/10).toFixed(1); }
 
@@ -551,13 +553,16 @@
         : '';
 
       const comp = computeComposites(BC.metrics, sex);
+      const sexWord = sex === 'm' ? 'male' : 'female';
+      const sexOther = sex === 'm' ? 'f' : 'm', sexOtherWord = sexOther === 'm' ? 'male' : 'female';
+      const flipPrompt = '<strong><a href="#" class="bc-sexflip" data-sex="'+sexOther+'" style="color:var(--scarlet)">Wrong? Switch to '+sexOtherWord+' &rarr;</a></strong>';
       const sexSrcNote = BC.sexSource === 'model'
-        ? 'Sex detected on-device from the face'+(BC.sexConf ? ' ('+Math.round(BC.sexConf*100)+'% confident)' : '')+' &mdash; flip it if wrong. '
+        ? 'Read from the face: <strong>'+sexWord+'</strong>'+(BC.sexConf ? ' (<strong>'+Math.round(BC.sexConf*100)+'% confident</strong>)' : '')+'. '+flipPrompt+' '
         : BC.sexSource === 'manual'
-        ? 'Sex set by you. '
+        ? 'Sex set by you: <strong>'+sexWord+'</strong>. '+flipPrompt+' '
         : BC.sexSource === 'unknown'
         ? '<strong>Sex undetermined</strong> &mdash; '+(BC.sexUnknownReason || 'the face wasn&rsquo;t clear enough to read and the body frame is ambiguous')+'. Set it below'+(usingModel ? '.' : ' (it feeds the geometry headline, so a bare-physique read needs it).')+' '
-        : 'Sex guessed from the body frame (face unclear or classifier not loaded) &mdash; the bony frame mis-reads sex, so flip if wrong. ';
+        : 'Estimated from the body frame: <strong>'+sexWord+'</strong> (face unclear or classifier not loaded). '+flipPrompt+' ';
       const sexCtl =
         '<div class="bc-sex"><button data-sex="f"'+(BC.sex==='f'?' class="active"':'')+'>Read as female</button>'
         + '<button data-sex="m"'+(BC.sex==='m'?' class="active"':'')+'>Read as male</button></div>'
@@ -602,10 +607,13 @@
         + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
         + drivers + coreRows + featRows + propRows + cantRows
-        + '<div class="bc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box) when one is loaded; the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a single frontal silhouette misses depth, muscle-vs-fat, and everything under clothing &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. And the sex bands encode <em>one</em> ideal apiece, so an athletic, non-hourglass frame can read low partly because the lens rewards the curvy/tapered optimum &mdash; the rubric, not just the body. With no model loaded, the geometry scores the headline too (badged above).</div>';
+        + '<div class="bc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box) when one is loaded; the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a single frontal silhouette misses depth, muscle-vs-fat, and everything under clothing &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. A fit body that still reads middling is usually an <em>input</em> problem, not the rubric: a mis-read sex (toggle it) or a distant/occluded silhouette flattens the very ratios the score leans on &mdash; the scorer ranks a clean, correctly-sexed read fine. With no model loaded, the geometry scores the headline too (badged above).</div>';
 
       host.querySelectorAll('.bc-sex button').forEach(function(b){
-        b.addEventListener('click', function(){ BC.sex = b.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote()); renderResult(); });
+        b.addEventListener('click', function(){ BC.sex = b.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderResult(); });
+      });
+      host.querySelectorAll('.bc-sexflip').forEach(function(a){
+        a.addEventListener('click', function(e){ e.preventDefault(); BC.sex = a.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderResult(); });
       });
 
       // persist this body score for the Face × Body composite. The CNN headline is sex-agnostic; a geometry
@@ -627,6 +635,7 @@
           window.leComposite.saveBody({ needsSex: true, ts: Date.now() });
         }
       }
+      bcSaveShot();   // persist the photo + this result across page switches
     }
 
     // ── hooks the MediaPipe module calls ──
@@ -636,10 +645,10 @@
     function bcStatusNote(){
       const sx = BC.sex==='m' ? 'male' : 'female';
       let how;
-      if (BC.sexSource==='unknown' || !BC.sex) how = 'sex undetermined — set it below';
-      else if (BC.sexSource==='model') how = 'sex read from the face: ' + sx + (BC.sexConf!=null ? ' ('+Math.round(BC.sexConf*100)+'%)' : '') + ' — flip if wrong';
-      else if (BC.sexSource==='manual') how = 'sex set to ' + sx;
-      else how = 'sex (provisional, from frame): ' + sx + ' — the face read will refine it';
+      if (BC.sexSource==='unknown' || !BC.sex) how = 'sex undetermined — <strong>set it below</strong>';
+      else if (BC.sexSource==='model') how = 'sex read from the face: <strong>' + sx + (BC.sexConf!=null ? ' ('+Math.round(BC.sexConf*100)+'%)' : '') + '</strong> — <strong>flip if wrong</strong>';
+      else if (BC.sexSource==='manual') how = 'sex set to <strong>' + sx + '</strong>';
+      else how = 'sex from the frame: <strong>' + sx + '</strong> — <strong>flip if wrong</strong>';
       return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + (BC.reliability ? ' · ' + BC.reliability : '');
     }
     window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac){
@@ -649,25 +658,61 @@
       BC.reliability = reliability || '';
       const g = guessSex(metrics);
       BC.sex = g; BC.sexAuto = true; BC.sexSource = g ? 'guess' : 'unknown'; BC.sexConf = null; BC.sexManual = false; BC.sexUnknownReason = '';
-      setStatus(bcStatusNote()); renderResult();
+      setStatus(bcStatusNote(), false, true); renderResult();
     };
     // the on-device face sex classifier reports in async — overrides the unreliable frame guess unless the
     // user has flipped it manually. (The headline score is unchanged; sex only re-bases the typical bands.)
     window.bcSetSex = function(sex, conf){
       if (BC.sexManual) return;
       BC.sex = (sex==='m'?'m':'f'); BC.sexSource = 'model'; BC.sexConf = conf; BC.sexAuto = true; BC.sexUnknownReason = '';
-      setStatus(bcStatusNote()); renderResult();
+      setStatus(bcStatusNote(), false, true); renderResult();
     };
     // the face sex read is untrustworthy when the eyes are hidden (sunglasses) — decline to guess rather than
     // assert a confident-wrong sex; the user sets it. Won't override a manual pick.
     window.bcSetSexUnknown = function(reason){
       if (BC.sexManual) return;
       BC.sex = null; BC.sexSource = 'unknown'; BC.sexConf = null; BC.sexUnknownReason = reason || '';
-      setStatus(bcStatusNote()); renderResult();
+      setStatus(bcStatusNote(), false, true); renderResult();
     };
     window.bcSetModelScore = function(t, raw){ BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.bcModelReady = function(ok){ BC.modelReady = ok; };
-    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; renderResult(); };
+    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.shotDataURL = null; bcClearShot(); renderResult(); };
+
+    // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
+    const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
+    function bcSaveShot(){
+      if (!BC.metrics || !BC.shotDataURL) return;          // only persist a real, analysed result
+      const state = { profile:BC.profile, metrics:BC.metrics, model:BC.model, modelRaw:BC.modelRaw,
+        sex:BC.sex, sexAuto:BC.sexAuto, sexSource:BC.sexSource, sexConf:BC.sexConf, sexManual:BC.sexManual,
+        sexUnknownReason:BC.sexUnknownReason||'', reliability:BC.reliability, framing:BC.framing,
+        bareGeometry:BC.bareGeometry, skinFrac:BC.skinFrac };
+      try { localStorage.setItem(BC_SHOT_KEY, JSON.stringify({ img:BC.shotDataURL, state, ts:Date.now() })); }
+      catch(e){ /* storage full — skip persistence, non-fatal */ }
+    }
+    function bcClearShot(){ try { localStorage.removeItem(BC_SHOT_KEY); } catch(e){} }
+    // the MediaPipe module owns the canvas; it hands us the snapshot, we hold it for bcSaveShot
+    window.bcSetShot = function(dataURL){ BC.shotDataURL = dataURL || null; };
+    // restore the saved analysis into BC + re-render the panel (the module repaints the canvas separately)
+    window.bcRestoreState = function(s){
+      if (!s || !s.metrics) return;
+      BC.profile = s.profile || 'blackpill'; BC.metrics = s.metrics;
+      BC.model = (s.model==null?null:s.model); BC.modelRaw = (s.modelRaw==null?null:s.modelRaw);
+      BC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; BC.sexAuto = !!s.sexAuto;
+      BC.sexSource = s.sexSource || 'guess'; BC.sexConf = (s.sexConf==null?null:s.sexConf);
+      BC.sexManual = !!s.sexManual; BC.sexUnknownReason = s.sexUnknownReason || '';
+      BC.reliability = s.reliability || ''; BC.framing = s.framing || 'full';
+      BC.bareGeometry = !!s.bareGeometry; BC.skinFrac = (s.skinFrac==null?null:s.skinFrac);
+      document.querySelectorAll('.bc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===BC.profile); });
+      setStatus(bcStatusNote(), false, true); renderResult();
+    };
+    // full reset of this calc (the composite Reset button calls this on whichever page is open)
+    window.bcResetAll = function(){
+      BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
+      BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
+      BC.sexConf = null; BC.sexManual = false; BC.sexUnknownReason = ''; BC.shotDataURL = null;
+      bcClearShot(); if (window.bcClearCanvas) window.bcClearCanvas();
+      setStatus('Cleared. Drop a photo to start again.'); renderResult();
+    };
     window.bcSetStatus = setStatus;
     window.bcPoseSkeleton = poseSkeleton;
     window.bcBodyRatios = bodyRatios;
@@ -685,6 +730,18 @@
     const stage = document.getElementById('bc-stage');
     const canvas = document.getElementById('bc-canvas');
     const video = document.getElementById('bc-video');
+    // Downscale a canvas to a compact JPEG data URL for localStorage (persisting the dropped photo across pages).
+    function downscaleToDataURL(srcCanvas, maxDim){
+      const w = srcCanvas.width, h = srcCanvas.height, scale = Math.min(1, maxDim / Math.max(w, h));
+      if (scale >= 1) return srcCanvas.toDataURL('image/jpeg', 0.85);
+      const t = document.createElement('canvas'); t.width = Math.round(w*scale); t.height = Math.round(h*scale);
+      t.getContext('2d').drawImage(srcCanvas, 0, 0, t.width, t.height);
+      return t.toDataURL('image/jpeg', 0.85);
+    }
+    window.bcClearCanvas = function(){
+      canvas.hidden = true; stage.classList.remove('show');
+      try { canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); } catch(_){}
+    };
     const POSE_WORKER_URL = 'js/body-pose-worker.js';
     const POSE_INIT_TIMEOUT_MS = 45000;
     const POSE_ANALYSIS_TIMEOUT_MS = 12000;
@@ -1010,10 +1067,12 @@
       octx.drawImage(srcEl, cx-side/2, cy-side/2, side, side, 0,0, S,S);
       return window.bcPreprocessSex(octx.getImageData(0,0,S,S).data, S);
     }
-    // genderage is unreliable on small / angled / partly-occluded faces and SAYS SO via a soft confidence.
-    // Correct reads cluster ~0.87–1.0; a low-confidence read (e.g. a tiny sunglasses face that the occlusion
-    // guard can't resolve) is barely a coin-flip — don't let it drive the headline, decline and ask instead.
-    const SEX_CONF_MIN = 0.75;
+    // DECISIVE by design (Jason's QOL call): the classifier always commits to male/female and surfaces its
+    // confidence; a one-tap bold "switch" in the readout corrects a wrong call. We no longer decline on a
+    // low-confidence read (the old "undetermined" was the annoyance) — the % is shown honestly and the toggle
+    // is right there. genderage's correct reads cluster ~0.87–1.0, so SEX_LOWCONF only tags the read as
+    // low-confidence for the debug line; it no longer gates the result.
+    const SEX_LOWCONF = 0.75;
     async function inferSex(data, gen){
       const ort = window.ort; if (!ort || !sexSession) return;
       try {
@@ -1021,12 +1080,7 @@
         const out = await sexSession.run({ [sexSession.inputNames[0]]: new ort.Tensor('float32', data, [1,3,S,S]) });
         if (gen !== currentGen){ if(window.__bcSex) window.__bcSex.reason='stale-gen'; return; }   // discard if a newer body superseded this one
         const r = window.bcSexFromLogits(out[sexSession.outputNames[0]].data);
-        if (r.conf < SEX_CONF_MIN){
-          if (window.__bcSex){ window.__bcSex.reason='low-confidence'; window.__bcSex.sex=r.sex; window.__bcSex.conf=+r.conf.toFixed(3); }
-          window.bcSetSexUnknown('the face is small or unclear, so the on-device model&rsquo;s sex read is low-confidence (only '+Math.round(r.conf*100)+'% model confidence, not a calibrated probability)');
-          return;
-        }
-        if (window.__bcSex){ window.__bcSex.reason='fired'; window.__bcSex.sex=r.sex; window.__bcSex.conf=+r.conf.toFixed(3); }
+        if (window.__bcSex){ window.__bcSex.reason = r.conf < SEX_LOWCONF ? 'fired-lowconf' : 'fired'; window.__bcSex.sex=r.sex; window.__bcSex.conf=+r.conf.toFixed(3); }
         window.bcSetSex(r.sex, r.conf);
       } catch(e){ if(window.__bcSex) window.__bcSex.reason='infer-error:'+e.message; }
     }
@@ -1140,7 +1194,8 @@
         else { pendingTensor = null; }
 
         // read sex from the face (overrides the unreliable frame guess); skipped if the face isn't visible OR if
-        // the eyes are hidden (sunglasses make genderage confidently mis-sex women → don't trust it, ask instead)
+        // the eyes are hidden (sunglasses make genderage confidently mis-sex women → don't trust it; fall back to
+        // bcAnalyze's decisive body-frame guess, which beats a confidently-wrong occluded-face read)
         let sexData = null, eyesHidden = false;
         try { eyesHidden = faceEyesOccluded(srcEl, lm, fullW, fullH); } catch(_){ eyesHidden = false; }
         if (eyesHidden){
@@ -1160,8 +1215,12 @@
           du.drawLandmarks(lm, { color:'#C41E3A', lineWidth:1, radius:3 });
         } catch(_){ /* overlay is cosmetic */ }
 
+        // snapshot the analysed photo (with overlay) so it survives a page switch — restored by bcRestoreShot
+        try { window.bcSetShot(downscaleToDataURL(canvas, 768)); } catch(_){}
+
         window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac);
-        if (eyesHidden) window.bcSetSexUnknown('the eyes are hidden (sunglasses?), so the face sex read isn&rsquo;t reliable');
+        // eyes hidden (sunglasses) → keep bcAnalyze's decisive body-frame guess rather than asserting the
+        // confidently-wrong occluded-face read; the bold "switch" toggle fixes it if the frame mis-reads.
         if (tensorData && session && useModel){ window.bcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
         else if (tensorData && modelState === 'loading' && !bareBody){ window.bcSetStatus('Body measured — trained model still loading, the score will update automatically…'); }
       } catch(e){
@@ -1219,6 +1278,21 @@
       if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
       camShot.hidden=true; video.hidden=true;
     };
+
+    // On load, restore a photo + result saved on a previous visit (persists until a new drop or Reset).
+    function bcRestoreShot(){
+      let saved; try { saved = JSON.parse(localStorage.getItem('loveEquations.bodyShot.v1') || 'null'); } catch(_){ saved = null; }
+      if (!saved || !saved.img || !saved.state || !saved.state.metrics) return;
+      if (window.bcRestoreState) window.bcRestoreState(saved.state);   // sets BC + renders the panel
+      const im = new Image();
+      im.onload = () => {
+        canvas.width = im.naturalWidth; canvas.height = im.naturalHeight;
+        canvas.getContext('2d').drawImage(im, 0, 0);
+        canvas.hidden = false; video.hidden = true; stage.classList.add('show');
+      };
+      im.src = saved.img;
+    }
+    bcRestoreShot();
   </script>
 </body>
 </html>

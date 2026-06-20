@@ -473,7 +473,7 @@
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
     const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
-                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'' };
+                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', shotDataURL:null };
 
     document.querySelectorAll('.lc-src').forEach(function(tab){
       tab.addEventListener('click', function(){
@@ -607,6 +607,7 @@
           source: usingModel ? 'model' : 'heuristic', sex: sex, ts: Date.now()
         });
       }
+      lcSaveShot();   // persist the photo + this result across page switches
     }
 
     window.lcAnalyze = function(geo, soft, reliability){
@@ -628,7 +629,39 @@
       LC.sex = (sex==='m'?'m':'f'); LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
       renderResult();
     };
-    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; renderResult(); };
+    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.shotDataURL = null; lcClearShot(); renderResult(); };
+
+    // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
+    const LC_SHOT_KEY = 'loveEquations.faceShot.v1';
+    function lcSaveShot(){
+      if (!LC.geo || !LC.shotDataURL) return;          // only persist a real, analysed result
+      const state = { profile:LC.profile, geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
+        sex:LC.sex, sexAuto:LC.sexAuto, sexSource:LC.sexSource, sexConf:LC.sexConf, sexManual:LC.sexManual,
+        reliability:LC.reliability };
+      try { localStorage.setItem(LC_SHOT_KEY, JSON.stringify({ img:LC.shotDataURL, state, ts:Date.now() })); }
+      catch(e){ /* storage full — skip persistence, non-fatal */ }
+    }
+    function lcClearShot(){ try { localStorage.removeItem(LC_SHOT_KEY); } catch(e){} }
+    // the MediaPipe module owns the canvas; it hands us the snapshot, we hold it for lcSaveShot
+    window.lcSetShot = function(dataURL){ LC.shotDataURL = dataURL || null; };
+    // restore the saved analysis into LC + re-render the panel (the module repaints the canvas separately)
+    window.lcRestoreState = function(s){
+      if (!s || !s.geo) return;
+      LC.profile = s.profile || 'blackpill'; LC.geo = s.geo; LC.soft = s.soft || null;
+      LC.model = (s.model==null?null:s.model); LC.modelRaw = (s.modelRaw==null?null:s.modelRaw);
+      LC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; LC.sexAuto = !!s.sexAuto;
+      LC.sexSource = s.sexSource || 'guess'; LC.sexConf = (s.sexConf==null?null:s.sexConf);
+      LC.sexManual = !!s.sexManual; LC.reliability = s.reliability || '';
+      document.querySelectorAll('.lc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===LC.profile); });
+      renderResult();
+    };
+    // full reset of this calc (the composite Reset button calls this on whichever page is open)
+    window.lcResetAll = function(){
+      LC.geo = null; LC.soft = null; LC.model = null; LC.modelRaw = null; LC.reliability = '';
+      LC.sex = null; LC.sexAuto = true; LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false; LC.shotDataURL = null;
+      lcClearShot(); if (window.lcClearCanvas) window.lcClearCanvas();
+      setStatus('Cleared. Drop a face to start again.'); renderResult();
+    };
     window.lcSetStatus = setStatus;
     window.lcComputeMetrics = computeMetrics;
     window.lcPreprocess = preprocessToTensor;
@@ -646,6 +679,18 @@
     const stage = document.getElementById('lc-stage');
     const canvas = document.getElementById('lc-canvas');
     const video = document.getElementById('lc-video');
+    // Downscale a canvas to a compact JPEG data URL for localStorage (persisting the dropped photo across pages).
+    function downscaleToDataURL(srcCanvas, maxDim){
+      const w = srcCanvas.width, h = srcCanvas.height, scale = Math.min(1, maxDim / Math.max(w, h));
+      if (scale >= 1) return srcCanvas.toDataURL('image/jpeg', 0.85);
+      const t = document.createElement('canvas'); t.width = Math.round(w*scale); t.height = Math.round(h*scale);
+      t.getContext('2d').drawImage(srcCanvas, 0, 0, t.width, t.height);
+      return t.toDataURL('image/jpeg', 0.85);
+    }
+    window.lcClearCanvas = function(){
+      canvas.hidden = true; stage.classList.remove('show');
+      try { canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); } catch(_){}
+    };
 
     async function init(){
       try {
@@ -851,6 +896,8 @@
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
+        // snapshot the analysed face (with overlay) so it survives a page switch — restored by lcRestoreShot
+        try { window.lcSetShot(downscaleToDataURL(canvas, 768)); } catch(_){}
         window.lcAnalyze(geo, soft, relWarn);
         if (sexData && sexSession) inferSex(sexData, gen);   // refine the geometry sex-guess with the classifier
         if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
@@ -910,6 +957,21 @@
       if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
       camShot.hidden=true; video.hidden=true;
     };
+
+    // On load, restore a face + result saved on a previous visit (persists until a new drop or Reset).
+    function lcRestoreShot(){
+      let saved; try { saved = JSON.parse(localStorage.getItem('loveEquations.faceShot.v1') || 'null'); } catch(_){ saved = null; }
+      if (!saved || !saved.img || !saved.state || !saved.state.geo) return;
+      if (window.lcRestoreState) window.lcRestoreState(saved.state);   // sets LC + renders the panel
+      const im = new Image();
+      im.onload = () => {
+        canvas.width = im.naturalWidth; canvas.height = im.naturalHeight;
+        canvas.getContext('2d').drawImage(im, 0, 0);
+        canvas.hidden = false; video.hidden = true; stage.classList.add('show');
+      };
+      im.src = saved.img;
+    }
+    lcRestoreShot();
   </script>
 </body>
 </html>
