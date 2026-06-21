@@ -930,15 +930,17 @@
       inputSize: 224,
       mean: [0.485, 0.456, 0.406],   // ImageNet
       std:  [0.229, 0.224, 0.225],
-      outMin: 26.234, outMax: 69.261, // RETRAINED model, 2026-06-20. Spearman 0.716 on a SINGLE grouped-holdout split —
-                                     // one split, with the best epoch AND these calibration percentiles both read off
-                                     // that same val set. Encouraging, but NOT cross-validation, NOT an independent test,
-                                     // and it does not settle whether the CNN is strong enough to own the headline.
-                                     // These are that split's held-out 2nd/98th-pct STUDIO predictions — a START, not
-                                     // validated real-photo calibration. The previous net compressed real photos ~10–20 pts
-                                     // below its studio range, so studio percentiles flatten average bodies; watch the
-                                     // on-screen `model raw` debug — if raws cluster below ~26, re-anchor down so
-                                     // average≈4–5, athletic≈8. Re-fit per real-photo batch; do NOT assume studio transfers.
+      outMin: 14.247, outMax: 58.628, // REAL-PHOTO calibrated, 2026-06-21 (replaces the 26.234/69.261 STUDIO percentiles,
+                                     // which crushed every real body into 1–3). Two-point fit on 5 clean full-body, clothed,
+                                     // front-facing shots: average-male center ≈34.8 (mean of 3) → 4.5, athletic male 47.91
+                                     // (full-body, fitted) → 8.0, solved against the blackpill curve (contrast 1.7). Lands
+                                     // avg males 4.2–5.0, athletic 8.0. BIGGEST lesson: framing dominates the raw — the SAME
+                                     // athletic build read 31.8 cropped at the hips vs 47.9 full-body (~16 pts). Score
+                                     // full-body fitted shots ONLY; upper-body/baggy/cropped raws are not comparable. KNOWN
+                                     // GAPS: (1) residual sex skew — avg-slim women still read ~6 (the studio set leans
+                                     // feminine); (2) the low/heavy end is NOT clean-anchored (the only heavy sample was
+                                     // baggy+tilted), so raw≈25→2 is an extrapolation — re-fit with a clean fitted full-body
+                                     // heavy shot to pin the bottom. Revisable per real-photo batch; do NOT assume studio transfers.
       inputName: null, outputName: null
     };
     let currentGen = 0;
