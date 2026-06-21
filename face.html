@@ -79,6 +79,8 @@
     .lc-how-row b { color: var(--text); font-weight: 600; }
     .lc-note { font-size: 11px; color: var(--text-dim); line-height: 1.55; margin-top: 0.7rem; border-top: 0.5px solid var(--border-light); padding-top: 0.6rem; }
     .lc-note a { color: var(--scarlet-dim); }
+    .lc-privacy { border-top: none; margin-top: 0.5rem; padding-top: 0; opacity: 0.92; }
+    .lc-privacy i { color: var(--scarlet-dim); }
 
     .lc-variant { display: flex; gap: 6px; margin-bottom: 1rem; }
     .lc-variant button {
@@ -164,7 +166,7 @@
 
             <div class="lc-src-panel" data-panel="upload">
               <input type="file" id="lc-file" accept="image/*" hidden />
-              <div class="lc-drop" id="lc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, well-lit photo here, or click to choose. Stays on your device.</div>
+              <div class="lc-drop" id="lc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, well-lit photo here, or click to choose. Saved on your device, never uploaded.</div>
             </div>
             <div class="lc-src-panel" data-panel="camera" hidden>
               <button class="lc-btn" id="lc-cam-start"><i class="ti ti-video"></i> Start camera</button>
@@ -183,6 +185,7 @@
               <canvas id="lc-canvas" hidden></canvas>
             </div>
             <div class="lc-status" id="lc-status">Loading the on-device face model&hellip;</div>
+            <div class="lc-note lc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
           </div>
 
           <div class="lc-panel">

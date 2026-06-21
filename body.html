@@ -80,6 +80,8 @@
     .bc-how-row b { color: var(--text); font-weight: 600; }
     .bc-note { font-size: 11px; color: var(--text-dim); line-height: 1.55; margin-top: 0.7rem; border-top: 0.5px solid var(--border-light); padding-top: 0.6rem; }
     .bc-note a { color: var(--scarlet-dim); }
+    .bc-privacy { border-top: none; margin-top: 0.5rem; padding-top: 0; opacity: 0.92; }
+    .bc-privacy i { color: var(--scarlet-dim); }
 
     .bc-variant { display: flex; gap: 6px; margin-bottom: 1rem; }
     .bc-variant button {
@@ -159,7 +161,7 @@
 
             <div class="bc-src-panel" data-panel="upload">
               <input type="file" id="bc-file" accept="image/*" hidden />
-              <div class="bc-drop" id="bc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing photo here &mdash; full body, or upper body to the hips. Click to choose. Stays on your device.</div>
+              <div class="bc-drop" id="bc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing photo here &mdash; full body, or upper body to the hips. Click to choose. Saved on your device, never uploaded.</div>
             </div>
             <div class="bc-src-panel" data-panel="camera" hidden>
               <button class="bc-btn" id="bc-cam-start"><i class="ti ti-video"></i> Start camera</button>
@@ -178,6 +180,7 @@
               <canvas id="bc-canvas" hidden></canvas>
             </div>
             <div class="bc-status" id="bc-status">Loading the on-device pose model&hellip;</div>
+            <div class="bc-note bc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
           </div>
 
           <div class="bc-panel">
