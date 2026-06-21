@@ -1240,7 +1240,7 @@
 
     const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
     const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E'];
-    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v3';
+    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v4';
 
     // ── Calibrated income → score curve ─────────────────────────────────────
     // Objective replacement for the old vibes-based "how attractive is your income" A–E.
@@ -1273,6 +1273,29 @@
       if (inc >= 45000) return 'Around the US individual median.';
       return 'Below the US median individual income.';
     }
+
+    // ── Calibrated net-worth → score curve ──────────────────────────────────
+    // Objective wealth STOCK to complement income's flow (the old "financial floor" vibe).
+    // Anchors are [net worth USD, score 1–10]; interpolation is LINEAR IN RAW dollars
+    // (via interpAnchors) so it handles negatives/zero, which a log curve cannot. Zero net
+    // worth lands a touch below neutral (little accumulated wealth); debt drags toward 1;
+    // the top saturates at 10. Absolute, NOT age-adjusted. Tune the anchors freely.
+    const NETWORTH_ANCHORS = [
+      [-100000, 1.0], [-25000, 2.0], [0, 3.0], [25000, 4.5], [100000, 6.0],
+      [300000, 7.2], [750000, 8.2], [2000000, 9.0], [10000000, 9.7], [50000000, 10.0]
+    ];
+    function networthToScore(nw) { return interpAnchors(NETWORTH_ANCHORS, nw); }
+    function networthBand(nw) {
+      if (nw >= 1000000) return 'Seven figures or more — a top-percentile asset base.';
+      if (nw >= 250000)  return 'A strong, well-above-median net worth.';
+      if (nw >= 25000)   return 'A positive, building net worth.';
+      if (nw >= 0)       return 'Around break-even — little accumulated wealth yet.';
+      return 'Negative net worth — debts outweigh assets.';
+    }
+    // Signed money formatters: fmtMoney for display text ("-$15,000"), fmtMoneyVal for the
+    // input field where a "$" prefix is shown separately ("-15,000").
+    function fmtMoney(n)    { n = Number(n) || 0; return (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US'); }
+    function fmtMoneyVal(n) { n = Number(n) || 0; return (n < 0 ? '-'  : '')  + Math.abs(n).toLocaleString('en-US'); }
 
     // ── Calibrated, sex-specific looks curves (Codex-reviewed, 2026) ─────────
     // Height in cm, BMI as a number → attractiveness sub-score 1–10. Linear interpolation
@@ -1353,15 +1376,9 @@
       {
         factor: 1,
         weight: 1.15,
-        text: 'How stable is your financial floor?',
-        sub: 'Rent, bills, debt pressure, emergency savings, and whether money anxiety controls your choices.',
-        opts: [
-          ['Unstable', 'Bills, debt, or dependence are a constant constraint.'],
-          ['Fragile', 'I get by, but one hit could destabilize me.'],
-          ['Stable enough', 'Basics are covered and life is manageable.'],
-          ['Comfortable', 'I have savings and room to make choices.'],
-          ['Very secure', 'Money rarely limits normal life decisions.']
-        ]
+        type: 'networth',
+        text: 'What is your net worth?',
+        sub: 'Everything you own minus everything you owe — savings, investments, property, and equity, less debt. Enter a real number; it can be negative. Income is your flow, this is the stock you have actually built. Absolute, not age-adjusted.'
       },
       {
         factor: 1,
@@ -1373,235 +1390,235 @@
       {
         factor: 1,
         weight: 0.95,
-        text: 'Does your lifestyle signal resources without looking desperate?',
-        sub: 'Housing, transportation, dates, travel, generosity, and taste. This is not flexing; it is visible stability.',
+        text: 'What is your housing situation?',
+        sub: 'Whether you own or rent, and the quality of the place you control — a factual read on your housing base, not taste or decor.',
         opts: [
-          ['My lifestyle signals scarcity', 'People can feel the constraint quickly.'],
-          ['Functional but limited', 'I can participate, but rarely elevate the experience.'],
-          ['Normal adult baseline', 'I can date without money being awkward.'],
-          ['Comfortable and tasteful', 'I can create good experiences without strain.'],
-          ['Abundant but controlled', 'Resources quietly enhance almost every setting.']
+          ['No independent housing', 'I live with family, or my housing is unstable.'],
+          ['Rent a modest place', 'Budget-driven housing that covers the basics.'],
+          ['Rent a quality place', 'I pay for a comfortable, well-located home.'],
+          ['Own with a mortgage', 'I own my residence and am building equity.'],
+          ['Own outright', 'I own my home free and clear.']
         ]
       },
       {
         factor: 1,
         weight: 1.30,
-        text: 'What is your career trajectory?',
-        sub: 'The market reads direction: stuck, wandering, building, accelerating, or already established.',
+        text: 'What is your career stage?',
+        sub: 'Where you actually sit on the professional ladder right now — a proxy for standing and future earning, independent of current income.',
         opts: [
-          ['Stalled or unclear', 'No credible upward path is visible.'],
-          ['Early but shaky', 'Some motion, not yet convincing.'],
-          ['Steady path', 'I have a normal, believable direction.'],
-          ['Strong upward trajectory', 'Momentum is visible and persuasive.'],
-          ['Established or accelerating fast', 'The future is already partly proven.']
+          ['Student, entry-level, or between jobs', 'Not yet established in a career.'],
+          ['Established individual contributor', 'A stable, working professional.'],
+          ['Senior, specialist, or team lead', 'Recognized skill and seniority.'],
+          ['Management, director, or executive', 'I lead people or a function.'],
+          ['Owner, partner, or principal', 'I own or run the enterprise.']
         ]
       },
       {
         factor: 1,
         weight: 1.10,
-        text: 'How independently can you live?',
-        sub: 'Adult autonomy matters: logistics, responsibility, privacy, and whether a partner would feel they are joining a stable life.',
+        text: 'What is your living arrangement?',
+        sub: 'Who you share a home with — the clearest objective read on day-to-day autonomy and privacy.',
         opts: [
-          ['Highly dependent', 'Family, roommates, debt, or disorder limit adult autonomy.'],
-          ['Partly independent', 'I handle some things, but the setup still feels incomplete.'],
-          ['Normally independent', 'I can run my life without much help.'],
-          ['Solid adult infrastructure', 'My life feels organized and self-directed.'],
-          ['High autonomy', 'I have control over time, space, money, and decisions.']
+          ['Live with parents or family', 'Limited control over space and logistics.'],
+          ['Live with roommates', 'I share space and split household control.'],
+          ['Live with a partner', 'A shared adult household.'],
+          ['Live alone', 'I control my own space, schedule, and privacy.'],
+          ['Fully independent across the board', 'Own space, finances, transport, and schedule — dependent on no one.']
         ]
       },
       {
         factor: 2,
         weight: 1.20,
-        text: 'How respected are you in your main environment?',
-        sub: 'Work, school, creative field, social circle, community, or any arena where people actually know you.',
+        text: 'How widely are you actually known?',
+        sub: 'The reach of your name and reputation — how far beyond your immediate circle people recognize you.',
         opts: [
-          ['Little respect or recognition', 'I am invisible or not taken seriously.'],
-          ['Some respect, low influence', 'People are neutral, but I do not carry weight.'],
-          ['Normal respect', 'I am treated as competent and decent.'],
-          ['Clear respect', 'People listen, invite, or defer to me.'],
-          ['High respect', 'My reputation changes how people treat me before I speak.']
+          ['Only my close circle', 'Known to friends, family, and immediate coworkers.'],
+          ['Known in one local scene', 'A recognized regular in a workplace, school, or community.'],
+          ['Known across my city or field', 'My name carries across a local market or profession.'],
+          ['Regionally or industry-wide known', 'Recognized well beyond my immediate area or niche.'],
+          ['Nationally or globally recognized', 'A public profile many strangers would know.']
         ]
       },
       {
         factor: 2,
         weight: 1.35,
-        text: 'How strong is your social proof?',
-        sub: 'Friends, invitations, being vouched for, being seen with desirable people, and the sense that others already chose you.',
+        text: 'What is your position in your main social circle?',
+        sub: 'Your actual standing in the group you spend the most social time with — where you sit, not how you feel.',
         opts: [
-          ['Weak or negative', 'There is little evidence that others value my presence.'],
-          ['Thin', 'I have some connections, but not much visible proof.'],
-          ['Normal', 'I have a decent social baseline.'],
-          ['Strong', 'People can see that I am liked, wanted, or included.'],
-          ['Very strong', 'My social proof creates attraction before I do much.']
+          ['On the edge', 'I am peripheral; plans happen without me.'],
+          ['A regular member', 'I belong, but I do not shape the group.'],
+          ['A core member', 'I am central to plans and decisions.'],
+          ['An organizer or hub', 'Things route through me; I connect people.'],
+          ['The center of gravity', 'The group orients around me; I set its tone.']
         ]
       },
       {
         factor: 2,
         weight: 1.00,
-        text: 'Do you lead anything?',
-        sub: 'Leadership can be formal or informal: teams, projects, scenes, communities, friend groups, events, or taste-making.',
+        text: 'How many people do you lead or manage?',
+        sub: 'People who report to you or answer to you in any arena — work teams, projects, volunteers, communities, or mentees.',
         opts: [
-          ['No leadership role', 'I mostly follow or stay peripheral.'],
-          ['Occasional responsibility', 'I lead small things when needed.'],
-          ['Some real ownership', 'People rely on me in at least one arena.'],
-          ['Recognized leader', 'I shape outcomes and people notice.'],
-          ['Center of gravity', 'I organize, direct, or define the room.']
+          ['None', 'I lead no one.'],
+          ['One to three', 'A small team or a few people.'],
+          ['Four to ten', 'A real team answers to me.'],
+          ['Eleven to fifty', 'I run a sizable group or function.'],
+          ['Fifty or more', 'I lead a large organization or following.']
         ]
       },
       {
         factor: 2,
         weight: 1.05,
-        text: 'How attractive is your network?',
-        sub: 'The quality of people around you affects perceived value: ambitious friends, social access, taste, and opportunity.',
+        text: 'How many selective groups do you belong to?',
+        sub: 'Invite-only, competitive, or prestigious circles you are actually in: clubs, boards, teams, fellowships, or recognized communities — not casual groups anyone can join.',
         opts: [
-          ['Isolated or low-quality network', 'My circle does not help my value.'],
-          ['Limited network', 'A few decent ties, not much access.'],
-          ['Normal network', 'Good enough, but not a major advantage.'],
-          ['Strong network', 'My people make me look better and create opportunities.'],
-          ['High-value network', 'Access to me means access to an impressive world.']
+          ['None', 'No selective affiliations.'],
+          ['One', 'A single selective group.'],
+          ['Two', 'A couple of selective affiliations.'],
+          ['Three', 'Several selective circles.'],
+          ['Four or more', 'I move through many selective worlds.']
         ]
       },
       {
         factor: 2,
         weight: 1.30,
-        text: 'Do people talk about you positively when you are not in the room?',
-        sub: 'Status compounds through reputation: referrals, admiration, curiosity, and preselection.',
+        text: 'How large is your audience or following?',
+        sub: 'People who follow, subscribe to, or actively pay attention to you across platforms — real, engaged reach, not bought or inactive numbers.',
         opts: [
-          ['Rarely or negatively', 'My reputation does not help.'],
-          ['Mildly positive', 'People think I am fine, but do not sell me.'],
-          ['Respectable', 'I have a decent name among people who know me.'],
-          ['People vouch for me', 'My reputation creates trust or intrigue.'],
-          ['My name carries weight', 'Reputation creates demand before direct contact.']
+          ['Essentially none', 'No meaningful audience or following.'],
+          ['A few hundred', 'A modest personal following.'],
+          ['Several thousand', 'A real, engaged audience.'],
+          ['Tens of thousands', 'Significant reach and influence.'],
+          ['Six figures or more', 'A large public audience.']
         ]
       },
       {
         factor: 3,
         weight: 1.00,
-        text: 'How comfortable are you with new people?',
-        sub: 'First conversations, introductions, small talk, and whether unfamiliar social settings drain or sharpen you.',
+        text: 'When you talk with someone new, how often do they stay engaged?',
+        sub: 'The observable result of your presence and conversation — do new people lean in and keep it going, or does it fizzle? Judge by their reaction, not your effort.',
         opts: [
-          ['I freeze or avoid', 'New people feel threatening or exhausting.'],
-          ['I can function, but stiffly', 'I get through it, not smoothly.'],
-          ['Normal comfort', 'I can hold a basic conversation.'],
-          ['Easy and relaxed', 'People usually feel comfortable around me.'],
-          ['Instant social ease', 'I warm rooms quickly and naturally.']
+          ['Rarely', 'Conversations usually fizzle or stay flat.'],
+          ['Sometimes', 'It lands occasionally, often not.'],
+          ['About half the time', 'A fair share of conversations come alive.'],
+          ['Usually', 'New people typically engage and stay in it.'],
+          ['Almost always', 'I reliably pull people into real conversation.']
         ]
       },
       {
         factor: 3,
         weight: 1.35,
-        text: 'Can you create attraction through conversation?',
-        sub: 'Not just being nice: teasing, timing, curiosity, stories, humor, and emotional rhythm.',
+        text: 'What share of your first dates lead to a second?',
+        sub: 'Your conversion rate, not your date volume (that is Exposure). Think across your recent first dates with people you actually wanted to see again.',
         opts: [
-          ['Conversation rarely helps me', 'I lose energy or become forgettable.'],
-          ['I am pleasant but flat', 'Safe, not especially compelling.'],
-          ['I can keep interest alive', 'Conversation usually does not hurt me.'],
-          ['I can build real pull', 'People become more interested as we talk.'],
-          ['Conversation is a weapon', 'I often create attraction that was not there at first.']
+          ['Almost none', 'First dates rarely turn into seconds.'],
+          ['About one in four', 'Occasionally, but most do not continue.'],
+          ['About half', 'Roughly a coin-flip on a second date.'],
+          ['Most of them', 'Second dates are the norm when I want one.'],
+          ['Nearly all', 'If I want a second date, I almost always get it.']
         ]
       },
       {
         factor: 3,
         weight: 1.35,
-        text: 'How calibrated is your flirting?',
-        sub: 'Reading signals, escalating without lurching, creating tension, and knowing when to stop.',
+        text: 'After meeting you, how often do people reach out first?',
+        sub: 'Who re-initiates — do the people you meet text first, follow up, or try to see you again? A direct read on the pull you leave behind.',
         opts: [
-          ['Poor calibration', 'I miss signals, overreach, or never move.'],
-          ['Inconsistent', 'Sometimes I get it, sometimes I make it awkward.'],
-          ['Adequate', 'I can flirt lightly when the path is clear.'],
-          ['Good', 'I can create tension and read the response.'],
-          ['Excellent', 'I escalate smoothly while making the other person feel chosen and safe.']
+          ['Rarely', 'I almost always have to chase, or it dies.'],
+          ['Sometimes', 'A few circle back; most do not.'],
+          ['Fairly often', 'People re-initiate a fair amount.'],
+          ['Usually', 'The people I click with tend to come to me.'],
+          ['Constantly', 'I regularly get unprompted follow-ups and interest.']
         ]
       },
       {
         factor: 3,
         weight: 1.20,
-        text: 'How emotionally steady are you under pressure?',
-        sub: 'Rejection, ambiguity, delayed texts, teasing, conflict, jealousy, and not leaking neediness.',
+        text: 'When someone goes cold or pulls back, what actually happens?',
+        sub: 'Charm holds up under pressure. Judge by your behavior — what you actually do next — not by how you feel inside.',
         opts: [
-          ['Reactive', 'Pressure quickly makes me needy, bitter, or chaotic.'],
-          ['Shaky', 'I can hold it together sometimes, but not reliably.'],
-          ['Mostly stable', 'Normal bumps do not derail me much.'],
-          ['Steady', 'I stay composed and warm even when uncertain.'],
-          ['Grounded', 'My calm becomes part of my attractiveness.']
+          ['I spiral or lash out', 'I get needy, bitter, or chaotic, and it shows.'],
+          ['It rattles me for a while', 'I hold it together unevenly.'],
+          ['I mostly stay level', 'Normal setbacks do not derail me much.'],
+          ['I stay steady and warm', 'I keep both my composure and my warmth.'],
+          ['Unbothered, and it reads', 'My calm under pressure is itself attractive.']
         ]
       },
       {
         factor: 3,
         weight: 1.10,
-        text: 'How memorable is your presence?',
-        sub: 'Voice, humor, taste, stories, confidence, and whether people remember the feeling of being around you.',
+        text: 'How often do people tell you you are fun or easy to be around?',
+        sub: 'The feedback you actually receive — being told you are funny, easy, interesting, or that time flew. Count what people say unprompted, not what you hope.',
         opts: [
-          ['Forgettable', 'People rarely remember much about me.'],
-          ['Mild', 'I am nice enough, but low impact.'],
-          ['Moderately memorable', 'Some people connect with my presence.'],
-          ['Distinctive', 'I leave a clear impression.'],
-          ['Magnetic', 'People seek my energy after one encounter.']
+          ['Almost never', 'I rarely get this kind of feedback.'],
+          ['Occasionally', 'Once in a while someone says it.'],
+          ['Sometimes', 'I hear it from time to time.'],
+          ['Often', 'People regularly tell me I am easy or fun to be around.'],
+          ['Constantly', 'It is a recurring, specific thing people say about me.']
         ]
       },
       {
         factor: 4,
         weight: 1.20,
-        text: 'How good is your dating geography?',
-        sub: 'City size, age pool, culture, venues, density, and whether the people you want are actually nearby.',
+        text: 'Where do you live, in dating-supply terms?',
+        sub: 'City size and density set the raw size of the local pool. This is about your location, not your effort or appeal.',
         opts: [
-          ['Bad geography', 'The pool is tiny or mismatched.'],
-          ['Limited pool', 'Some options, but not enough volume.'],
-          ['Decent pool', 'There are workable opportunities.'],
-          ['Strong pool', 'The environment gives me many chances.'],
-          ['Prime geography', 'My location is a real dating advantage.']
+          ['Rural or isolated area', 'Very few realistic local options.'],
+          ['Small town', 'A thin pool I mostly already know or have aged out of.'],
+          ['Mid-size city', 'A workable but limited local market.'],
+          ['Large city', 'A deep pool with steady turnover.'],
+          ['Major metro or dense urban core', 'Among the highest dating supply available.']
         ]
       },
       {
         factor: 4,
         weight: 1.40,
-        text: 'How often do you meet new qualified people?',
-        sub: 'Qualified means plausible attraction and availability, not random foot traffic.',
+        text: 'How often do you meet new people you could date?',
+        sub: 'Count new, available people with plausible mutual attraction — not acquaintances or random foot traffic.',
         opts: [
-          ['Almost never', 'Weeks or months pass without real chances.'],
-          ['Occasionally', 'A few chances appear, but not often.'],
-          ['Regularly', 'I meet plausible people most months.'],
-          ['Often', 'New chances appear most weeks.'],
-          ['Constantly', 'The market is continuously feeding me options.']
+          ['Almost never', 'Months can pass with zero new prospects.'],
+          ['A few a month', 'Roughly one to three new prospects a month.'],
+          ['About one a week', 'A steady weekly trickle of new prospects.'],
+          ['Several a week', 'Multiple new prospects most weeks.'],
+          ['Most days', 'New prospects appear almost daily.']
         ]
       },
       {
         factor: 4,
         weight: 1.10,
-        text: 'How strong is your app or online funnel?',
-        sub: 'Photos, profile, match quality, message flow, and whether online exposure creates real dates.',
+        text: 'How many dates do your online channels produce?',
+        sub: 'Real dates that actually happen via dating apps, social media, or DMs — not matches, likes, or chats. Count a typical month.',
         opts: [
-          ['No useful funnel', 'Apps/social media produce little or nothing.'],
-          ['Weak funnel', 'Occasional matches, low quality or low conversion.'],
-          ['Average funnel', 'Some real options, some dead ends.'],
-          ['Strong funnel', 'Online exposure reliably creates dates or interest.'],
-          ['Excellent funnel', 'Digital presence gives me more options than I can use.']
+          ['None', 'Online channels produce no real dates (or I do not use them).'],
+          ['Under one a month', 'A date materializes only rarely.'],
+          ['One or two a month', 'A modest but real flow.'],
+          ['Three to five a month', 'A reliable channel for me.'],
+          ['Six or more a month', 'More online-sourced dates than I can use.']
         ]
       },
       {
         factor: 4,
         weight: 1.10,
-        text: 'Do you have recurring social environments?',
-        sub: 'Repeated contact beats one-off events: classes, friend groups, work-adjacent circles, hobbies, scenes, communities.',
+        text: 'How many recurring places put you near new people?',
+        sub: 'Repeated-contact settings where fresh faces appear: classes, clubs, hobby scenes, friend groups, work-adjacent circles, communities.',
         opts: [
-          ['No recurring environments', 'I mostly rely on luck or apps.'],
-          ['One weak environment', 'I show up somewhere, but not enough to build momentum.'],
-          ['A few normal circles', 'Repeated contact exists, but not a major engine.'],
-          ['Strong recurring circles', 'People get familiar with me over time.'],
-          ['Multiple high-quality circles', 'My life naturally creates repeated romantic exposure.']
+          ['None', 'No recurring social settings; I rely on luck or apps.'],
+          ['One', 'A single recurring setting.'],
+          ['Two', 'A couple of recurring settings.'],
+          ['Three', 'Several recurring settings feeding new contact.'],
+          ['Four or more', 'My week is full of recurring rooms with new people.']
         ]
       },
       {
         factor: 4,
         weight: 1.35,
-        text: 'How much initiative do you actually take?',
-        sub: 'Approaching, messaging, asking, following up, making plans, and turning possibility into contact.',
+        text: 'How many people do you actually approach or ask out?',
+        sub: 'Conversations you start with a romantic frame, asks, and follow-ups that turn possibility into contact — over a typical week.',
         opts: [
-          ['Almost none', 'I wait and hope.'],
-          ['Low', 'I act only when the signal is extremely obvious.'],
-          ['Moderate', 'I take some shots and make some plans.'],
-          ['High', 'I consistently create opportunities.'],
-          ['Very high and calibrated', 'I create many chances without becoming reckless or indiscriminate.']
+          ['Almost none', 'I wait and hope; I rarely initiate.'],
+          ['Under one a week', 'I initiate only when the signal is undeniable.'],
+          ['One or two a week', 'I take a few real shots a week.'],
+          ['Three to five a week', 'I consistently create contact.'],
+          ['Six or more a week', 'I initiate constantly and at volume.']
         ]
       }
     ];
@@ -1859,6 +1876,21 @@
           <div class="income-preview" id="income-preview">${previewHtml}</div>`;
         return;
       }
+      if (q.type === 'networth') {
+        const has = answers[curQ] !== null && answers[curQ] !== undefined;
+        const previewHtml = has
+          ? fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the curve. ' + networthBand(answers[curQ])
+          : '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="income-input-wrap">
+            <span class="income-prefix">$</span>
+            <input type="text" inputmode="text" id="networth-field" class="income-field" autocomplete="off"
+                   value="${has ? fmtMoneyVal(answers[curQ]) : ''}" placeholder="e.g. 50,000 or -15,000" oninput="onNetWorthInput(this)" />
+            <span class="income-suffix">total</span>
+          </div>
+          <div class="income-preview" id="networth-preview">${previewHtml}</div>`;
+        return;
+      }
       if (q.type === 'sex') {
         const v = answers[curQ];
         document.getElementById('q-container').innerHTML = head + `
@@ -1985,6 +2017,23 @@
       saveState();
     }
 
+    // Net-worth field handler — allows a leading minus; updates score/preview/nav in place.
+    function onNetWorthInput(el) {
+      const raw = el.value || '';
+      const neg = /^\s*-/.test(raw);
+      const digits = raw.replace(/[^0-9]/g, '');
+      if (!digits) { answers[curQ] = null; }
+      else { const v = Math.min(999999999999, parseInt(digits, 10)); answers[curQ] = neg ? -v : v; }
+      const prev = document.getElementById('networth-preview');
+      if (prev) {
+        prev.innerHTML = answers[curQ] === null
+          ? '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>'
+          : fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the curve. ' + networthBand(answers[curQ]);
+      }
+      refreshNav();
+      saveState();
+    }
+
     function toggleAutoNext(checked) {
       autoNext = checked;
       saveState();
@@ -2019,6 +2068,7 @@
           let value, weight = q.weight || 1;
           if (q.type === 'sex') return null;                                  // a parameter, not a scored input
           else if (q.type === 'income') value = answers[i] == null ? 5.5 : incomeToScore(answers[i]);
+          else if (q.type === 'networth') value = answers[i] == null ? 5.5 : networthToScore(answers[i]);
           else if (q.type === 'height') value = answers[i] == null ? 5.5 : heightToScore(answers[i], getSex());
           else if (q.type === 'build') {
             const imp = bodyImport();
