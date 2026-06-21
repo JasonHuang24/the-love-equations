@@ -8,7 +8,7 @@ A static website presenting a personal framework for attraction, selection, and 
 
 - `index.html` — home
 - `hierarchy.html` — The Love Hierarchy + "Build your own hierarchy" tool
-- `smv.html` — The 5 Factors of SMV
+- `smvlevers.html` — Five Levers of SMV
 - `pills.html` — Pill Dossiers
 - `gender-dynamics.html` — Male & Female Dynamics
 - `statistics.html` — Statistics
