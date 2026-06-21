@@ -357,9 +357,9 @@
               <div class="factor-top">
                 <span class="factor-name" title="${f.desc}">${f.name}</span>
                 <input class="factor-box" style="color:${color}" type="number" min="1" max="10" step="0.1"
-                       value="7.0" id="b-${id}" oninput="onBox('${id}')" onchange="normBox('${id}')" aria-label="${f.name} score" />
+                       value="1.0" id="b-${id}" oninput="onBox('${id}')" onchange="normBox('${id}')" aria-label="${f.name} score" />
               </div>
-              <input type="range" min="1" max="10" step="0.1" value="7" id="s-${id}"
+              <input type="range" min="1" max="10" step="0.1" value="1" id="s-${id}"
                      style="accent-color:${color}" oninput="onSlider('${id}')" aria-label="${f.name} slider" />
             </div>`;
           }).join('');
@@ -439,8 +439,8 @@
         const id = fid(h.key, ti, fi);
         const slider = document.getElementById('s-' + id);
         const box = document.getElementById('b-' + id);
-        if (slider) slider.value = 7;
-        if (box) box.value = '7.0';
+        if (slider) slider.value = 1;
+        if (box) box.value = '1.0';
       })));
       activeKey = 'you';
       switchHier('you');
