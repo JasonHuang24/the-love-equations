@@ -335,6 +335,117 @@
       font-size: 12px;
       line-height: 1.45;
     }
+    .income-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,252,247,0.86);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.7rem 1rem;
+      max-width: 420px;
+      margin-bottom: 0.9rem;
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+    .income-input-wrap:focus-within {
+      border-color: var(--scarlet);
+      box-shadow: var(--shadow-soft);
+    }
+    .income-prefix {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      color: var(--scarlet-deep);
+      line-height: 1;
+    }
+    .income-field {
+      flex: 1 1 auto;
+      min-width: 0;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+    .income-suffix {
+      color: var(--text-muted);
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+    .income-preview {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.55;
+      margin-bottom: 1.2rem;
+      max-width: 620px;
+    }
+    .income-preview strong { color: var(--scarlet-deep); }
+    .income-hint { font-style: italic; }
+    .sex-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-bottom: 1.2rem; max-width: 460px;
+    }
+    .sexbtn {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 1rem; background: rgba(255,252,247,0.86);
+      border: 0.5px solid var(--border); border-radius: var(--radius-md);
+      cursor: pointer; font-family: Georgia, "Times New Roman", serif; font-size: 16px; color: var(--text);
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+    }
+    .sexbtn:hover { transform: translateY(-1px); border-color: rgba(196,30,58,0.34); box-shadow: var(--shadow-soft); }
+    .sexbtn.selected { border-color: var(--scarlet); border-width: 1px; background: var(--scarlet-pale); color: var(--scarlet-deep); }
+    .sexbtn i { font-size: 18px; }
+    .unit-toggle {
+      display: inline-flex; gap: 4px; margin-bottom: 0.85rem;
+      background: rgba(0,0,0,0.04); border-radius: 999px; padding: 3px;
+    }
+    .unitbtn {
+      border: none; background: transparent; cursor: pointer;
+      font-family: Georgia, "Times New Roman", serif; font-size: 13px; color: var(--text-muted);
+      padding: 0.35rem 0.9rem; border-radius: 999px; transition: background 120ms ease, color 120ms ease;
+    }
+    .unitbtn.active { background: var(--scarlet); color: #fff; }
+    .num-input-wrap {
+      display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+      background: rgba(255,252,247,0.86); border: 0.5px solid var(--border); border-radius: var(--radius-md);
+      padding: 0.7rem 1rem; max-width: 420px; margin-bottom: 0.9rem;
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+    .num-input-wrap:focus-within { border-color: var(--scarlet); box-shadow: var(--shadow-soft); }
+    .num-field {
+      flex: 1 1 auto; min-width: 0; border: none; background: transparent; outline: none;
+      font-family: Georgia, "Times New Roman", serif; font-size: 22px; color: var(--text);
+    }
+    .num-field.short { max-width: 70px; flex: 0 0 auto; }
+    .unit-lbl { color: var(--text-muted); font-size: 14px; }
+    .num-preview { color: var(--text-muted); font-size: 13px; line-height: 1.55; margin-bottom: 1.2rem; max-width: 640px; }
+    .num-preview strong { color: var(--scarlet-deep); }
+    .num-hint { font-style: italic; }
+    .soft-flag { color: #A06A12; }
+    .calc-import {
+      display: flex; gap: 0.6rem; align-items: flex-start;
+      background: #E1F5EE; border: 0.5px solid rgba(29,158,117,0.45); border-radius: var(--radius-md);
+      padding: 0.85rem 1rem; margin-bottom: 1.2rem; max-width: 640px;
+      font-size: 14px; line-height: 1.55; color: var(--text);
+    }
+    .calc-import i { color: #1D9E75; font-size: 18px; margin-top: 0.1rem; flex: 0 0 auto; }
+    .calc-import a, .calc-link a { color: var(--scarlet-deep); }
+    .calc-link { font-size: 13px; margin-bottom: 1.2rem; }
+    .soft-banner {
+      display: flex; gap: 0.5rem; align-items: center;
+      background: #FBF3E2; border: 0.5px solid rgba(160,106,18,0.4); border-radius: var(--radius-md);
+      padding: 0.7rem 1rem; margin-bottom: 1rem; max-width: 640px;
+      font-size: 13px; line-height: 1.5; color: #7a5210;
+    }
+    .soft-banner i { color: #A06A12; flex: 0 0 auto; }
+    .soft-banner a, .num-preview a { color: var(--scarlet-deep); }
+    .face-estimate { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.6rem; max-width: 460px; }
+    .face-estimate input[type=range] { flex: 1 1 auto; accent-color: var(--scarlet); }
+    .face-estimate-val {
+      font-family: Georgia, "Times New Roman", serif; font-size: 18px; color: var(--scarlet-deep);
+      min-width: 110px; text-align: right;
+    }
     .btn-row {
       display: flex;
       flex-wrap: wrap;
@@ -1129,72 +1240,114 @@
 
     const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
     const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E'];
-    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v1';
+    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v3';
+
+    // ── Calibrated income → score curve ─────────────────────────────────────
+    // Objective replacement for the old vibes-based "how attractive is your income" A–E.
+    // Anchors are [annual USD, score 1–10]; the score interpolates LINEARLY IN log10($)
+    // between anchors, so it keeps climbing past the old ceiling ($250k → $10M still
+    // gains ~2.5 pts) and saturates at the top. Gender is handled by the lens weights
+    // (Money 0.18 male vs 0.08 female), NOT this curve. Tune the anchors freely.
+    const INCOME_ANCHORS = [
+      [10000, 1.0], [45000, 4.0], [75000, 5.0], [100000, 6.0], [150000, 6.8],
+      [250000, 7.5], [500000, 8.2], [1000000, 8.8], [3000000, 9.4], [10000000, 10.0]
+    ];
+    const INCOME_MIN = INCOME_ANCHORS[0][0];
+    const INCOME_MAX = INCOME_ANCHORS[INCOME_ANCHORS.length - 1][0];
+    function incomeToScore(income) {
+      const inc = Math.max(INCOME_MIN, Math.min(INCOME_MAX, Number(income) || 0));
+      for (let k = 1; k < INCOME_ANCHORS.length; k++) {
+        const [x0, y0] = INCOME_ANCHORS[k - 1];
+        const [x1, y1] = INCOME_ANCHORS[k];
+        if (inc <= x1) {
+          const t = (Math.log10(inc) - Math.log10(x0)) / (Math.log10(x1) - Math.log10(x0));
+          return y0 + t * (y1 - y0);
+        }
+      }
+      return INCOME_ANCHORS[INCOME_ANCHORS.length - 1][1];
+    }
+    function incomeBand(inc) {
+      if (inc >= 1000000) return 'Top-tier — a rarefied resource signal.';
+      if (inc >= 250000) return 'Well into the top few percent of earners.';
+      if (inc >= 100000) return 'Roughly the top quarter of US earners.';
+      if (inc >= 45000) return 'Around the US individual median.';
+      return 'Below the US median individual income.';
+    }
+
+    // ── Calibrated, sex-specific looks curves (Codex-reviewed, 2026) ─────────
+    // Height in cm, BMI as a number → attractiveness sub-score 1–10. Linear interpolation
+    // between [value, score] anchors, clamped at the ends. Reasoned, not population-fitted;
+    // grounded where evidence exists (Tovée & Cornelissen on BMI; Stulp et al. on height) and
+    // flagged otherwise. Median lands neutral-positive (175cm M → 6.3, 162cm F → 6.8) — average
+    // height is not penalized; tall is upside, only short is a real negative. Tune freely.
+    const MALE_HEIGHT   = [[155,1.8],[162,3.2],[168,4.8],[175,6.3],[180,7.3],[185,8.2],[191,9.0],[198,9.2]];
+    const FEMALE_HEIGHT = [[147,4.0],[152,5.0],[157,6.0],[162,6.8],[167,7.3],[172,7.1],[178,6.3],[185,5.2],[191,4.5]];
+    const MALE_BMI      = [[17,3.0],[19,5.0],[21,6.8],[23.5,8.1],[25,7.8],[27,6.2],[30,4.5],[35,2.4],[40,1.3]];
+    const FEMALE_BMI    = [[16,3.8],[18,7.0],[19.5,8.6],[21,8.4],[23,7.2],[26,5.4],[30,3.2],[35,1.8],[40,1.1]];
+    function interpAnchors(anchors, x) {
+      x = Number(x) || 0;
+      if (x <= anchors[0][0]) return anchors[0][1];
+      const last = anchors[anchors.length - 1];
+      if (x >= last[0]) return last[1];
+      for (let k = 1; k < anchors.length; k++) {
+        const [x0, y0] = anchors[k - 1], [x1, y1] = anchors[k];
+        if (x <= x1) { const t = (x - x0) / (x1 - x0); return y0 + t * (y1 - y0); }
+      }
+      return last[1];
+    }
+    function heightToScore(cm, sex) { return interpAnchors(sex === 'f' ? FEMALE_HEIGHT : MALE_HEIGHT, cm); }
+    function bmiToScore(bmi, sex)   { return interpAnchors(sex === 'f' ? FEMALE_BMI : MALE_BMI, bmi); }
+
+    // Objective looks imports from the on-device photo calcs — the Conventional (cv) 0–10 read.
+    function readCalcCv(key) {
+      try { const o = JSON.parse(localStorage.getItem(key) || 'null');
+        if (o && !o.needsSex && typeof o.cv === 'number' && isFinite(o.cv)) return o.cv;
+      } catch (e) {}
+      return null;
+    }
+    function faceImport() { return readCalcCv('loveEquations.faceScore.v2'); }
+    function bodyImport() { return readCalcCv('loveEquations.bodyScore.v2'); }
 
     const QUESTIONS = [
       {
         factor: 0,
-        weight: 1.35,
-        text: 'What happens before you say a word?',
-        sub: 'Measure the raw visual first impression: face, frame, height/body proportion, posture, and how quickly attraction can spark.',
-        opts: [
-          ['I rarely create physical interest on sight', 'Most attraction would have to be built later.'],
-          ['I am passable but not visually memorable', 'I do not repel, but I do not pull much either.'],
-          ['I am solidly average in most rooms', 'Some people will like the look, many will not notice.'],
-          ['I get clear visual interest with some regularity', 'The first filter is usually not the main obstacle.'],
-          ['I create obvious attraction before personality enters', 'People notice the look immediately and treat me accordingly.']
-        ]
+        weight: 0,
+        type: 'sex',
+        text: 'What is your sex?',
+        sub: 'Height and build read differently by sex, so this sets those curves below — and aligns the scoring lens for the rest of your profile.'
       },
       {
         factor: 0,
-        weight: 1.20,
-        text: 'How disciplined is your body?',
-        sub: 'Fitness, body composition, posture, and physical energy. Not fantasy genetics - the part you actually maintain.',
-        opts: [
-          ['Neglected or visibly out of shape', 'Low energy, poor posture, or body composition works against me.'],
-          ['Some effort, inconsistent results', 'I try sometimes, but the body does not yet signal discipline.'],
-          ['Normal and presentable', 'Nothing dramatic either way; I look like a regular person.'],
-          ['Fit enough to help me', 'My body signals effort and raises my floor.'],
-          ['A serious asset', 'Fitness, build, and energy noticeably improve my market position.']
-        ]
+        weight: 1.2,
+        type: 'height',
+        text: 'How tall are you?',
+        sub: 'Scored on a sex-specific curve. Height is the one looks lever a photo cannot measure, so it gets its own input.'
       },
       {
         factor: 0,
-        weight: 0.95,
+        weight: 1.6,
+        type: 'build',
+        text: 'What is your build?',
+        sub: 'Best read by the Body Calc, which measures your actual frame — pulled in automatically if you have run it. Otherwise estimated from BMI, which cannot tell muscle from fat.'
+      },
+      {
+        factor: 0,
+        weight: 1.9,
+        type: 'face',
+        text: 'Your face.',
+        sub: 'The single biggest looks driver — and the only objective measure is the Face Calc, pulled in automatically if you have run it. Otherwise give an honest self-estimate, flagged as soft.'
+      },
+      {
+        factor: 0,
+        weight: 0.8,
         text: 'How polished is your presentation?',
-        sub: 'Hair, grooming, clothes, scent, skin, dental care, photos, and whether the package looks intentional.',
+        sub: 'Hair, grooming, clothes, scent, skin, dental care, and whether the package looks intentional. The one looks lever that is genuinely a self-report.',
         opts: [
           ['Unpolished or careless', 'The details quietly lower how people read me.'],
           ['Basic maintenance, little style', 'Clean enough, but not especially attractive or coherent.'],
           ['Competent and normal', 'I look presentable in most situations.'],
           ['Well put together', 'Style and grooming actively help the first impression.'],
           ['Distinctive and dialed in', 'Presentation feels curated without looking fake.']
-        ]
-      },
-      {
-        factor: 0,
-        weight: 0.95,
-        text: 'How well do photos capture your real attractiveness?',
-        sub: 'For modern dating, bad photos can erase real-world appeal. Count app photos, social photos, and how you appear on camera.',
-        opts: [
-          ['My photos hurt me', 'I look worse online than in person.'],
-          ['A few usable shots, mostly weak', 'The profile does not sell the best version of me.'],
-          ['Accurate but ordinary', 'Photos are fine, not a major advantage.'],
-          ['Strong photos that create interest', 'People can see the appeal quickly.'],
-          ['Photos are a force multiplier', 'My online presentation makes the market noticeably warmer.']
-        ]
-      },
-      {
-        factor: 0,
-        weight: 1.45,
-        text: 'What does revealed feedback say about your looks?',
-        sub: 'Ignore reassurance. Count unsolicited compliments, obvious checking-out, matches from attractive people, and repeated patterns.',
-        opts: [
-          ['Little to no positive feedback', 'The market rarely confirms physical appeal.'],
-          ['Occasional mild feedback', 'Some signs, but they are sporadic or ambiguous.'],
-          ['Moderate feedback', 'Enough evidence to say I am not invisible.'],
-          ['Consistent positive feedback', 'Interest is clear across multiple settings.'],
-          ['Strong, repeated feedback', 'Physical appeal is one of my obvious advantages.']
         ]
       },
       {
@@ -1213,15 +1366,9 @@
       {
         factor: 1,
         weight: 1.30,
-        text: 'How attractive is your income right now?',
-        sub: 'Not just survival income - whether your earning power changes your dating leverage or lifestyle options.',
-        opts: [
-          ['Low or inconsistent', 'Income is a liability or non-factor.'],
-          ['Below the local adult norm', 'I can function, but it does not create much confidence.'],
-          ['Around average for my area', 'Respectable but not a differentiator.'],
-          ['Clearly above average', 'Income opens options and signals competence.'],
-          ['High earning', 'Money is an obvious advantage in how people evaluate me.']
-        ]
+        type: 'income',
+        text: 'What is your annual income?',
+        sub: 'Your real, current pre-tax yearly income from all sources, in USD. Enter an actual number rather than a bracket - income scales, and $10M pulls far harder than $250k, so the curve keeps rewarding the top end instead of flattening it.'
       },
       {
         factor: 1,
@@ -1474,6 +1621,10 @@
     let curQ = 0;
     let answers = Array(QUESTIONS.length).fill(null);
     let scores = Array(FACTORS.length).fill(0);
+    let heightUnit = 'imperial';   // 'imperial' (ft/in) | 'metric' (cm)
+    let weightUnit = 'imperial';   // 'imperial' (lb)    | 'metric' (kg)
+    const SEX_IDX = QUESTIONS.findIndex(q => q.type === 'sex');
+    const HEIGHT_IDX = QUESTIONS.findIndex(q => q.type === 'height');
     let autoNext = false;
     let aCompleted = false;
     let aTotal = null;
@@ -1570,10 +1721,106 @@
       saveState();
     }
 
+    // ── Per-input answered / sex helpers (handle the typed Looks inputs) ──
+    function getSex() {
+      const a = SEX_IDX >= 0 ? answers[SEX_IDX] : null;
+      if (a === 'm' || a === 'f') return a;
+      return selectedLensA === 'female' ? 'f' : 'm';   // fall back to the lens
+    }
+    function bmiFromKg(kg) {
+      const h = answers[HEIGHT_IDX];
+      if (!h || !kg) return NaN;
+      return kg / Math.pow(h / 100, 2);
+    }
+    function isAnswered(i) {
+      const q = QUESTIONS[i];
+      if (q.type === 'sex') return answers[i] === 'm' || answers[i] === 'f';
+      if (q.type === 'build') return bodyImport() != null || answers[i] != null;
+      if (q.type === 'face') return faceImport() != null || answers[i] != null;
+      return answers[i] !== null && answers[i] !== undefined;
+    }
+    function answeredCount() {
+      let n = 0;
+      for (let i = 0; i < QUESTIONS.length; i++) if (isAnswered(i)) n++;
+      return n;
+    }
+    // Shared in-place nav/progress refresh — used by the numeric handlers so the field keeps focus (no full re-render).
+    function refreshNav() {
+      const answered = answeredCount();
+      const ap = document.getElementById('a-progress'); if (ap) ap.style.width = (answered / QUESTIONS.length * 100) + '%';
+      const ac = document.getElementById('answered-count'); if (ac) ac.textContent = `${answered} answered`;
+      const bn = document.getElementById('btn-next'); if (bn) bn.disabled = !isAnswered(curQ);
+      const bf = document.getElementById('btn-finish'); if (bf) bf.disabled = !isAnswered(curQ);
+      renderRail();
+    }
+
+    // ── Typed-input handlers ──
+    function setSex(s) {
+      answers[SEX_IDX] = s;
+      selectedLensA = (s === 'f') ? 'female' : 'male';   // sync the lens to the profile's sex
+      renderQ();
+      saveState();
+    }
+    function setHeightUnit(u) { heightUnit = u; renderQ(); saveState(); }
+    function setWeightUnit(u) { weightUnit = u; renderQ(); saveState(); }
+    function onHeightInput() {
+      let cm = null;
+      if (heightUnit === 'metric') {
+        const c = parseFloat((document.getElementById('h-cm') || {}).value || '');
+        if (!isNaN(c) && c > 0) cm = c;
+      } else {
+        const ft = parseInt((document.getElementById('h-ft') || {}).value || '', 10);
+        const inch = parseInt((document.getElementById('h-in') || {}).value || '', 10);
+        if (!isNaN(ft) || !isNaN(inch)) {
+          const total = (isNaN(ft) ? 0 : ft) * 12 + (isNaN(inch) ? 0 : inch);
+          if (total > 0) cm = total * 2.54;
+        }
+      }
+      answers[HEIGHT_IDX] = cm;
+      updateHeightPreview();
+      refreshNav();
+      saveState();
+    }
+    function updateHeightPreview() {
+      const el = document.getElementById('h-preview'); if (!el) return;
+      const cm = answers[HEIGHT_IDX];
+      if (cm == null) { el.innerHTML = '<span class="num-hint">Enter your height to see where it lands.</span>'; return; }
+      const ft = Math.floor((cm / 2.54) / 12), inch = Math.round((cm / 2.54) % 12);
+      el.innerHTML = `${Math.round(cm)} cm (${ft}&prime;${inch}&Prime;) maps to <strong>${heightToScore(cm, getSex()).toFixed(1)} / 10</strong> for a ${getSex() === 'f' ? 'female' : 'male'} profile.`;
+    }
+    function onWeightInput() {
+      let kg = null;
+      if (weightUnit === 'metric') {
+        const k = parseFloat((document.getElementById('w-kg') || {}).value || '');
+        if (!isNaN(k) && k > 0) kg = k;
+      } else {
+        const lb = parseFloat((document.getElementById('w-lb') || {}).value || '');
+        if (!isNaN(lb) && lb > 0) kg = lb * 0.453592;
+      }
+      answers[curQ] = kg;
+      updateBuildPreview();
+      refreshNav();
+      saveState();
+    }
+    function updateBuildPreview() {
+      const el = document.getElementById('b-preview'); if (!el) return;
+      const kg = answers[curQ], h = answers[HEIGHT_IDX];
+      if (!h) { el.innerHTML = '<span class="num-hint">Set your height first (previous question) so BMI can be computed.</span>'; return; }
+      if (kg == null) { el.innerHTML = '<span class="num-hint">Enter your weight, or run the Body Calc for an objective frame read.</span>'; return; }
+      const bmi = bmiFromKg(kg);
+      el.innerHTML = `BMI <strong>${bmi.toFixed(1)}</strong> maps to <strong>${bmiToScore(bmi, getSex()).toFixed(1)} / 10</strong> for a ${getSex() === 'f' ? 'female' : 'male'} profile. <span class="soft-flag">BMI cannot tell muscle from fat — the Body Calc fixes that.</span>`;
+    }
+    function onFaceEstimate(v) {
+      answers[curQ] = parseFloat(v);
+      const el = document.getElementById('face-val'); if (el) el.textContent = parseFloat(v).toFixed(1) + ' / 10';
+      refreshNav();
+      saveState();
+    }
+
     function renderRail() {
       document.getElementById('factor-rail').innerHTML = FACTORS.map((f, i) => {
         const total = QUESTIONS.filter(q => q.factor === i).length;
-        const done = QUESTIONS.reduce((n, q, qi) => n + (q.factor === i && answers[qi] !== null ? 1 : 0), 0);
+        const done = QUESTIONS.reduce((n, q, qi) => n + (q.factor === i && isAnswered(qi) ? 1 : 0), 0);
         const active = QUESTIONS[curQ].factor === i;
         return `<div class="factor-pill${active ? ' active' : ''}" style="${active ? `color:${f.color}` : ''}"><span>${f.name}</span><span>${done}/${total}</span></div>`;
       }).join('');
@@ -1582,7 +1829,7 @@
     function renderQ() {
       const q = QUESTIONS[curQ];
       const f = FACTORS[q.factor];
-      const answered = answers.filter(a => a !== null).length;
+      const answered = answeredCount();
       const pct = (answered / QUESTIONS.length) * 100;
       document.getElementById('a-progress').style.width = pct + '%';
       document.getElementById('q-count').textContent = `Question ${curQ + 1} of ${QUESTIONS.length}`;
@@ -1590,13 +1837,115 @@
       document.getElementById('btn-back').style.visibility = curQ > 0 ? 'visible' : 'hidden';
       document.getElementById('btn-next').style.display = curQ < QUESTIONS.length - 1 ? 'inline-flex' : 'none';
       document.getElementById('btn-finish').style.display = curQ === QUESTIONS.length - 1 ? 'inline-flex' : 'none';
-      document.getElementById('btn-next').disabled = answers[curQ] === null;
-      document.getElementById('btn-finish').disabled = answers[curQ] === null;
+      document.getElementById('btn-next').disabled = !isAnswered(curQ);
+      document.getElementById('btn-finish').disabled = !isAnswered(curQ);
       renderRail();
-      document.getElementById('q-container').innerHTML = `
+      const head = `
         <div class="factor-label" style="color:${f.color}"><i class="ti ${f.icon}"></i>${f.name}</div>
         <div class="question-title">${q.text}</div>
-        <div class="question-sub">${q.sub}</div>
+        <div class="question-sub">${q.sub}</div>`;
+      if (q.type === 'income') {
+        const has = answers[curQ] !== null && answers[curQ] !== undefined;
+        const previewHtml = has
+          ? '$' + Number(answers[curQ]).toLocaleString('en-US') + ' / yr maps to <strong>' + incomeToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the income curve. ' + incomeBand(answers[curQ])
+          : '<span class="income-hint">Enter your annual income to see where it lands on the curve.</span>';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="income-input-wrap">
+            <span class="income-prefix">$</span>
+            <input type="text" inputmode="numeric" id="income-field" class="income-field" autocomplete="off"
+                   value="${has ? Number(answers[curQ]).toLocaleString('en-US') : ''}" placeholder="e.g. 85,000" oninput="onIncomeInput(this)" />
+            <span class="income-suffix">/ year</span>
+          </div>
+          <div class="income-preview" id="income-preview">${previewHtml}</div>`;
+        return;
+      }
+      if (q.type === 'sex') {
+        const v = answers[curQ];
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="sex-grid">
+            <button type="button" class="sexbtn${v === 'm' ? ' selected' : ''}" onclick="setSex('m')"><i class="ti ti-gender-male" aria-hidden="true"></i> Male</button>
+            <button type="button" class="sexbtn${v === 'f' ? ' selected' : ''}" onclick="setSex('f')"><i class="ti ti-gender-female" aria-hidden="true"></i> Female</button>
+          </div>`;
+        return;
+      }
+      if (q.type === 'height') {
+        const cm = answers[curQ];
+        const has = cm != null;
+        const imperial = heightUnit !== 'metric';
+        const ft = has ? Math.floor((cm / 2.54) / 12) : '';
+        const inch = has ? Math.round((cm / 2.54) % 12) : '';
+        const cmVal = has ? Math.round(cm) : '';
+        const fields = imperial
+          ? `<input type="text" inputmode="numeric" id="h-ft" class="num-field short" autocomplete="off" value="${ft}" placeholder="5" oninput="onHeightInput()" /><span class="unit-lbl">ft</span>
+             <input type="text" inputmode="numeric" id="h-in" class="num-field short" autocomplete="off" value="${inch}" placeholder="10" oninput="onHeightInput()" /><span class="unit-lbl">in</span>`
+          : `<input type="text" inputmode="numeric" id="h-cm" class="num-field" autocomplete="off" value="${cmVal}" placeholder="178" oninput="onHeightInput()" /><span class="unit-lbl">cm</span>`;
+        const preview = has
+          ? `${cmVal} cm (${ft}&prime;${inch}&Prime;) maps to <strong>${heightToScore(cm, getSex()).toFixed(1)} / 10</strong> for a ${getSex() === 'f' ? 'female' : 'male'} profile.`
+          : '<span class="num-hint">Enter your height to see where it lands.</span>';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="unit-toggle">
+            <button type="button" class="unitbtn${imperial ? ' active' : ''}" onclick="setHeightUnit('imperial')">ft / in</button>
+            <button type="button" class="unitbtn${!imperial ? ' active' : ''}" onclick="setHeightUnit('metric')">cm</button>
+          </div>
+          <div class="num-input-wrap">${fields}</div>
+          <div class="num-preview" id="h-preview">${preview}</div>`;
+        return;
+      }
+      if (q.type === 'build') {
+        const imp = bodyImport();
+        if (imp != null) {
+          document.getElementById('q-container').innerHTML = head + `
+            <div class="calc-import">
+              <i class="ti ti-circle-check" aria-hidden="true"></i>
+              <div><strong>Imported from your Body Calc: ${imp.toFixed(1)} / 10</strong> (Conventional read) — the objective frame measurement, used instead of BMI. <a href="body.html">Re-run the Body Calc &rarr;</a></div>
+            </div>`;
+          return;
+        }
+        const imperial = weightUnit !== 'metric';
+        const kg = answers[curQ];
+        const has = kg != null;
+        const lb = has ? Math.round(kg / 0.453592) : '';
+        const kgVal = has ? Math.round(kg) : '';
+        const fields = imperial
+          ? `<input type="text" inputmode="numeric" id="w-lb" class="num-field" autocomplete="off" value="${lb}" placeholder="170" oninput="onWeightInput()" /><span class="unit-lbl">lb</span>`
+          : `<input type="text" inputmode="numeric" id="w-kg" class="num-field" autocomplete="off" value="${kgVal}" placeholder="77" oninput="onWeightInput()" /><span class="unit-lbl">kg</span>`;
+        let preview;
+        const h = answers[HEIGHT_IDX];
+        if (!h) preview = '<span class="num-hint">Set your height first (previous question) so BMI can be computed.</span>';
+        else if (!has) preview = '<span class="num-hint">Enter your weight, or run the Body Calc for an objective frame read.</span>';
+        else { const bmi = bmiFromKg(kg); preview = `BMI <strong>${bmi.toFixed(1)}</strong> maps to <strong>${bmiToScore(bmi, getSex()).toFixed(1)} / 10</strong> for a ${getSex() === 'f' ? 'female' : 'male'} profile. <span class="soft-flag">BMI cannot tell muscle from fat — the Body Calc fixes that.</span>`; }
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="unit-toggle">
+            <button type="button" class="unitbtn${imperial ? ' active' : ''}" onclick="setWeightUnit('imperial')">lb</button>
+            <button type="button" class="unitbtn${!imperial ? ' active' : ''}" onclick="setWeightUnit('metric')">kg</button>
+          </div>
+          <div class="num-input-wrap">${fields}</div>
+          <div class="num-preview" id="b-preview">${preview}</div>
+          <div class="calc-link"><a href="body.html"><i class="ti ti-camera" aria-hidden="true"></i> Run the Body Calc for an objective frame read &rarr;</a></div>`;
+        return;
+      }
+      if (q.type === 'face') {
+        const imp = faceImport();
+        if (imp != null) {
+          document.getElementById('q-container').innerHTML = head + `
+            <div class="calc-import">
+              <i class="ti ti-circle-check" aria-hidden="true"></i>
+              <div><strong>Imported from your Face Calc: ${imp.toFixed(1)} / 10</strong> (Conventional read) — the objective face measurement. <a href="face.html">Re-run the Face Calc &rarr;</a></div>
+            </div>`;
+          return;
+        }
+        const v = answers[curQ];
+        const has = v != null;
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="soft-banner"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Soft self-estimate — not an objective measure. <a href="face.html">Run the Face Calc</a> for a real read; it will override this.</div>
+          <div class="face-estimate">
+            <input type="range" min="1" max="10" step="0.5" id="face-range" value="${has ? v : 5.5}" oninput="onFaceEstimate(this.value)" />
+            <div class="face-estimate-val" id="face-val">${has ? v.toFixed(1) + ' / 10' : 'Drag to set your estimate'}</div>
+          </div>
+          <div class="num-preview">Be honest. A dishonest self-rating here is exactly the vibes problem this calculator exists to kill.</div>`;
+        return;
+      }
+      document.getElementById('q-container').innerHTML = head + `
         <div class="options-grid">
           ${q.opts.map((o, i) => `
             <button type="button" class="opt${answers[curQ] === i ? ' selected' : ''}" onclick="selectOpt(${i})">
@@ -1607,8 +1956,7 @@
               </span>
             </button>
           `).join('')}
-        </div>
-      `;
+        </div>`;
     }
 
     function selectOpt(i) {
@@ -1623,13 +1971,27 @@
       }
     }
 
+    // Income field handler — updates score/preview/nav in place (no full re-render, so the field keeps focus).
+    function onIncomeInput(el) {
+      const digits = (el.value || '').replace(/[^0-9]/g, '');
+      answers[curQ] = digits ? Math.min(999999999999, parseInt(digits, 10)) : null;
+      const prev = document.getElementById('income-preview');
+      if (prev) {
+        prev.innerHTML = answers[curQ] === null
+          ? '<span class="income-hint">Enter your annual income to see where it lands on the curve.</span>'
+          : '$' + answers[curQ].toLocaleString('en-US') + ' / yr maps to <strong>' + incomeToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the income curve. ' + incomeBand(answers[curQ]);
+      }
+      refreshNav();
+      saveState();
+    }
+
     function toggleAutoNext(checked) {
       autoNext = checked;
       saveState();
     }
 
     function nextQ() {
-      if (answers[curQ] === null) return;
+      if (!isAnswered(curQ)) return;
       if (curQ < QUESTIONS.length - 1) {
         curQ++;
         renderQ();
@@ -1654,11 +2016,23 @@
         const factorQs = QUESTIONS.map((q, i) => q.factor === f ? i : -1).filter(i => i >= 0);
         const weighted = factorQs.map(i => {
           const q = QUESTIONS[i];
-          return {
-            value: answers[i] === null ? 5.5 : DEFAULT_OPTION_SCORES[answers[i]],
-            weight: q.weight || 1
-          };
-        });
+          let value, weight = q.weight || 1;
+          if (q.type === 'sex') return null;                                  // a parameter, not a scored input
+          else if (q.type === 'income') value = answers[i] == null ? 5.5 : incomeToScore(answers[i]);
+          else if (q.type === 'height') value = answers[i] == null ? 5.5 : heightToScore(answers[i], getSex());
+          else if (q.type === 'build') {
+            const imp = bodyImport();
+            if (imp != null) { value = imp; }                                 // objective Body Calc read keeps full weight
+            else {                                                            // BMI-only fallback is less reliable (Codex)
+              const bmi = answers[i] == null ? NaN : bmiFromKg(answers[i]);
+              value = isFinite(bmi) ? bmiToScore(bmi, getSex()) : 5.5;
+              weight = 1.25;
+            }
+          }
+          else if (q.type === 'face') { const imp = faceImport(); value = imp != null ? imp : (answers[i] == null ? 5.5 : clampScore(answers[i])); }
+          else value = answers[i] == null ? 5.5 : DEFAULT_OPTION_SCORES[answers[i]];
+          return { value, weight };
+        }).filter(Boolean);
         const totalWeight = weighted.reduce((a, item) => a + item.weight, 0);
         return Math.round((weighted.reduce((a, item) => a + (item.value * item.weight), 0) / totalWeight) * 10) / 10;
       });
@@ -1732,7 +2106,7 @@
     }
 
     function finishA() {
-      if (answers[curQ] === null) return;
+      if (!isAnswered(curQ)) return;
       renderAResults(true);
     }
 
@@ -1827,6 +2201,8 @@
           aInputMode,
           bVals,
           bName: nameInput ? nameInput.value : '',
+          heightUnit,
+          weightUnit,
           profileAImportMeta,
           profileBImportMeta
         }));
@@ -1848,6 +2224,8 @@
         aCompleted = !!saved.aCompleted;
         aTotal = typeof saved.aTotal === 'number' ? saved.aTotal : null;
         aInputMode = saved.aInputMode === 'import' ? 'import' : 'quiz';
+        if (saved.heightUnit === 'metric' || saved.heightUnit === 'imperial') heightUnit = saved.heightUnit;
+        if (saved.weightUnit === 'metric' || saved.weightUnit === 'imperial') weightUnit = saved.weightUnit;
         profileAImportMeta = saved.profileAImportMeta || null;
         profileBImportMeta = saved.profileBImportMeta || null;
         if (profileAImportMeta && profileAImportMeta.pkg && !profileAImportMeta.displayName) {
