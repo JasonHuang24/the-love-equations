@@ -999,8 +999,8 @@
 
     <div class="content calc-content">
       <div class="tab-nav calc-tabs">
-        <button class="tab-btn a-active" onclick="switchTab('a', this)">Profile A - Your SMV</button>
-        <button class="tab-btn" onclick="switchTab('b', this)">Profile B - Their SMV</button>
+        <button class="tab-btn a-active" data-tab="a" onclick="switchTab('a', this)">Profile A - Your SMV</button>
+        <button class="tab-btn" data-tab="b" onclick="switchTab('b', this)">Profile B - Their SMV</button>
       </div>
 
       <div class="calc-page visible" id="tab-a">
@@ -1931,9 +1931,7 @@
         <div class="question-sub">${q.sub}</div>`;
       if (q.type === 'income') {
         const has = answers[curQ] !== null && answers[curQ] !== undefined;
-        const previewHtml = has
-          ? '$' + Number(answers[curQ]).toLocaleString('en-US') + ' / yr maps to <strong>' + incomeToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the income curve. ' + incomeBand(answers[curQ])
-          : '<span class="income-hint">Enter your annual income to see where it lands on the curve.</span>';
+        const previewHtml = incomePreviewHtml(answers[curQ]);
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
             <span class="income-prefix">$</span>
@@ -1946,9 +1944,7 @@
       }
       if (q.type === 'networth') {
         const has = answers[curQ] !== null && answers[curQ] !== undefined;
-        const previewHtml = has
-          ? fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthScore(answers[curQ]).toFixed(1) + ' / 10</strong>' + (getAge() ? ' (age-adjusted). ' : ' on the curve. ') + networthBand(answers[curQ])
-          : '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>';
+        const previewHtml = networthPreviewHtml(answers[curQ]);
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
             <span class="income-prefix">$</span>
@@ -2080,16 +2076,23 @@
       }
     }
 
+    // Preview HTML for the income / net-worth fields — shared by the initial render (renderQ)
+    // and the in-place input handlers, so the copy and the curve mapping can never drift apart.
+    function incomePreviewHtml(v) {
+      if (v === null || v === undefined) return '<span class="income-hint">Enter your annual income to see where it lands on the curve.</span>';
+      return '$' + Number(v).toLocaleString('en-US') + ' / yr maps to <strong>' + incomeToScore(v).toFixed(1) + ' / 10</strong> on the income curve. ' + incomeBand(v);
+    }
+    function networthPreviewHtml(v) {
+      if (v === null || v === undefined) return '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>';
+      return fmtMoney(v) + ' net worth maps to <strong>' + networthScore(v).toFixed(1) + ' / 10</strong>' + (getAge() ? ' (age-adjusted). ' : ' on the curve. ') + networthBand(v);
+    }
+
     // Income field handler — updates score/preview/nav in place (no full re-render, so the field keeps focus).
     function onIncomeInput(el) {
       const digits = (el.value || '').replace(/[^0-9]/g, '');
       answers[curQ] = digits ? Math.min(999999999999, parseInt(digits, 10)) : null;
       const prev = document.getElementById('income-preview');
-      if (prev) {
-        prev.innerHTML = answers[curQ] === null
-          ? '<span class="income-hint">Enter your annual income to see where it lands on the curve.</span>'
-          : '$' + answers[curQ].toLocaleString('en-US') + ' / yr maps to <strong>' + incomeToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the income curve. ' + incomeBand(answers[curQ]);
-      }
+      if (prev) prev.innerHTML = incomePreviewHtml(answers[curQ]);
       refreshNav();
       saveState();
     }
@@ -2102,11 +2105,7 @@
       if (!digits) { answers[curQ] = null; }
       else { const v = Math.min(999999999999, parseInt(digits, 10)); answers[curQ] = neg ? -v : v; }
       const prev = document.getElementById('networth-preview');
-      if (prev) {
-        prev.innerHTML = answers[curQ] === null
-          ? '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>'
-          : fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthScore(answers[curQ]).toFixed(1) + ' / 10</strong>' + (getAge() ? ' (age-adjusted). ' : ' on the curve. ') + networthBand(answers[curQ]);
-      }
+      if (prev) prev.innerHTML = networthPreviewHtml(answers[curQ]);
       refreshNav();
       saveState();
     }
@@ -2453,7 +2452,6 @@
     function importCompatibilityProfile(target) {
       const box = document.getElementById(`import-box-${target}`);
       const status = document.getElementById(`import-status-${target}`);
-      const report = document.getElementById(`import-report-${target}`);
       try {
         const pkg = parseCompatibilityPackage(box.value);
         const mapped = mapCompatibilityToSmv(pkg);
@@ -2531,7 +2529,7 @@
         return Math.round((acc[i] / wt[i]) * 10) / 10;
       });
       const coverage = FACTORS.map((f, i) => `${f.name}: ${Math.round(coverageRatios[i] * 100)}% source coverage`);
-      return { scores: scoresFromSource, mapped, unmapped, coverage, coverageRatios, axisStatus, manualAxes };
+      return { scores: scoresFromSource, mapped, unmapped, coverage, axisStatus, manualAxes };
     }
 
     function escapeHtml(value) {
@@ -2928,7 +2926,7 @@
     }
 
     function switchTabFromResults(id) {
-      const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes('their'));
+      const btn = document.querySelector('.tab-btn[data-tab="b"]');
       switchTab(id, btn);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }

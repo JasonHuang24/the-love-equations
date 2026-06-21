@@ -1,22 +1,8 @@
 /* ── The Love Equations — Shared Styles ── */
 
-:root {
-  --bg:           #FAF6F0;
-  --surface:      #F5EDE0;
-  --card:         #FFFFFF;
-  --border:       #DDD0C4;
-  --border-light: #EDE4D8;
-  --scarlet:      #C41E3A;
-  --scarlet-dim:  #9A1528;
-  --scarlet-pale: #FAECEE;
-  --text:         #1A0E0E;
-  --text-muted:   #7A6055;
-  --text-dim:     #B4A090;
-  --footer-bg:    #1A0E0E;
-  --radius-sm:    4px;
-  --radius-md:    8px;
-  --radius-lg:    12px;
-}
+/* Design tokens (palette, radii, shadows) live in the v1.6 Synthesis Layer
+   :root block further down — that layer fully supersedes the original v1.0
+   tokens, so they are defined once, there. */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -230,16 +216,6 @@ body {
   padding: 3px 9px;
   border-radius: var(--radius-sm);
 }
-.badge-scarlet {
-  background: var(--scarlet);
-  color: var(--bg);
-  border-color: var(--scarlet);
-}
-.badge-pale {
-  background: var(--scarlet-pale);
-  color: var(--scarlet-dim);
-  border-color: #F0C0C8;
-}
 
 /* ── Tabs / switcher ── */
 .tab-nav {
@@ -303,13 +279,6 @@ body {
   border-top: 0.5px solid var(--border);
 }
 .dos-body.open { display: block; }
-.placeholder {
-  font-size: 13px;
-  color: var(--text-dim);
-  font-style: italic;
-  padding-top: 0.75rem;
-  line-height: 1.7;
-}
 
 /* ── Buttons ── */
 .btn {
@@ -341,9 +310,6 @@ input[type=range] {
   accent-color: var(--scarlet);
 }
 
-/* ── Divider ── */
-.divider { height: 0.5px; background: var(--border); margin: 1.25rem 0; }
-
 /* ── Utility ── */
 .mt-1 { margin-top: 0.75rem; }
 .mt-2 { margin-top: 1.25rem; }
@@ -361,7 +327,6 @@ input[type=range] {
 :root {
   --bg: #fbf6ef;
   --surface: #f3e6d8;
-  --surface-strong: #ead7c6;
   --card: rgba(255, 252, 247, 0.92);
   --card-solid: #fffdf9;
   --border: rgba(116, 79, 61, 0.18);
@@ -419,8 +384,6 @@ body {
   letter-spacing: -0.02em;
   line-height: 1;
 }
-
-.nav-logo span { color: var(--scarlet); }
 
 .nav-links {
   align-items: center;
@@ -634,9 +597,6 @@ body {
   cursor: pointer;
 }
 
-.tab-btn.bp-active,
-.tab-btn.rp-active,
-.tab-btn.blk-active,
 .tab-btn.land-active,
 .tab-btn.male-active,
 .tab-btn.fem-active,

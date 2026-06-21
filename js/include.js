@@ -7,6 +7,8 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       el.outerHTML = await res.text();
     } catch (e) {
+      // Fail-soft: log and leave the placeholder <div data-include> in the DOM.
+      // A missing nav/footer should not blank out the rest of the page.
       console.error(`include: failed to load partials/${name}.html`, e);
     }
   }));

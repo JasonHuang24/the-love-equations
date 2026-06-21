@@ -1262,7 +1262,13 @@
     function smvErf(x){const t=1/(1+0.3275911*Math.abs(x));const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;}
     function smvNcdf(z){return 0.5*(1+smvErf(z/Math.SQRT2));}
     let smvSex = 'f';
-    function smvSetSex(sx){ smvSex = sx; document.querySelectorAll('#smv-toggle .smv-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.sex === sx)); smvMatch(); }
+    // Shared toggle handler: flips .active on the buttons inside #<toggleId> whose
+    // data-<dataKey> equals val, then re-renders via update(). Used by every sex/arena switch.
+    function setToggle(toggleId, dataKey, val, update){
+      document.querySelectorAll('#' + toggleId + ' .smv-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset[dataKey] === val));
+      update();
+    }
+    function smvSetSex(sx){ smvSex = sx; setToggle('smv-toggle', 'sex', sx, smvMatch); }
     function smvMatch(){
       const s=parseFloat(document.getElementById('smv-slider').value);
       document.getElementById('smv-val').textContent=s.toFixed(1);
@@ -1293,11 +1299,7 @@
     }
 
     let attnSex = 'f';
-    function attnSetSex(sx){
-      attnSex = sx;
-      document.querySelectorAll('#attn-toggle .smv-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.sex === sx));
-      attnMarket();
-    }
+    function attnSetSex(sx){ attnSex = sx; setToggle('attn-toggle', 'sex', sx, attnMarket); }
     function attnClamp(x){ return Math.max(1, Math.min(10, x)); }
     function attnFmt(x){
       const n = Math.round(attnClamp(x)*2)/2;
@@ -1407,8 +1409,7 @@
     function renderPoolCards(){
       let html = '';
       for (let R = 10; R >= 1; R--){
-        const open = '';
-        html += `<details class="pool-card"${open}>`
+        html += `<details class="pool-card">`
           + `<summary><span class="pool-rating">${R}/10</span><span class="pool-tagline">${poolTagline(R)}</span></summary>`
           + `<div class="pool-body">`
           + `<div class="smv-sub-note" style="margin:0.4rem 0 7px;">A <strong>${R}/10 woman</strong> — pool tilts <em>up</em>; men date down on looks freely, but commitment pulls back to match.</div>`
@@ -1488,11 +1489,7 @@
       else verdict = '<strong>Rejected.</strong> A ' + looks + '/10 needs about ' + Math.ceil(need) + '/10 game here &mdash; ' + game + ' falls short.';
       vEl.innerHTML = verdict + ' ' + arenaRead[ccArena] + ' <span class="smv-tag est">Estimate</span>';
     }
-    function ccSetArena(a){
-      ccArena = a;
-      document.querySelectorAll('#cc-toggle .smv-toggle-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.arena === a); });
-      ccUpdate();
-    }
+    function ccSetArena(a){ ccArena = a; setToggle('cc-toggle', 'arena', a, ccUpdate); }
 
     // ── Charm Ceiling Part 2 · evidence model: effective pull over exposure (Estimate) ──
     const CC2_STAGES = ['First glance', 'First convo', 'A few dates', 'Well-acquainted'];
@@ -1568,11 +1565,7 @@
       rEl.className = 'cc-verdict ' + cls;
       rEl.innerHTML = txt + ' <span class="smv-tag est">Estimate</span>';
     }
-    function cc2SetSex(s){
-      cc2Sex = s;
-      document.querySelectorAll('#cc2-toggle .smv-toggle-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.sex === s); });
-      cc2Update();
-    }
+    function cc2SetSex(s){ cc2Sex = s; setToggle('cc2-toggle', 'sex', s, cc2Update); }
 
     // ── Status Trade · sex-weighted composite mate value (reasoned weights, Estimate) ──
     let stSex = 'm';
@@ -1610,11 +1603,7 @@
       }
       rEl.innerHTML = txt + ' <span class="smv-tag est">Estimate</span>';
     }
-    function stSetSex(s){
-      stSex = s;
-      document.querySelectorAll('#st-toggle .smv-toggle-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.sex === s); });
-      stUpdate();
-    }
+    function stSetSex(s){ stSex = s; setToggle('st-toggle', 'sex', s, stUpdate); }
 
     // ── The Wall · app/stranger desirability vs. lived pairing, by age (Estimate) ──
     let wallSex = 'f';
@@ -1688,11 +1677,7 @@
       rEl.className = 'cc-verdict ' + cls;
       rEl.innerHTML = txt + ' <span class="smv-tag est">Estimate</span>';
     }
-    function wallSetSex(s){
-      wallSex = s;
-      document.querySelectorAll('#wall-toggle .smv-toggle-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.sex === s); });
-      wallUpdate();
-    }
+    function wallSetSex(s){ wallSex = s; setToggle('wall-toggle', 'sex', s, wallUpdate); }
 
     // ── Body Count · "depletion" prediction vs. actual divorce data (Estimate) ──
     // Data line: Wolfinger 2000s-cohort 5-yr divorce rates by premarital partners (directional, read from chart).

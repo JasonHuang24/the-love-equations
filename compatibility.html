@@ -424,7 +424,7 @@
         if (saved.activeKey && HIERARCHIES.some(h => h.key === saved.activeKey)) activeKey = saved.activeKey;
         if (!saved.values || typeof saved.values !== 'object') return;
         Object.entries(saved.values).forEach(([id, rawValue]) => {
-          const v = Math.max(1, Math.min(10, Number(rawValue) || 7));
+          const v = Math.max(1, Math.min(10, Number(rawValue) || 1));
           const slider = document.getElementById('s-' + id);
           const box = document.getElementById('b-' + id);
           if (slider) slider.value = v;
@@ -641,9 +641,8 @@
     renderInputs();
     restoringState = true;
     loadCompatState();
-    switchHier(activeKey);
+    switchHier(activeKey);   // switchHier() ends with update(), so the initial render happens here
     restoringState = false;
-    update();
   </script>
 </body>
 </html>

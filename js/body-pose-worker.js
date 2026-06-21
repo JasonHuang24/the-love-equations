@@ -7,8 +7,11 @@ const VISION_MODULE_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@
 const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm';
 const POSE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task';
 const SILHOUETTE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite';
-const PIDX = { nose:0, shoulderR:12, shoulderL:11, hipR:24, hipL:23, kneeR:26, kneeL:25,
-  ankleR:28, ankleL:27 };
+// MediaPipe Pose landmark indices (BlazePose 33-landmark order). Only the shoulder/hip
+// corners are addressed symbolically — they define the torso box used for width ratios.
+// Other landmarks are referenced by raw index at their (few) use sites; REQUIRED lists the
+// indices that must be present and finite for a pose to be usable (torso + legs/feet).
+const PIDX = { shoulderR:12, shoulderL:11, hipR:24, hipL:23 };
 const REQUIRED = [0,11,12,23,24,25,26,27,28,29,30,31,32];
 
 let mod = null;
@@ -19,6 +22,10 @@ function postTrace(id, stage, startedAt){
   self.postMessage({ type:'trace', id, stage, elapsedMs:performance.now()-startedAt });
 }
 
+// Per-landmark trust = the weaker of MediaPipe's visibility & presence (conservative: a
+// point is only as reliable as its lowest signal). The two fallbacks are deliberate and
+// asymmetric: a missing field (null) → assume present (1), since some models omit these;
+// a corrupt/non-finite value → assume absent (0).
 function confidence(point){
   const visibility = point.visibility == null ? 1 : point.visibility;
   const presence = point.presence == null ? 1 : point.presence;
@@ -269,6 +276,17 @@ function analyze(message){
   }
 }
 
+// ── Worker → host message protocol (sole consumer: body.html) ──
+//   ready      {segmentation}                         tasks initialised; segmentation = silhouette available
+//   trace      {id, stage, elapsedMs}                 per-stage timing probe
+//   landmarks  {id, landmarks}                        early partial — skeleton only; lets the host render a
+//                                                      fallback if the later silhouette step fails
+//   result     {id, landmarks, silhouette, quality,   full analysis (landmarks and/or silhouette may be null
+//               warning, recycle, elapsedMs}          on partial success)
+//   error      {id, stage, message, elapsedMs}        analysis failed for this image
+//   init-error {message}                              task init failed (host shows a fatal load error)
+//   recycle:true on a result tells the host to terminate + respawn this worker (clears a native WASM spin).
+// Inbound: {type:'analyze', id, bitmap, ...} — the only message the worker accepts.
 if (typeof self !== 'undefined'){
   self.onmessage=function(event){
     const message=event.data || {};

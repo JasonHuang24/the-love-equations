@@ -446,6 +446,11 @@
       body.classList.toggle('open', !open);
       chev.classList.toggle('open', !open);
     }
+    // Sorts each contiguous run of .dos-card siblings IN PLACE by label priority
+    // (Tier1 < Tier2 < Tier3 < Obs < Lens < Strat, unlabeled last); stable within a run
+    // via the original index. .dos-section headers break the page into runs, so each
+    // section sorts independently. After reordering, only the new top card of each run
+    // is left expanded.
     function sortCardsByLabel() {
       const map = { t1: 1, t2: 2, t3: 3, obs: 4, lens: 5, strat: 6 };
       const prio = card => {

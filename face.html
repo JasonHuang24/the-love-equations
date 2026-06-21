@@ -250,8 +250,6 @@
       const lipTop=P(IDX.lipTop), lipBot=P(IDX.lipBot);
       const fwhr = faceW / Math.abs(lipTop.y - brow.y);
       const foreTop=P(IDX.foreTop), subn=P(IDX.subnasale), chin=P(IDX.chin);
-      const t1=brow.y-foreTop.y, t2=subn.y-brow.y, t3=chin.y-subn.y, meanT=(t1+t2+t3)/3;
-      const thirdsDev = Math.sqrt(((t1-meanT)**2+(t2-meanT)**2+(t3-meanT)**2)/3) / meanT;
       const mid = (foreTop.x + chin.x) / 2;
       const pairs = [[IDX.reOuter,IDX.leOuter],[IDX.mouthR,IDX.mouthL],[IDX.cheekR,IDX.cheekL],[IDX.jawR,IDX.jawL],[IDX.browR,IDX.browL]];
       let asym = 0;
@@ -269,7 +267,7 @@
       const noseWidth = d(P(IDX.alarR), P(IDX.alarL)) / d(reI, leI);    // alar width ÷ intercanthal
       const eyeOpen = ((d(P(IDX.reLidTop),P(IDX.reLidBot)) + d(P(IDX.leLidTop),P(IDX.leLidBot))) / 2) / eyeW; // lid aperture ÷ eye width
       const poseSkew = Math.abs(Math.abs(cheekR.x-mid) - Math.abs(cheekL.x-mid)) / faceW; // yaw proxy (not scored)
-      return { symmetry:asym, jaw, midface, fwhr, canthal, thirdsDev, eyeSpacing, lips, leanness, noseWidth, eyeOpen, poseSkew };
+      return { symmetry:asym, jaw, midface, fwhr, canthal, eyeSpacing, lips, leanness, noseWidth, eyeOpen, poseSkew };
     }
 
     // raw geometric metrics: ideal + tolerance (reasoned, prototype — tune against real photos)
@@ -509,6 +507,9 @@
       const where = v<lo ? m.below : v>hi ? m.above : 'Typical';
       const val = m.fmt ? ' <span class="lc-meas-val">'+m.fmt(v)+'</span>' : '';
       const tier = m.tier || m.prov || '';
+      // Tier-1 rows come only from the computed composites (compRow), never from the
+      // MEASURES table (all Tier 2/3/Lens) — so the 't1' branch and .mtag.t1 style are
+      // intentionally kept even though no MEASURES entry is Tier 1.
       const tcls = tier==='Tier 1' ? 't1' : tier==='Lens' ? 'lens' : '';
       return '<div class="lc-meas"><div class="lc-meas-top">'
         + '<span class="lc-meas-name">'+m.label+'<span class="mtag '+tcls+'">'+tier+'</span></span>'

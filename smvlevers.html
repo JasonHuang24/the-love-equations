@@ -459,8 +459,7 @@
 
     function renderNav() {
       document.getElementById('factor-nav').innerHTML = FACTORS.map((f, i) => `
-        <button type="button" class="factor-tab" id="tab-${i}" onclick="selectFactor(${i})"
-                style="${''}">
+        <button type="button" class="factor-tab" id="tab-${i}" onclick="selectFactor(${i})">
           <div class="ft-num" style="color:${f.color}"><span class="ft-dot" style="background:${f.color}"></span>${f.num}</div>
           <div class="ft-name">${f.name}</div>
           <div class="ft-tag">${f.tagline}</div>
