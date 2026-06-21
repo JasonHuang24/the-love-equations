@@ -187,7 +187,7 @@ bounding box × 1.15) from the **original-resolution** image and feeds that — 
 ## Building `body-beauty.onnx` — train it (no turnkey checkpoint exists)
 SCUT-FBP5500 gave the face calc a ready, validated checkpoint. **Body attractiveness has no drop-in
 public equivalent** — every "score a physique" product is closed SaaS, and the public bodyfat repos
-have no released weights (full sweep in `body-cnn-scoping-brief.md`). So you **train a small
+have no released weights (full sweep in `../md/body-cnn-scoping-brief.md`). So you **train a small
 regressor**, which **`train_body_beauty.py`** (next to this file) does end-to-end:
 
 1. **Data — the Connor full-body stimulus set** (OSF `egj7c`, <https://osf.io/egj7c/>): 726 clothed
