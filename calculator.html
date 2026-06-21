@@ -386,6 +386,7 @@
       display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
       margin-bottom: 1.2rem; max-width: 460px;
     }
+    .age-grid { grid-template-columns: repeat(3, 1fr); }
     .sexbtn {
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
       padding: 1rem; background: rgba(255,252,247,0.86);
@@ -1203,7 +1204,7 @@
         icon: 'ti-messages',
         color: '#D4537E',
         short: 'Presence and calibration',
-        desc: 'Conversation, warmth, wit, flirtation, confidence, and your ability to create comfort and tension.',
+        desc: 'Conversation, warmth, wit, flirtation, confidence, and your ability to create comfort and tension. Measured here by interaction outcomes (do people stay engaged, convert, and come back), so it partly reflects your looks and status too — there is no clean way to isolate pure charm.',
         lever: 'Get more live reps. Practice conversation, listening, teasing, escalation, and emotional steadiness around real people.'
       },
       {
@@ -1240,7 +1241,7 @@
 
     const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
     const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E'];
-    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v4';
+    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v5';
 
     // ── Calibrated income → score curve ─────────────────────────────────────
     // Objective replacement for the old vibes-based "how attractive is your income" A–E.
@@ -1249,8 +1250,8 @@
     // gains ~2.5 pts) and saturates at the top. Gender is handled by the lens weights
     // (Money 0.18 male vs 0.08 female), NOT this curve. Tune the anchors freely.
     const INCOME_ANCHORS = [
-      [10000, 1.0], [45000, 4.0], [75000, 5.0], [100000, 6.0], [150000, 6.8],
-      [250000, 7.5], [500000, 8.2], [1000000, 8.8], [3000000, 9.4], [10000000, 10.0]
+      [10000, 1.0], [45000, 5.0], [75000, 6.0], [100000, 6.5], [150000, 7.1],
+      [250000, 7.7], [500000, 8.3], [1000000, 8.8], [3000000, 9.4], [10000000, 10.0]
     ];
     const INCOME_MIN = INCOME_ANCHORS[0][0];
     const INCOME_MAX = INCOME_ANCHORS[INCOME_ANCHORS.length - 1][0];
@@ -1292,6 +1293,20 @@
       if (nw >= 0)       return 'Around break-even — little accumulated wealth yet.';
       return 'Negative net worth — debts outweigh assets.';
     }
+    // Age-relative net worth (Codex/Fed-SCF): the same $ means different things at 22 vs 45.
+    // NW_AGE_PAR ≈ the "on-track / neutral" net worth per age band; we additively SHIFT net worth
+    // so being at par lands neutral (~5.5), then blend 0.55 absolute + 0.45 age-relative. Additive
+    // (not multiplicative) so it forgives the same way for debt as for low savings, and washes out
+    // at high net worth (where age stops mattering). NW_NEUTRAL = the $ that scores ~5.5 absolute.
+    const NW_NEUTRAL = 75000;
+    const NW_AGE_PAR = { '18-24': 5000, '25-29': 25000, '30-34': 70000, '35-39': 130000, '40-49': 250000, '50+': 400000 };
+    function networthScore(nw) {
+      const abs = networthToScore(nw);
+      const age = (typeof getAge === 'function') ? getAge() : null;
+      if (!age || !(age in NW_AGE_PAR)) return abs;
+      const rel = networthToScore(nw + (NW_NEUTRAL - NW_AGE_PAR[age]));
+      return 0.55 * abs + 0.45 * rel;
+    }
     // Signed money formatters: fmtMoney for display text ("-$15,000"), fmtMoneyVal for the
     // input field where a "$" prefix is shown separately ("-15,000").
     function fmtMoney(n)    { n = Number(n) || 0; return (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US'); }
@@ -1324,7 +1339,13 @@
     // Objective looks imports from the on-device photo calcs — the Conventional (cv) 0–10 read.
     function readCalcCv(key) {
       try { const o = JSON.parse(localStorage.getItem(key) || 'null');
-        if (o && !o.needsSex && typeof o.cv === 'number' && isFinite(o.cv)) return o.cv;
+        if (!(o && !o.needsSex && typeof o.cv === 'number' && isFinite(o.cv))) return null;
+        // Sex-provenance guard (Codex): geometry/heuristic scores are computed against a
+        // sex-specific rubric, so a score generated under one sex must NOT be silently reused
+        // after the SMV sex is changed. Model/CNN headline reads are sex-agnostic → stay reusable.
+        const chosen = (typeof SEX_IDX !== 'undefined' && (answers[SEX_IDX] === 'm' || answers[SEX_IDX] === 'f')) ? answers[SEX_IDX] : null;
+        if (chosen && o.sex && o.sex !== chosen && /geometry|heuristic/i.test(o.source || '')) return null;
+        return o.cv;
       } catch (e) {}
       return null;
     }
@@ -1338,6 +1359,13 @@
         type: 'sex',
         text: 'What is your sex?',
         sub: 'Height and build read differently by sex, so this sets those curves below — and aligns the scoring lens for the rest of your profile.'
+      },
+      {
+        factor: 0,
+        weight: 0,
+        type: 'age',
+        text: 'What is your age?',
+        sub: 'Not scored on its own. It age-adjusts your net worth (the same balance means more at 25 than at 45) and is kept for future age-aware scoring.'
       },
       {
         factor: 0,
@@ -1378,24 +1406,25 @@
         weight: 1.15,
         type: 'networth',
         text: 'What is your net worth?',
-        sub: 'Everything you own minus everything you owe — savings, investments, property, and equity, less debt. Enter a real number; it can be negative. Income is your flow, this is the stock you have actually built. Absolute, not age-adjusted.'
+        sub: 'Everything you own minus everything you owe — savings, investments, property, and equity, less debt. Enter a real number; it can be negative. Income is your flow, this is the stock you have actually built. Age-adjusted: the same balance counts for more the younger you are.'
       },
       {
         factor: 1,
         weight: 1.30,
         type: 'income',
         text: 'What is your annual income?',
-        sub: 'Your real, current pre-tax yearly income from all sources, in USD. Enter an actual number rather than a bracket - income scales, and $10M pulls far harder than $250k, so the curve keeps rewarding the top end instead of flattening it.'
+        sub: 'Your real, current pre-tax yearly income from all sources, in USD. Enter an actual number rather than a bracket — income scales, so the curve keeps rewarding the top end instead of flattening it, with diminishing returns toward the very top.'
       },
       {
         factor: 1,
-        weight: 0.95,
-        text: 'What is your housing situation?',
-        sub: 'Whether you own or rent, and the quality of the place you control — a factual read on your housing base, not taste or decor.',
+        weight: 1.0,
+        scores: [2.5, 4.5, 6.5, 8.5, 9.5],
+        text: 'Where are you on the housing-independence ladder?',
+        sub: 'Combines who you live with and whether you own — one factual read on housing autonomy and stability. Most independent renters sit mid-ladder, which is a normal adult baseline, not a low score.',
         opts: [
-          ['No independent housing', 'I live with family, or my housing is unstable.'],
-          ['Rent a modest place', 'Budget-driven housing that covers the basics.'],
-          ['Rent a quality place', 'I pay for a comfortable, well-located home.'],
+          ['Live with parents or family', 'No independent household of my own yet.'],
+          ['Rent, sharing with roommates', 'Independent of family, but I split space and control.'],
+          ['Rent my own place (solo or with a partner)', 'I run my own household.'],
           ['Own with a mortgage', 'I own my residence and am building equity.'],
           ['Own outright', 'I own my home free and clear.']
         ]
@@ -1403,34 +1432,37 @@
       {
         factor: 1,
         weight: 1.30,
+        scores: [3.5, 5.5, 7.0, 8.3, 8.8],
         text: 'What is your career stage?',
-        sub: 'Where you actually sit on the professional ladder right now — a proxy for standing and future earning, independent of current income.',
+        sub: 'Where you sit on the professional ladder — a proxy for standing and ceiling. Level only; whether you are actually winning at that level shows up in income and net worth.',
         opts: [
           ['Student, entry-level, or between jobs', 'Not yet established in a career.'],
           ['Established individual contributor', 'A stable, working professional.'],
           ['Senior, specialist, or team lead', 'Recognized skill and seniority.'],
           ['Management, director, or executive', 'I lead people or a function.'],
-          ['Owner, partner, or principal', 'I own or run the enterprise.']
+          ['Owner, partner, or principal', 'I own or run the enterprise (success itself is scored by income/net worth).']
         ]
       },
       {
         factor: 1,
-        weight: 1.10,
-        text: 'What is your living arrangement?',
-        sub: 'Who you share a home with — the clearest objective read on day-to-day autonomy and privacy.',
+        weight: 0.85,
+        scores: [2.5, 4.0, 5.5, 7.5, 8.5],
+        text: 'How heavy are your recurring financial obligations?',
+        sub: 'Debt payments and dependents that claim your income every month — the drag that raw income and net worth do not show. Fewer fixed claims means more free resources.',
         opts: [
-          ['Live with parents or family', 'Limited control over space and logistics.'],
-          ['Live with roommates', 'I share space and split household control.'],
-          ['Live with a partner', 'A shared adult household.'],
-          ['Live alone', 'I control my own space, schedule, and privacy.'],
-          ['Fully independent across the board', 'Own space, finances, transport, and schedule — dependent on no one.']
+          ['Crushing', 'Debt or dependents dominate my monthly budget.'],
+          ['Heavy', 'A large share of my income is already committed.'],
+          ['Moderate / typical', 'Normal adult obligations, manageable.'],
+          ['Light', 'Few fixed claims on my income.'],
+          ['None to speak of', 'No significant debt or dependents.']
         ]
       },
       {
         factor: 2,
         weight: 1.20,
+        scores: [4.0, 5.5, 7.5, 9.0, 10],
         text: 'How widely are you actually known?',
-        sub: 'The reach of your name and reputation — how far beyond your immediate circle people recognize you.',
+        sub: 'The reach of your name and reputation — how far beyond your immediate circle people recognize you. Known mainly to your own circle is the normal baseline, not a low score.',
         opts: [
           ['Only my close circle', 'Known to friends, family, and immediate coworkers.'],
           ['Known in one local scene', 'A recognized regular in a workplace, school, or community.'],
@@ -1442,21 +1474,23 @@
       {
         factor: 2,
         weight: 1.35,
-        text: 'What is your position in your main social circle?',
-        sub: 'Your actual standing in the group you spend the most social time with — where you sit, not how you feel.',
+        scores: [4.0, 5.5, 7.0, 8.5, 9.5],
+        text: 'Of your social plans, how many do you organize or host?',
+        sub: 'A behavioral read on centrality — who actually convenes the group, rather than how central you feel. Think across your recent get-togethers.',
         opts: [
-          ['On the edge', 'I am peripheral; plans happen without me.'],
-          ['A regular member', 'I belong, but I do not shape the group.'],
-          ['A core member', 'I am central to plans and decisions.'],
-          ['An organizer or hub', 'Things route through me; I connect people.'],
-          ['The center of gravity', 'The group orients around me; I set its tone.']
+          ['Almost none', 'Others organize; I attend.'],
+          ['Occasionally I host or organize', 'Now and then I pull something together.'],
+          ['A fair share', 'I organize a meaningful chunk of plans.'],
+          ['Most of them', 'My circle’s plans mostly run through me.'],
+          ['I am the hub', 'People come to me to make things happen, and to be introduced.']
         ]
       },
       {
         factor: 2,
         weight: 1.00,
+        scores: [4.5, 6.0, 7.5, 8.7, 9.7],
         text: 'How many people do you lead or manage?',
-        sub: 'People who report to you or answer to you in any arena — work teams, projects, volunteers, communities, or mentees.',
+        sub: 'People who report to you or answer to you in any arena — work teams, projects, volunteers, communities, or mentees. Leading no one is the common case, not a failure.',
         opts: [
           ['None', 'I lead no one.'],
           ['One to three', 'A small team or a few people.'],
@@ -1468,8 +1502,9 @@
       {
         factor: 2,
         weight: 1.05,
-        text: 'How many selective groups do you belong to?',
-        sub: 'Invite-only, competitive, or prestigious circles you are actually in: clubs, boards, teams, fellowships, or recognized communities — not casual groups anyone can join.',
+        scores: [4.5, 6.0, 7.2, 8.3, 9.3],
+        text: 'How many invite-only or competitively-selected groups are you in?',
+        sub: 'Groups you had to be admitted to or chosen for: boards, competitive teams, fellowships, juried or members-only organizations — not casual groups anyone can join.',
         opts: [
           ['None', 'No selective affiliations.'],
           ['One', 'A single selective group.'],
@@ -1480,9 +1515,10 @@
       },
       {
         factor: 2,
-        weight: 1.30,
+        weight: 0.80,
+        scores: [4.5, 5.5, 7.0, 8.5, 10],
         text: 'How large is your audience or following?',
-        sub: 'People who follow, subscribe to, or actively pay attention to you across platforms — real, engaged reach, not bought or inactive numbers.',
+        sub: 'People who follow, subscribe to, or actively pay attention to you across platforms — real, engaged reach, not bought or inactive numbers. Weighted modestly: most high-status people have no following, so this is a bonus signal, not a core one.',
         opts: [
           ['Essentially none', 'No meaningful audience or following.'],
           ['A few hundred', 'A modest personal following.'],
@@ -1494,58 +1530,70 @@
       {
         factor: 3,
         weight: 1.00,
+        scores: [2.0, 4.0, 5.5, 7.5, 9.0],
+        naIndex: 5,
         text: 'When you talk with someone new, how often do they stay engaged?',
-        sub: 'The observable result of your presence and conversation — do new people lean in and keep it going, or does it fizzle? Judge by their reaction, not your effort.',
+        sub: 'The observable result of your presence and conversation — do new people lean in and keep it going, or does it fizzle? Judge by their reaction over your recent conversations, not your effort.',
         opts: [
           ['Rarely', 'Conversations usually fizzle or stay flat.'],
           ['Sometimes', 'It lands occasionally, often not.'],
           ['About half the time', 'A fair share of conversations come alive.'],
           ['Usually', 'New people typically engage and stay in it.'],
-          ['Almost always', 'I reliably pull people into real conversation.']
+          ['Almost always', 'I reliably pull people into real conversation.'],
+          ['Not enough recent conversations to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
         ]
       },
       {
         factor: 3,
         weight: 1.35,
+        scores: [2.0, 4.0, 5.5, 7.5, 9.5],
+        naIndex: 5,
         text: 'What share of your first dates lead to a second?',
-        sub: 'Your conversion rate, not your date volume (that is Exposure). Think across your recent first dates with people you actually wanted to see again.',
+        sub: 'Your conversion rate, not your date volume (that is Exposure). Across roughly your last ten first dates with people you wanted to see again, how many led to a second?',
         opts: [
           ['Almost none', 'First dates rarely turn into seconds.'],
           ['About one in four', 'Occasionally, but most do not continue.'],
           ['About half', 'Roughly a coin-flip on a second date.'],
           ['Most of them', 'Second dates are the norm when I want one.'],
-          ['Nearly all', 'If I want a second date, I almost always get it.']
+          ['Nearly all', 'If I want a second date, I almost always get it.'],
+          ['Not enough recent first dates to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
         ]
       },
       {
         factor: 3,
         weight: 1.35,
+        scores: [2.0, 4.0, 5.5, 7.5, 9.0],
+        naIndex: 5,
         text: 'After meeting you, how often do people reach out first?',
-        sub: 'Who re-initiates — do the people you meet text first, follow up, or try to see you again? A direct read on the pull you leave behind.',
+        sub: 'Who re-initiates — across the people you have met recently, do they text first, follow up, or try to see you again? A direct read on the pull you leave behind.',
         opts: [
           ['Rarely', 'I almost always have to chase, or it dies.'],
           ['Sometimes', 'A few circle back; most do not.'],
           ['Fairly often', 'People re-initiate a fair amount.'],
           ['Usually', 'The people I click with tend to come to me.'],
-          ['Constantly', 'I regularly get unprompted follow-ups and interest.']
+          ['Constantly', 'I regularly get unprompted follow-ups and interest.'],
+          ['Not enough recent meetings to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
         ]
       },
       {
         factor: 3,
         weight: 1.20,
+        scores: [1.5, 3.5, 5.0, 6.5, 9.0],
         text: 'When someone goes cold or pulls back, what actually happens?',
-        sub: 'Charm holds up under pressure. Judge by your behavior — what you actually do next — not by how you feel inside.',
+        sub: 'Charm holds up under pressure. Judge by your behavior over your last few pullbacks — what you actually did next — not by how you felt inside.',
         opts: [
           ['I spiral or lash out', 'I get needy, bitter, or chaotic, and it shows.'],
           ['It rattles me for a while', 'I hold it together unevenly.'],
-          ['I mostly stay level', 'Normal setbacks do not derail me much.'],
-          ['I stay steady and warm', 'I keep both my composure and my warmth.'],
-          ['Unbothered, and it reads', 'My calm under pressure is itself attractive.']
+          ['I go quiet and detached', 'I shut down or pull away — calm, but cold.'],
+          ['I stay calm and unbothered', 'Nothing fazes me, though I keep my distance.'],
+          ['I stay grounded and warm', 'I keep both composure and warmth — secure, not cold.']
         ]
       },
       {
         factor: 3,
         weight: 1.10,
+        scores: [3.0, 4.5, 5.5, 7.5, 9.0],
+        naIndex: 5,
         text: 'How often do people tell you you are fun or easy to be around?',
         sub: 'The feedback you actually receive — being told you are funny, easy, interesting, or that time flew. Count what people say unprompted, not what you hope.',
         opts: [
@@ -1553,12 +1601,14 @@
           ['Occasionally', 'Once in a while someone says it.'],
           ['Sometimes', 'I hear it from time to time.'],
           ['Often', 'People regularly tell me I am easy or fun to be around.'],
-          ['Constantly', 'It is a recurring, specific thing people say about me.']
+          ['Constantly', 'It is a recurring, specific thing people say about me.'],
+          ['Not enough recent social contact to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
         ]
       },
       {
         factor: 4,
         weight: 1.20,
+        scores: [2.5, 4.0, 5.5, 7.5, 9.5],
         text: 'Where do you live, in dating-supply terms?',
         sub: 'City size and density set the raw size of the local pool. This is about your location, not your effort or appeal.',
         opts: [
@@ -1572,32 +1622,35 @@
       {
         factor: 4,
         weight: 1.40,
-        text: 'How often do you meet new people you could date?',
-        sub: 'Count new, available people with plausible mutual attraction — not acquaintances or random foot traffic.',
+        scores: [2.0, 4.0, 5.5, 7.5, 9.5],
+        text: 'How often do you cross paths with new, eligible people?',
+        sub: 'Raw at-bats: new people in your age range who are plausibly single that you actually encounter — whether or not anything comes of it. This counts exposure, not success (conversion lives in Charm).',
         opts: [
-          ['Almost never', 'Months can pass with zero new prospects.'],
-          ['A few a month', 'Roughly one to three new prospects a month.'],
-          ['About one a week', 'A steady weekly trickle of new prospects.'],
-          ['Several a week', 'Multiple new prospects most weeks.'],
-          ['Most days', 'New prospects appear almost daily.']
+          ['Almost never', 'Months can pass without meeting anyone new and eligible.'],
+          ['A few a month', 'Roughly one to three new eligible people a month.'],
+          ['About one a week', 'A steady weekly trickle of new faces.'],
+          ['Several a week', 'Multiple new eligible people most weeks.'],
+          ['Most days', 'New eligible people cross my path almost daily.']
         ]
       },
       {
         factor: 4,
         weight: 1.10,
-        text: 'How many dates do your online channels produce?',
-        sub: 'Real dates that actually happen via dating apps, social media, or DMs — not matches, likes, or chats. Count a typical month.',
+        scores: [2.5, 4.0, 5.5, 7.5, 9.0],
+        text: 'How much outreach do you do on dating apps or online?',
+        sub: 'Your online at-bats: people you message or actively contact, regardless of whether they reply or it becomes a date. Volume of attempts, not results. None / not on apps counts here.',
         opts: [
-          ['None', 'Online channels produce no real dates (or I do not use them).'],
-          ['Under one a month', 'A date materializes only rarely.'],
-          ['One or two a month', 'A modest but real flow.'],
-          ['Three to five a month', 'A reliable channel for me.'],
-          ['Six or more a month', 'More online-sourced dates than I can use.']
+          ['None or not on apps', 'No active online outreach.'],
+          ['A few messages a month', 'I dabble occasionally.'],
+          ['A few a week', 'A steady, modest outreach habit.'],
+          ['Most days', 'I reach out to new people almost daily.'],
+          ['High volume, daily', 'I work the apps hard and consistently.']
         ]
       },
       {
         factor: 4,
         weight: 1.10,
+        scores: [2.5, 4.5, 6.0, 7.5, 9.0],
         text: 'How many recurring places put you near new people?',
         sub: 'Repeated-contact settings where fresh faces appear: classes, clubs, hobby scenes, friend groups, work-adjacent circles, communities.',
         opts: [
@@ -1611,6 +1664,7 @@
       {
         factor: 4,
         weight: 1.35,
+        scores: [2.0, 4.0, 5.5, 7.5, 9.0],
         text: 'How many people do you actually approach or ask out?',
         sub: 'Conversations you start with a romantic frame, asks, and follow-ups that turn possibility into contact — over a typical week.',
         opts: [
@@ -1641,7 +1695,9 @@
     let heightUnit = 'imperial';   // 'imperial' (ft/in) | 'metric' (cm)
     let weightUnit = 'imperial';   // 'imperial' (lb)    | 'metric' (kg)
     const SEX_IDX = QUESTIONS.findIndex(q => q.type === 'sex');
+    const AGE_IDX = QUESTIONS.findIndex(q => q.type === 'age');
     const HEIGHT_IDX = QUESTIONS.findIndex(q => q.type === 'height');
+    const AGE_BANDS = ['18-24', '25-29', '30-34', '35-39', '40-49', '50+'];
     let autoNext = false;
     let aCompleted = false;
     let aTotal = null;
@@ -1744,6 +1800,10 @@
       if (a === 'm' || a === 'f') return a;
       return selectedLensA === 'female' ? 'f' : 'm';   // fall back to the lens
     }
+    function getAge() {
+      const a = AGE_IDX >= 0 ? answers[AGE_IDX] : null;
+      return AGE_BANDS.indexOf(a) >= 0 ? a : null;
+    }
     function bmiFromKg(kg) {
       const h = answers[HEIGHT_IDX];
       if (!h || !kg) return NaN;
@@ -1752,6 +1812,7 @@
     function isAnswered(i) {
       const q = QUESTIONS[i];
       if (q.type === 'sex') return answers[i] === 'm' || answers[i] === 'f';
+      if (q.type === 'age') return AGE_BANDS.indexOf(answers[i]) >= 0;
       if (q.type === 'build') return bodyImport() != null || answers[i] != null;
       if (q.type === 'face') return faceImport() != null || answers[i] != null;
       return answers[i] !== null && answers[i] !== undefined;
@@ -1778,6 +1839,11 @@
       renderQ();
       saveState();
     }
+    function setAge(a) {
+      answers[AGE_IDX] = a;
+      renderQ();
+      saveState();
+    }
     function setHeightUnit(u) { heightUnit = u; renderQ(); saveState(); }
     function setWeightUnit(u) { weightUnit = u; renderQ(); saveState(); }
     function onHeightInput() {
@@ -1793,6 +1859,7 @@
           if (total > 0) cm = total * 2.54;
         }
       }
+      if (cm != null) cm = Math.max(130, Math.min(230, cm));   // clamp to a plausible adult range
       answers[HEIGHT_IDX] = cm;
       updateHeightPreview();
       refreshNav();
@@ -1802,7 +1869,7 @@
       const el = document.getElementById('h-preview'); if (!el) return;
       const cm = answers[HEIGHT_IDX];
       if (cm == null) { el.innerHTML = '<span class="num-hint">Enter your height to see where it lands.</span>'; return; }
-      const ft = Math.floor((cm / 2.54) / 12), inch = Math.round((cm / 2.54) % 12);
+      const totIn = Math.round(cm / 2.54), ft = Math.floor(totIn / 12), inch = totIn % 12;
       el.innerHTML = `${Math.round(cm)} cm (${ft}&prime;${inch}&Prime;) maps to <strong>${heightToScore(cm, getSex()).toFixed(1)} / 10</strong> for a ${getSex() === 'f' ? 'female' : 'male'} profile.`;
     }
     function onWeightInput() {
@@ -1814,6 +1881,7 @@
         const lb = parseFloat((document.getElementById('w-lb') || {}).value || '');
         if (!isNaN(lb) && lb > 0) kg = lb * 0.453592;
       }
+      if (kg != null) kg = Math.max(35, Math.min(300, kg));    // clamp to a plausible adult range
       answers[curQ] = kg;
       updateBuildPreview();
       refreshNav();
@@ -1879,7 +1947,7 @@
       if (q.type === 'networth') {
         const has = answers[curQ] !== null && answers[curQ] !== undefined;
         const previewHtml = has
-          ? fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the curve. ' + networthBand(answers[curQ])
+          ? fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthScore(answers[curQ]).toFixed(1) + ' / 10</strong>' + (getAge() ? ' (age-adjusted). ' : ' on the curve. ') + networthBand(answers[curQ])
           : '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>';
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
@@ -1900,12 +1968,21 @@
           </div>`;
         return;
       }
+      if (q.type === 'age') {
+        const v = answers[curQ];
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="sex-grid age-grid">
+            ${AGE_BANDS.map(b => `<button type="button" class="sexbtn${v === b ? ' selected' : ''}" onclick="setAge('${b}')">${b}</button>`).join('')}
+          </div>`;
+        return;
+      }
       if (q.type === 'height') {
         const cm = answers[curQ];
         const has = cm != null;
         const imperial = heightUnit !== 'metric';
-        const ft = has ? Math.floor((cm / 2.54) / 12) : '';
-        const inch = has ? Math.round((cm / 2.54) % 12) : '';
+        const totIn = has ? Math.round(cm / 2.54) : 0;
+        const ft = has ? Math.floor(totIn / 12) : '';
+        const inch = has ? totIn % 12 : '';
         const cmVal = has ? Math.round(cm) : '';
         const fields = imperial
           ? `<input type="text" inputmode="numeric" id="h-ft" class="num-field short" autocomplete="off" value="${ft}" placeholder="5" oninput="onHeightInput()" /><span class="unit-lbl">ft</span>
@@ -1981,7 +2058,7 @@
         <div class="options-grid">
           ${q.opts.map((o, i) => `
             <button type="button" class="opt${answers[curQ] === i ? ' selected' : ''}" onclick="selectOpt(${i})">
-              <span class="opt-mark">${OPTION_MARKS[i]}</span>
+              <span class="opt-mark">${OPTION_MARKS[i] || '·'}</span>
               <span class="opt-main">
                 <span class="opt-title">${o[0]}</span>
                 <span class="opt-detail">${o[1]}</span>
@@ -2028,7 +2105,7 @@
       if (prev) {
         prev.innerHTML = answers[curQ] === null
           ? '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>'
-          : fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthToScore(answers[curQ]).toFixed(1) + ' / 10</strong> on the curve. ' + networthBand(answers[curQ]);
+          : fmtMoney(answers[curQ]) + ' net worth maps to <strong>' + networthScore(answers[curQ]).toFixed(1) + ' / 10</strong>' + (getAge() ? ' (age-adjusted). ' : ' on the curve. ') + networthBand(answers[curQ]);
       }
       refreshNav();
       saveState();
@@ -2066,9 +2143,9 @@
         const weighted = factorQs.map(i => {
           const q = QUESTIONS[i];
           let value, weight = q.weight || 1;
-          if (q.type === 'sex') return null;                                  // a parameter, not a scored input
+          if (q.type === 'sex' || q.type === 'age') return null;              // parameters, not scored inputs
           else if (q.type === 'income') value = answers[i] == null ? 5.5 : incomeToScore(answers[i]);
-          else if (q.type === 'networth') value = answers[i] == null ? 5.5 : networthToScore(answers[i]);
+          else if (q.type === 'networth') value = answers[i] == null ? 5.5 : networthScore(answers[i]);
           else if (q.type === 'height') value = answers[i] == null ? 5.5 : heightToScore(answers[i], getSex());
           else if (q.type === 'build') {
             const imp = bodyImport();
@@ -2080,9 +2157,13 @@
             }
           }
           else if (q.type === 'face') { const imp = faceImport(); value = imp != null ? imp : (answers[i] == null ? 5.5 : clampScore(answers[i])); }
-          else value = answers[i] == null ? 5.5 : DEFAULT_OPTION_SCORES[answers[i]];
+          else {
+            if (q.naIndex != null && answers[i] === q.naIndex) return null;   // "insufficient sample" → excluded from the factor denominator
+            value = answers[i] == null ? 5.5 : (q.scores || DEFAULT_OPTION_SCORES)[answers[i]];
+          }
           return { value, weight };
         }).filter(Boolean);
+        if (weighted.length === 0) return 5.5;                                 // every input excluded (e.g. all Charm Qs marked N/A) → neutral
         const totalWeight = weighted.reduce((a, item) => a + item.weight, 0);
         return Math.round((weighted.reduce((a, item) => a + (item.value * item.weight), 0) / totalWeight) * 10) / 10;
       });
