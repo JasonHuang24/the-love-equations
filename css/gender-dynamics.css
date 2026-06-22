@@ -69,5 +69,6 @@
 .chart-tier.obs { background: #ECEEF1; color: #51606F; }
 .chart-tier.lens { background: #EEE9F7; color: #5B4B8A; }
 .chart-tier.strat { background: #E2F0F2; color: #1F6E78; }
+.chart-tier.myth { background: var(--scarlet); color: #fff; }
 .label-legend { font-size: 12px; color: #8a8378; line-height: 2.1; margin: 4px 0 20px; }
 .label-legend .chart-tier { margin: 0 3px; }
