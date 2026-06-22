@@ -364,8 +364,12 @@
     function showPage(id, btn) {
       document.querySelectorAll('.dyn-page').forEach(p => p.classList.remove('visible'));
       document.getElementById('page-' + id).classList.add('visible');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('land-active','male-active','fem-active','both-active'));
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('land-active','male-active','fem-active','both-active');
+        b.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add(id + '-active');
+      btn.setAttribute('aria-pressed', 'true');
     }
     function toggle(header) {
       const body = header.nextElementSibling;
@@ -373,6 +377,7 @@
       const open = body.classList.contains('open');
       body.classList.toggle('open', !open);
       chev.classList.toggle('open', !open);
+      header.setAttribute('aria-expanded', String(!open));
     }
     // Sorts each contiguous run of .dos-card siblings IN PLACE by label priority
     // (Tier1 < Tier2 < Tier3 < Obs < Lens < Strat, unlabeled last); stable within a run
@@ -409,6 +414,27 @@
       });
     }
     document.addEventListener('DOMContentLoaded', sortCardsByLabel);
+    // Progressive enhancement: make the click-only widgets keyboard-operable and
+    // expose their state to assistive tech. Runs after sortCardsByLabel so the
+    // aria-expanded values reflect the post-sort open/closed state.
+    function enhanceA11y() {
+      document.querySelectorAll('.dos-head').forEach(head => {
+        head.setAttribute('role', 'button');
+        head.setAttribute('tabindex', '0');
+        const body = head.nextElementSibling;
+        head.setAttribute('aria-expanded', body && body.classList.contains('open') ? 'true' : 'false');
+        head.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            toggle(head);
+          }
+        });
+      });
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.setAttribute('aria-pressed', b.className.includes('-active') ? 'true' : 'false');
+      });
+    }
+    document.addEventListener('DOMContentLoaded', enhanceA11y);
   </script>
 </body>
 </html>

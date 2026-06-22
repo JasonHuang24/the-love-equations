@@ -457,7 +457,7 @@
           + '<div class="fc-feat-note">'+p.note+'</div></div></div>';
       }).join('');
       document.getElementById('fc-counter').textContent = (i+1)+' / '+FACE_LAYERS.length+' · '+L.tagLabel;
-      document.querySelectorAll('#fc-dots .fc-dot').forEach(function(d, di){ d.classList.toggle('active', di===i); });
+      document.querySelectorAll('#fc-dots .fc-dot').forEach(function(d, di){ d.classList.toggle('active', di===i); d.setAttribute('aria-pressed', di===i ? 'true' : 'false'); });
       faceIdx = i;
     }
     function faceStep(d){ renderFace((faceIdx + d + FACE_LAYERS.length) % FACE_LAYERS.length); }
@@ -468,8 +468,12 @@
         const dot = document.createElement('span');
         dot.className = 'fc-dot';
         dot.setAttribute('role', 'button');
+        dot.setAttribute('tabindex', '0');
         dot.setAttribute('aria-label', 'Layer ' + (i+1));
         dot.addEventListener('click', function(){ renderFace(i); });
+        dot.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); renderFace(i); }
+        });
         dotsEl.appendChild(dot);
       });
       document.getElementById('fc-prev').addEventListener('click', function(){ faceStep(-1); });

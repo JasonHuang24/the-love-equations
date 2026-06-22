@@ -266,11 +266,11 @@
           <div class="checker-body">
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Lowest physical factor</span><span class="slider-val" id="l-val" style="color:#BA7517">7</span></div>
-              <input type="range" min="1" max="10" step="1" value="7" id="l-slider" oninput="checkSub5()" />
+              <input type="range" aria-label="Lowest physical factor" min="1" max="10" step="1" value="7" id="l-slider" oninput="checkSub5()" />
             </div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Lowest character / fit factor</span><span class="slider-val" id="p-val" style="color:#7F77DD">7</span></div>
-              <input type="range" min="1" max="10" step="1" value="7" id="p-slider" oninput="checkSub5()" />
+              <input type="range" aria-label="Lowest character / fit factor" min="1" max="10" step="1" value="7" id="p-slider" oninput="checkSub5()" />
             </div>
             <div class="verdict pass" id="verdict">
               <div class="verdict-title pass" id="v-title">Clears the floor</div>
@@ -288,13 +288,13 @@
         <div class="profiles-grid">
           <div>
             <div class="profile-heading a">Person A</div>
-            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Looks</span><span style="font-size:15px;color:#BA7517" id="la-val">6</span></div><input type="range" min="1" max="10" step="1" value="6" id="la" oninput="calcTreatment()" /></div>
-            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Treatment</span><span style="font-size:15px;color:#378ADD" id="ta-val">8</span></div><input type="range" min="1" max="10" step="1" value="8" id="ta" oninput="calcTreatment()" /></div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Looks</span><span style="font-size:15px;color:#BA7517" id="la-val">6</span></div><input type="range" aria-label="Person A looks" min="1" max="10" step="1" value="6" id="la" oninput="calcTreatment()" /></div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Treatment</span><span style="font-size:15px;color:#378ADD" id="ta-val">8</span></div><input type="range" aria-label="Person A treatment" min="1" max="10" step="1" value="8" id="ta" oninput="calcTreatment()" /></div>
           </div>
           <div>
             <div class="profile-heading b">Person B</div>
-            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Looks</span><span style="font-size:15px;color:#BA7517" id="lb-val">5</span></div><input type="range" min="1" max="10" step="1" value="5" id="lb" oninput="calcTreatment()" /></div>
-            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Treatment</span><span style="font-size:15px;color:var(--scarlet)" id="tb-val">10</span></div><input type="range" min="1" max="10" step="1" value="10" id="tb" oninput="calcTreatment()" /></div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Looks</span><span style="font-size:15px;color:#BA7517" id="lb-val">5</span></div><input type="range" aria-label="Person B looks" min="1" max="10" step="1" value="5" id="lb" oninput="calcTreatment()" /></div>
+            <div class="slider-row"><div class="slider-top"><span class="slider-label" style="font-size:12px;color:var(--text-muted)">Treatment</span><span style="font-size:15px;color:var(--scarlet)" id="tb-val">10</span></div><input type="range" aria-label="Person B treatment" min="1" max="10" step="1" value="10" id="tb" oninput="calcTreatment()" /></div>
           </div>
         </div>
         <div class="treatment-battle">
@@ -322,7 +322,7 @@
           <div class="checker-body">
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Initial rating</span><span class="slider-val" style="color:var(--scarlet)" id="init-val">6.5</span></div>
-              <input type="range" min="1" max="10" step="0.5" value="6.5" id="init-slider" oninput="calcLooks()" />
+              <input type="range" aria-label="Initial rating" min="1" max="10" step="0.5" value="6.5" id="init-slider" oninput="calcLooks()" />
             </div>
             <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1rem;">
               <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)"><div style="width:12px;height:12px;border-radius:2px;background:var(--scarlet-pale);border:0.5px solid #E0A0A8;flex-shrink:0"></div>±2 deviation range</div>
@@ -398,7 +398,7 @@
             <div class="smv-sub-note" style="margin:-6px 0 12px;">Same numbers either way — scores are within-sex; the toggle changes only the market context, not the math.</div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your looks (within-sex percentile)</span><span class="slider-val" style="color:var(--scarlet)" id="smv-val">7.0</span></div>
-              <input type="range" min="1" max="10" step="0.5" value="7" id="smv-slider" oninput="smvMatch()" />
+              <input type="range" aria-label="Your looks (within-sex percentile)" min="1" max="10" step="0.5" value="7" id="smv-slider" oninput="smvMatch()" />
             </div>
             <div class="smv-checker-out">
               <div class="smv-out-card"><div class="smv-out-label">Expected partner</div><div class="smv-out-val" id="smv-exp">5.8</div></div>
@@ -406,7 +406,7 @@
               <div class="smv-out-card"><div class="smv-out-label">Partner ≥ 8</div><div class="smv-out-val" id="smv-p8">—</div></div>
               <div class="smv-out-card"><div class="smv-out-label">Partner below you</div><div class="smv-out-val" id="smv-pbelow">—</div></div>
             </div>
-            <div class="smv-callout" id="smv-readout" style="margin:1rem 0 0;"></div>
+            <div class="smv-callout" id="smv-readout" aria-live="polite" style="margin:1rem 0 0;"></div>
           </div>
         </div>
 
@@ -427,7 +427,7 @@
             <div class="smv-sub-note" style="margin:-6px 0 12px;">Numbers below are <strong>reasoned bands</strong>, not measured guarantees. They combine the sourced attention gap with the looks-matching curve and the different filters for casual sex, dating, situationships, and commitment. <span class="smv-tag est">Estimate</span></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your looks (within-sex percentile)</span><span class="slider-val" style="color:var(--scarlet)" id="attn-val">7.0</span></div>
-              <input type="range" min="1" max="10" step="0.5" value="7" id="attn-slider" oninput="attnMarket()" />
+              <input type="range" aria-label="Your looks (within-sex percentile)" min="1" max="10" step="0.5" value="7" id="attn-slider" oninput="attnMarket()" />
             </div>
             <div class="smv-checker-out attn-checker-out">
               <div class="smv-out-card"><div class="smv-out-label">Raw attention</div><div class="smv-out-val" id="attn-raw">—</div></div>
@@ -442,7 +442,7 @@
                 <tbody id="attn-rows"></tbody>
               </table>
             </div>
-            <div class="smv-callout" id="attn-readout" style="margin:1rem 0 0;"></div>
+            <div class="smv-callout" id="attn-readout" aria-live="polite" style="margin:1rem 0 0;"></div>
           </div>
         </div>
 
@@ -517,16 +517,16 @@
               <button type="button" class="smv-toggle-btn" data-arena="social" onclick="ccSetArena('social')">Social circle</button>
             </div>
             <div class="smv-sub-note" style="margin:-6px 0 12px;">Online and Cold approach are <strong>his</strong> lines; Social circle / repeated exposure is the arena he omits. Boundaries are a reasoned model, not measured. <span class="smv-tag est">Estimate</span></div>
-            <div class="cc-map-wrap"><div id="cc-map"></div></div>
+            <div class="cc-map-wrap"><div id="cc-map" role="img" aria-label="Charm Ceiling acceptance map: reachable partner looks by your looks and game across dating arenas"></div></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your looks</span><span class="slider-val" style="color:var(--scarlet)" id="cc-looks-val">5</span></div>
-              <input type="range" min="1" max="10" step="1" value="5" id="cc-looks" oninput="ccUpdate()" />
+              <input type="range" aria-label="Your looks" min="1" max="10" step="1" value="5" id="cc-looks" oninput="ccUpdate()" />
             </div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your game / charm</span><span class="slider-val" style="color:var(--scarlet)" id="cc-game-val">7</span></div>
-              <input type="range" min="1" max="10" step="1" value="7" id="cc-game" oninput="ccUpdate()" />
+              <input type="range" aria-label="Your game / charm" min="1" max="10" step="1" value="7" id="cc-game" oninput="ccUpdate()" />
             </div>
-            <div class="cc-verdict" id="cc-verdict"></div>
+            <div class="cc-verdict" id="cc-verdict" aria-live="polite"></div>
           </div>
         </div>
 
@@ -546,14 +546,14 @@
             <div class="smv-sub-note" style="margin:-6px 0 12px;">Same curve, recalibrated: a man&rsquo;s charm lifts roughly evenly with exposure; a woman&rsquo;s warmth pays off later and a touch smaller, because a man&rsquo;s first read is more looks-locked. <span class="smv-tag est">Estimate</span></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Your looks</span><span class="slider-val" style="color:var(--scarlet)" id="cc2-looks-val">5</span></div>
-              <input type="range" min="1" max="10" step="1" value="5" id="cc2-looks" oninput="cc2Update()" />
+              <input type="range" aria-label="Your looks" min="1" max="10" step="1" value="5" id="cc2-looks" oninput="cc2Update()" />
             </div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label" id="cc2-pers-label">Your personality / charm</span><span class="slider-val" style="color:var(--scarlet)" id="cc2-pers-val">8</span></div>
-              <input type="range" min="1" max="10" step="1" value="8" id="cc2-pers" oninput="cc2Update()" />
+              <input type="range" aria-label="Your personality / charm" min="1" max="10" step="1" value="8" id="cc2-pers" oninput="cc2Update()" />
             </div>
-            <div class="cc-map-wrap"><div id="cc2-map"></div></div>
-            <div class="cc-verdict" id="cc2-read"></div>
+            <div class="cc-map-wrap"><div id="cc2-map" role="img" aria-label="Charm-over-acquaintance chart: effective desirability as a trajectory over exposure"></div></div>
+            <div class="cc-verdict" id="cc2-read" aria-live="polite"></div>
           </div>
         </div>
 
@@ -612,15 +612,15 @@
             <div class="smv-sub-note" style="margin:-6px 0 12px;">The weights are reasoned (status ~40% of a man&rsquo;s value, ~20% of a woman&rsquo;s; looks the reverse); the <em>direction</em> of the asymmetry is the sourced part. <span class="smv-tag est">Estimate</span></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Looks</span><span class="slider-val" style="color:var(--scarlet)" id="st-looks-val">5</span></div>
-              <input type="range" min="1" max="10" step="1" value="5" id="st-looks" oninput="stUpdate()" />
+              <input type="range" aria-label="Looks" min="1" max="10" step="1" value="5" id="st-looks" oninput="stUpdate()" />
             </div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Personality</span><span class="slider-val" style="color:var(--scarlet)" id="st-pers-val">5</span></div>
-              <input type="range" min="1" max="10" step="1" value="5" id="st-pers" oninput="stUpdate()" />
+              <input type="range" aria-label="Personality" min="1" max="10" step="1" value="5" id="st-pers" oninput="stUpdate()" />
             </div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Status / resources</span><span class="slider-val" style="color:var(--scarlet)" id="st-status-val">8</span></div>
-              <input type="range" min="1" max="10" step="1" value="8" id="st-status" oninput="stUpdate()" />
+              <input type="range" aria-label="Status / resources" min="1" max="10" step="1" value="8" id="st-status" oninput="stUpdate()" />
             </div>
             <div class="st-score-wrap"><div class="st-score-num" id="st-score">&mdash;</div><div class="st-score-lbl">Overall mate value</div></div>
             <div class="st-bar">
@@ -629,7 +629,7 @@
               <div class="st-seg status" id="st-seg-status"></div>
             </div>
             <div class="st-legend"><span><span class="st-dot looks"></span>Looks</span><span><span class="st-dot pers"></span>Personality</span><span><span class="st-dot status"></span>Status</span></div>
-            <div class="cc-verdict" id="st-read"></div>
+            <div class="cc-verdict" id="st-read" aria-live="polite"></div>
           </div>
         </div>
 
@@ -770,12 +770,12 @@
               <button type="button" class="smv-toggle-btn" data-sex="m" onclick="wallSetSex('m')">Man</button>
             </div>
             <div class="smv-sub-note" style="margin:-6px 0 12px;">The desirability curve is schematic of the published <em>direction</em> (women decline from the early 20s, men rise to ~50) &mdash; not measured scores. The pairing curve is anchored to marriage-timing data. <span class="smv-tag est">Estimate</span></div>
-            <div class="cc-map-wrap"><div id="wall-map"></div></div>
+            <div class="cc-map-wrap"><div id="wall-map" role="img" aria-label="The Wall chart: age-desirability curve versus the pairing curve"></div></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Age</span><span class="slider-val" style="color:var(--scarlet)" id="wall-age-val">30</span></div>
-              <input type="range" min="18" max="55" step="1" value="30" id="wall-age" oninput="wallUpdate()" />
+              <input type="range" aria-label="Age" min="18" max="55" step="1" value="30" id="wall-age" oninput="wallUpdate()" />
             </div>
-            <div class="cc-verdict" id="wall-read"></div>
+            <div class="cc-verdict" id="wall-read" aria-live="polite"></div>
           </div>
         </div>
 
@@ -831,12 +831,12 @@
           <div class="checker-header">Live model &middot; what &ldquo;depletion&rdquo; predicts vs. what the data shows</div>
           <div class="checker-body">
             <div class="smv-sub-note" style="margin-bottom:12px;">The data line is Wolfinger&rsquo;s 2000s-cohort divorce rates (directional, read from his chart); the &ldquo;depletion predicts&rdquo; line is the smooth dose-response the mechanism <em>would</em> require. <span class="smv-tag est">Estimate</span></div>
-            <div class="cc-map-wrap"><div id="bc-map"></div></div>
+            <div class="cc-map-wrap"><div id="bc-map" role="img" aria-label="Body-count chart: divorce risk by premarital partner count, depletion prediction versus observed data"></div></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">Her premarital partner count</span><span class="slider-val" style="color:var(--scarlet)" id="bc-n-val">2</span></div>
-              <input type="range" min="0" max="15" step="1" value="2" id="bc-n" oninput="bcUpdate()" />
+              <input type="range" aria-label="Her premarital partner count" min="0" max="15" step="1" value="2" id="bc-n" oninput="bcUpdate()" />
             </div>
-            <div class="cc-verdict" id="bc-read"></div>
+            <div class="cc-verdict" id="bc-read" aria-live="polite"></div>
           </div>
         </div>
 
@@ -892,12 +892,12 @@
           <div class="checker-header">Live model &middot; the shared face-score vs. who actually decides</div>
           <div class="checker-body">
             <div class="smv-sub-note" style="margin-bottom:12px;">Both curves are schematic of the published <em>direction</em> &mdash; consensus on romantic desirability is high among people who&rsquo;ve just met and drops sharply with acquaintance, as idiosyncratic, relationship-specific preference takes over (Eastwick &amp; Hunt). Not measured scores. <span class="smv-tag est">Estimate</span></div>
-            <div class="cc-map-wrap"><div id="bp-map"></div></div>
+            <div class="cc-map-wrap"><div id="bp-map" role="img" aria-label="Bone Pill chart: shared face-score consensus versus idiosyncratic desire over acquaintance"></div></div>
             <div class="slider-row">
               <div class="slider-top"><span class="slider-label">How long they&rsquo;ve known you</span><span class="slider-val" style="color:var(--scarlet)" id="bp-acq-val">first glance</span></div>
-              <input type="range" min="0" max="24" step="1" value="0" id="bp-acq" oninput="bonepillUpdate()" />
+              <input type="range" aria-label="How long they&rsquo;ve known you" min="0" max="24" step="1" value="0" id="bp-acq" oninput="bonepillUpdate()" />
             </div>
-            <div class="cc-verdict" id="bp-read"></div>
+            <div class="cc-verdict" id="bp-read" aria-live="polite"></div>
           </div>
         </div>
 
@@ -1297,6 +1297,7 @@
       document.getElementById('cc2-looks-val').textContent = looks;
       document.getElementById('cc2-pers-val').textContent = pers;
       document.getElementById('cc2-pers-label').textContent = 'Your ' + CC2_PARAMS[cc2Sex].axis;
+      document.getElementById('cc2-pers').setAttribute('aria-label', 'Your ' + CC2_PARAMS[cc2Sex].axis);
       document.getElementById('cc2-map').innerHTML = cc2MapSVG(looks, pers);
       const fin = cc2Eff(looks, pers, CC2_STAGES.length-1), delta = fin - looks;
       const rEl = document.getElementById('cc2-read');

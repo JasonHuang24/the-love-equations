@@ -247,6 +247,7 @@
       document.querySelectorAll('.factor-tab').forEach((t, idx) => {
         const on = idx === i;
         t.classList.toggle('active', on);
+        t.setAttribute('aria-pressed', on ? 'true' : 'false');
         t.style.borderColor = on ? f.color : '';
         t.style.background = on
           ? `linear-gradient(145deg, rgba(255,255,255,0.96), ${hexToSoft(f.color)})`

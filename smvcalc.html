@@ -1066,7 +1066,7 @@
         document.getElementById('q-container').innerHTML = head + `
           <div class="soft-banner"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Soft self-estimate — not an objective measure. <a href="face.html">Run the Face Calc</a> for a real read; it will override this.</div>
           <div class="face-estimate">
-            <input type="range" min="1" max="10" step="0.5" id="face-range" value="${has ? v : 5.5}" oninput="onFaceEstimate(this.value)" />
+            <input type="range" aria-label="Your face self-estimate (1 to 10)" min="1" max="10" step="0.5" id="face-range" value="${has ? v : 5.5}" oninput="onFaceEstimate(this.value)" />
             <div class="face-estimate-val" id="face-val">${has ? v.toFixed(1) + ' / 10' : 'Drag to set your estimate'}</div>
           </div>
           <div class="num-preview">Be honest. A dishonest self-rating here is exactly the vibes problem this calculator exists to kill.</div>`;
@@ -1298,7 +1298,7 @@
             <span class="fs-val" id="bval-${i}" style="color:${f.color}">${bVals[i].toFixed(1)}</span>
           </div>
           <div class="fs-desc">${f.desc}</div>
-          <input type="range" min="1" max="10" step="0.1" value="${bVals[i]}" id="bslider-${i}" oninput="bSlide(${i}, this.value)" />
+          <input type="range" aria-label="${f.name}" min="1" max="10" step="0.1" value="${bVals[i]}" id="bslider-${i}" oninput="bSlide(${i}, this.value)" />
         </div>
       `).join('');
       updateB();
@@ -1581,7 +1581,7 @@
                 <span class="manual-gap-name">${escapeHtml(FACTORS[i].name)}${weak ? ' <span class="manual-gap-flag">weak source</span>' : ''}</span>
                 <span class="manual-gap-val" data-mgap="${target}-${i}">${mapped.scores[i].toFixed(1)}</span>
               </div>
-              <input type="range" min="1" max="10" step="0.1" value="${mapped.scores[i].toFixed(1)}" data-mgapslider="${target}-${i}" oninput="manualImportedAxis('${target}', ${i}, this.value)" />
+              <input type="range" aria-label="${escapeHtml(FACTORS[i].name)}" min="1" max="10" step="0.1" value="${mapped.scores[i].toFixed(1)}" data-mgapslider="${target}-${i}" oninput="manualImportedAxis('${target}', ${i}, this.value)" />
               <div class="manual-gap-note">${note}</div>
             </div>
           `;

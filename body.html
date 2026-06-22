@@ -351,8 +351,18 @@
                  bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null };
 
     document.querySelectorAll('.bc-src').forEach(function(tab){
+      tab.setAttribute('role', 'button');
+      tab.setAttribute('tabindex', '0');
+      tab.setAttribute('aria-pressed', tab.classList.contains('active') ? 'true' : 'false');
+      tab.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); tab.click(); }
+      });
       tab.addEventListener('click', function(){
-        document.querySelectorAll('.bc-src').forEach(t => t.classList.toggle('active', t===tab));
+        document.querySelectorAll('.bc-src').forEach(t => {
+          const on = t === tab;
+          t.classList.toggle('active', on);
+          t.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
         const src = tab.dataset.src;
         document.querySelectorAll('.bc-src-panel').forEach(p => p.hidden = (p.dataset.panel !== src));
         if (src !== 'camera' && window.bcStopCamera) window.bcStopCamera();
@@ -1152,7 +1162,12 @@
     }
 
     const fileInput=document.getElementById('bc-file'), drop=document.getElementById('bc-drop');
+    drop.setAttribute('role', 'button');
+    drop.setAttribute('tabindex', '0');
     drop.addEventListener('click', () => fileInput.click());
+    drop.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); drop.click(); }
+    });
     ['dragover','dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor='var(--scarlet)'; }));
     ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor=''; }));
     drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
