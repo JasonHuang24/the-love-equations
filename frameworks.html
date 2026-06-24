@@ -1633,8 +1633,10 @@
 
     // ── Body Count · "depletion" prediction vs. actual divorce data (Estimate) ──
     // Data line: Wolfinger 2000s-cohort 5-yr divorce rates by premarital partners (directional, read from chart).
+    // The IFS blog publishes 3-9 as one bucket; its finer cells run ~26% (3) / ~24% (4-5) / ~26% (6-9),
+    // so the band aggregates to ~25% (not the trough-only 24%). Kept consistent with statistics.html #body-count.
     // Mechanism line: the smooth dose-response a real "bonding depletion" would require.
-    const BC_DATA = [[0,6],[1,20],[2,30],[3,24],[9,24],[10,33],[15,33]];
+    const BC_DATA = [[0,6],[1,20],[2,30],[3,25],[9,25],[10,33],[15,33]];
     function bcData(n){
       for (let i=0;i<BC_DATA.length-1;i++){
         const a=BC_DATA[i], b=BC_DATA[i+1];
