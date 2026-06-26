@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/matchmaker.css?v=4.6" />
+  <link rel="stylesheet" href="css/matchmaker.css?v=5.5" />
 </head>
 <body data-page="matchmaker">
   <div data-include="navigation-bar"></div>
@@ -26,7 +26,7 @@
         <div class="mm-form-col">
       <!-- STEP 1 — INTAKE -->
       <div class="mm-step">
-        <div class="mm-step-head"><span class="mm-step-n">1</span><span class="mm-step-title">Your profile</span></div>
+        <div class="mm-step-head"><span class="mm-step-n">1</span><span class="mm-step-title">Your profile</span><button class="mm-step-reset" type="button" data-reset="1" title="Reset this step to defaults"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button></div>
         <div class="mm-step-sub">Pulled from your saved calculators where available, with a manual slider fallback for anything missing. Your scores and answers stay on this device.</div>
 
         <div class="mm-controls">
@@ -61,7 +61,7 @@
 
       <!-- STEP 2 — PYRAMID + SELF-GRADE -->
       <div class="mm-step">
-        <div class="mm-step-head"><span class="mm-step-n">2</span><span class="mm-step-title">Your standard</span></div>
+        <div class="mm-step-head"><span class="mm-step-n">2</span><span class="mm-step-title">Your standard</span><button class="mm-step-reset" type="button" data-reset="2" title="Reset this step to defaults"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button></div>
         <div class="mm-step-sub">Pick the hierarchy that fits how you actually weigh a partner. Its factors become the breakdown each match is scored on. (Your <a href="hierarchy.html">hierarchy</a> page stays untouched.)</div>
         <div class="mm-pyr-row" id="pyr-row"></div>
         <div class="mm-grade-host" id="grade-host"></div>
@@ -69,13 +69,14 @@
 
       <!-- STEP 3 — DESIRE QUIZ -->
       <div class="mm-step">
-        <div class="mm-step-head"><span class="mm-step-n">3</span><span class="mm-step-title">What you want</span></div>
-        <div class="mm-step-sub">Twenty-five quick dials on your taste &mdash; <strong>neutral by default</strong>, so move only what you actually care about. They drive the relational factors (desire, shared values, common interests) and the <strong>Looks</strong> dials (height, build, hair, aesthetic, ethnicity) reshape a candidate's <em>physical attractiveness to you</em>. The more you set, the sharper the match.</div>
+        <div class="mm-step-head"><span class="mm-step-n">3</span><span class="mm-step-title">What you want</span><button class="mm-step-reset" type="button" data-reset="3" title="Reset this step to defaults"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button></div>
+        <div class="mm-step-sub">Twenty-five quick dials on your taste &mdash; <strong>neutral by default</strong>, so move only what you actually care about. Most are <strong>one-tap either/or</strong> dials; the <strong>list</strong> questions marked <em>pick any</em> (hair, aesthetic, ethnicity, type you fall for, lifestyle) let you stack more than one. They drive the relational factors (desire, shared values, common interests) and the <strong>Looks</strong> dials (height, build, hair, aesthetic, ethnicity) reshape a candidate's <em>physical attractiveness to you</em>. The more you set, the sharper the match.</div>
         <div class="mm-quiz" id="quiz-host"></div>
       </div>
 
       <div class="mm-find-wrap">
         <button class="mm-find" id="find-btn" type="button"><i class="ti ti-heart-handshake" aria-hidden="true"></i> Find my matches</button>
+        <button class="mm-hide" id="hide-btn" type="button"><i class="ti ti-eye-off" aria-hidden="true"></i> Hide matches</button>
         <span class="mm-find-note" id="find-note"></span>
       </div>
         </div><!-- /mm-form-col -->
@@ -89,6 +90,20 @@
       </div><!-- /mm-form-wrap -->
 
       <div id="results-host"></div>
+
+      <details class="mm-method">
+        <summary>How a candidate's SMV is scored &mdash; and the notoriety dock</summary>
+        <div class="mm-method-body">
+          <p>The <strong>SMV</strong> figure on each card isn't one guess &mdash; it's a weighted blend of four levers (each rated 1&ndash;10), with the weights tilted by sex to mirror the <a href="smvlevers.html">Five Levers</a> doctrine:</p>
+          <ul>
+            <li><strong>Looks</strong> &middot; <strong>Vitality</strong> (youth &mdash; a steep age curve) &middot; <strong>Frame</strong> (personality / charisma) &middot; <strong>Status</strong> (wealth / rank / provision).</li>
+            <li><strong>Men:</strong> Status 0.36 &middot; Looks 0.28 &middot; Frame 0.22 &middot; Vitality 0.14 &mdash; status and looks carry it; no single maxed lever reaches the top.</li>
+            <li><strong>Women:</strong> Looks 0.40 &middot; Vitality 0.30 &middot; Frame 0.18 &middot; Status 0.12 &mdash; youth alone is 30%, and the curve drops hard after ~35 (the Wall). A 42-year-old with average looks caps around <strong>4</strong> even with nothing else wrong.</li>
+          </ul>
+          <p>On top of that blend, a <strong>notoriety dock</strong> subtracts for public infamy the dating market would actually hold against you: <strong>&minus;1.5</strong> for serious (conviction / predation / fraud), <strong>&minus;0.7</strong> for lesser (scandal / cancellation). It's deliberately a separate line from looks/status, not folded in. Worked example &mdash; <strong>Elizabeth Holmes</strong>: looks 5.0, vitality 3.2 (age 42), frame ~5.3, status 2.0 blend to <strong>~4.2</strong>, then the &minus;1.5 fraud dock lands her at <strong>2.7</strong>.</p>
+          <p class="mm-method-foot"><strong>Docked &minus;1.5:</strong> Sam Bankman-Fried, Billy McFarland, Martin Shkreli, George Santos, Tekashi 6ix9ine, Joe Exotic, Armie Hammer, Russell Brand, Elizabeth Holmes, Anna Sorokin, Casey Anthony, Tila Tequila. <strong>Docked &minus;0.7:</strong> Rudy Giuliani, Shia LaBeouf, Rachel Dolezal, Jenelle Evans, Amber Heard, Roseanne Barr, Mama June, Azealia Banks, Trisha Paytas. Every roster number is a provisional editorial estimate, built to be argued with.</p>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -294,6 +309,18 @@
       {l:'Loyal & all-in', pers:['grounded'], vibe:['traditional','family-first'], avoid:{vibe:['party']}},{l:'No preference'},{l:'Independent & free', pers:['free-spirited'], vibe:['low-key'], avoid:{vibe:['traditional']}} ] }
   ];
 
+  // ── selection model. Only the MENU questions are MULTI-select (q.multi) — you can hold more
+  //    than one preference (blonde AND red, Latino OR East Asian). Every other question is a
+  //    SINGLE-choice dial (one option at a time, radio-style), because its options are mutually
+  //    exclusive: you can't want kids AND career-over-kids, or be tall AND short.
+  //    `kind` drives how picks COMBINE in desireProfile():
+  //      menu  → additive want-tags (multiple).
+  //      scale → bipolar want/avoid; the one chosen pole applies (neutral default = nothing).
+  //      param → a scalar dial (age skew, looks-weight, reach) or intent; the one pick applies. ──
+  const MENU_Q  = new Set(['pref-hair','pref-style','pref-eth','pers','vibe']);
+  const PARAM_Q = new Set(['age','lp','reach','intent']);
+  QUIZ.forEach(q => { q.kind = MENU_Q.has(q.id) ? 'menu' : PARAM_Q.has(q.id) ? 'param' : 'scale'; q.multi = (q.kind==='menu'); });
+
   // ── scoring constants (provisional / moldable) — the gate engine from the sim. ──
   const TIER_W = { t1:0.55, t2:0.28, t3:0.17 };
   // stakes (the "what you want from it" answer) reweights the tiers: casual leans hard on
@@ -313,13 +340,13 @@
   // ── state ──
   let userSex = 'm', mode = 'looks', pyramid = 'you';
   let importedFace = null, importedBody = null, importedLooks = null, importedSMV = null;
-  let manualLooks = 6, manualSMV = 6;
+  let manualLooks = 1, manualSMV = 6;
   let overrideLooks = false, overrideSMV = false;   // manual override of an imported score
   let compatValues = {}, compatImported = false;
   let selfGrades = {};
   let quiz = {};
   const openCards = new Set();
-  QUIZ.forEach(q => quiz[q.id] = (q.def!=null ? q.def : 0));   // every question defaults to its neutral option
+  QUIZ.forEach(q => quiz[q.id] = [q.def!=null ? q.def : 0]);   // each answer is a SET of picked indices; defaults to its neutral option
 
   const clamp = (n,lo,hi) => Math.max(lo, Math.min(hi, n));
   const round1 = n => Math.round(n*10)/10;
@@ -381,7 +408,13 @@
       selfGrades = Object.assign({}, selfGrades, g);
     }
     if (s.quiz && typeof s.quiz==='object'){
-      QUIZ.forEach(q=>{ const i=s.quiz[q.id]; if (Number.isInteger(i) && i>=0 && i<q.opts.length) quiz[q.id]=i; });
+      QUIZ.forEach(q=>{
+        const raw = s.quiz[q.id];
+        const arr = Array.isArray(raw) ? raw : (Number.isInteger(raw) ? [raw] : null);   // back-compat: old saves stored one index
+        if (!arr) return;
+        const valid = [...new Set(arr.filter(i=>Number.isInteger(i) && i>=0 && i<q.opts.length))];
+        if (valid.length) quiz[q.id] = valid;
+      });
     }
     if (s.pyramid && PYRAMIDS[s.pyramid]) pyramid = s.pyramid;
     if (s.age!=null && isFinite(s.age)){ const el=document.getElementById('user-age'); if (el) el.value=clamp(Math.round(s.age),18,80); }
@@ -443,7 +476,7 @@
       html += `<div class="mm-grade-sub">${t.name}</div>`;
       t.factors.forEach((f, fi) => {
         const id = pyramid+'-'+ti+'-'+fi;
-        const v = selfGrades[id]!=null ? selfGrades[id] : 6;
+        const v = selfGrades[id]!=null ? selfGrades[id] : 1;   // bars start at 1 (lowest standard) — raise the ones you care about
         html += `<div class="mm-grade-row">
           <div class="mm-grade-name">${f[0]}<small>${f[1]}</small></div>
           <input class="mm-grade-slider" type="range" min="1" max="10" step="1" value="${v}" aria-label="${f[0]} — your standard, 1 to 10" oninput="mmSetGrade('${id}',this.value)">
@@ -460,14 +493,29 @@
     let html='', lastGroup=null;
     QUIZ.forEach(q => {
       if (q.group && q.group!==lastGroup){ html += `<div class="mm-qgroup">${q.group}</div>`; lastGroup=q.group; }
-      html += `<div class="mm-q"><div class="mm-q-text">${q.text}</div><div class="mm-q-opts">`+
-        q.opts.map((o,i)=>{ const on=quiz[q.id]===i, neutral=(i===q.def); return `<button class="mm-opt${on?' active':''}${on&&neutral?' is-neutral':''}" data-q="${q.id}" data-i="${i}" data-def="${neutral}" type="button" aria-pressed="${on}">${o.l}</button>`; }).join('')+
+      const hint = q.multi ? ` <span class="mm-q-multi">pick any</span>` : '';
+      html += `<div class="mm-q"><div class="mm-q-text">${q.text}${hint}</div><div class="mm-q-opts" role="${q.multi?'group':'radiogroup'}" aria-label="${q.text}">`+
+        q.opts.map((o,i)=>{ const on=quiz[q.id].includes(i), neutral=(i===q.def); return `<button class="mm-opt${q.multi?' mm-check':''}${on?' active':''}${on&&neutral?' is-neutral':''}" data-q="${q.id}" data-i="${i}" data-def="${neutral}" type="button" role="${q.multi?'checkbox':'radio'}" aria-checked="${on}">${o.l}</button>`; }).join('')+
         `</div></div>`;
     });
     document.getElementById('quiz-host').innerHTML = html;
     document.querySelectorAll('#quiz-host .mm-opt').forEach(b => b.onclick = () => {
-      quiz[b.dataset.q] = +b.dataset.i;
-      document.querySelectorAll(`#quiz-host .mm-opt[data-q="${b.dataset.q}"]`).forEach(x=>{ const on=x===b; x.classList.toggle('active', on); x.classList.toggle('is-neutral', on && x.dataset.def==='true'); x.setAttribute('aria-pressed', on); });
+      const qid=b.dataset.q, i=+b.dataset.i, q=QUIZ.find(x=>x.id===qid);
+      let arr;
+      if (!q.multi){
+        arr = [i];                                     // single-choice dial: this option only (radio)
+      } else {
+        arr = quiz[qid].slice();
+        if (i===q.def){
+          arr = [q.def];                               // "No preference" clears everything else
+        } else {
+          arr = arr.filter(x=>x!==q.def);              // a real pick drops the neutral default
+          arr = arr.includes(i) ? arr.filter(x=>x!==i) : arr.concat(i);   // toggle this option
+          if (!arr.length) arr = [q.def];              // nothing left ⇒ back to neutral
+        }
+      }
+      quiz[qid] = arr;
+      document.querySelectorAll(`#quiz-host .mm-opt[data-q="${qid}"]`).forEach(x=>{ const on=arr.includes(+x.dataset.i); x.classList.toggle('active', on); x.classList.toggle('is-neutral', on && x.dataset.def==='true'); x.setAttribute('aria-checked', on); });
       liveReRank();
     });
   }
@@ -476,15 +524,31 @@
   function desireProfile(){
     const wantPers=new Set(), wantVibe=new Set(), avoidPers=new Set(), avoidVibe=new Set();
     let ageSkew=0, looksW=0.5, reach=0, stakes='open';
-    const looksPref = { height:null, build:null, hair:null, style:null, eth:null };
-    QUIZ.forEach(q => {
-      const o = q.opts[quiz[q.id]]; if(!o) return;
+    // height/build are single-axis (scale); hair/style/eth are multi-pick menus (arrays).
+    const looksPref = { height:null, build:null, hair:[], style:[], eth:[] };
+    const accAge=[], accLW=[], accReach=[], stakesSel=[];     // param dials: collect picks, then average / resolve
+    const addOpt = o => {                                     // fold one chosen option's tags + looks into the profile
       (o.pers||[]).forEach(t=>wantPers.add(t)); (o.vibe||[]).forEach(t=>wantVibe.add(t));
       if(o.avoid){ (o.avoid.pers||[]).forEach(t=>avoidPers.add(t)); (o.avoid.vibe||[]).forEach(t=>avoidVibe.add(t)); }
-      if(o.looks){ for(const k in o.looks) looksPref[k]=o.looks[k]; }
-      if(o.ageSkew!=null) ageSkew=o.ageSkew; if(o.looksW!=null) looksW=o.looksW;
-      if(o.reach!=null) reach=o.reach; if(o.stakes) stakes=o.stakes;
+      if(o.looks){ for(const k in o.looks){ if(Array.isArray(looksPref[k])){ if(!looksPref[k].includes(o.looks[k])) looksPref[k].push(o.looks[k]); } else looksPref[k]=o.looks[k]; } }
+    };
+    QUIZ.forEach(q => {
+      const idxs = (quiz[q.id]||[]).filter(i=>q.opts[i]); if(!idxs.length) return;
+      if (q.kind==='param'){                                  // scalar dials average; intent (string) needs a clean single pick
+        idxs.forEach(i=>{ const o=q.opts[i];
+          if(o.ageSkew!=null) accAge.push(o.ageSkew); if(o.looksW!=null) accLW.push(o.looksW);
+          if(o.reach!=null) accReach.push(o.reach); if(o.stakes) stakesSel.push(o.stakes); });
+      } else if (q.kind==='scale'){                           // bipolar: both opposite poles picked ⇒ they cancel to neutral
+        const poles = idxs.filter(i=>i!==q.def);
+        if (poles.length===1) addOpt(q.opts[poles[0]]);
+      } else {                                                // menu: every pick adds (additive)
+        idxs.filter(i=>i!==q.def).forEach(i=>addOpt(q.opts[i]));
+      }
     });
+    if(accAge.length)   ageSkew = avg(accAge);
+    if(accLW.length)    looksW  = avg(accLW);
+    if(accReach.length) reach   = avg(accReach);
+    { const uniq=[...new Set(stakesSel)]; stakes = uniq.length===1 ? uniq[0] : 'open'; }   // mixed intents ⇒ neutral
     return { wantPers:[...wantPers], wantVibe:[...wantVibe], avoidPers:[...avoidPers], avoidVibe:[...avoidVibe], looksPref, ageSkew, looksW, reach, stakes };
   }
 
@@ -522,9 +586,9 @@
       if (p.build==='lean')  f += lean ? 0.8 : (curvy ? -0.8 : 0);
       else if (p.build==='curvy') f += curvy ? 0.8 : (lean ? -0.6 : 0);
     }
-    if (p.hair && c.hairColor) f += (c.hairColor===p.hair) ? 0.7 : -0.5;
-    if (p.style && c.style)    f += (c.style===p.style) ? 0.7 : -0.4;
-    if (p.eth && c.ethnicity)  f += (c.ethnicity===p.eth) ? 0.8 : -0.6;
+    if (p.hair && p.hair.length && c.hairColor)  f += p.hair.includes(c.hairColor) ? 0.7 : -0.5;   // any picked hair color counts as a hit
+    if (p.style && p.style.length && c.style)    f += p.style.includes(c.style) ? 0.7 : -0.4;
+    if (p.eth && p.eth.length && c.ethnicity)    f += p.eth.includes(c.ethnicity) ? 0.8 : -0.6;
     f += (ageFit(c,ctx)-0.5)*1.0;                         // age also shapes physical pull (±0.5); desire/avail keep their age effects
     return clamp(f, -2.5, 2.5);
   }
@@ -573,29 +637,74 @@
   }
 
   const band3 = s => s>=7.5 ? 'hi' : s>=5 ? 'mid' : 'lo';
+  // tag lists MIRROR the deriveAxis plus/minus lists (kept in sync by hand) — used ONLY to name
+  // WHY a factor reads exceptionally high/low in the comment; they don't score anything.
+  const AXIS_TAGS = {
+    class:      { plus:['reserved','grounded','intellectual','calm','warm','sweet','glamorous'], minus:['edgy','free-spirited','party'] },
+    fun:        { plus:['playful','witty','easygoing','warm','free-spirited','sweet'], minus:['intense','dominant','reserved'] },
+    initiative: { plus:['bold','dominant','ambitious','driven','intense'], minus:['reserved','calm','easygoing','sweet'] },
+    purity:     { plus:['grounded','sweet','reserved','calm','traditional','warm'], minus:['edgy','party','free-spirited','intense','glamorous'] },
+    warmth:     { plus:['warm','sweet','easygoing','grounded'], minus:['intense','dominant','edgy','reserved'] },
+    loyalty:    { plus:['grounded','traditional','reserved','sweet','calm'], minus:['party','free-spirited','edgy','glamorous'] },
+    confidence: { plus:['bold','dominant','driven','ambitious','intense','calm'], minus:['reserved'] }
+  };
+  function drv(c, src){ const m=AXIS_TAGS[src]; if(!m) return {plus:[],minus:[]}; const tags=[...c.personality, ...c.vibe]; return { plus: tags.filter(t=>m.plus.includes(t)), minus: tags.filter(t=>m.minus.includes(t)) }; }
+  const tagPhrase = a => a.slice(0,3).join(', ');
+  // Exceptional scores (>=8 or <=3) get a SPECIFIC "why" — naming the trait/attribute behind it —
+  // instead of the generic band line. Everything in [3,8) keeps the hi/mid/lo template.
   function axisComment(src, score, c, ctx){
     const b = band3(score);
     const first = c.name.split(' ')[0];
     const subj = c.g==='f' ? 'She' : 'He';
     const A = ctx.mode==='looks' ? c.looks : c.smv;
+    const hi = score>=8, lo = score<=3;
     switch(src){
       case 'looks': {
-        let t = {hi:"A genuine head-turner — physical pull is the strongest card here.", mid:"Attractive without being a knockout — clears the bar, doesn't dominate it.", lo:"Looks are the soft spot; physical pull won't carry this alone."}[b];
+        let t = hi ? `Genuinely striking — rated ${c.looks.toFixed(1)}/10, near the top of the roster.`
+              : lo ? `The real soft spot — rated ${c.looks.toFixed(1)}/10, toward the bottom of the roster.`
+              : {hi:"A genuine head-turner — physical pull is the strongest card here.", mid:"Attractive without being a knockout — clears the bar, doesn't dominate it.", lo:"Looks are the soft spot; physical pull won't carry this alone."}[b];
         const lf = looksFit(c, ctx);
         if (lf <= -0.8) t += " Not quite your physical type, which marks it down for you.";
         else if (lf >= 0.8) t += " Squarely your physical type, which lifts it for you.";
         const pl = physLine(c); if (pl) t += ` (${pl})`;
         return t;
       }
-      case 'status':     return {hi:"High-status and well-resourced — provides and signals near the top.", mid:"Comfortably established — enough standing to be taken seriously.", lo:"Status is modest; not where the case gets made."}[b];
-      case 'class':      return {hi:"Carries real polish and composure.", mid:"Presentable and put-together, if not exactly refined.", lo:"Reads a little rough or attention-seeking."}[b];
-      case 'fun':        return {hi:"Easy, playful company — low friction day to day.", mid:"Pleasant enough, with a few sharper edges.", lo:"Can run tense or heavy — not the easygoing sort."}[b];
-      case 'initiative': return {hi:"Assertive — likely to meet you halfway and initiate.", mid:"Will participate, but won't always drive.", lo:"Passive read; you'd be carrying the pursuit."}[b];
-      case 'purity':     return {hi:"Grounded and low-drama — little baggage to manage.", mid:"Some history, nothing alarming.", lo:"Reads chaotic or high-baggage — a stability risk."}[b];
-      case 'warmth':     return {hi:"Warm and kind — the type that makes life lighter.", mid:"Pleasant, if a touch guarded.", lo:"Runs cool or prickly."}[b];
-      case 'loyalty':    return {hi:"Steady, committed signals.", mid:"Probably loyal — hard to be certain.", lo:"Flightier signals; commitment is a question."}[b];
-      case 'confidence': return {hi:"Self-assured and non-needy — a strong frame.", mid:"Reasonably secure.", lo:"The frame looks shakier than ideal."}[b];
-      case 'spark':      return {hi:"Real chemistry potential — the electric kind.", mid:"Some spark, not a guarantee.", lo:"Chemistry is unlikely to catch."}[b];
+      case 'status':
+        if (hi) return `Elite standing — ${c.career}; resources and rank near the very top.`;
+        if (lo) return `Status is a genuine weak point — ${c.career}; little provision or rank to point to.`;
+        return {hi:"High-status and well-resourced — provides and signals near the top.", mid:"Comfortably established — enough standing to be taken seriously.", lo:"Status is modest; not where the case gets made."}[b];
+      case 'class': { const d=drv(c,'class');
+        if (hi) return `Real polish and composure${d.plus.length?` — reads ${tagPhrase(d.plus)}`:''}.`;
+        if (lo) return `Comes off notably rough or attention-seeking${d.minus.length?` — ${tagPhrase(d.minus)} energy`:''}.`;
+        return {hi:"Carries real polish and composure.", mid:"Presentable and put-together, if not exactly refined.", lo:"Reads a little rough or attention-seeking."}[b]; }
+      case 'fun': { const d=drv(c,'fun');
+        if (hi) return `Easy, lively company${d.plus.length?` — ${tagPhrase(d.plus)}`:''}; low friction day to day.`;
+        if (lo) return `Heavy or tense to be around${d.minus.length?` — runs ${tagPhrase(d.minus)}`:''}.`;
+        return {hi:"Easy, playful company — low friction day to day.", mid:"Pleasant enough, with a few sharper edges.", lo:"Can run tense or heavy — not the easygoing sort."}[b]; }
+      case 'initiative': { const d=drv(c,'initiative');
+        if (hi) return `Strong initiative${d.plus.length?` — ${tagPhrase(d.plus)}`:''}; meets you halfway and drives.`;
+        if (lo) return `Very passive${d.minus.length?` — ${tagPhrase(d.minus)}`:''}; you'd be carrying the pursuit.`;
+        return {hi:"Assertive — likely to meet you halfway and initiate.", mid:"Will participate, but won't always drive.", lo:"Passive read; you'd be carrying the pursuit."}[b]; }
+      case 'purity': { const d=drv(c,'purity');
+        if (hi) return `Grounded and low-drama${d.plus.length?` — ${tagPhrase(d.plus)}`:''}; very little baggage to manage.`;
+        if (lo) return `Reads chaotic or high-baggage${d.minus.length?` — ${tagPhrase(d.minus)}`:''}; a real stability risk.`;
+        return {hi:"Grounded and low-drama — little baggage to manage.", mid:"Some history, nothing alarming.", lo:"Reads chaotic or high-baggage — a stability risk."}[b]; }
+      case 'warmth': { const d=drv(c,'warmth');
+        if (hi) return `Genuinely warm and kind${d.plus.length?` — ${tagPhrase(d.plus)}`:''}; the type that makes life lighter.`;
+        if (lo) return `Runs cold or prickly${d.minus.length?` — ${tagPhrase(d.minus)}`:''}.`;
+        return {hi:"Warm and kind — the type that makes life lighter.", mid:"Pleasant, if a touch guarded.", lo:"Runs cool or prickly."}[b]; }
+      case 'loyalty': { const d=drv(c,'loyalty');
+        if (hi) return `Steady, all-in commitment signals${d.plus.length?` — ${tagPhrase(d.plus)}`:''}.`;
+        if (lo) return `Flighty signals${d.minus.length?` — ${tagPhrase(d.minus)}`:''}; commitment is a real question.`;
+        return {hi:"Steady, committed signals.", mid:"Probably loyal — hard to be certain.", lo:"Flightier signals; commitment is a question."}[b]; }
+      case 'confidence': { const d=drv(c,'confidence');
+        if (hi) return `A very secure, non-needy frame${d.plus.length?` — ${tagPhrase(d.plus)}`:''}${c.smv>=7?`, with a ${c.smv.toFixed(1)} SMV behind it`:''}.`;
+        if (lo) return `The frame looks shaky${d.minus.length?` — ${tagPhrase(d.minus)}`:''}${c.smv<=3?`, and a thin ${c.smv.toFixed(1)} SMV doesn't help`:''}.`;
+        return {hi:"Self-assured and non-needy — a strong frame.", mid:"Reasonably secure.", lo:"The frame looks shakier than ideal."}[b]; }
+      case 'spark':
+        if (hi) return "Strong chemistry potential — the electric, hard-to-fake kind.";
+        if (lo) return "Chemistry is unlikely to catch — little here to spark on.";
+        return {hi:"Real chemistry potential — the electric kind.", mid:"Some spark, not a guarantee.", lo:"Chemistry is unlikely to catch."}[b];
       case 'desire': {
         let base;
         if (A > ctx.uScore+1)   base = subj+"'d be looking up the ladder — desire toward you is the weak link, and why this reads as a stretch.";
@@ -694,7 +803,7 @@
     P.tiers.forEach((t,ti)=> t.factors.forEach((f,fi)=>{
       const src=f[2]||'looks';
       const raw=round1(clamp(deriveAxis(src,c,ctx),1,10));                                        // his score — FIXED (hierarchy model + candidate)
-      const std=(selfGrades[pyramid+'-'+ti+'-'+fi]!=null)?selfGrades[pyramid+'-'+ti+'-'+fi]:6;   // your bar on this factor — the yardstick
+      const std=(selfGrades[pyramid+'-'+ti+'-'+fi]!=null)?selfGrades[pyramid+'-'+ti+'-'+fi]:1;   // your bar on this factor — the yardstick (defaults to 1: lowest bar)
       const match=round1(clamp(YARD_C + YARD_K*(raw-std), 1, 10));                                // how his fixed score measures against your bar
       byTier[ti].push({ match, src });
       sv[src]=raw;
@@ -729,7 +838,7 @@
     const { scored, d, u } = currentMatches();
     openCards.clear();
     if (scored.length) openCards.add(scored[0].c.slug);   // top result expanded by default
-    renderResults(scored.slice(0,5), d, u);
+    renderResults(scored.slice(0,10), d, u);
     renderPreview(scored, d, u);
     // on stacked (mobile) layout the results sit below the live preview — jump to them
     // so "Find my matches" visibly does something instead of scrolling off-screen.
@@ -742,7 +851,7 @@
     const { scored, d, u } = currentMatches();
     renderPreview(scored, d, u);
     if (document.querySelector('.mm-rcard') || document.querySelector('.mm-empty'))
-      renderResults(scored.slice(0,5), d, u);
+      renderResults(scored.slice(0,10), d, u);
     saveState();   // every state-mutating interaction funnels through here
   }
   // compact always-on preview beside the form — in-band names + their score on the
@@ -754,7 +863,7 @@
     if (sub) sub.innerHTML = `Band <strong>${(u-1).toFixed(1)}&ndash;${(u+1+(d.reach||0)).toFixed(1)}</strong> &middot; ${targetSex()==='f'?'women':'men'} &middot; ranked by match`;
     if (!scored.length){ host.innerHTML = `<div class="mm-pv-empty">No one in your band yet &mdash; widen your aim, or flip By Looks / By SMV.</div>`; return; }
     // mirror the results exactly: same ranking (gated match), so the preview never disagrees with "Find my matches"
-    const list = scored.slice().sort((a,b)=> b.a.sb.final - a.a.sb.final || b.s - a.s).slice(0,8);
+    const list = scored.slice().sort((a,b)=> b.a.sb.final - a.a.sb.final || b.s - a.s).slice(0,10);
     host.innerHTML = `<ol class="mm-pv-list">` + list.map((x,i)=>{
       const c=x.c, m=x.a.sb.final, cls = m>=6.5 ? 'hi' : m>=4 ? 'mid' : 'lo';
       return `<li class="mm-pv-row" data-pv="${c.slug}" title="See ${c.name}'s full breakdown"><span class="mm-pv-rank">${i+1}</span><span class="mm-pv-name">${c.name}${x.stretch?' <span class="mm-pv-stretch">stretch</span>':''}</span><span class="mm-pv-axis">${axisAbbr}&nbsp;${x.s.toFixed(1)}</span><span class="mm-pv-score sc-${cls}">${m.toFixed(1)}</span></li>`;
@@ -886,6 +995,36 @@
     liveReRank();
   }
 
+  // ── per-step reset + hide-matches ──
+  function syncToggle(id, key, val){
+    document.querySelectorAll('#'+id+' .mm-toggle-btn').forEach(b=>{ const on=b.dataset[key]===val; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
+  }
+  // Step 1 (Your profile): sex→man, mode→by looks, age→30, manual scores→6, drop overrides
+  // (imported calc scores stay — they're pulled in, not entered here; clearing overrides re-shows them).
+  function resetStep1(){
+    userSex='m'; mode='looks'; manualLooks=1; manualSMV=6; overrideLooks=false; overrideSMV=false;
+    const ageEl=document.getElementById('user-age'); if(ageEl) ageEl.value=30;
+    syncToggle('sex-toggle','sex',userSex); syncToggle('mode-toggle','mode',mode);
+    if (!PYRAMIDS[pyramid] || PYRAMIDS[pyramid].describes !== targetSex()) pyramid = pyramidsForTarget()[0];
+    renderIntake(); renderPyramid(); liveReRank();
+  }
+  // Step 2 (Your standard): default pyramid, every bar back to 6, drop any Compatibility import.
+  function resetStep2(){
+    selfGrades = {}; compatValues = {}; compatImported = false;
+    pyramid = pyramidsForTarget()[0];
+    renderPyramid(); liveReRank();
+  }
+  // Step 3 (What you want): every quiz dial back to its neutral default.
+  function resetStep3(){
+    QUIZ.forEach(q => quiz[q.id] = [q.def!=null ? q.def : 0]);
+    renderQuiz(); liveReRank();
+  }
+  // Hide the found matches (the live preview is always-on and stays). "Find my matches" re-shows them.
+  function hideMatches(){
+    openCards.clear();
+    const host=document.getElementById('results-host'); if(host) host.innerHTML='';
+  }
+
   // ── toggles ──
   function wireToggle(id, key, set){
     document.getElementById(id).addEventListener('click', e => {
@@ -910,6 +1049,11 @@
     ageEl.addEventListener('input', liveReRank);
     ageEl.addEventListener('change', () => { const v=parseInt(ageEl.value,10); ageEl.value = isFinite(v)?clamp(v,18,80):30; liveReRank(); });
     document.getElementById('find-btn').addEventListener('click', runMatch);
+    document.getElementById('hide-btn').addEventListener('click', hideMatches);
+    document.querySelectorAll('.mm-step-reset').forEach(b => b.addEventListener('click', () => {
+      const s = b.dataset.reset;
+      if (s==='1') resetStep1(); else if (s==='2') resetStep2(); else resetStep3();
+    }));
     document.getElementById('pkg-import').addEventListener('click', importPackage);
     document.getElementById('find-note').textContent = importedLooks!=null||importedSMV!=null ? 'Using your saved calculator scores.' : 'No saved scores found — set them above first.';
     liveReRank();   // populate the live preview immediately (results stay hidden until "Find")
