@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matchmaker &mdash; The Love Equations</title>
+  <link rel="stylesheet" href="css/styles.css?v=1.6" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <link rel="stylesheet" href="css/matchmaker.css?v=4.6" />
+</head>
+<body data-page="matchmaker">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Tool</div>
+      <div class="page-title">Matchmaker</div>
+      <div class="page-sub">Not a flattering list &mdash; the <em>realistic intersection</em>. It takes your own value profile (pulled from your <a href="smvcalc.html">SMV</a>, <a href="face.html">Face</a> and <a href="body.html">Body</a> calcs), asks what you want, then finds the celebrities you'd actually match with at your level &mdash; and gives each one a full <a href="hierarchy.html">Love Hierarchy</a> breakdown: every factor scored, every factor explained. Flip <strong>By Looks / By SMV</strong> to change which scale it pairs you on.</div>
+    </div>
+
+    <div class="content">
+      <p class="mm-intro">It clamps the roster to <strong>your band</strong> (a 6 matches roughly 5&ndash;7), then ranks inside it by the gated hierarchy score &mdash; Tier&nbsp;1 is a gate, not an average, so a knockout who'd be looking past you still won't top the list. Each match opens into the same breakdown the old sims gave: the number, the tiers, and the <em>why</em> on every sub-factor. <span class="mm-tag lens">Lens</span> Celebrity ratings and the per-factor reads are provisional editorial estimates &mdash; a seed you can argue with.</p>
+
+      <div class="mm-form-wrap">
+        <div class="mm-form-col">
+      <!-- STEP 1 — INTAKE -->
+      <div class="mm-step">
+        <div class="mm-step-head"><span class="mm-step-n">1</span><span class="mm-step-title">Your profile</span></div>
+        <div class="mm-step-sub">Pulled from your saved calculators where available, with a manual slider fallback for anything missing. Your scores and answers stay on this device.</div>
+
+        <div class="mm-controls">
+          <div class="mm-ctl">
+            <span class="mm-ctl-label">I am a</span>
+            <div class="mm-toggle" id="sex-toggle" role="group" aria-label="I am a">
+              <button class="mm-toggle-btn active" data-sex="m" type="button" aria-pressed="true">Man</button>
+              <button class="mm-toggle-btn" data-sex="f" type="button" aria-pressed="false">Woman</button>
+            </div>
+          </div>
+          <div class="mm-ctl">
+            <span class="mm-ctl-label">Match me by</span>
+            <div class="mm-toggle" id="mode-toggle" role="group" aria-label="Match me by">
+              <button class="mm-toggle-btn active" data-mode="looks" type="button" aria-pressed="true">By Looks</button>
+              <button class="mm-toggle-btn" data-mode="smv" type="button" aria-pressed="false">By SMV</button>
+            </div>
+          </div>
+          <div class="mm-ctl">
+            <span class="mm-ctl-label">My age</span>
+            <input id="user-age" type="number" min="18" max="80" value="30" style="width:64px;font-family:inherit;font-size:13px;padding:6px 8px;border:0.5px solid var(--border);border-radius:8px;background:var(--card-solid);color:var(--text);" />
+          </div>
+        </div>
+
+        <div class="mm-intake-grid" id="intake-grid"></div>
+
+        <div class="mm-import">
+          <div class="mm-import-label">Have a saved package? Paste a <a href="compatibility.html">Compatibility</a> or <a href="smvcalc.html">SMV</a> export to fill your profile and standard in one shot. (Scores already on this device load automatically.)</div>
+          <textarea class="mm-import-box" id="pkg-box" spellcheck="false" placeholder='Paste {"source":"love-equations.compatibility", ...} or {"source":"love-equations.smv", ...} here'></textarea>
+          <div class="mm-import-actions"><button class="mm-import-btn" id="pkg-import" type="button"><i class="ti ti-upload" aria-hidden="true"></i> Import package</button><span class="mm-import-status" id="pkg-status"></span></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 — PYRAMID + SELF-GRADE -->
+      <div class="mm-step">
+        <div class="mm-step-head"><span class="mm-step-n">2</span><span class="mm-step-title">Your standard</span></div>
+        <div class="mm-step-sub">Pick the hierarchy that fits how you actually weigh a partner. Its factors become the breakdown each match is scored on. (Your <a href="hierarchy.html">hierarchy</a> page stays untouched.)</div>
+        <div class="mm-pyr-row" id="pyr-row"></div>
+        <div class="mm-grade-host" id="grade-host"></div>
+      </div>
+
+      <!-- STEP 3 — DESIRE QUIZ -->
+      <div class="mm-step">
+        <div class="mm-step-head"><span class="mm-step-n">3</span><span class="mm-step-title">What you want</span></div>
+        <div class="mm-step-sub">Twenty-five quick dials on your taste &mdash; <strong>neutral by default</strong>, so move only what you actually care about. They drive the relational factors (desire, shared values, common interests) and the <strong>Looks</strong> dials (height, build, hair, aesthetic, ethnicity) reshape a candidate's <em>physical attractiveness to you</em>. The more you set, the sharper the match.</div>
+        <div class="mm-quiz" id="quiz-host"></div>
+      </div>
+
+      <div class="mm-find-wrap">
+        <button class="mm-find" id="find-btn" type="button"><i class="ti ti-heart-handshake" aria-hidden="true"></i> Find my matches</button>
+        <span class="mm-find-note" id="find-note"></span>
+      </div>
+        </div><!-- /mm-form-col -->
+        <aside class="mm-preview-col">
+          <div class="mm-preview">
+            <div class="mm-preview-h"><i class="ti ti-eye" aria-hidden="true"></i> Live preview</div>
+            <div class="mm-preview-sub" id="preview-sub"></div>
+            <div id="preview-host"></div>
+          </div>
+        </aside>
+      </div><!-- /mm-form-wrap -->
+
+      <div id="results-host"></div>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script>
+  // ════════════════════════════════════════════════════════════════
+  //  MATCHMAKER — personalized you-vs-roster, with a full per-candidate
+  //  Love Hierarchy breakdown (every sub-factor scored + commented).
+  //  Flow: intake → pick standard → desire quiz → band-clamp the roster
+  //  → score each in-band candidate on YOUR chosen hierarchy (intrinsic
+  //  axes from roster data, relational axes from the parity gap + quiz)
+  //  → gate-aware overall → rank → expandable breakdown cards.
+  //  Roster ratings + per-factor derivations are provisional editorial
+  //  estimates, meant to be molded. No user data leaves the device
+  //  (only the Tabler icon webfont is fetched from a CDN).
+  // ════════════════════════════════════════════════════════════════
+
+  // ── ROSTER — real, recognizable names, spread across SMV/looks bands. ──
+  const ROSTER = [
+    // ── women (target for male users) ──
+    { slug:'margot-robbie', name:'Margot Robbie', g:'f', born:'1990-07-02', career:'Actor / producer', looks:9.5, smv:7.8, heightCm:168, build:'slim', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['playful','witty','ambitious','bold'], vibe:['social','career-first','luxury'] },
+    { slug:'sydney-sweeney', name:'Sydney Sweeney', g:'f', born:'1997-09-12', career:'Actor', looks:9.0, smv:8.0, heightCm:161, build:'curvy', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['playful','driven','glamorous'], vibe:['social','career-first'] },
+    { slug:'gal-gadot', name:'Gal Gadot', g:'f', born:'1985-04-30', career:'Actor', looks:9.0, smv:6.8, heightCm:178, build:'slim', hairColor:'brunette', ethnicity:'middle-eastern', style:'classic', personality:['warm','grounded','bold'], vibe:['family-first','traditional'] },
+    { slug:'zendaya', name:'Zendaya', g:'f', born:'1996-09-01', career:'Actor', looks:9.0, smv:8.1, heightCm:178, build:'slim', hairColor:'black', ethnicity:'mixed', style:'edgy', personality:['calm','intellectual','driven'], vibe:['artsy','career-first'] },
+    { slug:'scarlett-johansson', name:'Scarlett Johansson', g:'f', born:'1984-11-22', career:'Actor', looks:8.5, smv:6.5, heightCm:160, build:'curvy', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['bold','witty','reserved'], vibe:['career-first','luxury'] },
+    { slug:'kim-kardashian', name:'Kim Kardashian', g:'f', born:'1980-10-21', career:'Mogul / media', looks:8.5, smv:6.5, heightCm:157, build:'curvy', hairColor:'black', ethnicity:'white', style:'glam', personality:['ambitious','glamorous','driven'], vibe:['luxury','social','family-first'] },
+    { slug:'mila-kunis', name:'Mila Kunis', g:'f', born:'1983-08-14', career:'Actor', looks:8.0, smv:6.3, heightCm:163, build:'slim', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['witty','warm','grounded'], vibe:['homebody','family-first'] },
+    { slug:'anne-hathaway', name:'Anne Hathaway', g:'f', born:'1982-11-12', career:'Actor', looks:7.5, smv:5.7, heightCm:173, build:'slim', hairColor:'brunette', ethnicity:'white', style:'classic', personality:['warm','intellectual','reserved'], vibe:['family-first','low-key'] },
+    { slug:'emma-stone', name:'Emma Stone', g:'f', born:'1988-11-06', career:'Actor', looks:7.5, smv:6.5, heightCm:168, build:'slim', hairColor:'red', ethnicity:'white', style:'classic', personality:['witty','playful','intellectual'], vibe:['artsy','low-key'] },
+    { slug:'jennifer-lawrence', name:'Jennifer Lawrence', g:'f', born:'1990-08-15', career:'Actor', looks:7.5, smv:6.9, heightCm:175, build:'average', hairColor:'blonde', ethnicity:'white', style:'natural', personality:['playful','bold','easygoing'], vibe:['social','low-key'] },
+    { slug:'taylor-swift', name:'Taylor Swift', g:'f', born:'1989-12-13', career:'Musician / mogul', looks:7.0, smv:6.6, heightCm:178, build:'slim', hairColor:'blonde', ethnicity:'white', style:'classic', personality:['ambitious','sweet','driven'], vibe:['career-first','traditional'] },
+    { slug:'adele', name:'Adele', g:'f', born:'1988-05-05', career:'Musician', looks:6.0, smv:6.0, heightCm:175, build:'curvy', hairColor:'brunette', ethnicity:'white', style:'classic', personality:['warm','witty','grounded'], vibe:['homebody','family-first'] },
+    { slug:'mindy-kaling', name:'Mindy Kaling', g:'f', born:'1979-06-24', career:'Writer / actor', looks:5.5, smv:4.9, heightCm:163, build:'curvy', hairColor:'black', ethnicity:'south-asian', style:'glam', personality:['witty','intellectual','ambitious'], vibe:['career-first','homebody'] },
+    { slug:'amy-schumer', name:'Amy Schumer', g:'f', born:'1981-06-01', career:'Comedian', looks:4.5, smv:4.5, heightCm:170, build:'average', hairColor:'blonde', ethnicity:'white', style:'natural', personality:['bold','witty','edgy'], vibe:['social','party'] },
+    { slug:'lizzo', name:'Lizzo', g:'f', born:'1988-04-27', career:'Musician', looks:4.0, smv:4.9, heightCm:178, build:'heavy', hairColor:'black', ethnicity:'black', style:'glam', personality:['bold','warm','free-spirited'], vibe:['social','party'] },
+    { slug:'lena-dunham', name:'Lena Dunham', g:'f', born:'1986-05-13', career:'Writer / director', looks:3.5, smv:4.2, heightCm:161, build:'curvy', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['intellectual','edgy','bold'], vibe:['artsy','progressive'] },
+    { slug:'susan-boyle', name:'Susan Boyle', g:'f', born:'1961-04-01', career:'Singer', looks:3.0, smv:3.0, heightCm:163, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['sweet','reserved','grounded'], vibe:['homebody','traditional','spiritual'] },
+    { slug:'mama-june', name:'Mama June', g:'f', born:'1979-08-10', career:'Reality TV', looks:3.0, smv:3.3, heightCm:163, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['bold','free-spirited','edgy'], vibe:['low-key','party'] },
+    // — additions (Codex co-review, 2026-06-25): fill the mid/low looks + Full-SMV bands —
+    { slug:'amber-heard', name:'Amber Heard', g:'f', born:'1986-04-22', career:'Actor', looks:8.0, smv:5.8, heightCm:170, build:'slim', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['glamorous','bold','intense'], vibe:['career-first','social'] },
+    { slug:'bella-thorne', name:'Bella Thorne', g:'f', born:'1997-10-08', career:'Actor / creator', looks:7.0, smv:7.2, heightCm:168, build:'slim', hairColor:'red', ethnicity:'latino', style:'edgy', personality:['playful','bold','free-spirited'], vibe:['social','party','artsy'] },
+    { slug:'grimes', name:'Grimes', g:'f', born:'1988-03-17', career:'Musician / artist', looks:6.5, smv:5.6, heightCm:165, build:'slim', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['free-spirited','intellectual','edgy'], vibe:['artsy','progressive','spiritual'] },
+    { slug:'rebel-wilson', name:'Rebel Wilson', g:'f', born:'1980-03-02', career:'Actor / comedian', looks:6.0, smv:5.2, heightCm:163, build:'heavy', hairColor:'blonde', ethnicity:'white', style:'natural', personality:['witty','warm','playful'], vibe:['social','career-first','low-key'] },
+    { slug:'azealia-banks', name:'Azealia Banks', g:'f', born:'1991-05-31', career:'Musician', looks:6.0, smv:5.6, heightCm:157, build:'slim', hairColor:'black', ethnicity:'black', style:'edgy', personality:['witty','edgy','intense','bold'], vibe:['artsy','party','social'] },
+    { slug:'anna-sorokin', name:'Anna Sorokin', g:'f', born:'1991-01-23', career:'Media figure', looks:5.5, smv:5.2, heightCm:165, build:'average', hairColor:'brunette', ethnicity:'white', style:'glam', personality:['glamorous','bold','intense'], vibe:['luxury','social'] },
+    { slug:'trisha-paytas', name:'Trisha Paytas', g:'f', born:'1988-05-08', career:'Creator / media', looks:5.0, smv:5.1, heightCm:160, build:'curvy', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['playful','glamorous','free-spirited'], vibe:['social','party','low-key'] },
+    { slug:'farrah-abraham', name:'Farrah Abraham', g:'f', born:'1991-05-31', career:'Reality TV', looks:5.0, smv:5.2, heightCm:170, build:'curvy', hairColor:'brunette', ethnicity:'white', style:'glam', personality:['bold','glamorous','intense'], vibe:['social','party'] },
+    { slug:'elizabeth-holmes', name:'Elizabeth Holmes', g:'f', born:'1984-02-03', career:'Founder / felon', looks:5.0, smv:4.2, heightCm:168, build:'slim', hairColor:'blonde', ethnicity:'white', style:'classic', personality:['intellectual','driven','reserved','intense'], vibe:['career-first','low-key'] },
+    { slug:'casey-anthony', name:'Casey Anthony', g:'f', born:'1986-03-19', career:'Media figure', looks:4.5, smv:3.8, heightCm:157, build:'average', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['reserved','edgy','intense'], vibe:['low-key','social'] },
+    { slug:'tonya-harding', name:'Tonya Harding', g:'f', born:'1970-11-12', career:'Former athlete', looks:4.0, smv:3.5, heightCm:155, build:'athletic', hairColor:'blonde', ethnicity:'white', style:'sporty', personality:['bold','driven','edgy'], vibe:['low-key','family-first'] },
+    { slug:'rachel-dolezal', name:'Rachel Dolezal', g:'f', born:'1977-11-12', career:'Media figure', looks:4.0, smv:3.6, heightCm:168, build:'average', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['bold','intellectual','edgy'], vibe:['progressive','artsy'] },
+    { slug:'whoopi-goldberg', name:'Whoopi Goldberg', g:'f', born:'1955-11-13', career:'Actor / host', looks:3.0, smv:3.8, heightCm:165, build:'average', hairColor:'black', ethnicity:'black', style:'natural', personality:['witty','bold','warm'], vibe:['artsy','progressive','low-key'] },
+    { slug:'angela-deem', name:'Angela Deem', g:'f', born:'1965-12-09', career:'Reality TV', looks:2.5, smv:2.7, heightCm:173, build:'heavy', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['bold','intense','free-spirited'], vibe:['social','party','family-first'] },
+    // — low-SMV fillers (Claude, 2026-06-25): get the bottom SMV band to ≥5 per sex —
+    { slug:'tila-tequila', name:'Tila Tequila', g:'f', born:'1981-10-24', career:'Media figure', looks:5.0, smv:4.2, heightCm:150, build:'curvy', hairColor:'black', ethnicity:'east-asian', style:'glam', personality:['bold','edgy','free-spirited'], vibe:['social','party','low-key'] },
+    { slug:'aubrey-oday', name:"Aubrey O'Day", g:'f', born:'1984-02-11', career:'Singer / reality TV', looks:5.5, smv:4.8, heightCm:163, build:'curvy', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['glamorous','bold','free-spirited'], vibe:['social','party'] },
+    { slug:'jenelle-evans', name:'Jenelle Evans', g:'f', born:'1991-12-19', career:'Reality TV', looks:5.0, smv:5.0, heightCm:155, build:'average', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['bold','edgy','intense'], vibe:['low-key','party','family-first'] },
+    { slug:'nadya-suleman', name:'Nadya Suleman', g:'f', born:'1975-07-11', career:'Media figure', looks:4.0, smv:3.2, heightCm:168, build:'slim', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['reserved','intense','grounded'], vibe:['family-first','low-key'] },
+    // — low-looks women (Codex co-review, 2026-06-25): take the looks [1,3] band to ≥5 —
+    { slug:'roseanne-barr', name:'Roseanne Barr', g:'f', born:'1952-11-03', career:'Comedian / actor', looks:3.0, smv:3.5, heightCm:163, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['witty','bold','intense'], vibe:['social','traditional','low-key'] },
+    { slug:'rosie-odonnell', name:"Rosie O'Donnell", g:'f', born:'1962-03-21', career:'Comedian / host', looks:3.0, smv:3.8, heightCm:169, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['witty','bold','warm'], vibe:['social','progressive','family-first'] },
+    { slug:'jo-brand', name:'Jo Brand', g:'f', born:'1957-07-23', career:'Comedian / writer', looks:3.0, smv:3.5, heightCm:163, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['witty','grounded','calm'], vibe:['low-key','artsy','progressive'] },
+
+    // ── men (target for female users) ──
+    { slug:'henry-cavill', name:'Henry Cavill', g:'m', born:'1983-05-05', career:'Actor', looks:9.5, smv:7.9, heightCm:185, build:'muscular', hairColor:'brunette', ethnicity:'white', style:'classic', personality:['calm','reserved','grounded'], vibe:['homebody','low-key'] },
+    { slug:'chris-hemsworth', name:'Chris Hemsworth', g:'m', born:'1983-08-11', career:'Actor', looks:9.5, smv:8.4, heightCm:190, build:'muscular', hairColor:'blonde', ethnicity:'white', style:'sporty', personality:['easygoing','bold','warm'], vibe:['outdoorsy','adventurous','family-first'] },
+    { slug:'idris-elba', name:'Idris Elba', g:'m', born:'1972-09-06', career:'Actor / DJ', looks:9.0, smv:7.9, heightCm:188, build:'athletic', hairColor:'black', ethnicity:'black', style:'classic', personality:['bold','calm','intellectual'], vibe:['luxury','social'] },
+    { slug:'michael-b-jordan', name:'Michael B. Jordan', g:'m', born:'1987-02-09', career:'Actor', looks:9.0, smv:8.1, heightCm:183, build:'muscular', hairColor:'black', ethnicity:'black', style:'classic', personality:['driven','ambitious','grounded'], vibe:['career-first','social'] },
+    { slug:'ryan-gosling', name:'Ryan Gosling', g:'m', born:'1980-11-12', career:'Actor', looks:8.5, smv:7.5, heightCm:184, build:'athletic', hairColor:'blonde', ethnicity:'white', style:'classic', personality:['reserved','witty','intellectual'], vibe:['artsy','family-first','low-key'] },
+    { slug:'brad-pitt', name:'Brad Pitt', g:'m', born:'1963-12-18', career:'Actor / producer', looks:8.0, smv:7.5, heightCm:180, build:'athletic', hairColor:'blonde', ethnicity:'white', style:'classic', personality:['calm','grounded','bold'], vibe:['luxury','artsy'] },
+    { slug:'drake', name:'Drake', g:'m', born:'1986-10-24', career:'Musician', looks:7.0, smv:8.1, heightCm:182, build:'average', hairColor:'black', ethnicity:'mixed', style:'glam', personality:['ambitious','glamorous','driven'], vibe:['luxury','party','social'] },
+    { slug:'paul-rudd', name:'Paul Rudd', g:'m', born:'1969-04-06', career:'Actor', looks:7.0, smv:6.9, heightCm:178, build:'average', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['witty','warm','easygoing'], vibe:['homebody','low-key','family-first'] },
+    { slug:'pete-davidson', name:'Pete Davidson', g:'m', born:'1993-11-16', career:'Comedian', looks:5.0, smv:6.2, heightCm:190, build:'slim', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['witty','edgy','free-spirited'], vibe:['party','social'] },
+    { slug:'jonah-hill', name:'Jonah Hill', g:'m', born:'1983-12-20', career:'Actor / director', looks:5.0, smv:6.5, heightCm:168, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['witty','intellectual','grounded'], vibe:['artsy','low-key'] },
+    { slug:'seth-rogen', name:'Seth Rogen', g:'m', born:'1982-04-15', career:'Actor / cannabis mogul', looks:4.5, smv:6.6, heightCm:180, build:'heavy', hairColor:'black', ethnicity:'white', style:'natural', personality:['easygoing','witty','playful'], vibe:['low-key','homebody'] },
+    { slug:'elon-musk', name:'Elon Musk', g:'m', born:'1971-06-28', career:'CEO', looks:4.5, smv:6.9, heightCm:187, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['intellectual','dominant','intense'], vibe:['career-first'] },
+    { slug:'mark-zuckerberg', name:'Mark Zuckerberg', g:'m', born:'1984-05-14', career:'CEO', looks:3.5, smv:6.8, heightCm:171, build:'athletic', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['intellectual','reserved','driven'], vibe:['career-first','low-key','family-first'] },
+    { slug:'jeff-bezos', name:'Jeff Bezos', g:'m', born:'1964-01-12', career:'Founder', looks:3.0, smv:6.3, heightCm:171, build:'muscular', hairColor:'bald', ethnicity:'white', style:'classic', personality:['ambitious','dominant','intense'], vibe:['luxury','career-first'] },
+    { slug:'danny-devito', name:'Danny DeVito', g:'m', born:'1944-11-17', career:'Actor', looks:2.5, smv:5.4, heightCm:147, build:'heavy', hairColor:'bald', ethnicity:'white', style:'natural', personality:['witty','warm','bold'], vibe:['social','low-key'] },
+    { slug:'steve-buscemi', name:'Steve Buscemi', g:'m', born:'1957-12-13', career:'Actor', looks:2.5, smv:4.7, heightCm:173, build:'slim', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['calm','intellectual','grounded'], vibe:['artsy','low-key'] },
+    { slug:'kevin-federline', name:'Kevin Federline', g:'m', born:'1978-03-21', career:'DJ / former dancer', looks:4.5, smv:4.6, heightCm:183, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['easygoing','free-spirited'], vibe:['low-key','party'] },
+    { slug:'pauly-shore', name:'Pauly Shore', g:'m', born:'1968-02-01', career:'Comedian', looks:4.0, smv:4.4, heightCm:171, build:'average', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['playful','free-spirited','edgy'], vibe:['party','social'] },
+    // — additions (Codex co-review, 2026-06-25): fill the looks mid-band + Full-SMV bands —
+    { slug:'armie-hammer', name:'Armie Hammer', g:'m', born:'1986-08-28', career:'Actor', looks:8.0, smv:6.2, heightCm:196, build:'athletic', hairColor:'brunette', ethnicity:'white', style:'classic', personality:['bold','glamorous','intense'], vibe:['luxury','social'] },
+    { slug:'dev-patel', name:'Dev Patel', g:'m', born:'1990-04-23', career:'Actor', looks:8.0, smv:7.6, heightCm:188, build:'athletic', hairColor:'black', ethnicity:'south-asian', style:'classic', personality:['warm','grounded','intellectual'], vibe:['artsy','low-key'] },
+    { slug:'johnny-depp', name:'Johnny Depp', g:'m', born:'1963-06-09', career:'Actor / musician', looks:7.5, smv:6.9, heightCm:178, build:'slim', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['edgy','witty','intense'], vibe:['artsy','luxury','low-key'] },
+    { slug:'russell-brand', name:'Russell Brand', g:'m', born:'1975-06-04', career:'Comedian / media', looks:7.0, smv:5.9, heightCm:186, build:'slim', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['witty','intense','free-spirited'], vibe:['spiritual','social','progressive'] },
+    { slug:'shia-labeouf', name:'Shia LaBeouf', g:'m', born:'1986-06-11', career:'Actor', looks:7.0, smv:6.1, heightCm:175, build:'average', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['intense','edgy','driven'], vibe:['artsy','low-key'] },
+    { slug:'nicolas-cage', name:'Nicolas Cage', g:'m', born:'1964-01-07', career:'Actor', looks:6.0, smv:5.9, heightCm:183, build:'average', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['intense','edgy','witty'], vibe:['artsy','low-key'] },
+    { slug:'post-malone', name:'Post Malone', g:'m', born:'1995-07-04', career:'Musician', looks:5.5, smv:7.4, heightCm:184, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'edgy', personality:['warm','easygoing','edgy'], vibe:['party','low-key','artsy'] },
+    { slug:'jack-black', name:'Jack Black', g:'m', born:'1969-08-28', career:'Actor / musician', looks:5.5, smv:6.4, heightCm:168, build:'heavy', hairColor:'black', ethnicity:'white', style:'natural', personality:['playful','witty','warm'], vibe:['low-key','family-first'] },
+    { slug:'joe-rogan', name:'Joe Rogan', g:'m', born:'1967-08-11', career:'Podcaster / comedian', looks:5.5, smv:7.0, heightCm:170, build:'muscular', hairColor:'bald', ethnicity:'white', style:'sporty', personality:['dominant','witty','driven'], vibe:['social','outdoorsy','low-key'] },
+    { slug:'billy-mcfarland', name:'Billy McFarland', g:'m', born:'1991-12-11', career:'Founder / promoter', looks:5.5, smv:5.1, heightCm:175, build:'average', hairColor:'brunette', ethnicity:'white', style:'glam', personality:['bold','glamorous','intense'], vibe:['social','party','luxury'] },
+    { slug:'ben-shapiro', name:'Ben Shapiro', g:'m', born:'1984-01-15', career:'Commentator', looks:5.0, smv:6.6, heightCm:170, build:'slim', hairColor:'black', ethnicity:'white', style:'classic', personality:['intellectual','dominant','driven'], vibe:['traditional','career-first','family-first'] },
+    { slug:'james-corden', name:'James Corden', g:'m', born:'1978-08-22', career:'Host / actor', looks:4.0, smv:6.3, heightCm:173, build:'heavy', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['witty','playful','bold'], vibe:['social','career-first'] },
+    { slug:'martin-shkreli', name:'Martin Shkreli', g:'m', born:'1983-03-17', career:'Investor / media', looks:4.0, smv:4.6, heightCm:170, build:'average', hairColor:'black', ethnicity:'white', style:'natural', personality:['intellectual','edgy','dominant'], vibe:['career-first','low-key'] },
+    { slug:'george-santos', name:'George Santos', g:'m', born:'1988-07-22', career:'Former politician', looks:4.0, smv:4.5, heightCm:170, build:'average', hairColor:'brunette', ethnicity:'latino', style:'glam', personality:['glamorous','bold','free-spirited'], vibe:['social','luxury'] },
+    { slug:'sam-bankman-fried', name:'Sam Bankman-Fried', g:'m', born:'1992-03-06', career:'Founder / felon', looks:3.0, smv:3.7, heightCm:170, build:'average', hairColor:'brunette', ethnicity:'white', style:'natural', personality:['intellectual','reserved','intense'], vibe:['career-first','low-key'] },
+    { slug:'rudy-giuliani', name:'Rudy Giuliani', g:'m', born:'1944-05-28', career:'Former politician', looks:2.5, smv:3.4, heightCm:175, build:'average', hairColor:'bald', ethnicity:'white', style:'classic', personality:['dominant','intense','bold'], vibe:['career-first','traditional'] },
+    // — low-SMV fillers (Claude, 2026-06-25): get the bottom SMV band to ≥5 per sex —
+    { slug:'spencer-pratt', name:'Spencer Pratt', g:'m', born:'1983-08-14', career:'Reality TV', looks:5.0, smv:5.1, heightCm:175, build:'athletic', hairColor:'blonde', ethnicity:'white', style:'glam', personality:['bold','glamorous','intense'], vibe:['social','party','luxury'] },
+    { slug:'jon-gosselin', name:'Jon Gosselin', g:'m', born:'1977-04-01', career:'Reality TV', looks:4.5, smv:4.6, heightCm:170, build:'average', hairColor:'black', ethnicity:'mixed', style:'natural', personality:['reserved','easygoing','grounded'], vibe:['family-first','low-key'] },
+    { slug:'kato-kaelin', name:'Kato Kaelin', g:'m', born:'1959-03-09', career:'Media figure', looks:4.5, smv:4.0, heightCm:178, build:'slim', hairColor:'blonde', ethnicity:'white', style:'sporty', personality:['easygoing','playful','free-spirited'], vibe:['low-key','social'] },
+    { slug:'tekashi-6ix9ine', name:'Tekashi 6ix9ine', g:'m', born:'1996-05-08', career:'Musician', looks:4.0, smv:4.9, heightCm:167, build:'slim', hairColor:'other', ethnicity:'latino', style:'edgy', personality:['bold','edgy','intense'], vibe:['party','social'] },
+    { slug:'joe-exotic', name:'Joe Exotic', g:'m', born:'1963-03-05', career:'Reality TV / ex-zookeeper', looks:3.5, smv:3.3, heightCm:180, build:'average', hairColor:'blonde', ethnicity:'white', style:'edgy', personality:['bold','intense','free-spirited'], vibe:['low-key','party'] },
+  ];
+
+  // Ages are COMPUTED from each candidate's birthdate (`born` = YYYY-MM-DD, web-verified) so they
+  // never go stale — refresh the page next year and everyone is a year older automatically.
+  const NOW = new Date();
+  function ageFromDOB(dob){
+    const d = new Date(dob + 'T00:00:00');
+    let a = NOW.getFullYear() - d.getFullYear();
+    if (NOW.getMonth() < d.getMonth() || (NOW.getMonth() === d.getMonth() && NOW.getDate() < d.getDate())) a--;
+    return a;
+  }
+  ROSTER.forEach(c => { c.bornYear = parseInt(c.born.slice(0,4), 10); c.age = ageFromDOB(c.born); });
+
+  // ── four hierarchies — mirrored from compatibility.html (key + tier/factor ORDER must
+  //    match so saved `${key}-${ti}-${fi}` values import cleanly). Each factor is
+  //    [name, desc, SRC] where SRC names the derivation used to score a candidate on it. ──
+  const PYRAMIDS = {
+    you: { title:'Female 1', subtitle:"Jason's hierarchy", describes:'f', lean:'looks', tiers:[
+      { name:'Primary factors', factors:[ ['Physical attractiveness','what registers first','looks'],['Classiness','grace, not crude','class'],['Attraction toward you','the pull runs both ways','desire'] ] },
+      { name:'Secondary factors', factors:[ ['Fun & easygoing','light, low-maintenance','fun'],['Assertiveness / initiative','meets you halfway','initiative'],['Purity / low baggage','little unresolved damage','purity'] ] },
+      { name:'Tertiary factors', factors:[ ['Alignment in values','agrees on a shared life','values'],['Common interests','overlap in how you spend time','interests'],['Availability','actually free to invest','avail'] ] } ] },
+    male: { title:'Female 2', subtitle:'Generic male', describes:'f', lean:'looks', tiers:[
+      { name:'Gate 1 · Desire', factors:[ ['Attractiveness & vitality','face, body, youth, energy','looks'],['Sexual receptivity','warmth, attraction back','desire'],['Low-friction presence','not chaotic or punishing','fun'] ] },
+      { name:'Gate 2 · Attachment', factors:[ ['Warmth & kindness','makes life lighter','warmth'],['Loyalty & exclusivity','no reason to doubt','loyalty'],['Respect & admiration','values your effort','desire'] ] },
+      { name:'Gate 3 · Life fit', factors:[ ['Shared values & family','aligned on a life','values'],['Emotional stability','repairs, not drama','purity'],['Practical compatibility','daily life coexists','interests'] ] } ] },
+    'fem-claude': { title:'Male 1', subtitle:'Female · Claude', describes:'m', lean:'smv', tiers:[
+      { name:'Primary factors', factors:[ ['Confidence & frame','self-assured, non-needy','confidence'],['Status & ambition','direction and drive','status'],['Physical attractiveness','looks, masculine presence','looks'] ] },
+      { name:'Secondary factors', factors:[ ['Spark & chemistry','the electric pull','spark'],['Leadership & pursuit','pursues decisively','initiative'],['Stability & treatment','steady and kind','warmth'] ] },
+      { name:'Tertiary factors', factors:[ ['Provision & stability','can build a life','status'],['Commitment & loyalty','wants to commit','loyalty'],['Shared values & goals','aligned on the big questions','values'] ] } ] },
+    'fem-gpt': { title:'Male 2', subtitle:'Female · ChatGPT', describes:'m', lean:'smv', tiers:[
+      { name:'Gate 1 · Desire', factors:[ ['Attraction','face, body, height, presence','looks'],['Masculine competence','confident, capable','status'],['Safety & calibration','not chaotic or pushy','purity'] ] },
+      { name:'Gate 2 · Trust', factors:[ ['Consistency','follows through','loyalty'],['Emotional attunement','makes her feel chosen','warmth'],['Selective investment','specifically valued','desire'] ] },
+      { name:'Gate 3 · Fit', factors:[ ['Provision capacity','handles adult life','status'],['Shared values & lifestyle','the same future','values'],['Character under pressure','who he is when things get hard','purity'] ] } ] }
+  };
+
+  // ── 20-dial desire quiz. Each question has a NEUTRAL default (`def`) that adds nothing,
+  //    so the baseline profile is unopinionated and every dial you move adds signal.
+  //    Options carry wanted tags (pers/vibe) and optional `avoid:{pers,vibe}` (traits the
+  //    choice steers away from) — the want/avoid pair is what sharpens factor matching. A few
+  //    options instead carry engine params: ageSkew, looksW (looks-vs-personality weight),
+  //    reach (band ceiling), stakes (tier weights). Tags must exist in the roster vocabulary. ──
+  const QUIZ = [
+    // ── The basics ──
+    { id:'age', group:'The basics', text:'Age, relative to you', def:2, opts:[
+      {l:'Notably younger', ageSkew:-7},{l:'A bit younger', ageSkew:-3},{l:'Around my age', ageSkew:0},{l:'A bit older', ageSkew:3},{l:'Notably older', ageSkew:7} ] },
+    { id:'lp', group:'The basics', text:'Looks vs personality', def:1, opts:[
+      {l:'Looks first', looksW:0.85},{l:'Balanced', looksW:0.5},{l:'Personality first', looksW:0.15} ] },
+    { id:'reach', group:'The basics', text:'How high are you aiming?', def:0, opts:[
+      {l:'My league', reach:0},{l:'A bit higher', reach:0.7},{l:'For the stars', reach:1.6} ] },
+    { id:'intent', group:'The basics', text:'What you want from it', def:1, opts:[
+      {l:'Serious LTR', stakes:'ltr'},{l:'Open to see', stakes:'open'},{l:'Casual', stakes:'fling'} ] },
+    // ── Looks (physical type — these adjust how attractive a candidate reads TO YOU, on top of age) ──
+    { id:'pref-height', group:'Looks', text:'Height', def:1, opts:[
+      {l:'Prefer tall', looks:{height:'tall'}},{l:'No preference'},{l:'Shorter is fine', looks:{height:'short'}} ] },
+    { id:'pref-build', group:'Looks', text:'Build', def:1, opts:[
+      {l:'Lean & toned', looks:{build:'lean'}},{l:'No preference'},{l:'Curvy / solid', looks:{build:'curvy'}} ] },
+    { id:'pref-hair', group:'Looks', text:'Hair color', def:0, opts:[
+      {l:'No preference'},{l:'Blonde', looks:{hair:'blonde'}},{l:'Brunette', looks:{hair:'brunette'}},{l:'Dark', looks:{hair:'black'}},{l:'Red', looks:{hair:'red'}} ] },
+    { id:'pref-style', group:'Looks', text:'Aesthetic', def:0, opts:[
+      {l:'No preference'},{l:'Classic / elegant', looks:{style:'classic'}},{l:'Glam', looks:{style:'glam'}},{l:'Natural', looks:{style:'natural'}},{l:'Edgy / alt', looks:{style:'edgy'}},{l:'Sporty', looks:{style:'sporty'}} ] },
+    { id:'pref-eth', group:'Looks', text:'Ethnicity', def:0, opts:[
+      {l:'No preference'},{l:'White', looks:{eth:'white'}},{l:'Black', looks:{eth:'black'}},{l:'Latino', looks:{eth:'latino'}},{l:'East Asian', looks:{eth:'east-asian'}},{l:'South Asian', looks:{eth:'south-asian'}},{l:'Middle Eastern', looks:{eth:'middle-eastern'}} ] },
+    // ── Personality ──
+    { id:'pers', group:'Personality', text:'Type you fall for', def:0, opts:[
+      {l:'No preference'},{l:'Warm & nurturing', pers:['warm','sweet']},{l:'Playful & witty', pers:['playful','witty']},{l:'Bold & dominant', pers:['bold','dominant']},{l:'Calm & reserved', pers:['calm','reserved']},{l:'Intellectual', pers:['intellectual']} ] },
+    { id:'warmth', group:'Personality', text:'Affection style', def:1, opts:[
+      {l:'Very affectionate', pers:['warm','sweet'], avoid:{pers:['reserved','intense']}},{l:'No preference'},{l:'Cool & composed', pers:['calm','reserved'], avoid:{pers:['warm']}} ] },
+    { id:'edge', group:'Personality', text:'Their edge', def:1, opts:[
+      {l:'Wholesome', pers:['sweet','grounded'], avoid:{pers:['edgy','intense']}},{l:'No preference'},{l:'Edgy', pers:['edgy','bold'], avoid:{pers:['sweet']}} ] },
+    { id:'lead', group:'Personality', text:'Who leads', def:1, opts:[
+      {l:'Take-charge', pers:['bold','dominant','driven'], avoid:{pers:['reserved','easygoing']}},{l:'No preference'},{l:'Easygoing & gentle', pers:['easygoing','calm'], avoid:{pers:['dominant']}} ] },
+    { id:'humor', group:'Personality', text:'Sense of humor', def:1, opts:[
+      {l:'Funny & lively', pers:['witty','playful'], avoid:{pers:['reserved','intense']}},{l:'No preference'},{l:'Serious & deep', pers:['intellectual','reserved'], avoid:{pers:['playful']}} ] },
+    { id:'mind', group:'Personality', text:'Kind of smart', def:1, opts:[
+      {l:'Deep & intellectual', pers:['intellectual'], avoid:{pers:['free-spirited']}},{l:'No preference'},{l:'Street-smart', pers:['grounded'], avoid:{pers:['intellectual']}} ] },
+    // ── Lifestyle ──
+    { id:'vibe', group:'Lifestyle', text:'Ideal lifestyle', def:0, opts:[
+      {l:'No preference'},{l:'Homebody', vibe:['homebody','low-key']},{l:'Social butterfly', vibe:['social','party']},{l:'Adventurer', vibe:['adventurous','outdoorsy']},{l:'Glam / luxury', pers:['glamorous'], vibe:['luxury']},{l:'Artsy', pers:['free-spirited'], vibe:['artsy']} ] },
+    { id:'energy', group:'Lifestyle', text:'Social energy', def:1, opts:[
+      {l:'Introvert', vibe:['homebody','low-key'], avoid:{vibe:['social','party']}},{l:'Ambivert'},{l:'Extrovert', vibe:['social','party'], avoid:{vibe:['homebody']}} ] },
+    { id:'amb', group:'Lifestyle', text:'Ambition / drive', def:1, opts:[
+      {l:'Driven & career-first', pers:['ambitious','driven'], vibe:['career-first'], avoid:{pers:['easygoing'], vibe:['low-key']}},{l:'Balanced'},{l:'Relaxed & easygoing', pers:['easygoing','calm'], vibe:['low-key'], avoid:{pers:['ambitious','driven']}} ] },
+    { id:'pace', group:'Lifestyle', text:'Pace of life', def:1, opts:[
+      {l:'Spontaneous', pers:['free-spirited'], vibe:['adventurous','outdoorsy'], avoid:{vibe:['homebody']}},{l:'No preference'},{l:'Stable & steady', pers:['grounded','calm'], vibe:['low-key'], avoid:{vibe:['adventurous']}} ] },
+    { id:'wealth', group:'Lifestyle', text:'Status & money', def:1, opts:[
+      {l:'Luxury & ambition', pers:['glamorous'], vibe:['luxury'], avoid:{vibe:['low-key']}},{l:'No preference'},{l:'Down-to-earth', pers:['grounded'], vibe:['low-key'], avoid:{pers:['glamorous'], vibe:['luxury']}} ] },
+    { id:'spotlight', group:'Lifestyle', text:'Public profile', def:1, opts:[
+      {l:'Loves spotlight', pers:['bold','glamorous'], vibe:['social'], avoid:{pers:['reserved'], vibe:['homebody']}},{l:'No preference'},{l:'Private', pers:['reserved'], vibe:['homebody','low-key'], avoid:{pers:['glamorous']}} ] },
+    // ── Values & future ──
+    { id:'fam', group:'Values & future', text:'Family orientation', def:1, opts:[
+      {l:'Wants kids', vibe:['family-first','traditional'], avoid:{vibe:['career-first']}},{l:'No preference'},{l:'Career over kids', vibe:['career-first'], avoid:{vibe:['family-first']}} ] },
+    { id:'faith', group:'Values & future', text:'Faith & tradition', def:1, opts:[
+      {l:'Traditional / faithful', vibe:['traditional','spiritual','family-first'], avoid:{vibe:['progressive']}},{l:'No preference'},{l:'Secular / progressive', vibe:['progressive'], pers:['free-spirited'], avoid:{vibe:['traditional','spiritual','family-first']}} ] },
+    { id:'drama', group:'Values & future', text:'Emotional climate', def:1, opts:[
+      {l:'Drama-free & steady', pers:['grounded','calm','sweet'], avoid:{pers:['intense','edgy']}},{l:'No preference'},{l:'Passionate, some fire', pers:['intense','bold'], avoid:{pers:['calm']}} ] },
+    { id:'loyalty', group:'Values & future', text:'Commitment style', def:1, opts:[
+      {l:'Loyal & all-in', pers:['grounded'], vibe:['traditional','family-first'], avoid:{vibe:['party']}},{l:'No preference'},{l:'Independent & free', pers:['free-spirited'], vibe:['low-key'], avoid:{vibe:['traditional']}} ] }
+  ];
+
+  // ── scoring constants (provisional / moldable) — the gate engine from the sim. ──
+  const TIER_W = { t1:0.55, t2:0.28, t3:0.17 };
+  // stakes (the "what you want from it" answer) reweights the tiers: casual leans hard on
+  // Tier 1 (desire/looks); a serious LTR lets life-fit matter more. 'open' == the TIER_W default.
+  const STAKES_W = { fling:{ t1:0.68, t2:0.22, t3:0.10 }, open:{ t1:0.55, t2:0.28, t3:0.17 }, ltr:{ t1:0.45, t2:0.27, t3:0.28 } };
+  const STRONG_FLOOR = 7.5, HARD_T1 = 4, SOFT_T1AVG = 6, GATE_CLEAR = 6.5, GATE_FAIL = 4;
+  const YARD_C = 5.5, YARD_K = 0.9;   // yardstick: factor match = 5.5 + 0.9*(his score − your bar)
+  const BANDS = [
+    { min:8.7, key:'exceptional', label:'Exceptional' },
+    { min:7.5, key:'strong',      label:'Strong' },
+    { min:6.5, key:'promising',   label:'Good' },
+    { min:5.0, key:'mixed',       label:'Fair' },
+    { min:3.5, key:'weak',        label:'Weak' },
+    { min:0,   key:'hardno',      label:'Hard No' },
+  ];
+
+  // ── state ──
+  let userSex = 'm', mode = 'looks', pyramid = 'you';
+  let importedFace = null, importedBody = null, importedLooks = null, importedSMV = null;
+  let manualLooks = 6, manualSMV = 6;
+  let overrideLooks = false, overrideSMV = false;   // manual override of an imported score
+  let compatValues = {}, compatImported = false;
+  let selfGrades = {};
+  let quiz = {};
+  const openCards = new Set();
+  QUIZ.forEach(q => quiz[q.id] = (q.def!=null ? q.def : 0));   // every question defaults to its neutral option
+
+  const clamp = (n,lo,hi) => Math.max(lo, Math.min(hi, n));
+  const round1 = n => Math.round(n*10)/10;
+  const fmt = n => round1(n).toFixed(1);
+  const avg = a => a.reduce((x,y)=>x+y,0)/a.length;
+  const targetSex = () => userSex === 'm' ? 'f' : 'm';
+  const userLooks = () => (importedLooks!=null && !overrideLooks) ? importedLooks : manualLooks;
+  const userSMV   = () => (importedSMV!=null && !overrideSMV) ? importedSMV : manualSMV;
+  const userScore = () => mode==='looks' ? userLooks() : userSMV();
+  const userAge   = () => { const v = parseInt(document.getElementById('user-age').value,10); return isFinite(v)?clamp(v,18,80):30; };
+  const pyramidsForTarget = () => Object.keys(PYRAMIDS).filter(k => PYRAMIDS[k].describes === targetSex());
+  const bandFor = s => BANDS.find(b => s >= b.min);
+
+  // ── localStorage imports (same keys/shape as the calc pages) ──
+  function readLS(key){ try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){ return null; } }
+  function readCv(key){ const o = readLS(key); return (o && !o.needsSex && typeof o.cv==='number' && isFinite(o.cv)) ? o.cv : null; }
+  function initImports(){
+    importedFace = readCv('loveEquations.faceScore.v2');
+    importedBody = readCv('loveEquations.bodyScore.v2');
+    importedLooks = (importedFace!=null && importedBody!=null) ? round1((importedFace+importedBody)/2)
+                  : (importedFace!=null ? importedFace : (importedBody!=null ? importedBody : null));
+    const smv = readLS('loveEquations.smvCalculator.v5');
+    importedSMV = (smv && typeof smv.overall==='number' && isFinite(smv.overall)) ? smv.overall : null;
+    if (smv && Array.isArray(smv.answers)){
+      if (smv.answers[0]==='m'||smv.answers[0]==='f') userSex = smv.answers[0];
+      const a = parseInt(smv.answers[1],10); if (isFinite(a) && a>=18 && a<=80){ const el=document.getElementById('user-age'); if (el) el.value=a; }
+    }
+    const compat = readLS('loveEquations.compatibilityCalculator.v1');
+    if (compat && compat.values && typeof compat.values==='object'){
+      const ak = compat.activeKey;
+      const scored = ak && PYRAMIDS[ak] && Object.keys(compat.values).some(k => k.indexOf(ak+'-')===0 && compat.values[k] > 1.0);
+      if (scored){ compatValues = compat.values; compatImported = true; selfGrades = Object.assign({}, compat.values); pyramid = ak; }
+    }
+    if (PYRAMIDS[pyramid].describes !== targetSex()) pyramid = pyramidsForTarget()[0];
+  }
+
+  // ── persistence: remember the user's own matchmaker session (not the live calc imports,
+  //    which initImports re-reads fresh). Saved on every change via liveReRank → saveState. ──
+  const MM_KEY = 'loveEquations.matchmaker.v1';
+  function saveState(){
+    try {
+      const ageEl = document.getElementById('user-age');
+      localStorage.setItem(MM_KEY, JSON.stringify({
+        v:1, userSex, mode, pyramid, manualLooks, manualSMV, overrideLooks, overrideSMV,
+        age: ageEl ? parseInt(ageEl.value,10) : null, selfGrades, quiz
+      }));
+    } catch(e){}
+  }
+  // applied AFTER initImports so the user's last matchmaker choices win over calc-derived defaults.
+  function loadState(){
+    const s = readLS(MM_KEY); if (!s || typeof s!=='object') return;
+    if (s.userSex==='m'||s.userSex==='f') userSex = s.userSex;
+    if (s.mode==='looks'||s.mode==='smv') mode = s.mode;
+    if (typeof s.manualLooks==='number' && isFinite(s.manualLooks)) manualLooks = clamp(s.manualLooks,1,10);
+    if (typeof s.manualSMV==='number' && isFinite(s.manualSMV)) manualSMV = clamp(s.manualSMV,1,10);
+    overrideLooks = !!s.overrideLooks; overrideSMV = !!s.overrideSMV;
+    if (s.selfGrades && typeof s.selfGrades==='object'){
+      const g={}; for (const k in s.selfGrades){ const v=s.selfGrades[k]; if (typeof v==='number' && isFinite(v)) g[k]=clamp(v,1,10); }
+      selfGrades = Object.assign({}, selfGrades, g);
+    }
+    if (s.quiz && typeof s.quiz==='object'){
+      QUIZ.forEach(q=>{ const i=s.quiz[q.id]; if (Number.isInteger(i) && i>=0 && i<q.opts.length) quiz[q.id]=i; });
+    }
+    if (s.pyramid && PYRAMIDS[s.pyramid]) pyramid = s.pyramid;
+    if (s.age!=null && isFinite(s.age)){ const el=document.getElementById('user-age'); if (el) el.value=clamp(Math.round(s.age),18,80); }
+    if (!PYRAMIDS[pyramid] || PYRAMIDS[pyramid].describes !== targetSex()) pyramid = pyramidsForTarget()[0];
+  }
+
+  // ── render: intake chips ──
+  function renderIntake(){
+    const looksFound = importedLooks!=null, smvFound = importedSMV!=null;
+    const looksManual = !looksFound || overrideLooks, smvManual = !smvFound || overrideSMV;
+    document.getElementById('intake-grid').innerHTML = `
+      <div class="mm-chip">
+        <div class="mm-chip-head"><span class="mm-chip-label">Looks</span><span class="mm-chip-state ${looksFound&&!overrideLooks?'found':'manual'}">${looksFound?(overrideLooks?'manual override':'imported'):'manual'}</span></div>
+        <div class="mm-chip-val" id="chipval-looks">${userLooks().toFixed(1)}<small>/10</small></div>
+        <div class="mm-chip-src">${looksFound ? `Face ${importedFace!=null?importedFace.toFixed(1):'—'} &middot; Body ${importedBody!=null?importedBody.toFixed(1):'—'} (avg). From <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.` : `No saved score &mdash; set it, or run the <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.`}</div>
+        ${looksFound?`<label class="mm-ovr"><input type="checkbox" ${overrideLooks?'checked':''} onchange="mmToggleOverride('looks',this.checked)"> Set manually</label>`:''}
+        ${looksManual?`<input class="mm-range" type="range" min="1" max="10" step="0.5" value="${userLooks()}" aria-label="Your looks score, 1 to 10" oninput="mmSetManual('looks',this.value)">`:''}
+      </div>
+      <div class="mm-chip">
+        <div class="mm-chip-head"><span class="mm-chip-label">SMV</span><span class="mm-chip-state ${smvFound&&!overrideSMV?'found':'manual'}">${smvFound?(overrideSMV?'manual override':'imported'):'manual'}</span></div>
+        <div class="mm-chip-val" id="chipval-smv">${userSMV().toFixed(1)}<small>/10</small></div>
+        <div class="mm-chip-src">${smvFound ? `From your <a href="smvcalc.html">SMV calc</a>${overrideSMV?' &mdash; overridden manually':''}.` : `No saved score &mdash; set it, or run the <a href="smvcalc.html">SMV calc</a>.`}</div>
+        ${smvFound?`<label class="mm-ovr"><input type="checkbox" ${overrideSMV?'checked':''} onchange="mmToggleOverride('smv',this.checked)"> Set manually</label>`:''}
+        ${smvManual?`<input class="mm-range" type="range" min="1" max="10" step="0.5" value="${userSMV()}" aria-label="Your SMV score, 1 to 10" oninput="mmSetManual('smv',this.value)">`:''}
+      </div>
+      <div class="mm-chip">
+        <div class="mm-chip-head"><span class="mm-chip-label">Matching on</span><span class="mm-chip-state ${mode==='looks'?'manual':'found'}">${mode==='looks'?'looks':'smv'}</span></div>
+        <div class="mm-chip-val" id="chipval-match">${userScore().toFixed(1)}<small>/10</small></div>
+        <div class="mm-chip-src" id="chip-band">Your band: <strong>${(userScore()-1).toFixed(1)}&ndash;${(userScore()+1).toFixed(1)}</strong>. Looking for a <strong>${targetSex()==='f'?'woman':'man'}</strong>.</div>
+      </div>`;
+  }
+  function updateChipVals(){
+    const set=(id,v)=>{ const e=document.getElementById(id); if(e) e.innerHTML=v.toFixed(1)+'<small>/10</small>'; };
+    set('chipval-looks', userLooks()); set('chipval-smv', userSMV()); set('chipval-match', userScore());
+    const b=document.getElementById('chip-band'); if(b) b.innerHTML=`Your band: <strong>${(userScore()-1).toFixed(1)}&ndash;${(userScore()+1).toFixed(1)}</strong>. Looking for a <strong>${targetSex()==='f'?'woman':'man'}</strong>.`;
+  }
+  // live slider updates patch the displayed numbers only (no full re-render → smooth drag)
+  window.mmSetManual = function(which, v){ v=parseFloat(v); if(which==='looks') manualLooks=v; else manualSMV=v; updateChipVals(); liveReRank(); };
+  window.mmToggleOverride = function(which, checked){
+    if(which==='looks'){ overrideLooks=checked; if(checked && importedLooks!=null) manualLooks=importedLooks; }
+    else { overrideSMV=checked; if(checked && importedSMV!=null) manualSMV=importedSMV; }
+    renderIntake(); liveReRank();
+  };
+
+  // ── render: pyramid pick + self-grade (importable from Compatibility) ──
+  function renderPyramid(){
+    const keys = pyramidsForTarget();
+    if (!keys.includes(pyramid)) pyramid = keys[0];
+    document.getElementById('pyr-row').innerHTML = keys.map(k => {
+      const P = PYRAMIDS[k];
+      return `<button class="mm-pyr-btn${pyramid===k?' active':''}" data-pyr="${k}" type="button"><b>${P.title}</b><small>${P.subtitle}</small></button>`;
+    }).join('');
+    document.querySelectorAll('#pyr-row .mm-pyr-btn').forEach(b => b.onclick = () => { pyramid=b.dataset.pyr; renderPyramid(); liveReRank(); });
+    const P = PYRAMIDS[pyramid];
+    const imp = compatImported ? ` <span class="mm-chip-state found">imported</span>` : '';
+    let html = `<div class="mm-grade-tier">Your standard &middot; ${P.title} <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-dim)">(${P.subtitle} &mdash; describes a ${P.describes==='f'?'woman':'man'})</span>${imp}</div>
+      <div class="mm-grade-note" style="margin:0 0 0.4rem">Each slider is <strong>your standard</strong> on that factor &mdash; a <strong>yardstick</strong>, not a weight. A candidate's own scores stay fixed; the <strong>overall match</strong> measures how far their scores clear (or miss) your bars. Set every bar to 10 and only a near-perfect match scores well; set them low and almost anyone clears. Imports from Compatibility.</div>`;
+    P.tiers.forEach((t, ti) => {
+      html += `<div class="mm-grade-sub">${t.name}</div>`;
+      t.factors.forEach((f, fi) => {
+        const id = pyramid+'-'+ti+'-'+fi;
+        const v = selfGrades[id]!=null ? selfGrades[id] : 6;
+        html += `<div class="mm-grade-row">
+          <div class="mm-grade-name">${f[0]}<small>${f[1]}</small></div>
+          <input class="mm-grade-slider" type="range" min="1" max="10" step="1" value="${v}" aria-label="${f[0]} — your standard, 1 to 10" oninput="mmSetGrade('${id}',this.value)">
+          <div class="mm-grade-num" id="gn-${id}">${v}</div></div>`;
+      });
+    });
+    if (compatImported) html += `<div class="mm-grade-note">Imported from your <a href="compatibility.html">Compatibility</a> scores &mdash; adjust any slider to override.</div>`;
+    document.getElementById('grade-host').innerHTML = html;
+  }
+  window.mmSetGrade = function(id,v){ selfGrades[id]=parseInt(v,10); const el=document.getElementById('gn-'+id); if(el) el.textContent=v; liveReRank(); };
+
+  // ── render: quiz ──
+  function renderQuiz(){
+    let html='', lastGroup=null;
+    QUIZ.forEach(q => {
+      if (q.group && q.group!==lastGroup){ html += `<div class="mm-qgroup">${q.group}</div>`; lastGroup=q.group; }
+      html += `<div class="mm-q"><div class="mm-q-text">${q.text}</div><div class="mm-q-opts">`+
+        q.opts.map((o,i)=>{ const on=quiz[q.id]===i, neutral=(i===q.def); return `<button class="mm-opt${on?' active':''}${on&&neutral?' is-neutral':''}" data-q="${q.id}" data-i="${i}" data-def="${neutral}" type="button" aria-pressed="${on}">${o.l}</button>`; }).join('')+
+        `</div></div>`;
+    });
+    document.getElementById('quiz-host').innerHTML = html;
+    document.querySelectorAll('#quiz-host .mm-opt').forEach(b => b.onclick = () => {
+      quiz[b.dataset.q] = +b.dataset.i;
+      document.querySelectorAll(`#quiz-host .mm-opt[data-q="${b.dataset.q}"]`).forEach(x=>{ const on=x===b; x.classList.toggle('active', on); x.classList.toggle('is-neutral', on && x.dataset.def==='true'); x.setAttribute('aria-pressed', on); });
+      liveReRank();
+    });
+  }
+
+  // ── desire profile from quiz answers ──
+  function desireProfile(){
+    const wantPers=new Set(), wantVibe=new Set(), avoidPers=new Set(), avoidVibe=new Set();
+    let ageSkew=0, looksW=0.5, reach=0, stakes='open';
+    const looksPref = { height:null, build:null, hair:null, style:null, eth:null };
+    QUIZ.forEach(q => {
+      const o = q.opts[quiz[q.id]]; if(!o) return;
+      (o.pers||[]).forEach(t=>wantPers.add(t)); (o.vibe||[]).forEach(t=>wantVibe.add(t));
+      if(o.avoid){ (o.avoid.pers||[]).forEach(t=>avoidPers.add(t)); (o.avoid.vibe||[]).forEach(t=>avoidVibe.add(t)); }
+      if(o.looks){ for(const k in o.looks) looksPref[k]=o.looks[k]; }
+      if(o.ageSkew!=null) ageSkew=o.ageSkew; if(o.looksW!=null) looksW=o.looksW;
+      if(o.reach!=null) reach=o.reach; if(o.stakes) stakes=o.stakes;
+    });
+    return { wantPers:[...wantPers], wantVibe:[...wantVibe], avoidPers:[...avoidPers], avoidVibe:[...avoidVibe], looksPref, ageSkew, looksW, reach, stakes };
+  }
+
+  // ════════════ PER-CANDIDATE HIERARCHY DERIVATION (you × candidate) ════════════
+  function tagDelta(c, plus, minus, step){
+    let d=0; const tags=[...c.personality, ...c.vibe];
+    tags.forEach(t=>{ if(plus.includes(t)) d+=step; if(minus.includes(t)) d-=step; });
+    return d;
+  }
+  function ageFit(c, ctx){ return 1 - Math.min(Math.abs(c.age - ctx.desiredAge), 18) / 18; }  // 1 = right on your target age, 0 = ≥18yr off
+  // net taste alignment: how many of the candidate's traits you dialed FOR minus those you dialed AGAINST.
+  // Feeds `desire` (a Tier-1/2 factor present in every pyramid) so EVERY taste dial calibrates the rating —
+  // not just the Tier-3 values/interests factors, which two of the four pyramids don't even have.
+  function tasteNet(c, ctx){
+    const tags = [...c.personality, ...c.vibe];
+    const w = tags.filter(t=>ctx.wantPers.has(t)||ctx.wantVibe.has(t)).length;
+    const a = tags.filter(t=>ctx.avoidPers.has(t)||ctx.avoidVibe.has(t)).length;
+    return w - a;
+  }
+  // PHYSICAL-TYPE fit: how the Looks dials (height/build/hair/aesthetic/ethnicity) + age shift how attractive
+  // THIS candidate reads TO YOU. Adjusts the `looks` factor (and spark) only — NOT the objective band/preview.
+  // "Noticeable refiner": each set dial is ~±0.5–0.9, the whole thing capped to ±2.5 (a 9 never craters to 0).
+  function looksFit(c, ctx){
+    const p = ctx.looksPref || {};
+    let f = 0;
+    if (p.height && c.heightCm){
+      const ref = c.g==='m' ? 180 : 165;                 // ~average for the target sex
+      const t = (c.heightCm - ref) / 12;                 // ≈ +1 per 12cm above average
+      if (p.height==='tall')  f += clamp(t, -1, 1);
+      else if (p.height==='short') f += clamp(-t*0.8, -0.9, 0.9);
+    }
+    if (p.build && c.build){
+      const lean = (c.build==='slim'||c.build==='athletic'||c.build==='muscular');
+      const curvy = (c.build==='curvy'||c.build==='heavy');
+      if (p.build==='lean')  f += lean ? 0.8 : (curvy ? -0.8 : 0);
+      else if (p.build==='curvy') f += curvy ? 0.8 : (lean ? -0.6 : 0);
+    }
+    if (p.hair && c.hairColor) f += (c.hairColor===p.hair) ? 0.7 : -0.5;
+    if (p.style && c.style)    f += (c.style===p.style) ? 0.7 : -0.4;
+    if (p.eth && c.ethnicity)  f += (c.ethnicity===p.eth) ? 0.8 : -0.6;
+    f += (ageFit(c,ctx)-0.5)*1.0;                         // age also shapes physical pull (±0.5); desire/avail keep their age effects
+    return clamp(f, -2.5, 2.5);
+  }
+  function looksFor(c, ctx){ return clamp(c.looks + looksFit(c,ctx), 1, 10); }   // perceived attractiveness to YOU
+  const ETH_LABEL = { white:'White', black:'Black', latino:'Latino', 'east-asian':'East Asian', 'south-asian':'South Asian', 'middle-eastern':'Middle Eastern', mixed:'Mixed', other:'Other' };
+  function htDisplay(cm){ if(!cm) return ''; const inch=Math.round(cm/2.54); return Math.floor(inch/12)+"'"+(inch%12)+'"'; }
+  function physLine(c){ return [htDisplay(c.heightCm), c.build, c.hairColor&&(c.hairColor+' hair'), ETH_LABEL[c.ethnicity]].filter(Boolean).join(' · '); }
+  function deriveAxis(src, c, ctx){
+    const A = ctx.mode==='looks' ? c.looks : c.smv;     // candidate's active-axis score
+    const gap = ctx.uScore - A;                          // + ⇒ you outrank the candidate
+    switch(src){
+      case 'looks':      return looksFor(c, ctx);
+      case 'status':     return c.smv;
+      case 'class':      return clamp(4.6 + (c.looks-5)*0.35 + tagDelta(c,['reserved','grounded','intellectual','calm','warm','sweet','glamorous'],['edgy','free-spirited','party'],0.7), 1, 10);
+      case 'fun':        return clamp(5.5 + tagDelta(c,['playful','witty','easygoing','warm','free-spirited','sweet'],['intense','dominant','reserved'],1.0), 1, 10);
+      case 'initiative': return clamp(5.0 + tagDelta(c,['bold','dominant','ambitious','driven','intense'],['reserved','calm','easygoing','sweet'],1.0), 1, 10);
+      case 'purity':     return clamp(5.6 + tagDelta(c,['grounded','sweet','reserved','calm','traditional','warm'],['edgy','party','free-spirited','intense','glamorous'],1.0), 1, 10);
+      case 'warmth':     return clamp(5.6 + tagDelta(c,['warm','sweet','easygoing','grounded'],['intense','dominant','edgy','reserved'],1.1), 1, 10);
+      case 'loyalty':    return clamp(5.6 + tagDelta(c,['grounded','traditional','reserved','sweet','calm'],['party','free-spirited','edgy','glamorous'],1.0), 1, 10);
+      case 'confidence': return clamp(5.3 + (c.smv-5)*0.25 + tagDelta(c,['bold','dominant','driven','ambitious','intense','calm'],['reserved'],0.9), 1, 10);
+      case 'desire': {
+        let s = 6.4 + gap*1.15;                            // parity / hypergamy
+        s += tagDelta(c,['warm','sweet','easygoing','playful'],['intense','dominant','reserved'],0.35);
+        s += (ageFit(c,ctx)-0.5)*2.2;                      // your age preference: closer to your target age ⇒ more pull (works in every pyramid)
+        s += clamp(tasteNet(c,ctx)*1.0, -2.0, 3);          // "they're your type": every taste dial moves this Tier-1/2 factor, in every pyramid
+        return clamp(s, 1.5, 9.6);
+      }
+      case 'spark':      return clamp(0.5*looksFor(c,ctx) + 0.5*deriveAxis('desire',c,ctx) + clamp(tasteNet(c,ctx)*0.5, -1.5, 2), 1, 10);   // taste + physical-type both land on spark (the only relational factor in the male-lens pyramids)
+      case 'values': {
+        const wv=c.vibe.filter(t=>ctx.wantVibe.has(t)).length, av=c.vibe.filter(t=>ctx.avoidVibe.has(t)).length;
+        const wp=c.personality.filter(t=>ctx.wantPers.has(t)).length, ap=c.personality.filter(t=>ctx.avoidPers.has(t)).length;
+        return clamp(5.2 + wv*1.5 + wp*1.0 - av*1.3 - ap*0.9, 1, 10);     // shared-life fit: lifestyle-leaning, but character also counts (present in every pyramid)
+      }
+      case 'interests': {
+        const wp=c.personality.filter(t=>ctx.wantPers.has(t)).length, ap=c.personality.filter(t=>ctx.avoidPers.has(t)).length;
+        const wv=c.vibe.filter(t=>ctx.wantVibe.has(t)).length, av=c.vibe.filter(t=>ctx.avoidVibe.has(t)).length;
+        return clamp(4.9 + wp*1.3 + wv*0.8 - ap*1.1 - av*0.7, 1, 10);     // common-ground fit: personality-leaning
+      }
+      case 'avail': {
+        let s = 3.6 + ageFit(c,ctx)*5.6;
+        s += tagDelta(c,['homebody','low-key','family-first'],['career-first','party'],0.3);
+        return clamp(s, 1, 10);
+      }
+      default: return c.looks;
+    }
+  }
+
+  const band3 = s => s>=7.5 ? 'hi' : s>=5 ? 'mid' : 'lo';
+  function axisComment(src, score, c, ctx){
+    const b = band3(score);
+    const first = c.name.split(' ')[0];
+    const subj = c.g==='f' ? 'She' : 'He';
+    const A = ctx.mode==='looks' ? c.looks : c.smv;
+    switch(src){
+      case 'looks': {
+        let t = {hi:"A genuine head-turner — physical pull is the strongest card here.", mid:"Attractive without being a knockout — clears the bar, doesn't dominate it.", lo:"Looks are the soft spot; physical pull won't carry this alone."}[b];
+        const lf = looksFit(c, ctx);
+        if (lf <= -0.8) t += " Not quite your physical type, which marks it down for you.";
+        else if (lf >= 0.8) t += " Squarely your physical type, which lifts it for you.";
+        const pl = physLine(c); if (pl) t += ` (${pl})`;
+        return t;
+      }
+      case 'status':     return {hi:"High-status and well-resourced — provides and signals near the top.", mid:"Comfortably established — enough standing to be taken seriously.", lo:"Status is modest; not where the case gets made."}[b];
+      case 'class':      return {hi:"Carries real polish and composure.", mid:"Presentable and put-together, if not exactly refined.", lo:"Reads a little rough or attention-seeking."}[b];
+      case 'fun':        return {hi:"Easy, playful company — low friction day to day.", mid:"Pleasant enough, with a few sharper edges.", lo:"Can run tense or heavy — not the easygoing sort."}[b];
+      case 'initiative': return {hi:"Assertive — likely to meet you halfway and initiate.", mid:"Will participate, but won't always drive.", lo:"Passive read; you'd be carrying the pursuit."}[b];
+      case 'purity':     return {hi:"Grounded and low-drama — little baggage to manage.", mid:"Some history, nothing alarming.", lo:"Reads chaotic or high-baggage — a stability risk."}[b];
+      case 'warmth':     return {hi:"Warm and kind — the type that makes life lighter.", mid:"Pleasant, if a touch guarded.", lo:"Runs cool or prickly."}[b];
+      case 'loyalty':    return {hi:"Steady, committed signals.", mid:"Probably loyal — hard to be certain.", lo:"Flightier signals; commitment is a question."}[b];
+      case 'confidence': return {hi:"Self-assured and non-needy — a strong frame.", mid:"Reasonably secure.", lo:"The frame looks shakier than ideal."}[b];
+      case 'spark':      return {hi:"Real chemistry potential — the electric kind.", mid:"Some spark, not a guarantee.", lo:"Chemistry is unlikely to catch."}[b];
+      case 'desire': {
+        let base;
+        if (A > ctx.uScore+1)   base = subj+"'d be looking up the ladder — desire toward you is the weak link, and why this reads as a stretch.";
+        else if (A < ctx.uScore-0.6) base = "You're a clear step up for "+first+", so genuine interest in you is the easy part.";
+        else base = "Right around your level — interest toward you is plausible, not a sure thing.";
+        const tn = tasteNet(c, ctx);
+        if (tn >= 2) base += " Fits the type you dialed in, which lifts the pull.";
+        else if (tn <= -2) base += " Runs against the type you dialed in, which cools it.";
+        return base;
+      }
+      case 'values': {
+        const ov = c.vibe.filter(t=>ctx.wantVibe.has(t));
+        const bad = c.vibe.filter(t=>ctx.avoidVibe.has(t));
+        if (ov.length) return "Lifestyle leanings ("+ov.slice(0,2).join(', ')+") line up with what you dialed in.";
+        if (bad.length) return "Leans "+bad.slice(0,2).join(', ')+" — the direction you steered away from.";
+        return b==='lo' ? "Different priorities from the life you described." : "Partial overlap with the life you described.";
+      }
+      case 'interests': {
+        const ov = [...c.personality, ...c.vibe].filter(t=>ctx.wantPers.has(t)||ctx.wantVibe.has(t));
+        const bad = [...c.personality, ...c.vibe].filter(t=>ctx.avoidPers.has(t)||ctx.avoidVibe.has(t));
+        if (ov.length) return "Shares your taste on "+ov.slice(0,3).join(', ')+".";
+        if (bad.length) return "Skews toward "+bad.slice(0,2).join(', ')+", which you dialed against.";
+        return "Little overlap with the taste you dialed in.";
+      }
+      case 'avail': {
+        const gy = Math.abs(c.age-ctx.desiredAge);
+        if (gy<=4)  return "Age and timing line up well.";
+        if (gy<=10) return "Age sits a bit off your target, but workable.";
+        return "Age is well off your target — timing works against this.";
+      }
+      default: return '';
+    }
+  }
+
+  // looks-vs-personality (the "what matters more" answer) reweights factors within each tier:
+  // looks-leaning factors up when looks-first, the rest up when personality-first. looksW 0.5 ⇒ every weight 1.
+  function factorWeight(src, looksW){
+    if (src==='status' || src==='desire') return 1.0;                  // provision/attraction stay neutral
+    const looksKind = src==='looks' || src==='class' || src==='confidence' || src==='spark';
+    return looksKind ? (0.45 + looksW*1.1) : (0.45 + (1-looksW)*1.1);  // 0.5 ⇒ weight 1; widens to ~0.6/1.4 at the extremes
+  }
+  function wavg(arr, looksW){
+    let s=0, w=0; arr.forEach(o=>{ const ww=factorWeight(o.src, looksW); s+=o.match*ww; w+=ww; });
+    return w ? s/w : 0;
+  }
+  // gate-aware overall from the three tier averages (Tier 1 is a gate, not an average).
+  // Defaults (looksW 0.5, stakes 'open') reproduce the plain TIER_W blend exactly.
+  function scoreBreakdown(byTier, ctx){
+    const lw = (ctx && ctx.looksW!=null) ? ctx.looksW : 0.5;
+    const tw = (ctx && STAKES_W[ctx.stakes]) ? STAKES_W[ctx.stakes] : TIER_W;
+    const t = [0,1,2].map(i=>wavg(byTier[i], lw));
+    let base = tw.t1*t[0] + tw.t2*t[1] + tw.t3*t[2];
+    let final = base; const caps = [];
+    const t1m = byTier[0].map(o=>o.match);
+    const minT1 = Math.min(...t1m);
+    if (minT1 < HARD_T1){ if(minT1<final) final=minT1; caps.push({ type:'gate', v:minT1, idx:t1m.indexOf(minT1) }); }
+    if (t[0] < SOFT_T1AVG && final >= STRONG_FLOOR){ final = STRONG_FLOOR-0.1; caps.push({ type:'soft' }); }
+    final = clamp(final, 1, 10);
+    return { tierAvgs:t, base, final:round1(final), caps, band:bandFor(final) };
+  }
+
+  function candHeadline(sb){
+    if (sb.caps.find(c=>c.type==='gate')) return "a Tier 1 gate breaks, so the rest can't rescue it";
+    const t1=sb.tierAvgs[0], t3=sb.tierAvgs[2];
+    if (sb.band.key==='exceptional') return "the whole hierarchy fires at once";
+    if (t1>=7 && t3<5.5)  return "strong pull up top, thinner long-term fit";
+    if (t1>=7 && t3>=6.5) return "the spark and the structure agree";
+    if (t1<5.5)           return "the first tier never gets loud enough";
+    return "a balanced maybe, with nothing failing and nothing blazing";
+  }
+  function cardHeadline(sb){
+    if (sb.caps.find(c=>c.type==='gate')) return "Breaks a Tier 1 gate — capped hard.";
+    const cl = candHeadline(sb); return cl.charAt(0).toUpperCase()+cl.slice(1)+'.';
+  }
+
+  function insights(sv, sb){
+    const pick = (...ks)=>{ const v=ks.map(k=>sv[k]).filter(x=>x!=null); return v.length?avg(v):null; };
+    const L = s => s>=7.5?'hi':s>=5?'mid':'lo';
+    const visual = pick('looks','class','confidence');
+    const emo    = pick('fun','warmth','purity','initiative','loyalty');
+    const life   = pick('values','interests','avail');
+    const aff    = pick('desire','spark','warmth');
+    const def    = sb.tierAvgs;
+    return [
+      { k:'Visually',     t:{hi:"Strong on looks and presentation — registers immediately.", mid:"A solid visual impression without being overwhelming.", lo:"The visual case is the weak part."}[L(visual??def[0])] },
+      { k:'Emotionally',  t:{hi:"Easy, warm and steady to be around.", mid:"Generally pleasant, with a few rough edges.", lo:"Emotionally higher-friction than ideal."}[L(emo??def[1])] },
+      { k:'Lifestyle fit',t:{hi:"Your worlds overlap on the things you flagged.", mid:"Partial lifestyle overlap — some friction likely.", lo:"A different lifestyle from the one you described."}[L(life??def[2])] },
+      { k:'Affection vibe',t:{hi:"Likely to return warmth and show real interest.", mid:"Affection is plausible but not a given.", lo:"Reciprocated affection is the open question."}[L(aff??def[1])] },
+    ];
+  }
+
+  // build the full assessment for one candidate against the active pyramid
+  function assess(c, ctx){
+    const P = PYRAMIDS[pyramid];
+    const rows=[], byTier=[[],[],[]], sv={};
+    P.tiers.forEach((t,ti)=> t.factors.forEach((f,fi)=>{
+      const src=f[2]||'looks';
+      const raw=round1(clamp(deriveAxis(src,c,ctx),1,10));                                        // his score — FIXED (hierarchy model + candidate)
+      const std=(selfGrades[pyramid+'-'+ti+'-'+fi]!=null)?selfGrades[pyramid+'-'+ti+'-'+fi]:6;   // your bar on this factor — the yardstick
+      const match=round1(clamp(YARD_C + YARD_K*(raw-std), 1, 10));                                // how his fixed score measures against your bar
+      byTier[ti].push({ match, src });
+      sv[src]=raw;
+      rows.push({ ti, name:f[0], desc:f[1], src, score:raw, raw, std, match });
+    }));
+    const sb = scoreBreakdown(byTier, ctx);   // gated YARDSTICK (looks-/stakes-weighted) → overall match + per-tier match averages
+    rows.forEach(r=>{
+      r.comment = axisComment(r.src, r.raw, c, ctx);
+      const diff = r.raw - r.std;
+      if (diff <= -1) r.comment += ` Below your bar of ${r.std} — drags the match down.`;
+      else if (diff >= 1) r.comment += ` Clears your bar of ${r.std} with room.`;
+    });
+    return { rows, sb, sv, tierNames:P.tiers.map(t=>t.name), ins:insights(sv,sb), summaryClause:candHeadline(sb) };
+  }
+
+  // ── match engine: band-clamp on the active axis, rank by gated overall ──
+  function currentMatches(){
+    const d = desireProfile();
+    const u = userScore(), want = targetSex();
+    const low = u - 1, high = u + 1 + d.reach;
+    const ctx = { d, mode, uScore:u, desiredAge: userAge()+d.ageSkew,
+      wantPers:new Set(d.wantPers), wantVibe:new Set(d.wantVibe), avoidPers:new Set(d.avoidPers), avoidVibe:new Set(d.avoidVibe),
+      looksPref:d.looksPref, reach:d.reach, looksW:d.looksW, stakes:d.stakes };
+    const scored = ROSTER.filter(c => c.g===want).map(c => {
+      const s = mode==='looks' ? c.looks : c.smv;
+      const inBand = s >= low - 0.001 && s <= high + 0.001;
+      return { c, s, inBand, stretch: s > u+1, a: assess(c, ctx) };
+    }).filter(x => x.inBand).sort((a,b)=> b.a.sb.final - a.a.sb.final || b.s - a.s);
+    return { scored, d, u };
+  }
+  function runMatch(){
+    const { scored, d, u } = currentMatches();
+    openCards.clear();
+    if (scored.length) openCards.add(scored[0].c.slug);   // top result expanded by default
+    renderResults(scored.slice(0,5), d, u);
+    renderPreview(scored, d, u);
+    // on stacked (mobile) layout the results sit below the live preview — jump to them
+    // so "Find my matches" visibly does something instead of scrolling off-screen.
+    if (window.matchMedia && window.matchMedia('(max-width: 880px)').matches){
+      const rh = document.getElementById('results-host');
+      if (rh) rh.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+  }
+  function liveReRank(){
+    const { scored, d, u } = currentMatches();
+    renderPreview(scored, d, u);
+    if (document.querySelector('.mm-rcard') || document.querySelector('.mm-empty'))
+      renderResults(scored.slice(0,5), d, u);
+    saveState();   // every state-mutating interaction funnels through here
+  }
+  // compact always-on preview beside the form — in-band names + their score on the
+  // axis you're matching by (looks or SMV), so the number matches the axis and the toggle.
+  function renderPreview(scored, d, u){
+    const host = document.getElementById('preview-host'); if(!host) return;
+    const sub = document.getElementById('preview-sub');
+    const axisLabel = mode==='looks' ? 'looks' : 'SMV', axisAbbr = mode==='looks' ? 'L' : 'SMV';
+    if (sub) sub.innerHTML = `Band <strong>${(u-1).toFixed(1)}&ndash;${(u+1+(d.reach||0)).toFixed(1)}</strong> &middot; ${targetSex()==='f'?'women':'men'} &middot; ranked by match`;
+    if (!scored.length){ host.innerHTML = `<div class="mm-pv-empty">No one in your band yet &mdash; widen your aim, or flip By Looks / By SMV.</div>`; return; }
+    // mirror the results exactly: same ranking (gated match), so the preview never disagrees with "Find my matches"
+    const list = scored.slice().sort((a,b)=> b.a.sb.final - a.a.sb.final || b.s - a.s).slice(0,8);
+    host.innerHTML = `<ol class="mm-pv-list">` + list.map((x,i)=>{
+      const c=x.c, m=x.a.sb.final, cls = m>=6.5 ? 'hi' : m>=4 ? 'mid' : 'lo';
+      return `<li class="mm-pv-row" data-pv="${c.slug}" title="See ${c.name}'s full breakdown"><span class="mm-pv-rank">${i+1}</span><span class="mm-pv-name">${c.name}${x.stretch?' <span class="mm-pv-stretch">stretch</span>':''}</span><span class="mm-pv-axis">${axisAbbr}&nbsp;${x.s.toFixed(1)}</span><span class="mm-pv-score sc-${cls}">${m.toFixed(1)}</span></li>`;
+    }).join('') + `</ol><div class="mm-pv-foot">Ranked by match &mdash; same order as your results. Chip = their ${axisLabel}; bold number = the match. Tap a name for the full breakdown.</div>`;
+    host.querySelectorAll('.mm-pv-row').forEach(r => r.addEventListener('click', ()=> openFull(r.dataset.pv)));
+  }
+  // preview-row click → render that one candidate's full hierarchy breakdown below
+  function openFull(slug){
+    const { scored, d, u } = currentMatches();
+    const pick = scored.find(x=>x.c.slug===slug);
+    if (!pick) return;
+    openCards.clear(); openCards.add(slug);
+    renderResults([pick], d, u, { single:true });
+    renderPreview(scored, d, u);
+    const card = document.querySelector(`.mm-rcard[data-slug="${slug}"]`);
+    (card || document.getElementById('results-host')).scrollIntoView({ behavior:'smooth', block: card?'center':'start' });
+  }
+
+  const AV_COLORS = ['#C41E3A','#1E5AA0','#4E3D9E','#6E2742','#0F6E56','#854F0B','#B5531A','#2C6FB5'];
+  function avatar(c){
+    const initials = c.name.split(' ').slice(0,2).map(w=>w[0]).join('');
+    let h=0; for(let i=0;i<c.slug.length;i++) h=(h*31+c.slug.charCodeAt(i))>>>0;
+    return `<span class="mm-avatar" style="background:${AV_COLORS[h%AV_COLORS.length]}">${initials}</span>`;
+  }
+  const tierStatus = v => v>=GATE_CLEAR ? 'cleared' : v>=GATE_FAIL ? 'strained' : 'failed';
+
+  function breakdownHtml(c, a){
+    const sb = a.sb;
+    // mini pyramid — Primary (narrow apex) at top, Tertiary (largest tier) at the base
+    const pyr = [0,1,2].map(ti=>{
+      const v=sb.tierAvgs[ti], st=tierStatus(v);
+      return `<div class="mm-ptier ${st} pt${ti}">
+        <span class="mm-ptier-kick">${a.tierNames[ti]}${st!=='cleared'?' <i class="ti ti-alert-triangle mm-ptier-warn" aria-hidden="true"></i>':''}</span>
+        <span class="mm-ptier-score">${fmt(v)}</span>
+        <span class="mm-ptier-bar"><span class="mm-ptier-bar-fill" style="width:${v*10}%"></span></span></div>`;
+    }).join('');
+    // tiered table: his (fixed) score + the match vs your standard; tier avg = match
+    let tbl=`<div class="mm-bd-legendline"><b>their</b> = their score, fixed &middot; <b>match</b> = how it clears your bar (5.5 = meets it exactly)</div>`;
+    [0,1,2].forEach(ti=>{
+      const v=sb.tierAvgs[ti], st=tierStatus(v);
+      tbl += `<div class="mm-bd-tier"><span class="mm-bd-dot s-${st}"></span><span class="mm-bd-tname">${a.tierNames[ti]}</span><span class="mm-bd-tlbl">match</span><span class="mm-bd-tavg">${fmt(v)}</span></div>`;
+      a.rows.filter(r=>r.ti===ti).forEach(r=>{
+        const mcls = r.match>=6.5 ? 'hi' : r.match>=4 ? 'mid' : 'lo';
+        tbl += `<div class="mm-bd-row">
+          <div class="mm-bd-fn">${r.name}</div>
+          <div class="mm-bd-fs">${fmt(r.raw)}</div>
+          <div class="mm-bd-match sc-${mcls}">${fmt(r.match)}</div>
+          <div class="mm-bd-fc">${r.comment}</div></div>`;
+      });
+    });
+    const ins = a.ins.map(i=>`<div class="mm-insight"><b>${i.k}:</b> ${i.t}</div>`).join('');
+    const sum = `${c.name.split(' ')[0]} reads as a <b>${sb.band.label.toLowerCase()} ${fmt(sb.final)}</b> match — ${candHeadline(sb)}.`;
+    return `<div class="mm-bd-inner">
+      <div class="mm-pyramid mini">${pyr}</div>
+      <div class="mm-bd-table">${tbl}<div class="mm-bd-overall"><span>Overall match</span><b>${fmt(sb.final)}</b><span class="mm-tier-badge is-${sb.band.key}">${sb.band.label}</span></div></div>
+      <div class="mm-insights"><div class="mm-block-h2"><i class="ti ti-search" aria-hidden="true"></i> Compatibility insights</div>${ins}<p class="mm-summary">${sum}</p></div>
+    </div>`;
+  }
+
+  function renderResults(list, d, u, opts){
+    opts = opts || {};
+    const host = document.getElementById('results-host');
+    if (!list.length){
+      host.innerHTML = `<div class="mm-empty">No one in the roster lands in your band on this axis right now. Widen your aim (the "shoot for the stars" answer), flip <strong>By Looks / By SMV</strong>, or this just means the seed roster is thin at your level &mdash; more names land later.</div>`;
+      return;
+    }
+    const mirror = (!opts.single && d.reach>0)
+      ? `<div class="mm-mirror"><strong>Honest mirror.</strong> You aimed up to <strong>${d.reach.toFixed(1)}</strong> above your band. The realistic intersection sits around <strong>${(u-1).toFixed(1)}&ndash;${(u+1).toFixed(1)}</strong> &mdash; anything tagged <em>stretch</em> is the reach, not the expectation, and you'll see it punished on the <em>desire toward you</em> line.</div>`
+      : '';
+    host.innerHTML = mirror +
+      `<div class="mm-results-head">${opts.single ? 'Full breakdown' : 'Your top '+list.length+' &mdash; ranked within your band by gated hierarchy match'}</div>
+       <div class="mm-rcards">` +
+      list.map((x,idx) => {
+        const c = x.c, a = x.a, sb = a.sb, open = openCards.has(c.slug);
+        return `<div class="mm-rcard${open?' open':''}" data-slug="${c.slug}">
+          <button class="mm-rcard-head" type="button" data-exp="${c.slug}" aria-expanded="${open}" aria-controls="bd-${c.slug}">
+            ${avatar(c)}
+            <div class="mm-rc-id"><div class="mm-card-name">${c.name}</div><div class="mm-card-meta">#${idx+1} &middot; Age ${c.age} &middot; b. ${c.bornYear} &middot; ${c.career}</div></div>
+            <div class="mm-rc-score"><span class="mm-rc-num">${fmt(sb.final)}</span><span class="mm-rc-den">/10</span>
+              <span class="mm-tier-badge is-${sb.band.key}">${sb.band.label}</span></div>
+            <i class="ti ti-chevron-${open?'up':'down'} mm-rc-chev" aria-hidden="true"></i>
+          </button>
+          <div class="mm-rc-sub">
+            <span class="mm-score-pill">Looks <b>${c.looks.toFixed(1)}</b></span>
+            <span class="mm-score-pill">SMV <b>${c.smv.toFixed(1)}</b></span>
+            ${x.stretch?'<span class="mm-score-pill stretch">stretch</span>':''}
+            <span class="mm-tag est">Estimate</span>
+            <span class="mm-rc-headline">${cardHeadline(sb)}</span>
+          </div>
+          <div class="mm-bd" id="bd-${c.slug}" ${open?'':'hidden'}>${breakdownHtml(c, a)}</div>
+        </div>`;
+      }).join('') + `</div>
+      <div class="mm-foot">Band-clamp uses the <a href="frameworks.html#parity-rule">Parity Rule</a> (you match near your level); the overall is a <strong>gated</strong> score &mdash; Tier 1 caps the rest, so a knockout who'd look past you can't top a steady in-band match. Roster ratings and every per-factor read are provisional editorial estimates <span class="mm-tag est">Estimate</span> &mdash; built to be argued with and swapped.</div>`;
+
+    document.querySelectorAll('#results-host .mm-rcard-head').forEach(h => h.addEventListener('click', ()=>{
+      const slug=h.dataset.exp;
+      if (openCards.has(slug)) openCards.delete(slug); else openCards.add(slug);
+      const card=h.closest('.mm-rcard'); const bd=card.querySelector('.mm-bd'); const chev=card.querySelector('.mm-rc-chev');
+      const open=openCards.has(slug);
+      card.classList.toggle('open',open); bd.hidden=!open; h.setAttribute('aria-expanded', open);
+      chev.classList.toggle('ti-chevron-up',open); chev.classList.toggle('ti-chevron-down',!open);
+    }));
+  }
+
+  // ── paste-import: accept a Compatibility or SMV export package ──
+  function importPackage(){
+    const box = document.getElementById('pkg-box'), st = document.getElementById('pkg-status');
+    const setSt = m => { if (st) st.textContent = m; };
+    let pkg; try { pkg = JSON.parse((box.value||'').trim()); } catch(e){ setSt('That is not valid JSON.'); return; }
+    if (!pkg || !pkg.source){ setSt('Unrecognized package.'); return; }
+    if (pkg.source === 'love-equations.compatibility' && Array.isArray(pkg.factors)){
+      const key = pkg.hierarchyKey;
+      if (!PYRAMIDS[key]){ setSt('That package uses a hierarchy this tool does not know.'); return; }
+      const vals = {}; let idx = 0;
+      PYRAMIDS[key].tiers.forEach((t,ti)=>t.factors.forEach((f,fi)=>{ const fac = pkg.factors[idx++]; if (fac && typeof fac.score==='number' && isFinite(fac.score)) vals[key+'-'+ti+'-'+fi] = clamp(fac.score, 1, 10); }));
+      compatValues = Object.assign({}, compatValues, vals);
+      selfGrades = Object.assign({}, selfGrades, vals);
+      compatImported = true;
+      if (PYRAMIDS[key].describes === targetSex()) pyramid = key;
+      renderPyramid();
+      setSt('Imported standard: ' + PYRAMIDS[key].title + ' (' + PYRAMIDS[key].subtitle + ').');
+    } else if (pkg.source === 'love-equations.smv'){
+      if (typeof pkg.overall === 'number' && isFinite(pkg.overall)) importedSMV = clamp(pkg.overall, 1, 10);
+      if (pkg.sex==='m'||pkg.sex==='f'){ userSex = pkg.sex; document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); }); renderPyramid(); }
+      if (typeof pkg.age==='number' && isFinite(pkg.age)){ const el=document.getElementById('user-age'); if (el) el.value = clamp(Math.round(pkg.age), 18, 80); }
+      renderIntake();
+      setSt('Imported SMV ' + (typeof pkg.overall==='number'?pkg.overall.toFixed(1):'profile') + (pkg.sex?(' · '+(pkg.sex==='m'?'man':'woman')):'') + '.');
+    } else { setSt('Unrecognized package source.'); return; }
+    liveReRank();
+  }
+
+  // ── toggles ──
+  function wireToggle(id, key, set){
+    document.getElementById(id).addEventListener('click', e => {
+      const btn = e.target.closest('.mm-toggle-btn'); if(!btn) return;
+      document.querySelectorAll('#'+id+' .mm-toggle-btn').forEach(b=>{ const on=b===btn; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
+      set(btn.dataset[key]);
+      renderIntake();
+      if (key==='sex') renderPyramid();   // pyramids re-filter to the new target sex
+      liveReRank();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initImports();
+    loadState();   // restore the user's last matchmaker session over the calc-derived defaults
+    renderIntake(); renderPyramid(); renderQuiz();
+    document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
+    document.querySelectorAll('#mode-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.mode===mode; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
+    wireToggle('sex-toggle', 'sex', v => userSex=v);
+    wireToggle('mode-toggle', 'mode', v => mode=v);
+    const ageEl = document.getElementById('user-age');
+    ageEl.addEventListener('input', liveReRank);
+    ageEl.addEventListener('change', () => { const v=parseInt(ageEl.value,10); ageEl.value = isFinite(v)?clamp(v,18,80):30; liveReRank(); });
+    document.getElementById('find-btn').addEventListener('click', runMatch);
+    document.getElementById('pkg-import').addEventListener('click', importPackage);
+    document.getElementById('find-note').textContent = importedLooks!=null||importedSMV!=null ? 'Using your saved calculator scores.' : 'No saved scores found — set them above first.';
+    liveReRank();   // populate the live preview immediately (results stay hidden until "Find")
+  });
+  </script>
+</body>
+</html>

@@ -133,6 +133,16 @@
             <div id="matchup-results"></div>
           </div>
 
+          <div class="result-panel mt-2">
+            <div class="result-title">SMV export package</div>
+            <div class="result-copy">Copy this to carry your SMV profile into the <a href="matchmaker.html">Matchmaker</a> (or anywhere that reads it). It carries your overall score, sex, age, lens, and factor breakdown &mdash; not just the headline.</div>
+            <textarea class="import-box" id="smv-export-box" readonly spellcheck="false" placeholder="Your SMV package appears here once you have a score."></textarea>
+            <div class="import-actions">
+              <button class="btn btn-scarlet" type="button" onclick="copySmvPackage()"><i class="ti ti-copy"></i> Copy SMV package</button>
+              <span class="import-status" id="smv-export-status">Ready to copy.</span>
+            </div>
+          </div>
+
           <div class="btn-row">
             <button class="btn" onclick="resetA()">Retake assessment</button>
             <button class="btn btn-scarlet" onclick="switchTabFromResults('b')">Rate someone else <i class="ti ti-arrow-right"></i></button>
@@ -1254,7 +1264,36 @@
         </div>
       `).join('');
       renderMatchup();
+      setSmvExport(total);
       saveState();
+    }
+
+    // ── SMV export package (mirrors the compatibility export so the Matchmaker can read it) ──
+    function buildSmvPackage(total) {
+      let age = parseInt(answers[1], 10); if (!isFinite(age)) age = null;
+      return {
+        source: 'love-equations.smv',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        overall: Number(total.toFixed(1)),
+        scale: 10,
+        sex: getSex(),
+        age,
+        lens: (LENSES[selectedLensA] && LENSES[selectedLensA].label) || selectedLensA,
+        tier: getTier(total).label,
+        factors: FACTORS.map((f, i) => ({ name: f.name, score: Number((scores[i] || 0).toFixed(1)) }))
+      };
+    }
+    function setSmvExport(total) {
+      const box = document.getElementById('smv-export-box'); if (!box) return;
+      box.value = JSON.stringify(buildSmvPackage(total));
+      const st = document.getElementById('smv-export-status'); if (st) st.textContent = 'Ready to copy.';
+    }
+    async function copySmvPackage() {
+      const box = document.getElementById('smv-export-box'); const st = document.getElementById('smv-export-status');
+      if (!box) return;
+      try { await navigator.clipboard.writeText(box.value); if (st) st.textContent = 'Copied. Paste it into the Matchmaker.'; }
+      catch (e) { box.focus(); box.select(); document.execCommand('copy'); if (st) st.textContent = 'Copied via text selection.'; }
     }
 
     function finishA() {
@@ -1342,6 +1381,7 @@
       try {
         const nameInput = document.getElementById('pb-name');
         localStorage.setItem(SMV_STORAGE_KEY, JSON.stringify({
+          overall: (function(){ const e = document.getElementById('res-num'); const v = e ? parseFloat(e.textContent) : NaN; return isFinite(v) ? v : null; })(),
           selectedLensA,
           selectedLensB,
           answers,
