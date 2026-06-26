@@ -47,7 +47,19 @@
 .factor-box:focus { outline: none; border-color: var(--scarlet); }
 .factor-box::-webkit-outer-spin-button, .factor-box::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .factor-box { -moz-appearance: textfield; }
-input[type=range] { width: 100%; cursor: pointer; }
+/* Custom range: we paint the track + fill + thumb ourselves. The NATIVE accent-color track
+   renders DARK in Chrome when the accent is light (the pale Tertiary tier colors), so the
+   tertiary sliders looked black. --sld = the tier color (set inline per slider); --fill = the
+   filled % (set by paintSliders()). Firefox uses ::-moz-range-progress for the fill natively. */
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 18px; background: transparent; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 5px; border-radius: 999px; background: linear-gradient(to right, var(--sld, var(--scarlet)) var(--fill, 0%), var(--border) var(--fill, 0%)); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; margin-top: -5px; border-radius: 50%; background: var(--sld, var(--scarlet)); border: 2px solid #fffaf3; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+input[type=range]::-moz-range-track { height: 5px; border-radius: 999px; background: var(--border); }
+input[type=range]::-moz-range-progress { height: 5px; border-radius: 999px; background: var(--sld, var(--scarlet)); }
+input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: var(--sld, var(--scarlet)); border: 2px solid #fffaf3; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+input[type=range]:focus-visible { outline: none; }
+input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px rgba(196,30,58,0.25); }
+input[type=range]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px rgba(196,30,58,0.25); }
 
 /* ── Result panel ── */
 .result-panel {
