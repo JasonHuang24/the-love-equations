@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/matchmaker.css?v=7.9" />
+  <link rel="stylesheet" href="css/matchmaker.css?v=8.3" />
 </head>
 <body data-page="matchmaker">
   <div data-include="navigation-bar"></div>
@@ -2785,6 +2785,29 @@
     const src = ROSTER_IMG[c.slug];
     return src ? `<img class="mm-avatar-photo" src="${src}" alt="${escHtml(c.name)}" loading="lazy" onerror="this.remove()">` : '';
   }
+  // Extra verified photos per slug (carousel). Populated where Commons has more than the lead headshot.
+  const GALLERY_IMG = {'amy-schumer':['images/roster/amy-schumer/1.jpg','images/roster/amy-schumer/2.jpg','images/roster/amy-schumer/3.jpg','images/roster/amy-schumer/4.jpg'], 'armie-hammer':['images/roster/armie-hammer/1.jpg','images/roster/armie-hammer/2.jpg','images/roster/armie-hammer/3.jpg','images/roster/armie-hammer/4.jpg'], 'brad-pitt':['images/roster/brad-pitt/1.jpg','images/roster/brad-pitt/2.jpg','images/roster/brad-pitt/3.jpg'], 'danny-devito':['images/roster/danny-devito/1.jpg','images/roster/danny-devito/2.jpg'], 'farrah-abraham':['images/roster/farrah-abraham/1.jpg','images/roster/farrah-abraham/2.jpg','images/roster/farrah-abraham/3.jpg'], 'george-santos':['images/roster/george-santos/1.jpg','images/roster/george-santos/2.jpg'], 'idris-elba':['images/roster/idris-elba/1.jpg','images/roster/idris-elba/2.jpg','images/roster/idris-elba/3.jpg','images/roster/idris-elba/4.jpg'], 'jeff-bezos':['images/roster/jeff-bezos/1.jpg'], 'jo-brand':['images/roster/jo-brand/1.jpg','images/roster/jo-brand/2.jpg','images/roster/jo-brand/3.jpg'], 'joe-exotic':['images/roster/joe-exotic/1.jpg','images/roster/joe-exotic/2.jpg'], 'joe-rogan':['images/roster/joe-rogan/1.jpg','images/roster/joe-rogan/2.jpg','images/roster/joe-rogan/3.jpg','images/roster/joe-rogan/4.jpg'], 'jon-gosselin':['images/roster/jon-gosselin/1.jpg','images/roster/jon-gosselin/2.jpg'], 'kato-kaelin':['images/roster/kato-kaelin/1.jpg','images/roster/kato-kaelin/2.jpg','images/roster/kato-kaelin/3.jpg'], 'kevin-federline':['images/roster/kevin-federline/1.jpg'], 'lena-dunham':['images/roster/lena-dunham/1.jpg','images/roster/lena-dunham/2.jpg','images/roster/lena-dunham/3.jpg','images/roster/lena-dunham/4.jpg'], 'martin-shkreli':['images/roster/martin-shkreli/1.jpg','images/roster/martin-shkreli/2.jpg'], 'michael-b-jordan':['images/roster/michael-b-jordan/1.jpg'], 'mindy-kaling':['images/roster/mindy-kaling/1.jpg','images/roster/mindy-kaling/2.jpg','images/roster/mindy-kaling/3.jpg','images/roster/mindy-kaling/4.jpg'], 'nicolas-cage':['images/roster/nicolas-cage/1.jpg','images/roster/nicolas-cage/2.jpg'], 'paul-rudd':['images/roster/paul-rudd/1.jpg'], 'pauly-shore':['images/roster/pauly-shore/1.jpg','images/roster/pauly-shore/2.jpg','images/roster/pauly-shore/3.jpg','images/roster/pauly-shore/4.jpg'], 'pete-davidson':['images/roster/pete-davidson/1.jpg','images/roster/pete-davidson/2.jpg','images/roster/pete-davidson/3.jpg'], 'post-malone':['images/roster/post-malone/1.jpg','images/roster/post-malone/2.jpg','images/roster/post-malone/3.jpg','images/roster/post-malone/4.jpg'], 'rachel-dolezal':['images/roster/rachel-dolezal/1.jpg'], 'roseanne-barr':['images/roster/roseanne-barr/1.jpg','images/roster/roseanne-barr/2.jpg','images/roster/roseanne-barr/3.jpg','images/roster/roseanne-barr/4.jpg'], 'rudy-giuliani':['images/roster/rudy-giuliani/1.jpg'], 'russell-brand':['images/roster/russell-brand/1.jpg','images/roster/russell-brand/2.jpg','images/roster/russell-brand/3.jpg','images/roster/russell-brand/4.jpg'], 'sam-bankman-fried':['images/roster/sam-bankman-fried/1.jpg','images/roster/sam-bankman-fried/2.jpg','images/roster/sam-bankman-fried/3.jpg'], 'shia-labeouf':['images/roster/shia-labeouf/1.jpg','images/roster/shia-labeouf/2.jpg','images/roster/shia-labeouf/3.jpg','images/roster/shia-labeouf/4.jpg'], 'spencer-pratt':['images/roster/spencer-pratt/1.jpg','images/roster/spencer-pratt/2.jpg','images/roster/spencer-pratt/3.jpg'], 'susan-boyle':['images/roster/susan-boyle/1.jpg','images/roster/susan-boyle/2.jpg'], 'tekashi-6ix9ine':['images/roster/tekashi-6ix9ine/1.jpg','images/roster/tekashi-6ix9ine/2.jpg','images/roster/tekashi-6ix9ine/3.jpg'], 'tila-tequila':['images/roster/tila-tequila/1.jpg','images/roster/tila-tequila/2.jpg','images/roster/tila-tequila/3.jpg','images/roster/tila-tequila/4.jpg'], 'trisha-paytas':['images/roster/trisha-paytas/1.jpg'], 'whoopi-goldberg':['images/roster/whoopi-goldberg/1.jpg','images/roster/whoopi-goldberg/2.jpg']};
+  function avInitials(c){ return c.name.split(' ').slice(0,2).map(w=>w[0]).join(''); }
+  function avColor(c){ let h=0; for(let i=0;i<c.slug.length;i++) h=(h*31+c.slug.charCodeAt(i))>>>0; return AV_COLORS[h%AV_COLORS.length]; }
+  // all photos for the carousel = lead headshot first, then any extras
+  function galleryShots(c){ const lead = ROSTER_IMG[c.slug]; return (lead?[lead]:[]).concat(GALLERY_IMG[c.slug]||[]); }
+  function mmwCar(btn, dir){ const strip = btn.parentNode.querySelector('.mmw-carousel'); if (strip) strip.scrollBy({ left: dir*Math.max(180, strip.clientWidth*0.7), behavior:'smooth' }); }
+  function mmwZoom(src, alt){
+    const box = document.createElement('div'); box.className='mmw-lightbox';
+    box.innerHTML = `<img src="${src}" alt="${escHtml(alt||'')}">`;
+    box.addEventListener('click', ()=>box.remove());
+    document.addEventListener('keydown', function esc(e){ if(e.key==='Escape'){ box.remove(); document.removeEventListener('keydown', esc); } });
+    document.body.appendChild(box);
+  }
+  // hide the scroll arrows on any carousel whose photos already fit (no overflow)
+  function mmwTrimArrows(){
+    const host = document.getElementById('mmw-card'); if (!host) return;
+    host.querySelectorAll('.mmw-carousel-wrap').forEach(w => {
+      const s = w.querySelector('.mmw-carousel');
+      const need = s && s.scrollWidth > s.clientWidth + 2;
+      w.querySelectorAll('.mmw-car-btn').forEach(b => b.style.display = need ? '' : 'none');
+    });
+  }
   function avatar(c){
     const initials = c.name.split(' ').slice(0,2).map(w=>w[0]).join('');
     let h=0; for(let i=0;i<c.slug.length;i++) h=(h*31+c.slug.charCodeAt(i))>>>0;
@@ -3110,6 +3133,17 @@
     if (sub) sub.textContent = PYRAMIDS[pwStandard].subtitle + ' · describes a ' + (PYRAMIDS[pwStandard].describes==='f'?'woman':'man');
   }
 
+  // enlarged circular profile image + (if >1 photo) a scrollable photo carousel
+  function heroHtml(c, pill){
+    const heroAv = `<span class="mm-avatar mmw-hero-av" style="background:${avColor(c)}">${avInitials(c)}${avatarPhoto(c)}</span>`;
+    const shots = galleryShots(c);
+    const carousel = shots.length >= 2 ? `<div class="mmw-carousel-wrap">
+        <button class="mmw-car-btn mmw-car-prev" type="button" aria-label="Scroll photos left" onclick="mmwCar(this,-1)">&lsaquo;</button>
+        <div class="mmw-carousel">${shots.map((s,i)=>`<img class="mmw-shot" src="${s}" alt="${escHtml(c.name)} photo ${i+1}" loading="lazy" onclick="mmwZoom(this.src, this.alt)">`).join('')}</div>
+        <button class="mmw-car-btn mmw-car-next" type="button" aria-label="Scroll photos right" onclick="mmwCar(this,1)">&rsaquo;</button>
+      </div>` : '';
+    return `<div class="mmw-hero">${heroAv}<div class="mmw-hero-id"><div class="mmw-name">${c.name}</div><div class="mmw-meta">${c.career} &middot; ${c.age}</div></div>${pill||''}</div>${carousel}`;
+  }
   function renderPwCard(){
     const host = document.getElementById('mmw-card'); if (!host) return;
     if (!pwSlug){
@@ -3123,8 +3157,8 @@
     const prof = PROFILES[pwSlug];
     const P = PYRAMIDS[pwStandard];
     if (!prof){
-      host.innerHTML = `<div class="mmw-card-top">${pwAvatar(c,true)}<div><div class="mmw-name">${c.name}</div><div class="mmw-meta">${c.career} &middot; ${c.age}</div></div></div>
-        <div class="mmw-empty">No profile authored for <strong>${c.name}</strong> yet.<br>This is the test run &mdash; only the dotted names have a written breakdown so far. Once the concept is signed off, the rest of the roster fills in the same way.</div>`;
+      host.innerHTML = heroHtml(c, '') +
+        `<div class="mmw-empty">No profile authored for <strong>${c.name}</strong> yet.<br>This is the test run &mdash; only the dotted names have a written breakdown so far. Once the concept is signed off, the rest of the roster fills in the same way.</div>`;
       return;
     }
     const view = pwViewFor(prof, pwStandard);
@@ -3141,10 +3175,8 @@
       }).join('');
       return `<div class="mmw-tier"><div class="mmw-tier-head"><span class="mmw-tier-name">${t.name}</span><span class="mmw-tier-avg">tier avg ${t.avg!=null?t.avg.toFixed(1):'&mdash;'}</span></div>${rows}</div>`;
     }).join('');
-    host.innerHTML = `<div class="mmw-card-top">${pwAvatar(c,true)}
-        <div><div class="mmw-name">${c.name}</div><div class="mmw-meta">${c.career} &middot; ${c.age}</div></div>
-        <div class="mmw-card-pill"><div class="mmw-pill-lab">Standard</div><div class="mmw-pill-std">${P.title}</div></div></div>
-      <div class="mmw-blurb">${prof.blurb}</div>
+    host.innerHTML = heroHtml(c, `<div class="mmw-card-pill"><div class="mmw-pill-lab">Standard</div><div class="mmw-pill-std">${P.title}</div></div>`) +
+      `<div class="mmw-blurb">${prof.blurb}</div>
       <div class="mmw-overall"><span class="mmw-overall-num mmw-s-${oCls}">${view.overall.toFixed(1)}</span><span class="mmw-overall-den">/ 10</span><span class="mmw-overall-cap">overall under ${P.title} (${P.subtitle})</span></div>
       ${tiersHTML}
       <div class="mmw-foot">Scores are fixed per person. Switching the standard re-labels and re-groups the factors and recomputes the overall &mdash; the same person reads differently under each standard.</div>
@@ -3157,6 +3189,8 @@
     pwExportJSON = JSON.stringify(pwBuildPackage(c, prof, pwStandard, view));
     const btn = document.getElementById('mmw-copy-btn');
     if (btn) btn.addEventListener('click', pwCopyPackage);
+    host.querySelectorAll('.mmw-shot').forEach(im => im.addEventListener('load', mmwTrimArrows));
+    requestAnimationFrame(mmwTrimArrows);
   }
 
   // Build a portable package of a roster person's factor breakdown under one standard.

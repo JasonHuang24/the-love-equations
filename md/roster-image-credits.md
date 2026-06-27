@@ -79,3 +79,108 @@ Three profiles have no free image and render as initials only: Mama June, Angela
 | Kato Kaelin | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Kato_Kaelin_2011.jpg) |
 | Tekashi 6ix9ine | Eljakim Video | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_June_2018_side_(cropped_x2).jpg) |
 | Joe Exotic | State of Florida | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Joe_Exotic_(Santa_Rose_County_Jail).png) |
+
+## Carousel photos (additional)
+
+Extra verified photos shown in each profile's carousel, sourced from Wikimedia Commons. 35 of 76 roster figures had multiple genuine free-licensed photos; the rest keep a single headshot.
+
+| Profile | # | Author | License | Source |
+| --- | --- | --- | --- | --- |
+| amy-schumer | 1 | Greg2600 | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Amy_Schumer_(2015)_(cropped).jpg) |
+| amy-schumer | 2 | Greg2600 | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Amy_Schumer_(2015)_(cropped1).jpg) |
+| amy-schumer | 3 | Maryanne Ventrice | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Amy_Schumer.jpg) |
+| amy-schumer | 4 | Anna Hanks (@annaustin) | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Amy_Schumer_SXSW_One.jpg) |
+| armie-hammer | 1 | Maximilian Bühn | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Armie_Hammer_Final_Portrait_Red_Carpet_Berlinale_2017_(cropped).jpg) |
+| armie-hammer | 2 | Maximilian Bühn | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Armie_Hammer_Final_Portrait_Red_Carpet_Berlinale_2017.jpg) |
+| armie-hammer | 3 | Bex Walton  from London, England | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Armie_Hammer_on_the_Nocturnal_Animals_red_carpet_(30291248226)_(cropped).jpg) |
+| armie-hammer | 4 | Justin Steffman | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Armiehammer.jpg) |
+| brad-pitt | 1 | Harald Krichel | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Brad_Pitt-69924.jpg) |
+| brad-pitt | 2 | World Economic Forum  from Cologny, Switzerland | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:JoliePitt.png) |
+| brad-pitt | 3 | GabboT | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Moneyball_38_(6929854343).jpg) |
+| danny-devito | 1 | Gage Skidmore | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Danny_DeVito_by_Gage_Skidmore.jpg) |
+| danny-devito | 2 | Aawiosnaa | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:DannyDeVito_-camerimage.jpg) |
+| farrah-abraham | 1 | MTV International | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Farrah_Abraham_MTV_3.jpg) |
+| farrah-abraham | 2 | MTV International | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Farrah_Abraham_MTV_7.jpg) |
+| farrah-abraham | 3 | MTV International | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Farrah_Abraham_MTV_5.jpg) |
+| george-santos | 1 | U.S. House Office of Photography | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:George_Santos,_Official_Portrait,_118th_Congress_(cropped).jpg) |
+| george-santos | 2 | U.S. House Office of Photography | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:George_Santos_Official_Portrait_(close_cropped).jpg) |
+| idris-elba | 1 | Simon Dawson / No 10 Downing Street | OGL 3 | [Commons](https://commons.wikimedia.org/wiki/File:Idris_Elba_at_10_Downing_Street,_London,_on_9_September_2024_(cropped).jpg) |
+| idris-elba | 2 | LucaFazPhoto | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Idris_Elba_at_82nd_Venice_International_Film_Festival-1.jpg) |
+| idris-elba | 3 | Zafer | CC BY 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Idris_Elba_at_the_2025_Red_Sea_Film_Festival_20251210_(1).jpg) |
+| idris-elba | 4 | Zafer | CC BY 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Idris_Elba_at_the_2025_Red_Sea_Film_Festival_20251210_(2).jpg) |
+| jeff-bezos | 1 | Joseph Ayerle | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Young_Jeff_Bezos_one_week_before_launching_amazon.com_(fictional_AI_and_Photoshop-generated_Joseph_Ayerle_artwork).jpg) |
+| jo-brand | 1 | Rodw | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Jo_Brand_appearing_in_the_cabaret_tent_at_Glastonbury_Festival_2019_04.jpg) |
+| jo-brand | 2 | Mark Granier | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Jo_Brand_1994.jpg) |
+| jo-brand | 3 | Eden Project Communities | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Jo_Brand_at_The_Great_Big_Walk_2017_(cropped).jpg) |
+| joe-exotic | 1 | State of Florida | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Joe_Exotic_(Santa_Rose_County_Jail).png) |
+| joe-exotic | 2 | Santa Rosa County Jail | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Joe_Exotic_(Santa_Rose_County_Jail)_(crop).png) |
+| joe-rogan | 1 | Joerogan.png : *Original:  Rebecca Lai of Glasgow, Sweden  
+ | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Joerogan.jpg) |
+| joe-rogan | 2 | Unknown | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:JoeRogan-USMCPhoto-Cropped.PNG) |
+| joe-rogan | 3 | The White House | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:2026_Joe_Rogan_at_the_White_House_(cropped).jpg) |
+| joe-rogan | 4 | Steven Crowder | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Joe_Rogan.png) |
+| jon-gosselin | 1 | Jrcla2 | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Jon_Gosselin_profile.jpg) |
+| jon-gosselin | 2 | Kathy | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Jon_Gosselin.jpg) |
+| kato-kaelin | 1 | GabboT | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Kato_Kaelin_(cropped).jpg) |
+| kato-kaelin | 2 | GabboT | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Kato_Kaelin_(44310781461).jpg) |
+| kato-kaelin | 3 | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Kato_Kaelin_2011.jpg) |
+| kevin-federline | 1 | Gage Skidmore | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Kevin_Federline_by_Gage_Skidmore.jpg) |
+| lena-dunham | 1 | GabboT | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Lena_Dunham_at_the_2022_TIFF_Premiere_of_Catherine_Called_Birdy_(52359117603).jpg) |
+| lena-dunham | 2 | David Shankbone | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Lena_Dunham_2012_Shankbone.JPG) |
+| lena-dunham | 3 | David Shankbone | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Lena_Dunham_TFF_2012_Shankbone.JPG) |
+| lena-dunham | 4 | Elena Ternovaja | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Lena_Dunham_at_Berlinale_2024.jpg) |
+| martin-shkreli | 1 | House Committee on Oversight and Government Reform | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Mr._Shkreli_(cropped).jpg) |
+| martin-shkreli | 2 | House Committee on Oversight and Government Reform | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Martin_Shkreli_2016.jpg) |
+| michael-b-jordan | 1 | Gage Skidmore  from Peoria, AZ, United States of America | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Michael_B._Jordan_in_2017_by_Gage_Skidmore.jpg) |
+| mindy-kaling | 1 | Montclair Film | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Stephen_Colbert_and_Mindy_Kaling_(46863596135)_(cropped).jpg) |
+| mindy-kaling | 2 | Montclair Film | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Mindy_Kaling_(46863597125)_(cropped).jpg) |
+| mindy-kaling | 3 | Sassy | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Mindy_Kaling_Ocean%27s_8_premiere.png) |
+| mindy-kaling | 4 | watchwithkristin | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:MindyKaling.jpg) |
+| nicolas-cage | 1 | Kirk W | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Benjamin_Gates_(et_le_Livre_des_secrets).jpg) |
+| nicolas-cage | 2 | Cristian Bortes  from Cluj-Napoca, Romania | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Madame_Tussaud_-_London_(2327508456).jpg) |
+| paul-rudd | 1 | Dublin International Film Festival | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Paul_Rudd_at_DIFF_2026.jpg) |
+| pauly-shore | 1 | Super Festivals  from Ft. Lauderdale, USA | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pauly_Shore_Photo_Op_GalaxyCon_Raleigh_2024.jpg) |
+| pauly-shore | 2 | Super Festivals | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pauly_Shore_Photo_Op_GalaxyCon_Raleigh_2019.jpg) |
+| pauly-shore | 3 | Super Festivals  from Ft. Lauderdale, USA | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pauly_Shore_(48491064536).jpg) |
+| pauly-shore | 4 | Super Festivals  from Ft. Lauderdale, USA | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pauly_Shore_(48483877787).jpg) |
+| pete-davidson | 1 | LaVar James | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pete_Davidson_portrait_(cropped).png) |
+| pete-davidson | 2 | Greg2600 | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pete_Davidson_in_2015_(17073107891).jpg) |
+| pete-davidson | 3 | YouTube user  iwantmylauren | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pete_Davidson_in_2013.jpg) |
+| post-malone | 1 | Adam Bielawski | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Post_Malone_in_Chicago_2020_(cropped).jpg) |
+| post-malone | 2 | Toglenn | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Post_Malone_2018_(cropped).jpg) |
+| post-malone | 3 | Tore Sætre | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Post_Malone_Stavernfestivalen_2018_(203031).jpg) |
+| post-malone | 4 | The Come Up Show  from Canada | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Post_Malone_(28150750483).jpg) |
+| rachel-dolezal | 1 | Aaron Robert Kathman | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Rachel_Dolezal_at_Spokane_Rally_cropped_2.jpg) |
+| roseanne-barr | 1 | Roseanne_barr.jpg : Stand-Up Sucks, LLC 
+ derivative work:   | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Roseanne_barr_cropped.jpg) |
+| roseanne-barr | 2 | Jonathan Mauer | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Roseanne_Barr_Utah_Pride_Festival_2011.jpg) |
+| roseanne-barr | 3 | MikeAllen | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Roseanne_Hard_Rock_Cafe_modified.jpg) |
+| roseanne-barr | 4 | Jonathan Mauer | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Roseanne_Barr_Utah_Pride_Festival_Grand_Marshall_June_5_2011.jpg) |
+| rudy-giuliani | 1 | DonkeyHotey | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Rudy_Giuliani_-_Caricature_(48809188412).jpg) |
+| russell-brand | 1 | Unknown | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Russell_Brand_(54670634113)_(cropped).jpg) |
+| russell-brand | 2 | Gage Skidmore | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Russell_Brand_(54670647459)_(cropped).jpg) |
+| russell-brand | 3 | Xuthoria | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:AmericaFest_2025_-_Russell_Brand_05.jpg) |
+| russell-brand | 4 | Xuthoria | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:AmericaFest_2025_-_Russell_Brand_03.jpg) |
+| sam-bankman-fried | 1 | Cointelegraph | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Sam_Bankman-Fried_(cropped).png) |
+| sam-bankman-fried | 2 | Cointelegraph | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Sam_Bankman-Fried.png) |
+| sam-bankman-fried | 3 | MIT Bitcoin Club | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:MIT_Bitcoin_Expo_2022_-_Sam_Bankman.png) |
+| shia-labeouf | 1 | John Bauld  from Toronto, Canada | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Shia_LaBeouf_at_TIFF_2017_(36949725591)_(cropped).jpg) |
+| shia-labeouf | 2 | Shia_LaBeouf_-_Cannes.JPG :  Frantogian  
+ derivative work:  | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Shia_LaBeouf_(Cannes_Film_Festival_2012).jpg) |
+| shia-labeouf | 3 | Tabercil | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Shia_LaBeouf_at_the_TIFF_premiere_of_Man_Down.jpg) |
+| shia-labeouf | 4 | Frantogian | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Shia_LaBeouf_-_Cannes.JPG) |
+| spencer-pratt | 1 | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2009_(cropped).jpg) |
+| spencer-pratt | 2 | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2009.jpg) |
+| spencer-pratt | 3 | BigBrother Junkie | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2017.jpg) |
+| susan-boyle | 1 | Deborah Wilbanks | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Susan_Boyle_Nov_2009.jpg) |
+| susan-boyle | 2 | Wasforgas | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Susan_Boyle.jpg) |
+| tekashi-6ix9ine | 1 | Fabebk | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_(Daniel_Hernadez)_(cropped).jpg) |
+| tekashi-6ix9ine | 2 | Eljakim Video | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_June_2018_(cropped).jpg) |
+| tekashi-6ix9ine | 3 | Eljakim Video | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_June_2018_side_(cropped_x2).jpg) |
+| tila-tequila | 1 | This photograph was taken by   Glenn Francis   ( User:Toglen | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Tila_Tequila_2008_cropped.jpg) |
+| tila-tequila | 2 | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Tila_Tequila_2008.jpg) |
+| tila-tequila | 3 | Philip Nelson | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Tila_Tequila_2008_MTV_VMA.jpg) |
+| tila-tequila | 4 | Gina Hughes at  http://www.techiediva.com/ | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:TilaTequilaOct07.jpg) |
+| trisha-paytas | 1 | APK | CC BY 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Trisha_Paytas_at_the_2025_WorldPride_Music_Festival.jpg) |
+| whoopi-goldberg | 1 | Luke Rauscher | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Whoopi_Goldberg_(12329874804).jpg) |
+| whoopi-goldberg | 2 | David Shankbone  from USA | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Whoopi_Goldberg_by_David_Shankbone_(3026904000).jpg) |
