@@ -1,8 +1,28 @@
 # Roster headshot credits
 
-Photos for the Matchmaker roster profiles. All sourced from Wikimedia Commons / Wikipedia (downscaled to ~200px for avatar display). Each entry lists the author and license as recorded on Commons; follow the source link for the authoritative licensing terms.
+Photos for the Matchmaker roster profiles. All sourced from Wikimedia Commons / Wikipedia and optimized locally for avatar, carousel, and lightbox display. Older rows list author/license details as recorded on Commons; the 2026-06-27 refresh manifest links to the authoritative source pages for the newer image pass.
 
-Three profiles have no free image and render as initials only: Mama June, Angela Deem, Jenelle Evans.
+Five profiles render as initials only in the live widget: Mama June, Angela Deem, Jenelle Evans, Casey Anthony, and Joe Exotic. The first three have no verified free image; Casey Anthony and Joe Exotic have only mugshot/booking-style sources locally, which are intentionally withheld from the matchmaker UI until a neutral public portrait is available.
+
+## 2026-06-27 carousel audit note
+
+Second-pass audit tightened `GALLERY_IMG` for dating-profile presentation: exact duplicates, non-person images, crowd-dominant shots, and visually confusing multi-person slots were removed from the live carousel map. Some profiles remain sparse because the verified free-image pool is genuinely thin; those should stay sparse until a usable licensed source is found rather than being padded with bad filler.
+
+Follow-up quality sweep tightened the same standard around outfit/setting repetition: repeated same-event shots were reduced to the single strongest image, far-away panel/crowd shots were removed, and a few avatar choices were promoted from better existing local assets (`aubrey-oday/3.jpg`, `post-malone/2.jpg`). Wikimedia Commons thumbnail/file downloads were rate-limited during the sweep, so no new external assets were added in this pass.
+
+Quota-fill sweep restored the best available second-tier local alternates so most profiles with a real local image pool now show four to five total profile photos. The pass still refuses true duplicate crops, mugshot/booking-style images, no-subject stage-light filler, and confusing group shots where the subject is not clear; the remaining sparse rows need new verified free sources rather than lower-quality padding.
+
+New or overwritten live carousel assets from this audit:
+
+| Profile | Local path | Source |
+| --- | --- | --- |
+| Henry Cavill | `images/roster/henry-cavill/1.jpg` | [Commons](https://commons.wikimedia.org/wiki/File:Henry_Cavill_by_Gage_Skidmore.jpg) |
+| Henry Cavill | `images/roster/henry-cavill/2.jpg` | [Commons](https://commons.wikimedia.org/wiki/File:Henry_Cavill_(2009).jpg) |
+| Henry Cavill | `images/roster/henry-cavill/4.jpg` | [Commons](https://commons.wikimedia.org/wiki/File:Henry_Cavill_(48418057502).jpg) |
+| Chris Hemsworth | `images/roster/chris-hemsworth/4.jpg` | [Commons](https://commons.wikimedia.org/wiki/File:Chris_Hemsworth_2018.jpg) |
+| Ryan Gosling | `images/roster/ryan-gosling/2.jpg` | [Commons](https://commons.wikimedia.org/wiki/File:Ryan_Gosling_(16869617648).jpg) |
+| Paul Rudd | `images/roster/paul-rudd/1.jpg` | [Commons](https://commons.wikimedia.org/wiki/File:Paul_Rudd_(cropped)_2.jpg) |
+| Aubrey O'Day | `images/roster/aubrey-oday/3.jpg` | [Commons](https://commons.wikimedia.org/wiki/File:Aubrey_O'Day_leather_jacket.png) |
 
 | Profile | Author | License | Source |
 | --- | --- | --- | --- |
@@ -79,6 +99,8 @@ Three profiles have no free image and render as initials only: Mama June, Angela
 | Kato Kaelin | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Kato_Kaelin_2011.jpg) |
 | Tekashi 6ix9ine | Eljakim Video | CC BY 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_June_2018_side_(cropped_x2).jpg) |
 | Joe Exotic | State of Florida | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Joe_Exotic_(Santa_Rose_County_Jail).png) |
+| Aubrey O'Day | See Commons | See Commons | [Commons](https://commons.wikimedia.org/wiki/File:Aubrey_O%27Day.jpg) |
+| Rosie O'Donnell | See Commons | See Commons | [Commons](https://commons.wikimedia.org/wiki/File:Rosie_O%27Donnell_by_David_Shankbone.jpg) |
 
 ## Carousel photos (additional)
 
@@ -169,9 +191,10 @@ Extra verified photos shown in each profile's carousel, sourced from Wikimedia C
  derivative work:  | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Shia_LaBeouf_(Cannes_Film_Festival_2012).jpg) |
 | shia-labeouf | 3 | Tabercil | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Shia_LaBeouf_at_the_TIFF_premiere_of_Man_Down.jpg) |
 | shia-labeouf | 4 | Frantogian | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Shia_LaBeouf_-_Cannes.JPG) |
-| spencer-pratt | 1 | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2009_(cropped).jpg) |
-| spencer-pratt | 2 | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2009.jpg) |
-| spencer-pratt | 3 | BigBrother Junkie | Public domain | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2017.jpg) |
+| spencer-pratt | 1 | gamerscoreblog | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pratts_and_Chris.jpg) |
+| spencer-pratt | 2 | Philip Nelson | CC BY-SA 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Pratts_and_Philip_Nelson.jpg) |
+| spencer-pratt | 3 | BigBrother Junkie | Public domain mark; Commons deletion request pending | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2017.jpg) |
+| spencer-pratt | 4 | Toglenn | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2009.jpg) |
 | susan-boyle | 1 | Deborah Wilbanks | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Susan_Boyle_Nov_2009.jpg) |
 | susan-boyle | 2 | Wasforgas | CC BY-SA 3.0 | [Commons](https://commons.wikimedia.org/wiki/File:Susan_Boyle.jpg) |
 | tekashi-6ix9ine | 1 | Fabebk | CC BY-SA 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_(Daniel_Hernadez)_(cropped).jpg) |
@@ -184,3 +207,217 @@ Extra verified photos shown in each profile's carousel, sourced from Wikimedia C
 | trisha-paytas | 1 | APK | CC BY 4.0 | [Commons](https://commons.wikimedia.org/wiki/File:Trisha_Paytas_at_the_2025_WorldPride_Music_Festival.jpg) |
 | whoopi-goldberg | 1 | Luke Rauscher | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Whoopi_Goldberg_(12329874804).jpg) |
 | whoopi-goldberg | 2 | David Shankbone  from USA | CC BY 2.0 | [Commons](https://commons.wikimedia.org/wiki/File:Whoopi_Goldberg_by_David_Shankbone_(3026904000).jpg) |
+
+## 2026-06-27 profile image refresh
+
+This refresh adds or replaces the live Roster Profile widget images. Author and license details are authoritative on the linked Commons file page; this section supersedes older carousel rows for the same profile/slot where they differ.
+
+| Kind | Profile | # | Source |
+| --- | --- | --- | --- |
+| gallery | adele | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Adele_-_Live_2016,_Glasgow_SSE_Hydro_03.jpg) |
+| gallery | adele | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Adele_-_Live_2016,_Glasgow_SSE_Hydro_01.jpg) |
+| gallery | adele | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Adele_'Adele_Live_2016'_-_Nashville_DSC04885_(29781175243).jpg) |
+| gallery | adele | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Adele-in-Munich_20240814_Hello.jpg) |
+| gallery | amber-heard | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Amber_Heard_(43723454772).jpg) |
+| gallery | amber-heard | 2 | [Commons](https://commons.wikimedia.org/wiki/File:AmberHeardTIFFSept10.jpg) |
+| gallery | amber-heard | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Amber_Heard_2011.jpg) |
+| gallery | amber-heard | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Jason_Momoa_&_Amber_Heard_(43771577791).jpg) |
+| gallery | anna-sorokin | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Anna_Sorokin,_2022.jpg) |
+| gallery | anne-hathaway | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Anne_Hathaway-68408.jpg) |
+| gallery | anne-hathaway | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Anne_Hathaway_at_The_Apprentice_in_NYC_01.jpg) |
+| gallery | anne-hathaway | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Anne_Hathaway_at_The_Apprentice_in_NYC_03.jpg) |
+| gallery | anne-hathaway | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Anne_Hathaway_2011.jpg) |
+| gallery | aubrey-oday | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Aubrey_O'Day_%40_Paris_Hilton%E2%80%99s_30th_Birthday.jpg) |
+| gallery | aubrey-oday | 2 | [Commons](https://commons.wikimedia.org/wiki/File:AubreyO'DayFeb2011.jpg) |
+| gallery | aubrey-oday | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Three_members_of_Danity_Kane.jpg) |
+| gallery | azealia-banks | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Azealia_Banks_at_the_O2_Brixton_Academy_-_04.jpg) |
+| gallery | azealia-banks | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Azealia_Banks_at_the_O2_Brixton_Academy_-_02.jpg) |
+| gallery | azealia-banks | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Azealia_Banks_at_the_O2_Brixton_Academy_-_08.jpg) |
+| gallery | azealia-banks | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Azealia_Banks_at_the_O2_Brixton_Academy_-_10.jpg) |
+| gallery | bella-thorne | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Bella_Thorne_2022.jpg) |
+| gallery | bella-thorne | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Bella_Thorne_2014.jpg) |
+| gallery | bella-thorne | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Bella_Thorne_in_May_2014.jpg) |
+| gallery | bella-thorne | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Bella_Thorne_0125_(6477800815).jpg) |
+| gallery | ben-shapiro | 1 | [Commons](https://commons.wikimedia.org/wiki/File:John_Faso_and_Ben_Shapiro.jpg) |
+| gallery | ben-shapiro | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Louie_Gohmert_and_Ben_Shapiro.jpg) |
+| gallery | ben-shapiro | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Nancy_Mace_and_Ben_Shapiro_(2025).jpg) |
+| gallery | ben-shapiro | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Sally_Kohn_&_Ben_Shapiro_(27699235490).jpg) |
+| gallery | billy-mcfarland | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Web_Summit_2016_-_MusicNotes_-_Nov_10_-_Day_3_DSC0839_(30810709661).jpg) |
+| gallery | brad-pitt | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Brad_Pitt-69924.jpg) |
+| gallery | brad-pitt | 2 | [Commons](https://commons.wikimedia.org/wiki/File:JoliePitt.png) |
+| gallery | brad-pitt | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Moneyball_38_(6929854343).jpg) |
+| gallery | brad-pitt | 4 | [Commons](https://commons.wikimedia.org/wiki/File:War_Machine_Japan_Premiere_Red_Carpet-_Brad_Pitt_(38393313251)_(cropped).jpg) |
+| gallery | brad-pitt | 5 | [Commons](https://commons.wikimedia.org/wiki/File:PIA23278-Mars-InSightLanderTestSandbox-ActorBradPitt-20190906.jpg) |
+| gallery | casey-anthony | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Casey_Anthony_Mugshot.jpeg) |
+| gallery | casey-anthony | 2 | [Commons](https://commons.wikimedia.org/wiki/File:New_Casey_Anthony_mug_shot.gif) |
+| gallery | chris-hemsworth | 1 | [Commons](https://commons.wikimedia.org/wiki/File:CMiks_-2015_01_15_(20th,_Hollywood_Palladium)_CCMA_Chris_Hemsworth.jpg) |
+| gallery | chris-hemsworth | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Chris_Hemsworth_Forza_Motorsport_Xbox.jpg) |
+| gallery | chris-hemsworth | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Chris_Hemsworth_by_Gage_Skidmore_3.jpg) |
+| gallery | danny-devito | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Danny_DeVito_by_Gage_Skidmore.jpg) |
+| gallery | danny-devito | 2 | [Commons](https://commons.wikimedia.org/wiki/File:DannyDeVito_-camerimage.jpg) |
+| gallery | danny-devito | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Danny_DeVito_early_1980s.jpg) |
+| gallery | danny-devito | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Danny_DeVito_in_2018.png) |
+| gallery | danny-devito | 5 | [Commons](https://commons.wikimedia.org/wiki/File:The_One_And_Only_Ivan_Full_Cast_Interview.jpg) |
+| gallery | dev-patel | 1 | [Commons](https://commons.wikimedia.org/wiki/File:DevPatel08.jpg) |
+| gallery | dev-patel | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Dev_Patel_(31091427671).jpg) |
+| gallery | dev-patel | 3 | [Commons](https://commons.wikimedia.org/wiki/File:SXSW_2024_-_Dev_Patel_2.jpg) |
+| gallery | dev-patel | 4 | [Commons](https://commons.wikimedia.org/wiki/File:SXSW_2024_-_Dev_Patel_4.jpg) |
+| gallery | drake | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Drake_-_4972204415.jpg) |
+| gallery | drake | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Drake_Bluesfest_(cropped).jpg) |
+| gallery | drake | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Drake_Aug_25th_2018_at_MSG.jpg) |
+| gallery | drake | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Drake_in_2017.jpg) |
+| gallery | elizabeth-holmes | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Theranos_Chairman,_CEO_and_Founder_Elizabeth_Holmes_speaks_onstage_at_TechCrunch_Disrupt_at_Pier_48_on_September_8,_2014_(14996937900).jpg) |
+| gallery | elizabeth-holmes | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Elizabeth_Holmes_at_a_Nuclear_nonproliferation_discussion_in_2013_-_130417-D-NI589-107.jpg) |
+| gallery | elizabeth-holmes | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Ashton_B._Carter,_William_Perry,_and_Elizabeth_Holmes_-_130417-D-NI589-215_(8660144172).jpg) |
+| gallery | elizabeth-holmes | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Theranos_Chairman,_CEO_and_Founder_Elizabeth_Holmes_(L)_and_TechCrunch_Writer_and_Moderator_Jonathan_Shieber_speak_onstage_at_TechCrunch_Disrupt_at_Pier_48_on_September_8,_2014_(14995779320).jpg) |
+| gallery | elon-musk | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Elon_Musk_at_a_Press_Conference.jpg) |
+| gallery | elon-musk | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Elon_Musk_2021.jpg) |
+| gallery | elon-musk | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Speaker_Johnson_and_Elon_Musk_2024.jpg) |
+| gallery | elon-musk | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Elon_Musk_-_March_28,_2024.jpg) |
+| gallery | emma-stone | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Stone_at_the_2024_New_York_Film_Festival_1.jpg) |
+| gallery | emma-stone | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Stone_and_Yorgos_Lanthimos,_Cannes_Film_Festival_2024.jpg) |
+| gallery | emma-stone | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Stone_Deauville_2011.jpg) |
+| gallery | emma-stone | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Stone_after_Kinds_of_Kindness_press_conference_at_2024_Cannes_Film_Festival_1.jpg) |
+| gallery | farrah-abraham | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Farrah_Abraham_MTV_3.jpg) |
+| gallery | farrah-abraham | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Farrah_Abraham_MTV_4.jpg) |
+| gallery | gal-gadot | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Gal_Gadot_2017_interview3.jpg) |
+| gallery | gal-gadot | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Gal_Gadot_2017_interview5.jpg) |
+| gallery | gal-gadot | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Gal_Gadot_at_the_2018_Comic-Con_International_13_(cropped).jpg) |
+| gallery | gal-gadot | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Gal_Gadot_2016_lighting_corrected.jpg) |
+| gallery | george-santos | 1 | [Commons](https://commons.wikimedia.org/wiki/File:George_Santos,_Official_Portrait,_118th_Congress_(cropped).jpg) |
+| gallery | george-santos | 2 | [Commons](https://commons.wikimedia.org/wiki/File:George_Santos_Official_Portrait_(close_cropped).jpg) |
+| gallery | george-santos | 3 | [Commons](https://commons.wikimedia.org/wiki/File:George_Santos_(NY-03).jpg) |
+| gallery | grimes | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Grimes_at_SxSW_2012.jpg) |
+| gallery | grimes | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Grimes,_Lollapalooza_2016,_Chicago_(29078521595).jpg) |
+| gallery | grimes | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Grimes_Governors_Ball_2014_05.png) |
+| gallery | grimes | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Grimes_2012_live_by_Philip_Nguyen.jpg) |
+| gallery | henry-cavill | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Henry_Cavill_&_Anya_Chalotra_(48418064197).jpg) |
+| gallery | henry-cavill | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Henry_Cavill_(48417906016).jpg) |
+| gallery | henry-cavill | 3 | [Commons](https://commons.wikimedia.org/wiki/File:SDCC_2015_-_Henry_Cavill_(19509841918).jpg) |
+| gallery | jack-black | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Goosebumps,_Jack_Black,_SDCC_2014_01.jpg) |
+| gallery | jack-black | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Goosebumps,_Jack_Black,_Monsters,_SDCC_2014-2.jpg) |
+| gallery | jack-black | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Awkwafina,_Jack_Black_&_Karen_Gillan_in_2019.jpg) |
+| gallery | jack-black | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Jack_Black_at_KCAs_2024.jpg) |
+| gallery | james-corden | 3 | [Commons](https://commons.wikimedia.org/wiki/File:James_Corden_and_Daisy_Ridley_2018.jpg) |
+| gallery | james-corden | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Lucian_Grainge,_James_Corden_and_Irving_Azoff_at_State_of_the_Entertainment_Industry_2018.jpg) |
+| gallery | jeff-bezos | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Jeffrey_P._Bezos_1986.jpg) |
+| gallery | jeff-bezos | 3 | [Commons](https://commons.wikimedia.org/wiki/File:%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%82%D8%B1%D9%82%D8%A7%D9%88%D9%8A_%D9%85%D8%B9_%D8%AC%D9%8A%D9%81_%D8%A8%D9%8A%D8%B2%D9%88%D8%B3.jpg) |
+| gallery | jennifer-lawrence | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Jennifer_Lawrence_at_214._Wetten,_dass.._show_in_Graz,_8._Nov._2014_02.jpg) |
+| gallery | jennifer-lawrence | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Jennifer_Lawrence_SDCC_2015_X-Men.jpg) |
+| gallery | jennifer-lawrence | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Jennifer_Lawrence_-_TIFF_2012.jpg) |
+| gallery | jennifer-lawrence | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Jennifer_Lawrence_Tulane_University_2018_(02).jpg) |
+| gallery | jo-brand | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Jo_Brand_1994.jpg) |
+| gallery | jo-brand | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Jo_Brand_at_The_Great_Big_Walk_2017_(cropped).jpg) |
+| gallery | jo-brand | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Jo_Brand_appearing_in_the_cabaret_tent_at_Glastonbury_Festival_2019_03.jpg) |
+| gallery | johnny-depp | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Johnny_Depp_Cannes_2011.jpg) |
+| gallery | johnny-depp | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Johnny_Depp_-_Dark_Shadows_Premier_-_London.jpg) |
+| gallery | johnny-depp | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Johnny_Depp_Glastonbury_2017_1.jpg) |
+| gallery | johnny-depp | 4 | [Commons](https://commons.wikimedia.org/wiki/File:HollywoodVampsSSe200618-111_(42513695020).jpg) |
+| gallery | jon-gosselin | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Jon_Gosselin.jpg) |
+| gallery | jon-gosselin | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Jon_&_Kate_~_minus_the_eight%21.jpg) |
+| gallery | jonah-hill | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Cast_of_21_Jump_Street_(March_2012).jpg) |
+| gallery | jonah-hill | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Jonah_Hill_TIFF_2011.jpg) |
+| gallery | jonah-hill | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Moneyball_21_(6783735346).jpg) |
+| gallery | jonah-hill | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Jonah_Hill-5060.jpg) |
+| gallery | kevin-federline | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Kevin_Federline.jpg) |
+| gallery | kevin-federline | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Longkev.jpg) |
+| gallery | kim-kardashian | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Kim_Kardashian_Beverly_Hils_2015.jpg) |
+| gallery | kim-kardashian | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Kim_Kardashian_2018_5.png) |
+| gallery | kim-kardashian | 3 | [Commons](https://commons.wikimedia.org/wiki/File:President_Trump_Meets_with_Sentencing_Commutation_Recipients_(49624188912)_(cropped).jpg) |
+| gallery | kim-kardashian | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Kim_Kardashian_2,_2012.jpg) |
+| gallery | lizzo | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Lizzo_performing_in_the_Olympia_Dublin_in_2019.jpg) |
+| gallery | lizzo | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Lizzo_with_an_Irish_flag_in_the_Olympia_Dublin_in_2019.jpg) |
+| gallery | lizzo | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Lizzo_and_dancers_on_stage_in_The_Olympia_Dublin_in_2019.jpg) |
+| gallery | lizzo | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Lizzo_Madison_Square_Garden_2022.jpg) |
+| gallery | margot-robbie | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Margot_Robbie_(53012385004).jpg) |
+| gallery | margot-robbie | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Margot_Robbie_at_Somerset_House_in_2013_(cropped).jpg) |
+| gallery | margot-robbie | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Margot_Robbie_at_the_Paris_premiere_of_%22Wuthering_Heights%22.jpg) |
+| gallery | margot-robbie | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Margot_Robbie_&_Jared_Leto_in_2016_(28568544536).jpg) |
+| gallery | mark-zuckerberg | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Mark_Zuckerberg_f8_Keynote_(2696181147).jpg) |
+| gallery | mark-zuckerberg | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Mark_Zuckerberg_announces_new_Facebook_mobile_platform_(5143596932).jpg) |
+| gallery | mark-zuckerberg | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Mark_Zuckerberg_F8_2018_Keynote_(41118885014).jpg) |
+| gallery | martin-shkreli | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Martin_Shkreli_House_Committee_on_Oversight_and_Government_Reform_2016.jpg) |
+| gallery | martin-shkreli | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Mr._Shkreli_arrives_to_hearing.jpg) |
+| gallery | martin-shkreli | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Mr._Shkreli.jpg) |
+| gallery | martin-shkreli | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Martin_Shkreli_2016.jpg) |
+| gallery | michael-b-jordan | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Michael_B._Jordan_in_2017_by_Gage_Skidmore.jpg) |
+| gallery | michael-b-jordan | 2 | [Commons](https://commons.wikimedia.org/wiki/File:2018-05-12-_Cannes-L'acteur_Michael_B._Jordan-2721_(42075892224).jpg) |
+| gallery | michael-b-jordan | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Michael_B._Jordan_Cannes_2018.jpg) |
+| gallery | michael-b-jordan | 4 | [Commons](https://commons.wikimedia.org/wiki/File:SDCC_2015_-_Kate_Mara_&_Michael_B._Jordan_(19134211933).jpg) |
+| gallery | mila-kunis | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Mila_Kunis_Bad_Moms_2_(2018).jpg) |
+| gallery | mila-kunis | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Mila_Kunis_2018.jpg) |
+| gallery | mila-kunis | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Mila_Kunis_at_Third_Person_premiere_2013.jpg) |
+| gallery | mila-kunis | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Mila_Kunis_Toronto_International_Film_Festival_2025_4.jpg) |
+| gallery | nicolas-cage | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Nicolas_Cage_Deauville_2013_2.jpg) |
+| gallery | nicolas-cage | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Nicolas_Cage_September_2013.jpg) |
+| gallery | nicolas-cage | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Nicolas_Cage_2014_(cropped).jpg) |
+| gallery | nicolas-cage | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Nicolas_Cage_at_TIFF_2022.jpg) |
+| gallery | paul-rudd | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Paul_Rudd_at_DIFF_2026.jpg) |
+| gallery | paul-rudd | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Cast_of_Power_Ballad_at_DIFF_2026.jpg) |
+| gallery | paul-rudd | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Paul_Rudd,_Andres_Useche.jpg) |
+| gallery | pete-davidson | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Pete_Davidson_in_2015_(17073107891).jpg) |
+| gallery | pete-davidson | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Pete_Davidson_in_2013.jpg) |
+| gallery | pete-davidson | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Pete_Davidson_201802.png) |
+| gallery | rachel-dolezal | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Rachel_Dolezal_speaking_at_a_rally_in_Spokane.jpg) |
+| gallery | rachel-dolezal | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Rachel_Dolezal_at_the_MLK_March_in_Spokane_2015.jpg) |
+| gallery | rebel-wilson | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Rebel_Wilson.jpg) |
+| gallery | rebel-wilson | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Rebel_Wilson_2019.png) |
+| gallery | rebel-wilson | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Rebel_Wilson_2.jpg) |
+| gallery | rebel-wilson | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Rebel_Wilson_4.jpg) |
+| gallery | rosie-odonnell | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Rosie_O'Donnell,_Laurie_Metcalf.jpg) |
+| gallery | rosie-odonnell | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Rosie_O'Donnell_2.jpg) |
+| gallery | rosie-odonnell | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Rosie_O'Donnell_(211276376).jpg) |
+| gallery | rudy-giuliani | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Rudy_Giuliani_SDSU.jpg) |
+| gallery | rudy-giuliani | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Rudy_Giuliani_at_the_Iowa_State_Fair_(1131813111).jpg) |
+| gallery | rudy-giuliani | 3 | [Commons](https://commons.wikimedia.org/wiki/File:190911_DHS_Patriot_Day_Ceremonies_(48723965971).jpg) |
+| gallery | rudy-giuliani | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Jenna_Ellis_and_Rudy_Giuliani.png) |
+| gallery | ryan-gosling | 1 | [Commons](https://commons.wikimedia.org/wiki/File:%22First_Man%22_Premiere_at_NASM_(NHQ201810040121).jpg) |
+| gallery | ryan-gosling | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Ryan_Gosling_-_Dead_Man's_Bones_4.jpg) |
+| gallery | ryan-gosling | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Ryan_Gosling_Cannes_2011.jpg) |
+| gallery | sam-bankman-fried | 3 | [Commons](https://commons.wikimedia.org/wiki/File:MIT_Bitcoin_Expo_2022_-_Sam_Bankman.png) |
+| gallery | sam-bankman-fried | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Sam_Bankman-Fried_at_MDC_Brooklyn_(cropped).jpg) |
+| gallery | scarlett-johansson | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Scarlett_Johansson_in_Kuwait_01b.jpg) |
+| gallery | scarlett-johansson | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Ghost_In_The_Shell_World_Premiere_Red_Carpet-Scarlett_Johansson_(37147912300).jpg) |
+| gallery | scarlett-johansson | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Scarlett_Johansson_Oscars_2020.jpg) |
+| gallery | scarlett-johansson | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Scarlett_Johansson_with_soldiers.jpg) |
+| gallery | seth-rogen | 1 | [Commons](https://commons.wikimedia.org/wiki/File:SethRogen_7_2007.JPG) |
+| gallery | seth-rogen | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Seth_Rogen_(28558734586).jpg) |
+| gallery | seth-rogen | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Seth_Rogen_-_Good_Fortune_LA_Premiere.jpg) |
+| gallery | seth-rogen | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Cast_of_The_Studio_at_BAFTA_2026.jpg) |
+| gallery | spencer-pratt | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Pratts_and_Chris.jpg) |
+| gallery | spencer-pratt | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Pratts_and_Philip_Nelson.jpg) |
+| gallery | spencer-pratt | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Spencer_Pratt_2017.jpg) |
+| gallery | steve-buscemi | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Steve_Buscemi_2024_Sopranos_anniversary.png) |
+| gallery | steve-buscemi | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Ed_Renehan_and_Steve_Buscemi.jpg) |
+| gallery | steve-buscemi | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Buscemi_Moby_Reed.jpg) |
+| gallery | steve-buscemi | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Flickr_-_Siebbi_-_Steve_Buscemi_surrounded.jpg) |
+| gallery | susan-boyle | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Susan_Boyle.jpg) |
+| gallery | susan-boyle | 2 | [Commons](https://commons.wikimedia.org/wiki/File:SusanBoyle_2.jpg) |
+| gallery | sydney-sweeney | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Sydney_Sweeney_at_Berlinale_2023.jpg) |
+| gallery | sydney-sweeney | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Sydney_Sweeney_at_the_2024_Toronto_International_Film_Festival_02.jpg) |
+| gallery | sydney-sweeney | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Sydney_Sweeney_at_the_2024_Toronto_International_Film_Festival_05.jpg) |
+| gallery | sydney-sweeney | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Ana_de_Armas_and_Sydney_Sweeney_at_the_2024_Toronto_International_Film_Festival_04.jpg) |
+| gallery | taylor-swift | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Cierre_del_Eras_Tour_de_Taylor_Swift,_Buenos_Aires_noche_1.jpg) |
+| gallery | taylor-swift | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Taylor_Swift_at_the_Golden_Globes_2024_(Enhanced,_cropped)_1.jpg) |
+| gallery | taylor-swift | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Taylor_Swift_2_-_2019_by_Glenn_Francis.jpg) |
+| gallery | taylor-swift | 4 | [Commons](https://commons.wikimedia.org/wiki/File:191125_Taylor_Swift_at_the_2019_American_Music_Awards.png) |
+| gallery | tekashi-6ix9ine | 1 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_(Daniel_Hernadez)_(cropped).jpg) |
+| gallery | tekashi-6ix9ine | 2 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_June_2018_(cropped).jpg) |
+| gallery | tekashi-6ix9ine | 3 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_June_2018_side_(cropped_x2).jpg) |
+| gallery | tekashi-6ix9ine | 4 | [Commons](https://commons.wikimedia.org/wiki/File:6ix9ine_-_Oslo_(Sentrum_Scene).jpg) |
+| gallery | tonya-harding | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Tonya_harding_mac_club_1994_by_andrew_parodi.jpeg) |
+| gallery | tonya-harding | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Tonya_Harding_Olympic_practice_at_Clackamas_Town_Center_1994.jpg) |
+| gallery | tonya-harding | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Tonya_Harding_at_MAC_Club_reception_in_1994_by_Andrew_Parodi.jpeg) |
+| gallery | tonya-harding | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Tonya_harding_return_from_norway_4.jpg) |
+| gallery | trisha-paytas | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Trisha_Paytas_2025_WorldPride_Music_Festival.jpg) |
+| gallery | whoopi-goldberg | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Whoopi_Goldberg_by_David_Shankbone_(3026904000).jpg) |
+| gallery | whoopi-goldberg | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Whoopi_Goldberg_in_2024_(cropped).jpg) |
+| gallery | whoopi-goldberg | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Whoopi_Goldberg_(2011).jpg) |
+| gallery | zendaya | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Zendaya_Full_Length_-_2019_by_Glenn_Francis.jpg) |
+| gallery | zendaya | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Zendaya_promoting_Smallfoot_for_MTV_international.png) |
+| gallery | zendaya | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Zendaya_Paris_2025.jpg) |
+| gallery | zendaya | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Zendaya_NMACC_01.jpg) |
+| lead | aubrey-oday | - | [Commons](https://commons.wikimedia.org/wiki/File:Aubrey_O'Day.jpg) |
+| lead | rosie-odonnell | - | [Commons](https://commons.wikimedia.org/wiki/File:Rosie_O'Donnell_by_David_Shankbone.jpg) |
+
+Sparse-source note: Mama June, Angela Deem, Jenelle Evans, Nadya Suleman, Casey Anthony, Joe Exotic, and a few low-coverage reality/notorious figures remain intentionally sparse where verified free person photos were not available or not suitable for dating-profile presentation.
