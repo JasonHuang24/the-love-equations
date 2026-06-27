@@ -64,7 +64,7 @@
         <div class="mm-step-head"><span class="mm-step-n">2</span><span class="mm-step-title">Your standard</span><button class="mm-step-reset" type="button" data-reset="2" title="Reset this step to defaults"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button></div>
         <div class="mm-step-sub" id="step2-sub">Pick the hierarchy that fits how you actually weigh a partner. Its factors become the breakdown each match is scored on. (Your <a href="hierarchy.html">hierarchy</a> page stays untouched.)</div>
         <label class="mm-simple-toggle" for="simple-toggle"><input type="checkbox" id="simple-toggle"><span class="mm-simple-main"><strong>Skip the nuance &mdash; just compare us head-to-head.</strong> Drops the hierarchy and the desire quiz below; ranks every candidate by your <strong>Step&nbsp;1</strong> priority &mdash; <em>Looks</em> or <em>SMV</em> &mdash; while still weighing the other (the toggle is a priority, not a blinder).</span></label>
-        <div class="mm-simple-note" id="simple-note">Head-to-head is on &mdash; the hierarchy and the desire quiz are skipped. Each candidate gets a <strong>desire stamp</strong> (your priority blend &mdash; Step&nbsp;1 axis leads, the other still counts) and a <strong>pairing %</strong> (odds they accept you: a status gap <em>plus</em> a looks-attraction markdown), sex &amp; commitment aware. The top 10 are ranked by <em>desire &times; odds</em>, with a button to show everyone. Change an input and the list clears &mdash; hit Find for a fresh set. Untick to bring back the full gated breakdown.</div>
+        <div class="mm-simple-note" id="simple-note">Head-to-head is on &mdash; the hierarchy and the desire quiz are skipped. Each candidate gets a <strong>desire stamp</strong> (your priority blend &mdash; Step&nbsp;1 axis leads, the other still counts) and a <strong>pairing %</strong> (odds they accept you: an SMV overall-value gap <em>plus</em> a looks-attraction markdown), sex-aware &middot; relationship-mode. The top 10 are ranked by <em>desire &times; odds</em>, with a button to show everyone. Change an input and the list clears &mdash; hit Find for a fresh set. Untick to bring back the full gated breakdown.</div>
         <div class="mm-pyr-row" id="pyr-row"></div>
         <div class="mm-grade-host" id="grade-host"></div>
       </div>
@@ -364,6 +364,10 @@
     if (g >= -3.0) return SIMPLE_BANDS[3];
     return SIMPLE_BANDS[4];
   }
+  // rank discount by desire tier — at/above your level counts full; below-your-level decays so a
+  // near-certain downgrade (high %) can't top a real match. Penalty only — no boost at the top
+  // (would re-tilt toward improbable reaches, which the desire×odds rank exists to avoid).
+  const DESIRE_W = { excellent: 1, strong: 1, fair: 0.7, weak: 0.45, hardno: 0.25 };
   // ── DESIRABILITY blend — the Looks/SMV toggle is a PRIORITY (what you WANT), not a blinder. Both
   //    axes count; the chosen one leads 70/30. Drives the stamp + the "desire" half of the rank. ──
   const PRIORITY_W = 0.7;   // leading axis gets 70%, the other 30%
@@ -381,11 +385,14 @@
   //    NOTE: this is the Attention Market acceptance model, NOT the Spiderman Effect (that one is the
   //    subjective-perception lens — two people rating the same person differently). Provisional. ──
   const ATTAIN_TOL = { m: { fling: 3.0, rel: 1.5 }, f: { fling: 1.0, rel: 2.0 } };
-  const LOOKS_PEN = 1.5, LOOKS_BON = 0.5;   // looks deficit penalizes hard; a surplus lifts mildly
-  let simpleStakes = 'rel';   // simple-mode commitment context — defaults to relationship
+  // looks-attraction markdown, by CANDIDATE sex (who's judging your looks): a male candidate weighs a
+  // female user's looks harder than vice-versa (men ~0.40 of SMV is looks vs women ~0.28), so PEN is
+  // steeper for male candidates. Deficit penalizes hard; a surplus lifts mildly. Provisional / Estimate.
+  const LOOKS_PEN = { f: 1.5, m: 1.8 }, LOOKS_BON = { f: 0.5, m: 0.7 };
+  let simpleStakes = 'rel';   // odds context — fixed to relationship (no fling toggle yet)
   function pairProb(c, uLooks, uSmv, candSex){
     const smvGap = c.smv - uSmv, looksGap = c.looks - uLooks;
-    const looksAdj = looksGap > 0 ? LOOKS_PEN*looksGap : LOOKS_BON*looksGap;   // >0 you're below (markdown); <0 above (lift)
+    const looksAdj = looksGap > 0 ? LOOKS_PEN[candSex]*looksGap : LOOKS_BON[candSex]*looksGap;   // >0 you're below (markdown); <0 above (lift)
     const gap = smvGap + looksAdj;                        // >0 → they're effectively higher, dating down to you (the gate)
     const T = ATTAIN_TOL[candSex][simpleStakes];
     return clamp(Math.round(100 / (1 + Math.exp(0.9 * (gap - T)))), 2, 98);   // never a dead-cert 100% or flat 0%
@@ -898,14 +905,17 @@
     const uLooks = userLooks(), uSmv = userSMV(), uV = effVal(uLooks, uSmv), want = targetSex();
     const list = ROSTER.filter(c => c.g===want).map(c => {
       const cV = effVal(c.looks, c.smv), g = simpleGap(cV, uV);       // their desirability blend, curved gap for the stamp
-      const p = pairProb(c, uLooks, uSmv, want);                      // odds: status gate + looks-attraction markdown
-      return { c, cV, g, v: simpleVerdict(g), p, rank: cV * (p/100) };// rank = desirability × P(attain)
+      const v = simpleVerdict(g);
+      const p = pairProb(c, uLooks, uSmv, want);                      // odds: SMV gate + looks-attraction markdown
+      // rank = desirability × P(attain), with a below-your-level discount so a near-certain downgrade
+      // ("Hard no", high %) can't out-rank a real match. At/above your level (Excellent/Strong) = full weight.
+      return { c, cV, g, v, p, rank: cV * (p/100) * DESIRE_W[v.key] };
     }).sort((a,b)=> b.rank - a.rank || b.cV - a.cV);
     return { list, uV };
   }
   const showingResults = () => { const h=document.getElementById('results-host'); return !!(h && h.children.length); };
   const pCls = p => p>=70 ? 'p-hi' : p>=40 ? 'p-mid' : 'p-lo';
-  const SIMPLE_LEGEND = `<div class="mm-sledger"><span class="mm-tier-badge is-excellent">Excellent</span> best-case landing <span class="mm-tier-badge is-strong">Strong</span> a solid match <span class="mm-tier-badge is-fair">Fair</span> below your level <span class="mm-tier-badge is-weak">Weak</span> well below <span class="mm-tier-badge is-hardno">Hard no</span> far below</div><div class="mm-sledger-note"><strong>Stamp</strong> = how good they'd be for you (your priority blend). <strong>%</strong> = your odds of actually pairing &mdash; a <strong>status (SMV) gate</strong> plus a <strong>looks-attraction markdown</strong>, sex- &amp; commitment-aware, on the <a href="frameworks.html#attention-market">Attention Market</a> tolerances. Ranked by the two together &mdash; your best <em>realistic</em> catch first.</div>`;
+  const SIMPLE_LEGEND = `<div class="mm-sledger"><span class="mm-tier-badge is-excellent">Excellent</span> best-case landing <span class="mm-tier-badge is-strong">Strong</span> a solid match <span class="mm-tier-badge is-fair">Fair</span> below your level <span class="mm-tier-badge is-weak">Weak</span> well below <span class="mm-tier-badge is-hardno">Hard no</span> far below</div><div class="mm-sledger-note"><strong>Stamp</strong> = how good they'd be for you (your priority blend). <strong>%</strong> = your odds of actually pairing &mdash; an <strong>SMV (overall-value) gate</strong> plus a <strong>looks-attraction markdown</strong>, sex-aware &middot; relationship-mode, on the <a href="frameworks.html#attention-market">Attention Market</a> tolerances. Ranked by the two together &mdash; your best <em>realistic</em> catch first.</div>`;
   // the per-row expandable detail: the desire math (priority blend → gap → curve → stamp) and the
   // odds math (blend gap → who dates down → tolerance → %), then the desire×odds rank. No hierarchy
   // here — simple mode bypasses it — so this shows exactly how the two numbers are built.
@@ -924,9 +934,9 @@
       : `gap <b>${sgap>=0?'+':''}${sgap.toFixed(1)}</b>`;
     // odds — two gates, shown Looks → SMV to match the row header
     const smvGap = round1(c.smv - uSm), looksGap = round1(c.looks - uLk);
-    const looksAdj = round1(looksGap > 0 ? LOOKS_PEN*looksGap : LOOKS_BON*looksGap);
+    const looksAdj = round1(looksGap > 0 ? LOOKS_PEN[c.g]*looksGap : LOOKS_BON[c.g]*looksGap);
     const effGap = round1(smvGap + looksAdj), T = ATTAIN_TOL[c.g][simpleStakes];
-    const her = c.g==='f' ? 'she' : 'he', stakesWord = simpleStakes==='rel' ? 'commitment' : 'fling';
+    const her = c.g==='f' ? 'she' : 'he', stakesWord = simpleStakes==='rel' ? 'relationship' : 'fling';
     let looksLine;
     if (looksGap > 0.05) looksLine = `they're <b>${c.looks.toFixed(1)}</b>, you're <b>${uLk.toFixed(1)}</b> &mdash; you're <b>${looksGap.toFixed(1)} below</b> &rarr; <b>+${looksAdj.toFixed(1)}</b> markdown`;
     else if (looksGap < -0.05) looksLine = `they're <b>${c.looks.toFixed(1)}</b>, you're <b>${uLk.toFixed(1)}</b> &mdash; you're <b>${(-looksGap).toFixed(1)} above</b> &rarr; <b>${looksAdj.toFixed(1)}</b> lift`;
@@ -941,7 +951,7 @@
         <div class="mm-sb-line">Prioritizing ${prio} (<b>${wL}%</b> Looks + <b>${wS}%</b> SMV): your blend <b>${uV.toFixed(1)}</b> vs their <b>${cV.toFixed(1)}</b> &rarr; ${gapToStamp} &rarr; <span class="mm-tier-badge is-${x.v.key}">${x.v.label}</span></div></div>
       <div class="mm-sb-block"><div class="mm-sb-h">Odds &mdash; will they accept you?</div>
         <div class="mm-sb-line"><b>Looks</b> (attraction): ${looksLine}.</div>
-        <div class="mm-sb-line"><b>SMV</b> (status): ${smvLine}.</div>
+        <div class="mm-sb-line"><b>SMV</b> (overall value): ${smvLine}.</div>
         <div class="mm-sb-line">${netLine}. <span style="color:var(--text-dim)">Tolerances from the <a href="frameworks.html#attention-market">Attention Market</a>.</span></div></div>
       <div class="mm-sb-rank">Ranked by <b>desire &times; odds</b>: their <b>${cV.toFixed(1)}</b> &times; <b>${x.p}%</b> = <b>${(cV*x.p/100).toFixed(2)}</b>.</div>
     </div>`;
@@ -961,11 +971,11 @@
       + `<div class="mm-srows">` + shown.map((x,idx)=>{
           const c=x.c, v=x.v, open=simpleOpen.has(c.slug);
           return `<div class="mm-srow${open?' open':''}" data-slug="${c.slug}">`
-            + `<button class="mm-srow-head" type="button" data-exp="${c.slug}" aria-expanded="${open}" aria-controls="sb-${c.slug}"><span class="mm-srow-rank">${idx+1}</span>${avatar(c)}<div class="mm-srow-id"><div class="mm-srow-name">${c.name}</div><div class="mm-srow-meta">Age ${c.age} &middot; ${c.career} &middot; ${sc(c)}</div></div><span class="mm-prob ${pCls(x.p)}" title="Odds they accept you — status (SMV) gap + looks-attraction markdown, sex &amp; commitment aware">${x.p}%</span><span class="mm-tier-badge is-${v.key}" title="${v.desc}">${v.label}</span><i class="ti ti-chevron-${open?'up':'down'} mm-srow-chev" aria-hidden="true"></i></button>`
+            + `<button class="mm-srow-head" type="button" data-exp="${c.slug}" aria-expanded="${open}" aria-controls="sb-${c.slug}"><span class="mm-srow-rank">${idx+1}</span>${avatar(c)}<div class="mm-srow-id"><div class="mm-srow-name">${c.name}</div><div class="mm-srow-meta">Age ${c.age} &middot; ${c.career} &middot; ${sc(c)}</div></div><span class="mm-prob ${pCls(x.p)}" title="Odds they accept you — SMV (overall-value) gap + looks-attraction markdown, sex-aware · relationship-mode">${x.p}%</span><span class="mm-tier-badge is-${v.key}" title="${v.desc}">${v.label}</span><i class="ti ti-chevron-${open?'up':'down'} mm-srow-chev" aria-hidden="true"></i></button>`
             + `<div class="mm-srow-bd" id="sb-${c.slug}"${open?'':' hidden'}>${simpleBreakdown(x, uV)}</div></div>`;
         }).join('') + `</div>`
       + (total>10 ? `<button class="mm-srow-more" id="simple-more" type="button">${simpleShowAll ? 'Show top 10 only' : 'Show all '+total+' matches'}</button>` : '')
-      + `<div class="mm-foot">Two reads per row. The <strong>stamp</strong> = <strong>desire</strong>: the <strong>${prio}</strong> toggle is a priority, not a blinder, so it blends <strong>${wP}% ${prio} + ${wO}% ${other}</strong> (your off-axis value still counts), curved at the ends. The <strong>%</strong> = <strong>odds they accept you</strong>, on two gates &mdash; a <strong>status (SMV)</strong> gap <em>and</em> a <strong>looks-attraction markdown</strong> (being well below on looks is a wall a status edge only partly buys past), gated by whoever's dating down with the sex- and ${simpleStakes==='rel'?'commitment':'fling'}-aware tolerances from the <a href="frameworks.html#attention-market">Attention Market</a>. Ranked by <strong>desire &times; odds</strong> &mdash; best realistic catch first. Adjust any input and the list clears: hit <strong>Find my matches</strong> for a fresh set. <span class="mm-tag est">Estimate</span></div>`;
+      + `<div class="mm-foot">Two reads per row. The <strong>stamp</strong> = <strong>desire</strong>: the <strong>${prio}</strong> toggle is a priority, not a blinder, so it blends <strong>${wP}% ${prio} + ${wO}% ${other}</strong> (your off-axis value still counts), curved at the ends. The <strong>%</strong> = <strong>odds they accept you</strong>, on two gates &mdash; an <strong>SMV (overall-value)</strong> gap <em>and</em> a <strong>looks-attraction markdown</strong> (being well below on looks is a wall a status edge only partly buys past), gated by whoever's dating down with the <strong>sex-aware, relationship-mode</strong> tolerances from the <a href="frameworks.html#attention-market">Attention Market</a>. Ranked by <strong>desire &times; odds</strong> &mdash; best realistic catch first. Adjust any input and the list clears: hit <strong>Find my matches</strong> for a fresh set. <span class="mm-tag est">Estimate</span></div>`;
     document.querySelectorAll('#results-host .mm-srow-head').forEach(h => h.addEventListener('click', ()=>{
       const slug=h.dataset.exp;
       if (simpleOpen.has(slug)) simpleOpen.delete(slug); else simpleOpen.add(slug);
@@ -984,7 +994,7 @@
     host.innerHTML = `<ol class="mm-pv-list">` + list.slice(0,10).map((x,i)=>{
       const c=x.c, ps = mode==='looks' ? c.looks : c.smv;
       return `<li class="mm-pv-row mm-pv-static"><span class="mm-pv-rank">${i+1}</span><span class="mm-pv-name">${c.name}</span><span class="mm-pv-axis">${abbr}&nbsp;${ps.toFixed(1)}</span><span class="mm-pv-prob ${pCls(x.p)}">${x.p}%</span></li>`;
-    }).join('') + `</ol><div class="mm-pv-foot">% = odds they accept you (status gap + looks markdown, sex &amp; commitment aware). Ranked by desire &times; odds &mdash; best realistic catch first.</div>`;
+    }).join('') + `</ol><div class="mm-pv-foot">% = odds they accept you (SMV gap + looks markdown, sex-aware &middot; relationship-mode). Ranked by desire &times; odds &mdash; best realistic catch first.</div>`;
   }
 
   function runMatch(){
