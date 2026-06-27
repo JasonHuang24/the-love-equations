@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/compatibility.css?v=1.7" />
+  <link rel="stylesheet" href="css/compatibility.css?v=1.9" />
 </head>
 <body data-page="compatibility">
   <div data-include="navigation-bar"></div>
@@ -56,15 +56,25 @@
                 <div id="breakdown-rows"></div>
               </div>
 
-              <div class="profile-export">
-                <div class="breakdown-label">SMV export package</div>
-                <div class="gate-hint">Copy the full package, not just the headline score. SMV Calc uses the factor breakdown and mapping metadata.</div>
+              <div class="profile-import">
+                <div class="breakdown-label">Load a saved profile</div>
+                <div class="gate-hint">Copy a <a href="matchmaker.html">Matchmaker</a> roster profile (or another Compatibility export), then click below to drop its factor scores straight onto the grid above. It switches to the package's hierarchy automatically.</div>
                 <div class="export-actions">
-                  <button class="btn btn-scarlet" type="button" onclick="copyExportPackage()"><i class="ti ti-copy"></i> Copy for SMV Calc</button>
+                  <button class="btn btn-scarlet" type="button" onclick="importCompatibilityPackage()"><i class="ti ti-clipboard-text"></i> Paste from clipboard</button>
+                  <span class="export-status" id="compat-import-status">Copy a profile, then paste it here.</span>
+                </div>
+                <div class="pkg-readout" id="compat-import-readout" aria-live="polite"></div>
+              </div>
+
+              <div class="profile-export">
+                <div class="breakdown-label">Export this profile</div>
+                <div class="gate-hint">The current profile as a portable package &mdash; copy it to load onto the <a href="smvcalc.html">SMV Calc</a>, the <a href="matchmaker.html">Matchmaker</a>, or back here. The readable summary below is what gets copied (as data) to your clipboard.</div>
+                <div class="export-actions">
+                  <button class="btn btn-scarlet" type="button" onclick="copyExportPackage()"><i class="ti ti-copy"></i> Copy profile</button>
                   <button class="btn btn-subtle" type="button" onclick="resetCompatibilityState()">Reset scores</button>
                   <span class="export-status" id="export-status">Ready to copy.</span>
                 </div>
-                <textarea class="export-box" id="profile-export-box" readonly spellcheck="false"></textarea>
+                <div class="pkg-readout" id="profile-export-readout" aria-live="polite"></div>
               </div>
             </div>
           </div>
@@ -446,27 +456,81 @@
       };
     }
 
+    let compatExportJSON = '';
     function setExportPackage(pkg) {
-      const box = document.getElementById('profile-export-box');
-      if (!box) return;
-      box.value = JSON.stringify(pkg);
+      compatExportJSON = JSON.stringify(pkg);
+      const disp = document.getElementById('profile-export-readout');
+      if (disp) disp.innerHTML = humanizePackage(pkg);
       const status = document.getElementById('export-status');
-      if (status) status.textContent = `Package ready: ${pkg.importDisplayName} -> suggested SMV lens ${pkg.subjectLensHint}.`;
+      if (status) status.textContent = `Profile ready to copy: ${pkg.importDisplayName}.`;
     }
 
-    async function copyExportPackage() {
-      const box = document.getElementById('profile-export-box');
-      const status = document.getElementById('export-status');
-      if (!box) return;
-      try {
-        await navigator.clipboard.writeText(box.value);
-        if (status) status.textContent = 'Copied. Paste it into Profile A or Profile B on the SMV Calculator.';
-      } catch (err) {
-        box.focus();
-        box.select();
-        document.execCommand('copy');
-        if (status) status.textContent = 'Copied via text selection. Paste it into the SMV Calculator.';
+    function copyExportPackage() {
+      copyToClipboard(compatExportJSON, document.getElementById('export-status'), 'Copied. Paste it into SMV Calc, the Matchmaker, or back here.');
+    }
+
+    // ── shared interop helpers (readable display + clipboard) ──
+    function escHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function humanizePackage(pkg){
+      if (!pkg || typeof pkg !== 'object') return '';
+      const name = pkg.importDisplayName || pkg.subjectLabel || (pkg.source === 'love-equations.smv' ? 'SMV profile' : 'Profile');
+      const meta = [];
+      if (pkg.hierarchyLabel) meta.push(escHtml(pkg.hierarchyLabel));
+      if (pkg.source === 'love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+pkg.age); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall === 'number') meta.push('SMV '+pkg.overall+' / 10'); }
+      let html = '<div class="pkg-readout-name">'+escHtml(name)+'</div>';
+      if (meta.length) html += '<div class="pkg-readout-sub">'+meta.join(' &middot; ')+'</div>';
+      if (Array.isArray(pkg.factors) && pkg.factors.length){
+        html += '<ul class="pkg-readout-stats">'+pkg.factors.map(f =>
+          '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?f.score:'&mdash;')+'</b></li>').join('')+'</ul>';
       }
+      return html;
+    }
+    async function copyToClipboard(text, st, okMsg){
+      try { await navigator.clipboard.writeText(text); if (st) st.textContent = okMsg; return; } catch(e){}
+      try { const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); if (st) st.textContent = okMsg+' (via selection)'; }
+      catch(e2){ if (st) st.textContent = 'Copy failed — clipboard is blocked here.'; }
+    }
+
+    // Load a profile straight from the clipboard (Matchmaker roster export or another
+    // Compatibility export) onto the grid — both share this page's factor layout, so it's positional.
+    async function importCompatibilityPackage() {
+      const status = document.getElementById('compat-import-status');
+      const disp = document.getElementById('compat-import-readout');
+      const setSt = m => { if (status) status.textContent = m; };
+      const reject = m => { if (disp) disp.innerHTML = ''; setSt(m); };
+      let text;
+      try { text = await navigator.clipboard.readText(); }
+      catch (e) { setSt('Couldn’t read the clipboard — allow clipboard access, then try again.'); return; }
+      let pkg;
+      try { pkg = JSON.parse((text || '').trim()); } catch (e) { reject('Clipboard doesn’t contain a profile package.'); return; }
+      if (!pkg || typeof pkg !== 'object') { reject('Clipboard doesn’t contain a recognized package.'); return; }
+      if (!Array.isArray(pkg.factors)) {
+        reject(pkg.source === 'love-equations.smv'
+          ? 'That is an SMV headline package — paste it into the SMV Calculator. This grid needs per-factor scores.'
+          : 'That clipboard package has no factor scores to load.');
+        return;
+      }
+      const key = pkg.hierarchyKey;
+      const h = HIERARCHIES.find(x => x.key === key);
+      if (!h) { reject('That package uses a hierarchy this page does not know.'); return; }
+      switchHier(key);
+      let idx = 0, filled = 0;
+      h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {
+        const fac = pkg.factors[idx++];
+        if (fac && typeof fac.score === 'number' && isFinite(fac.score)) {
+          const v = Math.max(1, Math.min(10, fac.score));
+          const id = fid(key, ti, fi);
+          const slider = document.getElementById('s-' + id);
+          const bx = document.getElementById('b-' + id);
+          if (slider) slider.value = v;
+          if (bx) bx.value = fmt(v);
+          filled++;
+        }
+      }));
+      update();
+      saveCompatState();
+      if (disp) disp.innerHTML = humanizePackage(pkg);
+      setSt('Loaded ' + (pkg.importDisplayName || h.tab) + ' — ' + filled + ' factor' + (filled === 1 ? '' : 's') + ' filled onto ' + h.tab + '.');
     }
 
     function update() {

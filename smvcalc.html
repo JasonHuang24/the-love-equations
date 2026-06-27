@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/smvcalc.css?v=1.6" />
+  <link rel="stylesheet" href="css/smvcalc.css?v=1.7" />
 </head>
 <body data-page="smvcalc">
   <div data-include="navigation-bar"></div>
@@ -44,12 +44,11 @@
             </div>
             <div class="import-panel">
               <div class="lens-title">Import from Compatibility</div>
-              <div class="lens-copy">Paste a copied compatibility package here to skip the quiz and map its factor scores into Profile A. The mapping is visible so you can challenge it.</div>
-              <textarea class="import-box" id="import-box-a" placeholder="Paste compatibility export package..." spellcheck="false"></textarea>
+              <div class="lens-copy">Copy a compatibility package, then paste it here to skip the quiz and map its factor scores into Profile A. The mapping is shown below so you can challenge it.</div>
               <div class="import-actions">
-                <button class="btn btn-scarlet" type="button" onclick="importCompatibilityProfile('a')"><i class="ti ti-upload"></i> Import to Profile A</button>
+                <button class="btn btn-scarlet" type="button" onclick="importCompatibilityProfile('a')"><i class="ti ti-clipboard-text"></i> Paste from clipboard</button>
                 <button class="btn btn-subtle" type="button" onclick="clearSavedState()">Clear saved state</button>
-                <span class="import-status" id="import-status-a">Waiting for pasted package.</span>
+                <span class="import-status" id="import-status-a">Copy a package, then paste it here.</span>
               </div>
               <div class="import-report" id="import-report-a"></div>
             </div>
@@ -135,8 +134,8 @@
 
           <div class="result-panel mt-2">
             <div class="result-title">SMV export package</div>
-            <div class="result-copy">Copy this to carry your SMV profile into the <a href="matchmaker.html">Matchmaker</a> (or anywhere that reads it). It carries your overall score, sex, age, lens, and factor breakdown &mdash; not just the headline.</div>
-            <textarea class="import-box" id="smv-export-box" readonly spellcheck="false" placeholder="Your SMV package appears here once you have a score."></textarea>
+            <div class="result-copy">Carry your SMV profile into the <a href="matchmaker.html">Matchmaker</a> (or anywhere that reads it) &mdash; the readable summary below is what gets copied (as data). It carries your overall score, sex, age, lens, and factor breakdown.</div>
+            <div class="pkg-readout" id="smv-export-readout" aria-live="polite"></div>
             <div class="import-actions">
               <button class="btn btn-scarlet" type="button" onclick="copySmvPackage()"><i class="ti ti-copy"></i> Copy SMV package</button>
               <span class="import-status" id="smv-export-status">Ready to copy.</span>
@@ -164,12 +163,11 @@
           </div>
           <div class="import-panel">
             <div class="lens-title">Import from Compatibility</div>
-            <div class="lens-copy">Paste a copied compatibility package here to fill Profile B&rsquo;s target sliders. You can still adjust the mapped scores afterward.</div>
-            <textarea class="import-box" id="import-box-b" placeholder="Paste compatibility export package..." spellcheck="false"></textarea>
+            <div class="lens-copy">Copy a compatibility package, then paste it here to fill Profile B&rsquo;s target sliders. You can still adjust the mapped scores afterward.</div>
             <div class="import-actions">
-              <button class="btn btn-scarlet" type="button" onclick="importCompatibilityProfile('b')"><i class="ti ti-upload"></i> Import to Profile B</button>
+              <button class="btn btn-scarlet" type="button" onclick="importCompatibilityProfile('b')"><i class="ti ti-clipboard-text"></i> Paste from clipboard</button>
               <button class="btn btn-subtle" type="button" onclick="clearSavedState()">Clear saved state</button>
-              <span class="import-status" id="import-status-b">Waiting for pasted package.</span>
+              <span class="import-status" id="import-status-b">Copy a package, then paste it here.</span>
             </div>
             <div class="import-report" id="import-report-b"></div>
           </div>
@@ -1284,16 +1282,37 @@
         factors: FACTORS.map((f, i) => ({ name: f.name, score: Number((scores[i] || 0).toFixed(1)) }))
       };
     }
+    // ── shared interop helpers (readable display + clipboard) ──
+    function escHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function humanizePackage(pkg){
+      if (!pkg || typeof pkg !== 'object') return '';
+      const name = pkg.importDisplayName || pkg.subjectLabel || (pkg.source === 'love-equations.smv' ? 'SMV profile' : 'Profile');
+      const meta = [];
+      if (pkg.hierarchyLabel) meta.push(escHtml(pkg.hierarchyLabel));
+      if (pkg.source === 'love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+pkg.age); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall === 'number') meta.push('SMV '+pkg.overall+' / 10'); }
+      let html = '<div class="pkg-readout-name">'+escHtml(name)+'</div>';
+      if (meta.length) html += '<div class="pkg-readout-sub">'+meta.join(' &middot; ')+'</div>';
+      if (Array.isArray(pkg.factors) && pkg.factors.length){
+        html += '<ul class="pkg-readout-stats">'+pkg.factors.map(f =>
+          '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?f.score:'&mdash;')+'</b></li>').join('')+'</ul>';
+      }
+      return html;
+    }
+    async function copyToClipboard(text, st, okMsg){
+      try { await navigator.clipboard.writeText(text); if (st) st.textContent = okMsg; return; } catch(e){}
+      try { const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); if (st) st.textContent = okMsg+' (via selection)'; }
+      catch(e2){ if (st) st.textContent = 'Copy failed — clipboard is blocked here.'; }
+    }
+
+    let smvExportJSON = '';
     function setSmvExport(total) {
-      const box = document.getElementById('smv-export-box'); if (!box) return;
-      box.value = JSON.stringify(buildSmvPackage(total));
+      const pkg = buildSmvPackage(total);
+      smvExportJSON = JSON.stringify(pkg);
+      const disp = document.getElementById('smv-export-readout'); if (disp) disp.innerHTML = humanizePackage(pkg);
       const st = document.getElementById('smv-export-status'); if (st) st.textContent = 'Ready to copy.';
     }
-    async function copySmvPackage() {
-      const box = document.getElementById('smv-export-box'); const st = document.getElementById('smv-export-status');
-      if (!box) return;
-      try { await navigator.clipboard.writeText(box.value); if (st) st.textContent = 'Copied. Paste it into the Matchmaker.'; }
-      catch (e) { box.focus(); box.select(); document.execCommand('copy'); if (st) st.textContent = 'Copied via text selection.'; }
+    function copySmvPackage() {
+      copyToClipboard(smvExportJSON, document.getElementById('smv-export-status'), 'Copied. Paste it into the Matchmaker.');
     }
 
     function finishA() {
@@ -1511,11 +1530,13 @@
       return weights.map(w => w / total);
     }
 
-    function importCompatibilityProfile(target) {
-      const box = document.getElementById(`import-box-${target}`);
+    async function importCompatibilityProfile(target) {
       const status = document.getElementById(`import-status-${target}`);
+      let clipText;
+      try { clipText = await navigator.clipboard.readText(); }
+      catch (e) { if (status) status.textContent = 'Couldn’t read the clipboard — allow clipboard access, then try again.'; return; }
       try {
-        const pkg = parseCompatibilityPackage(box.value);
+        const pkg = parseCompatibilityPackage(clipText);
         const mapped = mapCompatibilityToSmv(pkg);
         const suggestedLens = LENSES[pkg.subjectLensHint] ? pkg.subjectLensHint : (target === 'b' ? selectedLensB : selectedLensA);
         const displayName = pkg.importDisplayName || importedProfileName(pkg);
@@ -1542,7 +1563,11 @@
         }
         saveState();
       } catch (err) {
-        if (status) status.textContent = err.message || 'Import failed.';
+        setImportReport(target, '');
+        const msg = (err && err.name === 'SyntaxError')
+          ? 'Clipboard doesn’t contain a profile package.'
+          : ((err && err.message) || 'Clipboard doesn’t contain a usable package.');
+        if (status) status.textContent = msg;
       }
     }
 

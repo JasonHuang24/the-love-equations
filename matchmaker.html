@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/matchmaker.css?v=7.5" />
+  <link rel="stylesheet" href="css/matchmaker.css?v=7.8" />
 </head>
 <body data-page="matchmaker">
   <div data-include="navigation-bar"></div>
@@ -53,9 +53,24 @@
         <div class="mm-intake-grid" id="intake-grid"></div>
 
         <div class="mm-import">
-          <div class="mm-import-label">Have a saved package? Paste a <a href="compatibility.html">Compatibility</a> or <a href="smvcalc.html">SMV</a> export to fill your profile and standard in one shot. (Scores already on this device load automatically.)</div>
-          <textarea class="mm-import-box" id="pkg-box" spellcheck="false" placeholder='Paste {"source":"love-equations.compatibility", ...} or {"source":"love-equations.smv", ...} here'></textarea>
-          <div class="mm-import-actions"><button class="mm-import-btn" id="pkg-import" type="button"><i class="ti ti-upload" aria-hidden="true"></i> Import package</button><span class="mm-import-status" id="pkg-status"></span></div>
+          <div class="mm-iobox">
+            <div class="mm-import-label"><strong>Your SMV</strong> &mdash; your own looks, SMV, age, and sex. Paste an <a href="smvcalc.html">SMV</a> export to fill it, or copy yours to carry elsewhere. (Scores already on this device load automatically.)</div>
+            <div class="pkg-readout" id="smv-readout" aria-live="polite"></div>
+            <div class="mm-import-actions">
+              <button class="mm-import-btn" id="smv-paste" type="button"><i class="ti ti-clipboard-text" aria-hidden="true"></i> Paste from clipboard</button>
+              <button class="mm-import-btn mm-btn-ghost" id="smv-copy" type="button"><i class="ti ti-copy" aria-hidden="true"></i> Copy my SMV</button>
+              <span class="mm-import-status" id="smv-io-status"></span>
+            </div>
+          </div>
+          <div class="mm-iobox">
+            <div class="mm-import-label"><strong>Your standard</strong> &mdash; the Step 2 hierarchy and the bars you set. Paste a <a href="compatibility.html">Compatibility</a> standard to fill it, or copy yours to carry elsewhere.</div>
+            <div class="pkg-readout" id="std-readout" aria-live="polite"></div>
+            <div class="mm-import-actions">
+              <button class="mm-import-btn" id="std-paste" type="button"><i class="ti ti-clipboard-text" aria-hidden="true"></i> Paste from clipboard</button>
+              <button class="mm-import-btn mm-btn-ghost" id="std-copy" type="button"><i class="ti ti-copy" aria-hidden="true"></i> Copy my standard</button>
+              <span class="mm-import-status" id="std-io-status">Ready to copy.</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2197,11 +2212,13 @@
         <div class="mm-chip-val" id="chipval-match">${userScore().toFixed(1)}<small>/10</small></div>
         <div class="mm-chip-src" id="chip-band">Your band: <strong>${(userScore()-1).toFixed(1)}&ndash;${(userScore()+1).toFixed(1)}</strong>. Looking for a <strong>${targetSex()==='f'?'woman':'man'}</strong>.</div>
       </div>`;
+    refreshSmvExport();
   }
   function updateChipVals(){
     const set=(id,v)=>{ const e=document.getElementById(id); if(e) e.innerHTML=v.toFixed(1)+'<small>/10</small>'; };
     set('chipval-looks', userLooks()); set('chipval-smv', userSMV()); set('chipval-match', userScore());
     const b=document.getElementById('chip-band'); if(b) b.innerHTML=`Your band: <strong>${(userScore()-1).toFixed(1)}&ndash;${(userScore()+1).toFixed(1)}</strong>. Looking for a <strong>${targetSex()==='f'?'woman':'man'}</strong>.`;
+    refreshSmvExport();
   }
   // live slider updates patch the displayed numbers only (no full re-render → smooth drag)
   window.mmSetManual = function(which, v){ v=parseFloat(v); if(which==='looks') manualLooks=v; else manualSMV=v; updateChipVals(); liveReRank(); };
@@ -2237,8 +2254,9 @@
     });
     if (compatImported) html += `<div class="mm-grade-note">Imported from your <a href="compatibility.html">Compatibility</a> scores &mdash; adjust any slider to override.</div>`;
     document.getElementById('grade-host').innerHTML = html;
+    refreshStandardExport();
   }
-  window.mmSetGrade = function(id,v){ selfGrades[id]=parseInt(v,10); const el=document.getElementById('gn-'+id); if(el) el.textContent=v; liveReRank(); };
+  window.mmSetGrade = function(id,v){ selfGrades[id]=parseInt(v,10); const el=document.getElementById('gn-'+id); if(el) el.textContent=v; refreshStandardExport(); liveReRank(); };
 
   // ── render: quiz ──
   function renderQuiz(){
@@ -2846,31 +2864,154 @@
     }));
   }
 
-  // ── paste-import: accept a Compatibility or SMV export package ──
-  function importPackage(){
-    const box = document.getElementById('pkg-box'), st = document.getElementById('pkg-status');
-    const setSt = m => { if (st) st.textContent = m; };
-    let pkg; try { pkg = JSON.parse((box.value||'').trim()); } catch(e){ setSt('That is not valid JSON.'); return; }
-    if (!pkg || !pkg.source){ setSt('Unrecognized package.'); return; }
-    if (pkg.source === 'love-equations.compatibility' && Array.isArray(pkg.factors)){
-      const key = pkg.hierarchyKey;
-      if (!PYRAMIDS[key]){ setSt('That package uses a hierarchy this tool does not know.'); return; }
-      const vals = {}; let idx = 0;
-      PYRAMIDS[key].tiers.forEach((t,ti)=>t.factors.forEach((f,fi)=>{ const fac = pkg.factors[idx++]; if (fac && typeof fac.score==='number' && isFinite(fac.score)) vals[key+'-'+ti+'-'+fi] = clamp(fac.score, 1, 10); }));
-      compatValues = Object.assign({}, compatValues, vals);
-      selfGrades = Object.assign({}, selfGrades, vals);
-      compatImported = true;
-      if (PYRAMIDS[key].describes === targetSex()) pyramid = key;
-      renderPyramid();
-      setSt('Imported standard: ' + PYRAMIDS[key].title + ' (' + PYRAMIDS[key].subtitle + ').');
-    } else if (pkg.source === 'love-equations.smv'){
-      if (typeof pkg.overall === 'number' && isFinite(pkg.overall)) importedSMV = clamp(pkg.overall, 1, 10);
-      if (pkg.sex==='m'||pkg.sex==='f'){ userSex = pkg.sex; document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); }); renderPyramid(); }
-      if (typeof pkg.age==='number' && isFinite(pkg.age)){ const el=document.getElementById('user-age'); if (el) el.value = clamp(Math.round(pkg.age), 18, 80); }
+  // ── shared interop helpers (readable display + clipboard) ──
+  function escHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // Render a package as a layman-readable card (name + stats) instead of raw JSON.
+  function humanizePackage(pkg){
+    if (!pkg || typeof pkg !== 'object') return '';
+    const name = pkg.importDisplayName || pkg.subjectLabel || (pkg.source==='love-equations.smv' ? 'SMV profile' : 'Profile');
+    const meta = [];
+    if (pkg.hierarchyLabel) meta.push(escHtml(pkg.hierarchyLabel));
+    if (pkg.source==='love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+pkg.age); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall==='number') meta.push('SMV '+pkg.overall+' / 10'); }
+    // overall is omitted for compatibility/standard packages: it's a tool-specific derived aggregate (it would mismatch on round-trip); the per-factor scores below are the real, stable data.
+    let html = '<div class="pkg-readout-name">'+escHtml(name)+'</div>';
+    if (meta.length) html += '<div class="pkg-readout-sub">'+meta.join(' &middot; ')+'</div>';
+    if (Array.isArray(pkg.factors) && pkg.factors.length){
+      html += '<ul class="pkg-readout-stats">'+pkg.factors.map(f =>
+        '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?f.score:'&mdash;')+'</b></li>').join('')+'</ul>';
+    }
+    return html;
+  }
+  async function copyToClipboard(text, st, okMsg){
+    try { await navigator.clipboard.writeText(text); if (st) st.textContent = okMsg; return; } catch(e){}
+    try { const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); if (st) st.textContent = okMsg+' (via selection)'; }
+    catch(e2){ if (st) st.textContent = 'Copy failed — clipboard is blocked here.'; }
+  }
+
+  // ── import: SMV profile (top box) / standard (bottom box), each from the clipboard ──
+  function isStandardPkg(pkg){ return (pkg.source==='love-equations.compatibility' || pkg.source==='love-equations.matchmaker.roster') && Array.isArray(pkg.factors); }
+  function applySmvPackage(pkg){
+    if (typeof pkg.overall === 'number' && isFinite(pkg.overall)) importedSMV = clamp(pkg.overall, 1, 10);
+    if (Array.isArray(pkg.factors)){ const lf = pkg.factors.find(f => /look/i.test(f.name||'')); if (lf && typeof lf.score==='number' && isFinite(lf.score)) importedLooks = clamp(lf.score, 1, 10); }
+    if (pkg.sex==='m'||pkg.sex==='f'){ userSex = pkg.sex; document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); }); }
+    if (typeof pkg.age==='number' && isFinite(pkg.age)){ const el=document.getElementById('user-age'); if (el) el.value = clamp(Math.round(pkg.age), 18, 80); }
+    renderPyramid(); renderIntake();
+  }
+  function applyStandardPackage(pkg){
+    const key = pkg.hierarchyKey;
+    if (!PYRAMIDS[key]) return false;
+    const vals = {}; let idx = 0;
+    PYRAMIDS[key].tiers.forEach((t,ti)=>t.factors.forEach((f,fi)=>{ const fac = pkg.factors[idx++]; if (fac && typeof fac.score==='number' && isFinite(fac.score)) vals[key+'-'+ti+'-'+fi] = clamp(fac.score, 1, 10); }));
+    compatValues = Object.assign({}, compatValues, vals);
+    selfGrades = Object.assign({}, selfGrades, vals);
+    compatImported = true;
+    // Straight model: a standard describes the sex you're matching. If it disagrees with your
+    // current target, flip "I am a…" so the standard is the one shown (status and readout stay in sync).
+    const describes = PYRAMIDS[key].describes;
+    if (targetSex() !== describes){
+      userSex = (describes === 'f') ? 'm' : 'f';
+      document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
       renderIntake();
-      setSt('Imported SMV ' + (typeof pkg.overall==='number'?pkg.overall.toFixed(1):'profile') + (pkg.sex?(' · '+(pkg.sex==='m'?'man':'woman')):'') + '.');
-    } else { setSt('Unrecognized package source.'); return; }
-    liveReRank();
+    }
+    pyramid = key;
+    renderPyramid();
+    return true;
+  }
+  async function readClip(statusEl){
+    try { return await navigator.clipboard.readText(); }
+    catch(e){ if (statusEl) statusEl.textContent = 'Couldn’t read the clipboard — allow clipboard access, then try again.'; return null; }
+  }
+  function parseClip(text, statusEl){
+    let pkg; try { pkg = JSON.parse((text||'').trim()); } catch(e){ if (statusEl) statusEl.textContent = 'Clipboard doesn’t contain a profile package.'; return null; }
+    if (!pkg || !pkg.source){ if (statusEl) statusEl.textContent = 'Clipboard doesn’t contain a recognized package.'; return null; }
+    return pkg;
+  }
+  async function importSmvFromClipboard(){
+    const st = document.getElementById('smv-io-status');
+    const text = await readClip(st); if (text===null) return;
+    const pkg = parseClip(text, st); if (!pkg) return;
+    if (pkg.source === 'love-equations.smv'){
+      applySmvPackage(pkg);   // re-renders the SMV readout via renderIntake → refreshSmvExport
+      st.textContent = 'Imported SMV ' + (typeof pkg.overall==='number'?pkg.overall.toFixed(1):'profile') + (pkg.sex?(' · '+(pkg.sex==='m'?'man':'woman')):'') + '.';
+      liveReRank();
+    } else if (isStandardPkg(pkg)){
+      st.textContent = 'That’s a standard, not an SMV profile — paste it in the “Your standard” box below.';
+    } else {
+      st.textContent = 'That clipboard package isn’t an SMV profile.';
+    }
+  }
+  async function importStandardFromClipboard(){
+    const st = document.getElementById('std-io-status');
+    const text = await readClip(st); if (text===null) return;
+    const pkg = parseClip(text, st); if (!pkg) return;
+    if (isStandardPkg(pkg)){
+      if (!applyStandardPackage(pkg)){ st.textContent = 'That package uses a hierarchy this tool does not know.'; return; }
+      st.textContent = 'Imported standard: ' + PYRAMIDS[pkg.hierarchyKey].title + ' (' + PYRAMIDS[pkg.hierarchyKey].subtitle + ').';   // std readout re-rendered by renderPyramid → refreshStandardExport
+      liveReRank();
+    } else if (pkg.source === 'love-equations.smv'){
+      st.textContent = 'That’s an SMV profile, not a standard — paste it in the “Your SMV” box above.';
+    } else {
+      st.textContent = 'That clipboard package isn’t a standard.';
+    }
+  }
+
+  // ── export: the user's self-graded standard as a Compatibility package ──
+  // Same factor order as the Compatibility grid; re-importable here and into SMV Calc.
+  function buildStandardPackage(){
+    const P = PYRAMIDS[pyramid];
+    const factors = []; let sum=0, n=0;
+    P.tiers.forEach((t,ti)=>t.factors.forEach((f,fi)=>{
+      const id = pyramid+'-'+ti+'-'+fi;
+      const v = selfGrades[id]!=null ? selfGrades[id] : 1;
+      factors.push({ tier: t.name, name: f[0], score: v });
+      sum += v; n++;
+    }));
+    return {
+      source: 'love-equations.compatibility',
+      version: 1,
+      hierarchyKey: pyramid,
+      hierarchyLabel: P.title,
+      subjectLabel: 'My standard',
+      importDisplayName: 'My standard (' + P.title + ')',
+      subjectLensHint: (pyramid==='you'||pyramid==='male') ? 'female' : 'male',
+      overall: n ? Number(((sum/n)*10).toFixed(1)) : null,
+      scale: 100,
+      factors
+    };
+  }
+  let stdExportJSON = '';
+  function refreshStandardExport(){
+    const pkg = buildStandardPackage();
+    stdExportJSON = JSON.stringify(pkg);
+    const disp = document.getElementById('std-readout');
+    if (disp) disp.innerHTML = humanizePackage(pkg);
+  }
+  function copyStandardPackage(){
+    copyToClipboard(stdExportJSON, document.getElementById('std-io-status'), 'Copied. Paste it into Compatibility or SMV Calc.');
+  }
+
+  // ── export: the user's own SMV profile (top box) ──
+  function buildUserSmvPackage(){
+    return {
+      source: 'love-equations.smv',
+      version: 1,
+      overall: round1(userSMV()),
+      scale: 10,
+      sex: userSex,
+      age: userAge(),
+      lens: userSex==='m' ? 'male' : 'female',
+      factors: [{ name: 'Looks', score: round1(userLooks()) }]
+    };
+  }
+  let smvExportJSON = '';
+  function refreshSmvExport(){
+    const pkg = buildUserSmvPackage();
+    smvExportJSON = JSON.stringify(pkg);
+    const disp = document.getElementById('smv-readout');
+    if (disp) disp.innerHTML = humanizePackage(pkg);
+  }
+  function copyUserSmv(){
+    copyToClipboard(smvExportJSON, document.getElementById('smv-io-status'), 'Copied your SMV. Paste it into the Matchmaker or any SMV reader.');
   }
 
   // ── per-step reset + hide-matches ──
@@ -2923,7 +3064,7 @@
   //  overall. Self-contained: never writes matchmaker state.
   // ════════════════════════════════════════════════════════════════════
   const PW_MIN_KEY = 'loveEquations.matchmaker.pwMin';
-  let pwStandard = null, pwSlug = null;
+  let pwStandard = null, pwSlug = null, pwExportJSON = '';
   const pwSc = s => s>=7.5 ? 'hi' : s>=5 ? 'mid' : 'lo';
 
   function pwViewFor(prof, key){
@@ -3000,7 +3141,42 @@
       <div class="mmw-overall"><span class="mmw-overall-num mmw-s-${oCls}">${view.overall.toFixed(1)}</span><span class="mmw-overall-den">/ 10</span><span class="mmw-overall-cap">overall under ${P.title} (${P.subtitle})</span></div>
       ${tiersHTML}
       <div class="mmw-foot">Scores are fixed per person. Switching the standard re-labels and re-groups the factors and recomputes the overall &mdash; the same person reads differently under each standard.</div>
-      ${prof.by ? `<div class="mmw-by">Profile drafted by ${prof.by==='gpt'?'ChatGPT':'Claude'}</div>` : ''}`;
+      ${prof.by ? `<div class="mmw-by">Profile drafted by ${prof.by==='gpt'?'ChatGPT':'Claude'}</div>` : ''}
+      <div class="mmw-export">
+        <div class="mmw-export-head"><i class="ti ti-package-export" aria-hidden="true"></i> Export this profile</div>
+        <div class="mmw-export-sub">Copies ${c.name}'s ${P.title} factor scores (shown above). Paste them onto the <a href="compatibility.html">Compatibility</a> grid in one click.</div>
+        <div class="mmw-export-actions"><button class="mmw-export-btn" type="button" id="mmw-copy-btn"><i class="ti ti-copy" aria-hidden="true"></i> Copy for Compatibility</button><span class="mmw-export-status" id="mmw-export-status">Ready to copy.</span></div>
+      </div>`;
+    pwExportJSON = JSON.stringify(pwBuildPackage(c, prof, pwStandard, view));
+    const btn = document.getElementById('mmw-copy-btn');
+    if (btn) btn.addEventListener('click', pwCopyPackage);
+  }
+
+  // Build a portable package of a roster person's factor breakdown under one standard.
+  // Same factor order as the Compatibility grid (shared PYRAMIDS/HIERARCHIES), so it
+  // drops straight onto that page's inputs.
+  function pwBuildPackage(c, prof, key, view){
+    const P = PYRAMIDS[key];
+    const factors = [];
+    P.tiers.forEach((t,ti)=>t.factors.forEach((f,fi)=>{
+      const fac = view.tiers[ti].factors[fi];
+      factors.push({ tier: t.name, name: f[0], score: (fac && fac.s!=null) ? Number(Number(fac.s).toFixed(1)) : null });
+    }));
+    return {
+      source: 'love-equations.matchmaker.roster',
+      version: 1,
+      hierarchyKey: key,
+      hierarchyLabel: P.title,
+      subjectLabel: c.name,
+      importDisplayName: c.name + ' (' + P.title + ')',
+      subjectLensHint: (key==='you'||key==='male') ? 'female' : 'male',
+      overall: view.overall!=null ? Number((view.overall*10).toFixed(1)) : null,
+      scale: 100,
+      factors
+    };
+  }
+  function pwCopyPackage(){
+    copyToClipboard(pwExportJSON, document.getElementById('mmw-export-status'), 'Copied. Paste it into Compatibility.');
   }
 
   function renderProfilesWidget(){
@@ -3065,7 +3241,7 @@
     wireToggle('mode-toggle', 'mode', v => mode=v);
     const ageEl = document.getElementById('user-age');
     ageEl.addEventListener('input', liveReRank);
-    ageEl.addEventListener('change', () => { const v=parseInt(ageEl.value,10); ageEl.value = isFinite(v)?clamp(v,18,80):30; liveReRank(); });
+    ageEl.addEventListener('change', () => { const v=parseInt(ageEl.value,10); ageEl.value = isFinite(v)?clamp(v,18,80):30; refreshSmvExport(); liveReRank(); });
     document.getElementById('find-btn').addEventListener('click', runMatch);
     document.getElementById('hide-btn').addEventListener('click', hideMatches);
     document.getElementById('simple-toggle').addEventListener('change', e => {
@@ -3075,7 +3251,11 @@
       const s = b.dataset.reset;
       if (s==='1') resetStep1(); else if (s==='2') resetStep2(); else resetStep3();
     }));
-    document.getElementById('pkg-import').addEventListener('click', importPackage);
+    document.getElementById('smv-paste').addEventListener('click', importSmvFromClipboard);
+    document.getElementById('smv-copy').addEventListener('click', copyUserSmv);
+    document.getElementById('std-paste').addEventListener('click', importStandardFromClipboard);
+    document.getElementById('std-copy').addEventListener('click', copyStandardPackage);
+    refreshStandardExport(); refreshSmvExport();   // populate both readouts from loaded/default state
     document.getElementById('find-note').textContent = importedLooks!=null||importedSMV!=null ? 'Using your saved calculator scores.' : 'No saved scores found — set them above first.';
     liveReRank();   // populate the live preview immediately (results stay hidden until "Find")
     initProfilesWidget();   // floating roster-profile HUD (minimize/maximize)
