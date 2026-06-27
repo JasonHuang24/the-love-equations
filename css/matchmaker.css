@@ -126,6 +126,65 @@
 .mm-hide:hover { color: var(--text); border-color: var(--text-dim); }
 .mm-find-note { font-size: 11.5px; color: var(--text-dim); }
 
+/* ── simple head-to-head mode (Step 2 opt-out) ── */
+.mm-simple-toggle { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 1rem 32px; padding: 0.7rem 0.9rem; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--surface); cursor: pointer; }
+.mm-simple-toggle:hover { border-color: var(--text-dim); }
+.mm-simple-toggle input { margin: 2px 0 0; width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--scarlet); cursor: pointer; }
+.mm-simple-main { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+.mm-simple-main strong { color: var(--text); }
+.mm-simple-note { display: none; font-size: 11.5px; color: var(--scarlet-dim); line-height: 1.55; margin: -0.5rem 0 1rem 32px; padding: 0.6rem 0.9rem; background: var(--scarlet-pale); border: 0.5px solid #E0B0B8; border-radius: var(--radius-md); }
+.mm-form-col.simple-on .mm-simple-note { display: block; }
+.mm-form-col.simple-on #step2-sub,
+.mm-form-col.simple-on #pyr-row,
+.mm-form-col.simple-on #grade-host,
+.mm-form-col.simple-on #step3 { display: none; }
+/* ladder legend above the simple results */
+.mm-sledger { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 9px; font-size: 11px; color: var(--text-muted); margin-bottom: 0.9rem; line-height: 1.9; }
+/* compact ranked rows — each expands to the gap + probability math */
+.mm-srows { display: flex; flex-direction: column; gap: 6px; }
+.mm-srow { border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--card); overflow: hidden; }
+.mm-srow.open { border-color: var(--scarlet); box-shadow: var(--shadow-soft); }
+.mm-srow-head { display: flex; align-items: center; gap: 11px; width: 100%; background: transparent; border: none; font-family: inherit; text-align: left; padding: 0.55rem 0.85rem; cursor: pointer; }
+.mm-srow-head:hover { background: var(--surface); }
+.mm-srow .mm-avatar { width: 34px; height: 34px; font-size: 13px; }
+.mm-srow-rank { width: 16px; flex-shrink: 0; font-size: 11px; font-weight: 800; color: var(--text-dim); text-align: right; }
+.mm-srow-id { flex: 1; min-width: 0; }
+.mm-srow-name { font-size: 13.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mm-srow-meta { font-size: 10.5px; color: var(--text-dim); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mm-srow-head .mm-tier-badge { flex-shrink: 0; min-width: 74px; text-align: center; }
+.mm-srow-chev { color: var(--text-dim); font-size: 15px; flex-shrink: 0; }
+/* expandable per-row detail (the desire math + the odds math) */
+.mm-srow-bd { padding: 0 0.85rem 0.7rem; }
+.mm-srow-bd-inner { border-top: 0.5px dashed var(--border); padding-top: 0.6rem; display: flex; flex-direction: column; gap: 0.55rem; }
+/* scorecard: your Looks·SMV vs theirs, set before the math so the numbers aren't a cipher */
+.mm-sb-card { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 12px; font-size: 11.5px; color: var(--text-muted); padding: 6px 10px; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-sm); }
+.mm-sb-card b { color: var(--text); }
+.mm-sb-vs { font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+.mm-sb-h { font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 3px; }
+.mm-sb-line { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.mm-sb-line + .mm-sb-line { margin-top: 3px; }
+.mm-sb-line b { color: var(--text); }
+.mm-sb-line .mm-tier-badge { vertical-align: middle; }
+.mm-sb-line a { color: var(--scarlet-dim); }
+.mm-sb-rank { font-size: 11.5px; color: var(--text-dim); font-style: italic; border-top: 0.5px dashed var(--border); padding-top: 0.5rem; }
+.mm-sb-rank b { color: var(--text); font-style: normal; }
+/* pairing-probability bubble next to the stamp (green/amber/scarlet by odds) */
+.mm-prob { flex-shrink: 0; min-width: 44px; text-align: center; font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; padding: 3px 8px; border-radius: 999px; }
+.mm-prob.p-hi { background: #E6F5EF; color: #0F6E56; }
+.mm-prob.p-mid { background: #FAEEDA; color: #854F0B; }
+.mm-prob.p-lo { background: var(--scarlet-pale); color: var(--scarlet-dim); }
+/* the legend's second line (stamp vs % explainer) */
+.mm-sledger-note { font-size: 11px; color: var(--text-muted); line-height: 1.6; margin: -0.45rem 0 0.95rem; }
+.mm-sledger-note a { color: var(--scarlet-dim); }
+/* "show all / show top 10" toggle under the simple rows */
+.mm-srow-more { display: block; width: 100%; margin: 0.7rem 0 0; font-family: inherit; font-size: 12.5px; font-weight: 700; color: var(--scarlet-dim); background: transparent; border: 0.5px dashed var(--border); border-radius: var(--radius-md); padding: 0.6rem; cursor: pointer; transition: color 0.12s, border-color 0.12s; }
+.mm-srow-more:hover { color: var(--scarlet); border-color: var(--scarlet); }
+/* simple-mode preview: static rows + a probability column */
+.mm-pv-row.mm-pv-static { cursor: default; }
+.mm-pv-row.mm-pv-static:hover { background: transparent; }
+.mm-pv-prob { flex-shrink: 0; width: 38px; text-align: right; font-size: 11.5px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.mm-pv-prob.p-hi { color: #0F6E56; } .mm-pv-prob.p-mid { color: #854F0B; } .mm-pv-prob.p-lo { color: var(--scarlet-dim); }
+
 /* ── honest-mirror banner ── */
 .mm-mirror { font-size: 12.5px; line-height: 1.6; padding: 0.85rem 1rem; border-radius: var(--radius-sm); background: var(--scarlet-pale); color: var(--scarlet-dim); margin-bottom: 1.1rem; border: 0.5px solid #E0B0B8; }
 .mm-mirror strong { color: var(--scarlet-deep); }
@@ -160,6 +219,9 @@
 .mm-tier-badge.is-mixed { background: #C08A2E; }
 .mm-tier-badge.is-weak { background: var(--scarlet-dim); }
 .mm-tier-badge.is-hardno { background: var(--scarlet-deep); }
+.mm-tier-badge.is-fair { background: #C08A2E; }
+/* simple-mode top tier: best-case landing — dark green, the strongest positive (matches full-mode "exceptional") */
+.mm-tier-badge.is-excellent { background: #0F6E56; }
 
 /* ── breakdown body ── */
 .mm-bd { border-top: 0.5px solid var(--border); background: var(--card-solid); }

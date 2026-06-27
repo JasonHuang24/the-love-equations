@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/matchmaker.css?v=5.5" />
+  <link rel="stylesheet" href="css/matchmaker.css?v=6.0" />
 </head>
 <body data-page="matchmaker">
   <div data-include="navigation-bar"></div>
@@ -62,13 +62,15 @@
       <!-- STEP 2 — PYRAMID + SELF-GRADE -->
       <div class="mm-step">
         <div class="mm-step-head"><span class="mm-step-n">2</span><span class="mm-step-title">Your standard</span><button class="mm-step-reset" type="button" data-reset="2" title="Reset this step to defaults"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button></div>
-        <div class="mm-step-sub">Pick the hierarchy that fits how you actually weigh a partner. Its factors become the breakdown each match is scored on. (Your <a href="hierarchy.html">hierarchy</a> page stays untouched.)</div>
+        <div class="mm-step-sub" id="step2-sub">Pick the hierarchy that fits how you actually weigh a partner. Its factors become the breakdown each match is scored on. (Your <a href="hierarchy.html">hierarchy</a> page stays untouched.)</div>
+        <label class="mm-simple-toggle" for="simple-toggle"><input type="checkbox" id="simple-toggle"><span class="mm-simple-main"><strong>Skip the nuance &mdash; just compare us head-to-head.</strong> Drops the hierarchy and the desire quiz below; ranks every candidate by your <strong>Step&nbsp;1</strong> priority &mdash; <em>Looks</em> or <em>SMV</em> &mdash; while still weighing the other (the toggle is a priority, not a blinder).</span></label>
+        <div class="mm-simple-note" id="simple-note">Head-to-head is on &mdash; the hierarchy and the desire quiz are skipped. Each candidate gets a <strong>desire stamp</strong> (your priority blend &mdash; Step&nbsp;1 axis leads, the other still counts) and a <strong>pairing %</strong> (odds they accept you: a status gap <em>plus</em> a looks-attraction markdown), sex &amp; commitment aware. The top 10 are ranked by <em>desire &times; odds</em>, with a button to show everyone. Change an input and the list clears &mdash; hit Find for a fresh set. Untick to bring back the full gated breakdown.</div>
         <div class="mm-pyr-row" id="pyr-row"></div>
         <div class="mm-grade-host" id="grade-host"></div>
       </div>
 
       <!-- STEP 3 — DESIRE QUIZ -->
-      <div class="mm-step">
+      <div class="mm-step" id="step3">
         <div class="mm-step-head"><span class="mm-step-n">3</span><span class="mm-step-title">What you want</span><button class="mm-step-reset" type="button" data-reset="3" title="Reset this step to defaults"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button></div>
         <div class="mm-step-sub">Twenty-five quick dials on your taste &mdash; <strong>neutral by default</strong>, so move only what you actually care about. Most are <strong>one-tap either/or</strong> dials; the <strong>list</strong> questions marked <em>pick any</em> (hair, aesthetic, ethnicity, type you fall for, lifestyle) let you stack more than one. They drive the relational factors (desire, shared values, common interests) and the <strong>Looks</strong> dials (height, build, hair, aesthetic, ethnicity) reshape a candidate's <em>physical attractiveness to you</em>. The more you set, the sharper the match.</div>
         <div class="mm-quiz" id="quiz-host"></div>
@@ -337,8 +339,60 @@
     { min:0,   key:'hardno',      label:'Hard No' },
   ];
 
+  // ── simple head-to-head ladder: one axis, one CURVED gap (their score − yours). ──
+  // Premise: the match list is "who'd match you back", so an above-you partner that lands is a
+  // real win → the top tier is "Excellent", not a cautioned "reach".
+  // The gap is curved at the two ends so the ceiling/floor behave sensibly:
+  //   • bonus   = max(0, C − 8.5)  → landing a near-perfect partner (9.5–10) reads Excellent even
+  //               at a tiny gap (a 10's best case is another 10; a 9 reaches Excellent at 9.5+).
+  //   • penalty = max(0, 2.5 − C)  → a bottom-of-scale pairing only reaches Fair (another 1 isn't a
+  //               win; from a 1 you need ~1.5+ to clear Strong).
+  // Mid-scale (2.5 ≤ C ≤ 8.5) is the plain gap, unchanged. Curve is monotonic in C. The bands below
+  // reproduce every worked example: 10×10 → Excellent, 10×9.5 → Strong, 9×9.5 → Excellent, 1×1 → Fair, 1×1.5 → Strong.
+  const SIMPLE_BANDS = [
+    { key:'excellent', label:'Excellent', desc:'best-case landing — the top of what you could match' }, // g > +1
+    { key:'strong',    label:'Strong',    desc:'a solid match around your level' },                      // −1 ≤ g ≤ +1
+    { key:'fair',      label:'Fair',      desc:'a notch below your level' },                              // −2 ≤ g < −1
+    { key:'weak',      label:'Weak',      desc:'well below your level' },                                 // −3 ≤ g < −2
+    { key:'hardno',    label:'Hard no',   desc:'far below — not a real match' },                          // g < −3
+  ];
+  const simpleGap = (c, u) => (c - u) + Math.max(0, c - 8.5) - Math.max(0, 2.5 - c);
+  function simpleVerdict(g){
+    if (g > 1.0)   return SIMPLE_BANDS[0];
+    if (g >= -1.0) return SIMPLE_BANDS[1];
+    if (g >= -2.0) return SIMPLE_BANDS[2];
+    if (g >= -3.0) return SIMPLE_BANDS[3];
+    return SIMPLE_BANDS[4];
+  }
+  // ── DESIRABILITY blend — the Looks/SMV toggle is a PRIORITY (what you WANT), not a blinder. Both
+  //    axes count; the chosen one leads 70/30. Drives the stamp + the "desire" half of the rank. ──
+  const PRIORITY_W = 0.7;   // leading axis gets 70%, the other 30%
+  const effVal = (looks, smv) => mode==='looks'
+    ? PRIORITY_W*looks + (1-PRIORITY_W)*smv
+    : PRIORITY_W*smv   + (1-PRIORITY_W)*looks;
+  // ── PAIRING ODDS — whether THEY accept YOU. Two gates, independent of your priority toggle
+  //    (acceptance physics doesn't care what you're shopping for):
+  //      • Status gate — their composite SMV vs yours: the site's acceptance model (Attention Market /
+  //        Treatment Markup), where the higher partner dates DOWN; a logistic at 50% = tolerance T,
+  //        set by sex × stakes.
+  //      • Attraction gate — a LOOKS markdown: being below them on looks adds hard resistance a status
+  //        edge can only partly buy past (a 3-pt deficit is a wall), so a 4-looks / 7-SMV man does NOT
+  //        land a 7-looks woman just because his SMV nudges hers. Being better-looking lifts mildly.
+  //    NOTE: this is the Attention Market acceptance model, NOT the Spiderman Effect (that one is the
+  //    subjective-perception lens — two people rating the same person differently). Provisional. ──
+  const ATTAIN_TOL = { m: { fling: 3.0, rel: 1.5 }, f: { fling: 1.0, rel: 2.0 } };
+  const LOOKS_PEN = 1.5, LOOKS_BON = 0.5;   // looks deficit penalizes hard; a surplus lifts mildly
+  let simpleStakes = 'rel';   // simple-mode commitment context — defaults to relationship
+  function pairProb(c, uLooks, uSmv, candSex){
+    const smvGap = c.smv - uSmv, looksGap = c.looks - uLooks;
+    const looksAdj = looksGap > 0 ? LOOKS_PEN*looksGap : LOOKS_BON*looksGap;   // >0 you're below (markdown); <0 above (lift)
+    const gap = smvGap + looksAdj;                        // >0 → they're effectively higher, dating down to you (the gate)
+    const T = ATTAIN_TOL[candSex][simpleStakes];
+    return clamp(Math.round(100 / (1 + Math.exp(0.9 * (gap - T)))), 2, 98);   // never a dead-cert 100% or flat 0%
+  }
+
   // ── state ──
-  let userSex = 'm', mode = 'looks', pyramid = 'you';
+  let userSex = 'm', mode = 'looks', pyramid = 'you', simpleMode = false, simpleShowAll = false;
   let importedFace = null, importedBody = null, importedLooks = null, importedSMV = null;
   let manualLooks = 1, manualSMV = 6;
   let overrideLooks = false, overrideSMV = false;   // manual override of an imported score
@@ -346,6 +400,7 @@
   let selfGrades = {};
   let quiz = {};
   const openCards = new Set();
+  const simpleOpen = new Set();   // expanded rows in simple head-to-head mode (mirrors openCards)
   QUIZ.forEach(q => quiz[q.id] = [q.def!=null ? q.def : 0]);   // each answer is a SET of picked indices; defaults to its neutral option
 
   const clamp = (n,lo,hi) => Math.max(lo, Math.min(hi, n));
@@ -390,7 +445,7 @@
     try {
       const ageEl = document.getElementById('user-age');
       localStorage.setItem(MM_KEY, JSON.stringify({
-        v:1, userSex, mode, pyramid, manualLooks, manualSMV, overrideLooks, overrideSMV,
+        v:1, userSex, mode, pyramid, simpleMode, manualLooks, manualSMV, overrideLooks, overrideSMV,
         age: ageEl ? parseInt(ageEl.value,10) : null, selfGrades, quiz
       }));
     } catch(e){}
@@ -400,6 +455,7 @@
     const s = readLS(MM_KEY); if (!s || typeof s!=='object') return;
     if (s.userSex==='m'||s.userSex==='f') userSex = s.userSex;
     if (s.mode==='looks'||s.mode==='smv') mode = s.mode;
+    if (typeof s.simpleMode==='boolean') simpleMode = s.simpleMode;
     if (typeof s.manualLooks==='number' && isFinite(s.manualLooks)) manualLooks = clamp(s.manualLooks,1,10);
     if (typeof s.manualSMV==='number' && isFinite(s.manualSMV)) manualSMV = clamp(s.manualSMV,1,10);
     overrideLooks = !!s.overrideLooks; overrideSMV = !!s.overrideSMV;
@@ -834,12 +890,118 @@
     }).filter(x => x.inBand).sort((a,b)=> b.a.sb.final - a.a.sb.final || b.s - a.s);
     return { scored, d, u };
   }
+
+  // ── simple head-to-head: NO band-clamp, NO gates, NO quiz — every candidate of the target sex
+  //    scored by a CURVED gap on the active axis (looks or SMV), best match first. The list is
+  //    "who'd match you back", so a reach that lands is a genuine win. Top 10 shown, expandable. ──
+  function currentMatchesSimple(){
+    const uLooks = userLooks(), uSmv = userSMV(), uV = effVal(uLooks, uSmv), want = targetSex();
+    const list = ROSTER.filter(c => c.g===want).map(c => {
+      const cV = effVal(c.looks, c.smv), g = simpleGap(cV, uV);       // their desirability blend, curved gap for the stamp
+      const p = pairProb(c, uLooks, uSmv, want);                      // odds: status gate + looks-attraction markdown
+      return { c, cV, g, v: simpleVerdict(g), p, rank: cV * (p/100) };// rank = desirability × P(attain)
+    }).sort((a,b)=> b.rank - a.rank || b.cV - a.cV);
+    return { list, uV };
+  }
+  const showingResults = () => { const h=document.getElementById('results-host'); return !!(h && h.children.length); };
+  const pCls = p => p>=70 ? 'p-hi' : p>=40 ? 'p-mid' : 'p-lo';
+  const SIMPLE_LEGEND = `<div class="mm-sledger"><span class="mm-tier-badge is-excellent">Excellent</span> best-case landing <span class="mm-tier-badge is-strong">Strong</span> a solid match <span class="mm-tier-badge is-fair">Fair</span> below your level <span class="mm-tier-badge is-weak">Weak</span> well below <span class="mm-tier-badge is-hardno">Hard no</span> far below</div><div class="mm-sledger-note"><strong>Stamp</strong> = how good they'd be for you (your priority blend). <strong>%</strong> = your odds of actually pairing &mdash; a <strong>status (SMV) gate</strong> plus a <strong>looks-attraction markdown</strong>, sex- &amp; commitment-aware, on the <a href="frameworks.html#attention-market">Attention Market</a> tolerances. Ranked by the two together &mdash; your best <em>realistic</em> catch first.</div>`;
+  // the per-row expandable detail: the desire math (priority blend → gap → curve → stamp) and the
+  // odds math (blend gap → who dates down → tolerance → %), then the desire×odds rank. No hierarchy
+  // here — simple mode bypasses it — so this shows exactly how the two numbers are built.
+  function simpleBreakdown(x, uV){
+    const c = x.c, first = c.name.split(' ')[0], prio = mode==='looks' ? 'Looks' : 'SMV';
+    const uLk = userLooks(), uSm = userSMV();
+    const wL = mode==='looks' ? Math.round(PRIORITY_W*100) : Math.round((1-PRIORITY_W)*100);   // Looks weight (Looks-first, always)
+    const wS = 100 - wL;
+    const cV = x.cV, sgap = round1(cV - uV);
+    const bonus = Math.max(0, cV - 8.5), pen = Math.max(0, 2.5 - cV);
+    const curveBits = [];
+    if (bonus>0) curveBits.push(`+${bonus.toFixed(1)} ceiling bonus`);
+    if (pen>0)   curveBits.push(`&minus;${pen.toFixed(1)} floor penalty`);
+    const gapToStamp = curveBits.length
+      ? `gap <b>${sgap>=0?'+':''}${sgap.toFixed(1)}</b> (${curveBits.join(', ')}) &rarr; curved <b>${x.g>=0?'+':''}${x.g.toFixed(1)}</b>`
+      : `gap <b>${sgap>=0?'+':''}${sgap.toFixed(1)}</b>`;
+    // odds — two gates, shown Looks → SMV to match the row header
+    const smvGap = round1(c.smv - uSm), looksGap = round1(c.looks - uLk);
+    const looksAdj = round1(looksGap > 0 ? LOOKS_PEN*looksGap : LOOKS_BON*looksGap);
+    const effGap = round1(smvGap + looksAdj), T = ATTAIN_TOL[c.g][simpleStakes];
+    const her = c.g==='f' ? 'she' : 'he', stakesWord = simpleStakes==='rel' ? 'commitment' : 'fling';
+    let looksLine;
+    if (looksGap > 0.05) looksLine = `they're <b>${c.looks.toFixed(1)}</b>, you're <b>${uLk.toFixed(1)}</b> &mdash; you're <b>${looksGap.toFixed(1)} below</b> &rarr; <b>+${looksAdj.toFixed(1)}</b> markdown`;
+    else if (looksGap < -0.05) looksLine = `they're <b>${c.looks.toFixed(1)}</b>, you're <b>${uLk.toFixed(1)}</b> &mdash; you're <b>${(-looksGap).toFixed(1)} above</b> &rarr; <b>${looksAdj.toFixed(1)}</b> lift`;
+    else looksLine = `both <b>${c.looks.toFixed(1)}</b> &mdash; no markdown`;
+    const smvLine = `they're <b>${c.smv.toFixed(1)}</b>, you're <b>${uSm.toFixed(1)}</b> &rarr; <b>${smvGap>=0?'+':''}${smvGap.toFixed(1)}</b>`;
+    const netLine = effGap > 0.05
+      ? `<b>Net +${effGap.toFixed(1)}</b> against you &mdash; ${her}&rsquo;d be dating down (${stakesWord} tolerance T&nbsp;<b>${T.toFixed(1)}</b>) &rarr; <b>${x.p}%</b> accept`
+      : `<b>Net ${effGap.toFixed(1)}</b> &mdash; ${her} (dating up) readily accepts &rarr; <b>${x.p}%</b>`;
+    return `<div class="mm-srow-bd-inner">
+      <div class="mm-sb-card"><span>You &mdash; <b>Looks ${uLk.toFixed(1)}</b> &middot; <b>SMV ${uSm.toFixed(1)}</b></span><span class="mm-sb-vs">vs</span><span>${first} &mdash; <b>Looks ${c.looks.toFixed(1)}</b> &middot; <b>SMV ${c.smv.toFixed(1)}</b></span></div>
+      <div class="mm-sb-block"><div class="mm-sb-h">Desire &mdash; how much you want them</div>
+        <div class="mm-sb-line">Prioritizing ${prio} (<b>${wL}%</b> Looks + <b>${wS}%</b> SMV): your blend <b>${uV.toFixed(1)}</b> vs their <b>${cV.toFixed(1)}</b> &rarr; ${gapToStamp} &rarr; <span class="mm-tier-badge is-${x.v.key}">${x.v.label}</span></div></div>
+      <div class="mm-sb-block"><div class="mm-sb-h">Odds &mdash; will they accept you?</div>
+        <div class="mm-sb-line"><b>Looks</b> (attraction): ${looksLine}.</div>
+        <div class="mm-sb-line"><b>SMV</b> (status): ${smvLine}.</div>
+        <div class="mm-sb-line">${netLine}. <span style="color:var(--text-dim)">Tolerances from the <a href="frameworks.html#attention-market">Attention Market</a>.</span></div></div>
+      <div class="mm-sb-rank">Ranked by <b>desire &times; odds</b>: their <b>${cV.toFixed(1)}</b> &times; <b>${x.p}%</b> = <b>${(cV*x.p/100).toFixed(2)}</b>.</div>
+    </div>`;
+  }
+  function renderResultsSimple(list, uV){
+    const host = document.getElementById('results-host'); if(!host) return;
+    const prio = mode==='looks' ? 'Looks' : 'SMV', other = mode==='looks' ? 'SMV' : 'Looks';
+    const wP = Math.round(PRIORITY_W*100), wO = 100 - wP;
+    if (!list.length){ host.innerHTML = `<div class="mm-empty">No ${targetSex()==='f'?'women':'men'} in the roster to compare against.</div>`; return; }
+    const total = list.length, shown = simpleShowAll ? list : list.slice(0,10);
+    const sc = c => mode==='looks'
+      ? `<b>Looks ${c.looks.toFixed(1)}</b> &middot; SMV ${c.smv.toFixed(1)}`
+      : `Looks ${c.looks.toFixed(1)} &middot; <b>SMV ${c.smv.toFixed(1)}</b>`;
+    host.innerHTML =
+      `<div class="mm-results-head">Head-to-head &mdash; prioritizing ${prio} (your blend <b>${uV.toFixed(1)}</b>) vs the field, best realistic match first</div>`
+      + SIMPLE_LEGEND
+      + `<div class="mm-srows">` + shown.map((x,idx)=>{
+          const c=x.c, v=x.v, open=simpleOpen.has(c.slug);
+          return `<div class="mm-srow${open?' open':''}" data-slug="${c.slug}">`
+            + `<button class="mm-srow-head" type="button" data-exp="${c.slug}" aria-expanded="${open}" aria-controls="sb-${c.slug}"><span class="mm-srow-rank">${idx+1}</span>${avatar(c)}<div class="mm-srow-id"><div class="mm-srow-name">${c.name}</div><div class="mm-srow-meta">Age ${c.age} &middot; ${c.career} &middot; ${sc(c)}</div></div><span class="mm-prob ${pCls(x.p)}" title="Odds they accept you — status (SMV) gap + looks-attraction markdown, sex &amp; commitment aware">${x.p}%</span><span class="mm-tier-badge is-${v.key}" title="${v.desc}">${v.label}</span><i class="ti ti-chevron-${open?'up':'down'} mm-srow-chev" aria-hidden="true"></i></button>`
+            + `<div class="mm-srow-bd" id="sb-${c.slug}"${open?'':' hidden'}>${simpleBreakdown(x, uV)}</div></div>`;
+        }).join('') + `</div>`
+      + (total>10 ? `<button class="mm-srow-more" id="simple-more" type="button">${simpleShowAll ? 'Show top 10 only' : 'Show all '+total+' matches'}</button>` : '')
+      + `<div class="mm-foot">Two reads per row. The <strong>stamp</strong> = <strong>desire</strong>: the <strong>${prio}</strong> toggle is a priority, not a blinder, so it blends <strong>${wP}% ${prio} + ${wO}% ${other}</strong> (your off-axis value still counts), curved at the ends. The <strong>%</strong> = <strong>odds they accept you</strong>, on two gates &mdash; a <strong>status (SMV)</strong> gap <em>and</em> a <strong>looks-attraction markdown</strong> (being well below on looks is a wall a status edge only partly buys past), gated by whoever's dating down with the sex- and ${simpleStakes==='rel'?'commitment':'fling'}-aware tolerances from the <a href="frameworks.html#attention-market">Attention Market</a>. Ranked by <strong>desire &times; odds</strong> &mdash; best realistic catch first. Adjust any input and the list clears: hit <strong>Find my matches</strong> for a fresh set. <span class="mm-tag est">Estimate</span></div>`;
+    document.querySelectorAll('#results-host .mm-srow-head').forEach(h => h.addEventListener('click', ()=>{
+      const slug=h.dataset.exp;
+      if (simpleOpen.has(slug)) simpleOpen.delete(slug); else simpleOpen.add(slug);
+      const row=h.closest('.mm-srow'), bd=row.querySelector('.mm-srow-bd'), chev=row.querySelector('.mm-srow-chev'), open=simpleOpen.has(slug);
+      row.classList.toggle('open',open); bd.hidden=!open; h.setAttribute('aria-expanded',open);
+      chev.classList.toggle('ti-chevron-up',open); chev.classList.toggle('ti-chevron-down',!open);
+    }));
+    const more = document.getElementById('simple-more');
+    if (more) more.addEventListener('click', ()=>{ simpleShowAll = !simpleShowAll; const r = currentMatchesSimple(); renderResultsSimple(r.list, r.uV); });
+  }
+  function renderPreviewSimple(list, uV){
+    const host = document.getElementById('preview-host'); if(!host) return;
+    const sub = document.getElementById('preview-sub'), abbr = mode==='looks' ? 'Looks' : 'SMV';
+    if (sub) sub.innerHTML = `Head-to-head &middot; prioritizing ${mode==='looks'?'looks':'SMV'} (blend <strong>${uV.toFixed(1)}</strong>) vs ${targetSex()==='f'?'women':'men'} &middot; desire &times; odds`;
+    if (!list.length){ host.innerHTML = `<div class="mm-pv-empty">No one to compare against.</div>`; return; }
+    host.innerHTML = `<ol class="mm-pv-list">` + list.slice(0,10).map((x,i)=>{
+      const c=x.c, ps = mode==='looks' ? c.looks : c.smv;
+      return `<li class="mm-pv-row mm-pv-static"><span class="mm-pv-rank">${i+1}</span><span class="mm-pv-name">${c.name}</span><span class="mm-pv-axis">${abbr}&nbsp;${ps.toFixed(1)}</span><span class="mm-pv-prob ${pCls(x.p)}">${x.p}%</span></li>`;
+    }).join('') + `</ol><div class="mm-pv-foot">% = odds they accept you (status gap + looks markdown, sex &amp; commitment aware). Ranked by desire &times; odds &mdash; best realistic catch first.</div>`;
+  }
+
   function runMatch(){
-    const { scored, d, u } = currentMatches();
-    openCards.clear();
-    if (scored.length) openCards.add(scored[0].c.slug);   // top result expanded by default
-    renderResults(scored.slice(0,10), d, u);
-    renderPreview(scored, d, u);
+    const fn = document.getElementById('find-note'); if (fn) fn.textContent = '';   // results now reflect current inputs
+    if (simpleMode){
+      simpleShowAll = false;   // a fresh search starts collapsed at the top 10
+      simpleOpen.clear();
+      const { list, uV } = currentMatchesSimple();
+      if (list.length) simpleOpen.add(list[0].c.slug);   // top match expanded by default
+      renderResultsSimple(list, uV); renderPreviewSimple(list, uV);
+    } else {
+      const { scored, d, u } = currentMatches();
+      openCards.clear();
+      if (scored.length) openCards.add(scored[0].c.slug);   // top result expanded by default
+      renderResults(scored.slice(0,10), d, u);
+      renderPreview(scored, d, u);
+    }
     // on stacked (mobile) layout the results sit below the live preview — jump to them
     // so "Find my matches" visibly does something instead of scrolling off-screen.
     if (window.matchMedia && window.matchMedia('(max-width: 880px)').matches){
@@ -847,19 +1009,34 @@
       if (rh) rh.scrollIntoView({ behavior:'smooth', block:'start' });
     }
   }
+  // Any input change keeps the LIVE PREVIEW live, but INVALIDATES the committed results below —
+  // they clear so a stale set never lingers after you move a slider or flip a toggle. Re-hit Find.
   function liveReRank(){
-    const { scored, d, u } = currentMatches();
-    renderPreview(scored, d, u);
-    if (document.querySelector('.mm-rcard') || document.querySelector('.mm-empty'))
-      renderResults(scored.slice(0,10), d, u);
+    if (simpleMode){
+      const { list, uV } = currentMatchesSimple();
+      renderPreviewSimple(list, uV);
+    } else {
+      const { scored, d, u } = currentMatches();
+      renderPreview(scored, d, u);
+    }
+    const host = document.getElementById('results-host');
+    if (host && host.children.length){
+      host.innerHTML = ''; openCards.clear(); simpleOpen.clear();
+      const fn = document.getElementById('find-note'); if (fn) fn.textContent = 'Inputs changed — hit Find my matches for a fresh set.';
+    }
     saveState();   // every state-mutating interaction funnels through here
+  }
+  // reflect simpleMode in the form chrome: hide the hierarchy + quiz, show the note, sync the box.
+  function applySimpleUI(){
+    const col = document.querySelector('.mm-form-col'); if (col) col.classList.toggle('simple-on', simpleMode);
+    const cb = document.getElementById('simple-toggle'); if (cb) cb.checked = simpleMode;
   }
   // compact always-on preview beside the form — in-band names + their score on the
   // axis you're matching by (looks or SMV), so the number matches the axis and the toggle.
   function renderPreview(scored, d, u){
     const host = document.getElementById('preview-host'); if(!host) return;
     const sub = document.getElementById('preview-sub');
-    const axisLabel = mode==='looks' ? 'looks' : 'SMV', axisAbbr = mode==='looks' ? 'L' : 'SMV';
+    const axisLabel = mode==='looks' ? 'looks' : 'SMV', axisAbbr = mode==='looks' ? 'Looks' : 'SMV';
     if (sub) sub.innerHTML = `Band <strong>${(u-1).toFixed(1)}&ndash;${(u+1+(d.reach||0)).toFixed(1)}</strong> &middot; ${targetSex()==='f'?'women':'men'} &middot; ranked by match`;
     if (!scored.length){ host.innerHTML = `<div class="mm-pv-empty">No one in your band yet &mdash; widen your aim, or flip By Looks / By SMV.</div>`; return; }
     // mirror the results exactly: same ranking (gated match), so the preview never disagrees with "Find my matches"
@@ -1010,9 +1187,9 @@
   }
   // Step 2 (Your standard): default pyramid, every bar back to 6, drop any Compatibility import.
   function resetStep2(){
-    selfGrades = {}; compatValues = {}; compatImported = false;
+    selfGrades = {}; compatValues = {}; compatImported = false; simpleMode = false;
     pyramid = pyramidsForTarget()[0];
-    renderPyramid(); liveReRank();
+    applySimpleUI(); renderPyramid(); liveReRank();
   }
   // Step 3 (What you want): every quiz dial back to its neutral default.
   function resetStep3(){
@@ -1040,7 +1217,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initImports();
     loadState();   // restore the user's last matchmaker session over the calc-derived defaults
-    renderIntake(); renderPyramid(); renderQuiz();
+    renderIntake(); renderPyramid(); renderQuiz(); applySimpleUI();
     document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
     document.querySelectorAll('#mode-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.mode===mode; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
     wireToggle('sex-toggle', 'sex', v => userSex=v);
@@ -1050,6 +1227,9 @@
     ageEl.addEventListener('change', () => { const v=parseInt(ageEl.value,10); ageEl.value = isFinite(v)?clamp(v,18,80):30; liveReRank(); });
     document.getElementById('find-btn').addEventListener('click', runMatch);
     document.getElementById('hide-btn').addEventListener('click', hideMatches);
+    document.getElementById('simple-toggle').addEventListener('change', e => {
+      simpleMode = e.target.checked; applySimpleUI(); liveReRank();   // swaps preview + (if showing) results between modes
+    });
     document.querySelectorAll('.mm-step-reset').forEach(b => b.addEventListener('click', () => {
       const s = b.dataset.reset;
       if (s==='1') resetStep1(); else if (s==='2') resetStep2(); else resetStep3();
