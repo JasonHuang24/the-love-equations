@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/matchmaker.css?v=7.8" />
+  <link rel="stylesheet" href="css/matchmaker.css?v=7.9" />
 </head>
 <body data-page="matchmaker">
   <div data-include="navigation-bar"></div>
@@ -2778,10 +2778,17 @@
   }
 
   const AV_COLORS = ['#C41E3A','#1E5AA0','#4E3D9E','#6E2742','#0F6E56','#854F0B','#B5531A','#2C6FB5'];
+  // Roster headshots (Wikipedia/Commons). Only slugs with a real file appear here;
+  // anyone missing keeps their colored initials chip. See images/roster/manifest.json.
+  const ROSTER_IMG = {'adele':'images/roster/adele.jpg', 'amber-heard':'images/roster/amber-heard.jpg', 'amy-schumer':'images/roster/amy-schumer.jpg', 'anna-sorokin':'images/roster/anna-sorokin.jpg', 'anne-hathaway':'images/roster/anne-hathaway.jpg', 'armie-hammer':'images/roster/armie-hammer.jpg', 'azealia-banks':'images/roster/azealia-banks.jpg', 'bella-thorne':'images/roster/bella-thorne.jpg', 'ben-shapiro':'images/roster/ben-shapiro.jpg', 'billy-mcfarland':'images/roster/billy-mcfarland.jpg', 'brad-pitt':'images/roster/brad-pitt.jpg', 'casey-anthony':'images/roster/casey-anthony.jpg', 'chris-hemsworth':'images/roster/chris-hemsworth.jpg', 'danny-devito':'images/roster/danny-devito.jpg', 'dev-patel':'images/roster/dev-patel.jpg', 'drake':'images/roster/drake.jpg', 'elizabeth-holmes':'images/roster/elizabeth-holmes.jpg', 'elon-musk':'images/roster/elon-musk.jpg', 'emma-stone':'images/roster/emma-stone.jpg', 'farrah-abraham':'images/roster/farrah-abraham.jpg', 'gal-gadot':'images/roster/gal-gadot.jpg', 'george-santos':'images/roster/george-santos.jpg', 'grimes':'images/roster/grimes.jpg', 'henry-cavill':'images/roster/henry-cavill.jpg', 'idris-elba':'images/roster/idris-elba.jpg', 'jack-black':'images/roster/jack-black.jpg', 'james-corden':'images/roster/james-corden.jpg', 'jeff-bezos':'images/roster/jeff-bezos.jpg', 'jennifer-lawrence':'images/roster/jennifer-lawrence.jpg', 'jo-brand':'images/roster/jo-brand.jpg', 'joe-exotic':'images/roster/joe-exotic.jpg', 'joe-rogan':'images/roster/joe-rogan.jpg', 'johnny-depp':'images/roster/johnny-depp.jpg', 'jon-gosselin':'images/roster/jon-gosselin.jpg', 'jonah-hill':'images/roster/jonah-hill.jpg', 'kato-kaelin':'images/roster/kato-kaelin.jpg', 'kevin-federline':'images/roster/kevin-federline.jpg', 'kim-kardashian':'images/roster/kim-kardashian.jpg', 'lena-dunham':'images/roster/lena-dunham.jpg', 'lizzo':'images/roster/lizzo.jpg', 'margot-robbie':'images/roster/margot-robbie.jpg', 'mark-zuckerberg':'images/roster/mark-zuckerberg.jpg', 'martin-shkreli':'images/roster/martin-shkreli.jpg', 'michael-b-jordan':'images/roster/michael-b-jordan.jpg', 'mila-kunis':'images/roster/mila-kunis.jpg', 'mindy-kaling':'images/roster/mindy-kaling.jpg', 'nadya-suleman':'images/roster/nadya-suleman.jpg', 'nicolas-cage':'images/roster/nicolas-cage.jpg', 'paul-rudd':'images/roster/paul-rudd.jpg', 'pauly-shore':'images/roster/pauly-shore.jpg', 'pete-davidson':'images/roster/pete-davidson.jpg', 'post-malone':'images/roster/post-malone.jpg', 'rachel-dolezal':'images/roster/rachel-dolezal.jpg', 'rebel-wilson':'images/roster/rebel-wilson.jpg', 'roseanne-barr':'images/roster/roseanne-barr.jpg', 'rudy-giuliani':'images/roster/rudy-giuliani.jpg', 'russell-brand':'images/roster/russell-brand.jpg', 'ryan-gosling':'images/roster/ryan-gosling.jpg', 'sam-bankman-fried':'images/roster/sam-bankman-fried.jpg', 'scarlett-johansson':'images/roster/scarlett-johansson.jpg', 'seth-rogen':'images/roster/seth-rogen.jpg', 'shia-labeouf':'images/roster/shia-labeouf.jpg', 'spencer-pratt':'images/roster/spencer-pratt.jpg', 'steve-buscemi':'images/roster/steve-buscemi.jpg', 'susan-boyle':'images/roster/susan-boyle.jpg', 'sydney-sweeney':'images/roster/sydney-sweeney.jpg', 'taylor-swift':'images/roster/taylor-swift.jpg', 'tekashi-6ix9ine':'images/roster/tekashi-6ix9ine.jpg', 'tila-tequila':'images/roster/tila-tequila.jpg', 'tonya-harding':'images/roster/tonya-harding.jpg', 'trisha-paytas':'images/roster/trisha-paytas.jpg', 'whoopi-goldberg':'images/roster/whoopi-goldberg.jpg', 'zendaya':'images/roster/zendaya.jpg'};
+  function avatarPhoto(c){
+    const src = ROSTER_IMG[c.slug];
+    return src ? `<img class="mm-avatar-photo" src="${src}" alt="${escHtml(c.name)}" loading="lazy" onerror="this.remove()">` : '';
+  }
   function avatar(c){
     const initials = c.name.split(' ').slice(0,2).map(w=>w[0]).join('');
     let h=0; for(let i=0;i<c.slug.length;i++) h=(h*31+c.slug.charCodeAt(i))>>>0;
-    return `<span class="mm-avatar" style="background:${AV_COLORS[h%AV_COLORS.length]}">${initials}</span>`;
+    return `<span class="mm-avatar" style="background:${AV_COLORS[h%AV_COLORS.length]}">${initials}${avatarPhoto(c)}</span>`;
   }
   const tierStatus = v => v>=GATE_CLEAR ? 'cleared' : v>=GATE_FAIL ? 'strained' : 'failed';
 
@@ -3090,7 +3097,7 @@
   function pwAvatar(c, lg){
     const initials = c.name.split(' ').slice(0,2).map(w=>w[0]).join('');
     let h=0; for(let i=0;i<c.slug.length;i++) h=(h*31+c.slug.charCodeAt(i))>>>0;
-    return `<span class="mm-avatar${lg?' mmw-av-lg':''}" style="background:${AV_COLORS[h%AV_COLORS.length]}">${initials}</span>`;
+    return `<span class="mm-avatar${lg?' mmw-av-lg':''}" style="background:${AV_COLORS[h%AV_COLORS.length]}">${initials}${avatarPhoto(c)}</span>`;
   }
 
   function renderPwSeg(){
