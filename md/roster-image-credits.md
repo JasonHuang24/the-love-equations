@@ -370,3 +370,49 @@ Curated Commons/Wikipedia portrait fill for public old-chat entries. Files are l
 | avatar | lilypichu | lead | [Commons](https://commons.wikimedia.org/wiki/File:Lilypichu_2018_(cropped).jpg) |
 | avatar | ihascupquake | lead | [Commons](https://commons.wikimedia.org/wiki/File:IHasCupquake.png) |
 | avatar | blaire-white | lead | [Commons](https://commons.wikimedia.org/wiki/File:Blaire_White_in_June_2019.png) |
+
+## 2026-06-30 expanded Openverse gallery wiring
+
+Selected subject-focused Openverse results from wider licensed sources, cropped where needed for dating-profile presentation. Weak, distant, group-heavy, non-person, or product-only results were rejected.
+
+| Kind | Profile | Slot | Source |
+| --- | --- | --- | --- |
+| gallery | pokimane | 1 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=128286802) |
+| gallery | qtcinderella | 1 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=143612207) |
+| gallery | amelia-dimoldenberg | 1 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=194294871) |
+| gallery | amelia-dimoldenberg | 2 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=161776122) |
+| gallery | maya-higa | 1 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=141959649) |
+| gallery | blaire-white | 1 | [Flickr](https://www.flickr.com/photos/14639118@N03/26422210499) |
+| gallery | ana-de-armas | 2 | [Flickr](https://www.flickr.com/photos/22007612@N05/36034834202) |
+| gallery | ana-de-armas | 3 | [Flickr](https://www.flickr.com/photos/22007612@N05/36067438621) |
+| gallery | victoria-justice | 2 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=28363327) |
+| gallery | victoria-justice | 3 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=10044838) |
+| gallery | megan-fox | 2 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=177407831) |
+| gallery | megan-fox | 3 | [Flickr](https://www.flickr.com/photos/36966509@N05/3908372463) |
+| gallery | lana-condor | 2 | [Flickr](https://www.flickr.com/photos/22007612@N05/19764810021) |
+| gallery | kylie-jenner | 2 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=193741488) |
+| gallery | margot-robbie | 4 | [Flickr](https://www.flickr.com/photos/22007612@N05/27983770104) |
+| gallery | gal-gadot | 5 | [Flickr](https://www.flickr.com/photos/22007612@N05/14596739858) |
+| gallery | gal-gadot | 6 | [Flickr](https://www.flickr.com/photos/22007612@N05/41950918780) |
+| gallery | scarlett-johansson | 4 | [Flickr](https://www.flickr.com/photos/22007612@N05/9363881948) |
+| gallery | zendaya | 5 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=81480161) |
+| gallery | jennifer-lawrence | 5 | [Flickr](https://www.flickr.com/photos/22007612@N05/9355240843) |
+| gallery | jennifer-lawrence | 6 | [Flickr](https://www.flickr.com/photos/22007612@N05/9362869370) |
+| gallery | emma-stone | 5 | [Flickr](https://www.flickr.com/photos/22007612@N05/6855553804) |
+| gallery | emma-stone | 6 | [Flickr](https://www.flickr.com/photos/22007612@N05/7001667239) |
+| gallery | brad-pitt | 5 | [Flickr](https://www.flickr.com/photos/53086225@N07/5072490175) |
+| gallery | brad-pitt | 6 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=152113880) |
+| gallery | chris-hemsworth | 5 | [Flickr](https://www.flickr.com/photos/58820009@N05/7400859048) |
+| gallery | henry-cavill | 5 | [Flickr](https://www.flickr.com/photos/22007612@N05/14596691880) |
+| gallery | michael-b-jordan | 4 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=186305001) |
+| gallery | dev-patel | 5 | [Wikimedia](https://commons.wikimedia.org/w/index.php?curid=52454230) |
+| gallery | dev-patel | 6 | [Flickr](https://www.flickr.com/photos/82924988@N05/15782203736) |
+| gallery | taylor-swift | 5 | [Flickr](https://www.flickr.com/photos/57474870@N03/5296412436) |
+| gallery | taylor-swift | 6 | [Flickr](https://www.flickr.com/photos/58820009@N05/6820799756) |
+| gallery | hailee-steinfeld | 4 | [Flickr](https://www.flickr.com/photos/22007612@N05/28787539647) |
+| gallery | hailee-steinfeld | 5 | [Flickr](https://www.flickr.com/photos/22007612@N05/28787546407) |
+| gallery | elizabeth-olsen | 5 | [Flickr](https://www.flickr.com/photos/22007612@N05/9353981123) |
+| gallery | elizabeth-olsen | 6 | [Flickr](https://www.flickr.com/photos/22007612@N05/14802536275) |
+| gallery | chloe-grace-moretz | 5 | [Flickr](https://www.flickr.com/photos/36549536@N03/6385376795) |
+| gallery | chloe-grace-moretz | 6 | [Flickr](https://www.flickr.com/photos/36549536@N03/6385073783) |
+| gallery | chloe-grace-moretz | 7 | [Flickr](https://www.flickr.com/photos/36549536@N03/6385355261) |
