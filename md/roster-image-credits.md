@@ -296,3 +296,77 @@ This refresh adds or replaces the live Roster Profile widget images. Author and 
 | lead | rosie-odonnell | - | [Commons](https://commons.wikimedia.org/wiki/File:Rosie_O'Donnell_by_David_Shankbone.jpg) |
 
 Sparse-source note: Mama June, Angela Deem, Jenelle Evans, Nadya Suleman, Casey Anthony, Joe Exotic, and a few low-coverage reality/notorious figures remain intentionally sparse where verified free person photos were not available or not suitable for dating-profile presentation.
+
+## 2026-06-30 old-chat roster expansion
+
+First-pass image fill for the old-chat roster seeds. Files are local optimized derivatives of Wikimedia Commons thumbnails; sparse or skipped entries were left without images rather than padded with wrong-person, nonfree, or low-confidence assets.
+
+| Kind | Profile | Slot | Source |
+| --- | --- | --- | --- |
+| avatar | ana-de-armas | lead | [Commons](https://commons.wikimedia.org/wiki/File:Ana_de_Armas_at_the_2024_Toronto_International_Film_Festival_05_(better_crop).jpg) |
+| gallery | ana-de-armas | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Ana_De_Armas_(cropped).png) |
+| avatar | megan-fox | lead | [Commons](https://commons.wikimedia.org/wiki/File:Megan_Fox_Jennifers_Body_TIFF09_(cropped).jpg) |
+| gallery | megan-fox | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Megan_Fox_-_Jennifer%27s_Body.jpg) |
+| avatar | victoria-justice | lead | [Commons](https://commons.wikimedia.org/wiki/File:Victoria_Justice_%26_Madison_Justice_(cropped).png) |
+| gallery | victoria-justice | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Victoria_Justice_cropped.jpg) |
+| gallery | natalie-portman | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Natalie_Portman_(48470988352)_(cropped).jpg) |
+| gallery | elizabeth-olsen | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Elizabeth_Olsen_(48471039152)_cropped.jpg) |
+| avatar | pokimane | lead | [Commons](https://commons.wikimedia.org/wiki/File:Pokimane_2019.jpg) |
+| avatar | amelia-dimoldenberg | lead | [Commons](https://commons.wikimedia.org/wiki/File:Amelia_Dimoldenberg_(cropped).jpg) |
+
+Skipped/no verified free Commons hit in this pass: aerith-gainsborough, alice-lane, anna-henrietta, asmr-darling, callan-exorcist, courtney-clenney, emma-blackery, evil-addams, gab-smolders, keira-metz, marina-laswick, marz, philippa-eilhart, piia-tamare, selene-ashford, shaelah-mcgilton, tifa-lockhart, triss-merigold, vera-lux, whispersred.
+
+## 2026-06-30 old-chat roster image fill pass 2
+
+Curated Commons/Wikipedia portrait fill for public old-chat entries. Files are local optimized derivatives; entries without safe public-photo pools remain initials-only. Rows below reflect the post-QA live avatar/carousel selection, not every downloaded candidate.
+
+| Kind | Profile | Slot | Source |
+| --- | --- | --- | --- |
+| avatar | emma-watson | lead | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Watson%2C_2012.jpg) |
+| gallery | emma-watson | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Watson_2013.jpg) |
+| gallery | emma-watson | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Watson_ONU_2017.jpg) |
+| gallery | emma-watson | 5 | [Commons](https://commons.wikimedia.org/wiki/File:Emma_Watson_interview_in_2017.jpg) |
+| avatar | natalie-portman | lead | [Commons](https://commons.wikimedia.org/wiki/File:Natalie_Portman-4339.jpg) |
+| gallery | natalie-portman | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Natalie_Portman_(48470988352)_(cropped).jpg) |
+| gallery | natalie-portman | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Natalie_Portman-4361.jpg) |
+| gallery | natalie-portman | 5 | [Commons](https://commons.wikimedia.org/wiki/File:Natalie_Portman-69211.jpg) |
+| avatar | elizabeth-olsen | lead | [Commons](https://commons.wikimedia.org/wiki/File:Elizabeth-olsen-1632123202.jpg) |
+| gallery | elizabeth-olsen | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Elizabeth_Olsen_(48471039152)_cropped.jpg) |
+| gallery | elizabeth-olsen | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Elizabeth_Olsen_by_Gage_Skidmore.jpg) |
+| avatar | lana-condor | lead | [Commons](https://commons.wikimedia.org/wiki/File:Lana_Condor_(2020).jpg) |
+| gallery | lana-condor | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Lana_Condor%2C_2015_(cropped).jpg) |
+| avatar | emmy-rossum | lead | [Commons](https://commons.wikimedia.org/wiki/File:Emmy_Rossum_cropped_headshot.jpg) |
+| gallery | emmy-rossum | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Emmy_Rossum%2C_2011.jpg) |
+| gallery | emmy-rossum | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Emmy_Rossum_(24341757766)_(cropped).jpg) |
+| gallery | emmy-rossum | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Emmy_Rossum_2011.jpg) |
+| avatar | hailee-steinfeld | lead | [Commons](https://commons.wikimedia.org/wiki/File:Hailee_Steinfeld_by_Gage_Skidmore.jpg) |
+| gallery | hailee-steinfeld | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Hailee_Steinfeld_1_(42104424475).jpg) |
+| gallery | hailee-steinfeld | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Hailee_Steinfeld_2_(42287125684_).jpg) |
+| avatar | pom-klementieff | lead | [Commons](https://commons.wikimedia.org/wiki/File:Pom_Klementieff_(36141344391).jpg) |
+| gallery | pom-klementieff | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Pom_Klementieff_IMG_7514_(37457648972).jpg) |
+| avatar | rosa-salazar | lead | [Commons](https://commons.wikimedia.org/wiki/File:Rosa_Salazar_2019.png) |
+| gallery | rosa-salazar | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Rosa_Salazar_(51986301072).jpg) |
+| gallery | rosa-salazar | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Rosa_Salazar_by_Gage_Skidmore.jpg) |
+| avatar | chloe-grace-moretz | lead | [Commons](https://commons.wikimedia.org/wiki/File:Chlo%C3%AB_Grace_Moretz_The_Peripheral_NYCC_2022_(cropped).jpg) |
+| gallery | chloe-grace-moretz | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Chloe_Grace_Moretz_2019.png) |
+| gallery | chloe-grace-moretz | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Chloe_Moretz_2018_2.jpg) |
+| avatar | jennifer-haben | lead | [Commons](https://commons.wikimedia.org/wiki/File:Beyond_the_Black%2C_Dancing_In_The_Dark_Tour%2C_Stuttgart_2024_(06).jpg) |
+| gallery | jennifer-haben | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Beyond_the_Black%2C_Dancing_In_The_Dark_Tour%2C_Stuttgart_2024_(26).jpg) |
+| gallery | jennifer-haben | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Beyond_the_Black%2C_European_Co-Headline_Tour%2C_Ludwigsburg_2022_(03).jpg) |
+| avatar | alissa-white-gluz | lead | [Commons](https://commons.wikimedia.org/wiki/File:Alissa_White-Gluz_(Arch_Enemy)_-_Elbriot_2018_14.jpg) |
+| gallery | alissa-white-gluz | 1 | [Commons](https://commons.wikimedia.org/wiki/File:20160806_Wacken_Wacken_Open_Air_Arch_Enemy_0109.jpg) |
+| gallery | alissa-white-gluz | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Alissa_White-Gluz_(Arch_Enemy)_-_Elbriot_2018_21.jpg) |
+| avatar | melissa-bonny | lead | [Commons](https://commons.wikimedia.org/wiki/File:Ad_Infinitum-10_(54123235589).jpg) |
+| gallery | melissa-bonny | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Ad_Infinitum-18_(54123171183).jpg) |
+| gallery | melissa-bonny | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Ad_Infinitum-34_(54122040687).jpg) |
+| gallery | melissa-bonny | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Ad_Infinitum-4_(54122053692).jpg) |
+| avatar | valkyrae | lead | [Commons](https://commons.wikimedia.org/wiki/File:Valkyrae_in_2023_(cropped).png) |
+| gallery | valkyrae | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Valkyrae_for_100_Thieves_(cropped).jpg) |
+| avatar | qtcinderella | lead | [Commons](https://commons.wikimedia.org/wiki/File:QTCinderella_in_2022_(2).jpg) |
+| avatar | maya-higa | lead | [Commons](https://commons.wikimedia.org/wiki/File:Maya_Higa_in_2023.jpg) |
+| avatar | kylie-jenner | lead | [Commons](https://commons.wikimedia.org/wiki/File:Kylie_Jenner_at_Topshop_Behind_the_Scenes.png) |
+| gallery | kylie-jenner | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Kylie_Jenner_Complex.png) |
+| avatar | gibi-asmr | lead | [Commons](https://commons.wikimedia.org/wiki/File:Gibi_ASMR.jpg) |
+| avatar | lilypichu | lead | [Commons](https://commons.wikimedia.org/wiki/File:Lilypichu_2018_(cropped).jpg) |
+| avatar | ihascupquake | lead | [Commons](https://commons.wikimedia.org/wiki/File:IHasCupquake.png) |
+| avatar | blaire-white | lead | [Commons](https://commons.wikimedia.org/wiki/File:Blaire_White_in_June_2019.png) |
