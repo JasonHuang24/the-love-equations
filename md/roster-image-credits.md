@@ -740,3 +740,11 @@ Follow-up pass after Jason clarified that broader visual-match sources are accep
 | gallery | evil-addams | 3 | visual match, unverified | Instagram screenshot supplied by Jason; @evil_addams / Johanna visual reference |
 | gallery | evil-addams | 4 | visual match, unverified | Instagram screenshot supplied by Jason; @evil_addams / Johanna visual reference |
 | gallery | evil-addams | 5 | visual match, unverified | Instagram screenshot supplied by Jason; @evil_addams / Johanna visual reference |
+
+2026-07-01 Jungkook photo fill: verified Wikimedia Commons sources cropped locally for the roster avatar and five-card carousel; these do not need `visual match, unverified` stamps.
+| avatar | jungkook | lead | [Commons](https://commons.wikimedia.org/wiki/File:Jung_Kook_of_BTS,_February_12,_2026_%281%29.png) | TV10, CC BY 4.0 |
+| gallery | jungkook | 1 | [Commons](https://commons.wikimedia.org/wiki/File:Jung_Kook_of_BTS,_February_12,_2026_%281%29.png) | TV10, CC BY 4.0 |
+| gallery | jungkook | 2 | [Commons](https://commons.wikimedia.org/wiki/File:Jeon_Jung-kook_at_%22Map_of_the_Soul_-_Persona%22_global_press_conference,_17_April_2019.jpg) | Dispatch, CC BY 3.0 |
+| gallery | jungkook | 3 | [Commons](https://commons.wikimedia.org/wiki/File:Jeon_Jung-kook_at_BBMAs,_1_May_2019_01.jpg) | I DARE U JK, CC BY 3.0 |
+| gallery | jungkook | 4 | [Commons](https://commons.wikimedia.org/wiki/File:Jeon_Jung-kook_at_Golden_Disk_Awards,_5_January_2019_01.jpg) | I Dare U JK, CC BY 3.0 |
+| gallery | jungkook | 5 | [Commons](https://commons.wikimedia.org/wiki/File:Jeon_Jung-kook_during_the_%22Boy_In_Luv%22_performance_at_SBS_Gayo_Daejeon,_25_December_2018_02.jpg) | I Dare U JK, CC BY 3.0 |
