@@ -363,7 +363,10 @@
 .mmw-carousel { display: flex; gap: .5rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; padding: 2px; }
 .mmw-carousel::-webkit-scrollbar { display: none; }
 .mmw-shot-tile { flex: 0 0 auto; width: fit-content; max-width: 240px; margin: 0; scroll-snap-align: start; }
-.mmw-shot { display: block; height: 168px; min-width: 96px; max-width: 240px; border-radius: 12px; object-fit: cover; object-position: center center; border: 0.5px solid var(--border); background: var(--bg); cursor: zoom-in; }
+.mmw-shot { display: block; height: 168px; min-width: 96px; max-width: 240px; border-radius: 12px; object-fit: cover; object-position: center center; border: 0.5px solid var(--border); cursor: zoom-in;
+  background: linear-gradient(100deg, var(--bg) 40%, rgba(120,90,70,.08) 50%, var(--bg) 60%); background-size: 200% 100%; animation: mmwShimmer 1.2s linear infinite; }
+.mmw-shot.is-loaded { animation: none; background: var(--bg); }
+@keyframes mmwShimmer { from { background-position: 120% 0; } to { background-position: -80% 0; } }
 .mmw-shot-stamp { display: block; margin-top: .22rem; color: var(--text-dim); font-size: 8.5px; line-height: 1.2; letter-spacing: 0; text-transform: none; text-align: center; opacity: .66; font-weight: 400; }
 .mmw-hero-stamp { width: 100%; max-width: 104px; }
 .mmw-car-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid var(--border); background: rgba(255,250,243,.92); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; z-index: 2; box-shadow: 0 2px 8px -3px rgba(80,40,30,.4); transition: all .12s; }
@@ -372,6 +375,10 @@
 /* fullscreen lightbox for a tapped carousel shot */
 .mmw-lightbox { position: fixed; inset: 0; z-index: 200; background: rgba(20,12,10,.86); display: flex; align-items: center; justify-content: center; padding: 3vh 3vw; cursor: zoom-out; backdrop-filter: blur(3px); }
 .mmw-lightbox img { max-width: 100%; max-height: 94vh; border-radius: 10px; box-shadow: 0 20px 60px -20px rgba(0,0,0,.7); }
+.mmw-lb-close { position: absolute; top: 14px; right: 18px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(20,12,10,.55); color: #fff; font-size: 24px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.mmw-lb-close:hover, .mmw-lb-close:focus-visible { background: rgba(255,255,255,.18); outline: 2px solid rgba(255,255,255,.5); }
+.mmw-lb-hint { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.55); font-size: 11px; letter-spacing: .04em; pointer-events: none; }
+.mm-fict-chip { display: inline-block; padding: 0 .45em; border: 1px solid var(--border); border-radius: 999px; font-size: .82em; letter-spacing: .05em; text-transform: uppercase; color: var(--text-dim); background: var(--bg); vertical-align: baseline; }
 .mmw-blurb { font-size: 14px; line-height: 1.55; color: var(--text); margin: .8rem 0 .9rem; padding-bottom: .9rem; border-bottom: 0.5px solid var(--border); }
 .mmw-overall { display: flex; align-items: baseline; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .mmw-overall-num { font-family: Georgia, serif; font-size: 38px; line-height: 1; }
