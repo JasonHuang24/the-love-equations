@@ -374,6 +374,17 @@
 }
 .income-preview strong { color: var(--scarlet-deep); }
 .income-hint { font-style: italic; }
+/* N/A skip toggle for count questions — same exclusion semantics as the charm "skip" options */
+.na-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  border: 0.5px solid var(--border); background: rgba(255,252,247,0.86); cursor: pointer;
+  font-family: Georgia, "Times New Roman", serif; font-size: 13px; color: var(--text-muted);
+  padding: 0.5rem 1rem; border-radius: 999px; margin-bottom: 1.2rem;
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+}
+.na-btn:hover { border-color: var(--scarlet); color: var(--scarlet-deep); }
+.na-btn.selected { border-color: var(--scarlet); background: var(--scarlet-pale); color: var(--scarlet-deep); }
+.na-btn i { font-size: 16px; }
 .sex-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
   margin-bottom: 1.2rem; max-width: 460px;

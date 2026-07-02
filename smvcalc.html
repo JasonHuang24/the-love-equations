@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css?v=1.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/smvcalc.css?v=1.7" />
+  <link rel="stylesheet" href="css/smvcalc.css?v=1.8" />
 </head>
 <body data-page="smvcalc">
   <div data-include="navigation-bar"></div>
@@ -30,7 +30,7 @@
           <div class="exam-panel">
             <div class="exam-kicker"><i class="ti ti-clipboard-check"></i> Profile A - Self Assessment</div>
             <div class="exam-title">Map your market position across five factors.</div>
-            <div class="exam-copy">This calculator scores Looks, Money, Status, Charm, and Exposure through twenty-five prompts weighted by how directly each one tends to move attention, leverage, and realistic options. Answer by current reality, not potential.</div>
+            <div class="exam-copy">This calculator scores Looks, Money, Status, Charm, and Exposure through thirty prompts (twenty-eight scored) weighted by how directly each one tends to move attention, leverage, and realistic options. Wherever a factor can be counted, you enter the real number and it is scored on a percentile-anchored curve — self-report is reserved for the few things only you can observe. Answer by current reality, not potential.</div>
             <div class="lens-selector">
               <div class="lens-top">
                 <div>
@@ -54,7 +54,7 @@
             </div>
             <div class="exam-stats">
               <div class="exam-stat">
-                <div class="exam-stat-num">25</div>
+                <div class="exam-stat-num">30</div>
                 <div class="exam-stat-label">questions, no filler</div>
               </div>
               <div class="exam-stat">
@@ -74,7 +74,7 @@
         <div class="screen" id="a-questions">
           <div class="progress-shell">
             <div class="progress-top">
-              <span id="q-count">Question 1 of 25</span>
+              <span id="q-count">Question 1 of 30</span>
               <span id="answered-count">0 answered</span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="a-progress"></div></div>
@@ -243,7 +243,7 @@
         icon: 'ti-radar',
         color: '#C41E3A',
         short: 'Market surface area',
-        desc: 'How many qualified people actually encounter you: location, apps, events, circles, routines, and initiative.',
+        desc: 'How many qualified people actually encounter you: location, apps, events, circles, routines, and initiative. Measured sex-dynamically — men send 81% of first moves, so male exposure is counted outbound (approaches, messages sent) and female exposure largely inbound (interest received).',
         lever: 'Increase qualified surface area: better photos, stronger apps, recurring social spaces, events, introductions, and follow-through.'
       }
     ];
@@ -270,8 +270,8 @@
     };
 
     const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
-    const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E'];
-    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v5';
+    const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v6';
 
     // ── Calibrated income → score curve ─────────────────────────────────────
     // Objective replacement for the old vibes-based "how attractive is your income" A–E.
@@ -382,6 +382,34 @@
     function faceImport() { return readCalcCv('loveEquations.faceScore.v2'); }
     function bodyImport() { return readCalcCv('loveEquations.bodyScore.v2'); }
 
+    // ── Count-question machinery (v6 de-vibe pass) ───────────────────────────
+    // 'count' questions take a real number and score it on percentile-anchored curves,
+    // exactly like income/height. interpLogAnchors works in log10(x+1) space so 0 is a
+    // first-class answer and the long right tails (followers, metro population) compress.
+    function interpLogAnchors(anchors, x) {
+      const lx = Math.log10(Math.max(0, Number(x) || 0) + 1);
+      if (lx <= Math.log10(anchors[0][0] + 1)) return anchors[0][1];
+      const last = anchors[anchors.length - 1];
+      if (lx >= Math.log10(last[0] + 1)) return last[1];
+      for (let k = 1; k < anchors.length; k++) {
+        const x0 = Math.log10(anchors[k - 1][0] + 1), y0 = anchors[k - 1][1];
+        const x1 = Math.log10(anchors[k][0] + 1),     y1 = anchors[k][1];
+        if (lx <= x1) { const t = (lx - x0) / (x1 - x0); return y0 + t * (y1 - y0); }
+      }
+      return last[1];
+    }
+    // Anchors may be a plain array or {m, f} — sex-specific curves resolve at score time
+    // (like height/BMI), so those answers survive a sex change and simply re-score.
+    function anchorsFor(q) { return Array.isArray(q.anchors) ? q.anchors : q.anchors[getSex()]; }
+    function countToScore(q, v) { return (q.scale === 'log' ? interpLogAnchors : interpAnchors)(anchorsFor(q), v); }
+    // Per-sex question weight ({m, f}) — used where the same behavior carries different
+    // market load by sex (e.g. in-person initiative is core for men, upside for women).
+    function qWeight(q) { return (q.weights && q.weights[getSex()]) || q.weight || 1; }
+    // Full forks: q.variants = {m: {text, sub, placeholder, ...}, f: {...}} overrides display
+    // fields per sex. A forked question measures a DIFFERENT quantity per sex, so its answer
+    // is invalidated when sex changes (see setSex) — unlike sex-anchored ones, which re-score.
+    function resolveQ(q) { return q.variants ? Object.assign({}, q, q.variants[getSex()]) : q; }
+
     const QUESTIONS = [
       {
         factor: 0,
@@ -421,6 +449,9 @@
       {
         factor: 0,
         weight: 0.8,
+        // Percentile-reasoned: modal adult ("competent and normal") = median 5.5; careless ≈ bottom
+        // decile → 2.5 (floors principle, not 1); "dialed in" ≈ top 5% → 9.0. Reasoned estimate.
+        scores: [2.5, 4.3, 5.5, 7.5, 9.0],
         text: 'How polished is your presentation?',
         sub: 'Hair, grooming, clothes, scent, skin, dental care, and whether the package looks intentional. The one looks lever that is genuinely a self-report.',
         opts: [
@@ -447,8 +478,25 @@
       },
       {
         factor: 1,
-        weight: 1.0,
-        scores: [2.5, 4.5, 6.5, 8.5, 9.5],
+        weight: 0.90,
+        type: 'count',
+        money: true,
+        scale: 'log',
+        unit: 'from savings',
+        placeholder: 'e.g. 5,000',
+        // Fed SHED: ~37% of US adults could not cover a $400 emergency with cash → $400 ≈ 35–40th
+        // pct → 4.0. Median transaction-account balance ≈ $8k (Fed SCF 2022) → 5.5. Top reasoned.
+        anchors: [[0, 1.5], [400, 4.0], [2000, 4.8], [8000, 5.5], [25000, 6.6], [100000, 7.8], [500000, 9.0], [2000000, 10]],
+        text: 'What is the largest unexpected expense you could cover today from savings, without borrowing?',
+        sub: 'Cash and easily-tapped savings only — no credit, no selling assets, no family. This is spending freedom: absorbing surprises and creating experiences without strain. Net worth is the stock; this is the part of it you can actually reach. Fed benchmark: about 4 in 10 US adults could not cover a $400 emergency from cash.'
+      },
+      {
+        factor: 1,
+        weight: 0.95,
+        // Percentile-reasoned: ~65% of US households own (Census HVS), so "own with mortgage" is
+        // near-modal for established adults → 7.5, not top-decile; own outright ≈ top quarter of
+        // owners (age-skewed) → 8.5; independent renter = median independence → 6.0.
+        scores: [3.0, 4.5, 6.0, 7.5, 8.5],
         text: 'Where are you on the housing-independence ladder?',
         sub: 'Combines who you live with and whether you own — one factual read on housing autonomy and stability. Most independent renters sit mid-ladder, which is a normal adult baseline, not a low score.',
         opts: [
@@ -461,7 +509,7 @@
       },
       {
         factor: 1,
-        weight: 1.30,
+        weight: 1.20,
         scores: [3.5, 5.5, 7.0, 8.3, 8.8],
         text: 'What is your career stage?',
         sub: 'Where you sit on the professional ladder — a proxy for standing and ceiling. Level only; whether you are actually winning at that level shows up in income and net worth.',
@@ -490,10 +538,16 @@
       {
         factor: 2,
         weight: 1.20,
-        scores: [4.0, 5.5, 7.5, 9.0, 10],
+        // Percentile-reasoned: known-to-close-circle is the MAJORITY condition → median 5.0.
+        // Local scene ≈ top 25–30% → 6.0; city/field ≈ top 8% → 7.5; regional ≈ top 1.5% → 8.7.
+        // The negative-reputation floor is what lets Status actually read LOW — status is
+        // right-skewed, so the median adult sits at the bottom of every positive marker;
+        // the low end of the scale is reserved for actively bad standing, not obscurity.
+        scores: [2.5, 5.0, 6.0, 7.5, 8.7, 10],
         text: 'How widely are you actually known?',
-        sub: 'The reach of your name and reputation — how far beyond your immediate circle people recognize you. Known mainly to your own circle is the normal baseline, not a low score.',
+        sub: 'The reach of your name and reputation — how far beyond your immediate circle people recognize you. Known mainly to your own circle is the normal baseline, not a low score. Reputation compounds slowly and forfeits fast — if your name currently works against you, that outranks reach.',
         opts: [
+          ['Known negatively where I am known', 'My name currently works against me in my own circles.'],
           ['Only my close circle', 'Known to friends, family, and immediate coworkers.'],
           ['Known in one local scene', 'A recognized regular in a workplace, school, or community.'],
           ['Known across my city or field', 'My name carries across a local market or profession.'],
@@ -503,10 +557,12 @@
       },
       {
         factor: 2,
-        weight: 1.35,
-        scores: [4.0, 5.5, 7.0, 8.5, 9.5],
+        weight: 1.30,
+        // Percentile-reasoned: "almost none" is the MODAL answer — most people attend, few convene —
+        // so it sits just under median at 4.8; "the hub" ≈ top 2% → 9.3. Reasoned estimate.
+        scores: [4.8, 5.8, 7.0, 8.3, 9.3],
         text: 'Of your social plans, how many do you organize or host?',
-        sub: 'A behavioral read on centrality — who actually convenes the group, rather than how central you feel. Think across your recent get-togethers.',
+        sub: 'A behavioral read on centrality — who actually convenes the group, rather than how central you feel. Think across your recent get-togethers. Kept as a share rather than a count: recall over "your last ten plans" is less reliable than the overall pattern.',
         opts: [
           ['Almost none', 'Others organize; I attend.'],
           ['Occasionally I host or organize', 'Now and then I pull something together.'],
@@ -518,49 +574,62 @@
       {
         factor: 2,
         weight: 1.00,
-        scores: [4.5, 6.0, 7.5, 8.7, 9.7],
-        text: 'How many people do you lead or manage?',
-        sub: 'People who report to you or answer to you in any arena — work teams, projects, volunteers, communities, or mentees. Leading no one is the common case, not a failure.',
-        opts: [
-          ['None', 'I lead no one.'],
-          ['One to three', 'A small team or a few people.'],
-          ['Four to ten', 'A real team answers to me.'],
-          ['Eleven to fifty', 'I run a sizable group or function.'],
-          ['Fifty or more', 'I lead a large organization or following.']
-        ]
+        type: 'count',
+        scale: 'log',
+        unit: 'people',
+        placeholder: 'e.g. 3',
+        // Percentile-anchored: most workers supervise no one (0 = median = 5.0); roughly 1 in 5 US
+        // workers supervises anyone (BLS-derived, reasoned); 50+ reports ≈ top 2–3% → 9.1.
+        anchors: [[0, 5.0], [1, 5.8], [3, 6.5], [8, 7.4], [20, 8.3], [50, 9.1], [200, 10]],
+        text: 'How many people report to you or answer to you, across every arena?',
+        sub: 'Work teams, projects, volunteers, communities, or mentees — anyone who answers to you. Enter the real headcount. Leading no one is the common case, not a failure: zero scores as the population median.'
       },
       {
         factor: 2,
-        weight: 1.05,
-        scores: [4.5, 6.0, 7.2, 8.3, 9.3],
-        text: 'How many invite-only or competitively-selected groups are you in?',
-        sub: 'Groups you had to be admitted to or chosen for: boards, competitive teams, fellowships, juried or members-only organizations — not casual groups anyone can join.',
-        opts: [
-          ['None', 'No selective affiliations.'],
-          ['One', 'A single selective group.'],
-          ['Two', 'A couple of selective affiliations.'],
-          ['Three', 'Several selective circles.'],
-          ['Four or more', 'I move through many selective worlds.']
-        ]
+        weight: 1.00,
+        type: 'count',
+        unit: 'groups',
+        placeholder: 'e.g. 1',
+        max: 50,
+        // Percentile-reasoned: the median adult belongs to 0 selective groups → 5.0; each additional
+        // one is a real percentile jump. Linear scale — small integers, no long tail.
+        anchors: [[0, 5.0], [1, 6.2], [2, 7.2], [3, 8.0], [5, 9.0], [8, 10]],
+        text: 'How many invite-only or competitively selected groups are you currently part of?',
+        sub: 'Groups you had to be admitted to or chosen for: boards, competitive teams, fellowships, juried or members-only organizations — not casual groups anyone can join. Enter the count.'
       },
       {
         factor: 2,
-        weight: 0.80,
-        scores: [4.5, 5.5, 7.0, 8.5, 10],
-        text: 'How large is your audience or following?',
-        sub: 'People who follow, subscribe to, or actively pay attention to you across platforms — real, engaged reach, not bought or inactive numbers. Weighted modestly: most high-status people have no following, so this is a bonus signal, not a core one.',
-        opts: [
-          ['Essentially none', 'No meaningful audience or following.'],
-          ['A few hundred', 'A modest personal following.'],
-          ['Several thousand', 'A real, engaged audience.'],
-          ['Tens of thousands', 'Significant reach and influence.'],
-          ['Six figures or more', 'A large public audience.']
-        ]
+        weight: 0.75,
+        type: 'count',
+        scale: 'log',
+        unit: 'followers',
+        placeholder: 'e.g. 500',
+        // Percentile-reasoned: the median adult's ENGAGED reach ≈ 0 → 4.8 — a hair under neutral,
+        // because the absence of a bonus signal is not a deficit; 100k+ is a fraction of a percent.
+        anchors: [[0, 4.8], [200, 5.5], [1000, 6.2], [5000, 7.0], [20000, 7.9], [100000, 8.8], [1000000, 10]],
+        text: 'Across platforms, how many people actively follow, subscribe to, or pay attention to you?',
+        sub: 'Real, engaged reach, not bought or inactive numbers — add up what actually pays attention. Weighted modestly: most high-status people have no following, so this is a bonus signal, not a core one.'
+      },
+      {
+        factor: 2,
+        weight: 1.15,
+        type: 'count',
+        scale: 'log',
+        unit: 'times / 12 months',
+        placeholder: 'e.g. 2',
+        // Prestige — the doctrine's "more durable route to status" (Henrich & Gil-White; Cheng et
+        // al. 2013). Percentile-reasoned: the median adult is sought out for their skill ~0 times a
+        // year → 5.0; even one genuine invitation marks visible competence → 6.0.
+        anchors: [[0, 5.0], [1, 6.0], [3, 7.0], [6, 7.8], [12, 8.6], [30, 9.4], [100, 10]],
+        text: 'In the last 12 months, how many times were you sought out for your skill — invited to speak, teach, perform, consult, judge, or advise?',
+        sub: 'Prestige is rank through freely-given respect: being genuinely good at something people value. Count the times others came to you because of what you are good at. Do not count gigs you applied for.'
       },
       {
         factor: 3,
         weight: 1.00,
-        scores: [2.0, 4.0, 5.5, 7.5, 9.0],
+        // Percentile-reasoned: "about half the time" = median 5.5; "rarely" ≈ bottom decile → 3.0
+        // (floors principle). A frequency judgment, not a clean count — stays a self-report.
+        scores: [3.0, 4.3, 5.5, 7.3, 9.0],
         naIndex: 5,
         text: 'When you talk with someone new, how often do they stay engaged?',
         sub: 'The observable result of your presence and conversation — do new people lean in and keep it going, or does it fizzle? Judge by their reaction over your recent conversations, not your effort.',
@@ -576,39 +645,46 @@
       {
         factor: 3,
         weight: 1.35,
-        scores: [2.0, 4.0, 5.5, 7.5, 9.5],
-        naIndex: 5,
-        text: 'What share of your first dates lead to a second?',
-        sub: 'Your conversion rate, not your date volume (that is Exposure). Across roughly your last ten first dates with people you wanted to see again, how many led to a second?',
-        opts: [
-          ['Almost none', 'First dates rarely turn into seconds.'],
-          ['About one in four', 'Occasionally, but most do not continue.'],
-          ['About half', 'Roughly a coin-flip on a second date.'],
-          ['Most of them', 'Second dates are the norm when I want one.'],
-          ['Nearly all', 'If I want a second date, I almost always get it.'],
-          ['Not enough recent first dates to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
-        ]
+        type: 'count',
+        unit: 'of your last 10',
+        placeholder: 'e.g. 4',
+        max: 10,
+        allowNA: true,
+        naLabel: 'Fewer than ~10 recent first dates — skip',
+        // Sex-anchored (reasoned estimates): men accept second dates more readily than women do, so
+        // the same raw conversion means more for a male profile — male median ≈ 5/10, female ≈ 6/10.
+        anchors: {
+          m: [[0, 2.0], [2, 4.0], [5, 5.5], [7, 7.0], [9, 8.5], [10, 9.5]],
+          f: [[0, 1.8], [3, 4.0], [6, 5.5], [8, 7.0], [9, 8.0], [10, 9.2]]
+        },
+        text: 'Of your last 10 first dates with people you wanted to see again, how many led to a second date?',
+        sub: 'Your conversion rate, not your volume (volume is Exposure). Count real seconds — met again or clearly scheduled. If you have not had close to ten recent first dates, skip rather than guess.'
       },
       {
         factor: 3,
         weight: 1.35,
-        scores: [2.0, 4.0, 5.5, 7.5, 9.0],
-        naIndex: 5,
-        text: 'After meeting you, how often do people reach out first?',
-        sub: 'Who re-initiates — across the people you have met recently, do they text first, follow up, or try to see you again? A direct read on the pull you leave behind.',
-        opts: [
-          ['Rarely', 'I almost always have to chase, or it dies.'],
-          ['Sometimes', 'A few circle back; most do not.'],
-          ['Fairly often', 'People re-initiate a fair amount.'],
-          ['Usually', 'The people I click with tend to come to me.'],
-          ['Constantly', 'I regularly get unprompted follow-ups and interest.'],
-          ['Not enough recent meetings to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
-        ]
+        type: 'count',
+        unit: 'of the last 10',
+        placeholder: 'e.g. 3',
+        max: 10,
+        allowNA: true,
+        naLabel: 'Have not met ~10 new people recently — skip',
+        // Sex-anchored: the 81/19 first-message asymmetry (Tier 1, statistics.html) generalizes to
+        // who follows up — women are re-contacted by default (median ≈ 7/10), men are not (≈ 3/10),
+        // so the same raw count reads very differently per sex. Medians are reasoned estimates.
+        anchors: {
+          m: [[0, 2.5], [1, 4.0], [3, 5.5], [5, 6.8], [7, 8.0], [10, 9.5]],
+          f: [[0, 1.5], [3, 3.8], [5, 4.8], [7, 5.5], [9, 7.5], [10, 9.0]]
+        },
+        text: 'Of the last 10 new people you genuinely hit it off with, how many reached out first afterward?',
+        sub: 'Who re-initiates — did they text first, follow up, or try to see you again? A direct read on the pull you leave behind. Anchored by sex: women get chased by default, so the same count means different things.'
       },
       {
         factor: 3,
         weight: 1.20,
-        scores: [1.5, 3.5, 5.0, 6.5, 9.0],
+        // Percentile-reasoned: modal adults straddle "rattled" / "quiet and detached" around the
+        // median; secure-and-warm ≈ top decile → 8.8; spiral/lash-out ≈ bottom decile → 2.0.
+        scores: [2.0, 4.2, 5.2, 6.8, 8.8],
         text: 'When someone goes cold or pulls back, what actually happens?',
         sub: 'Charm holds up under pressure. Judge by your behavior over your last few pullbacks — what you actually did next — not by how you felt inside.',
         opts: [
@@ -621,7 +697,7 @@
       },
       {
         factor: 3,
-        weight: 1.10,
+        weight: 1.05,
         scores: [3.0, 4.5, 5.5, 7.5, 9.0],
         naIndex: 5,
         text: 'How often do people tell you you are fun or easy to be around?',
@@ -636,74 +712,123 @@
         ]
       },
       {
-        factor: 4,
-        weight: 1.20,
-        scores: [2.5, 4.0, 5.5, 7.5, 9.5],
-        text: 'Where do you live, in dating-supply terms?',
-        sub: 'City size and density set the raw size of the local pool. This is about your location, not your effort or appeal.',
-        opts: [
-          ['Rural or isolated area', 'Very few realistic local options.'],
-          ['Small town', 'A thin pool I mostly already know or have aged out of.'],
-          ['Mid-size city', 'A workable but limited local market.'],
-          ['Large city', 'A deep pool with steady turnover.'],
-          ['Major metro or dense urban core', 'Among the highest dating supply available.']
-        ]
+        factor: 3,
+        weight: 1.00,
+        type: 'count',
+        scale: 'log',
+        unit: '/ month',
+        placeholder: 'e.g. 4',
+        // Presence (doctrine: "whether people remember the feeling of being around you") measured by
+        // its countable trace. Percentile-reasoned: median connected adult ≈ 2–4 invitations/month →
+        // 3 = 5.5; zero is genuinely below median but floored at 3.5, not treated as social death.
+        anchors: [[0, 3.5], [1, 4.5], [3, 5.5], [6, 6.7], [12, 7.8], [25, 9.0], [50, 10]],
+        text: 'In a typical month, how many social invitations do you receive that you did not initiate?',
+        sub: 'Plans, parties, trips, "come join us" — from anyone, romantic or not. A countable trace of whether people want you back in the room. Zero is a real answer, not a failure.'
       },
       {
         factor: 4,
-        weight: 1.40,
-        scores: [2.0, 4.0, 5.5, 7.5, 9.5],
-        text: 'How often do you cross paths with new, eligible people?',
-        sub: 'Raw at-bats: new people in your age range who are plausibly single that you actually encounter — whether or not anything comes of it. This counts exposure, not success (conversion lives in Charm).',
-        opts: [
-          ['Almost never', 'Months can pass without meeting anyone new and eligible.'],
-          ['A few a month', 'Roughly one to three new eligible people a month.'],
-          ['About one a week', 'A steady weekly trickle of new faces.'],
-          ['Several a week', 'Multiple new eligible people most weeks.'],
-          ['Most days', 'New eligible people cross my path almost daily.']
-        ]
-      },
-      {
-        factor: 4,
-        weight: 1.10,
-        scores: [2.5, 4.0, 5.5, 7.5, 9.0],
-        text: 'How much outreach do you do on dating apps or online?',
-        sub: 'Your online at-bats: people you message or actively contact, regardless of whether they reply or it becomes a date. Volume of attempts, not results. None / not on apps counts here.',
-        opts: [
-          ['None or not on apps', 'No active online outreach.'],
-          ['A few messages a month', 'I dabble occasionally.'],
-          ['A few a week', 'A steady, modest outreach habit.'],
-          ['Most days', 'I reach out to new people almost daily.'],
-          ['High volume, daily', 'I work the apps hard and consistently.']
-        ]
-      },
-      {
-        factor: 4,
-        weight: 1.10,
-        scores: [2.5, 4.5, 6.0, 7.5, 9.0],
-        text: 'How many recurring places put you near new people?',
-        sub: 'Repeated-contact settings where fresh faces appear: classes, clubs, hobby scenes, friend groups, work-adjacent circles, communities.',
-        opts: [
-          ['None', 'No recurring social settings; I rely on luck or apps.'],
-          ['One', 'A single recurring setting.'],
-          ['Two', 'A couple of recurring settings.'],
-          ['Three', 'Several recurring settings feeding new contact.'],
-          ['Four or more', 'My week is full of recurring rooms with new people.']
-        ]
+        weight: 1.15,
+        type: 'count',
+        scale: 'log',
+        unit: 'people in metro',
+        placeholder: 'e.g. 2,500,000',
+        // Percentile-anchored: metros over 1M hold ~56% of the US population (Census), so the median
+        // American's metro ≈ 1.5M → 5.5. Capped at 9.0 — pool SIZE is not pool ACCESS.
+        anchors: [[1000, 2.0], [20000, 3.5], [100000, 4.5], [500000, 5.0], [1500000, 5.5], [4000000, 6.5], [10000000, 7.8], [25000000, 9.0]],
+        text: 'How many people live in your metro area?',
+        sub: 'Your best figure for the metro you actually date in — e.g. New York ≈ 20,000,000; Denver ≈ 3,000,000; a mid-size metro ≈ 500,000; a small town ≈ 20,000. A rough figure is fine; location sets the raw pool, not your effort or appeal.'
       },
       {
         factor: 4,
         weight: 1.35,
-        scores: [2.0, 4.0, 5.5, 7.5, 9.0],
-        text: 'How many people do you actually approach or ask out?',
-        sub: 'Conversations you start with a romantic frame, asks, and follow-ups that turn possibility into contact — over a typical week.',
-        opts: [
-          ['Almost none', 'I wait and hope; I rarely initiate.'],
-          ['Under one a week', 'I initiate only when the signal is undeniable.'],
-          ['One or two a week', 'I take a few real shots a week.'],
-          ['Three to five a week', 'I consistently create contact.'],
-          ['Six or more a week', 'I initiate constantly and at volume.']
-        ]
+        type: 'count',
+        scale: 'log',
+        unit: '/ month',
+        placeholder: 'e.g. 5',
+        // Percentile-reasoned: out-of-school adults meet ~3–5 genuinely new eligible people a month
+        // at the median → 5.8 at 5; near-daily new contact ≈ top few percent.
+        anchors: [[0, 2.0], [1, 3.5], [3, 5.0], [5, 5.8], [10, 7.0], [20, 8.2], [40, 9.5]],
+        text: 'In a typical month, how many new people in your dating range do you actually meet — at least a real exchange, in person or online?',
+        sub: 'Raw at-bats: new people in your age range who are plausibly single, whether or not anything comes of it. This counts exposure, not success (conversion lives in Charm).'
+      },
+      {
+        factor: 4,
+        weight: 1.05,
+        type: 'count',
+        unit: 'settings',
+        placeholder: 'e.g. 2',
+        max: 10,
+        // Percentile-reasoned: the median adult has ~1 recurring setting with rotating people → 5.0;
+        // zero means relying on luck or apps → 3.2. Linear — small integers, no long tail.
+        anchors: [[0, 3.2], [1, 5.0], [2, 6.2], [3, 7.3], [5, 8.5], [8, 9.5]],
+        text: 'How many recurring settings put you around new or rotating people at least monthly?',
+        sub: 'Classes, clubs, hobby scenes, friend groups, work-adjacent circles, communities — repeated-contact settings where fresh faces appear. A fixed office with the same 12 people does not count.'
+      },
+      {
+        factor: 4,
+        weight: 1.10,
+        type: 'count',
+        scale: 'log',
+        unit: '/ week',
+        // FULL FORK: the two sexes' app exposure is a different QUANTITY — men send, women receive
+        // (men send 81% of first messages, Tier 1; 54% of women vs 25% of men report being
+        // overwhelmed by app messages, Pew Tier 1 — both on statistics.html). Answer is invalidated
+        // on sex change (see setSex). Medians per active user are reasoned estimates.
+        variants: {
+          m: {
+            placeholder: 'e.g. 10',
+            text: 'In a typical week, how many first messages or intent-driven likes do you send on dating apps?',
+            sub: 'A man’s app exposure is what he sends: men send 81% of opening messages, so outbound volume is the male at-bat count. Attempts, not results. Not on apps = 0.'
+          },
+          f: {
+            placeholder: 'e.g. 30',
+            text: 'In a typical week, how many likes and messages arrive in your dating-app inbox?',
+            sub: 'A woman’s app exposure is what arrives: 54% of women (vs 25% of men) report being overwhelmed by app messages, so inbound volume is the female at-bat count. Not on apps = 0.'
+          }
+        },
+        anchors: {
+          m: [[0, 3.0], [3, 4.5], [10, 5.5], [25, 6.8], [60, 8.0], [150, 9.2]],
+          f: [[0, 2.5], [10, 4.5], [30, 5.5], [75, 6.8], [200, 8.2], [500, 9.3]]
+        },
+        text: 'In a typical week, how many first messages or intent-driven likes do you send on dating apps?',
+        sub: 'Your online at-bats — attempts, not results. Not on apps = 0.'
+      },
+      {
+        factor: 4,
+        weight: 1.35,
+        weights: { m: 1.35, f: 0.90 },
+        type: 'count',
+        scale: 'log',
+        unit: '/ month',
+        placeholder: 'e.g. 2',
+        // Sex-anchored + sex-weighted: men carry most of the initiation load (81/19 first-move
+        // split), so 0 approaches is a real male exposure deficit but the female MEDIAN (her 19%
+        // share ⇒ most women initiate ~0/month) — for her, initiative is pure upside. Weights
+        // mirror the inbound question so per-sex Exposure weight totals stay equal.
+        anchors: {
+          m: [[0, 2.5], [1, 4.5], [2, 5.5], [5, 7.0], [10, 8.3], [20, 9.5]],
+          f: [[0, 5.0], [1, 6.5], [3, 8.0], [6, 9.2], [12, 10]]
+        },
+        text: 'In a typical month, how many people do you directly approach or ask out, face to face?',
+        sub: 'First moves in the physical world — a romantic-frame conversation you start, a number you ask for, a date you propose. Anchored and weighted by sex: men carry most of the initiation load, so for women consistent initiative is upside, not a requirement.'
+      },
+      {
+        factor: 4,
+        weight: 0.90,
+        weights: { m: 0.90, f: 1.35 },
+        type: 'count',
+        scale: 'log',
+        unit: '/ month',
+        placeholder: 'e.g. 1',
+        // Mirror of the initiative question. Sex-anchored: the median man receives ~0 clear inbound
+        // interest a month → 0 = his median; the median woman ≈ a few → 3 = 5.5, and 0 for a woman
+        // signals genuinely low market surface. Reasoned from the same 81/19 asymmetry.
+        anchors: {
+          m: [[0, 5.0], [1, 6.3], [2, 7.3], [4, 8.5], [8, 9.6]],
+          f: [[0, 2.0], [1, 3.8], [3, 5.5], [6, 6.7], [12, 8.0], [30, 9.3]]
+        },
+        text: 'In a typical month, how many people express clear romantic interest in you without you initiating?',
+        sub: 'Unambiguous inbound — asked you out, told you directly, sustained pursuit. Do not count app likes (counted separately) or politeness. Weighted by sex: inbound is the main female exposure channel, a bonus one for men.'
       }
     ];
 
@@ -845,6 +970,7 @@
       if (q.type === 'age') return AGE_BANDS.indexOf(answers[i]) >= 0;
       if (q.type === 'build') return bodyImport() != null || answers[i] != null;
       if (q.type === 'face') return faceImport() != null || answers[i] != null;
+      if (q.type === 'count') return answers[i] === 'na' || typeof answers[i] === 'number';
       return answers[i] !== null && answers[i] !== undefined;
     }
     function answeredCount() {
@@ -864,7 +990,14 @@
 
     // ── Typed-input handlers ──
     function setSex(s) {
+      const prevSex = answers[SEX_IDX];
       answers[SEX_IDX] = s;
+      if (prevSex !== s) {
+        // Fully-forked questions (q.variants) measure a DIFFERENT quantity per sex, so their
+        // answers cannot survive a sex change — mirror of the face/body import sex guard.
+        // Sex-ANCHORED questions keep their answers and simply re-score on the new curve.
+        QUESTIONS.forEach((q, i) => { if (q.variants) answers[i] = null; });
+      }
       selectedLensA = (s === 'f') ? 'female' : 'male';   // sync the lens to the profile's sex
       renderQ();
       saveState();
@@ -942,7 +1075,7 @@
     }
 
     function renderQ() {
-      const q = QUESTIONS[curQ];
+      const q = resolveQ(QUESTIONS[curQ]);   // sex-forked questions render their variant text
       const f = FACTORS[q.factor];
       const answered = answeredCount();
       const pct = (answered / QUESTIONS.length) * 100;
@@ -959,6 +1092,24 @@
         <div class="factor-label" style="color:${f.color}"><i class="ti ${f.icon}"></i>${f.name}</div>
         <div class="question-title">${q.text}</div>
         <div class="question-sub">${q.sub}</div>`;
+      if (q.type === 'count') {
+        const v = answers[curQ];
+        const isNA = v === 'na';
+        const has = typeof v === 'number';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="income-input-wrap">
+            ${q.money ? '<span class="income-prefix">$</span>' : ''}
+            <input type="text" inputmode="numeric" id="count-field" class="income-field" autocomplete="off"
+                   value="${has ? Number(v).toLocaleString('en-US') : ''}" placeholder="${q.placeholder || ''}" oninput="onCountInput(this)" ${isNA ? 'disabled' : ''} />
+            <span class="income-suffix">${q.unit || ''}</span>
+          </div>
+          <div class="income-preview" id="count-preview">${countPreviewHtml(q, v)}</div>
+          ${q.allowNA ? `
+          <button type="button" class="na-btn${isNA ? ' selected' : ''}" onclick="setCountNA()">
+            <i class="ti ${isNA ? 'ti-circle-check' : 'ti-circle-off'}" aria-hidden="true"></i> ${q.naLabel || 'Not enough recent data — skip'}
+          </button>` : ''}`;
+        return;
+      }
       if (q.type === 'income') {
         const has = answers[curQ] !== null && answers[curQ] !== undefined;
         const previewHtml = incomePreviewHtml(answers[curQ]);
@@ -1127,6 +1278,49 @@
       saveState();
     }
 
+    // Count-question preview — shared by renderQ and the in-place handler so copy and curve
+    // can never drift apart. Sex-anchored curves say so, mirroring the height preview.
+    function countPreviewHtml(q, v) {
+      if (v === 'na') return '<span class="income-hint">Skipped — excluded from the ' + FACTORS[q.factor].name + ' average rather than scored as a zero.</span>';
+      if (v === null || v === undefined) return '<span class="income-hint">Enter a real number to see where it lands on the curve.</span>';
+      const sexed = !Array.isArray(q.anchors);
+      const val = q.money ? fmtMoney(v) : Number(v).toLocaleString('en-US');
+      return val + (q.unit ? ' ' + q.unit : '') + ' maps to <strong>' + countToScore(q, v).toFixed(1) + ' / 10</strong>' +
+        (sexed ? ' for a ' + (getSex() === 'f' ? 'female' : 'male') + ' profile.' : ' on the curve.');
+    }
+
+    // Count field handler — digits only, clamped to [min, max]; updates preview/nav in place.
+    function onCountInput(el) {
+      const q = resolveQ(QUESTIONS[curQ]);
+      const digits = (el.value || '').replace(/[^0-9]/g, '');
+      if (!digits) { answers[curQ] = null; }
+      else {
+        const lo = q.min != null ? q.min : 0;
+        const hi = q.max != null ? q.max : 999999999999;
+        const v = Math.max(lo, Math.min(hi, parseInt(digits, 10)));
+        answers[curQ] = v;
+        if (String(v) !== digits) el.value = v.toLocaleString('en-US');   // reflect the clamp
+      }
+      const prev = document.getElementById('count-preview');
+      if (prev) prev.innerHTML = countPreviewHtml(q, answers[curQ]);
+      refreshNav();
+      saveState();
+    }
+
+    // N/A toggle for count questions — same denominator-exclusion semantics as the charm
+    // naIndex options: 'na' answers return null in calculateScores and shrink the factor pool.
+    function setCountNA() {
+      answers[curQ] = answers[curQ] === 'na' ? null : 'na';
+      renderQ();
+      saveState();
+      if (autoNext && answers[curQ] === 'na') {
+        window.setTimeout(() => {
+          if (curQ === QUESTIONS.length - 1) finishA();
+          else nextQ();
+        }, 150);
+      }
+    }
+
     // Net-worth field handler — allows a leading minus; updates score/preview/nav in place.
     function onNetWorthInput(el) {
       const raw = el.value || '';
@@ -1186,6 +1380,11 @@
             }
           }
           else if (q.type === 'face') { const imp = faceImport(); value = imp != null ? imp : (answers[i] == null ? 5.5 : clampScore(answers[i])); }
+          else if (q.type === 'count') {
+            if (answers[i] === 'na') return null;                           // skipped — excluded from the factor denominator
+            weight = qWeight(q);                                            // per-sex weight where defined
+            value = typeof answers[i] === 'number' ? countToScore(q, answers[i]) : 5.5;
+          }
           else {
             if (q.naIndex != null && answers[i] === q.naIndex) return null;   // "insufficient sample" → excluded from the factor denominator
             value = answers[i] == null ? 5.5 : (q.scores || DEFAULT_OPTION_SCORES)[answers[i]];
@@ -1268,7 +1467,7 @@
 
     // ── SMV export package (mirrors the compatibility export so the Matchmaker can read it) ──
     function buildSmvPackage(total) {
-      let age = parseInt(answers[1], 10); if (!isFinite(age)) age = null;
+      let age = parseInt(answers[AGE_IDX], 10); if (!isFinite(age)) age = null;   // band string like '25-29' parses to its lower bound
       return {
         source: 'love-equations.smv',
         version: 1,
@@ -2019,6 +2218,8 @@
     }
 
     restoringState = true;
+    // v5 state must never load into the v6 roster (indices shifted, counts replaced options) — purge it.
+    try { localStorage.removeItem('loveEquations.smvCalculator.v5'); } catch (e) {}
     loadState();
     renderFactorMap();
     renderLensControls();

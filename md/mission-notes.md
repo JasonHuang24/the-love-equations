@@ -293,6 +293,7 @@ build → the other reviews → Jason decides.
 |---|---|---|---|
 | SMV page — 5 Factors of SMV | `smv.html` | **Claude** | Full content + UI revamp with online research; evidence-graded factors/sub-variables + Clock/Market/Context multipliers. `bf6d1e4`, `693c128` |
 | SMV Calculator | `calculator.html` | **Codex** | Purely delegated to Codex. Claude only reviewed + fixed the backwards male-lens note. `b87bf77`, `64f1b99` |
+| SMV Calculator — v6 question rework | `smvcalc.html` | **Claude** | Question-quality audit + rebuild (2026-07-02): 8 vibes-bucket questions converted to numeric counts on percentile-anchored curves; 3 new questions (Spending Freedom, Prestige, Inbound interest); sex-forked/sex-anchored Exposure built on the 81/19 first-message asymmetry; negative-reputation Status floor; storage → v6, export package unchanged. |
 | Pill Dossiers | `pills.html` | **Codex** | Codex built the lens-based revamp; Claude reviewed and committed as-is (kept "Just Be First"). `61f946b` |
 | Compatibility Calculator | `compatibility.html` | **Claude** | Built the 4-way tabbed rebuild + scoring/breach model; Codex did a review pass, Claude applied the fixes. `91d2dae`, `52223b4`. Later "Jason's hierarchy" rename `6b0885d`. |
 | Rules & Frameworks | `frameworks.html` | **Claude** | 7-7 / Sub-5 alignment with the calculator + visible reasoning cards. `43bcf48`, `5900c96` |
