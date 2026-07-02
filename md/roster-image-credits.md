@@ -907,3 +907,15 @@ Quota fill from the matchmaker quality audit: TMDB profile-image portraits (stam
 | gallery | melissa-bonny | 3 | [source](https://commons.wikimedia.org/wiki/File:Ad_Infinitum,_European_Co-Headline_Tour,_Ludwigsburg_2022_(20).jpg) |
 | gallery | melissa-bonny | 4 | [source](https://commons.wikimedia.org/wiki/File:The_Dark_Side_of_the_Moon_Rockharz_2023_34.jpg) |
 | gallery | melissa-bonny | 5 | [source](https://commons.wikimedia.org/wiki/File:Ad_Infinitum_Rockharz_2022_02.jpg) |
+| gallery | martin-shkreli | 5 | [source](https://en.wikipedia.org/wiki/Martin_Shkreli) |
+| avatar | martin-shkreli | lead | [source](https://en.wikipedia.org/wiki/Martin_Shkreli) |
+| gallery | tom-brady | 5 | [source](https://en.wikipedia.org/wiki/Tom_Brady) |
+| gallery | chris-brown | 4 | [source](https://en.wikipedia.org/wiki/Chris_Brown) |
+| gallery | jeff-bezos | 6 | [TMDB](https://www.themoviedb.org/person/1223665-jeff-bezos) · unverified stamp |
+| gallery | kevin-federline | 6 | [TMDB](https://www.themoviedb.org/person/1214374-kevin-federline) · unverified stamp |
+| gallery | lizzo | 3 | [TMDB](https://www.themoviedb.org/person/1661465-lizzo) · unverified stamp |
+| gallery | lizzo | 5 | [source](https://en.wikipedia.org/wiki/Lizzo) |
+| gallery | mark-zuckerberg | 8 | [TMDB](https://www.themoviedb.org/person/1188953-mark-zuckerberg) · unverified stamp |
+| gallery | post-malone | 6 | [TMDB](https://www.themoviedb.org/person/1821863-post-malone) · unverified stamp |
+| gallery | rudy-giuliani | 4 | [TMDB](https://www.themoviedb.org/person/931021-rudolph-giuliani) · unverified stamp |
+| gallery | piia-tamare | 1 | [source](https://vimeo.com/piiatamare) · unverified stamp |

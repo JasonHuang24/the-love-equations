@@ -71,8 +71,10 @@ def load_data(names=DATA_NAMES):
     js = "\n".join(parts) + (
         "\nprocess.stdout.write(JSON.stringify({" + ",".join(names) + "}));"
     )
+    tmp_dir = ROOT / ".roster-audit" / "tmp"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(
-        "w", suffix=".js", delete=False, encoding="utf-8"
+        "w", suffix=".js", delete=False, encoding="utf-8", dir=tmp_dir
     ) as f:
         f.write(js)
         tmp = f.name

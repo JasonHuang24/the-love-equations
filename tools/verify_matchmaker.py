@@ -32,8 +32,10 @@ def main():
     check(b"\r\n" not in raw, "line endings are LF-only")
 
     script, _ = mm_data.inline_script(raw.decode("utf-8"))
+    tmp_dir = mm_data.ROOT / ".roster-audit" / "tmp"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(
-        "w", suffix=".js", delete=False, encoding="utf-8"
+        "w", suffix=".js", delete=False, encoding="utf-8", dir=tmp_dir
     ) as f:
         f.write(script)
         tmp = f.name
