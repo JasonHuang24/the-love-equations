@@ -1,0 +1,126 @@
+/* ── Deep Dive — Hub / index page ── */
+
+.dd-hub-intro {
+  max-width: 760px;
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+}
+
+/* Feature-card index */
+.dd-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.dd-feature {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.6rem 1.5rem 1.5rem;
+  background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,250,243,0.74));
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+a.dd-feature:hover {
+  transform: translateY(-3px);
+  border-color: rgba(196, 30, 58, 0.38);
+  box-shadow: var(--shadow);
+}
+
+.dd-feature-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 850;
+  color: var(--scarlet);
+}
+.dd-feature-kicker i { font-size: 14px; }
+
+.dd-feature-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.5rem, 2.6vw, 1.85rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.dd-feature-hook {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.dd-feature-foot {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top: 0.5px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* "extends cards from [section]" tag */
+.dd-extends {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 11px;
+}
+.dd-extends i { font-size: 13px; color: var(--gold); }
+
+.dd-feature-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--scarlet-dim);
+}
+
+/* Upcoming / placeholder cards */
+.dd-feature.upcoming {
+  cursor: default;
+  opacity: 0.72;
+  background: linear-gradient(145deg, rgba(255,255,255,0.55), rgba(243,230,216,0.4));
+}
+.dd-feature.upcoming .dd-feature-kicker { color: var(--text-dim); }
+.dd-feature.upcoming:hover { transform: none; box-shadow: var(--shadow-soft); border-color: var(--border); }
+
+.dd-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--text-dim);
+}
+
+@media (max-width: 720px) {
+  .dd-hub-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,439 @@
+/* ── Deep Dive — longform essay shell ──
+   Magazine-feature layout: standfirst hero, an era timeline that doubles
+   as the primary navigation spine (scrollspy + sticky docking), serif body
+   measure, and scarlet "Framework" + ivory "Record" callouts. */
+
+/* Wide desktop frame for this page only. The container / timeline / callouts
+   keep the wide width; running text is capped at a comfortable measure so the
+   restored (original) type size still reads well — width comes from layout,
+   not from enlarging the font. Mobile ignores these caps (viewport < caps). */
+body[data-page="deep-dive"] {
+  --dd-wide: 1320px;    /* container, hero, timeline, related frame */
+  --dd-measure: 62rem;  /* running prose — ~85ch at the restored 18px: wide but readable */
+  --dd-feature: 68rem;  /* callouts & pull-quotes break wider than the text */
+}
+
+/* ── Essay hero / masthead ── */
+.dd-essay-hero {
+  background:
+    linear-gradient(135deg, rgba(255, 252, 247, 0.78), rgba(250, 230, 232, 0.55)),
+    var(--surface);
+  border-bottom: 0.5px solid var(--border);
+  padding: 3rem 2rem 3.25rem;
+}
+.dd-essay-hero-inner {
+  max-width: var(--dd-wide);
+  margin-inline: auto;
+}
+.dd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--scarlet-dim);
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+}
+.dd-back:hover { color: var(--scarlet); }
+.dd-back i { font-size: 15px; }
+
+.dd-essay-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2.3rem, 5.2vw, 4rem);
+  line-height: 1.0;
+  letter-spacing: -0.045em;
+  color: var(--text);
+  max-width: 16ch;
+  margin-bottom: 1.1rem;
+}
+.dd-standfirst {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 40ch;
+  border-left: 3px solid var(--scarlet);
+  padding-left: 1rem;
+}
+.dd-essay-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 1.5rem;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+.dd-essay-meta span { display: inline-flex; align-items: center; gap: 6px; }
+.dd-essay-meta i { font-size: 14px; color: var(--gold); }
+
+/* ── Era timeline: navigation spine ──────────────────────────────
+   Era-SEGMENTED (each era ~equal width, not to scale) so it reads as
+   navigation; true date ranges are labelled so the asymmetry stays
+   legible. Sticks below the nav and compresses (.docked) once scrolled
+   past the intro. Segments are positioned containers (position:relative,
+   no overflow clip, data-start/data-end years) so a later amendment can
+   drop absolutely-positioned event markers inside them unchanged. */
+.dd-timeline {
+  position: sticky;
+  top: 76px; /* height of the sticky site nav */
+  z-index: 18; /* below nav (20), above article */
+  background: linear-gradient(180deg, rgba(251, 246, 239, 0.96), rgba(247, 238, 228, 0.96));
+  backdrop-filter: blur(18px);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem 2rem 0.9rem;
+  transition: padding 0.25s ease, box-shadow 0.25s ease;
+}
+.dd-timeline-track {
+  max-width: var(--dd-wide);
+  margin-inline: auto;
+  display: flex;
+}
+.dd-era {
+  position: relative; /* positioned container for future event markers */
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  min-height: 56px;
+  padding: 0.5rem 0.7rem;
+  border: 0.5px solid var(--border);
+  border-left-width: 0;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(243, 230, 216, 0.5));
+  text-decoration: none;
+  color: var(--text-muted);
+  text-align: center;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.dd-era:first-child {
+  border-left-width: 0.5px;
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
+}
+.dd-era:last-child {
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+}
+.dd-era:hover {
+  color: var(--scarlet);
+  border-color: rgba(196, 30, 58, 0.4);
+  transform: translateY(-1px);
+  z-index: 1;
+}
+.dd-era-label {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.005em;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.dd-era-range {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.dd-era.active {
+  background: linear-gradient(145deg, var(--scarlet), var(--scarlet-dim));
+  color: #fffaf3;
+  outline: 1.5px solid var(--scarlet); /* full box outline over neighbour borders */
+  outline-offset: -1px;
+  z-index: 2;
+  box-shadow: 0 6px 16px rgba(196, 30, 58, 0.28);
+}
+.dd-era.active .dd-era-range { color: rgba(255, 250, 243, 0.82); }
+
+/* Boundary date axis (absolute so ticks sit exactly on segment edges) */
+.dd-timeline-axis {
+  position: relative;
+  max-width: var(--dd-wide);
+  margin: 0.5rem auto 0;
+  height: 13px;
+}
+.dd-timeline-axis span {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.dd-timeline-axis span.start { transform: none; }
+.dd-timeline-axis span.end { transform: translateX(-100%); }
+
+/* Scroll-progress indicator — a scarlet fill whose leading edge (the knob)
+   marks the reader's position across the era strip. deep-dive.js sizes it
+   per-section (era-scaled), so the knob sits between the boundary dates on
+   the axis directly below — glance up and read roughly "where in history". */
+.dd-timeline-progress {
+  position: relative;
+  max-width: var(--dd-wide);
+  margin: 0.5rem auto 0;
+  height: 3px;
+  background: var(--border-light);
+  border-radius: 2px;
+}
+.dd-timeline-progress-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, var(--scarlet-dim), var(--scarlet));
+  border-radius: 2px;
+  transition: width 0.08s linear;
+}
+.dd-timeline-progress-fill::after {
+  content: "";
+  position: absolute;
+  right: -4px; top: 50%;
+  width: 9px; height: 9px;
+  transform: translateY(-50%);
+  background: var(--scarlet);
+  border: 1.5px solid #fffaf3;
+  border-radius: 50%;
+  box-shadow: 0 1px 5px rgba(196, 30, 58, 0.5);
+}
+
+/* Docked (compressed) state — toggled by deep-dive.js once stuck.
+   The year axis + progress rail stay visible so the reader always has a
+   time reference; only the per-era range labels drop out to save height. */
+.dd-timeline.docked {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  box-shadow: 0 10px 26px rgba(82, 43, 29, 0.14);
+}
+.dd-timeline.docked .dd-era { min-height: 34px; }
+.dd-timeline.docked .dd-era-range { display: none; }
+.dd-timeline.docked .dd-timeline-progress { margin-top: 0.4rem; }
+.dd-timeline.docked .dd-timeline-axis { margin-top: 0.35rem; }
+
+/* ── Article body (single column, centred) ── */
+.dd-layout {
+  max-width: var(--dd-wide);
+  margin-inline: auto;
+  padding: 2.5rem 2rem 3.5rem;
+}
+.dd-article {
+  font-family: Georgia, "Times New Roman", serif;
+  max-width: var(--dd-wide); /* wide zone; children set their own measure below */
+  margin-inline: auto;
+}
+.dd-section { scroll-margin-top: 150px; } /* clear the sticky nav + docked timeline */
+.dd-section + .dd-section { margin-top: 2.75rem; }
+
+/* Running text sits at a readable measure, centred in the wide zone; callouts,
+   pull-quotes and the related rail break wider to fill and vary the column. */
+.dd-section > p,
+.dd-section > .dd-h2 { max-width: var(--dd-measure); margin-inline: auto; }
+.dd-section > .dd-callout { max-width: var(--dd-feature); margin-inline: auto; }
+
+.dd-h2 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.6rem, 3.2vw, 2.15rem); /* restored (pre-Amendment-2) scale */
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--text);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 0.5px solid var(--border);
+}
+/* hover-revealed anchor link */
+.dd-anchor {
+  margin-left: 0.4rem;
+  font-size: 0.62em;
+  color: var(--text-dim);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 140ms ease, color 140ms ease;
+  vertical-align: middle;
+}
+.dd-h2:hover .dd-anchor,
+.dd-anchor:focus { opacity: 1; }
+.dd-anchor:hover { color: var(--scarlet); }
+
+.dd-article p {
+  /* restored original size; a slightly looser leading is the only readability
+     concession for the wider measure (no font enlargement) */
+  font-size: 1.12rem;
+  line-height: 1.9;
+  color: #2a1c1c;
+  margin-bottom: 1.15rem;
+}
+.dd-article p:last-child { margin-bottom: 0; }
+.dd-article a:not(.dd-anchor) { color: var(--scarlet-dim); text-decoration: underline; text-underline-offset: 2px; }
+.dd-dropcap::first-letter {
+  float: left;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 3.4rem;
+  line-height: 0.82;
+  padding: 0.1rem 0.6rem 0 0;
+  color: var(--scarlet);
+}
+
+/* ── Callouts: Framework (scarlet) vs Record (ivory) ── */
+.dd-callout {
+  margin: 1.6rem 0;
+  padding: 1.15rem 1.3rem 1.2rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+}
+.dd-callout-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 850;
+  margin-bottom: 0.55rem;
+}
+.dd-callout-label i { font-size: 15px; }
+.dd-callout p { font-size: 1.02rem !important; line-height: 1.7 !important; margin-bottom: 0.6rem !important; }
+.dd-callout p:last-child { margin-bottom: 0 !important; }
+
+/* (a) Framework — speculative Love Equations claim */
+.dd-callout.framework {
+  background: linear-gradient(145deg, var(--scarlet-pale), rgba(255, 250, 243, 0.66));
+  border: 0.5px solid rgba(196, 30, 58, 0.24);
+  border-left: 4px solid var(--scarlet);
+}
+.dd-callout.framework .dd-callout-label { color: var(--scarlet-dim); }
+.dd-callout.framework strong { color: var(--scarlet-deep); }
+
+/* (b) Record — sourced historical fact / statistic */
+.dd-callout.record {
+  background: linear-gradient(145deg, var(--card-solid), var(--surface));
+  border: 0.5px solid var(--border);
+  border-left: 4px solid var(--gold);
+}
+.dd-callout.record .dd-callout-label { color: var(--gold); }
+.dd-callout.record strong { color: var(--text); }
+.dd-callout-cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ── Pull-quote: reuses a strong line to break the measure and fill width.
+   Selector must outrank `.dd-article p` (which sets body size/colour). ── */
+.dd-article p.dd-pullquote {
+  max-width: var(--dd-feature);
+  margin: 2.4rem auto;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--scarlet);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--scarlet-dim);
+}
+.dd-article p.dd-pullquote span { color: var(--text-dim); font-style: italic; }
+
+/* ── Related Cards rail / block ── */
+.dd-related {
+  max-width: var(--dd-feature);
+  margin: 3rem auto 0;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: linear-gradient(145deg, rgba(255,255,255,0.82), rgba(243,230,216,0.5));
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+.dd-related-head {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 850;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 0.9rem;
+}
+.dd-related-head i { color: var(--scarlet); font-size: 15px; }
+.dd-related-list { display: grid; gap: 0.6rem; }
+.dd-related-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--card-solid);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 140ms ease, transform 140ms ease;
+}
+.dd-related-card:hover { border-color: rgba(196, 30, 58, 0.38); transform: translateX(3px); }
+.dd-related-icon {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--scarlet-pale);
+  color: var(--scarlet-dim);
+  border-radius: 10px;
+  font-size: 17px;
+}
+.dd-related-name {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--text);
+}
+.dd-related-where {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11.5px; color: var(--text-dim); margin-top: 1px;
+}
+.dd-related-card > i:last-child { margin-left: auto; color: var(--text-dim); font-size: 16px; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .dd-timeline {
+    top: 64px; /* shorter mobile nav */
+    padding: 0.7rem 1rem 0.65rem;
+  }
+  /* Horizontally scrollable strip of tappable era chips; active one is
+     auto-centred by deep-dive.js. Axis hidden to save height. */
+  .dd-timeline-track {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .dd-timeline-track::-webkit-scrollbar { display: none; }
+  .dd-era {
+    flex: 0 0 auto;
+    min-width: 118px;
+    border-left-width: 0.5px;
+    border-radius: var(--radius-sm);
+    margin-left: -0.5px;
+  }
+  .dd-era:first-child { margin-left: 0; }
+  /* The full-width year axis can't track the horizontally-scrolled chips, so
+     it's hidden; instead the per-era date ranges stay on the chips even when
+     docked, keeping boundary years visible. The progress rail remains. */
+  .dd-timeline-axis { display: none; }
+  .dd-timeline.docked .dd-era-range { display: block; }
+  .dd-timeline-progress { max-width: none; }
+  .dd-section { scroll-margin-top: 128px; }
+}
+
+@media (max-width: 720px) {
+  .dd-essay-hero { padding: 2.25rem 1rem 2.5rem; }
+  .dd-layout { padding-left: 1rem; padding-right: 1rem; }
+}
