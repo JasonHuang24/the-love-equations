@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Third Spaces &mdash; The Love Equations</title>
+  <meta name="description" content="The apps didn't win the courtship market — the third places where people used to meet were emptied out first. A Deep Dive tracing where courtship actually happened, from the well and the agora to the age of the app." />
+  <link rel="stylesheet" href="css/styles.css?v=1.6" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <link rel="stylesheet" href="css/deep-dive-essay.css?v=1.3" />
+  <script src="js/deep-dive.js?v=1.5" defer></script>
+</head>
+<body data-page="deep-dive">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <header class="dd-essay-hero">
+      <div class="dd-essay-hero-inner">
+        <a class="dd-back" href="deep-dive.html"><i class="ti ti-arrow-left" aria-hidden="true"></i> All Deep Dives</a>
+        <div class="page-eyebrow">Deep Dive &middot; Essay 02</div>
+        <h1 class="dd-essay-title">Third Spaces</h1>
+        <p class="dd-standfirst">The apps didn&rsquo;t win the courtship market. The places where people met were demolished first.</p>
+        <div class="dd-essay-meta">
+          <!-- reading time: placeholder — fill on the content pass -->
+          <span><i class="ti ti-clock" aria-hidden="true"></i> &mdash; min read</span>
+          <span><i class="ti ti-timeline" aria-hidden="true"></i> Antiquity &ndash; present</span>
+          <span><i class="ti ti-books" aria-hidden="true"></i> Records cited &middot; Frameworks flagged</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Era timeline: primary navigation spine (era-segmented, not to scale) ──
+         This essay's OWN five eras. Note the first segment has no numeric start:
+         its boundary tick reads "Antiquity". The timeline component tolerates a
+         non-numeric left edge natively — deep-dive.js never parses the axis
+         labels or data-start/-end (scrollspy uses live offsetTop; progress is
+         index-based), and the axis is hand-authored spans — so no patch needed.
+         data-start on era 1 is a numeric forward-compat placeholder (unused). -->
+    <nav class="dd-timeline" aria-label="Era timeline — jump to a section">
+      <div class="dd-timeline-track">
+        <a class="dd-era" href="#well-and-agora" data-start="-800" data-end="500">
+          <span class="dd-era-label">Well &amp; Agora</span>
+          <span class="dd-era-range">Antiquity</span>
+        </a>
+        <a class="dd-era" href="#parish-and-fair" data-start="500" data-end="1600">
+          <span class="dd-era-label">Parish &amp; Fair</span>
+          <span class="dd-era-range">500 &ndash; 1600</span>
+        </a>
+        <a class="dd-era" href="#coffeehouse-century" data-start="1600" data-end="1870">
+          <span class="dd-era-label">Coffeehouse Century</span>
+          <span class="dd-era-range">1600 &ndash; 1870</span>
+        </a>
+        <a class="dd-era" href="#golden-age-of-joining" data-start="1870" data-end="1960">
+          <span class="dd-era-label">Golden Age of Joining</span>
+          <span class="dd-era-range">1870 &ndash; 1960</span>
+        </a>
+        <a class="dd-era" href="#great-emptying" data-start="1960" data-end="2025">
+          <span class="dd-era-label">The Great Emptying</span>
+          <span class="dd-era-range">1960 &ndash; present</span>
+        </a>
+      </div>
+      <div class="dd-timeline-progress" aria-hidden="true"><span class="dd-timeline-progress-fill"></span></div>
+      <div class="dd-timeline-axis" aria-hidden="true">
+        <span class="start" style="left:0%">Antiquity</span>
+        <span style="left:20%">500</span>
+        <span style="left:40%">1600</span>
+        <span style="left:60%">1870</span>
+        <span style="left:80%">1960</span>
+        <span class="end" style="left:100%">Now</span>
+      </div>
+    </nav>
+
+    <div class="dd-layout">
+      <!-- ══════════════════════════════════════════════════════════════════════
+           PLACEHOLDER PROSE. This is a template-instantiation shell: the real
+           essay content arrives in a separate content pass. Every Record and
+           Framework below is a demonstrated component with placeholder copy —
+           no sourced facts are asserted yet. Callout distribution and the ≤2R/
+           ≤2F-per-section cap will be set during the content pass.
+           ══════════════════════════════════════════════════════════════════ -->
+      <article class="dd-article">
+
+        <section class="dd-section" id="well-and-agora">
+          <h2 class="dd-h2">The Well and the Agora<a class="dd-anchor" href="#well-and-agora" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p class="dd-dropcap"><em>Placeholder prose.</em> Long before anyone matched, swiped, or advertised, the earliest courtship happened in the places a settlement could not function without &mdash; and the oldest of them all was the source of its water. The well, the spring, the public fountain: everyone came, every day, and the young came alongside everyone else. This section will argue that the first &ldquo;third space&rdquo; was never designed as one. It was shared infrastructure that happened to double as the only reliable place two strangers could be seen crossing paths. Beside it stood the deliberate version &mdash; the agora, the forum, the market square &mdash; a space built for public life that carried courtship as a side effect of putting the whole town in one place at one time.</p>
+
+          <!-- Documentation-bias caveat SLOT — placeholder; expand on the content pass. -->
+          <p><em>Documentation-bias caveat (placeholder).</em> One limit shapes everything in this section, so it belongs here at the start: what survives is the record of the literate city &mdash; the Athenian agora, the Roman forum &mdash; and almost nothing of the countless villages whose gathering places left no text at all. The picture of antiquity that follows leans urban, propertied, and Mediterranean because that is where the writing was kept. Treat the well and the square described here as a legible sample of a much wider human habit, not a census of it, and hold every generalization a little loosely.</p>
+
+          <p class="dd-pullquote">Before there were apps, <span>there was the well.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced fact about antiquity&rsquo;s public gathering places will sit here &mdash; the civic and social density of the classical agora, say, or the frequency of the public festivals that pulled a whole population into one square. The figure will be stated plainly and carried by the citation line below, exactly as in every Record on the site.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; a named source and, later, a Tier grade will go here].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> What matters for the argument is the shape, not yet the detail: courtship in antiquity was hosted by spaces that existed for other reasons entirely. Nobody built the well to make marriages. It made them anyway, because it gathered people. Keep that mechanism in view &mdash; a venue that assembles the population will always do quiet matchmaking on the side &mdash; because the rest of this essay is the story of those venues multiplying, professionalizing, and then, at the very end, disappearing.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> Read through The Love Equations, the well and the agora are the first instance of a claim this essay will make repeatedly: pairing is downstream of <strong>where people are gathered</strong>, not of how much they want to pair. The interpretive read to be developed here is that the &ldquo;market&rdquo; for partners has always been a physical place first and a preference second &mdash; and that changing the place changes the market more than changing the people ever does.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="parish-and-fair">
+          <h2 class="dd-h2">Parish and Fair<a class="dd-anchor" href="#parish-and-fair" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> When the classical city receded, the gathering places did not vanish &mdash; they changed management. For a thousand years the two dependable third spaces of ordinary European life were the parish church and the seasonal fair. The parish assembled the same faces every week within walking distance; the fair assembled a much larger and stranger crowd a few times a year. Between the weekly draw of one and the periodic surge of the other, a courting population had both a reliable local pool and an occasional wider one &mdash; roughly the medieval equivalent of a neighbourhood and a festival.</p>
+
+          <p><em>Placeholder prose.</em> This section will develop how much of courtship rode on the church calendar and the fair calendar together: feast days, holy days, patronal festivals, hiring fairs where young servants changed households and, not incidentally, met. The venue set the rhythm. People did not pair on a schedule of their own choosing so much as on the schedule the parish and the fair provided.</p>
+
+          <p class="dd-pullquote">The calendar decided <span>when you could meet.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced figure for the density of the medieval gathering calendar will go here &mdash; the number of feast and festival days on which a parish population was drawn together, or the reach of a major regional fair. Stated plainly, carried by the citation below.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; named source + Tier grade to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> The through-line to carry forward: the medieval world did not lack places to meet, it <em>scheduled</em> them. Courtship clustered around fixed points in the year because that was when the venues opened. Hold onto the idea of a courtship calendar &mdash; it is one more thing the modern age will quietly abolish.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> The Love Equations reads parish and fair as a two-tier market structure hiding in plain sight: a dense <strong>local</strong> pool with high repetition and low novelty, and a sparse <strong>regional</strong> pool with the opposite. The lens to develop is that healthy pairing wants both tiers at once &mdash; and that later eras keep breaking one tier or the other.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="coffeehouse-century">
+          <h2 class="dd-h2">The Coffeehouse Century<a class="dd-anchor" href="#coffeehouse-century" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> Then something new: a third space you paid to enter, built for no purpose but sociability itself. The coffeehouse, the salon, the assembly room, the public house &mdash; between roughly 1600 and 1870 the gathering place went commercial and multiplied. For the first time the venue was not an accident of water, worship, or trade. It was a business whose product <em>was</em> company. This section will trace how commercial sociability thickened the courtship market almost by accident, simply by giving people a reason and a place to sit near strangers for hours.</p>
+
+          <p><em>Placeholder prose.</em> The argument to build here is that the coffeehouse century was a peak of a certain kind &mdash; the moment the third space stopped being rationed by the calendar and became something you could choose to visit on a Tuesday. Availability went up; the friction of simply being present near other people went down. Whatever else the era did, it made <em>showing up</em> cheap.</p>
+
+          <p class="dd-pullquote">A place whose only product <span>was company.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced count will anchor this section &mdash; the number of coffeehouses in a major city by a given year, or the spread of assembly rooms and public houses per head of population. The figure will land here with its citation.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; named source + Tier grade to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> Carry this forward as the high-water mark for now: commercial third spaces made near-daily, low-stakes, in-person gathering ordinary. The next era will push that even further before the whole thing turns and begins to drain &mdash; which is the pivot the essay has been walking toward.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> The Love Equations reads the priced-entry third space as the invention of <strong>low-friction repeated contact</strong> &mdash; the single most important input to pairing, and the one the modern market will turn out to be worst at supplying. The lens to develop: the coffeehouse didn&rsquo;t create attraction; it created <em>proximity at volume</em>, and proximity at volume is most of what a courtship market is.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="golden-age-of-joining">
+          <h2 class="dd-h2">The Golden Age of Joining<a class="dd-anchor" href="#golden-age-of-joining" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> From roughly 1870 to 1960 the third space reached its densest form in the modern West: an age of <em>joining</em>. Clubs, lodges, unions, congregations, choirs, bowling leagues, service organizations, dance halls, and mutual societies layered a thick mesh of membership over ordinary life. People did not merely visit gathering places; they belonged to them, repeatedly, by name. This section will argue that the golden age of joining was also, quietly, the golden age of meeting &mdash; because a population organized into overlapping memberships is a population continually being introduced to itself.</p>
+
+          <p><em>Placeholder prose.</em> The key idea to develop is redundancy. In a heavily-joined society, any two people were likely to be one or two memberships apart &mdash; a lodge, a parish, a league, a hall in common. Courtship rode on that dense connective tissue almost invisibly. Nobody experienced the club as a dating venue, and yet the club, multiplied across a whole society, was doing an enormous amount of the introducing.</p>
+
+          <p class="dd-pullquote">A joined society is one <span>forever introducing itself.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced measure of associational density will sit here &mdash; peak membership rates in civic, fraternal, or religious organizations before the mid-century turn. The figure and its source will carry the point that joining, once, was near-universal.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; named source + Tier grade to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> Hold this section as the peak from which the last one falls. The mesh of memberships was so thick that its role in pairing was invisible &mdash; which is exactly why its disappearance would go unnoticed as a courtship problem, and get mistaken for something else entirely.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> The Love Equations reads the age of joining as the point of maximum <strong>ambient</strong> matchmaking &mdash; introductions produced as a by-product of belonging, with no one having to try. The lens to develop: the strongest courtship market is the one nobody experiences as a market at all, because the venues do the work invisibly and for free.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="great-emptying">
+          <h2 class="dd-h2">The Great Emptying<a class="dd-anchor" href="#great-emptying" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> Here is the turn the whole essay has been built to deliver, and it belongs stated bluntly. From about 1960 the third space drained. Suburbanization spread people out; the car privatized the commute; the screen privatized the evening; membership in the joined institutions fell decade over decade. The mesh that had done ambient, invisible matchmaking for a century thinned to almost nothing &mdash; and it thinned <em>first</em>, quietly, years before anyone connected it to how hard partnering had become.</p>
+
+          <p><em>Placeholder prose.</em> Only into that emptied landscape did the app arrive. The standard story treats dating apps as the disruptor that beat the old ways of meeting. This essay&rsquo;s claim is close to the opposite: the apps did not defeat the coffeehouse, the parish, or the club. They moved into the vacancy those places left behind. The market was already missing its venues; the app is what rushes in when a market has lost its gathering places and still needs to clear.</p>
+
+          <p class="dd-pullquote">The app didn&rsquo;t win the room. <span>It inherited an empty one.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> Two sourced figures will anchor the payoff &mdash; the long decline in civic and associational membership across the second half of the twentieth century, set beside the rise of the share of couples who now meet online. Placed side by side, with citations, they make the emptying and the substitution visible at once.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citations; named sources + Tier grades to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> Market structure, though, is only half of why modern pairing feels so hard. The other half is what we now ask a single venue &mdash; and a single relationship &mdash; to carry, once all the others are gone.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> So here is the lens The Love Equations will leave you holding. Every era in this essay hosted courtship in a <strong>shared physical place</strong> that existed for other reasons &mdash; water, worship, trade, company, belonging &mdash; and did its matchmaking for free, as a side effect of gathering people. The Great Emptying removed the places without removing the need. The app is not the cause of modern loneliness in this reading; it is the receipt for a demolition that happened first, out of sight, in every drained third space at once.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <!-- ── Related Cards: LE cards this essay extends (DUMMY placeholders — real links set on the content pass) ── -->
+        <div class="dd-related">
+          <div class="dd-related-head"><i class="ti ti-cards" aria-hidden="true"></i> Cards this essay extends</div>
+          <div class="dd-related-list">
+            <a class="dd-related-card" href="statistics.html#stat-how-couples-meet">
+              <span class="dd-related-icon"><i class="ti ti-map-pin" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">How couples meet</span>
+                <span class="dd-related-where">Statistics &middot; placeholder link</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="dd-related-card" href="frameworks.html#smv-matching">
+              <span class="dd-related-icon"><i class="ti ti-building-community" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">The Attention Economy</span>
+                <span class="dd-related-where">Rules &amp; Frameworks &middot; placeholder link</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="dd-related-card" href="deep-dive.html">
+              <span class="dd-related-icon"><i class="ti ti-history" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">Relationships Throughout History</span>
+                <span class="dd-related-where">Deep Dive &middot; companion essay</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+</body>
+</html>
