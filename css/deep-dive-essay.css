@@ -331,6 +331,53 @@ body[data-page="deep-dive"] {
   line-height: 1.5;
 }
 
+/* (c) Voice — a primary-source period quotation (a third callout family).
+   Neither a sourced statistic (Record) nor a speculative reading (Framework):
+   the actual words of someone alive at the time. Warm parchment, an umber
+   accent, and an oversized serif quotation mark hold it unmistakably apart
+   from the gold Record and the scarlet Framework. No inner <p>, so the
+   `.dd-callout p` size override never touches the quotation. */
+.dd-callout.voice {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #faf3e4, #f3e8d4);
+  border: 0.5px solid var(--border);
+  border-left: 4px solid #6f4e2e; /* umber — distinct from gold and scarlet */
+}
+.dd-callout.voice .dd-callout-label { color: #8a663a; }
+.dd-callout.voice::before {
+  content: "\201C";
+  position: absolute;
+  top: 0.15rem;
+  right: 1rem;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 5rem;
+  line-height: 1;
+  color: rgba(111, 78, 46, 0.15);
+  pointer-events: none;
+}
+.dd-voice-quote {
+  position: relative; /* sit above the decorative quote mark */
+  margin: 0.2rem 0 0.85rem;
+  padding: 0;
+  border: 0;
+  max-width: 54ch; /* readable measure for the quotation inside the wide callout */
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #2a1c1c;
+}
+.dd-voice-attr {
+  display: block;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.dd-voice-attr cite { font-style: italic; }
+
 /* ── Pull-quote: reuses a strong line to break the measure and fill width.
    Selector must outrank `.dd-article p` (which sets body size/colour). ── */
 .dd-article p.dd-pullquote {
@@ -436,4 +483,8 @@ body[data-page="deep-dive"] {
 @media (max-width: 720px) {
   .dd-essay-hero { padding: 2.25rem 1rem 2.5rem; }
   .dd-layout { padding-left: 1rem; padding-right: 1rem; }
+  /* Voice: shrink the decorative quote mark and step the quotation down so it
+     stays comfortable at narrow widths (the new component's mobile pass). */
+  .dd-callout.voice::before { font-size: 3.5rem; top: 0.1rem; right: 0.7rem; }
+  .dd-voice-quote { font-size: 1.06rem; line-height: 1.62; }
 }
