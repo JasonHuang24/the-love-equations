@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relationships by Country &mdash; The Love Equations</title>
+  <meta name="description" content="The unbundling of marriage is not a Western event — it is a wave moving through the whole world at different speeds. A Deep Dive comparing where the relationship transition has reached, region by region, from ultra-low-fertility East Asia to high-fertility Sub-Saharan Africa. [Placeholder — refine on the content pass.]" />
+  <link rel="stylesheet" href="css/styles.css?v=1.6" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="js/include.js" defer></script>
+  <link rel="stylesheet" href="css/deep-dive-essay.css?v=1.4" />
+  <script src="js/deep-dive.js?v=1.5" defer></script>
+</head>
+<body data-page="deep-dive">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <header class="dd-essay-hero">
+      <div class="dd-essay-hero-inner">
+        <a class="dd-back" href="deep-dive.html"><i class="ti ti-arrow-left" aria-hidden="true"></i> All Deep Dives</a>
+        <div class="page-eyebrow">Deep Dive &middot; Essay 03</div>
+        <h1 class="dd-essay-title">Relationships by Country</h1>
+        <p class="dd-standfirst">The West didn&rsquo;t invent the unbundling. It was just the pilot program.</p>
+        <div class="dd-essay-meta">
+          <!-- reading time: placeholder — fill on the content pass -->
+          <span><i class="ti ti-clock" aria-hidden="true"></i> &mdash; min read</span>
+          <span><i class="ti ti-world" aria-hidden="true"></i> East Asia &ndash; Sub-Saharan Africa</span>
+          <span><i class="ti ti-books" aria-hidden="true"></i> Records cited &middot; Frameworks flagged &middot; Voices quoted</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Nav strip: primary navigation spine — GEOGRAPHIC this time, not chronological ──
+         The five segments are world REGIONS, ordered by total fertility rate (TFR),
+         low → high, which doubles as "furthest into the unbundling → earliest". Each
+         segment's sub-label is the region's headline TFR instead of a date range, and
+         the boundary axis below is a TFR ruler (1.0 → 4.5) instead of a year axis.
+         The timeline component tolerates all of this NATIVELY — deep-dive.js never
+         parses the era labels, the axis labels, or data-start/-end (scrollspy uses live
+         offsetTop; the progress rail is index-based ((i+f)/N)*100). So the strip is
+         just labeled anchors: no css/js change. data-start/-end carry the TFR band as
+         unused numeric forward-compat placeholders. Segment names, order, and all TFR
+         values are PLACEHOLDERS — the content pass supplies the real ones. -->
+    <nav class="dd-timeline" aria-label="Region strip — jump to a section">
+      <div class="dd-timeline-track">
+        <a class="dd-era" href="#east-asia" data-start="1.0" data-end="1.4">
+          <span class="dd-era-label">East Asia</span>
+          <span class="dd-era-range">TFR ~1.1</span>
+        </a>
+        <a class="dd-era" href="#latin-america" data-start="1.4" data-end="2.0">
+          <span class="dd-era-label">Latin America</span>
+          <span class="dd-era-range">TFR ~1.8</span>
+        </a>
+        <a class="dd-era" href="#south-asia" data-start="2.0" data-end="2.4">
+          <span class="dd-era-label">South Asia</span>
+          <span class="dd-era-range">TFR ~2.1</span>
+        </a>
+        <a class="dd-era" href="#mena" data-start="2.4" data-end="3.5">
+          <span class="dd-era-label">Middle East &amp; N. Africa</span>
+          <span class="dd-era-range">TFR ~2.8</span>
+        </a>
+        <a class="dd-era" href="#sub-saharan-africa" data-start="3.5" data-end="4.6">
+          <span class="dd-era-label">Sub-Saharan Africa</span>
+          <span class="dd-era-range">TFR ~4.3</span>
+        </a>
+      </div>
+      <div class="dd-timeline-progress" aria-hidden="true"><span class="dd-timeline-progress-fill"></span></div>
+      <div class="dd-timeline-axis" aria-hidden="true">
+        <span class="start" style="left:0%">TFR 1.0</span>
+        <span style="left:20%">1.5</span>
+        <span style="left:40%">2.0</span>
+        <span style="left:60%">2.5</span>
+        <span style="left:80%">3.5</span>
+        <span class="end" style="left:100%">4.5</span>
+      </div>
+    </nav>
+
+    <div class="dd-layout">
+      <!-- ══════════════════════════════════════════════════════════════════════
+           PLACEHOLDER PROSE. This is a template-instantiation shell: the real
+           essay content arrives in a separate content pass. Every Record, Framework,
+           and Voice below is a demonstrated component with placeholder copy — no
+           sourced facts are asserted yet. Callout distribution and the per-section
+           caps will be set during the content pass.
+           ══════════════════════════════════════════════════════════════════ -->
+      <article class="dd-article">
+
+        <section class="dd-section" id="east-asia">
+          <h2 class="dd-h2">East Asia<a class="dd-anchor" href="#east-asia" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p class="dd-dropcap"><em>Placeholder prose.</em> Begin where the wave has traveled furthest. East Asia &mdash; South Korea, Japan, Taiwan, mainland China, Singapore &mdash; holds the lowest fertility rates ever recorded in peacetime, and it got there in a single generation. This section will argue that the region is not an exotic outlier but a preview: the same forces that loosened marriage in the West, run at higher speed and against a backdrop of intense educational competition and unaffordable housing, until pairing itself begins to look optional to a whole cohort.</p>
+
+          <!-- Documentation / comparability caveat SLOT — placeholder; expand on the content pass. -->
+          <p><em>Comparability caveat (placeholder).</em> One limit belongs here at the start, because it shapes every regional comparison that follows: fertility, marriage, and cohabitation are measured differently from country to country, and a &ldquo;marriage&rdquo; or a &ldquo;household&rdquo; does not mean the same thing everywhere. Read the regional figures in this essay as directional and roughly comparable, not as identical instruments laid side by side.</p>
+
+          <p class="dd-pullquote">The future of pairing <span>is already on display here.</span></p>
+
+          <!-- Voice block SLOT — placeholder; Polybius arrives with the real content. -->
+          <figure class="dd-callout voice">
+            <div class="dd-callout-label"><i class="ti ti-quote" aria-hidden="true"></i> Voice</div>
+            <blockquote class="dd-voice-quote"><em>Placeholder Voice.</em> A verbatim period quotation will sit here on the content pass. The plan is Polybius on the shrinking of ancient Greece &mdash; the oldest surviving lament for a people who chose fewer children for the sake of comfort and status, an uncanny rhyme with modern East Asia. His actual words arrive with the real content.</blockquote>
+            <figcaption class="dd-voice-attr">&mdash; Polybius, <cite>Histories</cite> (2nd c. BC) &mdash; placeholder attribution</figcaption>
+          </figure>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced headline figure for the region will sit here &mdash; a national total fertility rate at or below <strong>1.0</strong>, say, or the share of a cohort still unmarried at forty. Stated plainly and carried by the citation line below, exactly as in every Record on the site; a Tier grade will follow.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; a named source and, later, a Tier grade will go here].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> The mechanism to develop is that East Asia compressed into decades a transition the West spread across a century, and layered on top of it pressures the West never faced at the same intensity &mdash; extreme education arms races, punishing housing costs, and expectations of marriage and parenthood that stayed traditional even as the economics that once supported them fell away. The result is a widening gap between what the culture still asks of a couple and what a young person can actually afford to provide.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> Read through The Love Equations, East Asia is the clearest test of a claim this essay will make everywhere: the unbundling is not a Western value that spread, but a <strong>predictable response to a set of conditions</strong> &mdash; and wherever those conditions arrive, the same retreat from marriage follows, regardless of the local culture&rsquo;s stated wishes. The lens to develop is that culture slows the wave but does not stop it.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="latin-america">
+          <h2 class="dd-h2">Latin America<a class="dd-anchor" href="#latin-america" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> Latin America complicates the story, because here the retreat from formal marriage arrived early and without ever fully passing through a golden age of it. This section will develop the region&rsquo;s long tradition of informal and consensual unions, its rapid fertility decline to below replacement across much of the continent, and the way a strongly Catholic culture came to coexist with some of the world&rsquo;s highest rates of cohabitation and births outside marriage.</p>
+
+          <p><em>Placeholder prose.</em> The through-line to carry forward is that formal marriage was never the only route to family here, so its decline looks different: less a collapse than the growth of an alternative that was always partly present. The couple stayed; the certificate became optional.</p>
+
+          <p class="dd-pullquote">The family stayed. <span>The paperwork became optional.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced figure will anchor the section &mdash; the share of births outside marriage, or the prevalence of consensual unions, in a major Latin American country. The number will land here with its citation and a Tier grade.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; named source + Tier grade to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> The lesson to draw is that &ldquo;marriage decline&rdquo; and &ldquo;family decline&rdquo; are not the same measurement. A region can walk away from the wedding while keeping the household, which is a caution against reading every falling marriage rate as the same story.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> The Love Equations reads Latin America as evidence that the <strong>bundle</strong> can be unbundled in a different order than the West took &mdash; sex, cohabitation, and childbearing decoupling from the marriage certificate while the pair-bond itself persists. The lens to develop: the certificate and the relationship are separable goods, and different cultures drop different pieces first.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="south-asia">
+          <h2 class="dd-h2">South Asia<a class="dd-anchor" href="#south-asia" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> South Asia sits near the middle of the wave, and it is the section where the alliance model from the first essay is still visibly load-bearing. This section will trace near-universal, largely arranged marriage; the persistence of dowry and the joint family; and, underneath all of it, a fertility rate that has quietly fallen to around replacement even as the institution of marriage itself remains almost mandatory.</p>
+
+          <p><em>Placeholder prose.</em> The tension to develop is between an old marriage system that still holds and a demographic reality moving fast beneath it: falling fertility, rising urban education, and a slowly growing space for the couple&rsquo;s own preferences inside arrangements their families still broker.</p>
+
+          <p class="dd-pullquote">Marriage stays universal <span>while everything under it moves.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced figure will sit here &mdash; the share of marriages still arranged, or the near-universal ever-married rate by a given age, in a major South Asian country. Stated plainly, carried by the citation below with a Tier grade.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; named source + Tier grade to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> Hold this region as the living version of the alliance era the companion essay described: two families still negotiating a match, with the individuals gaining a say slowly and unevenly rather than all at once.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> The Love Equations reads South Asia as a chance to watch the <strong>alliance-to-love-match transition</strong> happen in real time, rather than in the historical record &mdash; the same shift the West made over centuries, compressed and still in progress. The lens to develop: the sequence looks similar everywhere, even when the starting institutions differ.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="mena">
+          <h2 class="dd-h2">Middle East &amp; North Africa<a class="dd-anchor" href="#mena" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> In the Middle East and North Africa the striking pattern is not the abandonment of marriage but its delay. This section will develop the phenomenon often called &ldquo;waithood&rdquo;: marriage remains near-universal and culturally central, yet the age at first marriage keeps climbing as young men struggle to afford the housing, bride-price, and stable income that marriage is understood to require.</p>
+
+          <p><em>Placeholder prose.</em> The idea to develop is a bottleneck rather than a rejection. The demand for marriage stays high; the economic gate to it narrows, and a large cohort of young people ends up suspended in an extended, unwanted single adulthood they did not choose on principle.</p>
+
+          <p class="dd-pullquote">Not a rejection of marriage &mdash; <span>a queue for it.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced figure will anchor the section &mdash; the rise in mean age at first marriage, or the share of men in their late twenties still unmarried, in a major MENA country. The figure lands here with its citation and a Tier grade.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; named source + Tier grade to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> The comparison to draw is with East Asia&rsquo;s marriage strike: same delayed marriage, very different cause and meaning. One cohort is opting out; the other is stuck in line. Reading them as the same trend would miss the point entirely.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> The Love Equations reads MENA as the case that separates <strong>delayed</strong> marriage from <strong>declined</strong> marriage &mdash; two patterns that look identical on a chart of median marriage age but mean opposite things about desire. The lens to develop: the same statistic can hide a strike or a shortage, and only the underlying wanting tells you which.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <section class="dd-section" id="sub-saharan-africa">
+          <h2 class="dd-h2">Sub-Saharan Africa<a class="dd-anchor" href="#sub-saharan-africa" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p><em>Placeholder prose.</em> End where the wave has barely begun. Sub-Saharan Africa holds the world&rsquo;s highest fertility, its youngest populations, and the marriage and kinship arrangements that most of human history would recognize &mdash; early and near-universal marriage, bride-wealth, and, in a wide belt across the continent, polygyny that is still openly practiced rather than merely permitted on paper.</p>
+
+          <p><em>Placeholder prose.</em> The argument to build is that this is not a region &ldquo;behind&rdquo; the others so much as a region still standing where the others started &mdash; the clearest present-day picture of the baseline the first essay described, and the place where the coming decades will test whether the same transition arrives here too, and how fast.</p>
+
+          <p class="dd-pullquote">Not behind the others. <span>Standing where they began.</span></p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p><em>Placeholder Record.</em> A sourced figure will close the tour &mdash; a regional total fertility rate above <strong>4</strong>, or the share of women in a polygynous union in a given country. Stated plainly, carried by the citation with a Tier grade.</p>
+            <span class="dd-callout-cite">Source &mdash; [placeholder citation; named source + Tier grade to follow].</span>
+          </div>
+
+          <p><em>Placeholder prose.</em> The closing move of the essay lives here: set the five regions side by side and the West stops looking like the author of a decline and starts looking like the first country to reach a destination the rest are traveling toward at their own speeds. That is the payoff the standfirst promises &mdash; the pilot program, and the wave behind it.</p>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p><em>Placeholder Framework.</em> So here is the lens The Love Equations will leave you holding. Line the regions up by how far each has traveled and they look less like different cultures and more like different <strong>frames of one film</strong> &mdash; the same unbundling, caught at five different moments. The West was not the exception that broke the rule; it was the first frame, and everywhere else is further back on the same reel, moving forward.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <!-- ── Related Cards: LE cards this essay extends (PLACEHOLDER links except the companion — finalize on the content pass) ── -->
+        <div class="dd-related">
+          <div class="dd-related-head"><i class="ti ti-cards" aria-hidden="true"></i> Cards this essay extends</div>
+          <div class="dd-related-list">
+            <a class="dd-related-card" href="dd-relationships-throughout-history.html">
+              <span class="dd-related-icon"><i class="ti ti-history" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">Relationships Throughout History</span>
+                <span class="dd-related-where">Deep Dive &middot; companion essay</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="dd-related-card" href="statistics.html">
+              <span class="dd-related-icon"><i class="ti ti-chart-bar" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">The numbers behind the retreat</span>
+                <span class="dd-related-where">Statistics &middot; placeholder link</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="dd-related-card" href="frameworks.html">
+              <span class="dd-related-icon"><i class="ti ti-building-community" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">SMV &amp; market structure</span>
+                <span class="dd-related-where">Rules &amp; Frameworks &middot; placeholder link</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+</body>
+</html>
