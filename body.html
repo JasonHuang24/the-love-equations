@@ -508,6 +508,7 @@
   <script>
     const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
+                 sexClsSex:null, sexClsConf:null,   // the face classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
                  bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null,
                  // Tier-0 objective inputs (optional; drive the hybrid blend). bf is a PERCENT; source 'picker'|'measured'.
                  inHeightCm:null, inWeightKg:null, inBfPct:null, inBfSource:null };
@@ -667,13 +668,39 @@
       return '<div class="bc-xcheck"><i class="ti ti-alert-triangle" aria-hidden="true"></i> <strong>Silhouette vs. stated body-fat disagree.</strong> ' + lead
         + ' &mdash; one of them is off (arms or clothing can corrupt the outline; self-estimates skew low). Both are shown; neither was changed to fit the other.</div>';
     }
+    // Manual sex — a Step-1 selection OR a result-panel flip — is the top of the precedence order:
+    //   manual (Step-1 or flip)  >  face classifier  >  body-frame guess.
+    // It re-bases the whole pipeline (objective tier, curves, bands) and STAYS put when a new photo is measured;
+    // the classifier still runs and logs, it just can't silently re-sex a person the user already pinned.
+    // (Fable cold-review P2, Jason-ruled option a.) Keeps the state coherent: Step-1's stored sex follows a flip,
+    // and the body-fat guide re-bases with it — a value that predates the new sex's buckets is kept as the user's
+    // number but shown in the measured field, not mis-highlighting a silhouette tile that can't honestly claim it.
+    function bcApplyManualSex(s){
+      BC.sex = (s === 'm' ? 'm' : 'f'); BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual';
+      BC.sexConf = null; BC.sexUnknownReason = '';
+      if (Number.isFinite(BC.inBfPct) && bfBucketIndexFor(BC.inBfPct, BC.sex) === -1) BC.inBfSource = 'measured';
+      setStatus(bcStatusNote(), false, true);
+      renderInputsPanel(); bcSaveInputs(); renderResult();
+    }
+    // A confident face-classifier read that contradicts a manual sex pick. Manual still wins the score; this only
+    // surfaces the disagreement (mirrors the composite's face≠body convention). Null when they agree, when there
+    // is no manual pick, or when the classifier read is too tentative to loudly contradict a manual choice.
+    const SEX_CONFLICT_MIN = 0.75;   // genderage's correct reads cluster ~0.87–1.0; below this it isn't "confident"
+    function bcSexConflict(){
+      if (BC.sexSource !== 'manual') return null;
+      const manual = (BC.sex === 'm' || BC.sex === 'f') ? BC.sex : null;
+      const cls = (BC.sexClsSex === 'm' || BC.sexClsSex === 'f') ? BC.sexClsSex : null;
+      if (!manual || !cls || cls === manual) return null;
+      if (!(typeof BC.sexClsConf === 'number' && BC.sexClsConf >= SEX_CONFLICT_MIN)) return null;
+      return { manual:manual, cls:cls, conf:BC.sexClsConf };
+    }
     // Sex toggle wiring, shared by the full and numbers-only renders (both draw into #bc-result).
     function wireSexButtons(host){
       host.querySelectorAll('.bc-sex button').forEach(function(b){
-        b.addEventListener('click', function(){ BC.sex = b.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderInputsPanel(); renderResult(); });
+        b.addEventListener('click', function(){ bcApplyManualSex(b.dataset.sex); });
       });
       host.querySelectorAll('.bc-sexflip').forEach(function(a){
-        a.addEventListener('click', function(e){ e.preventDefault(); BC.sex = a.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderInputsPanel(); renderResult(); });
+        a.addEventListener('click', function(e){ e.preventDefault(); bcApplyManualSex(a.dataset.sex); });
       });
     }
 
@@ -792,6 +819,8 @@
           : 'This re-bases the typical ranges below <em>and</em> the geometry headline above &mdash; the sex-specific bands feed the score whenever the model isn&rsquo;t the headline, so set it correctly for a bare-physique read.')
         + '</div>';
 
+      const sexConflict = bcSexConflict();   // a manual pick the face classifier confidently disagrees with (non-blocking)
+
       const drivers = '<div class="bc-bd-h">Strongest drivers &middot; Tier 1</div>'
         + '<div class="bc-note-line">Waist-to-hip and overall leanness are the most replicated predictors of body attractiveness &mdash; but a front photo can&rsquo;t see depth, so leanness is shown below only as an <strong>uncalibrated</strong> frontal proxy (measured, not scored). Shown here as <strong>reasoned proxies, not population-fitted</strong>: <em>proportional typicality</em> is closeness to the sex-typical bands; a <em>dimorphic-cue index</em> reads broad-and-tapered (masculine) vs. hourglass (feminine).</div>'
         + compRow('Proportional typicality', comp.typicality, [55,85], 'Distinctive', 'Very typical')
@@ -819,6 +848,8 @@
         + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental model.</strong> Validated to <em>rank</em> bodies, not to pinpoint &mdash; read it as a broad band (roughly &plusmn;1.5), not a precise grade, especially on casual photos unlike its studio training set.</div>' : '')
         + (BC.framing === 'torso' ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Upper-body read.</strong> Scored on frame cues only &mdash; waist-to-hip, V-taper, shoulder breadth. Leanness (needs full height) and leg proportion are cropped out, and a draped top softens the waist; a full-body shot in fitted clothing reads more.</div>' : '')
         + (BC.reliability ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+BC.reliability+'</div>' : '')
+        + (sexConflict ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:var(--scarlet)"><strong>Your sex pick and the photo disagree.</strong> '
+            + (hasInputs ? 'Step&nbsp;1 is set to ' : 'You set the sex to ') + '<strong>'+(sexConflict.manual==='m'?'male':'female')+'</strong>, but the photo&rsquo;s face classifier reads <strong>'+(sexConflict.cls==='m'?'male':'female')+'</strong> ('+Math.round(sexConflict.conf*100)+'% confident). The score uses <strong>your selection</strong> &mdash; if the photo is of someone else, that&rsquo;s why. <strong><a href="#" class="bc-sexflip" data-sex="'+sexConflict.cls+'" style="color:var(--scarlet)">Use the '+(sexConflict.cls==='m'?'male':'female')+' read instead &rarr;</a></strong></div>' : '')
         + (hasInputs ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Hybrid read.</strong> Your measured numbers set the objective base; the '+(usingModel?'trained-model':'silhouette')+' photo moves it for shape &amp; distribution. The arithmetic is spelled out in the Tier-0 section below.</div>' : '')
         + (hasInputs ? crossCheckHtml(t0) : '')
         + (BC_DEBUG && usingModel && BC.modelRaw!=null ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+BC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
@@ -878,22 +909,37 @@
       else if (BC.sexSource==='model') how = 'sex read from the face: <strong>' + sx + (BC.sexConf!=null ? ' ('+Math.round(BC.sexConf*100)+'% model confidence'+(BC.sexConf<0.75?', tentative':'')+')' : '') + '</strong> — <strong>flip if wrong</strong>';
       else if (BC.sexSource==='manual') how = 'sex set to <strong>' + sx + '</strong>';
       else how = 'sex from the frame: <strong>' + sx + '</strong> — <strong>flip if wrong</strong>';
-      return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + (BC.reliability ? ' · ' + BC.reliability : '');
+      const cf = bcSexConflict();
+      const cfNote = cf ? ' · <strong style="color:var(--scarlet)">face reads ' + (cf.cls==='m'?'male':'female') + ' (' + Math.round(cf.conf*100) + '%) — using your pick</strong>' : '';
+      return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + cfNote + (BC.reliability ? ' · ' + BC.reliability : '');
     }
     window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac){
       BC.metrics = metrics; BC.model = null; BC.measuredAt = Date.now();   // stable stamp: a new photo, reused on every re-render so age stays honest
       BC.framing = framing === 'torso' ? 'torso' : 'full';
       BC.bareGeometry = !!bareGeometry; BC.skinFrac = (skinFrac==null ? null : skinFrac);
       BC.reliability = reliability || '';
-      const g = guessSex(metrics);
-      BC.sex = g; BC.sexAuto = true; BC.sexSource = g ? 'guess' : 'unknown'; BC.sexConf = null; BC.sexManual = false; BC.sexUnknownReason = '';
+      BC.sexClsSex = null; BC.sexClsConf = null;   // a new photo → drop the previous photo's classifier read before this one's fires
+      // Manual sex (a Step-1 pick or a prior flip) OUTRANKS the frame guess and the face classifier and SURVIVES a
+      // new photo — re-measure the body, don't silently re-sex the person. Only an auto (guess/model) sex is
+      // re-derived from this frame. (Fable cold-review P2: the old unconditional reset wiped the Step-1 sex, letting
+      // a mis-read clothed photo re-base the objective tier to the wrong sex's curves.)
+      if (BC.sexManual && (BC.sex === 'm' || BC.sex === 'f')){
+        BC.sexAuto = false; BC.sexSource = 'manual'; BC.sexConf = null; BC.sexUnknownReason = '';
+      } else {
+        const g = guessSex(metrics);
+        BC.sex = g; BC.sexAuto = true; BC.sexSource = g ? 'guess' : 'unknown'; BC.sexConf = null; BC.sexManual = false; BC.sexUnknownReason = '';
+      }
       setStatus(bcStatusNote(), false, true); renderResult();
     };
-    // the on-device face sex classifier reports in async — overrides the unreliable frame guess unless the
-    // user has flipped it manually. (The headline score is unchanged; sex only re-bases the typical bands.)
+    // the on-device face sex classifier reports in async — it OVERRIDES the unreliable frame guess but NEVER a
+    // manual pick (Step-1 or a flip): manual > classifier > frame. The read is recorded either way, so a manual
+    // choice it contradicts still surfaces a non-blocking conflict warning. (The headline score is unchanged; sex
+    // only re-bases the typical bands.)
     window.bcSetSex = function(sex, conf){
-      if (BC.sexManual) return;
-      BC.sex = (sex==='m'?'m':'f'); BC.sexSource = 'model'; BC.sexConf = conf; BC.sexAuto = true; BC.sexUnknownReason = '';
+      const s = (sex==='m'?'m':'f');
+      BC.sexClsSex = s; BC.sexClsConf = (typeof conf==='number' && isFinite(conf)) ? conf : null;   // always log the classifier read
+      if (BC.sexManual){ setStatus(bcStatusNote(), false, true); renderResult(); return; }   // manual wins — but re-render so a conflict surfaces
+      BC.sex = s; BC.sexSource = 'model'; BC.sexConf = conf; BC.sexAuto = true; BC.sexUnknownReason = '';
       setStatus(bcStatusNote(), false, true); renderResult();
     };
     // the face sex read is untrustworthy when the eyes are hidden (sunglasses) — decline to guess rather than
@@ -905,7 +951,7 @@
     };
     window.bcSetModelScore = function(t, raw){ BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.bcModelReady = function(ok){ BC.modelReady = ok; };
-    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
@@ -913,6 +959,7 @@
       if (!BC.metrics || !BC.shotDataURL) return;          // only persist a real, analysed result
       const state = { profile:BC.profile, metrics:BC.metrics, model:BC.model, modelRaw:BC.modelRaw,
         sex:BC.sex, sexAuto:BC.sexAuto, sexSource:BC.sexSource, sexConf:BC.sexConf, sexManual:BC.sexManual,
+        sexClsSex:BC.sexClsSex, sexClsConf:BC.sexClsConf,
         sexUnknownReason:BC.sexUnknownReason||'', reliability:BC.reliability, framing:BC.framing,
         bareGeometry:BC.bareGeometry, skinFrac:BC.skinFrac, measuredAt:BC.measuredAt };
       try { localStorage.setItem(BC_SHOT_KEY, JSON.stringify({ img:BC.shotDataURL, state, ts:BC.measuredAt })); }
@@ -930,6 +977,7 @@
       BC.model = fin(s.model, null); BC.modelRaw = fin(s.modelRaw, null);
       BC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; BC.sexAuto = !!s.sexAuto;
       BC.sexSource = s.sexSource || 'guess'; BC.sexConf = fin(s.sexConf, null);
+      BC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; BC.sexClsConf = fin(s.sexClsConf, null);
       BC.sexManual = !!s.sexManual; BC.sexUnknownReason = s.sexUnknownReason || '';
       BC.reliability = s.reliability || ''; BC.framing = s.framing==='torso' ? 'torso' : 'full';
       BC.bareGeometry = !!s.bareGeometry; BC.skinFrac = fin(s.skinFrac, null);
@@ -940,7 +988,7 @@
     window.bcResetAll = function(){
       BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
       BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
-      BC.sexConf = null; BC.sexManual = false; BC.sexUnknownReason = ''; BC.shotDataURL = null;
+      BC.sexConf = null; BC.sexManual = false; BC.sexClsSex = null; BC.sexClsConf = null; BC.sexUnknownReason = ''; BC.shotDataURL = null;
       BC.inHeightCm = null; BC.inWeightKg = null; BC.inBfPct = null; BC.inBfSource = null;   // clear the Tier-0 inputs too
       bcClearShot(); bcClearInputs(); if (window.bcClearCanvas) window.bcClearCanvas();
       setStatus('Cleared. Drop a photo to start again.'); renderInputsPanel(); renderResult();
@@ -961,6 +1009,7 @@
     function bfBucketIndexFor(bfPct, sex){
       if (!Number.isFinite(bfPct)) return -1;
       const arr = BF_BUCKETS[sex === 'm' ? 'm' : 'f'];
+      if (bfPct < arr[0].lo) return -1;   // below this sex's lowest bucket → no honest tile (e.g. a male-grid value under the female floor)
       for (let i = 0; i < arr.length; i++){ if (bfPct <= arr[i].hi) return i; }
       return arr.length - 1;
     }
@@ -1108,11 +1157,7 @@
       BC.inBfPct = b.mid; BC.inBfSource = 'picker';
       renderInputsPanel(); bcSaveInputs(); renderResult();   // buttons, no focus concern → full rebuild moves the highlight
     };
-    function bcSetInSex(s){
-      BC.sex = (s === 'm' ? 'm' : 'f'); BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual';
-      setStatus(bcStatusNote(), false, true);
-      renderInputsPanel(); bcSaveInputs(); renderResult();
-    }
+    function bcSetInSex(s){ bcApplyManualSex(s); }   // Step-1 sex picker → the shared manual-sex path (precedence + BF coherence)
 
     // ── persistence: loveEquations.bodyInputs.v1 (survives page switches like the photo does) ──
     function bcSaveInputs(){
@@ -1132,6 +1177,7 @@
       if ((s.sex === 'm' || s.sex === 'f') && !(BC.sex === 'm' || BC.sex === 'f')){ BC.sex = s.sex; BC.sexManual = true; BC.sexSource = 'manual'; BC.sexAuto = false; }
     }
     window.bcSetStatus = setStatus;
+    window.bcSexConflict = bcSexConflict;   // manual-vs-classifier sex conflict (batch harness mirrors it into reliability)
     window.bcState = BC;                 // live handle for the debug batch harness (BC is const, never reassigned)
     window.bcPoseSkeleton = poseSkeleton;
     window.bcBodyRatios = bodyRatios;
@@ -1596,6 +1642,7 @@
         const skinFrac = torsoSkinFraction(ctx, lm, W, H);
         const bareBody = skinFrac >= SKIN_HEADLINE_THRESHOLD;
         const useModel = (!!session || modelState === 'loading') && !bareBody;
+        BC.routeBare = bareBody; BC.routeUseModel = useModel;   // instrumentation only: the TRUE routing decision (incl. the model-load window) for the debug batch harness — no logic change
         const px = poseResult.silhouette || null;
         if (!px && !useModel){
           window.bcSetStatus('The pose was readable, but the body outline was not reliable enough to score. No number was produced; try a neutral standing photo with clear contrast and fitted clothing.', true);
@@ -1800,13 +1847,12 @@
       function wrapsOn(){
         window.bcSetStatus = function(msg,isErr,isHtml){ if (cur){ cur.statusMsg=String(msg==null?'':msg); cur.statusErr=!!isErr; if (isErr && /inference failed/i.test(cur.statusMsg)){ cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } } return origStatus.apply(this,arguments); };
         window.bcSetModelScore = function(t,raw){ if (cur){ cur.model=t; cur.modelRaw=(raw==null?null:raw); cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } return origModel.apply(this,arguments); };
-        window.bcSetSex = function(sex,conf){ if (cur) cur.sexFired=true; return origSex.apply(this,arguments); };
-        window.bcSetSexUnknown = function(reason){ if (cur) cur.sexFired=true; return origSexU.apply(this,arguments); };
+        window.bcSetSex = function(sex,conf){ if (cur){ cur.sexFired=true; if (cur.sexRes){ const r=cur.sexRes; cur.sexRes=null; r(); } } return origSex.apply(this,arguments); };
+        window.bcSetSexUnknown = function(reason){ if (cur){ cur.sexFired=true; if (cur.sexRes){ const r=cur.sexRes; cur.sexRes=null; r(); } } return origSexU.apply(this,arguments); };
       }
       function wrapsOff(){ window.bcSetStatus=origStatus; window.bcSetModelScore=origModel; window.bcSetSex=origSex; window.bcSetSexUnknown=origSexU; }
 
-      const SETTLE_MS = 15000, SEX_GRACE_MS = 500;
-      const delay = ms => new Promise(r=>setTimeout(r,ms));
+      const SETTLE_MS = 15000, SEX_SETTLE_MS = 6000;   // model wait cap · sex-read wait cap (a stuck read is bounded, not 15s)
       const nowISO = () => new Date().toISOString();
       const n2 = x => (x==null||!isFinite(x)) ? '' : (Math.round(x*100)/100).toFixed(2);
       const stripTags = s => String(s==null?'':s).replace(/<[^>]*>/g,'');
@@ -1826,19 +1872,38 @@
         return [ window.gradeBody(BC.metrics,sex,'blackpill').score, window.gradeBody(BC.metrics,sex,'conventional').score ];
       }
 
-      async function settle(modelExpected){
+      // Await THIS image's trained-model score, when one was actually scheduled (routeUseModel). Resolves the
+      // instant bcSetModelScore fires (via the wrapper) or, on a stuck load, at SETTLE_MS — flagging the read
+      // ABANDONED (Finding 1) so its late resolution is invalidated rather than bleeding into the next row.
+      async function settleModel(modelExpected){
         const c = cur;                               // this image's capture — never route a stale timer through a later image's `cur`
         await new Promise(res=>{
           if (!modelExpected || !c || c.modelSettled){ res(); return; }
-          c.res = res; c.timer = setTimeout(()=>{ if (c.res){ const r=c.res; c.res=null; r(); } }, SETTLE_MS);
+          c.res = res; c.timer = setTimeout(()=>{ if (c.res){ const r=c.res; c.res=null; c.abandoned=true; r(); } }, SETTLE_MS);
         });
         if (c && c.timer){ clearTimeout(c.timer); c.timer = null; }
-        // brief grace for the (fast) sex classifier when we didn't already wait on the model
-        if (!modelExpected && sexSession && c && !c.sexFired) await delay(SEX_GRACE_MS);
       }
+      // Await the on-device sex read for a SEX-DEPENDENT row (geometry / hybrid), when a classifier read is
+      // actually in flight for this image (a clean face crop was produced → __bcSex.reason===''; occluded /
+      // low-vis / no-face / absent-classifier reads never fire, so we don't wait and the frame guess stands).
+      // Resolves the instant bcSetSex/bcSetSexUnknown fires, or at SEX_SETTLE_MS (abandoned). (Finding 3)
+      async function settleSex(){
+        const c = cur;
+        if (!c || c.sexFired) return;
+        const inFlight = (!!sexSession || sexState==='loading') && !!window.__bcSex && window.__bcSex.reason==='';
+        if (!inFlight) return;
+        await new Promise(res=>{
+          c.sexRes = res; c.sexTimer = setTimeout(()=>{ if (c.sexRes){ const r=c.sexRes; c.sexRes=null; c.abandoned=true; r(); } }, SEX_SETTLE_MS);
+        });
+        if (c && c.sexTimer){ clearTimeout(c.sexTimer); c.sexTimer = null; }
+      }
+      // Invalidate an abandoned image's still-in-flight inference so it self-discards (never touches the next
+      // row's `cur`, never persists after guardOff): bump the generation the async work is gen-guarded against,
+      // and drop any tensor a still-loading model/classifier would auto-run for it. (Finding 1)
+      function abandonInFlight(){ currentGen++; pendingTensor = null; pendingSexTensor = null; }
 
       async function processOne(file){
-        cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null };
+        cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null, sexRes:null, abandoned:false };
         const ts = nowISO();
         const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', routing:'', skin_frac:'', framing:'', model_raw:'', bp:'', cv:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
         let img=null;
@@ -1846,29 +1911,51 @@
         catch(e){ return blank({ refusal:'could not decode image' }); }
         try { await handleImage(img); }  // async pipeline: awaits the pose worker; sets BC.metrics (or refuses); kicks off async model + sex
         catch(e){ try{ URL.revokeObjectURL(img.src);}catch(_){}  return blank({ refusal:'pipeline threw: '+e.message }); }
-        const modelExpected = (!!session || modelState==='loading') && !!BC.metrics && !BC.bareGeometry;   // mirror drawAndScore's useModel (incl. the load window); bare shots route to geometry
-        await settle(modelExpected);
+        // Finding 2: the TRUE routing decision (BC.routeUseModel, incl. the model-load window) governs whether an
+        // inference was scheduled — mirror it, don't re-derive a predicate that logs geometry as clothed→model and
+        // then waits 15s for a run that never happened. A bare / absent-model shot has routeUseModel=false → skip.
+        const modelExpected = !!BC.metrics && !!BC.routeUseModel;
+        await settleModel(modelExpected);
         try{ URL.revokeObjectURL(img.src);}catch(_){}
 
         const scored = !!BC.metrics;
         let bp='', cv='', routing='', skin='', framing='', t0f='', t0b='', xchk='';
         if (scored){
+          // Finding 3: a geometry or hybrid row's bp/cv is sex-dependent — the single-shot UI re-renders with the
+          // classifier sex, so await that read before computing. The pure-model headline is sex-agnostic → skip.
+          const usingModel = BC.model != null;
+          const tier0Numbers = BC.inHeightCm>0 && BC.inWeightKg>0 && Number.isFinite(BC.inBfPct);
+          if (!usingModel || tier0Numbers) await settleSex();
           // bp/cv EXACTLY as renderResult: a bare/geometry headline with an unresolved sex is a male–female
           // RANGE on the page (usingRange), not a single number — so log the range, don't silently pick 'f'.
-          const usingModel = BC.model != null, sexKnown = BC.sex==='m' || BC.sex==='f';
+          const sexKnown = BC.sex==='m' || BC.sex==='f';
           if (!usingModel && !sexKnown && !window.computeTier0()){
             const rng = pk => { const m=window.gradeBody(BC.metrics,'m',pk).score, f=window.gradeBody(BC.metrics,'f',pk).score; return n2(Math.min(m,f))+'–'+n2(Math.max(m,f)); };
             bp = rng('blackpill'); cv = rng('conventional');
           } else {
             const pair = bodyBpCv(); bp = n2(pair[0]); cv = n2(pair[1]);
           }
-          routing = BC.bareGeometry ? 'bare→geometry' : 'clothed→model';
+          routing = BC.routeBare ? 'bare→geometry' : 'clothed→model';   // Finding 2: log the true bare decision, not bareBody&&!!session
           skin = BC.skinFrac!=null ? Math.round(BC.skinFrac*100)+'%' : '';
           framing = BC.framing || '';
           const t0 = window.computeTier0();
           if (t0){
             t0f = t0.ffmiAdj.toFixed(1); t0b = t0.bfPct.toFixed(1);
             xchk = (BC.metrics.whtr!=null) ? (window.crossCheckBF(BC.metrics.whtr, t0.bfPct, t0.sex) ? 'yes' : 'no') : '';
+          }
+        }
+        // Finding 1: if either wait timed out, this image's model/sex inference may still be in flight — invalidate
+        // it now (so a late inferAndSet/inferSex self-discards) before advancing so it can't bleed into the next row.
+        if (cur && cur.abandoned) abandonInFlight();
+        // Item 1: a manual (Step-1) sex the classifier confidently contradicts surfaces on the page as a
+        // non-blocking conflict — mirror it into the reliability column so a batch row carries the same signal
+        // (same source of truth as renderResult via window.bcSexConflict).
+        let relOut = scored ? String(BC.reliability||'').trim() : '';
+        if (scored){
+          const sc = window.bcSexConflict ? window.bcSexConflict() : null;
+          if (sc){
+            const note = 'sex conflict: set '+sc.manual+', face reads '+sc.cls+' ('+Math.round(sc.conf*100)+'%) — used your pick';
+            relOut = relOut ? relOut + ' · ' + note : note;
           }
         }
         return {
@@ -1881,7 +1968,7 @@
           sex: scored ? (BC.sex||'unknown') : '',
           sex_conf: (scored && BC.sexConf!=null) ? Math.round(BC.sexConf*100)+'%' : '',
           sex_source: scored ? (BC.sexSource||'') : '',
-          reliability: scored ? String(BC.reliability||'').trim() : '',
+          reliability: relOut,
           tier0_ffmi:t0f, tier0_bf:t0b, crosscheck:xchk
         };
       }
@@ -1933,6 +2020,10 @@
             rows.push(row); renderTable();
           }
         } finally {
+          // Finding 1: invalidate any inference still in flight from the LAST image BEFORE unpatching Storage /
+          // wraps — else a late inferAndSet/inferSex passes its gen guard, calls the real (now-unwrapped) setter,
+          // and renderResult persists loveEquations.* after the guard is gone. Order: gen → pendings → restore → off.
+          currentGen++; pendingTensor = null; pendingSexTensor = null;
           cur = null;
           try { restore(snap); }         // storage still guarded → restore renders without persisting
           catch(e){ console.error('[body batch] UI restore failed:', e); }   // but ALWAYS un-patch below — a leaked guard would break the app's persistence

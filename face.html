@@ -960,15 +960,19 @@
         const c = cur;                               // this image's capture — never route a stale timer through a later image's `cur`
         await new Promise(res=>{
           if (!modelExpected || !c || c.modelSettled){ res(); return; }
-          c.res = res; c.timer = setTimeout(()=>{ if (c.res){ const r=c.res; c.res=null; r(); } }, SETTLE_MS);
+          c.res = res; c.timer = setTimeout(()=>{ if (c.res){ const r=c.res; c.res=null; c.abandoned=true; r(); } }, SETTLE_MS);   // TIMEOUT → abandon this image's in-flight inference (Finding 1)
         });
         if (c && c.timer){ clearTimeout(c.timer); c.timer = null; }
         // brief grace for the (fast) sex classifier when we didn't already wait on the model
         if (!modelExpected && sexSession && c && !c.sexFired) await delay(SEX_GRACE_MS);
       }
+      // Invalidate an abandoned image's still-in-flight inference so it self-discards (never touches the next
+      // row's `cur`, never persists after guardOff): bump the generation the async work is gen-guarded against,
+      // and drop any tensor a still-loading model/classifier would auto-run for it. (Finding 1)
+      function abandonInFlight(){ currentGen++; pendingTensor = null; pendingSexTensor = null; }
 
       async function processOne(file){
-        cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null };
+        cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null, abandoned:false };
         const ts = nowISO();
         const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', model_raw:'', bp:'', cv:'', sex:'', sex_conf:'', sex_source:'', reliability:'' }, extra);
         let img=null;
@@ -987,6 +991,9 @@
           bp = n2(usingModel ? window.mapModelScore(cur.model,'blackpill')  : window.gradeFace(LC.geo,LC.soft,'blackpill').score);
           cv = n2(usingModel ? window.mapModelScore(cur.model,'conventional'): window.gradeFace(LC.geo,LC.soft,'conventional').score);
         }
+        // Finding 1: if settle timed out, this image's model/sex inference may still be in flight — invalidate it
+        // now (so a late inferAndSet/inferSex self-discards) before advancing so it can't bleed into the next row.
+        if (cur && cur.abandoned) abandonInFlight();
         return {
           filename:file.name, timestamp:ts,
           outcome: scored ? 'scored' : 'refused',
@@ -1046,6 +1053,10 @@
             rows.push(row); renderTable();
           }
         } finally {
+          // Finding 1: invalidate any inference still in flight from the LAST image BEFORE unpatching Storage /
+          // wraps — else a late inferAndSet/inferSex passes its gen guard, calls the real (now-unwrapped) setter,
+          // and renderResult persists loveEquations.* after the guard is gone. Order: gen → pendings → restore → off.
+          currentGen++; pendingTensor = null; pendingSexTensor = null;
           cur = null;
           try { restore(snap); }         // storage still guarded → restore renders without persisting
           catch(e){ console.error('[face batch] UI restore failed:', e); }   // but ALWAYS un-patch below — a leaked guard would break the app's persistence
