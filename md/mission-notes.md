@@ -408,3 +408,304 @@ the commit trailers won't disambiguate it.*
 | The Mythbuster &mdash; myth/claim audit page (**proof-of-concept render system**) | **new:** `mythbuster.html`, `css/mythbuster.css`, `js/mythbuster.js` (built this session as `myths.*`; **renamed** in the follow-up row below); **+1 link each:** `partials/navigation-bar.html` + `partials/footer.html`; **dev-only (untracked):** `.claude/launch.json` (port-8756 no-cache preview) | **Jason** (brief + mid-flight multi-claim architecture patch) &middot; **Claude** (Opus 4.8, Ultracode; recon + build + 2 review Workflows + live verify) | **Status: NOT committed** (session rule: leave for review). A data-driven "beliefs on trial" page: one `ENTRIES` array + one `render()`/`cardHTML()` &mdash; no per-card HTML. **Schema:** a QUESTION with 1..N `claims[]{camp?,text,verdict}` + a `ruling{badge,text,tier,sources[]}` + `related[]` + `draft`; **single render path** for N=1..N (the only N-branch is the top-strip right cell: N=1 shows the claim's verdict badge, N&gt;1 shows a "N claims tested" count pill). **Render GATE (hard-refuse + `console.warn`, no unsourced ruling ever renders):** missing/invalid `ruling.tier` OR empty `ruling.sources` (the brief's two conditions) plus defensive skips (no claims / claim missing text or invalid verdict / missing ruling|badge|text); `window.Mythbuster={data,render,validate}` exposed for gate testing. **Verdict palette** (per-claim, reused as the N=1 strip badge): confirmed=green `#1e7b34`, oversimplified=amber `#9a6b12`, false=`--scarlet`, backwards=`--scarlet-deep` (two distinct scarlet shades); **tier pills** mirror statistics `.chart-tier`. **4 DRAFT placeholders** (all `draft:true`, visible DRAFT chip): M-001 N=1 (no question), M-002 N=2, M-003 N=3 **incl. a `confirmed` claim**, M-004 N=1+question &mdash; covers all 4 verdicts + all 3 tiers; content is **plausible-but-placeholder, not canon** (Jason replaces). **Anatomy:** single-column stack of full-width cards; top strip (mono ID + category, right badge/count); optional bold full-width question line; body split by a vertical hairline &mdash; LEFT claims stacked &amp; separated by horizontal hairlines (camp + verdict chip, then italic-serif quote), RIGHT scarlet "The ruling" label + ruling badge + text + tier pill + attribution; footer = expandable **"Sources"** (renamed from "Receipts") with rotating chevron + `aria-expanded` (real `<button>`, keyboard-native) revealing full source links + a Related line, smooth `grid-template-rows 0fr&rarr;1fr` reveal. **Mobile (`max-width:599px`):** columns stack, claims first, **ruling closes the card**, hairline horizontal. **DEVIATIONS (all deliberate):** (1) used the spec's load-bearing **&lt;600px** breakpoint though the house mobile standard is 720px (600px appears once in the codebase); (2) added a **monospace stack** scoped to `.mb-id` &mdash; the site has NO mono font, but the spec requires a "mono ID"; (3) **darkened the evidence tier text `#9a6b12`&rarr;`#8a5f10`** &mdash; statistics' shade is 4.24:1 (fails AA), the brief demands AA (now 5.1:1; all badges AA-verified via computed pixel contrast); (4) N&gt;1 without a `question` is a **soft `console.warn`, not a hard skip** (brief's hard-refuse list is only tier+sources; reviewer confirmed acceptable); (5) registered in nav+footer (a page not in nav is unreachable) &mdash; flagged since it surfaces a POC site-wide. **VERIFY:** recon Workflow (5 agents: tokens/breakpoints/chips/badges/scaffolding) &rarr; live browser on a local **:8756** no-cache server (gate skips 5 malformed w/ warns; N=1/2/3 render; chips auto-gen+dedup+filter; Sources toggle; desktop 2&times;527px split; mobile claims-first/ruling-last) &rarr; **2 adversarial review Workflows** (old-arch 13-agent = all met; new-arch 8-agent = all met but 1 real AA nit **[fixed]** + 2 nits that are Jason's WIP). **GUARDRAIL clean:** touched ONLY the feature files &mdash; NO calculator/`MODEL_CONFIG`/`PROFILES`/gate-threshold edits. The working tree's `M face.html` (MODEL_CONFIG calibration), `M .gitignore`, `?? tools/*.py`, `?? md/face-calibration-report.md` and the calibration ledger row above are **Jason's concurrent WIP** &mdash; leave unstaged; do not let `git add -A` sweep them into a Mythbuster commit. [[content-placement-and-lexicon]] &middot; [[claim-verdict-stamps]] &middot; [[data-rigor-and-tiers]] &middot; [[staging-hygiene-concurrent-wip]] &middot; [[local-preview-no-cache-server]] |
 | The Mythbuster &mdash; **PoC follow-up** (rename + 5 fixes, post cold-review) | `mythbuster.html` + `css/mythbuster.css` + `js/mythbuster.js` (**renamed** from `myths.*`), `partials/navigation-bar.html` + `partials/footer.html` (href + data-page), `md/mission-notes.md`, `.claude/launch.json` (dev-only) | **Jason** (cold-review fix list) &middot; **Claude** (Opus 4.8, Ultracode; atomic rename + 5 fixes + live :8756 verify) | **Status: NOT committed** (leave for review). **RENAME (atomic; files were untracked so a plain move):** `myths.html`&rarr;`mythbuster.html`, `js/myths.js`&rarr;`js/mythbuster.js`, `css/myths.css`&rarr;`css/mythbuster.css`; `<link>`/`<script>` refs + `?v=1.0` cache-bust updated; `body data-page` `myths`&rarr;`mythbuster`; both partials' href+data-page updated; prior row's filenames updated. Repo grep for "myths" now returns only prose (`matchmaker.html` "chemistry myths", the "Myths &amp; claims" eyebrow, the "Myth stamp" rows) &mdash; **no stray file refs**. **FIX 1 &mdash; zero external deps:** dropped the jsdelivr Tabler `<link>`; replaced all 3 `ti` glyphs with **inline SVG** (`.mb-svg` alert-triangle in the notice, open-book in the Sources button, chevron). **DECISION (flagged):** the site loads Tabler `@latest` (unpinned) on every other page, so there was no exact version to "pin and keep" &rarr; took the brief's default (inline SVG). This page is now self-contained but **diverges** from the rest (still on the Tabler webfont) &mdash; Jason's call whether to propagate. **FIX 2 &mdash; breakpoint `599px`&rarr;`720px`** (the house mobile breakpoint), reversing the initial build's spec-driven &lt;600 choice as instructed. **FIX 3 &mdash; semantic headings:** the visible question line is now `<h2 class="mb-question">`; no-question N=1 cards get an **sr-only `<h2>`** built from the claim text (new page-scoped `.mb-sr-only`; the site had no such utility). Model mirrors `hierarchy.html`: the `.page-title` **div** = the single h1-equivalent, sections are `<h2>`, **no literal `<h1>`** (site convention on `.page-header` pages). **FIX 4 &mdash; duplicate-id gate:** `validate(entry, seenIds)` gained an optional seen-`Set`; `render()` threads a running `Set` and registers each id only after it passes, so a **second occurrence of an id fails the gate + `console.warn`**. Existing gate conditions, schema, verdict/tier vocab, and escaping **unchanged** (do-not-touch list respected). **FIX 5 &mdash; `@media (prefers-reduced-motion: reduce)`** sets `transition:none` on `.mb-sources-panel`/`.mb-sources-inner`/`.mb-chev`. **VERIFY (live, local no-cache :8756):** mythbuster.html network trace = **localhost-only, zero external requests**; 0 `i.ti` nodes, all 3 inline SVGs render; **0 `<h1>`, 1 `.page-title`, 4 card `<h2>`** (M-001 sr-only from its claim text, M-002/003/004 visible questions); **dup-id** &mdash; a repeated id is skipped with "duplicate id" while the unique one renders; **720px** &mdash; 700px = 1 col, 760px = 2 cols (347&times;347); filter + Sources toggle (SVG chevron rotates, `aria-expanded` flips) work; **console clean**. [[mythbuster-page]] &middot; [[content-placement-and-lexicon]] &middot; [[local-preview-no-cache-server]] |
 | Statistics page &mdash; **PENDING (NOT fixed this session)**: amber Tier-2 badge fails WCAG AA | `css/statistics.css` (`.chart-tier.t2`) | **Claude** (logged during the Mythbuster follow-up, per Jason) | **Pending fix &mdash; deliberately NOT changed.** The statistics evidence Tier-2 badge `.chart-tier.t2` (`background:#fbf3e0; color:#9a6b12`, 9px / weight 700) computes to **4.24:1**, below WCAG AA's 4.5:1 for normal text. The Mythbuster page hit the same colour pair and darkened its own copy to `#8a5f10` (~5:1); statistics still ships the failing shade. When statistics is next touched, darken the t2 text (e.g. `#8a5f10`); also worth spot-checking `frameworks.css` `.smv-tag.t2` (`#854f0b` on `#faeeda`). Logged only &mdash; no statistics/frameworks files were edited. [[data-rigor-and-tiers]] &middot; [[comparison-charts-tab]] |
+| The Mythbuster &mdash; **merged 11 real candidate entries** (8 ungraded Ani/Mika extractions + 3 graded Fable entries); retired the 4 PoC placeholders | `js/mythbuster.js` (ENTRIES body: M-001&ndash;M-004 &rarr; M-TBD-1&ndash;11; stale data comment rewritten), `mythbuster.html` (`.mb-notice` copy), `md/mission-notes.md` | **Jason** (candidate content &mdash; the Ani/Mika extractions + the Fable-verified rulings/sources in `mythbuster-candidates.js`) &middot; **Claude** (Opus 4.8, Ultracode; verbatim merge + deterministic + live :8753 verify) | **Status: NOT committed** (session rule). **MERGE:** all 11 candidate entries appended **verbatim** &mdash; field order preserved; `\u`-escapes, the M-TBD-4 `[REPORTED]` marker, and the extra `researchNotes`/empty-`camp` fields all intact &mdash; via a deterministic **+2-space reindent** (candidates' 2-space base &rarr; the file's 4-space nesting; **formatting only**) with a self-asserting round-trip (strip the +2, compare to source &rarr; **PASS, content byte-identical**). Dropped the candidates' file-header comment; **kept** the inline Fable-divider comment; **rewrote** the stale "4 DRAFT placeholders" data comment. **Deleted** M-001&ndash;M-004 (the Fable trio replaces their demo function). **`.mb-notice`** now: *"Work in progress. Rendered entries are graded drafts pending final review; additional entries are merged but held back until graded."* &mdash; **DRAFT chip mechanics untouched.** **VERIFY (deterministic via `window.Mythbuster` + live :8753 render + screenshot, single fresh render):** 11 loaded; **exactly 3 render** (M-TBD-9/10/11); the **8 `todo` entries** (M-TBD-1&ndash;8) fail the gate &rarr; **exactly 8 `console.warn`s, one per entry**, each on the intended reasons (invalid `ruling.tier` + empty `ruling.sources` + invalid claim `verdict`) with **no** "unknown field" complaint (confirms `validate()` ignores `researchNotes`/`camp`); **no** soft "claims but no question" warn (M-TBD-11 carries its question); **chips = All / Attraction / Conflict only** (auto-gen from rendered entries &mdash; Signals/Approach/Definitions/Dating/Confidence correctly absent); M-TBD-11 = **2-claim card** with question line *"Who cares more about looks?"* + a **"2 claims tested"** pill; **zero console errors**. **TASK-5 known-incomplete items CONFIRMED left as-is:** the Gottman source (M-TBD-10) empty `url`, the Eastwick-2014 source (M-TBD-11) empty `url`, and the M-TBD-4 `[REPORTED]` marker &mdash; **all untouched**. **Empty-`url` source is VALID to the gate &mdash; confirmed empirically** (M-TBD-10 & M-TBD-11 both `validate()` clean despite carrying an empty-url source; the gate checks `sources.length`, never `s.url`) &rarr; **no gate-logic change**. **NO content authority exercised** &mdash; no verdict assigned, no ruling filled, no source invented; nothing in the 11 entries looked structurally wrong. **Line-ending note:** working tree is CRLF (`core.autocrlf=true`, repo blob LF); merge preserves CRLF so the diff is **content-only** (206 ins / 53 del). Working tree otherwise clean &mdash; only the two feature files + this ledger changed. [[mythbuster-page]] &middot; [[content-placement-and-lexicon]] &middot; [[staging-hygiene-concurrent-wip]] &middot; [[local-preview-no-cache-server]] |
+| The Mythbuster &mdash; **preview mode ("the docket")**: show the 8 ungraded entries for grading WITHOUT weakening the gate | `js/mythbuster.js` (new `computePreview`/`markPreviewNotice`/`docketClaimHTML`/`docketCardHTML`; `render()` gains an `opts.preview` branch; `init()` computes the guard; header-doc note; test export), `css/mythbuster.css` (`.mb-card.is-docket` + `.mb-ungraded` + `.mb-awaiting` + `.mb-notice-preview`), `md/mission-notes.md` | **Jason** (behavior spec) &middot; **Claude** (Opus 4.8, Ultracode; implement + live :8753 verify) | **Status: NOT committed** (session rule). **GUARD (both required, pure fn `computePreview(hostname, search)` so it's unit-testable without a real host):** `?preview=1` **AND** `hostname` is exactly `localhost` or `127.0.0.1`. `init()` computes it from `location` and passes `{preview}` into `render()`; **default (no opts) is byte-for-byte the old behavior.** **DOCKET RENDER PATH (for already-FAILED entries only &mdash; NOT a gate bypass):** in `render()`, a gate-failed entry still logs its `console.warn` and is still excluded from `rendered`; in preview mode it is ALSO pushed to a `docket[]` and rendered by a **separate `docketCardHTML`** AFTER all gate-passing cards. `validate()` and every gate condition are **byte-unchanged.** **Docket card:** same shell via `esc()` throughout, class `.is-docket`; strip = id + category (left) + a neutral **"Ungraded"** pill (right, NOT a verdict chip); question line + claims (camp + quote) via a dedicated **`docketClaimHTML` that never touches `VERDICTS`** (a `'todo'` verdict would throw on `VERDICTS[v].label` &mdash; this is why `claimHTML` can't be reused); ruling column = "The ruling" label + a muted **"Awaiting ruling"** placeholder, **no badge / tier / source line / sources footer**. **Chips:** preview folds docket categories in after the gate-passers' (`rendered.concat(docket)`); normal mode still generates from gate-passers only. **Notice:** preview appends one idempotent line "Preview mode: ungraded entries shown on the docket." **CSS:** docket = washed `rgba(243,230,216,0.28)` bg + **dashed neutral border** (`var(--border)`, distinct from `.is-draft`'s dashed *scarlet*) + `opacity:0.9` + no shadow &mdash; same dashed family, clearly "not yet real". **VERIFY (live :8753, DOM+inspect+guard-matrix; per-render counts via an instrumented throwaway-mount `render`):** **localhost + `?preview=1`** &rarr; 11 cards (3 real THEN 8 docket, order M-TBD-9/10/11 &rarr; M-TBD-1..8), chips = All/Attraction/Conflict/**Signals/Approach/Definitions/Dating/Confidence**, **8 warns/render**, notice line present, a docket card has **0 verdict chips + no tier/attr/badge/sources footer** (has Ungraded pill + "Awaiting ruling"), no `'todo'` string in the markup, clicking the **Signals** chip filters to exactly the 3 Signals docket cards (docket cards participate in filtering), computed styles = dashed border + 0.9 opacity + washed bg. **localhost, no param** &rarr; exactly 3 cards + 3 chips (All/Attraction/Conflict), 0 docket, no notice line &mdash; unchanged. **Non-localhost inertness verified by the pure guard** (no host-spoof needed): `computePreview('theloveequations.com','?preview=1')` &rarr; **false**; also false for `localhost`+no-param, `?preview=2`, and the substring trap `mylocalhost.com`; **true** only for `localhost`/`127.0.0.1` + `preview=1`. **Zero console errors.** **CAVEAT:** `preview_screenshot` timed out 3&times; (renderer capture-side flake; page fully responsive to `eval`/`inspect`) &mdash; verification is text-based (DOM/inspect/computed-style), which the preview tooling treats as authoritative for structure/style; no visual screenshot captured this pass. **CONSTRAINT-CLEAN:** no entry data / verdicts / content touched; no scoring constants; only the two feature files + the ledger. Line endings preserved (js CRLF, css LF &mdash; both internally consistent; the css `autocrlf` LF&rarr;CRLF advisory is pre-existing and benign). [[mythbuster-page]] &middot; [[local-preview-no-cache-server]] &middot; [[reasoned-judgment-calls]] |
+| The Mythbuster &mdash; **(A) card-format fixes + (B) graded-content merge** (6 entries graded, 2 held on the docket) | `js/mythbuster.js` (cardHTML + docketCardHTML + `SVG_TIER`; 6 ENTRIES objects replaced verbatim; M-TBD-10/11 source patches), `css/mythbuster.css` (`.mb-ruling-head`, `.mb-tier` inline-flex + `.mb-tier-ico`, `.mb-sources-bar` + `.mb-related-footer` + `.mb-related-head`), `mythbuster.html` (`.mb-notice` copy), `md/mission-notes.md` | **Jason** (fix list + graded content in `mythbuster-graded.js`) &middot; **Claude** (Opus 4.8, Ultracode; presentation edits + deterministic verbatim merge + live :8753 verify) | **Status: NOT committed** (session rule). **(A) FORMAT (presentation only).** **A1** ruling badge moved onto the "The ruling" label row via a new `.mb-ruling-head` flex (label left, badge right, `space-between`); **same treatment applied to the docket** &mdash; the "Ungraded" pill moved OUT of the top strip INTO the docket's ruling-head row (mirrors the real badge; strip is now id+category only). *(Interpretation call: "same treatment for the docket UNGRADED pill" &rarr; relocate it to the ruling-head, since the strip already right-aligned it and a no-op made no sense. Noted for Jason.)* **A2** restored a leading inline-SVG bar-chart glyph on `.mb-tier` (`SVG_TIER`, currentColor, aria-hidden; `.mb-tier` &rarr; inline-flex); **sized 12px, not the suggested ~14px** &mdash; 14px dwarfs the 9px tier text, 12px keeps the site's ~1.3&times; icon:text ratio (flagged). No CDN re-added. **A3** Related links moved OUT of the collapsed panel into an always-visible footer row (`.mb-sources-bar`: toggle left, Related right, `space-between`); full source list stays in the expandable panel; entries with empty `related[]` render nothing on the right. *(Now-unused CSS `.mb-sources-block`/`.mb-related`/`.mb-sources-head` left in place &mdash; prunable.)* **(B) CONTENT MERGE (zero editorial authority).** **B1** replaced M-TBD-1/2/5/6/7/8 verbatim from `mythbuster-graded.js` via a deterministic +2-space reindent with brace-matched block extraction and a self-asserting round-trip (PASS, byte-identical); **claim-text drift check: none** (file == current for all 6). **B2** M-TBD-10 empty-url Gottman source swapped for the PubMed-linked one **using the file's exact label** (caught & removed an invented "(1992), JPSP" mid-draft); M-TBD-11's empty-url Eastwick-2014 source deleted and the removal noted in its `researchNotes`. **B3** M-TBD-3 & M-TBD-4 left untouched on the docket &mdash; **the two docket holds:** M-TBD-3 = no direct literature surfaced for the reputation-cost dispute (the gate working as designed); M-TBD-4 = double-blocked (Ani's claim still `[REPORTED]`, needs her primary quote; definitional sourcing Tennov/limerence not URL-verified). No verdicts assigned, no sources filled, warnings intact. **B4** notice &rarr; "&hellip;two entries remain on the docket awaiting evidence." **BUG CAUGHT & FIXED:** the merge script appended a comma to blocks that already ended in `},` &rarr; 6 array elisions (`},,`); detected in the post-write read, collapsed `},,`&rarr;`},` (0 remaining), `node --check` clean. **VERIFY (live :8753, DOM + computed-style + geometry; per-render warn counts via instrumented throwaway mounts):** **normal load** &rarr; **9 cards** (M-TBD-1,2,5,6,7,8,9,10,11), chips = All/Signals/Approach/Dating/Confidence/Attraction/Conflict, **exactly 2 warns** (M-TBD-3, M-TBD-4); M-TBD-1 Ani=Oversimplified + Mika=Confirmed, badge "Advantage Mika" in the ruling-head right of the label (`flex`+`space-between`, badge.x&gt;label.right); M-TBD-8 both **Confirmed** green `rgb(30,123,52)`/white = **5.33:1 (AA pass)**; tier icons on all 9 (12px, tier-coloured); Related footer on M-TBD-1/2/5/6 only, right-aligned opposite the toggle; **exactly ONE empty url** dataset-wide (M-TBD-5 PNAS, expected/flagged), 14 source anchors total. **?preview=1** &rarr; **11 cards**, 2 docket (M-TBD-3, M-TBD-4) LAST, docket "Ungraded" on the ruling-head + "Awaiting ruling" + 0 verdict chips + no footer, chips add Definitions. **Zero console errors.** **NO verify check failed.** **MINOR (left as-is, flagged):** M-TBD-10's `researchNotes` still says "Gottman source needs a specific citation and URL" &mdash; now stale since B2 supplied the URL, but B2 only directed the source swap so I did not edit it (Jason's call). **CAVEAT:** `preview_screenshot` timed out every attempt this session (renderer capture-side flake; page fully responsive to eval/inspect) &mdash; verification is text-based (DOM/computed-style/geometry), authoritative for structure & style; no screenshot captured. Line endings preserved (js CRLF, css/html LF; the LF&rarr;CRLF autocrlf advisory is pre-existing/benign). [[mythbuster-page]] &middot; [[claim-verdict-stamps]] &middot; [[data-rigor-and-tiers]] &middot; [[local-preview-no-cache-server]] |
+
+| The Mythbuster — **Gender Dynamics port (32 docket entries) + statistics “Verified on the Mythbuster” block + card anchors** | `js/mythbuster.js` (ENTRIES + M-TBD-12–43; `id` anchors on both card renderers; data comment), `mythbuster.html` (notice copy), `css/mythbuster.css` (`.mb-card` scroll-margin), `statistics.html` (`#stat-mythbuster` card + TOC group; cutting room 22→23; css `?v` bump), `css/statistics.css` (t2 amber), `.claude/launch.json` (session preview server), `md/mission-notes.md` (this row + the manifest section below) | **Claude** (Fable 5; mechanical port — zero grading authority) | **Status: NOT committed** (session rule). **(1) PORT:** all 211 GD cards inventoried (HTML-parser extraction to JSON, not regex) and assessed → **32 ported** as M-TBD-12–43 (30 single-claim + 2 two-claim: M-TBD-34 Bluepill/Blackpill camps, M-TBD-35 the platitude vs “the blackpill”), **29 borderline — flagged, not ported**, **150 not ported** — per-card reasoning in the manifest section below. Every ported claim is the source card's own words, lightly trimmed, **machine-verified: 34/34 claim texts substring-matched against the card bodies** (tolerances: first-char case at trim starts + one trailing period at trim ends; anything else fails the build). All ports carry verdict/tier `todo`, `sources: []`, badge/text `TODO`, `draft: true`, and `sourcePage: 'gender-dynamics'` / `sourceCard` provenance (gate-ignored fields). New docket-only categories: Market / Standards / Psychology (chips fold in on preview only). Duplicates of already-graded entries NOT ported (#46→M-TBD-11, #188→M-TBD-1/2, #190→M-TBD-5); Female-tab mirrors ported from their third-person Male/Both-Sides versions. **gender-dynamics.html/.css untouched (git-verified)** — incl. gender-dynamics.css:67's own t2 amber failure, left for the post-grading migration session. Cards carrying inline evidence (#114 Pareto, #115 “40% online”, #184 potential) ported claim-only per the zero-grading rule — their inline debunks stay on the source cards for the grading loop. **(2) STATS BLOCK:** new `dos-section` “Verified on the Mythbuster” + `#stat-mythbuster` chart-card ahead of the cutting room — 5 one-line stats from GRADED entries only (Montoya r=.47/.39, 313 studies → M-TBD-9; Hall ~38% detection, women's flirting read better → M-TBD-1/2; Busby n=2,035 sexual timing → M-TBD-6; Eastwick & Finkel stated-vs-revealed → M-TBD-11; Wilson sleep→conflict → M-TBD-10), tier chips mirror each ruling's grade (hard-data→Tier 1, evidence→Tier 2: t1/t1/t2/t1/t2), source URLs **byte-identical to ENTRIES** (programmatically verified — none re-sourced), ruling deep links; TOC group added, cutting room renumbered 22→23. **(3) ANCHORS:** both card renderers emit `id="<entry id>"`; `.mb-card` gains `scroll-margin-top: 96px` (same offset as `.dos-section` in styles.css). **(4) AMBER (pre-approved fix):** `css/statistics.css` `.chart-tier.t2` color #9A6B12→#8A5F10 (value-only, matches mythbuster.css) + `statistics.html` `?v=1.7→1.8` cache-bust. Notice copy → “34 entries sit on the docket… 32 of them newly ported”. Stale JS data comment rewritten to match reality. **VERIFY (headless Node harness + live :8757 — :8753 belongs to another session's server, so a session-local `mythbuster-preview` config was added to launch.json):** normal load **exactly 9 cards**, 0 docket, chips unchanged, **34 warns = 2 + 32 ✓** (per-render harness count; live DOM agrees); `?preview=1` → 43 cards, **34 docket cards LAST** in order M-TBD-3, 4, 12–43, docket cards verdict-chip-free with Ungraded pill, camps render (screenshot); fresh navigation to `mythbuster.html#M-TBD-6` lands on the card (scrollY 1929, card top 177px, clear of the sticky nav); stats block renders in house style (screenshot); all 6 external + 6 internal links resolve (externals byte-matched to ENTRIES, deep-link targets all render with anchors); t2 computes rgb(138,95,16). `node --check` clean, zero console errors. **NO verify check failed.** [[mythbuster-page]] · [[comparison-charts-tab]] · [[data-rigor-and-tiers]] · [[commit-straight-to-main]] |
+
+## Gender Dynamics → Mythbuster port manifest (2026-07-06, Claude/Fable — no commits)
+
+Selection criteria (from the mission): **PORT (strong)** = two or more competing viewpoints on one
+question; **PORT (acceptable)** = a single claim-shaped, empirically testable assertion; **DO NOT
+PORT** = definitions, frameworks, taxonomies, advice, doctrine, or anything whose meaning depends on
+Gender Dynamics context. Uncertain cards are flagged **borderline — Jason decides** rather than
+silently included/excluded. Ported entries are M-TBD-12..43 on the Mythbuster docket: verdict/tier
+`todo`, empty sources, badge/text `TODO`, `draft: true`, `sourcePage`/`sourceCard` provenance —
+**zero grading performed**. Where a claim exists on two tabs, the third-person (Male/Both Sides)
+version was ported and the second-person Female-tab mirror is marked as such. Nothing on the Gender
+Dynamics page was modified (git-verified); migration/removal happens after grading, per Jason.
+
+**Tally: 32 ported · 29 borderline (flagged, not ported) · 150 not ported · 211 cards total.**
+
+*Overview tab (page furniture, no dos-cards): hero, the core-dynamic inv-box (men=offer/women=choosers
++ high-value inversion), four how-to-read overview cards, three quick-links — all framing/doctrine,
+none ported, listed here for completeness.*
+
+
+**[MALE] The default market**
+
+1. Men as the offer {Observation} — **borderline — Jason decides** — the page's core men-offer/women-choosers framework — doctrine, but the initiation asymmetry inside it is testable in principle
+2. He performs, she judges {Observation} — **borderline — Jason decides** — effort-asymmetry grievance; claim-shaped (“the work is wildly one-sided”) but diffuse
+3. The climb — building SMV {Observation} — **not ported** — SMV-accumulation doctrine (the climb) — framework, SMV-levers territory
+4. The inversion threshold {Lens} — **not ported** — inversion-threshold framework doctrine
+5. The male window {Observation} — **not ported** — male-window timeline doctrine — Wall-family framework material, not a discrete claim
+6. Commentary {Strategy} — **not ported** — Commentary — advice
+
+**[MALE] Directness, delivery & the indirect game**
+
+7. Why being direct gets you shut down {Observation} — **PORTED as M-TBD-12** — crisp testable claim: direct sexual requests fail where indirect escalation succeeds
+8. The "just tell me what you want" trap {Observation} — **not ported** — restatement of #7 (M-TBD-12) — merge candidate at grading
+9. It's not what you want, it's how you frame it {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+10. Smooth isn't the same as coy {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+11. Feeling desired vs. feeling used {Observation} — **borderline — Jason decides** — counter-claim to #7 (“it's crude, low-effort directness they hate, not directness”) — could join M-TBD-12 as a competing claim
+12. The transactional-attention problem is real {Observation} — **not ported** — perspective/validation card; its statistical core (attention asymmetry) is already charted on statistics.html #stat-attention
+13. The double standard is real {Observation} — **PORTED as M-TBD-13** — reception of identical sexual directness differs by sex — testable (Clark & Hatfield territory)
+14. Women train men to hide their intentions {Observation} — **not ported** — same underlying claim as #7 (M-TBD-12), stated as a training mechanism — merge candidate
+15. The "wine at my place" move {Observation} — **not ported** — coaching lore/advice; same directness family as M-TBD-12
+
+**[MALE] Selection, hypocrisy & how guys respond**
+
+16. Punishing honesty filters the pool {Observation} — **not ported** — speculative selection-pressure mechanism — not cleanly gradeable
+17. Complaining about the guys you reward {Observation} — **PORTED as M-TBD-14** — stated complaints vs revealed choices — testable behavioral loop; fem mirror #140
+18. "No good men left" dodges the real question {Lens} — **not ported** — rhetorical reframe — lens in all but tag; fem mirror #157
+19. Butterflies beat honesty {Observation} — **PORTED as M-TBD-15** — charm/butterflies outcompete honesty in actual choice — dark-triad-attractiveness literature
+20. "I want an honest guy" is branding {Observation} — **PORTED as M-TBD-16** — stated vs revealed preference for honesty (“branding”); fem mirror #134
+21. The disconnect breeds resentment {Observation} — **not ported** — downstream sentiment claim (resentment) — not a testable proposition
+22. It's conditioning, not conspiracy {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+23. Why "game" became a whole industry {Observation} — **not ported** — historical narrative about the game industry, not a gradeable claim
+24. Two types of guys left {Observation} — **not ported** — taxonomy (two types of guys), not a claim
+
+**[MALE] Logic, feelings & the cycle**
+
+25. Instincts override logic {Observation} — **borderline — Jason decides** — “logic loses to feelings” — sweeping but in-principle testable (emotion vs deliberation in mate choice); fem mirror #138
+26. The raw deal cycle {Observation} — **not ported** — narrative cycle; its testable components are carried by M-TBD-14/15
+27. Guys are checking out {Observation} — **PORTED as M-TBD-17** — male opt-out trend — Pew singles-not-looking data exists; fem-tab mirror #165
+28. Modern dating feels like a job hunt {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+29. The low-investment middle path {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+30. The cop-out slogans {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+31. Female dating advice protects her image, not your success {Observation} — **borderline — Jason decides** — motive claim (advice as image management) untestable, but its behavioral core is the stated-vs-revealed family (M-TBD-16/38)
+32. Decoding "just be nice" and "just be yourself" {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+33. Saving face beats telling the truth {Observation} — **not ported** — generalized form of the stated-vs-revealed claims already ported (M-TBD-16/38)
+34. Cold logic keeps reaching the same place {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+35. Most don't snap out of it {Observation} — **not ported** — unfalsifiable course-correction narrative; fem strat mirror #161
+
+**[MALE] Facing reality & what attracts**
+
+36. Men accept harsh truths more readily {Observation} — **borderline — Jason decides** — sex difference in accepting blunt feedback — claim-shaped but thin, diffuse evidence base
+37. Reality vs. feelings {Observation} — **not ported** — culture-war rhetoric (“you'll never see…”) — companion to #36, not independently gradeable; fem mirror #155
+38. The arrogant-guy paradox {Observation} — **PORTED as M-TBD-18** — arrogance attracts despite stated dislike — testable; fem mirror #148
+39. Charisma overrides red flags {Observation} — **PORTED as M-TBD-19** — charisma discounts red flags — halo-effect family; fem mirror #141
+40. The honest guy's bind: get rich or get hot {Observation} — **borderline — Jason decides** — “only rich or hot overrides the need for game” — compound, strategy-shaped claim
+41. Preselection: nothing attracts women like other women {Observation} — **PORTED as M-TBD-20** — preselection / mate-choice copying — established literature; fem mirror #143
+42. The body-count double standard {Observation} — **PORTED as M-TBD-21** — sexual double standard on body count — direct literature exists; fem mirror #154; ties to frameworks Body Count duality
+43. "Stop sexualizing me" is selective {Observation} — **PORTED as M-TBD-22** — objectification complaints conditional on attractiveness — testable; fem mirror #145
+44. The celebrity-crush asymmetry {Observation} — **PORTED as M-TBD-23** — sexed desire styles (physical/bounded vs parasocial/narrative) — parasocial research; fem mirror #156
+
+**[MALE] The looks-first reality**
+
+45. "Personality matters most" is mostly marketing {Observation} — **PORTED as M-TBD-24** — the “personality matters most” belief vs swipe behavior — testable; fem mirror #151
+46. What the research actually shows {Tier 2} — **not ported** — already carried by graded M-TBD-11 (same Eastwick & Finkel 2008 finding and source)
+47. The looks-rejection cope {Observation} — **borderline — Jason decides** — looks-rejections misattributed to other causes — claim-shaped, attribution research thin; fem mirror #152
+48. Nobody will tell a man the truth about his looks {Observation} — **borderline — Jason decides** — “nobody tells men the truth about their looks” — claim-shaped social observation with no obvious grading path
+49. "Get a hobby" is code for "give up" {Observation} — **not ported** — euphemism decode (“get a hobby”), not a claim
+50. Height: the one looks preference women own {Observation} — **PORTED as M-TBD-25** — height as the one openly stated looks filter — preference data exists; fem mirror #153
+
+**[MALE] The female-approval engine & mixed signals**
+
+51. Social approval runs deeper than guys realize {Observation} — **not ported** — general form of #52 (ported as M-TBD-26)
+52. Women care more what other women think {Observation} — **PORTED as M-TBD-26** — female peer approval outweighs male preference in driving behavior — testable; fem mirror #132
+53. Cosmetic surgery and the female-approval engine {Observation} — **not ported** — instance of #52 (M-TBD-26) — cosmetic-surgery example
+54. The female hive mind {Observation} — **PORTED as M-TBD-27** — sex difference in conformity to social consensus — Eagly-family conformity literature; fem mirror #133
+55. The herd script just got updated {Observation} — **not ported** — historical elaboration of #54's conformity claim (M-TBD-27)
+56. "Women aren't a monolith" is a weak defense {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+57. "I just want to feel safe" is usually just talk {Observation} — **PORTED as M-TBD-28** — stated safety preference vs revealed excitement-seeking; fem mirror #139
+58. Drawn to chaos more than they'll admit {Observation} — **not ported** — restatement of #57 (M-TBD-28)
+
+**[MALE] Game, the mask & reading signals**
+
+59. The mask of game {Observation} — **not ported** — experiential narrative (authenticity cost of game)
+60. Game is a scale — baseline is just not being awkward {Lens} — **not ported** — definitional — game as a scale
+61. What "tension" actually sounds like {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+62. Boldness is built, not born {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+63. Treat it as practice — without leading anyone on {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+64. Stop showing women the watered-down you {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+65. Read the mutual effort — she often mirrors your energy {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+66. Pickiness is earned {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+67. Be yourself and invisible, or play and resent yourself {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+68. Game is like learning a new language {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+69. Dating is fun — if you enjoy the game itself {Observation} — **not ported** — diffuse hidden-filter observation, not claim-shaped enough to grade
+70. Looks get the match; game keeps it {Observation} — **borderline — Jason decides** — “looks get the match, game keeps it” — post-match retention claim; app-messaging research exists
+71. The "treat her like a person" trap {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+72. Reading the signals: when escalation is welcome {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+73. Fantasy talk isn't a green light — don't leap {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+74. Read the room and flow — don't prideful-double-down {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+75. Real confidence isn't being an asshole {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+76. Weak signals aren't your fault — and the grey zone favors the bold {Observation} — **not ported** — signal-ambiguity core already graded in M-TBD-2; the grey-zone remainder is validation
+77. Decoding "that's hot" — flirty or just a compliment? {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+78. "Just friends" doesn't always mean no feelings {Observation} — **borderline — Jason decides** — “platonic effort signals interest” — testable-ish via cross-sex friendship research
+79. The wingwoman tell: you're genuinely friend-zoned {Observation} — **not ported** — folk decode heuristic (wingwoman tell) — advice-adjacent
+80. Romance is fragile; friendship is durable {Observation} — **borderline — Jason decides** — romance-fragile / friendship-durable asymmetry — claim-shaped, thin literature
+81. Dating has no margin for error {Observation} — **not ported** — same thin-error-tolerance claim as #80 (flagged borderline there)
+82. The plausible-deniability freeze {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+83. Always-attractive blindness {Observation} — **not ported** — introspective blind-spot claim — not gradeable
+84. The fear of being "that guy" {Observation} — **not ported** — origin-story psychology narrative
+85. The on-the-clock trap {Observation} — **not ported** — situational bind description, not a claim
+86. A safe answer buys you no information {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+
+**[MALE] Standards, leverage & desperation**
+
+87. "Like me for me" only runs one way {Observation} — **borderline — Jason decides** — “like me for me” grace asymmetry — testable-ish against necessity/luxury preference research; both-sides mirror #150
+88. Inflated value and the simp economy {Observation} — **borderline — Jason decides** — attention inflates self-assessed value — testable-ish (mate-value calibration); fem mirror #136
+89. The emotional harem {Observation} — **not ported** — named pattern/taxonomy (emotional harem); prevalence claim too vague to grade; fem mirror #149
+90. Being the safe guy cuts both ways {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+91. The wingwoman myth {Observation} — **not ported** — its testable core (endorsement ≠ preselection) sits inside ported #41 (M-TBD-20)
+92. Knowing the personality can kill the infatuation {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+93. Most guys are terrified of being alone {Observation} — **PORTED as M-TBD-29** — fear of being single drives settling — Spielmann et al. territory
+94. When standards become a shield {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+95. "I'll know it when I see it" is an escape hatch {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+96. The "pure girl" filter rejects almost everyone {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+97. The "high standards" story can be armor {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+98. Honesty about inexperience gets punished {Observation} — **PORTED as M-TBD-30** — inexperience stigma (honesty about it punished) — testable
+99. "The bar is in hell" means selective, not low {Observation} — **borderline — Jason decides** — “selective, not low” — conditional-standards claim, halo family; fem mirror #144
+100. Men's main-character syndrome {Observation} — **not ported** — male-side instance of the both-ways entitlement claim (#167, flagged borderline)
+101. Going high-value flips who signals {Observation} — **not ported** — inversion-doctrine extension; signaling core carried by ported #163 (M-TBD-36)
+
+**[MALE] The cost of staying true**
+
+102. Choosing to stay true — and already living it {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+103. A relationship is a bonus, not a necessity {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+104. The social cost of going against the grain {Observation} — **not ported** — experiential social-cost claim, tied to the page's stay-true arc
+105. Peace or belonging — you usually can't have both {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+106. Choosing the pain you can respect {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+107. The "what about kids?" pressure is often manipulation {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+108. Want kids for the right reason, not the default {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+109. There may be no justice — and that's the hardest part {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+110. The internal reward, paid for with isolation {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+111. Make peace with it, or let resentment win {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+112. Neither rage nor cope {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+
+**[MALE] The macro picture — why dating broke**
+
+113. The feminism trade-off: freedoms in, guardrails out {Lens} — **not ported** — macro historical interpretation (feminism trade-off) — worldview material, Pills territory
+114. Winner-take-most: the dating market's "Pareto problem" {Myth} — **PORTED as M-TBD-31** — the Pareto lock-out myth itself (page's one Myth tag); claim ported ungraded per zero-grading rule — the card's inline debunk stays on the source card for the grading loop
+115. "40% met online" is an average that hides the skew {Tier 2} — **PORTED as M-TBD-32** — “most couples meet on apps” — testable against Rosenfeld/Pew; inline correction stays on source card
+116. Abundance blindness: why women don't see the crisis {Observation} — **borderline — Jason decides** — abundance blinds women to male-side difficulty — projection claim, some survey data conceivable; fem mirror #159
+117. The situationship economy {Observation} — **PORTED as M-TBD-33** — “situationships now dominant” — crisp prevalence claim
+118. The one-sided commitment frame {Lens} — **not ported** — media-framing critique (one-sided commitment frame); fem mirror #160
+119. The pile-on: young men hit from every side {Observation} — **not ported** — compound pile-on narrative; its loneliness statistics already live on the statistics page
+120. Gen Z has it even worse {Observation} — **not ported** — sexlessness stat already charted on statistics #stat-sex-recession; remainder is commentary plus a pointer to the Pareto myth (ported M-TBD-31)
+121. The window narrows — and sitting out compounds {Observation} — **borderline — Jason decides** — narrowing-window claim (28–38 targeting, compounding) — partially testable via age-preference data
+122. Sold a fantasy: the cost of a decade of bad advice {Lens} — **not ported** — cohort narrative (sold a fantasy)
+123. Bluepill hope vs blackpill despair {Lens} — **PORTED as M-TBD-34** — PORT (strong): two named camps — bluepill vs blackpill — contesting what determines male dating success; camps are worldview labels, so Jason may prefer Pills placement
+124. "There's someone out there for everyone" is a comforting lie {Lens} — **PORTED as M-TBD-35** — PORT (strong): the platitude and the blackpill inversion as two competing claims in the card's own words
+125. Blackpilled before they start {Observation} — **not ported** — cohort psychology narrative
+126. The "final boss" cope {Observation} — **not ported** — cope-analysis; embedded looks-vs-game claim is anecdotal
+
+**[FEMALE] The choosing & the window**
+
+127. Women as the choosers {Observation} — **borderline — Jason decides** — fem-tab side of #1's core framework — same call as #1
+128. Peak leverage & the filter {Observation} — **not ported** — peak-leverage/filter doctrine — SMV framework
+129. The female window {Observation} — **not ported** — female-window claim — covered by the Wall deep dive (dd-what-the-wall-actually-is) + frameworks
+130. When the dynamic shifts {Observation} — **not ported** — inversion doctrine, female side
+131. Commentary {Strategy} — **not ported** — Commentary — advice
+
+**[FEMALE] The approval engine**
+
+132. You're performing for other women, not men {Observation} — **not ported** — mirror of #52 — ported from the third-person version as M-TBD-26
+133. The hive mind runs you more than you think {Observation} — **not ported** — mirror of #54 — ported as M-TBD-27
+134. "I want an honest guy" is often branding {Observation} — **not ported** — mirror of #20 — ported as M-TBD-16
+135. The "pick-me" label keeps women in line {Lens} — **not ported** — social-policing decode (pick-me label) — lens
+136. Your options can inflate your sense of value {Observation} — **borderline — Jason decides** — mirror of borderline #88 (inflated self-value)
+
+**[FEMALE] Your standards & your choices**
+
+137. Notice when your standards quietly bend {Observation} — **not ported** — mirror of #170 — ported as M-TBD-38
+138. Your feelings can override your better judgment {Observation} — **borderline — Jason decides** — mirror of borderline #25 (feelings override judgment)
+139. "I just want to feel safe" — but notice what excites you {Observation} — **not ported** — mirror of #57 — ported as M-TBD-28
+140. You complain about the guys you keep choosing {Observation} — **not ported** — mirror of #17 — ported as M-TBD-14
+141. Charm can blind you to red flags {Observation} — **not ported** — mirror of #39 — ported as M-TBD-19
+142. Butterflies aren't the same as a good match {Lens} — **not ported** — reframe/advice (butterflies ≠ good match); arousal-misattribution angle noted but advice-wrapped
+143. You want the men other women want {Observation} — **not ported** — mirror of #41 — ported as M-TBD-20
+144. Your bar isn't low — it's selective {Observation} — **borderline — Jason decides** — mirror of borderline #99 (selective standards)
+145. You only mind being sexualized by some men {Observation} — **not ported** — mirror of #43 — ported as M-TBD-22
+
+**[FEMALE] How you choose — and what it does**
+
+146. You're training men to play games {Observation} — **not ported** — mirror of the #7/#14 directness-training claim — ported as M-TBD-12
+147. The backup-plan cycle {Observation} — **not ported** — mirror of #26 (raw-deal/backup cycle — not ported there either)
+148. Why the cocky jerk keeps getting you {Observation} — **not ported** — mirror of #38 — ported as M-TBD-18
+149. Be honest about your emotional harem {Observation} — **not ported** — mirror of #89 (emotional harem — not ported there either)
+150. "Like me for me" — do you extend the same grace? {Lens} — **borderline — Jason decides** — mirror of borderline #87 (grace asymmetry)
+
+**[FEMALE] Looks & attraction, honestly**
+
+151. You lead with looks too {Observation} — **not ported** — mirror of #45 — ported as M-TBD-24
+152. You reject on looks, then blame something else {Observation} — **borderline — Jason decides** — mirror of borderline #47 (looks-rejection cope)
+153. Height is the one rule you'll say out loud {Observation} — **not ported** — mirror of #50 — ported as M-TBD-25
+154. Men quietly judge your body count {Observation} — **not ported** — mirror of #42 — ported as M-TBD-21
+155. Bending reality to fit your feelings {Lens} — **not ported** — mirror of #37 (bending reality — not ported there either)
+156. Your celebrity crushes show how you desire {Observation} — **not ported** — mirror of #44 — ported as M-TBD-23
+
+**[FEMALE] Timing, honesty & the mirror**
+
+157. "There are no good men left" — turn the question inward {Lens} — **not ported** — mirror of #18 (turn the question inward — lens)
+158. Saving face vs. telling yourself the truth {Lens} — **not ported** — mirror of #33 (saving face — stated-vs-revealed family, carried by M-TBD-16/38)
+159. Your abundance hides how hard it is for men {Observation} — **borderline — Jason decides** — mirror of borderline #116 (abundance blindness)
+160. You might be the one avoiding commitment {Observation} — **not ported** — mirror of #118 (commitment-frame critique)
+161. Don't wait for the wall to course-correct {Strategy} — **not ported** — advice (don't wait for the wall); mirror of #35
+162. Everyone's chasing the same few men {Observation} — **borderline — Jason decides** — attention funnels to the same few men → they don't commit — attention-skew half is inside M-TBD-31; the commitment consequence is its own claim
+163. You signal it — you just don't shoot {Tier 2} — **PORTED as M-TBD-36** — covert female initiation (Moore 1985) — testable, already evidence-tagged on the page
+164. Even shy girls break character for the right guy {Observation} — **not ported** — self-audit advice; signal-detection core covered by graded M-TBD-2 + ported M-TBD-36
+165. The approach economy is shifting under you {Observation} — **not ported** — mirror of #27 — ported as M-TBD-17
+
+**[BOTH SIDES] The shared market**
+
+166. Looks are the first filter — for both sexes {Tier 2} — **PORTED as M-TBD-37** — looks as first filter for both sexes — T2-tagged, testable
+167. Entitlement runs both ways {Observation} — **borderline — Jason decides** — both-sides entitlement/overestimation — testable-ish via self-assessed mate-value studies
+168. It's not just women — the market is rough for them too {Lens} — **not ported** — anti-bitterness corrective — lens
+169. The problem isn't the standards — it's the dishonesty about them {Lens} — **not ported** — honesty-about-standards ethic — doctrine
+170. Principles are cheap when untested {Observation} — **PORTED as M-TBD-38** — stated standards collapse under desirable temptation — both-sides canonical of the stated-vs-revealed family; fem mirror #137
+171. It's the same game as high school {Lens} — **not ported** — high-school continuity metaphor — lens
+172. She feels like a body; he feels like a wallet {Observation} — **PORTED as M-TBD-39** — symmetric objectification (body / wallet) — objectification research runs both directions
+173. Why each side dodges commitment {Observation} — **borderline — Jason decides** — sex-differentiated commitment-avoidance motives — sociosexuality literature could grade it
+174. Texting energy usually previews the real thing {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+175. Soft truth vs blunt truth {Lens} — **PORTED as M-TBD-40** — cushioned-vs-blunt rejection split — the card itself flags the mixed evidence; clean trial candidate
+176. When a woman moves first, weight it heavily {Lens} — **borderline — Jason decides** — explicit female first moves are rare → weight them — evidence-aware lens whose testable core (initiation rarity) could be tried
+177. "Crush" is a much bigger bucket than you think {Lens} — **borderline — Jason decides** — competing definition of “crush” — natural third claim for EXISTING docket entry M-TBD-4 rather than a new entry
+178. The signaling standoff {Observation} — **not ported** — mechanism narrative (mutual risk-aversion standoff)
+
+**[BOTH SIDES] Standards, self-assessment & avoidance**
+
+179. Most people are average — that's what "average" means {Lens} — **not ported** — definitional/mathematical lens (most people are average)
+180. The market prices you, not your self-assessment {Lens} — **not ported** — market-calibration doctrine
+181. Hell yes, or it's a hell no {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+182. The "I'll start when I'm better" trap {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+183. An agreeable yes isn't an enthusiastic yes {Lens} — **not ported** — decode of the compliant yes — lens/advice
+184. "Dating for potential" is half-true {Tier 2} — **PORTED as M-TBD-41** — “I date for potential” — the saying on trial (single-claim, Opposites-attract pattern); card's own Buss/Walter split stays on the source card
+185. The grind-vs-date answer flips with age {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+
+**[BOTH SIDES] How these conversations get distorted**
+
+186. Attacking the messenger isn't a rebuttal {Lens} — **not ported** — argumentation critique (attacking the messenger)
+187. It's not just feminism — apps and social media reshaped everyone {Lens} — **not ported** — multi-cause macro interpretation
+188. Friendly isn't interested — and men over-read it {Tier 1} — **not ported** — already carried by graded M-TBD-1/2 (sexual overperception + Hall detection rates)
+189. "Be bold" has a silent clause {Lens} — **not ported** — decode of “be bold” — lens; adjacent to docket M-TBD-3's approach-cost question
+190. The cold-approach tax {Observation} — **not ported** — already carried by graded M-TBD-5 (cold approach vs venue, Rosenfeld)
+191. Same complaint, new villain every generation {Observation} — **PORTED as M-TBD-42** — the century-rerun claim — historically checkable against each era's press
+192. Shame the exit, or fix the offer {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+
+**[BOTH SIDES] Meeting people & the odds**
+
+193. Your social circle levels you up {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+194. How to actually build a social circle {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+195. The introvert's catch-22 — and the way out {Strategy} — **not ported** — advice card — doctrine, not a testable claim
+196. Why "just go to meetups" is empty advice {Lens} — **not ported** — advice critique (meetups); the demographic claim is incidental
+197. How couples actually meet: college and lucky accidents {Observation} — **PORTED as M-TBD-43** — college + lucky accidents claim — testable against HCMST; potential tension with graded M-TBD-5 worth trying
+198. Third spaces have disappeared {Observation} — **not ported** — already covered by dd-third-spaces deep dive + statistics companion charts (#stat-third-places)
+199. The game is built for extroverts — the introverts who "won" opted out of it {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+200. It's not "rigged" — extroverts just always had the edge {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+201. The real problem isn't being quiet — it's being quiet and disconnected {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+202. Lottery-ticket success stories aren't a strategy {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+203. Asking fast filters for lukewarm dates {Strategy} — **not ported** — advice; testable core (fast asks → lukewarm dates) noted but advice-wrapped
+
+**[BOTH SIDES] Regret, the missed window & seeing clearly**
+
+204. The honest answer is "I don't know" — sit in it without coping {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+205. The regret that hurts most: real chances you fumbled {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+206. You got a test before you studied for it {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+207. The deeper regret: you had easy mode and didn't play it {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+208. Nobody warned you the social window closes {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+209. Naming the enemy helps — even when it can't fix anything {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+210. Self-awareness isn't the same as change {Lens} — **not ported** — lens/framing — a way of seeing, not a gradeable claim
+211. Stop waiting for the other side to change {Strategy} — **not ported** — advice card — doctrine, not a testable claim

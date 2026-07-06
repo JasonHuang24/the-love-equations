@@ -37,6 +37,7 @@
   line-height: 1.55;
 }
 .mb-notice strong { letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px; }
+.mb-notice-preview { margin-top: 0.45rem; }
 
 /* ── Filter chips ── */
 .mb-controls { margin: 0 0 1.4rem; }
@@ -77,9 +78,44 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
+  scroll-margin-top: 96px; /* deep-link anchors (#M-TBD-n) land clear of the sticky nav — same offset as .dos-section in styles.css */
 }
 .mb-card.is-hidden { display: none; }
 .mb-card.is-draft { border-style: dashed; border-color: rgba(196, 30, 58, 0.42); }
+
+/* ── Docket cards (preview mode only): gate-FAILED entries shown for grading.
+   Washed + dashed + slightly dimmed so they read as "not yet real" at a glance,
+   in the same dashed-border family as .is-draft / .mb-notice — but neutral, not
+   scarlet, since they carry no verdict yet. ── */
+.mb-card.is-docket {
+  background: rgba(243, 230, 216, 0.28);
+  border-style: dashed;
+  border-color: var(--border);
+  box-shadow: none;
+  opacity: 0.9;
+}
+.mb-card.is-docket .mb-strip { background: rgba(243, 230, 216, 0.32); }
+/* "Ungraded" strip pill — deliberately NOT a verdict chip (neutral, dashed). */
+.mb-ungraded {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  padding: 3px 11px;
+  white-space: nowrap;
+}
+/* Muted "Awaiting ruling" placeholder — stands in for the badge/text/tier/source. */
+.mb-awaiting {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-dim);
+  margin: 0;
+}
 
 /* ── Top strip: id + category (left), verdict badge or claim-count pill (right) ── */
 .mb-strip {
@@ -205,6 +241,18 @@
   margin-bottom: 0.55rem;
 }
 .mb-ruling-label { color: var(--scarlet); }
+/* Ruling label (left) + verdict badge / docket Ungraded pill (right) on one row. */
+.mb-ruling-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.mb-ruling-head .mb-col-label { margin-bottom: 0; }
+.mb-ruling-head .mb-ruling-badge { margin: 0; }
+.mb-ruling-head .mb-ungraded { margin: 0; }
 .mb-ruling-badge {
   display: inline-block;
   font-size: 12px;
@@ -228,7 +276,9 @@
 
 /* Tier pill — statistics/.chart-tier family */
 .mb-tier {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -237,6 +287,9 @@
   border-radius: 4px;
   white-space: nowrap;
 }
+/* Leading tier glyph — sized to the site's ~1.3x icon:text ratio on the 9px pill
+   (the ~14px suggestion would dwarf the small pill; currentColor = the tier hue). */
+.mb-tier-ico { width: 12px; height: 12px; }
 .mb-tier.hard-data { background: #e6f4ea; color: #1e7b34; }        /* 4.7:1 */
 .mb-tier.evidence { background: #fbf3e0; color: #8a5f10; }         /* darkened from statistics' #9a6b12 (4.24:1 fail) to clear AA ~5:1 */
 .mb-tier.definitional { background: #eeedfe; color: #3c3489; }     /* 8.9:1 */
@@ -244,6 +297,31 @@
 
 /* ── Footer: expandable Sources (closed by default) ── */
 .mb-sources { border-top: 1px solid var(--border); }
+/* Footer row: Sources toggle (left) + always-visible Related links (right). */
+.mb-sources-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.mb-sources-bar .mb-sources-toggle { width: auto; }
+.mb-related-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  padding: 0.2rem 1.15rem;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.mb-related-head {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
 .mb-sources-toggle {
   width: 100%;
   display: flex;
