@@ -90,6 +90,22 @@
           </div>
         </div>
       </div>
+
+      <!-- ===== DEBUG · Batch mode (calibration/validation; localhost or ?debug only) ===== -->
+      <div class="bc-batch" id="bc-batch" hidden>
+        <div class="bc-batch-h"><i class="ti ti-flask"></i> Debug &middot; Batch mode <span class="bc-batch-tag">calibration &mdash; never persists</span></div>
+        <div class="bc-batch-note">Runs images <strong>sequentially</strong> through the exact single-shot pipeline (one pose worker; same gates, routing, silhouette/model, framing, sex read). Nothing is saved &mdash; your single-shot score, photo, Step-1 numbers and the Overall composite are untouched, and <code>localStorage</code> is verified unchanged after each run. If Step-1 numbers are set they feed the hybrid + Tier-0 columns. Localhost / <code>?debug</code> only.</div>
+        <div class="bc-batch-ctl">
+          <input type="file" id="bc-batch-file" accept="image/*" multiple hidden />
+          <button class="bc-btn" id="bc-batch-run"><i class="ti ti-player-play"></i> Batch run&hellip;</button>
+          <span class="bc-batch-drop" id="bc-batch-drop"><i class="ti ti-folder"></i> &hellip;or drop images / a folder</span>
+          <button class="bc-btn ghost" id="bc-batch-csv" disabled><i class="ti ti-download"></i> Export CSV</button>
+          <button class="bc-btn ghost" id="bc-batch-md" disabled><i class="ti ti-markdown"></i> Copy markdown</button>
+          <button class="bc-btn ghost" id="bc-batch-clear" disabled>Clear</button>
+        </div>
+        <div class="bc-batch-status" id="bc-batch-status">No batch run yet.</div>
+        <div class="bc-batch-tablewrap"><table class="bc-batch-table" id="bc-batch-table"></table></div>
+      </div>
     </div>
   </div>
 
@@ -459,9 +475,33 @@
       return null;
     }
 
+    // ── Batch-mode serializers (debug/calibration only; DOM-free, testable). Generic over a columns
+    //    spec [{key,label}] so the on-page table, CSV and markdown all share one stable column order.
+    //    RFC-4180 CSV quoting; markdown pipe-escaping. No scoring here — pure text shaping. ──
+    function batchCsvCell(v){
+      var s = (v == null) ? '' : String(v);
+      return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+    function batchToCSV(rows, columns){
+      var head = columns.map(function(c){ return batchCsvCell(c.label); }).join(',');
+      var lines = (rows || []).map(function(r){ return columns.map(function(c){ return batchCsvCell(r[c.key]); }).join(','); });
+      return [head].concat(lines).join('\r\n') + '\r\n';
+    }
+    function batchMdCell(v){
+      var s = (v == null) ? '' : String(v);
+      return s.replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ').trim();
+    }
+    function batchToMarkdown(rows, columns){
+      var head = '| ' + columns.map(function(c){ return batchMdCell(c.label); }).join(' | ') + ' |';
+      var sep  = '| ' + columns.map(function(){ return '---'; }).join(' | ') + ' |';
+      var body = (rows || []).map(function(r){ return '| ' + columns.map(function(c){ return batchMdCell(r[c.key]); }).join(' | ') + ' |'; });
+      return [head, sep].concat(body).join('\n') + '\n';
+    }
+
     if (typeof module !== 'undefined') { module.exports = { poseSkeleton, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX,
       interpAnchors, computeFFMI, frameScore, leannessScore, objectiveScore, geomPreLens, blendRaw, crossCheckBF,
-      FRAME_ANCHORS, LEANNESS_BAND, TIER0_W, W_OBJ, LB_TO_KG, IN_TO_CM, FRONTAL_WHTR_BY_BF, FFMI_KOURI_K, FFMI_KOURI_H0, CROSSCHECK_GROSS }; }
+      FRAME_ANCHORS, LEANNESS_BAND, TIER0_W, W_OBJ, LB_TO_KG, IN_TO_CM, FRONTAL_WHTR_BY_BF, FFMI_KOURI_K, FFMI_KOURI_H0, CROSSCHECK_GROSS,
+      batchToCSV, batchToMarkdown, batchCsvCell, batchMdCell }; }
   </script>
 
   <!-- ===== UI wiring (no MediaPipe) ===== -->
@@ -1092,6 +1132,7 @@
       if ((s.sex === 'm' || s.sex === 'f') && !(BC.sex === 'm' || BC.sex === 'f')){ BC.sex = s.sex; BC.sexManual = true; BC.sexSource = 'manual'; BC.sexAuto = false; }
     }
     window.bcSetStatus = setStatus;
+    window.bcState = BC;                 // live handle for the debug batch harness (BC is const, never reassigned)
     window.bcPoseSkeleton = poseSkeleton;
     window.bcBodyRatios = bodyRatios;
     window.bcPreprocess = preprocessToTensor;
@@ -1698,6 +1739,259 @@
       im.src = saved.img;
     }
     bcRestoreShot();
+
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    // DEBUG · BATCH MODE — calibration / validation harness (localhost or ?debug only).
+    // Feeds images one-at-a-time through the EXACT single-shot pipeline (handleImage → drawAndScore
+    // → one pose worker → routing / model / sex inference), logs the read, and NEVER persists: a
+    // Storage guard blocks every loveEquations.* write for the batch's duration, and the pre-batch UI
+    // (BC + Step-1 panel + canvas + status) is snapshotted and restored when it ends. No scoring / gate
+    // / constant is touched — additive only. A refused or worker-killed image logs its row and continues
+    // (the pipeline recycles a dead worker itself; the next image gets a fresh one). Lives inside this
+    // module so it reuses the pipeline in place (handleImage / session / sexSession / canvas).
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    (function bcBatchMode(){
+      const DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname==='localhost' || location.hostname==='127.0.0.1';
+      const panel = document.getElementById('bc-batch');
+      if (!DEBUG || !panel) return;                 // additive, debug-gated: a deployed build never shows this
+      panel.hidden = false;
+      const BC = window.bcState;
+
+      const COLUMNS = [
+        { key:'filename',    label:'filename' },
+        { key:'timestamp',   label:'timestamp' },
+        { key:'outcome',     label:'outcome' },
+        { key:'refusal',     label:'refusal_reason' },
+        { key:'routing',     label:'routing' },
+        { key:'skin_frac',   label:'skin_frac' },
+        { key:'framing',     label:'framing' },
+        { key:'model_raw',   label:'model_raw' },
+        { key:'bp',          label:'bp' },
+        { key:'cv',          label:'cv' },
+        { key:'sex',         label:'sex' },
+        { key:'sex_conf',    label:'sex_conf' },
+        { key:'sex_source',  label:'sex_source' },
+        { key:'reliability', label:'reliability' },
+        { key:'tier0_ffmi',  label:'tier0_ffmi' },
+        { key:'tier0_bf',    label:'tier0_bf' },
+        { key:'crosscheck',  label:'crosscheck' }
+      ];
+      const rows = [];
+
+      // ---- Storage guard: block every calc persistence write while a batch runs (belt-and-suspenders
+      //      with snapshot/restore below — the batch stays fully inert w.r.t. localStorage). ----
+      let _set=null, _rm=null;
+      function guardOn(){
+        if (_set) return;
+        _set = Storage.prototype.setItem; _rm = Storage.prototype.removeItem;
+        Storage.prototype.setItem = function(k,v){ if (typeof k==='string' && k.indexOf('loveEquations.')===0) return; return _set.call(this,k,v); };
+        Storage.prototype.removeItem = function(k){ if (typeof k==='string' && k.indexOf('loveEquations.')===0) return; return _rm.call(this,k); };
+      }
+      function guardOff(){ if (!_set) return; Storage.prototype.setItem=_set; Storage.prototype.removeItem=_rm; _set=_rm=null; }
+      function snapshotLS(){
+        return Object.keys(localStorage).filter(k=>k.indexOf('loveEquations.')===0).sort()
+          .map(k=>k+'='+localStorage.getItem(k)).join('\n');
+      }
+
+      // ---- per-image capture. BC.modelRaw is NOT reset per image, so the wrappers are the only reliable
+      //      per-image source for the model output; status carries the refusal reason. ----
+      let cur = null;
+      const origStatus = window.bcSetStatus, origModel = window.bcSetModelScore, origSex = window.bcSetSex, origSexU = window.bcSetSexUnknown;
+      function wrapsOn(){
+        window.bcSetStatus = function(msg,isErr,isHtml){ if (cur){ cur.statusMsg=String(msg==null?'':msg); cur.statusErr=!!isErr; if (isErr && /inference failed/i.test(cur.statusMsg)){ cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } } return origStatus.apply(this,arguments); };
+        window.bcSetModelScore = function(t,raw){ if (cur){ cur.model=t; cur.modelRaw=(raw==null?null:raw); cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } return origModel.apply(this,arguments); };
+        window.bcSetSex = function(sex,conf){ if (cur) cur.sexFired=true; return origSex.apply(this,arguments); };
+        window.bcSetSexUnknown = function(reason){ if (cur) cur.sexFired=true; return origSexU.apply(this,arguments); };
+      }
+      function wrapsOff(){ window.bcSetStatus=origStatus; window.bcSetModelScore=origModel; window.bcSetSex=origSex; window.bcSetSexUnknown=origSexU; }
+
+      const SETTLE_MS = 15000, SEX_GRACE_MS = 500;
+      const delay = ms => new Promise(r=>setTimeout(r,ms));
+      const nowISO = () => new Date().toISOString();
+      const n2 = x => (x==null||!isFinite(x)) ? '' : (Math.round(x*100)/100).toFixed(2);
+      const stripTags = s => String(s==null?'':s).replace(/<[^>]*>/g,'');
+      function decode(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=()=>rej(new Error('unreadable image')); img.src=URL.createObjectURL(file); }); }
+
+      // bp/cv computed EXACTLY as renderResult (hybrid blend when Step-1 inputs are set, else model, else geometry).
+      function bodyBpCv(){
+        const sex = BC.sex==='m'?'m':'f';
+        const usingModel = BC.model != null;
+        const t0 = window.computeTier0();
+        if (t0){
+          const pr = pk => usingModel ? BC.model*100 : window.geomPreLens(window.gradeBody(BC.metrics,sex,pk).subs, pk);
+          return [ window.mapModelScore(window.blendRaw(t0.objective, pr('blackpill'))/100,'blackpill'),
+                   window.mapModelScore(window.blendRaw(t0.objective, pr('conventional'))/100,'conventional') ];
+        }
+        if (usingModel) return [ window.mapModelScore(BC.model,'blackpill'), window.mapModelScore(BC.model,'conventional') ];
+        return [ window.gradeBody(BC.metrics,sex,'blackpill').score, window.gradeBody(BC.metrics,sex,'conventional').score ];
+      }
+
+      async function settle(modelExpected){
+        const c = cur;                               // this image's capture — never route a stale timer through a later image's `cur`
+        await new Promise(res=>{
+          if (!modelExpected || !c || c.modelSettled){ res(); return; }
+          c.res = res; c.timer = setTimeout(()=>{ if (c.res){ const r=c.res; c.res=null; r(); } }, SETTLE_MS);
+        });
+        if (c && c.timer){ clearTimeout(c.timer); c.timer = null; }
+        // brief grace for the (fast) sex classifier when we didn't already wait on the model
+        if (!modelExpected && sexSession && c && !c.sexFired) await delay(SEX_GRACE_MS);
+      }
+
+      async function processOne(file){
+        cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null };
+        const ts = nowISO();
+        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', routing:'', skin_frac:'', framing:'', model_raw:'', bp:'', cv:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
+        let img=null;
+        try { img = await decode(file); }
+        catch(e){ return blank({ refusal:'could not decode image' }); }
+        try { await handleImage(img); }  // async pipeline: awaits the pose worker; sets BC.metrics (or refuses); kicks off async model + sex
+        catch(e){ try{ URL.revokeObjectURL(img.src);}catch(_){}  return blank({ refusal:'pipeline threw: '+e.message }); }
+        const modelExpected = (!!session || modelState==='loading') && !!BC.metrics && !BC.bareGeometry;   // mirror drawAndScore's useModel (incl. the load window); bare shots route to geometry
+        await settle(modelExpected);
+        try{ URL.revokeObjectURL(img.src);}catch(_){}
+
+        const scored = !!BC.metrics;
+        let bp='', cv='', routing='', skin='', framing='', t0f='', t0b='', xchk='';
+        if (scored){
+          // bp/cv EXACTLY as renderResult: a bare/geometry headline with an unresolved sex is a male–female
+          // RANGE on the page (usingRange), not a single number — so log the range, don't silently pick 'f'.
+          const usingModel = BC.model != null, sexKnown = BC.sex==='m' || BC.sex==='f';
+          if (!usingModel && !sexKnown && !window.computeTier0()){
+            const rng = pk => { const m=window.gradeBody(BC.metrics,'m',pk).score, f=window.gradeBody(BC.metrics,'f',pk).score; return n2(Math.min(m,f))+'–'+n2(Math.max(m,f)); };
+            bp = rng('blackpill'); cv = rng('conventional');
+          } else {
+            const pair = bodyBpCv(); bp = n2(pair[0]); cv = n2(pair[1]);
+          }
+          routing = BC.bareGeometry ? 'bare→geometry' : 'clothed→model';
+          skin = BC.skinFrac!=null ? Math.round(BC.skinFrac*100)+'%' : '';
+          framing = BC.framing || '';
+          const t0 = window.computeTier0();
+          if (t0){
+            t0f = t0.ffmiAdj.toFixed(1); t0b = t0.bfPct.toFixed(1);
+            xchk = (BC.metrics.whtr!=null) ? (window.crossCheckBF(BC.metrics.whtr, t0.bfPct, t0.sex) ? 'yes' : 'no') : '';
+          }
+        }
+        return {
+          filename:file.name, timestamp:ts,
+          outcome: scored ? 'scored' : 'refused',
+          refusal: scored ? '' : stripTags(cur.statusMsg),
+          routing, skin_frac:skin, framing,
+          model_raw: cur.modelRaw!=null ? cur.modelRaw.toFixed(3) : '',
+          bp, cv,
+          sex: scored ? (BC.sex||'unknown') : '',
+          sex_conf: (scored && BC.sexConf!=null) ? Math.round(BC.sexConf*100)+'%' : '',
+          sex_source: scored ? (BC.sexSource||'') : '',
+          reliability: scored ? String(BC.reliability||'').trim() : '',
+          tier0_ffmi:t0f, tier0_bf:t0b, crosscheck:xchk
+        };
+      }
+
+      // ---- table ----
+      const tableEl = document.getElementById('bc-batch-table');
+      const statusEl = document.getElementById('bc-batch-status');
+      const btnCsv = document.getElementById('bc-batch-csv'), btnMd = document.getElementById('bc-batch-md'), btnClear = document.getElementById('bc-batch-clear');
+      const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      function renderTable(){
+        const head = '<tr>'+COLUMNS.map(c=>'<th>'+esc(c.label)+'</th>').join('')+'</tr>';
+        const body = rows.map(r=>'<tr class="'+(r.outcome==='scored'?'ok':r.outcome==='refused'?'bad':'err')+'">'+COLUMNS.map(c=>'<td>'+esc(r[c.key])+'</td>').join('')+'</tr>').join('');
+        tableEl.innerHTML = head + body;
+        const has = rows.length>0; btnCsv.disabled=!has; btnMd.disabled=!has; btnClear.disabled=!has;
+      }
+
+      // ---- snapshot / restore the pre-batch UI (localStorage stays untouched; this is in-memory + canvas + Step-1) ----
+      function snapshot(){
+        const shown = !canvas.hidden && stage.classList.contains('show');
+        let url=null; try { if (shown) url = canvas.toDataURL('image/jpeg',0.92); } catch(_){}
+        return { bc:Object.assign({}, BC), w:canvas.width, h:canvas.height, shown, url,
+                 status:document.getElementById('bc-status').innerHTML };
+      }
+      function restore(s){
+        Object.assign(BC, s.bc);
+        document.querySelectorAll('.bc-variant button').forEach(b=>b.classList.toggle('active', b.dataset.prof===BC.profile));
+        if (window.renderInputsPanel) window.renderInputsPanel();   // resync Step-1 (sex-specific picker) to restored BC
+        if (window.renderResult) window.renderResult();             // storage still guarded → repaint without persisting
+        if (s.shown && s.url){ const im=new Image(); im.onload=()=>{ canvas.width=s.w; canvas.height=s.h; canvas.getContext('2d').drawImage(im,0,0,s.w,s.h); canvas.hidden=false; video.hidden=true; stage.classList.add('show'); }; im.src=s.url; }
+        else { window.bcClearCanvas(); }
+        document.getElementById('bc-status').innerHTML = s.status;
+      }
+
+      // ---- run ----
+      let running = false;
+      async function runBatch(files){
+        files = Array.from(files||[]).filter(f=>f && (f.type ? /^image\//.test(f.type) : true));
+        if (running || !files.length) return;
+        running = true; rows.length = 0; renderTable();
+        const snap = snapshot();
+        const lsBefore = snapshotLS();
+        guardOn(); wrapsOn();
+        try {
+          for (let i=0;i<files.length;i++){
+            statusEl.textContent = 'Processing '+(i+1)+'/'+files.length+': '+files[i].name+' …';
+            let row;
+            try { row = await processOne(files[i]); }
+            catch(e){ row = Object.assign({ filename:files[i].name, timestamp:nowISO(), outcome:'error', refusal:'batch error: '+e.message }, {}); COLUMNS.forEach(c=>{ if(!(c.key in row)) row[c.key]=''; }); }
+            rows.push(row); renderTable();
+          }
+        } finally {
+          cur = null;
+          try { restore(snap); }         // storage still guarded → restore renders without persisting
+          catch(e){ console.error('[body batch] UI restore failed:', e); }   // but ALWAYS un-patch below — a leaked guard would break the app's persistence
+          wrapsOff(); guardOff();
+          running = false;
+          const lsAfter = snapshotLS();
+          const clean = lsBefore === lsAfter;
+          console[clean?'log':'error']('[body batch] localStorage '+(clean?'UNCHANGED ✓':'CHANGED ✗ — this is a bug'));
+          const nS = rows.filter(r=>r.outcome==='scored').length, nR = rows.filter(r=>r.outcome==='refused').length, nE = rows.length-nS-nR;
+          statusEl.innerHTML = 'Done · '+rows.length+' image'+(rows.length===1?'':'s')+' · '+nS+' scored, '+nR+' refused'+(nE?', '+nE+' error':'')
+            + (clean ? ' · <span style="color:#0F6E56">localStorage unchanged ✓</span>' : ' · <span style="color:var(--scarlet)">localStorage CHANGED ✗</span>');
+          renderTable();
+        }
+      }
+
+      // folder / multi-file drop → flat image File[] (webkit entries; falls back to dataTransfer.files)
+      function filesFromDrop(dt){
+        const items = dt && dt.items ? Array.from(dt.items) : [];
+        const entries = items.map(it=>it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean);
+        const isImg = f => /^image\//.test(f.type||'') || /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name||'');
+        if (!entries.length) return Promise.resolve(Array.from((dt&&dt.files)||[]).filter(isImg));
+        const out=[];
+        const readEntry = entry => new Promise(res=>{
+          if (entry.isFile){ entry.file(f=>{ if (isImg(f)) out.push(f); res(); }, ()=>res()); }
+          else if (entry.isDirectory){ const rd=entry.createReader(); const all=[];
+            const readBatch=()=>rd.readEntries(es=>{ if(!es.length){ Promise.all(all.map(readEntry)).then(()=>res()); return; } all.push.apply(all,es); readBatch(); }, ()=>res());
+            readBatch(); }
+          else res();
+        });
+        return Promise.all(entries.map(readEntry)).then(()=>out.sort((a,b)=>(a.name||'').localeCompare(b.name||'')));
+      }
+
+      // ---- wiring ----
+      const stamp = () => new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
+      document.getElementById('bc-batch-run').addEventListener('click', ()=>document.getElementById('bc-batch-file').click());
+      document.getElementById('bc-batch-file').addEventListener('change', e=>{ runBatch(e.target.files); e.target.value=''; });
+      btnCsv.addEventListener('click', ()=>{
+        const csv = window.batchToCSV(rows, COLUMNS);
+        const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download='body-batch-'+stamp()+'.csv';
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+      });
+      btnMd.addEventListener('click', async ()=>{
+        const md = window.batchToMarkdown(rows, COLUMNS);
+        try { await navigator.clipboard.writeText(md); statusEl.textContent='Markdown copied to clipboard.'; }
+        catch(_){ const ta=document.createElement('textarea'); ta.value=md; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(__){} ta.remove(); statusEl.textContent='Markdown copied.'; }
+      });
+      btnClear.addEventListener('click', ()=>{ if (running) return; rows.length=0; renderTable(); statusEl.textContent='Cleared.'; });
+      const dz = document.getElementById('bc-batch-drop');
+      ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.add('over'); }));
+      ['dragleave','dragend'].forEach(ev=>dz.addEventListener(ev,e=>{ e.preventDefault(); dz.classList.remove('over'); }));
+      dz.addEventListener('drop', async e=>{ e.preventDefault(); dz.classList.remove('over'); const f = await filesFromDrop(e.dataTransfer); if (f.length) runBatch(f); });
+
+      // debug/test hooks (debug-gated) — drive a batch from fetched blobs without a file picker
+      window.__bcBatchRun = runBatch;
+      window.__bcBatchRows = rows;
+      window.__bcBatchCSV = ()=>window.batchToCSV(rows, COLUMNS);
+      window.__bcBatchLS = snapshotLS;
+      window.__bcBatchRunning = ()=>running;
+    })();
   </script>
 </body>
 </html>
