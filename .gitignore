@@ -21,3 +21,6 @@ __pycache__/
 
 # Body Calc calibration set (local tooling, not site content)
 images/calibration/
+
+# Face Calc calibration set (SCUT-FBP5500 research dataset; local tooling, not site content)
+images/calibration-scut/

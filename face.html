@@ -695,7 +695,7 @@
       inputSize: 224,
       mean: [0.485, 0.456, 0.406],   // ImageNet
       std:  [0.229, 0.224, 0.225],
-      outMin: 1.5, outMax: 4.5,      // conservative interim range (min-max off ~3 faces is fragile; replace with holdout quantiles when a real calibration set exists)
+      outMin: 1.797, outMax: 4.379,  // SCUT-FBP5500 p2/p98 of model_raw through the shipped browser pipeline (crop→model), 2026-07-06, N=400 scored / 0 refused; overall Spearman ρ=0.93 (in-distribution → optimistic: this .onnx is the Gustrd SCUT checkpoint, canonical held-out ResNet18 PC≈0.88). See md/face-calibration-report.md
       inputName: null, outputName: null   // null → first graph input/output
     };
     let currentGen = 0;   // bumped per analysis; async inferences tag themselves and self-discard if superseded
