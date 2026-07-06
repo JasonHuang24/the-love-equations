@@ -91,6 +91,8 @@
     return s === 'model' ? 'trained model'
       : s === 'geometry' ? 'silhouette geometry'
       : s === 'heuristic' ? 'geometry heuristic'
+      : s === 'measured' ? 'measured numbers (no photo)'           // Body Calc numbers-only path (objective spine, no photo blended)
+      : s === 'hybrid' ? 'hybrid read (measured &times; photo)'   // Body Calc objective-spine blend (bodyScore.v2 additive source)
       : (s || '—');
   }
   function lensLabel(lens) { return lens === 'blackpill' ? 'Black Pill &middot; Frame' : 'Conventional'; }

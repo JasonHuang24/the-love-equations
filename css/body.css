@@ -120,4 +120,83 @@
 .bc-missing { font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin-top: 1rem; border-top: 0.5px solid var(--border-light); padding-top: 0.7rem; }
 .bc-missing a { color: var(--scarlet-dim); }
 
+/* ═══ Step 1 · objective-input panel (hybrid) ═══ */
+.bc-inputs-lead { font-size: 12px; color: var(--text-muted); line-height: 1.55; margin-bottom: 0.9rem; }
+.bc-inputs-lead strong { color: var(--text); }
+.bc-step-opt {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-dim); background: rgba(116,79,61,0.09); border-radius: 999px; padding: 2px 7px; margin-left: 4px;
+}
+.bc-in-field { margin-bottom: 1rem; }
+.bc-field-label { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 0.45rem; }
+.bc-req { font-size: 10.5px; font-weight: 400; color: var(--text-dim); letter-spacing: 0; text-transform: none; margin-left: 4px; }
+.bc-in-sex { display: inline-flex; margin: 0; }
+.bc-in-sex button { padding: 5px 18px; font-size: 12px; }
+
+/* dual-unit height/weight — reused verbatim in style from smvcalc.css (.unit-toggle / .num-field family) */
+.unit-toggle {
+  display: inline-flex; gap: 4px; margin-bottom: 0.55rem;
+  background: rgba(0,0,0,0.04); border-radius: 999px; padding: 3px;
+}
+.unitbtn {
+  border: none; background: transparent; cursor: pointer;
+  font-family: Georgia, "Times New Roman", serif; font-size: 13px; color: var(--text-muted);
+  padding: 0.3rem 0.85rem; border-radius: 999px; transition: background 120ms ease, color 120ms ease;
+}
+.unitbtn.active { background: var(--scarlet); color: #fff; }
+.num-input-wrap {
+  display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  background: rgba(255,252,247,0.86); border: 0.5px solid var(--border); border-radius: var(--radius-md);
+  padding: 0.6rem 0.9rem; max-width: 320px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.num-input-wrap:focus-within { border-color: var(--scarlet); box-shadow: var(--shadow-soft); }
+.num-field {
+  flex: 1 1 auto; min-width: 0; border: none; background: transparent; outline: none;
+  font-family: Georgia, "Times New Roman", serif; font-size: 20px; color: var(--text);
+}
+.num-field.short { max-width: 64px; flex: 0 0 auto; }
+.unit-lbl { color: var(--text-muted); font-size: 13px; }
+.bc-in-preview { font-size: 12px; color: var(--text-muted); line-height: 1.55; margin-top: 0.3rem; }
+.bc-in-preview strong { color: var(--scarlet-deep); }
+.num-hint { font-style: italic; }
+.soft-flag { color: #A06A12; }
+
+/* BF% silhouette picker */
+.bc-bf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(54px, 1fr)); gap: 5px; margin-bottom: 0.6rem; }
+.bc-bf-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 10px; background: rgba(255,255,255,0.55);
+  padding: 7px 3px 5px; transition: border-color 120ms ease, background 120ms ease;
+}
+.bc-bf-tile:hover { border-color: var(--scarlet-dim); background: var(--scarlet-pale); }
+.bc-bf-tile.sel { border-color: var(--scarlet); background: var(--scarlet-pale); box-shadow: inset 0 0 0 1px var(--scarlet); }
+.bc-bf-svg { width: 30px; height: 60px; display: block; }
+.bc-bf-svg circle, .bc-bf-svg path { fill: rgba(116,79,61,0.34); transition: fill 120ms ease; }
+.bc-bf-tile:hover .bc-bf-svg circle, .bc-bf-tile:hover .bc-bf-svg path { fill: var(--scarlet-dim); }
+.bc-bf-tile.sel .bc-bf-svg circle, .bc-bf-tile.sel .bc-bf-svg path { fill: var(--scarlet); }
+.bc-bf-lbl { font-size: 9.5px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.01em; }
+.bc-bf-tile.sel .bc-bf-lbl { color: var(--scarlet-deep); }
+.bc-bf-needsex { font-size: 12px; color: var(--text-dim); font-style: italic; padding: 0.3rem 0; }
+.bc-bf-measured { margin-top: 0.3rem; }
+.bc-bf-measured summary { font-size: 11.5px; color: var(--scarlet-dim); cursor: pointer; }
+.bc-bf-num { max-width: 170px; margin-top: 0.5rem; }
+
+/* hybrid headline badge + Tier-0 breakdown + cross-check */
+.bc-srcbadge.hybrid { color: #fff; background: var(--scarlet); }
+.bc-meas-name .mtag.t0 { color: var(--scarlet); }
+.bc-t0-math {
+  font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0.55rem 0 0;
+  font-variant-numeric: tabular-nums; padding: 0.5rem 0.7rem;
+  background: rgba(255,250,243,0.7); border: 0.5px solid var(--border-light); border-radius: var(--radius-sm);
+}
+.bc-t0-math strong { color: var(--scarlet-deep); }
+.bc-xcheck {
+  font-size: 12px; line-height: 1.55; color: #7a2230; margin: 0.55rem 0 0;
+  background: var(--scarlet-pale); border: 0.5px solid rgba(196,30,58,0.35); border-left: 3px solid var(--scarlet);
+  border-radius: var(--radius-md); padding: 0.6rem 0.85rem; text-align: left;
+}
+.bc-xcheck i { color: var(--scarlet); }
+.bc-xcheck strong { color: var(--scarlet-deep); }
+
 @media (max-width: 880px) { .bc-grid { grid-template-columns: 1fr; } }

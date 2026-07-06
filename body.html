@@ -9,7 +9,7 @@
   <script src="js/include.js" defer></script>
   <script src="js/composite-score.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/body.css?v=1.6" />
+  <link rel="stylesheet" href="css/body.css?v=1.7" />
 </head>
 <body data-page="body">
   <div data-include="navigation-bar"></div>
@@ -29,8 +29,15 @@
       <div class="bc-grid">
         <!-- INPUT COLUMN -->
         <div>
+          <!-- STEP 1 · objective inputs (optional; upgrade the photo read into the hybrid) -->
+          <div class="bc-panel bc-inputs">
+            <div class="bc-h"><i class="ti ti-ruler-measure"></i> Step 1 &middot; Your numbers <span class="bc-step-opt">optional</span></div>
+            <div class="bc-inputs-lead">Numbers you can verify: a tape, a scale, a mirror-match. Height, weight and body-fat close the four things a photo structurally can&rsquo;t &mdash; absolute scale, muscle-vs-fat, depth, and a real leanness signal. <strong>Self-flattery in, garbage out.</strong></div>
+            <div id="bc-inputs-body"><!-- built by renderInputsPanel() --></div>
+          </div>
+
           <div class="bc-panel">
-            <div class="bc-h"><i class="ti ti-camera"></i> Give it a body</div>
+            <div class="bc-h"><i class="ti ti-camera"></i> Step 2 &middot; Your photo</div>
             <div class="bc-srcs">
               <span class="bc-src active" data-src="upload"><i class="ti ti-upload"></i> Upload</span>
               <span class="bc-src" data-src="camera"><i class="ti ti-camera"></i> Camera</span>
@@ -341,14 +348,132 @@
     }
     function tierFor(p, s, sex){ return p === 'blackpill' ? frameTier(s, sex) : convTier(s); }
 
-    if (typeof module !== 'undefined') { module.exports = { poseSkeleton, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX }; }
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    // TIER 0 — Objective spine (hybrid). Pure, DOM-free, testable. Every anchor / band / weight here
+    // comes from md/body-calc-hybrid-spec.md §2 and is PROVISIONAL & tunable (like the SMV
+    // INCOME_ANCHORS) — NOT a sacred tuned constant. The objective tier supplies the three things a
+    // single frontal photo structurally cannot (spec §1): absolute scale, muscle-vs-fat, and a real
+    // (non-monotonic) leanness signal. It WRAPS the photo pipeline; it never reaches into it — the
+    // blend re-uses the existing sacred lens curve (mapModelScore) rather than duplicating it.
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    const LB_TO_KG = 0.45359237, IN_TO_CM = 2.54;
+
+    // Linear interpolation across [x,y] anchor pairs, clamped FLAT past both ends — so a curve built
+    // on these is monotonic within range and plateaus below the first / above the last anchor. Same
+    // shape as the SMV calc's interpAnchors. (testable)
+    function interpAnchors(anchors, x){
+      x = Number(x); if (!isFinite(x)) return anchors[0][1];
+      if (x <= anchors[0][0]) return anchors[0][1];
+      const last = anchors[anchors.length - 1];
+      if (x >= last[0]) return last[1];
+      for (let k = 1; k < anchors.length; k++){
+        const a = anchors[k-1], b = anchors[k];
+        if (x <= b[0]){ const t = (x - a[0]) / (b[0] - a[0]); return a[1] + t*(b[1] - a[1]); }
+      }
+      return last[1];
+    }
+
+    // FFMI with the Kouri height normalization (Kouri et al. 1995): FFMI = lean mass(kg) / height(m)²,
+    // then + 6.1·(1.8 − h) so a short and a tall frame with the same build read on one scale. bf is a
+    // FRACTION (0.18), not a percent. Returns null on non-physical inputs — a guard, not a score. At
+    // h = 1.8 m the adjustment term is 0, so FFMI_adj === FFMI (a Kouri edge case worth testing). (testable)
+    const FFMI_KOURI_K = 6.1, FFMI_KOURI_H0 = 1.8;
+    function computeFFMI(weightKg, bfFrac, heightM){
+      // Number.isFinite guards, not bare `>=`: JS coerces `null >= 0` to true, which would let a
+      // missing input slip past a `bfFrac >= 0` test and poison the math with NaN.
+      if (!(weightKg > 0) || !(heightM > 0) || !(Number.isFinite(bfFrac) && bfFrac >= 0 && bfFrac < 1)) return null;
+      const leanKg = weightKg * (1 - bfFrac);
+      const ffmi = leanKg / (heightM * heightM);
+      const ffmiAdj = ffmi + FFMI_KOURI_K * (FFMI_KOURI_H0 - heightM);
+      return { leanKg: leanKg, ffmi: ffmi, ffmiAdj: ffmiAdj };
+    }
+
+    // Frame score 0–100 — a sex-conditional curve on the height-adjusted FFMI. Natural ceiling ≈ 25
+    // (male) / 19 (female): at/above it the curve plateaus at 100 (enhancement territory is credited,
+    // never extrapolated). Provisional anchors (spec §2). (testable)
+    const FRAME_ANCHORS = {
+      m: [[16,15],[18,40],[20,65],[22,88],[23.5,97],[25,100]],
+      f: [[13,20],[14.5,45],[16,70],[17.5,90],[19,100]]
+    };
+    function frameScore(ffmiAdj, sex){
+      if (!Number.isFinite(ffmiAdj)) return null;   // Number.isFinite (not global isFinite) — consistent with the sibling guards; global isFinite(null) coerces to true
+      return interpAnchors(FRAME_ANCHORS[sex === 'm' ? 'm' : 'f'], ffmiAdj);
+    }
+
+    // Leanness score 0–100 — a sex-conditional INVERTED-U on body-fat %: a band cue, NOT monotonic.
+    // This is the R1 fix from the Codex rubric review — an emaciated frame must not bank near-max
+    // leanness credit, so both too-lean AND too-soft fall off. Gaussian on distance from the band
+    // centre, using the SAME width convention (half·1.6) as the silhouette band cues in scoreMeasure(),
+    // so the descriptive marker and the score agree. bf is a PERCENT here (12, not 0.12). (testable)
+    const LEANNESS_BAND = { m:{ lo:9, hi:15, c:12 }, f:{ lo:17, hi:24, c:20.5 } };
+    function leannessScore(bfPct, sex){
+      if (!(Number.isFinite(bfPct) && bfPct >= 0)) return null;   // reject null/undefined/NaN (see computeFFMI note)
+      const band = LEANNESS_BAND[sex === 'm' ? 'm' : 'f'];
+      const half = (band.hi - band.lo) / 2, sigma = half * 1.6;
+      return 100 * Math.exp(-Math.pow((bfPct - band.c) / sigma, 2));
+    }
+
+    // Objective score 0–100 = fixed weighted mean of frame + leanness (DP-2: 45% frame / 55% leanness —
+    // leanness is the single strongest replicated cue, and BF% is the more reliable input). Deliberately
+    // lens-INDEPENDENT: the lens only interprets the blend downstream, it does not re-weight the spine. (testable)
+    const TIER0_W = { frame: 0.45, leanness: 0.55 };
+    function objectiveScore(frameSc, leanSc){
+      if (frameSc == null || leanSc == null) return null;
+      return TIER0_W.frame * frameSc + TIER0_W.leanness * leanSc;
+    }
+
+    // The PHOTO tier's PRE-lens 0–100 raw, reconstructed from gradeBody()'s own per-metric `subs` and the
+    // profile weights — i.e. exactly gradeBody's internal num/den, WITHOUT reaching into gradeBody (spec
+    // constraint 4). The blend happens on this pre-lens value; the lens curve is applied once, afterwards.
+    // A Node test asserts mapModelScore(geomPreLens(subs,p)/100, p) === gradeBody(...).score. (testable)
+    function geomPreLens(subs, profKey){
+      const w = PROFILES[profKey].w; let num = 0, den = 0;
+      Object.keys(subs || {}).forEach(function(k){ if (w[k] != null){ num += w[k]*subs[k]; den += w[k]; } });
+      return den ? num/den : 0;
+    }
+
+    // Tier 2 — doctrine blend (DP-3: FIXED W_OBJ = 0.60 for BOTH lenses; no ±cap variant). Blends the two
+    // PRE-lens 0–100 scores. The caller runs the result through the SAME lens curve gradeBody/mapModelScore
+    // use — mapModelScore(blendRaw/100, lens) — so the lenses keep interpreting, only the measurement
+    // underneath changes. (testable)
+    const W_OBJ = 0.60;
+    function blendRaw(objective0to100, photo0to100){
+      return W_OBJ * objective0to100 + (1 - W_OBJ) * photo0to100;
+    }
+
+    // Cross-check (DP-5: FLAG ONLY — this NEVER dampens or modifies any score). When a silhouette's frontal
+    // WHtR and a claimed body-fat both exist, a GROSS contradiction between them is surfaced as a
+    // non-blocking note. The expected-WHtR-by-BF table is REASONED on the frontal width/height scale
+    // (~0.15–0.35), NOT the circumference bands (converting them was the P0 units bug), and is uncalibrated
+    // — so the threshold is deliberately wide and only gross mismatches fire. (testable)
+    const FRONTAL_WHTR_BY_BF = {
+      m: [[8,0.16],[15,0.19],[22,0.22],[30,0.27],[40,0.33]],
+      f: [[16,0.17],[22,0.20],[28,0.23],[36,0.28],[45,0.34]]
+    };
+    const CROSSCHECK_GROSS = 0.06;   // frontal-WHtR units (~2 buckets); conservative because the table is uncalibrated
+    function crossCheckBF(frontalWHtR, bfPct, sex){
+      if (!(frontalWHtR > 0) || !(Number.isFinite(bfPct) && bfPct >= 0)) return null;   // both inputs required & finite
+      const exp = interpAnchors(FRONTAL_WHTR_BY_BF[sex === 'm' ? 'm' : 'f'], bfPct);
+      if (frontalWHtR > exp + CROSSCHECK_GROSS) return { mismatch:true, dir:'claim-leaner', expected:exp };  // silhouette WIDER than the stated BF implies
+      if (frontalWHtR < exp - CROSSCHECK_GROSS) return { mismatch:true, dir:'claim-softer', expected:exp };  // silhouette NARROWER than the stated BF implies
+      return null;
+    }
+
+    if (typeof module !== 'undefined') { module.exports = { poseSkeleton, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX,
+      interpAnchors, computeFFMI, frameScore, leannessScore, objectiveScore, geomPreLens, blendRaw, crossCheckBF,
+      FRAME_ANCHORS, LEANNESS_BAND, TIER0_W, W_OBJ, LB_TO_KG, IN_TO_CM, FRONTAL_WHTR_BY_BF, FFMI_KOURI_K, FFMI_KOURI_H0, CROSSCHECK_GROSS }; }
   </script>
 
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
     const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
-                 bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null };
+                 bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null,
+                 // Tier-0 objective inputs (optional; drive the hybrid blend). bf is a PERCENT; source 'picker'|'measured'.
+                 inHeightCm:null, inWeightKg:null, inBfPct:null, inBfSource:null };
+    // Unit prefs for the objective inputs — same two-state model as smvcalc.html's height/weight fields.
+    let bcHeightUnit = 'imperial';   // 'imperial' (ft/in) | 'metric' (cm)
+    let bcWeightUnit = 'imperial';   // 'imperial' (lb)    | 'metric' (kg)
 
     document.querySelectorAll('.bc-src').forEach(function(tab){
       tab.setAttribute('role', 'button');
@@ -432,13 +557,135 @@
         + '</div>';
     }
 
+    // ── Tier-0 (objective spine) presence + computation ──
+    // Complete = all three numbers AND a known sex (the FFMI/leanness curves and the BF picker are sex-specific).
+    function bcHasInputs(){ return BC.inHeightCm > 0 && BC.inWeightKg > 0 && Number.isFinite(BC.inBfPct) && (BC.sex === 'm' || BC.sex === 'f'); }
+    function bcInputsAny(){ return BC.inHeightCm > 0 || BC.inWeightKg > 0 || Number.isFinite(BC.inBfPct); }
+    // Returns the full Tier-0 read, or null unless the inputs are complete. Pure spine math (spec §2).
+    function computeTier0(){
+      if (!bcHasInputs()) return null;
+      const sex = BC.sex === 'm' ? 'm' : 'f';
+      const f = computeFFMI(BC.inWeightKg, BC.inBfPct / 100, BC.inHeightCm / 100);
+      if (!f) return null;
+      const frame = frameScore(f.ffmiAdj, sex);
+      const lean = leannessScore(BC.inBfPct, sex);
+      const objective = objectiveScore(frame, lean);
+      return { sex:sex, ffmi:f.ffmi, ffmiAdj:f.ffmiAdj, leanKg:f.leanKg, frame:frame, lean:lean,
+               objective:objective, bfPct:BC.inBfPct, bfSource:BC.inBfSource };
+    }
+
+    // A neutral Tier-0 marker row — same track/band/dot device as the geometry rows, but WITHOUT the
+    // scarlet out-of-band flag (Tier-0 sits on a continuum; "above the muscular band" is not a fault).
+    function tier0Row(o){
+      const span = (o.dispHi - o.dispLo) || 1;
+      const clamp = x => Math.max(0, Math.min(100, x));
+      const pos = clamp((o.val - o.dispLo) / span * 100);
+      const bL = clamp((o.bandLo - o.dispLo) / span * 100), bR = clamp((o.bandHi - o.dispLo) / span * 100);
+      return '<div class="bc-meas"><div class="bc-meas-top">'
+        + '<span class="bc-meas-name">' + o.label + '<span class="mtag t0">Tier 0</span></span>'
+        + '<span class="bc-meas-where"><strong>' + o.whereStr + '</strong> <span class="bc-meas-val">' + o.valStr + '</span></span></div>'
+        + '<div class="bc-meas-track"><span class="bc-meas-band" style="left:' + bL + '%;width:' + Math.max(2, bR - bL) + '%"></span>'
+        + '<span class="bc-meas-dot" style="left:' + pos + '%"></span></div>'
+        + '<div class="bc-meas-val" style="margin-top:3px">' + o.note + '</div>'
+        + '</div>';
+    }
+    // The Tier-0 breakdown block: FFMI (frame) + BF% leanness (inverted-U) + the spelled-out arithmetic.
+    // photoRaw/blended/headline are passed only in the hybrid state (photo present); null → numbers-only.
+    function tier0Breakdown(t0, profKey, photoRaw, blended, headline){
+      const sex = t0.sex, b = LEANNESS_BAND[sex];
+      const frameWhere = t0.frame >= 85 ? 'Dense / muscular' : t0.frame >= 55 ? 'Solid frame' : t0.frame >= 30 ? 'Lean frame' : 'Slight frame';
+      const leanWhere = t0.bfPct < b.lo ? 'Very lean' : t0.bfPct > b.hi ? 'Softer' : 'In the sweet spot';
+      const ffmiRow = tier0Row({
+        label:'Fat-free mass index &middot; height-adj FFMI', val:t0.ffmiAdj, valStr:t0.ffmiAdj.toFixed(1),
+        dispLo:14, dispHi:(sex === 'm' ? 25.5 : 20), bandLo:(sex === 'm' ? 21 : 16.5), bandHi:(sex === 'm' ? 25 : 19),
+        whereStr:frameWhere,
+        note:'Lean mass carried for your height (Kouri-adjusted). Frame score <strong>' + Math.round(t0.frame) + ' / 100</strong>. Shaded = a muscular frame; natural ceiling &asymp; ' + (sex === 'm' ? '25' : '19') + ', beyond which is enhancement territory.'
+      });
+      const leanRow = tier0Row({
+        label:'Body-fat leanness &middot; inverted-U', val:t0.bfPct, valStr:t0.bfPct.toFixed(t0.bfSource === 'measured' ? 1 : 0) + '%',
+        dispLo:(sex === 'm' ? 4 : 12), dispHi:(sex === 'm' ? 40 : 48), bandLo:b.lo, bandHi:b.hi,
+        whereStr:leanWhere,
+        note:'A true optimum &mdash; both too-lean <em>and</em> too-soft score lower (leaner is not always better). Leanness score <strong>' + Math.round(t0.lean) + ' / 100</strong>' + (t0.bfSource === 'picker' ? ', from the silhouette match' : ', from your measured value') + '.'
+      });
+      const objMath = '<div class="bc-t0-math">Objective spine &nbsp;=&nbsp; 0.45 &times; ' + Math.round(t0.frame) + ' frame &nbsp;+&nbsp; 0.55 &times; ' + Math.round(t0.lean) + ' leanness &nbsp;=&nbsp; <strong>' + Math.round(t0.objective) + ' / 100</strong></div>';
+      const blendMath = (photoRaw == null) ? '' :
+        '<div class="bc-t0-math">Blend &nbsp;=&nbsp; 0.60 &times; ' + Math.round(t0.objective) + ' objective &nbsp;+&nbsp; 0.40 &times; ' + Math.round(photoRaw) + ' photo &nbsp;=&nbsp; ' + blended.toFixed(0) + ' &nbsp;&rarr;&nbsp; <strong>' + fmt(headline) + ' ' + PROFILES[profKey].unit + '</strong></div>';
+      return '<div class="bc-bd-h">Tier 0 &middot; measured spine</div>'
+        + '<div class="bc-note-line">The most-validated tier: real units, no proxy. FFMI is lean mass for your height; leanness is a genuine optimum. These are what a photo structurally cannot see.</div>'
+        + ffmiRow + leanRow + objMath + blendMath;
+    }
+
+    // Cross-check note (DP-5, FLAG ONLY — never touches a score). Returns '' when the silhouette WHtR and the
+    // stated body-fat agree (or a piece is missing); a scarlet, non-blocking note on a gross contradiction.
+    function crossCheckHtml(t0){
+      if (!t0 || !BC.metrics || BC.metrics.whtr == null) return '';
+      const flag = crossCheckBF(BC.metrics.whtr, t0.bfPct, t0.sex);
+      if (!flag) return '';
+      const lead = flag.dir === 'claim-leaner'
+        ? 'Your silhouette looks softer than a ' + t0.bfPct.toFixed(0) + '% body-fat would'
+        : 'Your silhouette looks leaner than a ' + t0.bfPct.toFixed(0) + '% body-fat would';
+      return '<div class="bc-xcheck"><i class="ti ti-alert-triangle" aria-hidden="true"></i> <strong>Silhouette vs. stated body-fat disagree.</strong> ' + lead
+        + ' &mdash; one of them is off (arms or clothing can corrupt the outline; self-estimates skew low). Both are shown; neither was changed to fit the other.</div>';
+    }
+    // Sex toggle wiring, shared by the full and numbers-only renders (both draw into #bc-result).
+    function wireSexButtons(host){
+      host.querySelectorAll('.bc-sex button').forEach(function(b){
+        b.addEventListener('click', function(){ BC.sex = b.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderInputsPanel(); renderResult(); });
+      });
+      host.querySelectorAll('.bc-sexflip').forEach(function(a){
+        a.addEventListener('click', function(e){ e.preventDefault(); BC.sex = a.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderInputsPanel(); renderResult(); });
+      });
+    }
+
+    // ── State C — numbers-only read (inputs present, no photo). Objective score alone, mapped through the lens. ──
+    function renderNumbersOnly(host, t0, BC_DEBUG){
+      const prof = PROFILES[BC.profile], other = BC.profile === 'blackpill' ? 'conventional' : 'blackpill';
+      const accent = BC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
+      const sex = t0.sex;
+      const score = mapModelScore(t0.objective / 100, BC.profile);
+      const oscore = mapModelScore(t0.objective / 100, other);
+      const sexWord = sex === 'm' ? 'male' : 'female', sexOther = sex === 'm' ? 'f' : 'm', sexOtherWord = sexOther === 'm' ? 'male' : 'female';
+      const flipPrompt = '<strong><a href="#" class="bc-sexflip" data-sex="' + sexOther + '" style="color:var(--scarlet)">Wrong? Switch to ' + sexOtherWord + ' &rarr;</a></strong>';
+      const sexCtl =
+        '<div class="bc-sex"><button data-sex="f"' + (sex === 'f' ? ' class="active"' : '') + '>Read as female</button>'
+        + '<button data-sex="m"' + (sex === 'm' ? ' class="active"' : '') + '>Read as male</button></div>'
+        + '<div class="bc-sexnote">Sex set to <strong>' + sexWord + '</strong>. ' + flipPrompt + ' It bases the sex-specific FFMI and leanness curves.</div>';
+      host.innerHTML =
+        '<div class="bc-score-wrap">'
+        + '<div class="bc-score" style="color:' + accent + '">' + fmt(score) + ' <span class="unit">' + prof.unit + '</span></div>'
+        + '<div class="bc-tier" style="color:' + accent + '">' + tierFor(BC.profile, score, sex) + '</div>'
+        + '<div class="bc-srcbadge hybrid">Numbers-only read &middot; add a photo for shape</div>'
+        + '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Objective spine only.</strong> Height, weight and body-fat give frame and leanness with real units &mdash; but not shape or distribution. <strong>Drop a photo in Step 2</strong> to fold those in (the hybrid read).</div>'
+        + '<div class="bc-other">The other lens &mdash; ' + PROFILES[other].name + ' &mdash; says <strong>' + fmt(oscore) + ' ' + PROFILES[other].unit + '</strong> (' + tierFor(other, oscore, sex) + ').</div>'
+        + '</div>'
+        + sexCtl
+        + tier0Breakdown(t0, BC.profile, null, null, null)
+        + '<div class="bc-missing"><strong>How to read this:</strong> a numbers-only read is the objective spine &mdash; the most trustworthy tier (real measurements, no pixels) but blind to shape, posture and distribution. A photo adds those; together they are the hybrid. Frame + leanness cannot, on their own, tell a well-proportioned build from an awkward one.</div>';
+      wireSexButtons(host);
+      // Persist the numbers-only body read for the Face × Body composite + SMV import (source 'measured', sex known).
+      // No photo contributed here, so it is NOT a hybrid read — only the blend path (renderResult, hasInputs) emits 'hybrid'.
+      if (window.leComposite){
+        window.leComposite.saveBody({
+          bp: mapModelScore(t0.objective / 100, 'blackpill'), cv: mapModelScore(t0.objective / 100, 'conventional'),
+          bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
+          source: 'measured', sex: sex, tier0: { ffmi: t0.ffmiAdj, bf: t0.bfPct }, ts: (BC.measuredAt || Date.now())
+        });
+      }
+    }
+
     function renderResult(){
       const host = document.getElementById('bc-result');
       // Verbose red calibration rows (skin %, model raw, face read): shown on localhost (the dev/calibration
       // build) or with ?debug, hidden in a deployed build. See also LE_DEBUG note on the Face Calc.
       const BC_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      const t0 = computeTier0();          // objective spine, or null unless the three numbers + a sex are all in
+      const hasInputs = !!t0;
+      bcSyncInputsPreview();              // keep the Step-1 preview's photo-aware tail current (focus-safe span-only update)
       if (!BC.metrics){
-        host.innerHTML = '<div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo and the score appears here &mdash; switch lenses any time.</div>';
+        if (hasInputs){ renderNumbersOnly(host, t0, BC_DEBUG); return; }   // State C — numbers only
+        host.innerHTML = bcInputsAny()
+          ? '<div class="bc-empty"><i class="ti ti-body-scan"></i>Your <strong>numbers read</strong> appears here once height, weight, body-fat <em>and</em> a sex are all set in Step&nbsp;1 &mdash; or drop a photo for the shape read.</div>'
+          : '<div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo &mdash; or add your numbers in Step&nbsp;1 &mdash; and the score appears here.</div>';
         return;
       }
       const prof = PROFILES[BC.profile];
@@ -447,8 +694,21 @@
       const sex = BC.sex === 'm' ? 'm' : 'f';
       const heur  = gradeBody(BC.metrics, sex, BC.profile);
       const usingModel = BC.model != null;
-      const score  = usingModel ? mapModelScore(BC.model, BC.profile) : heur.score;
-      const oscore = usingModel ? mapModelScore(BC.model, other) : gradeBody(BC.metrics, sex, other).score;
+      let score  = usingModel ? mapModelScore(BC.model, BC.profile) : heur.score;
+      let oscore = usingModel ? mapModelScore(BC.model, other) : gradeBody(BC.metrics, sex, other).score;
+      // ── Hybrid (State A) — photo + inputs both present. Blend the PRE-lens photo raw with the objective
+      // spine (DP-3 fixed W_OBJ 0.60), then run the blend through the SAME lens curve (mapModelScore). The
+      // photo-only path above is untouched; this only overrides the headline when inputs exist. Sex is known
+      // here (bcHasInputs requires it), so usingRange below is already false.
+      let photoRawCur = null, blendedCur = null;
+      if (hasInputs){
+        // Photo's pre-lens 0–100: the CNN's normalized t·100 (lens-independent), else the geometry num/den
+        // (lens-dependent) reconstructed from gradeBody's own subs — never reaching into gradeBody.
+        const photoRaw = pk => usingModel ? BC.model * 100 : geomPreLens(gradeBody(BC.metrics, sex, pk).subs, pk);
+        const hyb = pk => mapModelScore(blendRaw(t0.objective, photoRaw(pk)) / 100, pk);
+        score = hyb(BC.profile); oscore = hyb(other);
+        photoRawCur = photoRaw(BC.profile); blendedCur = blendRaw(t0.objective, photoRawCur);
+      }
       // Sex-range headline: a GEOMETRY headline is scored against sex-specific bands, so an undetermined sex
       // can't yield one honest number. Show the male–female range until a reliable read or manual pick resolves
       // it (the model headline is sex-agnostic, so it needs no range). Collapses to a single score when sex is set.
@@ -461,7 +721,9 @@
         rng = { lo:Math.min(sM,sF), hi:Math.max(sM,sF), m:sM, f:sF, oLo:Math.min(oM,oF), oHi:Math.max(oM,oF) };
       }
 
-      const srcBadge = usingModel
+      const srcBadge = hasInputs
+        ? '<div class="bc-srcbadge hybrid">Hybrid &middot; measured inputs &times; ' + (usingModel ? 'trained-model' : 'silhouette') + ' photo read</div>'
+        : usingModel
         ? '<div class="bc-srcbadge model">Trained model score &middot; the breakdown below is the transparent geometry</div>'
         : BC.bareGeometry
         ? '<div class="bc-srcbadge heur">Bare-physique read &middot; the trained model is clothed-trained, so a shirtless / swimwear shot is scored from the silhouette geometry instead</div>'
@@ -517,6 +779,8 @@
         + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental model.</strong> Validated to <em>rank</em> bodies, not to pinpoint &mdash; read it as a broad band (roughly &plusmn;1.5), not a precise grade, especially on casual photos unlike its studio training set.</div>' : '')
         + (BC.framing === 'torso' ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Upper-body read.</strong> Scored on frame cues only &mdash; waist-to-hip, V-taper, shoulder breadth. Leanness (needs full height) and leg proportion are cropped out, and a draped top softens the waist; a full-body shot in fitted clothing reads more.</div>' : '')
         + (BC.reliability ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+BC.reliability+'</div>' : '')
+        + (hasInputs ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Hybrid read.</strong> Your measured numbers set the objective base; the '+(usingModel?'trained-model':'silhouette')+' photo moves it for shape &amp; distribution. The arithmetic is spelled out in the Tier-0 section below.</div>' : '')
+        + (hasInputs ? crossCheckHtml(t0) : '')
         + (BC_DEBUG && usingModel && BC.modelRaw!=null ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+BC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
         + skinDebug
         + (BC_DEBUG && window.__bcSex ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; face read = '+(window.__bcSex.reason||'pending')+'</strong>'+(window.__bcSex.facePx!=null?' &middot; face '+window.__bcSex.facePx+'px, vis '+window.__bcSex.avgVis:'')+(window.__bcSex.sex?' &rarr; '+window.__bcSex.sex+' '+Math.round((window.__bcSex.conf||0)*100)+'%':'')+'</div>' : '')
@@ -524,22 +788,27 @@
         + '</div>'
         + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
+        + (hasInputs ? tier0Breakdown(t0, BC.profile, photoRawCur, blendedCur, score) : '')
         + drivers + coreRows + featRows + propRows
         + (comp.athletic == null ? '' : '<div class="bc-bd-h">Tapered structure &middot; observation (not scored)</div>' + athleticRow(comp.athletic))
         + cantRows
         + '<div class="bc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box) when one is loaded; the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a single frontal silhouette misses depth, muscle-vs-fat, and everything under clothing &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. A fit body that reads middling usually traces to the <em>input</em> &mdash; a mis-read sex (toggle it) or a distant/occluded silhouette that flattens the ratios &mdash; more than the score; a clean, correctly-sexed read ranks roughly right. The one rubric caveat: the female bands reward the hourglass, so a broad, tapered frame is mildly under-credited &mdash; surfaced as <em>Tapered structure</em> below (a labelled choice, left out of the score, not a bug). With no model loaded, the geometry scores the headline too (badged above).</div>';
 
-      host.querySelectorAll('.bc-sex button').forEach(function(b){
-        b.addEventListener('click', function(){ BC.sex = b.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderResult(); });
-      });
-      host.querySelectorAll('.bc-sexflip').forEach(function(a){
-        a.addEventListener('click', function(e){ e.preventDefault(); BC.sex = a.dataset.sex; BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual'; setStatus(bcStatusNote(), false, true); renderResult(); });
-      });
+      wireSexButtons(host);   // shared: also refreshes the Step-1 inputs picker (its silhouettes are sex-specific)
 
       // persist this body score for the Face × Body composite. The CNN headline is sex-agnostic; a geometry
       // headline needs a known sex (an unresolved male–female range can't yield one honest number → needsSex).
+      // Hybrid (inputs present) always has a known sex and carries the objective spine in an additive `tier0`.
       if (window.leComposite){
-        if (usingModel){
+        if (hasInputs){
+          const pr = pk => usingModel ? BC.model * 100 : geomPreLens(gradeBody(BC.metrics, sex, pk).subs, pk);
+          window.leComposite.saveBody({
+            bp: mapModelScore(blendRaw(t0.objective, pr('blackpill')) / 100, 'blackpill'),
+            cv: mapModelScore(blendRaw(t0.objective, pr('conventional')) / 100, 'conventional'),
+            bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
+            source: 'hybrid', sex: sex, tier0: { ffmi: t0.ffmiAdj, bf: t0.bfPct }, ts: BC.measuredAt
+          });
+        } else if (usingModel){
           window.leComposite.saveBody({
             bp: mapModelScore(BC.model,'blackpill'), cv: mapModelScore(BC.model,'conventional'),
             bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
@@ -632,9 +901,196 @@
       BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
       BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
       BC.sexConf = null; BC.sexManual = false; BC.sexUnknownReason = ''; BC.shotDataURL = null;
-      bcClearShot(); if (window.bcClearCanvas) window.bcClearCanvas();
-      setStatus('Cleared. Drop a photo to start again.'); renderResult();
+      BC.inHeightCm = null; BC.inWeightKg = null; BC.inBfPct = null; BC.inBfSource = null;   // clear the Tier-0 inputs too
+      bcClearShot(); bcClearInputs(); if (window.bcClearCanvas) window.bcClearCanvas();
+      setStatus('Cleared. Drop a photo to start again.'); renderInputsPanel(); renderResult();
     };
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    // STEP 1 · objective-input panel — dual-unit height/weight (smvcalc pattern, verbatim in style) +
+    // a sex-conditional BF% silhouette picker (original on-palette SVG art, DP-1). Persistence key
+    // loveEquations.bodyInputs.v1; bcResetAll clears it. All of this only UPGRADES the read — the
+    // photo-only path is untouched when these are empty.
+    // ═══════════════════════════════════════════════════════════════════════════════════════════
+    const BC_INPUTS_KEY = 'loveEquations.bodyInputs.v1';
+    // BF% buckets per sex (spec §2). Selecting a tile sets BF% to the bucket MIDPOINT (self-estimates skew
+    // ~5pts low, so picture-matching is more honest than typing a number). Top buckets use a representative mid.
+    const BF_BUCKETS = {
+      m: [ {lo:6,hi:9,mid:7.5,label:'6&ndash;9%'}, {lo:10,hi:13,mid:11.5,label:'10&ndash;13%'}, {lo:14,hi:17,mid:15.5,label:'14&ndash;17%'}, {lo:18,hi:22,mid:20,label:'18&ndash;22%'}, {lo:23,hi:27,mid:25,label:'23&ndash;27%'}, {lo:28,hi:34,mid:31,label:'28&ndash;34%'}, {lo:35,hi:45,mid:38,label:'35%+'} ],
+      f: [ {lo:14,hi:17,mid:15.5,label:'14&ndash;17%'}, {lo:18,hi:21,mid:19.5,label:'18&ndash;21%'}, {lo:22,hi:25,mid:23.5,label:'22&ndash;25%'}, {lo:26,hi:30,mid:28,label:'26&ndash;30%'}, {lo:31,hi:36,mid:33.5,label:'31&ndash;36%'}, {lo:37,hi:44,mid:40.5,label:'37&ndash;44%'}, {lo:45,hi:55,mid:48,label:'45%+'} ]
+    };
+    function bfBucketIndexFor(bfPct, sex){
+      if (!Number.isFinite(bfPct)) return -1;
+      const arr = BF_BUCKETS[sex === 'm' ? 'm' : 'f'];
+      for (let i = 0; i < arr.length; i++){ if (bfPct <= arr[i].hi) return i; }
+      return arr.length - 1;
+    }
+    // Original SVG silhouette per BF bucket — a symmetric front-facing torso whose waist/hip widths grow with
+    // adiposity (male keeps its V-taper at low bf; female keeps a waist-to-hip drop). Colours come from CSS so
+    // the selected tile fills scarlet. Half-widths are around a centre x=20 in a 40×80 viewBox.
+    const BF_SHAPES = {
+      m: [ {sh:15,wa:8,hi:10}, {sh:15,wa:9,hi:10.5}, {sh:14.5,wa:10.5,hi:11}, {sh:14,wa:12,hi:12}, {sh:14,wa:13.5,hi:13}, {sh:14.5,wa:15.5,hi:14.5}, {sh:15,wa:17.5,hi:16.5} ],
+      f: [ {sh:11,wa:8,hi:12.5}, {sh:11,wa:8.5,hi:13}, {sh:11,wa:9.5,hi:13.5}, {sh:11.5,wa:11,hi:14}, {sh:12,wa:13,hi:15}, {sh:12.5,wa:15,hi:16}, {sh:13,wa:17,hi:17.5} ]
+    };
+    function bfSilhouetteSVG(sex, i){
+      const P = BF_SHAPES[sex === 'm' ? 'm' : 'f'][i];
+      const cx = 20, L = x => (cx - x).toFixed(1), R = x => (cx + x).toFixed(1);
+      const d = 'M' + L(P.sh) + ',26'
+        + 'Q' + L(P.sh + 1.5) + ',38 ' + L(P.wa) + ',48'      // shoulder → waist
+        + 'Q' + L(P.wa - 0.5) + ',55 ' + L(P.hi) + ',60'      // waist → hip
+        + 'Q' + L(P.hi) + ',72 ' + cx + ',72'                 // hip → rounded pelvis
+        + 'Q' + R(P.hi) + ',72 ' + R(P.hi) + ',60'
+        + 'Q' + R(P.wa - 0.5) + ',55 ' + R(P.wa) + ',48'
+        + 'Q' + R(P.sh + 1.5) + ',38 ' + R(P.sh) + ',26'
+        + 'Q' + cx + ',22 ' + L(P.sh) + ',26 Z';              // shoulder line
+      return '<svg class="bc-bf-svg" viewBox="0 0 40 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+        + '<circle cx="20" cy="12" r="6.2"/><path d="' + d + '"/></svg>';
+    }
+
+    // The live preview under the inputs — the objective read once complete, else what is still missing.
+    function bcInputsPreviewHtml(){
+      const t0 = computeTier0();
+      if (!t0){
+        const need = [];
+        if (!(BC.inHeightCm > 0)) need.push('height');
+        if (!(BC.inWeightKg > 0)) need.push('weight');
+        if (!Number.isFinite(BC.inBfPct)) need.push('body-fat');
+        if (!(BC.sex === 'm' || BC.sex === 'f')) need.push('sex');
+        return need.length
+          ? '<span class="num-hint">Add ' + need.join(', ') + ' to compute your objective frame read.</span>'
+          : '<span class="num-hint">Enter your numbers to see the objective read.</span>';
+      }
+      return 'FFMI <strong>' + t0.ffmiAdj.toFixed(1) + '</strong> &rarr; frame <strong>' + Math.round(t0.frame) + '/100</strong> &middot; '
+        + 'body-fat <strong>' + t0.bfPct.toFixed(t0.bfSource === 'measured' ? 1 : 0) + '%</strong> &rarr; leanness <strong>' + Math.round(t0.lean) + '/100</strong> &middot; '
+        + 'objective <strong>' + Math.round(t0.objective) + '/100</strong>'
+        + (BC.metrics ? ' &middot; blended with your photo.' : ' &middot; <span class="soft-flag">drop a photo (Step 2) for the full hybrid.</span>');
+    }
+
+    // Rebuild the Step-1 panel body. Unit / sex / picker changes rebuild (they restructure the fields);
+    // numeric typing does NOT rebuild — its oninput updates the preview + result in place so the field keeps focus.
+    function renderInputsPanel(){
+      const body = document.getElementById('bc-inputs-body');
+      if (!body) return;
+      const sex = (BC.sex === 'm' || BC.sex === 'f') ? BC.sex : null;
+
+      const sexToggle =
+        '<div class="bc-in-field"><div class="bc-field-label">Sex <span class="bc-req">sets the body-fat guide &amp; the curves</span></div>'
+        + '<div class="bc-sex bc-in-sex"><button type="button" data-sex="f"' + (sex === 'f' ? ' class="active"' : '') + '>Female</button>'
+        + '<button type="button" data-sex="m"' + (sex === 'm' ? ' class="active"' : '') + '>Male</button></div></div>';
+
+      const hImperial = bcHeightUnit !== 'metric', cm = BC.inHeightCm;
+      const totIn = cm ? Math.round(cm / 2.54) : 0, ft = cm ? Math.floor(totIn / 12) : '', inch = cm ? totIn % 12 : '', cmVal = cm ? Math.round(cm) : '';
+      const hFields = hImperial
+        ? '<input type="text" inputmode="numeric" id="bc-h-ft" class="num-field short" autocomplete="off" value="' + ft + '" placeholder="5" oninput="bcOnHeightInput()" /><span class="unit-lbl">ft</span>'
+          + '<input type="text" inputmode="numeric" id="bc-h-in" class="num-field short" autocomplete="off" value="' + inch + '" placeholder="10" oninput="bcOnHeightInput()" /><span class="unit-lbl">in</span>'
+        : '<input type="text" inputmode="numeric" id="bc-h-cm" class="num-field" autocomplete="off" value="' + cmVal + '" placeholder="178" oninput="bcOnHeightInput()" /><span class="unit-lbl">cm</span>';
+      const heightField =
+        '<div class="bc-in-field"><div class="bc-field-label">Height</div>'
+        + '<div class="unit-toggle"><button type="button" class="unitbtn' + (hImperial ? ' active' : '') + '" onclick="bcSetInHeightUnit(\'imperial\')">ft / in</button>'
+        + '<button type="button" class="unitbtn' + (!hImperial ? ' active' : '') + '" onclick="bcSetInHeightUnit(\'metric\')">cm</button></div>'
+        + '<div class="num-input-wrap">' + hFields + '</div></div>';
+
+      const wImperial = bcWeightUnit !== 'metric', kg = BC.inWeightKg;
+      const lb = kg ? Math.round(kg / 0.453592) : '', kgVal = kg ? Math.round(kg) : '';
+      const wFields = wImperial
+        ? '<input type="text" inputmode="numeric" id="bc-w-lb" class="num-field short" autocomplete="off" value="' + lb + '" placeholder="170" oninput="bcOnWeightInput()" /><span class="unit-lbl">lb</span>'
+        : '<input type="text" inputmode="numeric" id="bc-w-kg" class="num-field short" autocomplete="off" value="' + kgVal + '" placeholder="77" oninput="bcOnWeightInput()" /><span class="unit-lbl">kg</span>';
+      const weightField =
+        '<div class="bc-in-field"><div class="bc-field-label">Weight</div>'
+        + '<div class="unit-toggle"><button type="button" class="unitbtn' + (wImperial ? ' active' : '') + '" onclick="bcSetInWeightUnit(\'imperial\')">lb</button>'
+        + '<button type="button" class="unitbtn' + (!wImperial ? ' active' : '') + '" onclick="bcSetInWeightUnit(\'metric\')">kg</button></div>'
+        + '<div class="num-input-wrap">' + wFields + '</div></div>';
+
+      let bfBlock;
+      if (!sex){
+        bfBlock = '<div class="bc-in-field"><div class="bc-field-label">Body fat</div><div class="bc-bf-needsex">Pick a sex above to see the body-fat silhouette guide.</div></div>';
+      } else {
+        const selIdx = bfBucketIndexFor(BC.inBfPct, sex);
+        const tiles = BF_BUCKETS[sex].map(function(b, i){
+          return '<button type="button" class="bc-bf-tile' + (selIdx === i ? ' sel' : '') + '" data-idx="' + i + '" aria-pressed="' + (selIdx === i) + '" title="' + b.label + ' body fat" onclick="bcPickBf(' + i + ')">'
+            + bfSilhouetteSVG(sex, i) + '<span class="bc-bf-lbl">' + b.label + '</span></button>';
+        }).join('');
+        const measHas = BC.inBfSource === 'measured' && Number.isFinite(BC.inBfPct);
+        bfBlock =
+          '<div class="bc-in-field"><div class="bc-field-label">Body fat <span class="bc-req">match your silhouette</span></div>'
+          + '<div class="bc-bf-grid">' + tiles + '</div>'
+          + '<details class="bc-bf-measured"' + (measHas ? ' open' : '') + '><summary>I know my measured body-fat %</summary>'
+          + '<div class="num-input-wrap bc-bf-num"><input type="text" inputmode="decimal" id="bc-bf-measured" class="num-field short" autocomplete="off" value="' + (measHas ? BC.inBfPct : '') + '" placeholder="14.5" oninput="bcOnMeasuredBf()" /><span class="unit-lbl">% BF</span></div>'
+          + '<div class="bc-note" style="margin-top:0.4rem;border:none;padding:0">Caliper, BIA or DEXA. A body-fat smart scale like the <a href="https://www.wyze.com/products/wyze-scale-x" target="_blank" rel="noopener">Wyze Scale X</a> is best for trends under consistent conditions, not a precise one-off reading.</div>'
+          + '</details></div>';
+      }
+
+      body.innerHTML = sexToggle + heightField + weightField + bfBlock
+        + '<div class="bc-in-preview" id="bc-in-preview">' + bcInputsPreviewHtml() + '</div>';
+      body.querySelectorAll('.bc-in-sex button').forEach(function(b){
+        b.addEventListener('click', function(){ bcSetInSex(b.dataset.sex); });
+      });
+    }
+
+    // Update ONLY the Step-1 preview span (never the fields) — focus-safe, so it can run on every render,
+    // keeping the "blended with your photo" tail honest when a photo arrives via the photo path.
+    function bcSyncInputsPreview(){ const pv = document.getElementById('bc-in-preview'); if (pv) pv.innerHTML = bcInputsPreviewHtml(); }
+    // In-place refresh after a numeric edit: update the preview + the result panel WITHOUT rebuilding the
+    // inputs panel (so the field being typed keeps focus). rebuild=true only for unit/sex/picker changes.
+    function bcAfterInputEdit(rebuild){
+      bcSyncInputsPreview();
+      if (rebuild) renderInputsPanel();
+      bcSaveInputs(); renderResult();
+    }
+    window.bcSetInHeightUnit = function(u){ bcHeightUnit = (u === 'metric' ? 'metric' : 'imperial'); renderInputsPanel(); };
+    window.bcSetInWeightUnit = function(u){ bcWeightUnit = (u === 'metric' ? 'metric' : 'imperial'); renderInputsPanel(); };
+    window.bcOnHeightInput = function(){
+      let cm = null;
+      if (bcHeightUnit === 'metric'){ const c = parseFloat((document.getElementById('bc-h-cm') || {}).value || ''); if (!isNaN(c) && c > 0) cm = c; }
+      else {
+        const ft = parseInt((document.getElementById('bc-h-ft') || {}).value || '', 10);
+        const inch = parseInt((document.getElementById('bc-h-in') || {}).value || '', 10);
+        if (!isNaN(ft) || !isNaN(inch)){ const t = (isNaN(ft) ? 0 : ft) * 12 + (isNaN(inch) ? 0 : inch); if (t > 0) cm = t * IN_TO_CM; }
+      }
+      BC.inHeightCm = (cm != null) ? Math.max(130, Math.min(230, cm)) : null;   // clamp to a plausible adult range
+      bcAfterInputEdit(false);
+    };
+    window.bcOnWeightInput = function(){
+      let kg = null;
+      if (bcWeightUnit === 'metric'){ const k = parseFloat((document.getElementById('bc-w-kg') || {}).value || ''); if (!isNaN(k) && k > 0) kg = k; }
+      else { const lb = parseFloat((document.getElementById('bc-w-lb') || {}).value || ''); if (!isNaN(lb) && lb > 0) kg = lb * LB_TO_KG; }
+      BC.inWeightKg = (kg != null) ? Math.max(35, Math.min(300, kg)) : null;
+      bcAfterInputEdit(false);
+    };
+    window.bcOnMeasuredBf = function(){
+      const v = parseFloat((document.getElementById('bc-bf-measured') || {}).value || '');
+      if (!isNaN(v) && v >= 1 && v <= 75){ BC.inBfPct = v; BC.inBfSource = 'measured'; }
+      else { BC.inBfPct = null; BC.inBfSource = null; }
+      bcAfterInputEdit(false);   // no rebuild: keep focus in the % field (the picker highlight re-syncs on next rebuild)
+    };
+    window.bcPickBf = function(i){
+      const sex = (BC.sex === 'm' || BC.sex === 'f') ? BC.sex : null; if (!sex) return;
+      const b = BF_BUCKETS[sex][i]; if (!b) return;
+      BC.inBfPct = b.mid; BC.inBfSource = 'picker';
+      renderInputsPanel(); bcSaveInputs(); renderResult();   // buttons, no focus concern → full rebuild moves the highlight
+    };
+    function bcSetInSex(s){
+      BC.sex = (s === 'm' ? 'm' : 'f'); BC.sexAuto = false; BC.sexManual = true; BC.sexSource = 'manual';
+      setStatus(bcStatusNote(), false, true);
+      renderInputsPanel(); bcSaveInputs(); renderResult();
+    }
+
+    // ── persistence: loveEquations.bodyInputs.v1 (survives page switches like the photo does) ──
+    function bcSaveInputs(){
+      if (!bcInputsAny() && !(BC.sex === 'm' || BC.sex === 'f')){ bcClearInputs(); return; }
+      const rec = { heightCm:BC.inHeightCm, weightKg:BC.inWeightKg, bfPct:BC.inBfPct, bfSource:BC.inBfSource,
+                    sex:(BC.sex === 'm' || BC.sex === 'f') ? BC.sex : null, ts:Date.now() };
+      try { localStorage.setItem(BC_INPUTS_KEY, JSON.stringify(rec)); } catch(e){}
+    }
+    function bcClearInputs(){ try { localStorage.removeItem(BC_INPUTS_KEY); } catch(e){} }
+    function bcRestoreInputs(){
+      let s; try { s = JSON.parse(localStorage.getItem(BC_INPUTS_KEY) || 'null'); } catch(e){ s = null; }
+      if (!s || typeof s !== 'object') return;
+      const fin = x => (typeof x === 'number' && isFinite(x)) ? x : null;
+      BC.inHeightCm = fin(s.heightCm); BC.inWeightKg = fin(s.weightKg); BC.inBfPct = fin(s.bfPct);
+      BC.inBfSource = (s.bfSource === 'measured' || s.bfSource === 'picker') ? s.bfSource : (BC.inBfPct != null ? 'measured' : null);
+      // Adopt the stored sex only if the photo path hasn't already set one (the shot restore runs later, in the module).
+      if ((s.sex === 'm' || s.sex === 'f') && !(BC.sex === 'm' || BC.sex === 'f')){ BC.sex = s.sex; BC.sexManual = true; BC.sexSource = 'manual'; BC.sexAuto = false; }
+    }
     window.bcSetStatus = setStatus;
     window.bcPoseSkeleton = poseSkeleton;
     window.bcBodyRatios = bodyRatios;
@@ -642,6 +1098,23 @@
     window.bcPreprocessSex = preprocessSex;
     window.bcSexFromLogits = sexFromLogits;
     window.bcFacePidx = FACE_PIDX;
+
+    // Restore any saved objective inputs and paint Step 1 immediately (the photo, if any, restores later in the
+    // MediaPipe module and re-renders — yielding State A when both are present).
+    bcRestoreInputs();
+    renderInputsPanel();
+    renderResult();
+    // This inline (non-deferred) block runs during parse, BEFORE the deferred composite-score.js defines
+    // window.leComposite. In pure State C (restored inputs, no saved photo) the numbers-only composite save is
+    // gated on leComposite, so it is skipped now and nothing re-renders State C afterward (bcRestoreShot only
+    // re-renders when a saved shot exists). Re-run once after the deferred scripts have executed so a restored
+    // numbers-only read reaches the Overall-looks composite on first load. (State A/B already save correctly —
+    // their render happens in the deferred module, after leComposite exists — and BC.metrics guards this out.)
+    (function repersistNumbersOnly(){
+      var run = function(){ if (!BC.metrics && bcHasInputs()) renderResult(); };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+      else run();
+    })();
   </script>
 
   <!-- ===== MediaPipe Pose Landmarker (on-device) ===== -->
