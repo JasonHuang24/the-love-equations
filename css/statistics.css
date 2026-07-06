@@ -7,7 +7,7 @@
 .chart-legend-row { font-size: 12px; color: var(--text-muted); line-height: 1.9; }
 .chart-tier { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: middle; }
 .chart-tier.t1 { background: #E6F4EA; color: #1E7B34; }
-.chart-tier.t2 { background: #FBF3E0; color: #9A6B12; }
+.chart-tier.t2 { background: #FBF3E0; color: #8A5F10; }
 .chart-tier.t3 { background: #FBEDE6; color: #B5541E; }
 .chart-tier.myth { background: var(--scarlet); color: #fff; }
 .dos-section { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin: 1.75rem 0 0.7rem; padding-bottom: 0.45rem; border-bottom: 0.5px solid var(--border); }
