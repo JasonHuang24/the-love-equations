@@ -1077,7 +1077,7 @@
     };
     window.bcSetModelScore = function(t, raw){ BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.bcModelReady = function(ok){ BC.modelReady = ok; };
-    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
@@ -1115,6 +1115,7 @@
       BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
       BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
       BC.sexConf = null; BC.sexManual = false; BC.sexClsSex = null; BC.sexClsConf = null; BC.sexUnknownReason = ''; BC.shotDataURL = null;
+      BC.routeBare = false; BC.routeUseModel = false;
       BC.inHeightCm = null; BC.inWeightKg = null; BC.inBfPct = null; BC.inBfSource = null;   // clear the Tier-0 inputs too
       BC.skipInputs = false;                                                                 // Item 4: reset the skip affordance
       bcClearShot(); bcClearInputs(); if (window.bcClearCanvas) window.bcClearCanvas();

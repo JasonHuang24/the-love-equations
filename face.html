@@ -263,10 +263,17 @@
     // Fallback sex guess ONLY (used when the classifier isn't loaded — unreliable by nature, front-view
     // ratios barely separate sex). Uses the two least expression-noisy cues, jaw + nose, against the
     // midpoint of the female/male band centres. The classifier overrides this whenever present.
+    // Returns null in a DEADZONE around the decision boundary — an ambiguous front-view face must read
+    // "undetermined", NOT silently default to 'f' (which would mis-base the sex-typical bands & dimorphism below).
+    // Mirrors body's guessSex |idx|<0.15. Derivation onto face's jaw+nose scale: body's 0.15 is ~6–7% of a typical
+    // clear-read |idx| (~2.2–2.5 on its three-cue index, total weight 2.2). Face's jaw+nose index has total weight
+    // 1.6 and a typical clear-read |idx| ~1.6–1.8, so the SAME fraction lands at ~0.11. A classifier read or a
+    // manual pick resolves the deadzone.
     function guessSex(geo){
-      if (!geo) return 'f';
+      if (!geo) return null;   // no geometry → undetermined (was 'f')
       const jaw = geo.jaw==null ? 0.835 : geo.jaw, nose = geo.noseWidth==null ? 1.1975 : geo.noseWidth;
-      return ((jaw - 0.835)/0.055 + 0.6*(nose - 1.1975)/0.10) > 0 ? 'm' : 'f';
+      const idx = (jaw - 0.835)/0.055 + 0.6*(nose - 1.1975)/0.10;
+      return Math.abs(idx) < 0.11 ? null : (idx > 0 ? 'm' : 'f');
     }
     // What a single front photo structurally cannot read — see frameworks.html#bone-pill
     const CANT_READ = [
@@ -386,11 +393,23 @@
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
     const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
-                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', shotDataURL:null, measuredAt:null };
+                 sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'',
+                 sexClsSex:null, sexClsConf:null,   // the classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
+                 shotDataURL:null, measuredAt:null };
 
     document.querySelectorAll('.lc-src').forEach(function(tab){
+      tab.setAttribute('role', 'button');
+      tab.setAttribute('tabindex', '0');
+      tab.setAttribute('aria-pressed', tab.classList.contains('active') ? 'true' : 'false');
+      tab.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); tab.click(); }
+      });
       tab.addEventListener('click', function(){
-        document.querySelectorAll('.lc-src').forEach(t => t.classList.toggle('active', t===tab));
+        document.querySelectorAll('.lc-src').forEach(t => {
+          const on = t === tab;
+          t.classList.toggle('active', on);
+          t.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
         const src = tab.dataset.src;
         document.querySelectorAll('.lc-src-panel').forEach(p => p.hidden = (p.dataset.panel !== src));
         if (src !== 'camera' && window.lcStopCamera) window.lcStopCamera();
@@ -440,6 +459,19 @@
         + '<span class="lc-px-val">'+Math.round(v)+'</span></div>';
     }
 
+    // A confident classifier read that contradicts a MANUAL sex pick. Manual still wins the panel; this only surfaces
+    // the disagreement (non-blocking). Null when they agree, when there's no manual pick, or when the read is too
+    // tentative (<0.75) to loudly contradict a manual choice. Mirrors body.html's bcSexConflict.
+    const SEX_CONFLICT_MIN = 0.75;   // genderage's correct reads cluster ~0.87–1.0; below this it isn't "confident"
+    function lcSexConflict(){
+      if (LC.sexSource !== 'manual') return null;
+      const manual = (LC.sex === 'm' || LC.sex === 'f') ? LC.sex : null;
+      const cls = (LC.sexClsSex === 'm' || LC.sexClsSex === 'f') ? LC.sexClsSex : null;
+      if (!manual || !cls || cls === manual) return null;
+      if (!(typeof LC.sexClsConf === 'number' && LC.sexClsConf >= SEX_CONFLICT_MIN)) return null;
+      return { manual:manual, cls:cls, conf:LC.sexClsConf };
+    }
+
     function renderResult(){
       const host = document.getElementById('lc-result');
       // Verbose red calibration row (model raw output): shown on localhost (the dev/calibration build) or
@@ -460,8 +492,10 @@
       const srcBadge = usingModel
         ? '<div class="lc-srcbadge model">Trained CNN score &middot; the breakdown below is the transparent geometry</div>'
         : '<div class="lc-srcbadge heur">Geometry heuristic &middot; no trained model loaded (see note)</div>';
-      const sex = LC.sex === 'm' ? 'm' : 'f';
-      const comp = computeComposites(LC.geo, sex);
+      const sexKnown = LC.sex === 'm' || LC.sex === 'f';
+      const sex = sexKnown ? LC.sex : 'f';   // fallback ONLY for the sex-agnostic headline label; sex-conditional blocks gate on sexKnown
+      const comp = sexKnown ? computeComposites(LC.geo, sex) : null;
+      const sexConflict = lcSexConflict();   // a manual pick the classifier confidently disagrees with (non-blocking)
       const resolve = m => Object.assign({}, m, { band: bandFor(m, sex) });
       const compRow = (label, val, band, below, above, note) =>
         measureRow({ label:label, band:band, disp:[0,100], below:below, above:above, fmt:v=>Math.round(v), tier:'Tier 1', note:note }, val);
@@ -470,29 +504,36 @@
         ? 'Sex detected on-device'+(LC.sexConf ? ' ('+Math.round(LC.sexConf*100)+'% confident)' : '')+' &mdash; flip it if wrong. '
         : LC.sexSource === 'manual'
         ? 'Sex set by you. '
+        : LC.sexSource === 'unknown'
+        ? '<strong>Sex undetermined</strong> &mdash; this front-view face was too ambiguous to call. Set it below (it re-bases the sex-typical bands &amp; the dimorphism read; the headline score is the same either way). '
         : 'Sex guessed from geometry (classifier not loaded &mdash; drop <code>models/face-sex.onnx</code>) &mdash; flip if wrong. ';
       const sexCtl =
-        '<div class="lc-sex"><button data-sex="f"'+(sex==='f'?' class="active"':'')+'>Read as female</button>'
-        + '<button data-sex="m"'+(sex==='m'?' class="active"':'')+'>Read as male</button></div>'
+        '<div class="lc-sex"><button data-sex="f"'+(LC.sex==='f'?' class="active"':'')+'>Read as female</button>'
+        + '<button data-sex="m"'+(LC.sex==='m'?' class="active"':'')+'>Read as male</button></div>'
         + '<div class="lc-sexnote">'+sexSrcNote
         + 'This only re-bases the typical ranges below (dimorphism is sex-conditional); it does <em>not</em> change the headline score (the model scores the same either way &mdash; though that model carries its training set&rsquo;s own demographic biases).</div>';
 
-      const drivers = '<div class="lc-bd-h">Strongest drivers &middot; Tier 1</div>'
-        + '<div class="lc-note-line">Averageness and sexual dimorphism are the most replicated predictors of attractiveness (Rhodes 2006). Shown here as <strong>reasoned proxies, not population-fitted</strong>: <em>proportional typicality</em> stands in for averageness (closeness to typical proportions, not distance from a mean face); a <em>dimorphic-cue index</em> stands in for sex-typicality.</div>'
-        + compRow('Proportional typicality', comp.averageness, [55,85], 'Distinctive', 'Very typical')
-        + compRow((sex==='m'?'Masculinity':'Femininity')+' &middot; dimorphic cues', comp.dimorphism, [45,80], 'Androgynous', (sex==='m'?'Masculine':'Feminine'),
-            (sex==='m'?'expression-sensitive proxy · male masculinity preference is mixed':'expression-sensitive proxy · femininity reliably predicts attractiveness'));
+      const drivers = sexKnown
+        ? ('<div class="lc-bd-h">Strongest drivers &middot; Tier 1</div>'
+           + '<div class="lc-note-line">Averageness and sexual dimorphism are the most replicated predictors of attractiveness (Rhodes 2006). Shown here as <strong>reasoned proxies, not population-fitted</strong>: <em>proportional typicality</em> stands in for averageness (closeness to typical proportions, not distance from a mean face); a <em>dimorphic-cue index</em> stands in for sex-typicality.</div>'
+           + compRow('Proportional typicality', comp.averageness, [55,85], 'Distinctive', 'Very typical')
+           + compRow((sex==='m'?'Masculinity':'Femininity')+' &middot; dimorphic cues', comp.dimorphism, [45,80], 'Androgynous', (sex==='m'?'Masculine':'Feminine'),
+               (sex==='m'?'expression-sensitive proxy · male masculinity preference is mixed':'expression-sensitive proxy · femininity reliably predicts attractiveness')))
+        : ('<div class="lc-bd-h">Strongest drivers &middot; Tier 1</div>'
+           + '<div class="lc-note-line"><strong>Set sex to resolve these.</strong> Proportional typicality and the dimorphic-cue read are scored against sex-specific bands &mdash; pick male or female above and they&rsquo;ll appear.</div>');
 
       const grp = g => MEASURES.filter(m => m.group === g);
+      const showMeas = m => sexKnown || Array.isArray(m.band);   // undetermined → hide sex-conditional bands (jaw/lips/eyeOpen/noseWidth/leanness), keep sex-agnostic ones
       const featRows = '<div class="lc-bd-h">Sex-typical features &middot; Tier 2</div>'
-        + grp('feature').map(m => measureRow(resolve(m), LC.geo[m.key])).join('')
+        + (sexKnown ? '' : '<div class="lc-note-line">Sex-specific bands appear once you set sex above.</div>')
+        + grp('feature').filter(showMeas).map(m => measureRow(resolve(m), LC.geo[m.key])).join('')
         + (LC.soft ? pxRow('Skin clarity', LC.soft.skin) + pxRow('Skin-tone evenness', LC.soft.evenness) + pxRow('Under-eye', LC.soft.undereye)
             + '<div class="lc-note-line" style="margin:0.4rem 0 0">Skin &amp; adiposity is a genuine Tier-2 cue, but read from pixels it&rsquo;s lighting-dependent &mdash; a clean studio shot scores higher than a candid. Photo quality, not dermatology.</div>' : '');
       const propRows = '<div class="lc-bd-h">Proportions &middot; Tier 3</div>'
-        + grp('prop').map(m => measureRow(resolve(m), LC.geo[m.key])).join('');
+        + grp('prop').filter(showMeas).map(m => measureRow(resolve(m), LC.geo[m.key])).join('');
       const lensRows = '<div class="lc-bd-h">PSL lens &middot; weak attractiveness evidence</div>'
         + '<div class="lc-note-line">Popular in looksmaxxing, thin in the literature. fWHR tracks <em>dominance</em> (larger is, if anything, <em>less</em> attractive to women &mdash; Geniole 2015); canthal tilt&rsquo;s attractiveness link is essentially unstudied. Shown for completeness, not weight.</div>'
-        + grp('lens').map(m => measureRow(resolve(m), LC.geo[m.key])).join('');
+        + grp('lens').filter(showMeas).map(m => measureRow(resolve(m), LC.geo[m.key])).join('');
       const cantRows = '<div class="lc-bd-h">What this panel cannot measure</div>'
         + '<ul class="lc-cant">' + CANT_READ.map(t => '<li>'+t+'</li>').join('') + '</ul>';
 
@@ -502,6 +543,7 @@
         + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score, sex)+'</div>'
         + srcBadge
         + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Low-res read.</strong> '+LC.reliability.replace(/^ · small\/distant face /, '').replace(/^ · /, '')+'</div>' : '')
+        + (sexConflict ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:var(--scarlet)"><strong>Your sex pick and the photo disagree.</strong> You set the sex to <strong>'+(sexConflict.manual==='m'?'male':'female')+'</strong>, but the photo&rsquo;s face classifier reads <strong>'+(sexConflict.cls==='m'?'male':'female')+'</strong> ('+Math.round(sexConflict.conf*100)+'% confident). The panel below uses <strong>your selection</strong> &mdash; the headline score is the same either way. <strong><a href="#" class="lc-sexflip" data-sex="'+sexConflict.cls+'" style="color:var(--scarlet)">Use the '+(sexConflict.cls==='m'?'male':'female')+' read instead &rarr;</a></strong></div>' : '')
         + (LE_DEBUG && usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
         + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+').</div>'
         + '</div>'
@@ -512,6 +554,9 @@
 
       host.querySelectorAll('.lc-sex button').forEach(function(b){
         b.addEventListener('click', function(){ LC.sex = b.dataset.sex; LC.sexAuto = false; LC.sexManual = true; LC.sexSource = 'manual'; renderResult(); });
+      });
+      host.querySelectorAll('.lc-sexflip').forEach(function(a){
+        a.addEventListener('click', function(e){ e.preventDefault(); LC.sex = a.dataset.sex; LC.sexAuto = false; LC.sexManual = true; LC.sexSource = 'manual'; renderResult(); });
       });
 
       // persist this face score for the Face × Body composite (both lenses; the composite normalises them)
@@ -529,9 +574,19 @@
     window.lcAnalyze = function(geo, soft, reliability){
       LC.geo = geo; LC.soft = soft; LC.model = null; LC.measuredAt = Date.now();   // new face: heuristic shows first, model score arrives async
       LC.reliability = reliability || '';              // persistent low-res caveat (survives the async model re-render)
-      LC.sex = guessSex(geo); LC.sexAuto = true;       // geometry guess shows instantly; the sex model refines it async
-      LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false;
-      let note = 'Face measured. Sex auto-read: ' + (LC.sex==='m'?'male':'female') + ' — flip it in the panel if wrong.';
+      LC.sexClsSex = null; LC.sexClsConf = null;   // new photo → drop the previous photo's classifier read before this one's fires
+      // Manual sex (a panel flip) OUTRANKS the guess AND the classifier and SURVIVES a new photo — re-measure the
+      // face, don't silently re-sex the person. Only an auto guess is re-derived from this frame. (Body P2.)
+      if (LC.sexManual && (LC.sex === 'm' || LC.sex === 'f')){
+        LC.sexAuto = false; LC.sexSource = 'manual'; LC.sexConf = null;
+      } else {
+        LC.sex = guessSex(geo); LC.sexAuto = true;
+        LC.sexSource = LC.sex ? 'guess' : 'unknown'; LC.sexConf = null; LC.sexManual = false;   // null = deadzone (Item 2)
+      }
+      let note;
+      if (LC.sexSource === 'manual') note = 'Face measured. Sex kept as your pick: ' + (LC.sex==='m'?'male':'female') + '.';
+      else if (LC.sex) note = 'Face measured. Sex auto-read: ' + (LC.sex==='m'?'male':'female') + ' — flip it in the panel if wrong.';
+      else note = 'Face measured. Sex undetermined — set it in the panel below.';
       if (geo && geo.poseSkew > 0.12) note += ' · head looks turned — front-on gives a better read.';
       if (soft && soft.brightness < 45) note += ' · lighting looks off — results less reliable.';
       note += LC.reliability;
@@ -539,13 +594,16 @@
     };
     window.lcSetModelScore = function(t, raw){ LC.model = t; LC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.lcModelReady = function(ok){ LC.modelReady = ok; };
-    // the on-device sex classifier reports in — overrides the geometry guess unless the user picked manually
+    // the on-device classifier reports in — it OVERRIDES the geometry guess but NEVER a manual pick. The read is
+    // recorded either way (LC.sexClsSex/Conf), so a manual choice it contradicts still surfaces a conflict note.
     window.lcSetSex = function(sex, conf){
-      if (LC.sexManual) return;
-      LC.sex = (sex==='m'?'m':'f'); LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
+      const s = (sex==='m'?'m':'f');
+      LC.sexClsSex = s; LC.sexClsConf = (typeof conf==='number' && isFinite(conf)) ? conf : null;   // always log the classifier read
+      if (LC.sexManual){ renderResult(); return; }   // manual wins — but re-render so a conflict surfaces
+      LC.sex = s; LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
       renderResult();
     };
-    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
+    window.lcResetResult = function(){ LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.sexClsSex = null; LC.sexClsConf = null; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const LC_SHOT_KEY = 'loveEquations.faceShot.v1';
@@ -553,6 +611,7 @@
       if (!LC.geo || !LC.shotDataURL) return;          // only persist a real, analysed result
       const state = { profile:LC.profile, geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
         sex:LC.sex, sexAuto:LC.sexAuto, sexSource:LC.sexSource, sexConf:LC.sexConf, sexManual:LC.sexManual,
+        sexClsSex:LC.sexClsSex, sexClsConf:LC.sexClsConf,
         reliability:LC.reliability, measuredAt:LC.measuredAt };
       try { localStorage.setItem(LC_SHOT_KEY, JSON.stringify({ img:LC.shotDataURL, state, ts:LC.measuredAt })); }
       catch(e){ try { localStorage.removeItem(LC_SHOT_KEY); } catch(_){} }   // quota: drop the stale shot so a reload can't pair an old photo with a fresh score
@@ -569,6 +628,7 @@
       LC.model = fin(s.model, null); LC.modelRaw = fin(s.modelRaw, null);
       LC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; LC.sexAuto = !!s.sexAuto;
       LC.sexSource = s.sexSource || 'guess'; LC.sexConf = fin(s.sexConf, null);
+      LC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; LC.sexClsConf = fin(s.sexClsConf, null);
       LC.sexManual = !!s.sexManual; LC.reliability = s.reliability || '';
       document.querySelectorAll('.lc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===LC.profile); });
       renderResult();
@@ -577,11 +637,13 @@
     window.lcResetAll = function(){
       LC.geo = null; LC.soft = null; LC.model = null; LC.modelRaw = null; LC.reliability = '';
       LC.sex = null; LC.sexAuto = true; LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false; LC.shotDataURL = null;
+      LC.sexClsSex = null; LC.sexClsConf = null;
       lcClearShot(); if (window.lcClearCanvas) window.lcClearCanvas();
       setStatus('Cleared. Drop a face to start again.'); renderResult();
     };
     window.lcSetStatus = setStatus;
     window.lcState = LC;                 // live handle for the debug batch harness (LC is const, never reassigned)
+    window.lcSexConflict = lcSexConflict;
     window.lcComputeMetrics = computeMetrics;
     window.lcPreprocess = preprocessToTensor;
     window.lcPreprocessSex = preprocessSex;
@@ -759,6 +821,39 @@
                underEyeL:patchStats(img,W,H,underEyeL.x,underEyeL.y,r*0.7) };
     }
 
+    // genderage is confidently WRONG when the eyes are hidden (sunglasses remove its strongest cue → it reads a woman
+    // in shades as male at high confidence). Detect the only way a front photo can: the eye band reading much darker
+    // than that same face's cheeks → decline to trust the classifier. Ratio on the SAME face (tone-robust),
+    // conservative, manually overridable. Ported from body.html faceEyesOccluded, adapted to the FaceMesh eye/cheek
+    // landmarks via patchStats. Must run BEFORE the overlay is drawn (samples clean pixels).
+    function faceEyesOccluded(ctx, lm, W, H){
+      if (!lm[33]||!lm[133]||!lm[263]||!lm[362]||!lm[234]||!lm[454]||!lm[2]) return false;
+      const P = i => ({ x: lm[i].x*W, y: lm[i].y*H });
+      const lerp = (a,b,t) => ({ x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t });
+      const d = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+      const ecR = { x:(P(33).x+P(133).x)/2, y:(P(33).y+P(133).y)/2 };
+      const ecL = { x:(P(263).x+P(362).x)/2, y:(P(263).y+P(362).y)/2 };
+      const subn = P(2);
+      const cheekR = lerp(P(234), subn, 0.42), cheekL = lerp(P(454), subn, 0.42);
+      const eyeW = (d(P(33),P(133)) + d(P(263),P(362))) / 2;
+      // Patch radius = 1.5× a single eye's width (inner–outer corner). Body's pose-landmark sampleLum uses a wide
+      // patch scaled to inter-ocular distance; FaceMesh's precise 33/133·263/362 mid-point sits dead-centre on the
+      // (always-dark) pupil, so a tight patch reads an OPEN eye as "dark eye band" and false-flags occlusion. Widening
+      // to 1.5× eyeW folds in the sclera/lids/orbital skin so an open eye reads ≈ cheek — empirically 0.82–1.04 across
+      // 8 real clear-eyed faces (brad-pitt 0.87 · gal-gadot 0.84 · scarlett 0.90 · idris 0.94 · emma 0.85 · ben 0.82 ·
+      // zendaya 0.82 · devito 1.04), which restores body's "open eyes ~0.99" behaviour so the 0.70 threshold transfers.
+      const rad = Math.max(3, eyeW*1.5);
+      const img = ctx.getImageData(0,0,W,H).data;
+      const eyeLum = (patchStats(img,W,H,ecR.x,ecR.y,rad).L + patchStats(img,W,H,ecL.x,ecL.y,rad).L)/2;
+      const cheekLum = (patchStats(img,W,H,cheekR.x,cheekR.y,rad).L + patchStats(img,W,H,cheekL.x,cheekL.y,rad).L)/2;
+      const ratio = cheekLum>10 ? eyeLum/cheekLum : 1;
+      window.__lcEyeRatio = +ratio.toFixed(3);
+      // Threshold mirrors body's 0.70 (open eyes cluster ~0.82–1.04 here with ≥0.12 margin; dark sunglasses read far
+      // lower — a lens is wider than the eye, so a 1.5× patch is still lens-dominated). Reasoned/tunable; biased to
+      // catch (a false "undetermined → set sex" is honest; a false "confident wrong sex" is the bug).
+      return eyeLum>=0 && cheekLum>10 && ratio < 0.70;
+    }
+
     let lcBusy = false;
     function drawAndScore(srcEl, W, H){
       if (lcBusy) return;                       // guard against double-submit
@@ -802,9 +897,13 @@
         let tensorData = null;
         try { tensorData = cropFaceTensor(srcEl, lm, srcW, srcH); } catch(_){ tensorData = null; }
         pendingTensor = tensorData; pendingTensorGen = gen;
-        let sexData = null;
-        try { sexData = cropSexTensor(srcEl, lm, srcW, srcH); } catch(_){ sexData = null; }
-        pendingSexTensor = sexData; pendingSexGen = gen;
+        let sexData = null, eyesHidden = false;
+        try { eyesHidden = faceEyesOccluded(ctx, lm, W, H); } catch(_){ eyesHidden = false; }   // ctx = clean 520-canvas, pre-overlay
+        if (!eyesHidden){
+          try { sexData = cropSexTensor(srcEl, lm, srcW, srcH); } catch(_){ sexData = null; }
+        }
+        pendingSexTensor = eyesHidden ? null : sexData; pendingSexGen = gen;
+        window.__lcSexSkip = eyesHidden ? 'eyes-occluded' : '';   // instrumentation only
         // Non-blocking reliability note: how many REAL source pixels span the face (native, not the
         // 520-canvas measure). Below this the CNN crop is upscaled and softer — score still shown, just flagged.
         const nativeFaceW = fwFrac * srcW;
@@ -818,7 +917,7 @@
         // snapshot the analysed face (with overlay) so it survives a page switch — restored by lcRestoreShot
         try { window.lcSetShot(downscaleToDataURL(canvas, 768)); } catch(_){}
         window.lcAnalyze(geo, soft, relWarn);
-        if (sexData && sexSession) inferSex(sexData, gen);   // refine the geometry sex-guess with the classifier
+        if (sexData && sexSession && !eyesHidden) inferSex(sexData, gen);   // refine the geometry sex-guess with the classifier
         if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
         else if (tensorData && modelState === 'loading'){ window.lcSetStatus('Face measured — trained model still loading, the score will update automatically…'); }
       } catch(e){
@@ -834,7 +933,12 @@
     }
 
     const fileInput=document.getElementById('lc-file'), drop=document.getElementById('lc-drop');
+    drop.setAttribute('role', 'button');
+    drop.setAttribute('tabindex', '0');
     drop.addEventListener('click', () => fileInput.click());
+    drop.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); drop.click(); }
+    });
     ['dragover','dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor='var(--scarlet)'; }));
     ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor=''; }));
     drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
