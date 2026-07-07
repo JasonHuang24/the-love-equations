@@ -273,37 +273,64 @@
   margin: 0 0 1rem;
 }
 
-/* ── Stake bar ("Our stake"): one numbers-free row under the ruling head — the
-   percentages live on the claim stamps in the left column. Deliberately NOT
-   verdict-coloured — it is a share-of-the-truth readout, not a verdict — so the
-   segments step down through the ruling's scarlet family in claim order
-   (s0 first claim → faintest = the ruling's remainder on lone/mirror claims). ── */
-.mb-split {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin: -0.1rem 0 0.85rem;
-}
-.mb-split-head {
+/* ── Stake ledger ("Our stake"): one 0-anchored row per position — every claim
+   (scarlet) plus the ruling itself (gold) — on a shared 0–100 axis, percentage
+   printed on each row. Shares are absolute, so bar lengths compare directly:
+   the gold row vs the best claim shows how much the ruling adds, and the
+   ruling's empty tail is the standing refutation margin. Gold TEXT uses the
+   darkened #8a5f10 (same AA fix as .mb-tier.evidence); the bar fill can be the
+   brighter --gold since it is not text. ── */
+.mb-stake { margin: -0.1rem 0 0.9rem; }
+.mb-stake-head {
   font-size: 9.5px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-dim);
-  white-space: nowrap;
+  margin-bottom: 0.4rem;
 }
-.mb-split-bar {
-  flex: 1 1 auto;
-  display: flex;
-  gap: 2px;
-  height: 7px;
+.mb-stake-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) 38px;
+  gap: 0.55rem;
+  align-items: center;
+}
+.mb-stake-row + .mb-stake-row { margin-top: 0.3rem; }
+.mb-stake-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mb-stake-track {
+  display: block;
+  height: 8px;
   border-radius: 4px;
+  background: rgba(243, 230, 216, 0.55);
+  border: 0.5px solid var(--border);
   overflow: hidden;
 }
-.mb-split-seg { display: block; height: 100%; }
-.mb-split-seg.s0 { background: var(--scarlet); }
-.mb-split-seg.s1 { background: rgba(196, 30, 58, 0.32); }
-.mb-split-seg.s2 { background: rgba(196, 30, 58, 0.14); }
+.mb-stake-fill { display: block; height: 100%; border-radius: 4px; background: var(--scarlet); }
+.mb-stake-pct { font-size: 11px; font-weight: 800; color: var(--text); text-align: right; letter-spacing: 0.02em; }
+/* Party colors: sharp distinction per Jason. Claims 1+2 use the ORIGINAL split
+   bar's pair — full scarlet vs the pale washed scarlet — a dark/light contrast
+   that reads instantly; blue takes the odd third claim. p3/p4 held in reserve
+   for hypothetical wider dockets. The renderer emits p<index> for any claim
+   count, so adding a party is a one-line rule here. */
+.mb-stake-row.p1 .mb-stake-fill { background: rgba(196, 30, 58, 0.32); }
+.mb-stake-row.p2 .mb-stake-fill { background: #1f5fa8; }
+.mb-stake-row.p3 .mb-stake-fill { background: #3c3489; }   /* reserve: purple */
+.mb-stake-row.p4 .mb-stake-fill { background: #0f6e56; }   /* reserve: teal */
+/* The ruling row is ONE gold story: a true yellow-gold fill (deliberately NOT
+   the orange-leaning --gold #b7772f, and yellower than the amber verdict
+   chips) with its dark AA sibling for the text. */
+.mb-stake-row.is-ruling .mb-stake-label { color: #8a5f10; }
+.mb-stake-row.is-ruling .mb-stake-fill { background: #c99417; }
+.mb-stake-row.is-ruling .mb-stake-pct { color: #8a5f10; }
 
 /* Staked-% suffix inside a claim's verdict chip ("OVERSIMPLIFIED · 45%"). */
 .mb-verdict .mb-truth { font-weight: 800; opacity: 0.9; }

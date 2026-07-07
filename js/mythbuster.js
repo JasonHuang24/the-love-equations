@@ -27,15 +27,22 @@
  *     a few points; central-thrust failures sink the number. Mid-range values
  *     must be EARNED by genuinely split evidence — never produced by averaging
  *     a true core with a false extrapolation (that reads as a toss-up).
- *   - The ruling column derives a proportion bar from those truths (segments in
- *     claim order). On single/mirror entries the faint remainder is the
- *     COUNTER-POSITION'S share — the ruling's side of the question — so the
- *     bar reads naturally as claim vs ruling. The 25% floor tests EVERY
- *     staked claim: if any argument on the card stakes under 25%, ALL metrics
- *     are omitted — a rout is not a contest, and the silence says the losing
- *     claim doesn't meaningfully reflect reality; the ruling is the ground
- *     truth. Clean poles carry no numbers at all. Stakes are SYNTHESIZED
- *     judgment calls, not measurements — staked to be refuted and refined.
+ *   - The ruling stakes its own share too — `ruling.truth` (required whenever
+ *     the claims are staked; gate-enforced ≥ the best claim, since the ruling
+ *     subsumes what the claims got right and adds its correction). It NEVER
+ *     stakes 100: the empty tail is the margin held open for refutation,
+ *     informally capped by tier (hard-data ≲95, evidence ≲85).
+ *   - The ruling column renders the STAKE LEDGER: one 0-anchored row per
+ *     position — every claim (scarlet) plus the ruling itself (gold) — on a
+ *     shared 0–100 axis with the percentage printed on each row. All shares
+ *     are ABSOLUTE (nothing is normalized against anything else), so bar
+ *     lengths compare directly: the gold row vs the best claim shows exactly
+ *     how much the ruling adds. The 25% floor tests EVERY staked claim: if any
+ *     argument on the card stakes under 25%, ALL metrics are omitted — a rout
+ *     is not a contest, and the silence says the losing claim doesn't
+ *     meaningfully reflect reality; the ruling is the ground truth. Clean
+ *     poles carry no numbers at all. Stakes are SYNTHESIZED judgment calls,
+ *     not measurements — staked to be refuted and refined.
  *   - render() REFUSES an entry missing `ruling.tier`, with an empty
  *     `ruling.sources`, with a duplicate id, or otherwise structurally broken —
  *     it is skipped and a console.warn fires. No unsourced ruling reaches the DOM.
@@ -95,6 +102,7 @@
         badge: 'Advantage Mika',
         text: 'Men systematically over-read warmth as romantic interest \u2014 the sexual overperception bias \u2014 and service-industry friendliness is occupational, which inflates the false-positive rate further. The discriminating cue is the one Mika names: differential treatment and effort to extend the interaction, not baseline warmth.',
         tier: 'hard-data',
+        truth: 80,
         sources: [
           { label: 'Sexual overperception bias \u2014 emotion projection & desire study (2021, replicating the bias)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8416843/' },
           { label: 'Hall, Xing & Brooks (2014), Communication Research \u2014 flirting detection accuracy and base rates', url: 'https://journals.sagepub.com/doi/10.1177/0093650214534972' },
@@ -119,6 +127,7 @@
         badge: 'Both half right',
         text: 'Interested women do emit identifiable cues \u2014 the ones Mika lists are the documented ones \u2014 but detection is genuinely bad: in lab interactions, actual flirting was correctly recognized only about a third of the time, and observers did no better than participants. Signals exist and get missed at high rates. Each camp holds half the picture.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Hall, Xing & Brooks (2014), Communication Research \u2014 two-study flirting detection design', url: 'https://journals.sagepub.com/doi/10.1177/0093650214534972' },
           { label: 'University of Kansas summary \u2014 detection rates (38% when flirting occurred; women\u2019s flirting read more accurately)', url: 'https://news.ku.edu/2014/06/03/flirting-hard-detect-study-finds' },
@@ -142,6 +151,7 @@
         badge: 'Advantage Ani',
         text: 'The pursuit literature puts the damage where Ani puts it: across 241 people\'s dual pursuer/target accounts, targets\' negative reactions attached to persistence after explicit rejection \u2014 and pursuers, especially men, over-reported reciprocation signals and under-reported the no. No study shows a polite, once-and-done ask costing reputation. Mika\'s mechanism is real but narrower: identical advances get labeled harassment more often when the initiator is less attractive, and interested men do overperceive attraction \u2014 so "the vibe was good" is the unreliable part, not the graceful exit.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Sinclair & Frieze (2005), Sex Roles \u2014 unrequited attraction: negativity attaches to persistent pursuit after explicit rejection; pursuers over-report reciprocation signals', url: 'https://link.springer.com/article/10.1007/s11199-005-4203-4' },
           { label: 'Walker & Bonner (2022), Journal of Business and Psychology \u2014 identical romantic advances draw more harassment labeling when the initiator is relatively less attractive', url: 'https://link.springer.com/article/10.1007/s10869-020-09729-w' },
@@ -170,6 +180,7 @@
         badge: 'Opposite errors',
         text: 'Definitionally both miss, in opposite directions. Crush research treats a crush as an attraction-based, usually unilateral and uncommunicated longing that ranges from light to intense (O\'Sullivan et al. 2022, n=3,585). That sinks Ani\'s \u201cany positive thought counts\u201d \u2014 fondness, or a laughed-at joke with no attraction behind it, isn\'t a crush. But it also undercuts Mika\'s demand for nervous, emotionally invested pining: a crush can be mild. The real line is attraction at any intensity \u2014 not mere liking, and not full limerence (Tennov).',
         tier: 'definitional',
+        truth: 85,
         sources: [
           { label: 'O\'Sullivan, Belu & Garcia (2022), J. of Social and Personal Relationships \u2014 crush studies (n=3,585 adults) defining a crush as a typically unilateral, uncommunicated attraction, \u201ca state of unfulfilled longing\u201d', url: 'https://journals.sagepub.com/doi/10.1177/02654075211038612' },
           { label: 'Wyant (2021), J. of Patient Experience \u2014 limerence as obsessive attachment to a \u201climerent object\u201d (Tennov, Love and Limerence, 1979): the intense pole a crush need not reach', url: 'https://pubmed.ncbi.nlm.nih.gov/34869848/' },
@@ -194,6 +205,7 @@
         badge: 'Advantage Mika',
         text: 'Where couples actually form: friends, family, coworkers, school and \u2014 now the leading channel \u2014 online dating account for the bulk of matches; meeting cold in a public place is a small and shrinking share. Initiative matters within a context, but as a strategy, venue beats volume.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Rosenfeld, Thomas & Hausen (2019), PNAS 116(36):17753\u201317758 \u2014 Disintermediating your friends', url: 'https://doi.org/10.1073/pnas.1908630116' },
           { label: 'HCMST 2017-based analysis of meeting channels (friends vs. internet vs. other)', url: 'https://arxiv.org/pdf/2111.03825' },
@@ -215,6 +227,7 @@
         badge: 'It depends',
         text: 'On long-term outcomes the claim inverts: among 2,035 married individuals, later sexual timing predicted better communication, satisfaction, perceived stability, and sexual quality \u2014 controlling for religiosity, education, partner count, and relationship length. Decisiveness may help short-term attraction, but \u201cdeath sentence\u201d depends entirely on which finish line you\u2019re measuring.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Busby, Carroll & Willoughby (2010), J. of Family Psychology \u2014 Compatibility or restraint? Sexual timing and marriage outcomes', url: 'https://scholarsarchive.byu.edu/facpub/4349/' },
         ],
@@ -280,6 +293,7 @@
         badge: 'Oversimplified',
         text: 'Similarity \u2014 actual and perceived \u2014 strongly predicts attraction: r = .47 and .39 across 313 studies. One wrinkle: in established relationships it is perceived similarity that carries the effect, not measured similarity. Evidence for complementarity (\u201copposites\u201d) is weak and trait-specific.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Montoya, Horton & Kirchner (2008), J. of Social and Personal Relationships \u2014 meta-analysis, 313 studies', url: 'https://journals.sagepub.com/doi/10.1177/0265407508096700' },
         ],
@@ -321,6 +335,7 @@
         badge: 'Both wrong',
         text: 'In stated preferences the traditional gap is real and replicated: men rate looks as more important, women rate earning prospects higher. But in live speed-dating behavior the sex differences disappear \u2014 both sexes\u2019 actual romantic interest tracked partners\u2019 attractiveness about equally. The stated gap exists; the behavioral gap is a fraction of what either camp believes.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Eastwick & Finkel (2008), J. of Personality and Social Psychology \u2014 speed-dating, stated vs. revealed preferences', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
         ],
@@ -359,6 +374,7 @@
         badge: 'Right pattern, wrong lesson',
         text: 'The outcome asymmetry is real and repeatedly replicated: in Clark and Hatfield\'s field experiments, 69\u201375% of men accepted a stranger\'s "go to bed with me tonight," zero women did \u2014 yet roughly half of women in the same experiments accepted a date request. The lesson drawn is wrong, though. Women\'s refusals track perceived danger and low expected sexual pleasure, and in a subjectively safe lab setting the gender gap vanishes. The slow route wins because it delivers safety and information \u2014 not because the market punishes honesty.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Clark & Hatfield (1989), Journal of Psychology & Human Sexuality \u2014 original field experiments: 69\u201375% of men vs 0% of women accepted a stranger\'s bed offer; ~50% of both sexes accepted a date', url: 'https://www.sciencefriday.com/wp-content/uploads/2016/04/gender-differences-in-receptivity-to-sexual-offers.pdf' },
           { label: 'Conley (2011), Journal of Personality and Social Psychology \u2014 acceptance tracks perceived proposer characteristics (sexual skill/expected pleasure); gender gap disappears for familiar or famous proposers', url: 'https://pubmed.ncbi.nlm.nih.gov/21171789/' },
@@ -410,6 +426,7 @@
         badge: 'Half right',
         text: 'At first contact, partly yes: narcissists are more popular at first sight, and the charming traits are precisely the toxic ones \u2014 exploitativeness and entitlement (Back et al. 2010). But the reward is front-loaded: across three weeks of real contact the advantage decays as arrogance and untrustworthiness surface (Leckelt et al., n=311). The "rejecting the honest guys" half fails outright \u2014 women chose the nice guy for dates and serious relationships, with looks mattering mainly for casual sex. And no study shows the loudest complainers are the same women doing the rewarding.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Back, Schmukle & Egloff (2010), Journal of Personality and Social Psychology \u2014 narcissism predicts popularity at zero acquaintance, driven most by the exploitativeness/entitlement facet', url: 'https://pubmed.ncbi.nlm.nih.gov/20053038/' },
           { label: 'Leckelt, K\u00fcfner, Nestler & Back (2015), Journal of Personality and Social Psychology \u2014 longitudinal study (n=311) showing narcissists\' initial popularity declines over repeated group contact as arrogant-aggressive behavior and perceived untrustworthiness emerge', url: 'https://pubmed.ncbi.nlm.nih.gov/26191958/' },
@@ -434,6 +451,7 @@
         badge: 'True at first sight',
         text: 'At first contact, yes \u2014 confidence and smoothness win. Narcissists are rated more popular at zero acquaintance and earn higher short-term mate appeal in real courtship interactions, via social boldness rather than empathy. But the claim\'s "even knowing he\'s dishonest" clause fails: describing a target as honest raises attractiveness ratings (replicated at n=457), and narcissists\' popularity decays precisely as they come to be seen as untrustworthy. Charm wins because the dishonesty isn\'t visible yet \u2014 not because women knowingly discount it.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Back, Schmukle & Egloff (2010), Journal of Personality and Social Psychology \u2014 narcissists are more popular at zero acquaintance, and the most exploitative/entitled facets charm the most', url: 'https://pubmed.ncbi.nlm.nih.gov/20053038/' },
           { label: 'Dufner, Rauthmann, Czarna & Denissen (2013), Personality and Social Psychology Bulletin \u2014 narcissism boosts short-term mate appeal across three studies (including naturalistic courtship outcomes), mediated by social boldness and physical attractiveness', url: 'https://pubmed.ncbi.nlm.nih.gov/23554177/' },
@@ -462,6 +480,7 @@
         badge: 'Half right',
         text: 'Partly. In live speed dating, ideals stated beforehand failed to predict who actually inspired desire \u2014 the stated/revealed gap is real and replicated at first attraction. But "branding" overreaches: stated ideals prospectively predicted the traits of partners singles ended up with five months later (N=763), and across 43 countries, partners matching one\'s own ideals were rated better (corrected \u03b2=.19, N=10,358). "Honest" is near-universal boilerplate, so it carries little distinctive signal \u2014 but the gap reflects weak introspection, not image management, and stated ideals do predict selection.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Eastwick & Finkel (2008), Journal of Personality and Social Psychology \u2014 ideal preferences stated before a speed-dating event failed to predict actual romantic desire at the event', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
           { label: 'Gerlach, Arslan, Schultze, Reinhard & Penke (2019), Journal of Personality and Social Psychology \u2014 G\u00f6ttingen Mate Choice Study: N=763 singles tracked prospectively; stated ideals predicted the characteristics of later actual partners', url: 'https://pubmed.ncbi.nlm.nih.gov/28921999/' },
@@ -490,6 +509,7 @@
         badge: 'Real trend, shaky story',
         text: 'The checkout is measurable: only 50% of single U.S. men were looking for a relationship or dates in July 2022, down from 61% in 2019 (Pew, n=6,034); 63% of men under 30 are single; and past-year sexlessness among men 18\u201324 rose from 19% to 31% between 2000\u20132002 and 2016\u20132018 (GSS). But the why is embellished: singles\' top stated reasons are enjoying single life and other priorities, and the rise concentrates among unmarried men, and sexual inactivity is disproportionately found among low-income and part-time/unemployed men \u2014 not monk-mode self-improvers.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Pew Research Center (2023) \u2014 57% of singles not looking; single men looking fell 61%\u219250% (2019\u20132022); 63% of men under 30 single', url: 'https://www.pewresearch.org/short-reads/2023/02/08/for-valentines-day-5-facts-about-single-americans/' },
           { label: 'Ueda, Mercer, Ghaznavi & Herbenick (2020), JAMA Network Open \u2014 GSS 2000\u20132018: sexual inactivity among men 18\u201324 rose 18.9%\u219230.9%, concentrated among unmarried, lower-income, part-time/unemployed men', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7293001/' },
@@ -516,6 +536,7 @@
         badge: 'True at first sight',
         text: 'At first sight, yes \u2014 this paradox is a replicated finding. Narcissists were more popular at zero acquaintance (73-person round-robin, 2,628 dyads), the entitled, exploitative facet was the most attractive of all, and narcissism predicted real courtship success. But the decomposition matters: the pull runs through confidence, boldness, and appearance \u2014 when observers read a man as arrogant per se, desirability drops. And this evidence covers first impressions and short-term appeal, where the dick side hasn\'t had time to surface.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Back, Schmukle & Egloff (2010), Journal of Personality and Social Psychology \u2014 narcissists more popular at zero acquaintance; the exploitativeness/entitlement facet was the most attractive, mediated by appearance and verbal/nonverbal cues', url: 'https://pubmed.ncbi.nlm.nih.gov/20053038/' },
           { label: 'Dufner, Rauthmann, Czarna & Denissen (2013), Personality and Social Psychology Bulletin \u2014 narcissism raised short-term mate appeal across three studies including real-life courtship outcomes, mediated by physical attractiveness and social boldness', url: 'https://pubmed.ncbi.nlm.nih.gov/23554177/' },
@@ -543,6 +564,7 @@
         badge: 'Charm expires',
         text: 'Temporarily, yes \u2014 and not just on women. In a 73-person round-robin of first meetings (2,628 dyads), the most exploitative, entitled narcissism facets were exactly the most charming at first sight. But the spell decays: across three weeks of group contact, narcissists were increasingly read as untrustworthy and their popularity sank. The base-rate warning is real too \u2014 prior cheaters carried triple the odds of cheating again. Charm masks flags at first glance; it doesn\'t erase them, and it isn\'t female gullibility.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Back, Schmukle & Egloff (2010), Journal of Personality and Social Psychology \u2014 zero-acquaintance round-robin (N=73, 2,628 dyads): the narcissism facets most maladaptive long-term (exploitativeness/entitlement) were the most attractive at first sight, mediated by charming verbal/nonverbal behavior and appearance.', url: 'https://pubmed.ncbi.nlm.nih.gov/20053038/' },
           { label: 'Leckelt, K\u00fcfner, Nestler & Back (2015), Journal of Personality and Social Psychology \u2014 longitudinal groups (n=311, three weekly sessions): narcissists\' initial popularity declines as arrogant-aggressive behavior mounts and they are increasingly perceived as untrustworthy.', url: 'https://pubmed.ncbi.nlm.nih.gov/26191958/' },
@@ -570,6 +592,7 @@
         badge: 'Real but overstated',
         text: 'Mate-choice copying is real and asymmetric in the claim\'s favor: in Hill & Buss (N=847), women rated a man as more desirable when shown surrounded by women, while men rated a woman as less desirable when surrounded by men. But the 2018 Gouda-Vossos meta-analysis found the effect modest, highly heterogeneous, and inflated by moderate publication bias \u2014 reliable for women choosing men, weak-to-mixed for men. "One of the strongest forces" overstates it; the vouching-does-nothing claim is untested.',
         tier: 'hard-data',
+        truth: 80,
         sources: [
           { label: 'Hill & Buss (2008), Personality and Social Psychology Bulletin \u2014 women rated men more desirable when surrounded by women (desirability enhancement); men rated women less desirable when surrounded by men (Study 1, N=847).', url: 'https://pubmed.ncbi.nlm.nih.gov/18303129/' },
           { label: 'Gouda-Vossos, Nakagawa, Dixson & Brooks (2018), Adaptive Human Behavior and Physiology \u2014 meta-analysis: copying reliable for women choosing men, no clear effect for men, with high heterogeneity and moderate publication bias favoring positive reports.', url: 'https://research.monash.edu/en/publications/mate-choice-copying-in-humans-a-systematic-review-and-meta-analys' },
@@ -596,6 +619,7 @@
         badge: 'Slight lean, not reversal',
         text: 'The direction is real, the magnitude inflated. Endendijk et al.\'s meta-analysis (99 studies, 123,343 people) finds a traditional double standard \u2014 men\'s sexual activity is evaluated more positively than women\'s \u2014 but the effect is small (d\u22480.25) and shows up only when people rate male vs. female targets (largely implicit vignette-style evaluation studies), vanishing on explicit Likert-scale double-standard questionnaires. Crucially, a high count is no plus for men: Stewart-Williams et al. (2017) found willingness peaks at a modest history then falls sharply, with both sexes equally reluctant about an extensive record. A slight lean, not opposite verdicts.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Endendijk, van Baar & Dekovi\u0107 (2020), Personality and Social Psychology Review \u2014 meta-analysis of 99 studies (123,343 participants) finds a traditional sexual double standard (men\'s sexual activity evaluated more positively; d\u22480.25) in evaluation/expectation-difference studies, largely implicit vignette designs; null on explicit Likert-type SDS questionnaires, null on Likert questionnaires, moderated by country gender equality.', url: 'https://pubmed.ncbi.nlm.nih.gov/31880971/' },
           { label: 'Stewart-Williams, Butler & Thomas (2017), The Journal of Sex Research \u2014 willingness to partner rises with a modest sexual history then falls dramatically; both sexes expressed equal reluctance toward an overly extensive history (no strong double standard at the high end).', url: 'https://pubmed.ncbi.nlm.nih.gov/27805420/' },
@@ -622,6 +646,7 @@
         badge: 'Half true',
         text: 'Partly \u2014 the perceptual asymmetry is real. In vignette experiments, identical ambiguous behavior was judged less harassing when the man was attractive (Golden et al. 2001, N=150); a second N=591 study found attractive opposite-sex perpetrators were judged less harassing (LaRocca & Kromrey 1999). But "unwanted" is built into what harassment means: attention that varies in welcomeness by source is consent logic, not hypocrisy. And "happy, even" fails outright \u2014 objectification by women\'s own chosen partners predicts lower sexual satisfaction, weaker refusal ability, and more coercion (S\u00e1ez et al. 2019).',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Golden, Johnson & Lopez (2001), Sex Roles \u2014 vignette experiment (N=150, photo-manipulated attractiveness): identical ambiguous workplace behavior by attractive men was less likely to be judged harassing', url: 'https://link.springer.com/article/10.1023/A:1015688303023' },
           { label: 'LaRocca & Kromrey (1999), Sex Roles \u2014 N=591 students; an attractive opposite-sex perpetrator in an identical ambiguous scenario was perceived as less harassing than an attractive same-gender perpetrator', url: 'https://link.springer.com/article/10.1023/A:1018829222894' },
@@ -649,6 +674,7 @@
         badge: 'Half right',
         text: 'Half of it holds. Girls\' and women\'s celebrity crushes running emotional and narrative is documented: adolescent idols serve as safe practice targets for romantic love \u2014 talked over with peers, complete with excitement and jealousy of the idol\'s real and on-screen relationships (Karniol 2001). The "male desire stays bounded" half breaks: a systematic review finds sex differences in celebrity-worship intensity mixed and inconsistent, most studies find no sex difference at all, and where differences appear, men more often score higher on borderline-pathological worship and slightly likelier to endorse celebrity stalking (one study). The visible fan-edit culture skews female; the obsession that escapes containment tilts male.',
         tier: 'evidence',
+        truth: 70,
         sources: [
           { label: 'Karniol (2001), Sex Roles \u2014 adolescent girls\' idolization of male media stars as a safe \'practice\' target of romantic love before dating', url: 'https://link.springer.com/article/10.1023/A:1011037900554' },
           { label: 'Brooks (2018), Current Psychology \u2014 systematic review of celebrity-worship correlates: sex differences mixed; males higher on borderline-pathological worship in most studies; one study finds males slightly likelier to endorse celebrity stalking', url: 'https://link.springer.com/article/10.1007/s12144-018-9978-4' },
@@ -676,6 +702,7 @@
         badge: 'True at the gate',
         text: 'At the gate, confirmed: a field experiment planting curated profiles before nearly half a million Tinder users found male profiles matched on just 0.6% of their likes (female profiles: 10.5%), in the paper\'s companion survey 93% of women reported liking only profiles they\'re explicitly attracted to, and the same man\'s profile with three photos instead of one drew roughly seven-fold more matches. Initial desire tracks looks in both sexes, and stated ideals don\'t predict it. The overreach is "largely marketing": lengthen acquaintance and the gate measurably weakens \u2014 friends-first couples barely sort on attractiveness.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Tyson, Perta, Haddadi & Seto (2016), IEEE/ACM ASONAM \u2014 Tinder field experiment (~230k male + 250k female profiles): male match rate 0.6% vs female 10.5%; 93% of women like only profiles they\'re attracted to vs 0% casually liking most; same male profile with 1 vs 3 photos: 234 vs 1,568 matches', url: 'https://arxiv.org/abs/1607.01952' },
           { label: 'Eastwick & Finkel (2008), Journal of Personality and Social Psychology \u2014 speed-dating: stated ideal preferences failed to predict actual romantic desire, and physical attractiveness predicted initial interest with no sex differences', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
@@ -703,6 +730,7 @@
         badge: 'Loudest, not only',
         text: 'The height half is solid: women state it openly and strongly \u2014 48.9% of women\'s Yahoo dating ads demanded a taller man outright (versus 13.5% of men wanting shorter), and women\'s height minimums are more selective and more consistent than men\'s. The exclusivity half fails: "even income preferences get hidden" is wrong \u2014 women openly rated good financial prospects higher than men in all 45 countries of the largest cross-cultural replication of Buss\'s mate-preference battery. Height is the loudest openly-owned filter, not the only one.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Yancey & Emerson (2016), Journal of Family Issues \u2014 in Yahoo dating ads, 48.9% of women required a taller man vs 13.5% of men requiring shorter (Rice University summary)', url: 'https://news2.rice.edu/2014/02/10/is-height-important-in-matters-of-the-heart-new-study-says-yes/' },
           { label: 'Stulp, Buunk & Pollet (2013), Personality and Individual Differences \u2014 women are more selective and more consistent in height preferences; satisfaction peaks at a partner 21 cm taller (men: 8 cm)', url: 'https://research.rug.nl/en/publications/women-want-taller-men-more-than-men-want-shorter-women' },
@@ -730,6 +758,7 @@
         badge: 'Oversimplified',
         text: 'The real finding: policing of women\'s sexual reputation is done chiefly by other women. Baumeister & Twenge\'s 2002 review found the claim that men suppress female sexuality got "hardly any support" \u2014 women stifle each other\'s; Vaillancourt\'s work shows women aim indirect aggression at sexually-available peers. But female peers are the enforcers, not the ultimate audience: intrasexual competition is a contest to attract men, and OnlyFans itself runs on paying male demand. "Far more, almost every time" overreaches.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Vaillancourt (2013), Philosophical Transactions of the Royal Society B \u2014 women use indirect aggression to police sexually-available/attractive female peers, suppressing rivals\' sexuality (incl. the Vaillancourt & Sharma \'sexy peers\' experiment).', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3826209/' },
           { label: 'Baumeister & Twenge (2002), Review of General Psychology \u2014 a cross-domain review concluding female sexuality is suppressed chiefly by other women; the idea that men do the suppressing got \'hardly any support.\'', url: 'https://journals.sagepub.com/doi/10.1037/1089-2680.6.2.166' },
@@ -756,6 +785,7 @@
         badge: 'Everyone conforms',
         text: 'The kernel: classic meta-analytic work \u2014 Eagly & Carli\'s 148-study review \u2014 did report women as slightly more conforming, a small difference partly tied to masculine-biased test content. The modern record shrinks it further: a 2024 systematic review (48 articles covering 78 conformity studies) found only a minority detect any gender effect, and recent studies show no significant disparity; a 2023 Asch replication (n=202) found no sex difference while a third of judgments in the baseline condition bent to an obviously wrong majority. Conformity is human, not female; "hive mind versus independent men" is a caricature.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Capuano & Chekroun (2024), International Review of Social Psychology \u2014 systematic review of 78 conformity studies: only a minority find any gender effect (64 of 78 did not report gender), and recent studies show no significant male-female disparity in conformity', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12372704/' },
           { label: 'Franzen & Mader (2023), PLoS One \u2014 Asch replication with 202 Swiss students: 33% conformity to an obviously wrong majority overall, and no statistically significant gender difference (female trend only at the 10% level)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10686423/' },
@@ -783,6 +813,7 @@
         badge: 'Short-term only',
         text: 'At first sight, the kernel holds: 128 women rated a Dark Triad character as more attractive than a control with looks held constant, and a warm, responsive male stranger earned no attraction boost \u2014 that cue works on men, not on women. But at the choosing stage the claim collapses: women picked the nice guy over the jerk roughly eight to one, and niceness was the most salient factor for serious relationships. Excitement wins the first spark; safe wins the actual pick.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Carter, Campbell & Muncer (2014), Personality and Individual Differences \u2014 128 women rated a high Dark Triad male character as significantly more attractive than a control, with physicality held constant', url: 'https://ray.yorksj.ac.uk/id/eprint/1187/' },
           { label: 'Birnbaum, Ein-Dor, Reis & Segal (2014), Personality and Social Psychology Bulletin \u2014 responsiveness from a stranger raised men\'s attraction to women but gave women no attraction boost in initial acquaintanceships', url: 'https://pubmed.ncbi.nlm.nih.gov/25062930/' },
@@ -807,6 +838,7 @@
         badge: 'Real but overstated',
         text: 'The mechanism checks out: people high on Spielmann\'s Fear of Being Single Scale stay dependent in unsatisfying relationships and warm to less responsive, less attractive partners across seven studies. The sex direction has real support too \u2014 single men are likelier to want a partner (Pew: 61% looking vs 38% of single women) and less happy single (Hoan & MacDonald, ~6,000 singles). But "most guys are terrified" overshoots: 39% of single men \u2014 the complement of Pew\'s 61% \u2014 aren\'t looking at all, and fear-driven settling appears in both sexes.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Spielmann, MacDonald, Maxwell, Joel, Peragine, Muise & Impett (2013), Journal of Personality and Social Psychology \u2014 fear of being single predicts settling for less: staying in unsatisfying relationships, romantic interest in less responsive/less attractive partners, and lower speed-dating selectivity (7 studies)', url: 'https://pubmed.ncbi.nlm.nih.gov/24128187/' },
           { label: 'Pew Research Center (2020), A Profile of Single Americans \u2014 61% of single men vs 38% of single women say they are looking for a relationship or dates; half of all singles are not looking', url: 'https://www.pewresearch.org/social-trends/2020/08/20/a-profile-of-single-americans/' },
@@ -831,6 +863,7 @@
         badge: 'Real, but capped',
         text: 'The stigma is real: across three studies of nearly 5,900 adults, sexually inexperienced people were rated less desirable partners \u2014 even by other inexperienced adults \u2014 and desirability rises from zero past partners to a modest few. But the claim overshoots on the fix: heavy histories get punished harder, with willingness to consider a long-term partner dropping sharply as counts climb (d = 0.87 from 4 to 12 partners, replicated across 11 countries). A bit of a past beats a blank slate; a pile of toxic exes beats neither.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Gesselman, Webster & Garcia (2017), Journal of Sex Research \u2014 three studies (~5,900 adults): sexually inexperienced adults are stigmatized and rated less desirable relationship partners, even by other inexperienced adults', url: 'https://pubmed.ncbi.nlm.nih.gov/26983793/' },
           { label: 'Stewart-Williams, Butler & Thomas (2017), Journal of Sex Research \u2014 willingness to get involved rises from zero to a modest number of past partners, then falls dramatically as the history grows (N=188)', url: 'https://pubmed.ncbi.nlm.nih.gov/27805420/' },
@@ -858,6 +891,7 @@
         badge: 'Skew, not lock-out',
         text: 'The attention skew is real: male Tinder test profiles converted just 0.6% of likes into matches versus 10.5% for female profiles, and messaging follows a long tail \u2014 one New York woman drew 1,504 messages in a month. But "locked out" fails arithmetic: 61% of U.S. men aged 25\u201354 were married or cohabiting in 2019, and Bruch & Newman found daters at every desirability level still send messages and get replies \u2014 typically aiming 25% above their own league. Unequal attention, yes; Pareto exile, no.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Tyson, Perta, Haddadi & Seto (2016), arXiv:1607.01952 \u2014 Tinder field experiment: male test profiles matched on 0.6% of likes vs 10.5% for female profiles; 59% of women like \u226410% of profiles they see', url: 'https://arxiv.org/abs/1607.01952' },
           { label: 'Bruch & Newman (2018), Science Advances \u2014 online-dating desirability study in four U.S. cities: long-tailed message concentration (top NYC woman got 1,504 messages/month), yet users at all desirability levels message ~25% above their league and reply rates to more-desirable partners top out at ~21%', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6082652/' },
@@ -882,6 +916,7 @@
         badge: 'Online, not apps',
         text: 'Online is the single biggest channel for newly formed couples \u2014 Rosenfeld\'s nationally representative HCMST data put it at 39% of heterosexual couples who met in 2017, having overtaken meeting through friends around 2013. But "online" bundles apps, sites, and social media, and 39% isn\'t "most." Across all existing couples, Pew (2023 report; survey July 2022, n=6,034) finds just 10% met their partner on a dating site or app \u2014 20% among adults under 30. Biggest single channel: yes. Where most couples meet: no.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Rosenfeld, Thomas & Hausen (2019), PNAS \u2014 39% of heterosexual couples who met in 2017 met online; online eclipsed friends ~2013; apps are a subset of "online"', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6731751/' },
           { label: 'Rosenfeld, Thomas & Hausen (2019), PNAS 116(36) \u2014 PubMed record confirming venue, DOI 10.1073/pnas.1908630116, and the "most popular way couples meet, eclipsing friends around 2013" abstract claim', url: 'https://pubmed.ncbi.nlm.nih.gov/31431531/' },
@@ -906,6 +941,7 @@
         badge: 'Common, not dominant',
         text: 'No. Situationships are genuinely widespread \u2014 a 2024 YouGov poll finds half of 18\u201334-year-olds have ever been in one, and a 2026 college-sample study classified 34% of relationship experiences as situationships \u2014 but committed relationships still outnumbered them in the one sample that measured the mix (65.9% vs 34.1% in the college study). The claim\'s gendered engine also runs backwards: in Pew\'s representative sample, women daters are the ones likelier to want commitment-only (36% vs 22% of men). Common, rising, and worth naming; dominant, no.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Langlais & Davidson (2026), Sexuality & Culture \u2014 34.1% of 468 college relationship experiences were situationships (defined as unlabeled, low-commitment but romantically behaving ties); situationships predicted lower trust than non-situationship (primarily committed) relationships', url: 'https://link.springer.com/article/10.1007/s12119-026-10592-9' },
           { label: 'Pew Research Center (2020), A Profile of Single Americans \u2014 among singles looking to date, 28% want committed-only, 20% casual-only, 53% either; women likelier than men to seek commitment-only (36% vs 22%)', url: 'https://www.pewresearch.org/social-trends/2020/08/20/a-profile-of-single-americans/' },
@@ -933,6 +969,7 @@
         badge: 'Both overshoot',
         text: 'Both poles overshoot. In real speed-dating studies (Asendorpf, Penke & Back 2011, n=382 followed a year; Eastwick & Finkel 2008), physical attractiveness is the single most powerful predictor of being chosen \u2014 so the bluepill\'s "almost anyone can compete on game alone" is too rosy. But for men, women additionally weighted sociosexuality, low shyness, openness, education and income \u2014 controllable factors \u2014 so the blackpill\'s "it\'s not about game at all, the fixed face decides" overshoots too. Looks lead; they don\'t lock the gate.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Asendorpf, Penke & Back (2011), European Journal of Personality \u2014 n=382 community speed-dating sample followed a year; both sexes chose mainly on physical attractiveness, and women additionally weighted men\'s sociosexuality, openness, low shyness, education and income.', url: 'https://www.larspenke.eu/pdfs/Asendorpf_Penke_Back_2011_-_Speed_dating_mating_relating.pdf' },
           { label: 'Eastwick & Finkel (2008), Journal of Personality and Social Psychology \u2014 physical attractiveness predicted romantic interest similarly for both sexes in live speed dating, and pre-stated ideal preferences failed to predict actual desire at the event.', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
@@ -1006,6 +1043,7 @@
         badge: 'Mostly holds up',
         text: 'In live interactions, physical attractiveness predicts romantic interest at r \u2248 .40 for both sexes \u2014 the sex difference is .03 and nonsignificant across a 97-study meta-analysis \u2014 and in a speed-dating study it was the single strongest predictor for men and women alike. The stated-preference gap is real, but behavioral parity wins: both sexes run the filter. Two trims: attractiveness is the dominant weight, not a literal pass-first gate; and "honesty" is the wrong word \u2014 stated ideals fail to predict live desire for either sex, so it\'s poor self-insight, not packaging.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Eastwick, Luchies, Finkel & Hunt (2014), Psychological Bulletin \u2014 97-study meta-analysis: physical attractiveness predicts romantic evaluations at r \u2248 .40 for both sexes; sex difference r = .03, uniformly nonsignificant', url: 'https://pubmed.ncbi.nlm.nih.gov/23586697/' },
           { label: 'Eastwick & Finkel (2008), Journal of Personality and Social Psychology \u2014 stated ideals show the classic sex gap, but at a live speed-dating event there were no sex differences in how partners\' attractiveness drove romantic interest, and pre-event ideals failed to predict in-event desire', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
@@ -1057,6 +1095,7 @@
         badge: 'Real but lopsided',
         text: 'Both currencies are documented. Across 45 countries (N=14,399), women rate financial prospects higher and men rate looks and youth higher in stated preferences \u2014 and a 1990 personal-ads study was literally titled "men as success objects and women as sex objects." But the mirror is lopsided: in live speed-dating, both sexes\' actual desire tracked looks about equally, and earning prospects only weakly \u2014 for both alike. The body screen operates in real-time behavior for everyone; the wallet screen\'s sex skew lives in stated standards and long-term provider expectations, not instant verdicts.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Walter, Conroy-Beam, Buss et al. (2020), Psychological Science \u2014 45-country replication (N=14,399): women rate financial prospects in a mate higher than men do, men rate physical attractiveness and youth higher', url: 'https://labs.la.utexas.edu/buss/files/2020/03/Sex-Differences-in-Mate-Preferences-Across-45-Nations-2020.pdf' },
           { label: 'Davis (1990), Sex Roles \u2014 328 newspaper personal ads: men emphasized seeking physical characteristics, women emphasized employment, financial and intellectual status (\'men as success objects, women as sex objects\')', url: 'https://link.springer.com/article/10.1007/BF00289878' },
@@ -1082,6 +1121,7 @@
         badge: 'Lens, not law',
         text: 'Only loosely. Indirect, face-saving rejection is common for both sexes, and the documented driver is safety, not rejector sex. Women report roughly twice men\'s worry about the repercussions of saying no \u2014 being hit, followed, touched (n=465) \u2014 and salient safety concerns push rejectors toward ghosting. But in a 414-person registered report, male and female rejectors responded alike (no significant gender interaction), and meta-analytic sex differences in assertive speech are negligible (d=.09). The "men reject brutally" half has no direct evidence. A lens, not a law.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Freedman, Hales, Powell, Le & Williams (2022), Journal of Experimental Social Psychology \u2014 registered report: safety concerns raise ghosting (indirect-rejection) intentions; pilot leaned toward more ghosting of male targets, but the main study (analytic n=414 of 526 targeted) found no significant rejector-gender differences', url: 'https://gilifreedman.com/GenderSafetyGhosting.pdf' },
           { label: 'Moran & Burch (2023), International Journal of Sexual Health \u2014 n=465; women\'s worry about repercussions of rejecting an advance was double men\'s (36.8 vs 18.1), with far higher fear of being hit, followed, or touched, and more avoidance/safety-focused rejection strategies', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10830141/' },
@@ -1106,6 +1146,7 @@
         badge: 'Half-true',
         text: 'Half of this line is bankable: in Buss\'s 37-culture data (N=10,047) and the 45-country 2020 replication (N=14,399), women rate a partner\'s financial prospects higher than men do (both datasets), and ambition too (Buss 1989) \u2014 trajectory genuinely counts on paper. The other half isn\'t: in live speed-dating, stated preferences for earning prospects failed to predict whom people actually desired. Visible momentum gets credited; unrealized potential mostly doesn\'t. "Dating for potential" describes questionnaires better than choices \u2014 a demonstrated trajectory beats a promised one.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Buss (1989), Behavioral and Brain Sciences \u2014 37 cultures, N=10,047: women value earning capacity and ambition\u2013industriousness in mates more than men do', url: 'https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/sex-differences-in-human-mate-preferences-evolutionary-hypotheses-tested-in-37-cultures/0E112ACEB2E7BC877805E3AC11ABC889' },
           { label: 'Walter, Conroy-Beam, Buss et al. (2020), Psychological Science \u2014 45-country replication (N=14,399): women, more than men, prefer mates with good financial prospects', url: 'https://pubmed.ncbi.nlm.nih.gov/32196435/' },
@@ -1155,6 +1196,7 @@
         badge: 'Apps, not college',
         text: 'In the nationally representative HCMST surveys, "met in college" was never a big chunk \u2014 about 9% of heterosexual couples at its 1995 peak, 4% by 2017. Among 19,131 Americans married 2005\u20132012, all school combined was 11% of the couples who met offline \u2014 roughly 7% of all marriages. The claim\'s core survives: most spouses met through repeated-contact channels \u2014 friends (33% in 1995, 20% by 2017), work, school, bars \u2014 not elaborate game. But the biggest channel is now deliberate search, not luck: meeting online reached ~39% of couples by 2017, and over a third of recent marriages began online.',
         tier: 'hard-data',
+        truth: 90,
         sources: [
           { label: 'Rosenfeld, Thomas & Hausen (2019), PNAS \u2014 HCMST 2009+2017 (N=5,421 heterosexual couples): met in college 9%\u21924% (1995\u20132017); online 2%\u219239%, overtaking friends (33%\u219220%) around 2013', url: 'https://pubmed.ncbi.nlm.nih.gov/31431531/' },
           { label: 'Rosenfeld, Thomas & Hausen (2019) author manuscript, Stanford \u2014 full text carrying Table 1\'s venue percentages, incl. the college 9%\u21924% figures', url: 'https://web.stanford.edu/~mrosenfe/Rosenfeld_et_al_Disintermediating_Friends.pdf' },
@@ -1217,6 +1259,7 @@
         badge: 'Half the ledger',
         text: 'The overt burden is real: in Kreager et al.\'s six-month dating-site dataset, women were four times less likely to send a first message \u2014 the visible asking falls on men. But \'she can largely just sit back\' fails direct observation: Moore\'s naturalistic courtship research, confirmed in Wade\'s 2018 review, found women\'s nonverbal solicitation signals reliably preceded a male approach within 15 seconds. Her early-stage work is covert signaling and filtering \u2014 invisible, not absent. Real asymmetry in visible effort; \'wildly one-sided\' overdraws the ledger.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Kreager, Cavanagh, Yen & Yu (2014), Journal of Marriage and Family \u2014 online dating data: women 4x less likely to initiate messages than men', url: 'https://pubmed.ncbi.nlm.nih.gov/24910472/' },
           { label: 'Wade (2018), Perspectives on Behavior Science \u2014 review confirming Moore\'s (1985) naturalistic finding: female nonverbal courtship signals were followed by a male approach within 15 seconds', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6701824/' },
@@ -1244,6 +1287,7 @@
         badge: 'True of everyone',
         text: 'Attraction genuinely bypasses the deliberating brain \u2014 in everyone. Stated ideals fail to predict who actually sparks desire in live speed dating (Eastwick & Finkel, 2008), and across a 97-study meta-analysis looks predict romantic evaluations at r\u2248.40 for both sexes, with sex differences nonsignificant. The cleanest override evidence is on men: Ariely & Loewenstein\'s aroused male subjects endorsed acts their cool-state selves rejected, and couldn\'t predict the shift. The mechanism is human wiring; casting it as a female defect is the part that fails.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Eastwick & Finkel (2008), Journal of Personality and Social Psychology \u2014 speed dating: ideal preferences failed to predict actual romantic desire; no sex differences in what predicted live attraction', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
           { label: 'Eastwick, Luchies, Finkel & Hunt (2014), Psychological Bulletin \u2014 meta-analysis (k=97): physical attractiveness predicts romantic evaluations r\u2248.40 for both sexes; sex differences \u2248.03, uniformly nonsignificant', url: 'https://pubmed.ncbi.nlm.nih.gov/23586697/' },
@@ -1268,6 +1312,7 @@
         badge: 'Bad advice, unproven motive',
         text: 'The advice itself really is unreliable: \'looks don\'t matter\' fails the revealed-preference test \u2014 attractiveness predicts romantic desire at r\u2248.40 for both sexes across 97 studies, and stated ideals don\'t predict whom people actually want. Social pressure also measurably bends self-reports in this domain: under a bogus lie detector, sex differences in reported sexuality collapsed. But \'designed to protect her image\' asserts a motive no study tests \u2014 men\'s stated ideals fail identically, so honest introspective blindness explains the same data without any performance.',
         tier: 'evidence',
+        truth: 70,
         sources: [
           { label: 'Eastwick, Luchies, Finkel & Hunt (2014), Psychological Bulletin \u2014 meta-analysis (k=97): attractiveness predicts romantic evaluations r\u2248.40 for both sexes, contradicting \'looks don\'t matter\' as behavioral description', url: 'https://pubmed.ncbi.nlm.nih.gov/23586697/' },
           { label: 'Eastwick & Finkel (2008), Journal of Personality and Social Psychology \u2014 stated ideal preferences failed to predict actual desire for both sexes, showing poor introspective access rather than sex-specific deception', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
@@ -1314,6 +1359,7 @@
         badge: 'Wrong two wildcards',
         text: 'Trade-off studies miscast the two \'wildcards.\' In Li et al.\'s (2002) budget paradigm, kindness and intelligence were necessities for both sexes \u2014 women prioritized status/resources and men looks alongside those basics, not instead of them. And in live attraction, the Eastwick et al. (2014) meta (k=97) puts physical attractiveness at r\u2248.40 but earning prospects at only r\u2248.10 for both sexes. Exceptional looks genuinely are a wildcard; wealth is a screening threshold, not an override; and the kind, smart honest guy holds necessity cards this claim zeroes out.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Li, Bailey, Kenrick & Linsenmeier (2002), Journal of Personality and Social Psychology \u2014 budget studies: kindness and intelligence are necessities for both sexes; status/resources (women) and looks (men) are prioritized at low budgets', url: 'https://pubmed.ncbi.nlm.nih.gov/12051582/' },
           { label: 'Eastwick, Luchies, Finkel & Hunt (2014), Psychological Bulletin \u2014 meta-analysis (k=97): physical attractiveness predicts romantic evaluations at r\u2248.40, earning prospects only r\u2248.10, both sexes, nonsignificant sex differences', url: 'https://pubmed.ncbi.nlm.nih.gov/23586697/' },
@@ -1342,6 +1388,7 @@
         badge: 'Gap real, motive unproven',
         text: 'The gap is real; the mind-reading isn\'t. Women\'s stated weighting of looks undershoots behavior: across 97 studies attractiveness predicts romantic interest at r\u2248.40 for both sexes, and stated ideals fail to predict live desire (Eastwick & Finkel 2008; Eastwick et al. 2014). People also bend rejections to spare feelings \u2014 singles accepted unattractive \'real\' dates far more often than hypothetical ones (Joel et al. 2014). But no study catches the manufactured excuse itself, and ideals mispredict even in private: often she genuinely doesn\'t know, not knows-and-won\'t-say.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Eastwick & Finkel (2008), Journal of Personality and Social Psychology \u2014 speed-dating: stated sex-differentiated ideals about looks vanish in live choices and fail to predict actual desire', url: 'https://pubmed.ncbi.nlm.nih.gov/18211175/' },
           { label: 'Eastwick, Luchies, Finkel & Hunt (2014), Psychological Bulletin \u2014 meta-analysis (k=97): attractiveness predicts romantic evaluations at r\u2248.40 for both sexes despite differing stated importance', url: 'https://pubmed.ncbi.nlm.nih.gov/23586697/' },
@@ -1389,6 +1436,7 @@
         badge: 'Looks keep working',
         text: 'The looks half holds: Tyson et al.\'s Tinder field study measured a 0.6% match rate for male profiles versus 10.5% for female. The \'game\' half wobbles: most matches die in silence \u2014 only 21% of men and 7% of women send any message after matching, and the median male opener is 12 characters \u2014 while Bruch & Newman found longer, harder-working messages barely lift reply rates, and replies track relative desirability instead. Looks don\'t stop working at the match; the claim retires them too early.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Tyson, Perta, Haddadi & Seto (2016), arXiv preprint (Tinder field experiment) \u2014 0.6% vs 10.5% match rates; only 21%/7% of matched men/women ever message; 12- vs 122-character median openers', url: 'https://arxiv.org/abs/1607.01952' },
           { label: 'Bruch & Newman (2018), Science Advances \u2014 reply probability falls steeply with desirability gap (reply rate to more-desirable women never exceeds 21%); longer/more effortful messages yield little or no reply gain; users aim ~25% up', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6082652/' },
@@ -1412,6 +1460,7 @@
         badge: 'Overreads the signal',
         text: 'Behavior can leak interest, but this card licenses the classic misread. Attraction inside cross-sex friendships is common yet asymmetric: Bleske-Rechek et al. (2012) found young men report substantially more attraction to their female friends than women report toward male friends, and both sexes name it a cost more often than a benefit. Men also systematically over-perceive women\'s friendliness as sexual interest (Haselton & Buss, 2000). No study validates initiation frequency as an interest gauge \u2014 \'she texts first, so she feels something\' is the overperception this literature warns against.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Bleske-Rechek, Somers, Micke, Erickson, Matteson, Stocco, Schumacher & Ritchie (2012), Journal of Social and Personal Relationships \u2014 men report more attraction to cross-sex friends than women do; attraction nominated as a cost more often than a benefit', url: 'https://journals.sagepub.com/doi/abs/10.1177/0265407512443611' },
           { label: 'Haselton & Buss (2000), Journal of Personality and Social Psychology \u2014 error management theory; men systematically overperceive women\'s sexual intent', url: 'https://pubmed.ncbi.nlm.nih.gov/10653507/' },
@@ -1459,6 +1508,7 @@
         badge: 'Runs both ways',
         text: 'The double standard is real; the one-way framing isn\'t. In Li et al.\'s (2002) budget studies nobody buys \'as-is\' acceptance: with tight budgets women spend first on status and resources, men on physical attractiveness; kindness and intelligence are necessities for both \u2014 necessary, not sufficient, the kind-but-awkward man\'s exact problem. And looks predict live romantic interest at r\u2248.40 for both sexes (Eastwick et al., 2014, k=97). \'Like me for me\' coexists with a demands list in both directions; only \'rarely runs the other way\' overreaches.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Li, Bailey, Kenrick & Linsenmeier (2002), Journal of Personality and Social Psychology \u2014 budget paradigm: physical attractiveness a necessity for men, status/resources for women, kindness and intelligence necessities for both sexes', url: 'https://pubmed.ncbi.nlm.nih.gov/12051582/' },
           { label: 'Eastwick, Luchies, Finkel & Hunt (2014), Psychological Bulletin \u2014 meta-analysis (k=97): attractiveness predicts romantic evaluations at r\u2248.40 for both sexes; sex differences tiny and nonsignificant', url: 'https://pubmed.ncbi.nlm.nih.gov/23586697/' },
@@ -1486,6 +1536,7 @@
         badge: 'Real effect, oversold',
         text: 'The mechanism is real. In controlled experiments (Kavanagh, Robins & Ellis, 2010), being accepted by attractive opposite-sex others raised participants\' mating aspirations, mediated by a lift in state self-esteem \u2014 so incoming attention genuinely inflates self-assessed value and pushes standards up. In real markets both sexes already message partners about 25% more desirable than themselves (Bruch & Newman, 2018). The female lens\'s caveat \u2014 low-effort attention isn\'t genuine demand \u2014 is apt. The male lens\'s \'average, not special\' contempt is editorial, not measured.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Kavanagh, Robins & Ellis (2010), J. Personality & Social Psychology \u2014 experimental acceptance by attractive opposite-sex confederates raised mating aspirations, mediated by state self-esteem', url: 'https://pubmed.ncbi.nlm.nih.gov/20565190/' },
           { label: 'Bruch & Newman (2018), Science Advances \u2014 both sexes pursue partners ~25% more desirable than themselves', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6082652/' },
@@ -1513,6 +1564,7 @@
         badge: 'Selective, not low',
         text: 'Attraction really does bend the ruler. Meta-analytically, physically attractive people are judged and treated more positively across domains (Langlois et al., 2000), and attractiveness predicts live romantic desire at r\u2248.40 for both sexes (Eastwick et al., 2014) \u2014 so tolerance is conditioned on attraction, not uniformly low. \'Selective, not low\' is the correct reframe. Two caveats drop the male lens to oversimplified: this halo is human-universal, not a female trait, and the effects are real but modest \u2014 \'overlook massive red flags\' overstates the magnitude.',
         tier: 'hard-data',
+        truth: 85,
         sources: [
           { label: 'Langlois, Kalakanis, Rubenstein, Larson, Hallam & Smoot (2000), Psychological Bulletin \u2014 meta-analysis: attractive people are judged and treated more positively, with cross-cultural rater agreement', url: 'https://pubmed.ncbi.nlm.nih.gov/10825783/' },
           { label: 'Eastwick, Luchies, Finkel & Hunt (2014), Psychological Bulletin \u2014 attractiveness predicts romantic evaluation at r\u2248.40, near-identical across sexes', url: 'https://pubmed.ncbi.nlm.nih.gov/23586697/' },
@@ -1540,6 +1592,7 @@
         badge: 'Gap real, blindness unproven',
         text: 'The asymmetry is real. In a Tinder field experiment women accumulated matches rapidly while men accrued them slowly (Tyson et al., 2016); in a full dating market men overwhelmingly message up, where replies from more-desirable women never top 21% and men hear back twice as often from less-desirable ones (Bruch & Newman, 2018). So women do receive more attention and average men face steep odds. But the \'women can\'t perceive it\' half is asserted, not measured \u2014 a plausible egocentric bias, not a proven one.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Tyson, Perta, Haddadi & Seto (2016), ASONAM/arXiv \u2014 Tinder curated-profile experiment: women accumulate matches rapidly, men slowly', url: 'https://arxiv.org/abs/1607.01952' },
           { label: 'Bruch & Newman (2018), Science Advances \u2014 men overwhelmingly message more-desirable women; reply rate up-hierarchy never exceeds 21%', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6082652/' },
@@ -1563,6 +1616,7 @@
         badge: 'Partly real, partly unproven',
         text: 'Partly grounded, partly not. Women do prefer slightly older partners within a narrower age band (Antfolk, 2017), and romantically/sexually inexperienced adults are stigmatized and less desired (Gesselman et al., 2017) \u2014 so \'they screen for an established, experienced man\' holds. But the \'window narrows by your mid-30s\' framing runs against evidence that men\'s online desirability actually rises with age, peaking near 50 (Bruch & Newman, 2018). The specific 28\u201338 target and the \'sitting out compounds\' claim are untested assertions.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Antfolk (2017), Evolutionary Psychology \u2014 women prefer slightly older partners in a narrower band; men prefer women in their 20s and widen with age', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10367477/' },
           { label: 'Bruch & Newman (2018), Science Advances \u2014 male desirability rises with age, peaking near 50 (counter-evidence to a narrowing 30s window)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6082652/' },
@@ -1611,6 +1665,7 @@
         badge: 'Real but overstated',
         text: 'The sex-typed split is half-real. Schmitt\'s 48-nation study (N=14,059) confirms men score reliably higher on unrestricted sociosexuality \u2014 the \'variety\' motive is well-founded and cross-culturally robust. Apostolou et al. (2020) likewise found men more often single to \'flirt around\' or avoid family life. But the tidy \'women hoard a backup\' half wobbles: Dibble & Drouin (2014) found men, not women, report more \'back burners,\' and women\'s own top single-reasons were pickiness and fear of getting hurt. Overlapping motives, not clean opposites.',
         tier: 'evidence',
+        truth: 75,
         sources: [
           { label: 'Schmitt (2005), Behavioral and Brain Sciences \u2014 48 nations, N=14,059; men\'s higher unrestricted sociosexuality is large and cross-culturally universal.', url: 'https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/sociosexuality-from-argentina-to-zimbabwe-a-48nation-study-of-sex-culture-and-strategies-of-human-mating/E6442571B8E524AE8CAF7613BD4CECC8' },
           { label: 'Apostolou, O & Esposito (2020), Frontiers in Psychology \u2014 N=648 singles; men more often single to \'flirt around\'/avoid family life, women more often \'too picky\'/fearing hurt.', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7218110/' },
@@ -1635,6 +1690,7 @@
         badge: 'Rare yes, ignored no',
         text: 'Rarity and weight check out; the \'men ignore it\' half is shakier. Kreager et al. (2014) found women send first messages four times less often than men \u2014 and those who do initiate connect with more desirable partners, so an explicit move is both rare and a costly, informative signal. But \'men routinely wave these off\' cuts against Haselton & Buss (2000): men tend to OVERperceive women\'s sexual interest, not under-read it. Treat an explicit move as strong; the dismissal claim is the weak link.',
         tier: 'evidence',
+        truth: 80,
         sources: [
           { label: 'Kreager, Cavanagh, Yen & Yu (2014), Journal of Marriage and Family \u2014 women send first messages 4x less often than men; women who initiate connect with more desirable partners.', url: 'https://pubmed.ncbi.nlm.nih.gov/24910472/' },
           { label: 'Haselton & Buss (2000), Journal of Personality and Social Psychology \u2014 men overperceive women\'s sexual intent; women underperceive men\'s commitment (error management theory).', url: 'https://pubmed.ncbi.nlm.nih.gov/10653507/' },
@@ -1716,6 +1772,22 @@
           }
         }
       }
+      // The ruling's own stake pairs with staked claims: required with them,
+      // meaningless without them, integer 1–99, and never below the best claim
+      // (the ruling subsumes what the claims got right, then adds to it).
+      var rt = entry.ruling && typeof entry.ruling === 'object' ? entry.ruling.truth : null;
+      if (staked.length === entry.claims.length && staked.length > 0) {
+        if (rt == null) {
+          problems.push('staked claims require ruling.truth');
+        } else if (typeof rt !== 'number' || !isFinite(rt) || rt !== Math.round(rt) || rt <= 0 || rt >= 100) {
+          problems.push('ruling.truth must be an integer in 1–99');
+        } else {
+          var bestClaim = Math.max.apply(null, entry.claims.map(function (c) { return c.truth; }));
+          if (isFinite(bestClaim) && rt < bestClaim) problems.push('ruling.truth (' + rt + ') must be >= the best claim (' + bestClaim + ')');
+        }
+      } else if (rt != null) {
+        problems.push('ruling.truth requires fully staked claims');
+      }
     }
     return problems;
   }
@@ -1749,37 +1821,39 @@
       '</div>';
   }
 
-  /* ── Stake bar segments, derived from the claims' truth stakes (post-gate, so
-     shapes are trusted). Returns null when the entry stakes nothing OR when ANY
-     staked claim is under the 25% floor — the deliberate-omission case: a rout
-     is not a contest, so no chip %s, no bar; the stamps and the ruling stand
-     alone as the ground truth. (The floor tests only the claims' own stakes —
-     a lone claim at 80% shows fine; its 20% remainder is the ruling's, not an
-     argument's.)
-       N=1            → [claim share, ruling remainder]
-       N≥2 all equal  → mirror claims (one shared kernel) → [share, remainder]
-       N≥2 sum = 100  → competing camps → one segment per claim, claim order ── */
-  function stakeSegments(claims) {
+  /* ── Ledger visibility (the 25% floor): metrics render only when every claim
+     is staked AND every claim clears 25 — a rout is not a contest, so a card
+     with any sub-floor argument shows bare stamps and the ruling stands alone
+     as the ground truth. The floor tests only the claims' own stakes, never
+     the ruling's. ── */
+  function stakesVisible(claims) {
     var truths = claims.map(function (c) { return c.truth; });
-    if (truths.some(function (t) { return t == null; })) return null;
-    if (Math.min.apply(null, truths) < 25) return null;
-    var allEqual = truths.every(function (t) { return t === truths[0]; });
-    if (truths.length === 1 || allEqual) return [truths[0], 100 - truths[0]];
-    return truths.slice();
+    if (truths.some(function (t) { return t == null; })) return false;
+    return Math.min.apply(null, truths) >= 25;
   }
 
-  /* ── Stake bar (optional): "Our stake" + a proportion bar under the ruling
-     head. Numbers-free on purpose — the percentages live on the claim stamps
-     (left column); segments follow the claims top-to-bottom. aria-hidden: the
-     chip suffixes carry the same data as visible text. ── */
-  function stakeBarHTML(segs) {
-    if (!segs) return '';
-    var spans = segs.map(function (pct, i) {
-      return '<span class="mb-split-seg s' + i + '" style="width:' + Number(pct) + '%"></span>';
+  /* ── Stake ledger: one 0-anchored row per position — every claim (scarlet)
+     plus the ruling itself (gold) — on a shared 0–100 axis, the percentage
+     printed on each row. All shares are ABSOLUTE: nothing is normalized, so
+     bar lengths compare directly and the gold row vs the best claim shows how
+     much the ruling adds. The ruling never stakes 100 — its empty tail is the
+     margin held open for refutation. ── */
+  function ledgerRowHTML(label, pct, rowClass) {
+    return '<div class="mb-stake-row ' + rowClass + '">' +
+        '<span class="mb-stake-label">' + esc(label) + '</span>' +
+        '<span class="mb-stake-track" aria-hidden="true"><span class="mb-stake-fill" style="width:' + Number(pct) + '%"></span></span>' +
+        '<span class="mb-stake-pct">' + Number(pct) + '%</span>' +
+      '</div>';
+  }
+  function stakeLedgerHTML(claims, r) {
+    // Each party keeps its own scarlet step (p0 scarlet → p1 dim → p2 deep) so
+    // multi-claim ledgers are attributable at a glance; the ruling row is gold.
+    var rows = claims.map(function (c, i) {
+      return ledgerRowHTML(c.camp || 'Claim', c.truth, 'p' + i);
     }).join('');
-    return '<div class="mb-split" title="Synthesized stake — segments follow the claims top to bottom; on a lone or mirrored claim the faint remainder is the counter-position&#39;s share, the ruling&#39;s side of the question. Not a measurement: refute it with better data and the numbers move.">' +
-        '<span class="mb-split-head">Our stake</span>' +
-        '<div class="mb-split-bar" aria-hidden="true">' + spans + '</div>' +
+    rows += ledgerRowHTML('Ruling', r.truth, 'is-ruling');
+    return '<div class="mb-stake" title="Synthesized stakes — each position&#39;s absolute share of the full truth of the matter, the ruling included. The ruling never claims 100%: its empty tail is the margin we hold open for refutation. Not measurements — bring better data and the numbers move.">' +
+        '<div class="mb-stake-head">Our stake</div>' + rows +
       '</div>';
   }
 
@@ -1788,7 +1862,7 @@
     const claims = m.claims;
     const n = claims.length;
     const r = m.ruling;
-    const stakes = stakeSegments(claims);   // null = no stakes, or under the 25% floor
+    const metricsOn = stakesVisible(claims);   // false = no stakes, or under the 25% floor
     const sourcesId = 'sources-' + m.id;
 
     const draftChip = m.draft
@@ -1846,17 +1920,17 @@
         heading +
 
         // Body: claims (left/top) | ruling (right/bottom), split by a hairline.
-        // One entry-level stake computation feeds both columns: chip %s on the
-        // claims, the numbers-free bar on the ruling.
+        // One entry-level visibility decision feeds both columns: chip %s on
+        // the claims, the stake ledger on the ruling.
         '<div class="mb-body">' +
-          '<div class="mb-col mb-claims">' + claims.map(function (c) { return claimHTML(c, !!stakes); }).join('') + '</div>' +
+          '<div class="mb-col mb-claims">' + claims.map(function (c) { return claimHTML(c, metricsOn); }).join('') + '</div>' +
           '<div class="mb-col mb-ruling">' +
             // Label (left) + verdict badge (right) share one row.
             '<div class="mb-ruling-head">' +
               '<div class="mb-col-label mb-ruling-label">The ruling</div>' +
               '<div class="mb-ruling-badge">' + esc(r.badge) + '</div>' +
             '</div>' +
-            stakeBarHTML(stakes) +
+            (metricsOn ? stakeLedgerHTML(claims, r) : '') +
             '<p class="mb-ruling-text">' + esc(r.text) + '</p>' +
             '<div class="mb-evidence">' +
               '<span class="mb-tier ' + esc(r.tier) + '">' + SVG_TIER + esc(TIERS[r.tier].label) + '</span>' +
