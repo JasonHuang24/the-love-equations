@@ -75,7 +75,6 @@
         researchNotes: 'Ani regraded from the earlier proposed Backwards to Oversimplified: Hall shows real flirting is also frequently MISSED, so \u201cyou\u2019re missing signals\u201d has partial support \u2014 her error is ignoring base rates in occupational-warmth contexts, not inverting reality.',
       },
       related: [ { label: 'Rules & Frameworks', href: 'frameworks.html' } ],
-      draft: true,
     },
     {
       id: 'M-TBD-2',
@@ -99,7 +98,6 @@
         ],
       },
       related: [ { label: 'Lexicon', href: 'lexicon.html' } ],
-      draft: true,
     },
     {
       id: 'M-TBD-3',
@@ -125,7 +123,6 @@
         researchNotes: 'No study directly measures reputational fallout from a single graceful approach \u2014 that gap caps this at evidence tier, and Ani\'s "most girls respect a clean move" is inference from the persistence literature, not a measured approval rate. Walker & Bonner\'s harassment-labeling effect comes from workplace vignettes involving physical contact from a superior, so its transfer to a polite number-ask is directional, not exact. A study tying serial misreads spread through gossip networks to concrete reputation loss would strengthen Mika\'s claim and could shift the badge toward "Both half right."',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-4',
@@ -134,20 +131,22 @@
       claims: [
         { camp: 'Ani',
           text: '[REPORTED \u2014 needs primary quote from the original Ani session; this wording is Jason\u2019s summary] Anyone who thinks anything positive of you \u2014 finds you cute, laughs at your jokes, has you on their mind \u2014 has a crush.',
-          verdict: 'todo' },
+          verdict: 'oversimplified' },
         { camp: 'Mika',
           text: 'A crush is romantic interest with emotional investment \u2014 someone excited or nervous to be around you who wants your attention. Finding someone cute or enjoying their company is basic attraction, not a crush.',
-          verdict: 'todo' },
+          verdict: 'oversimplified' },
       ],
       ruling: {
-        badge: 'TODO',
-        text: 'TODO',
-        tier: 'todo',
-        sources: [],
-        researchNotes: 'Verified definitional anchors (all fetched and confirmed this session) for the eventual grading: (1) O\'Sullivan, Belu & Garcia (2022), Journal of Social and Personal Relationships \u2014 https://journals.sagepub.com/doi/10.1177/02654075211038612 \u2014 peer-reviewed crush studies (n=3,585 adults 22-45) defining a "crush" as a typically unilateral, unreciprocated attraction not directly communicated to the target, "a state of unfulfilled longing"; (2) Bradbury, Short & Bleakley (2024, online first; vol. 2025), Journal of Police and Criminal Psychology \u2014 https://link.springer.com/article/10.1007/s11896-024-09674-x \u2014 scoping review crediting Tennov (1979, 300+ interviews) for "limerence," defined as involuntary obsessive longing for another\'s attention, and explicitly contrasting it with a crush, whose "feelings of intense longing come and go"; (3) Wyant (2021), Journal of Patient Experience \u2014 https://pubmed.ncbi.nlm.nih.gov/34869848/ \u2014 clinical case study defining limerence as obsessive attachment to a "limerent object" that interferes with daily functioning, with Tennov\'s Love and Limerence (1979) as reference 1. Caveat: the APA Dictionary of Psychology entries for infatuation/limerence (dictionary.apa.org) could NOT be fetch-verified \u2014 the pages are JS-rendered and return only a title shell \u2014 so they cannot clear the sourcing bar via fetch; the three journal anchors above should be used instead. No verdicts proposed; grading blocked until Ani\'s primary quote replaces Jason\'s summary.',
+        badge: 'Opposite errors',
+        text: 'Definitionally both miss, in opposite directions. Crush research treats a crush as an attraction-based, usually unilateral and uncommunicated longing that ranges from light to intense (O\'Sullivan et al. 2022, n=3,585). That sinks Ani\'s \u201cany positive thought counts\u201d \u2014 fondness, or a laughed-at joke with no attraction behind it, isn\'t a crush. But it also undercuts Mika\'s demand for nervous, emotionally invested pining: a crush can be mild. The real line is attraction at any intensity \u2014 not mere liking, and not full limerence (Tennov).',
+        tier: 'definitional',
+        sources: [
+          { label: 'O\'Sullivan, Belu & Garcia (2022), J. of Social and Personal Relationships \u2014 crush studies (n=3,585 adults) defining a crush as a typically unilateral, uncommunicated attraction, \u201ca state of unfulfilled longing\u201d', url: 'https://journals.sagepub.com/doi/10.1177/02654075211038612' },
+          { label: 'Wyant (2021), J. of Patient Experience \u2014 limerence as obsessive attachment to a \u201climerent object\u201d (Tennov, Love and Limerence, 1979): the intense pole a crush need not reach', url: 'https://pubmed.ncbi.nlm.nih.gov/34869848/' },
+        ],
+        researchNotes: 'Fable-graded 2026-07-06 at definitional tier on Jason\'s instruction to publish with the marker. Ani\'s claim is still [REPORTED] \u2014 Jason\'s paraphrase, not her verbatim words; swap in her primary quote when it surfaces and re-check the verdict (a genuinely low-threshold reading could push Ani toward Confirmed). Both sources fetch-verified. The APA Dictionary infatuation/limerence entries could not be fetch-verified (JS-rendered), so are not cited; Bradbury et al. (2024) scoping review (link.springer.com/article/10.1007/s11896-024-09674-x) is available as further limerence grounding if a third source is wanted.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-5',
@@ -172,7 +171,6 @@
         researchNotes: 'PNAS citation triple-confirmed via citing papers. DOI URL filled 2026-07-06: doi.org/10.1073/pnas.1908630116 verified to 302-redirect to the canonical pnas.org article page (pnas.org 403s automated fetchers but loads in browsers). No empty URLs remain in the dataset.',
       },
       related: [ { label: 'Statistics', href: 'statistics.html' } ],
-      draft: true,
     },
     {
       id: 'M-TBD-6',
@@ -192,7 +190,6 @@
         ],
       },
       related: [ { label: 'Rules & Frameworks', href: 'frameworks.html' } ],
-      draft: true,
     },
     {
       id: 'M-TBD-7',
@@ -212,7 +209,6 @@
         ],
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-8',
@@ -236,7 +232,6 @@
         ],
       },
       related: [],
-      draft: true,
     },
 
     /* ── Fable-authored entries from the design mockups ──
@@ -261,7 +256,6 @@
         researchNotes: 'Verified. The stability half of the original mockup claim was trimmed \u2014 Montoya covers attraction, not longitudinal stability; add a homogamy/marital-quality source if the ruling should speak to stability.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-10',
@@ -280,7 +274,6 @@
         researchNotes: 'Wilson 2017 verified. COUNTER-EVIDENCE EXISTS: sleep-consolidation studies (e.g. Baran et al. 2012, J. Neuroscience) suggest sleep can preserve negative emotional memory \u2014 the strongest case FOR the myth. Weigh both lines; verdict may soften to Oversimplified. Gottman source needs a specific citation and URL.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-11',
@@ -304,7 +297,6 @@
         researchNotes: 'E&F 2008 verified; a 2015 direct replication reached consistent results. NOTE: \u201cThe classic\u201d regraded from the mockup\u2019s Backwards to False \u2014 the direction of the stated difference is real, so the claim isn\u2019t inverted, just wrong in magnitude. \u201cThe leveler\u201d is closest to right on revealed preferences and could arguably land higher \u2014 Jason\u2019s call. Eastwick et al. (2014) meta-analysis source removed this pass (empty URL, unverified) \u2014 E&F 2008 carries the ruling alone.',
       },
       related: [],
-      draft: true,
     },
 
     /* ── Gender Dynamics ports (2026-07-06) ──
@@ -339,7 +331,6 @@
         researchNotes: 'The "three dates gets it" half is script-consistent but not directly quantified in this literature, and the lab-parity results (Conley; Baranowski & Hecht) measure hypothetical consent under manufactured safety, not real-world behavior \u2014 so the mechanism evidence is softer than the outcome data. Kunz & Greitemeyer (2025, Journal of Social Psychology; PubMed 39661065, fetched) confirm the field asymmetry persists 40+ years on, independent of proposition type. Read purely as an outcome prediction (direct stranger propositions fail), the claim would grade confirmed; the oversimplified verdict rides on the "market punishes honesty / rewards deception" mechanism.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-13',
@@ -364,7 +355,6 @@
         researchNotes: 'The original 1989 percentages (commonly cited as ~69-75% of men vs 0% of women) could not be re-verified verbatim this session \u2014 the original article and the 2025 full text both 403\'d \u2014 so the ruling uses the abstract-level magnitudes confirmed on PubMed ("men quite likely to accept, women never did"). Regrade risk: if the card\'s framing hardens into an intrinsic anti-male double standard, Conley 2011 plus the low-risk lab data argue the driver is anticipated pleasure and safety rather than male directness itself, which would pull the verdict toward oversimplified. Note the claim covers the target\'s immediate reception; reputational aftermath for sexually forward women is a separate literature not graded here.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-14',
@@ -389,7 +379,6 @@
         researchNotes: 'No study directly tests the within-person claim \u2014 that the loudest complainers are the same individuals rewarding players \u2014 so that part rests on inference from population-level first-impression effects. A verified partial supporting the "keep going back" reading: Haslam & Montrose (2015, Personality and Individual Differences; confirmed via the Hartpury repository, https://pure.hartpury.ac.uk/en/publications/should-have-known-better-the-impact-of-mating-experience-and-the-/) found women with more mating experience and those desiring marriage rated the narcissistic male personality as more attractive, in a single ~146-woman sample. Regrade risk: Jauk et al. (2016) speed-dating work attributes narcissism\'s mate appeal largely to shared variance with extraversion and physical attractiveness (Wiley paywall blocked verification this session), so "player traits per se get rewarded" is contestable at the mechanism level.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-15',
@@ -415,7 +404,6 @@
         researchNotes: 'Also verified via PubMed: Leckelt et al. 2015 (JPSP, PMID 26191958) \u2014 narcissists\' initial popularity declines over three weeks as arrogant-aggressive behavior and being seen as untrustworthy take over, which is the mechanism behind the ruling\'s last sentence. Jauk et al. 2016 (European Journal of Personality speed-dating, narcissism predicting both short- and long-term mate appeal) fits the picture but was paywalled (Wiley 402), so it is not cited; a 2025 Journal of Personality speed-dating study on narcissistic dating success (doi 10.1111/jopy.70059) was also paywalled and could soften the first-sight advantage if it is a non-replication. No study directly tests the exact forced choice "knowingly dishonest smooth vs honest awkward," and samples are mostly students/lab paradigms \u2014 hence evidence tier, not hard-data.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-16',
@@ -441,7 +429,6 @@
         researchNotes: 'Also verified the Eastwick, Luchies, Finkel & Hunt (2014) Psychological Bulletin meta-analysis (k=97, PMID 23586697): both sexes\' live evaluations tracked attractiveness at r\u2248.40 with nonsignificant sex differences, backing the stated/revealed split at first attraction. The card\'s "branding" mechanism is its weak link \u2014 researchers attribute the gap to construal/introspective limits rather than impression management, though the 2024 worldwide test\'s trait-by-trait level metric (\u03b2\u2248.04) is a genuine partial for the card: naming any single stated trait like honesty adds almost no distinctive predictive weight. Regrade risk: evidence that preference self-reports are driven by social desirability rather than introspection limits would push the verdict toward confirmed.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-17',
@@ -465,7 +452,6 @@
         researchNotes: 'The withdrawal trend itself is solid across two independent representative datasets, but the claim\'s motive story (bitter honest men going monk mode or turning player) is untested \u2014 Pew\'s self-reported reasons read as indifference/priorities, not lost hope, and self-reports may under-capture bitterness. Part of the 2019\u21922022 drop overlaps the pandemic, so some rebound is possible (Pew 2025 reports singledom ticking down). A targeted study of male dating-app burnout or disengagement motives could upgrade the motive half and shift the verdict toward confirmed.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-18',
@@ -490,7 +476,6 @@
         researchNotes: 'The reward is front-loaded: Carlson & DesJardins (2015, PSPB, fetched and verified this session) found narcissists initially gained status but lost it with repeated exposure and overestimated their own popularity, so the paradox is strongest where acquaintance is thinnest. Converging support left out under the 3-source cap: Jauk et al. (2016, European Journal of Personality) speed-dating found narcissism predicted mate appeal (via extraversion/attractiveness; Wiley page paywalled, verified only via abstract), and a 2025 Journal of Personality speed-dating study reportedly found rivalrous narcissism predicted more second dates (not independently fetched). Regrade risk: if the question is re-scoped to long-term partner choice, the verdict tilts further against the claim \u2014 narcissism\'s costs surface with exposure.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-19',
@@ -515,7 +500,6 @@
         researchNotes: 'The lab evidence measures narcissism-driven first-impression charm, not literal "red flag ignoring," and Back 2010\'s mixed-sex round-robin plus Knopp\'s gender-consistent infidelity odds undercut the women-specific framing; the "he\'ll change for me" persistence is better explained by investment-model commitment research than by charisma. Supporting but uncited: Carter, Campbell & Muncer (2014, PAID) found 128 women rated a high-Dark-Triad male character more attractive. Regrade risk: a proper meta-analysis of Dark Triad attractiveness (speed-dating results are mixed) could shrink the "charm advantage" toward null, pushing this closer to plain false.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-20',
@@ -539,7 +523,6 @@
         researchNotes: 'The preselection/mate-choice-copying core is well-replicated for women choosing men, but the 2018 meta-analysis flags high heterogeneity and moderate publication bias, so "one of the strongest forces" is unsupported hyperbole. The card\'s "vouching-does-almost-nothing vs. visible-pursuit-does-a-lot" split is untested and arguably backwards \u2014 "augmentation" studies show even indirect social information (other women\'s endorsements/ratings) can raise a target\'s desirability. Verdict would move to "confirmed" if the card dropped the magnitude framing and the vouching claim; it would weaken toward "false" if it insisted the effect were symmetric across the sexes.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-21',
@@ -563,7 +546,6 @@
         researchNotes: 'The weak part of the claim is the "opposite directions" framing: the double standard is directional (men judged somewhat more leniently) but small and measurement-dependent, and the "high count reads as high value for men" assertion is essentially unsupported \u2014 high counts are penalized by both sexes. Regrade risk: the equal-penalty-at-the-top finding leans on a single study (Stewart-Williams, n=188), though it converges with the meta-analytic result that the SDS is weak and inconsistent. Could not load the Sage full text or Cronfa PDF (server refused/403); graded from the verified PubMed abstracts.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-22',
@@ -588,7 +570,6 @@
         researchNotes: 'The attractiveness-asymmetry evidence is third-party vignette work on student samples, not first-person field data on women\'s in-vivo reactions \u2014 a strong experience-sampling or behavioral study could enlarge or shrink the effect, and the S\u00e1ez et al. counter-evidence is correlational (N=138). The claim\'s kernel is also partly definitional: "unwanted attention" is receiver-relative by construction, so source-dependence alone cannot establish insincerity or weaponization. Regrade risk: direct first-person data showing women uniformly welcome sexualized attention from desired men would push the verdict toward confirmed; none was found.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-23',
@@ -613,7 +594,6 @@
         researchNotes: 'No study directly quantifies the claimed asymmetry \u2014 how often male vs female celebrity attraction becomes an intense parasocial romance \u2014 so the "far more often" magnitude is ungraded folk observation; the female-rehearsal evidence is also adolescent-heavy, with thin adult data. Adjacent literature (sexual-fantasy content, romance-vs-visual-erotica consumption) supports the style core, but the celebrity-worship intensity data cut against "bounded" male desire. A representative adult survey of parasocial-romance prevalence by sex could move this toward confirmed or false.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-24',
@@ -638,7 +618,6 @@
         researchNotes: 'The press-circulated "61.9% vs 4.5% like rate" attributed to the Tinder study does not appear in the paper text \u2014 quote only the verified 0.6%/10.5% match rates, the 93% liking-strategy figure, and the photo experiment. The looks gate runs in both sexes (Eastwick & Finkel), so any woman-specific framing of the filter overreaches. The off-app softening rests mainly on one 167-couple study; if Hunt et al. failed to replicate, the verdict would drift toward confirmed.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-25',
@@ -663,7 +642,6 @@
         researchNotes: 'The claim\'s descriptive core is well-supported by stated-preference data (the 48.9% figure IS women stating the filter in their own ads), and Dial & Brown (2025, Human Nature, PMC12644153, verified) adds 43.4% of women vs 25.8% of men rating height important. But no peer-reviewed content analysis directly compares how openly height vs baldness/weight/face get stated in bios \u2014 the exclusivity leg is graded mainly on the income part, which Walter et al. and personal-ads research (Wiederman 1993, not independently fetched) contradict. Regrade risk: read narrowly as "looks-only preferences publicly owned in bios," the claim edges closer to confirmed.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-26',
@@ -687,7 +665,6 @@
         researchNotes: 'The narrow core \u2014 female peers, not men, are the chief enforcers of women\'s sexual reputation \u2014 is well-supported (Baumeister & Twenge 2002; Vaillancourt 2013). But "women care far more about what other women think" is a global claim never directly tested as stated, and the OnlyFans example arguably inverts itself since the platform monetizes male demand. Verdict would move to \'confirmed\' if scoped strictly to sexual-reputation sanctioning, or toward \'false\' if read as a claim about all female motivation and choice.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-27',
@@ -712,7 +689,6 @@
         researchNotes: 'The strongest classic nuance stayed out of the ruling for sourcing reasons: Eagly, Wood & Fishbaugh (1981, JPSP) found the sex gap appeared mainly when responses were public, driven partly by men conforming LESS under surveillance \u2014 male "independence" as display, which cuts against the claim\'s framing, but no stable primary URL would fetch. Bond & Smith\'s 1996 meta also reported higher conformity in samples with more female respondents, so a large modern replication finding a robust female-direction effect could enlarge the kernel \u2014 though nothing in the literature approaches "hive mind" magnitude. The claim\'s trend-diffusion half (viral "6ft minimum" rules) has no direct literature either way; lab conformity is the nearest proxy, and it says both sexes move with the majority.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-28',
@@ -737,7 +713,6 @@
         researchNotes: 'The \'chaos wins\' kernel rests on limited designs \u2014 Carter et al. is a hypothetical-vignette study, and later work argues the Dark Triad\'s pull shrinks once confounded traits like extraversion/confidence are controlled, so a future meta-analysis could weaken that half. Birnbaum\'s null for women applies to initial acquaintanceship only; in established relationships responsiveness strongly predicts attraction, which actually supports the claim\'s own \'safe AND excited\' concession. The claim\'s biggest miss is treating a first-attraction effect as evidence about what women choose, where kindness/stability wins decisively.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-29',
@@ -762,7 +737,6 @@
         researchNotes: 'Gender differences on the Fear of Being Single construct itself are mixed \u2014 Spielmann\'s own work reports no consistent sex difference and some adaptations find women slightly higher \u2014 so the male-typing rests on partnering-desire and singlehood-satisfaction data, not on fear scores. The claim\'s tail ("desperation inflates entitlement on the other side") is an untested market mechanism with no direct literature. A future meta-analysis of FOBS sex differences could push this toward false (if women score equal or higher) or firm up the male skew. Spielmann et al. (2013) carries a published correction (PubMed 30321050; Study 3 FOBS wording adapted for partnered participants, conclusions unchanged), and "appears in both sexes" rests on the paper\'s mixed-sex samples reporting no consistent gender difference rather than on the abstract.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-30',
@@ -787,7 +761,6 @@
         researchNotes: 'All direct evidence concerns sexual history, not disclosure of dating or relationship inexperience per se \u2014 no study tests an honest admission against a fabricated past, so the "inventing toxic exes would earn more respect" counterfactual is untested inference, and the card\'s honesty-is-punished framing conflates the trait penalty with a disclosure penalty. The inexperience penalty is also moderated by rater sociosexuality (unrestricted raters punish low counts more; restricted raters punish high counts more). A direct disclosure experiment could push the second half of this claim to false or, less likely, confirmed.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-31',
@@ -812,7 +785,6 @@
         researchNotes: 'Both skew studies are platform-specific and non-representative (Tyson: 14 test profiles; Bruch & Newman: one free site, four cities), so exact inequality magnitudes \u2014 including the blog-derived "Gini 0.58" \u2014 should not be quoted as population facts. The viral "75% of men left out" derivation assumes ~80% of men seek casual sex, but Pew 2023 measured 31% of male users citing casual sex as a major reason (verified: https://www.pewresearch.org/internet/2023/02/02/the-who-where-and-why-of-online-dating-in-the-u-s/). Regrade risk: unpartnered prime-age adults did drift up 29%\u219238% (1990\u20132019), so a weaker "the tail got worse" claim has legs \u2014 but Pew\'s Jan 2025 update (verified) shows the unpartnered share ticking down (44%\u219242%, 2019\u20132023), the opposite of an accelerating lock-out. Pew\'s Jan 2025 44%\u219242% figures cover all adults 18+, while the 29%\u219238% series is ages 25\u201354; Pew reports the decline occurred across all age groups.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-32',
@@ -837,7 +809,6 @@
         researchNotes: 'BONUS verified with a caveat: the direct PNAS URL for Rosenfeld, Thomas & Hausen (2019) is https://www.pnas.org/doi/10.1073/pnas.1908630116 \u2014 title and DOI match the PubMed record exactly, but pnas.org returned HTTP 403 to the fetcher this session, so the PMC/PubMed mirrors above are the fetch-verified anchors. Regrade risk: later HCMST waves (2020/2022) reportedly push the online share for NEWLY formed couples above 50%, which would make "half meet online" fair for new couples (still online, not apps) \u2014 I found only secondhand write-ups, no fetchable primary, this session. The 40%-online vs 10%-on-apps gap is partly stock-vs-flow: HCMST measures how recent couples met, Pew measures all current couples.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-33',
@@ -862,7 +833,6 @@
         researchNotes: 'The direct situationship literature is young (2024\u20132026, convenience and qualitative samples), and the headline prevalence figures are lifetime "ever been in one," not the current modal form \u2014 so "dominant" fails but the phenomenon is real. Pew\'s committed-vs-casual fieldwork is 2019, predating the situationship boom; a representative time-series of current relationship-type mix could shift the magnitude call. The gendered engine could still operate in a high-desirability submarket without appearing in population averages, but as stated it is contradicted by the representative data.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-34',
@@ -889,7 +859,6 @@
         researchNotes: 'Attractiveness-as-lead-predictor is well-replicated (also Luo & Zhang 2009, J. Personality, and Feingold 1990\'s meta-analysis, both cited within Asendorpf; Wiley copy of Luo & Zhang was paywalled/402 so it is corroboration, not a cited source). Height is a genuine fixed-looks advantage for men (Pawlowski, Dunbar & Lipowicz 2000, cited within Asendorpf), which is why the blackpill isn\'t simply "false" \u2014 but leanness, low shyness, social boldness and status are movable, so the "rigged before you start" fatalism overshoots just as the bluepill\'s "game gets anyone in" ignores that looks are the main driver. Verdict would shift only if a study showed game/confidence actually closing the attractiveness gap in real choices, which current speed-dating data do not.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-35',
@@ -917,7 +886,6 @@
         researchNotes: 'Never-married is not never-partnered \u2014 cohabitation and non-cohabiting relationships mean the true lifetime-alone base rate is fuzzier (and lower) than the 25% marriage stat, while point-in-time "unpartnered" figures include the divorced and widowed. The card\'s sharper claim that below-average men specifically drive the alone-for-life pool is plausible (marriage gradients by income/education exist) but was not directly verified here; attractiveness-stratified lifetime-partnering data would be the regrade trigger. Both verdicts are robust to that: the universal guarantee and the individual-hopelessness inference each contradict the same Census/ACS numbers.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-36',
@@ -928,17 +896,19 @@
       claims: [
         { camp: '',
           text: 'When you\'re interested, it tends to leak out indirectly rather than as an explicit move: lingering nearby, remembering small details, laughing harder than the joke earned, finding little reasons to talk to him, going quiet or flustered when he\'s around. Field studies of courtship found women actually initiate most encounters through exactly these covert nonverbal signals \u2014 and that men often don\'t consciously register that she signaled first (Moore, 1985).',
-          verdict: 'todo' },
+          verdict: 'confirmed' },
       ],
       ruling: {
-        badge: 'TODO',
-        text: 'TODO',
-        tier: 'todo',
-        sources: [],
-        researchNotes: 'Grading attempt (2026-07-06 Fable loop) HELD BACK by the source-integrity audit: the proposed "Holds up" ruling leaned on load-bearing figures \u2014 Moore\'s 52-behavior catalog, Perper\'s ~two-thirds female-first-move share, de Weerth & Kalma\'s finding that both sexes are unaware who initiates \u2014 that trace to works not fetch-verified this session (Moore 1985, Ethology & Sociobiology; Moore 2010, J. Sex Research, PubMed 20358459; Perper 1985, Sex Signals; de Weerth & Kalma 1995, Sex Roles). Wade (2018, PMC6701824) does verify Moore\'s 15-second approach-correlation finding. Regrade path: fetch-verify Moore 2010 (restates the catalog and the signaling-frequency\u2192approach relationship) plus de Weerth & Kalma, then "Holds up" is likely defensible.',
+        badge: 'Holds up',
+        text: 'Well supported. Moore\'s field observations catalogued 52 nonverbal solicitation cues \u2014 glancing, primping, leaning in \u2014 and found the women who signaled most were the ones most often approached, a signal typically eliciting a male approach within about 15 seconds (confirmed by Wade 2018). So the woman\'s covert signal usually initiates the encounter the man then experiences as his own move. The one caveat is magnitude: \u201cmost encounters\u201d is directionally right but not a settled share, and men\'s unawareness is inferred more than measured.',
+        tier: 'evidence',
+        sources: [
+          { label: 'Moore (1985), Ethology and Sociobiology 6(4):237\u2013247 \u2014 catalogued 52 female nonverbal solicitation behaviors; women who signaled more were approached more, signals eliciting a male approach within ~15s', url: 'https://doi.org/10.1016/0162-3095(85)90016-0' },
+          { label: 'Wade (2018), Perspectives on Behavior Science \u2014 confirms Moore\'s finding that specific female nonverbal signals correlate with a male approaching within 15 seconds', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6701824/' },
+        ],
+        researchNotes: 'Fable-graded 2026-07-06. Held back on the first pass because the 52-count and signaling\u2192approach findings were then uncited; both are now confirmed \u2014 Moore (1985) catalogued 52 solicitation behaviors and found \u201cwomen who signaled often were also those who were most often approached by a man\u201d (verified via the ScienceDirect abstract + multiple secondary sources; the doi.org link 403s automated fetchers but resolves in-browser, per the M-TBD-5 PNAS precedent). Dropped from the earlier draft: Perper\'s ~two-thirds first-move figure and de Weerth & Kalma\'s \u201cboth sexes unaware\u201d finding \u2014 neither could be fetch-verified this session, so the ruling no longer rests on them (hence the hedge on \u201cmost encounters\u201d and men\'s unawareness).',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-37',
@@ -963,7 +933,6 @@
         researchNotes: 'The strict gate wording ("everything else only gets weighed once the filter is passed") is stronger than the data, which show dominant weighting rather than a literal lexicographic screen; Luo & Zhang also found partner characteristics predicted men\'s attraction better than women\'s, so the symmetry isn\'t perfect. The card\'s "honesty" framing is the main regrade risk: Eastwick & Finkel read the stated/revealed gap as poor introspective access in both sexes, not deliberate female dressing-up \u2014 the mechanism parity is hard data, the motive attribution is not.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-38',
@@ -988,7 +957,6 @@
         researchNotes: 'Ideals aren\'t empty: Gerlach et al. 2019 (JPSP, PMID 28921999, verified this session) found stated preferences prospectively predicted later partners\' traits in a naturalistic sample \u2014 standards shape who you orbit; they bend on contact, and people also revised ideals downward to fit partners who fell short. Caveat/regrade risk: this literature tests trait ideals broadly, not moral deal-breakers (e.g., body count) under active pursuit by a high-option suitor \u2014 direct evidence that deal-breakers specifically hold or collapse live could shift the verdict toward oversimplified.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-39',
@@ -1014,7 +982,6 @@
         researchNotes: 'Killewald (2016, American Sociological Review) corroborates the provider half downstream: in post-1975 marriages, husbands not employed full-time faced higher divorce risk while wives\' employment and couples\' finances predicted nothing \u2014 a gendered-expectations effect, not literal wallet-mining (verified only via the ScienceDaily/ASA press summary; the journal and Harvard pages returned 403, so it is not cited). Regrade risks: speed-dating samples are young and income-compressed, which can understate real-world wallet-screening; conversely, the "gone once sex is off the table" male pattern rests more on stated hookup motives than on direct behavioral tests.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-40',
@@ -1039,7 +1006,6 @@
         researchNotes: 'No study directly measures whether men deliver verbally harsher romantic rejections \u2014 that half of the claim rests on anecdote, and Freedman\'s ns trend (p=.058) plus women\'s clearly documented safety fears mean a larger study could still surface a modest rejector-sex difference (regrade risk toward a weak confirm). Freedman\'s main sample was bisexual US adults, limiting generalization; ghosting-prevalence studies report mixed or null gender differences. The site\'s own source card already hedges the claim as a lens, which this ruling formalizes.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-41',
@@ -1064,7 +1030,6 @@
         researchNotes: 'The disconfirming half rests mainly on Eastwick & Finkel 2008 \u2014 a single US speed-dating sample measuring initial attraction, not long-term commitment decisions, where resource/trajectory considerations plausibly matter more; a longitudinal study tying partner ambition to actual pairing or marriage outcomes could push this toward confirmed for long-term contexts. No direct literature was found on the card\'s specific "patience with unrealized potential over the years" mechanism \u2014 that part remains inference, not measured evidence.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-42',
@@ -1090,7 +1055,6 @@
         researchNotes: 'The claim\'s decade-by-decade wordings are loose paraphrases: the verified anchors are 1918 (husband-shortage letter), early-1900s\u20131930s marriage-crisis panics (Kuby via Jotwell), and 2003 (Whitehead\'s "Why There Are No Good Men Left" \u2014 Penguin Random House page fetched this session); I did not verify era primaries for the specific 1920s "can\'t court" and 1970s "threatened by independent women" phrasings, nor a scholarly primary for post-2017 "men are trash." Regrade risk: if the claim is read as "therefore nothing real ever changed," Lichter et al. 2020 (and the genuine post-WWI male deficit behind the 1918 instance) cut against it \u2014 some reruns tracked real market shifts, which is why the caveat sits in the ruling text.',
       },
       related: [],
-      draft: true,
     },
     {
       id: 'M-TBD-43',
@@ -1115,7 +1079,6 @@
         researchNotes: 'BONUS verified: doi.org/10.1073/pnas.1908630116 302-redirects to https://pnas.org/doi/full/10.1073/pnas.1908630116 (i.e. the canonical page https://www.pnas.org/doi/10.1073/pnas.1908630116 is real), but pnas.org itself returns HTTP 403 to automated fetches \u2014 use the DOI or PubMed link for the site\'s pending empty-url source. Caveat: HCMST counts all couples, but the paper\'s footnote 1 says results are unchanged when restricted to married couples, and Cacioppo 2013 is marriages-only, so the ruling holds for "couples who actually marry." Regrade risk: among college graduates specifically the met-in-college share is much higher (the widely quoted ~28% same-school figure traces to a non-citable Facebook Data Science blog post) \u2014 a peer-reviewed grads-only analysis could soften "never a big chunk" for degree-holding social circles, which is plausibly the friend group the card is describing.',
       },
       related: [],
-      draft: true,
     },
   ];
 
@@ -1443,11 +1406,24 @@
     }
   }
 
+  /* ── Deep-link scroll: cards render client-side, so a browser arriving at
+     mythbuster.html#M-TBD-6 tries to scroll BEFORE the anchor exists and lands
+     at the top. After render, re-resolve the hash and scroll the card into view
+     ourselves (CSS scroll-margin-top keeps it clear of the sticky nav). Only
+     acts on our own #M-TBD-* ids so it never fights other on-page anchors. ── */
+  function scrollToHashCard() {
+    var id = (location.hash || '').slice(1);
+    if (!/^M-TBD-/.test(id)) return;
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView();
+  }
+
   function init() {
     var preview = computePreview(location.hostname, location.search);
     if (preview) markPreviewNotice();
     render(ENTRIES, { preview: preview });
     wire();
+    scrollToHashCard();
   }
 
   if (document.readyState === 'loading') {
