@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Lexicon &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=2.0" />
+  <link rel="stylesheet" href="css/styles.css?v=2.1" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/lexicon.css?v=1.7" />
+  <link rel="stylesheet" href="css/lexicon.css?v=1.8" />
 </head>
 <body data-page="lexicon">
   <div data-include="navigation-bar"></div>
@@ -23,21 +23,24 @@
     <div class="content">
       <p class="lex-intro">The language here is borrowed from the pills &mdash; <strong>Black</strong>, <strong>Red</strong>, <strong>Blue</strong> &mdash; but the definitions aren&rsquo;t. Each term carries the lens that owns it; the ones marked <strong>Shared</strong> cut across all three. Filter by lens, and follow any link to the dossier, framework, or chart where the claim gets tested.</p>
 
-      <div class="lex-filter">
-        <button class="lex-fbtn active" data-lens="all" onclick="lexFilter('all', this)">All</button>
-        <button class="lex-fbtn" data-lens="shared" onclick="lexFilter('shared', this)">Shared</button>
-        <button class="lex-fbtn" data-lens="black" onclick="lexFilter('black', this)">Black Pill</button>
-        <button class="lex-fbtn" data-lens="red" onclick="lexFilter('red', this)">Red Pill</button>
-        <button class="lex-fbtn" data-lens="blue" onclick="lexFilter('blue', this)">Blue Pill</button>
-      </div>
-      <div class="lex-count" id="lex-count"></div>
-
-      <details class="page-toc" id="lex-toc" aria-label="Table of contents">
-        <summary class="page-toc-head"><i class="ti ti-list-details" aria-hidden="true"></i> On this page<i class="ti ti-chevron-down toc-chevron" aria-hidden="true"></i></summary>
-        <div class="toc-groups" id="lex-toc-groups">
-          <!-- Generated from LEX below; follows the active lens filter. -->
+      <div class="filter-deck">
+        <div class="filter-deck-row">
+          <div class="lex-filter" role="group" aria-label="Filter by lens">
+            <button class="lex-fbtn active" data-lens="all" onclick="lexFilter('all', this)">All</button>
+            <button class="lex-fbtn" data-lens="shared" onclick="lexFilter('shared', this)">Shared</button>
+            <button class="lex-fbtn" data-lens="black" onclick="lexFilter('black', this)">Black Pill</button>
+            <button class="lex-fbtn" data-lens="red" onclick="lexFilter('red', this)">Red Pill</button>
+            <button class="lex-fbtn" data-lens="blue" onclick="lexFilter('blue', this)">Blue Pill</button>
+          </div>
+          <div class="filter-deck-count" id="lex-count" aria-live="polite"></div>
         </div>
-      </details>
+        <details class="page-toc" id="lex-toc" aria-label="Table of contents">
+          <summary class="page-toc-head"><i class="ti ti-list-details" aria-hidden="true"></i> On this page<span class="toc-hint" id="lex-toc-hint"></span><i class="ti ti-chevron-down toc-chevron" aria-hidden="true"></i></summary>
+          <div class="toc-groups" id="lex-toc-groups">
+            <!-- Generated from LEX below; follows the active lens filter. -->
+          </div>
+        </details>
+      </div>
 
       <div class="lex-grid" id="lex-grid"></div>
     </div>
@@ -158,7 +161,8 @@
     (function renderLexToc() {
       const mount = document.getElementById('lex-toc-groups');
       if (!mount) return;
-      mount.innerHTML = ['shared', 'black', 'red', 'blue'].map(lens => {
+      const order = ['shared', 'black', 'red', 'blue'];
+      mount.innerHTML = order.map(lens => {
         const terms = LEX.filter(t => t[1] === lens);
         const links = terms.map(t =>
           `<a class="toc-entry" href="#${lexSlug(t[0])}">${t[0]}</a>`).join('');
@@ -167,6 +171,14 @@
             ${links}
           </div>`;
       }).join('');
+      // Per-lens counts on the filter buttons + the deck's header hint.
+      document.querySelectorAll('.lex-fbtn').forEach(b => {
+        const lens = b.dataset.lens;
+        const n = lens === 'all' ? LEX.length : LEX.filter(t => t[1] === lens).length;
+        b.insertAdjacentHTML('beforeend', `<span class="lex-n">${n}</span>`);
+      });
+      const hint = document.getElementById('lex-toc-hint');
+      if (hint) hint.textContent = `${LEX.length} terms · ${order.length} lenses`;
     })();
 
     function lexFilter(lens, btn) {

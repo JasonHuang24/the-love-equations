@@ -2008,12 +2008,15 @@
       '</article>';
   }
 
-  /* ── Filter chips auto-generated from categories present in the data ── */
-  function chipsHTML(categories) {
-    var chips = '<button class="mb-chip active" type="button" data-category="all" aria-pressed="true">All</button>';
+  /* ── Filter chips auto-generated from categories present in the data,
+     each carrying its entry count ── */
+  function chipsHTML(categories, counts, total) {
+    var chips = '<button class="mb-chip active" type="button" data-category="all" aria-pressed="true">All' +
+      '<span class="mb-chip-n">' + total + '</span></button>';
     categories.forEach(function (cat) {
       chips += '<button class="mb-chip" type="button" data-category="' + esc(cat) +
-        '" aria-pressed="false">' + esc(cat) + '</button>';
+        '" aria-pressed="false">' + esc(cat) +
+        '<span class="mb-chip-n">' + (counts[cat] || 0) + '</span></button>';
     });
     return chips;
   }
@@ -2113,24 +2116,27 @@
       (preview ? docket.map(docketCardHTML).join('') : '');
     mount.innerHTML = cards || '<p class="mb-empty">No entries passed the render gate.</p>';
 
-    // Chips — unique categories, first-seen order. Normal: from gate-passers only.
-    // Preview: also fold in docket categories so Jason can filter while grading.
-    var filters = document.getElementById(filtersId);
-    if (filters) {
-      var catSeen = {}, cats = [];
-      var chipSource = preview ? rendered.concat(docket) : rendered;
-      chipSource.forEach(function (m) {
-        if (m.category && !catSeen[m.category]) { catSeen[m.category] = true; cats.push(m.category); }
-      });
-      filters.innerHTML = chipsHTML(cats);
-    }
+    // Chips (unique categories, first-seen order), TOC, count line, and header
+    // hint all draw from the same source — gate-passers only on a normal load;
+    // preview folds the docket in, so Jason can filter/jump while grading.
+    var deckSource = preview ? rendered.concat(docket) : rendered;
+    var catCounts = {}, cats = [];
+    deckSource.forEach(function (m) {
+      if (!m.category) return;
+      if (!catCounts[m.category]) { catCounts[m.category] = 0; cats.push(m.category); }
+      catCounts[m.category]++;
+    });
 
-    // TOC + count line draw from the same source as the chips (preview folds
-    // the docket in, so Jason can jump to ungraded cards while grading).
+    var filters = document.getElementById(filtersId);
+    if (filters) filters.innerHTML = chipsHTML(cats, catCounts, deckSource.length);
+
     var tocMount = document.getElementById('mb-toc-groups');
-    var tocSource = preview ? rendered.concat(docket) : rendered;
-    if (tocMount) tocMount.innerHTML = tocGroupsHTML(tocSource);
-    setFilterCount(tocSource.length, tocSource.length);
+    if (tocMount) tocMount.innerHTML = tocGroupsHTML(deckSource);
+
+    var hint = document.getElementById('mb-toc-hint');
+    if (hint) hint.textContent = deckSource.length + ' entries · ' + cats.length + ' categories';
+
+    setFilterCount(deckSource.length, deckSource.length);
 
     return rendered.length;
   }

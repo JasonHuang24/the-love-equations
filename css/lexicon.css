@@ -2,26 +2,43 @@
 
 .lex-intro { font-size: 14px; color: var(--text-muted); line-height: 1.8; max-width: 820px; margin-bottom: 1.4rem; }
 .lex-intro strong { color: var(--text); }
-.lex-filter { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.4rem; }
+.lex-filter { display: flex; flex-wrap: wrap; gap: 7px; }
 .lex-fbtn {
   cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700;
   border: 0.5px solid var(--border); background: var(--card); color: var(--text-muted);
   border-radius: 999px; padding: 6px 15px; transition: all 120ms ease;
+  display: inline-flex; align-items: center; gap: 6px;
 }
 .lex-fbtn:hover { border-color: var(--text-dim); }
 .lex-fbtn.active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
-.lex-count { font-size: 12px; color: var(--text-dim); margin: -0.6rem 0 1.2rem; }
+/* Lens dot — same colors as the card borders/chips, tying filter → TOC → cards */
+.lex-fbtn:not([data-lens="all"])::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.lex-fbtn[data-lens="shared"]::before { background: #51606F; }
+.lex-fbtn[data-lens="black"]::before { background: #4a3832; }
+.lex-fbtn[data-lens="red"]::before { background: var(--scarlet); }
+.lex-fbtn[data-lens="blue"]::before { background: #2f6d9c; }
+.lex-fbtn.active::before { background: #fffaf3; } /* after the lens rules — wins on the active chip */
+.lex-n { font-size: 0.92em; font-weight: 700; opacity: 0.55; font-variant-numeric: tabular-nums; }
+.lex-fbtn.active .lex-n { opacity: 0.8; }
 .lex-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .lex-card {
   border: 0.5px solid var(--border); border-radius: var(--radius-lg);
   background: var(--card); padding: 1.05rem 1.15rem; display: flex; flex-direction: column;
   scroll-margin-top: 96px; /* TOC anchors land clear of the sticky nav */
 }
-#lex-toc { margin: 0 auto 1.4rem; } /* .page-toc default assumes a spot under the header; here it sits below the filter bar */
 /* Lens groups run 7–28 terms — pack into CSS columns so short groups don't
    leave tall gaps (groups never split across a column). */
 #lex-toc[open] .toc-groups { display: block; column-width: 240px; column-gap: 2.5rem; }
 #lex-toc .toc-group { break-inside: avoid; margin-bottom: 1.35rem; }
+/* Lens dot on each TOC group label, matching the filter buttons */
+#lex-toc .toc-group-label { display: flex; align-items: center; gap: 7px; }
+#lex-toc .toc-group-label::before { content: ''; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+#lex-toc .toc-group[data-lens="shared"] .toc-group-label::before { background: #51606F; }
+#lex-toc .toc-group[data-lens="black"] .toc-group-label::before { background: #4a3832; }
+#lex-toc .toc-group[data-lens="red"] .toc-group-label::before { background: var(--scarlet); }
+#lex-toc .toc-group[data-lens="blue"] .toc-group-label::before { background: #2f6d9c; }
 .lex-card.lens-black { border-left: 2px solid #4a3832; }
 .lex-card.lens-red { border-left: 2px solid var(--scarlet); }
 .lex-card.lens-blue { border-left: 2px solid #2f6d9c; }
