@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Lexicon &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.9" />
+  <link rel="stylesheet" href="css/styles.css?v=2.0" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/lexicon.css?v=1.6" />
+  <link rel="stylesheet" href="css/lexicon.css?v=1.7" />
 </head>
 <body data-page="lexicon">
   <div data-include="navigation-bar"></div>
@@ -31,6 +31,13 @@
         <button class="lex-fbtn" data-lens="blue" onclick="lexFilter('blue', this)">Blue Pill</button>
       </div>
       <div class="lex-count" id="lex-count"></div>
+
+      <details class="page-toc" id="lex-toc" aria-label="Table of contents">
+        <summary class="page-toc-head"><i class="ti ti-list-details" aria-hidden="true"></i> On this page<i class="ti ti-chevron-down toc-chevron" aria-hidden="true"></i></summary>
+        <div class="toc-groups" id="lex-toc-groups">
+          <!-- Generated from LEX below; follows the active lens filter. -->
+        </div>
+      </details>
 
       <div class="lex-grid" id="lex-grid"></div>
     </div>
@@ -118,6 +125,12 @@
 
     const LENS_LABEL = { black: 'Black Pill', red: 'Red Pill', blue: 'Blue Pill', shared: 'Shared' };
 
+    // Stable per-term anchor id, derived from the display name (entities → spaces).
+    function lexSlug(term) {
+      return 'term-' + term.replace(/&[^;\s]+;/g, ' ').replace(/<[^>]*>/g, '')
+        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    }
+
     function renderLex(filter) {
       const grid = document.getElementById('lex-grid');
       const shown = LEX.filter(t => filter === 'all' || t[1] === filter);
@@ -126,7 +139,7 @@
         const link = href
           ? `<a class="lex-link" href="${href}">${label} <i class="ti ti-arrow-right"></i></a>`
           : `<span class="lex-link none">No deeper page yet</span>`;
-        return `<div class="lex-card lens-${lens}">
+        return `<div class="lex-card lens-${lens}" id="${lexSlug(term)}">
             <div class="lex-top"><span class="lex-term">${term}</span><span class="lex-chip ${lens}">${LENS_LABEL[lens]}</span></div>
             <div class="lex-def">${def}</div>
             ${link}
@@ -134,7 +147,27 @@
       }).join('');
       document.getElementById('lex-count').textContent =
         `Showing ${shown.length} of ${LEX.length} terms` + (filter === 'all' ? '' : ` · ${LENS_LABEL[filter]}`);
+      // The TOC follows the active lens (group axis = filter axis, so whole
+      // groups show/hide and every visible link targets a rendered card).
+      document.querySelectorAll('#lex-toc-groups .toc-group').forEach(g => {
+        g.style.display = (filter === 'all' || g.dataset.lens === filter) ? '' : 'none';
+      });
     }
+
+    // Table of contents — built once from LEX, in the lens order of the filter bar.
+    (function renderLexToc() {
+      const mount = document.getElementById('lex-toc-groups');
+      if (!mount) return;
+      mount.innerHTML = ['shared', 'black', 'red', 'blue'].map(lens => {
+        const terms = LEX.filter(t => t[1] === lens);
+        const links = terms.map(t =>
+          `<a class="toc-entry" href="#${lexSlug(t[0])}">${t[0]}</a>`).join('');
+        return `<div class="toc-group" data-lens="${lens}">
+            <div class="toc-group-label">${LENS_LABEL[lens]}<span class="toc-count">${terms.length}</span></div>
+            ${links}
+          </div>`;
+      }).join('');
+    })();
 
     function lexFilter(lens, btn) {
       document.querySelectorAll('.lex-fbtn').forEach(b => b.classList.toggle('active', b === btn));
@@ -151,6 +184,11 @@
         renderLex(h);
       } else {
         renderLex('all');
+        // Cards render client-side, so a #term-* deep link needs a manual scroll.
+        if (h.indexOf('term-') === 0) {
+          const el = document.getElementById(h);
+          if (el) el.scrollIntoView();
+        }
       }
     })();
   </script>

@@ -15,7 +15,13 @@
 .lex-card {
   border: 0.5px solid var(--border); border-radius: var(--radius-lg);
   background: var(--card); padding: 1.05rem 1.15rem; display: flex; flex-direction: column;
+  scroll-margin-top: 96px; /* TOC anchors land clear of the sticky nav */
 }
+#lex-toc { margin: 0 auto 1.4rem; } /* .page-toc default assumes a spot under the header; here it sits below the filter bar */
+/* Lens groups run 7–28 terms — pack into CSS columns so short groups don't
+   leave tall gaps (groups never split across a column). */
+#lex-toc[open] .toc-groups { display: block; column-width: 240px; column-gap: 2.5rem; }
+#lex-toc .toc-group { break-inside: avoid; margin-bottom: 1.35rem; }
 .lex-card.lens-black { border-left: 2px solid #4a3832; }
 .lex-card.lens-red { border-left: 2px solid var(--scarlet); }
 .lex-card.lens-blue { border-left: 2px solid #2f6d9c; }

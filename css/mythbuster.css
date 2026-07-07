@@ -41,6 +41,12 @@
 
 /* ── Filter chips ── */
 .mb-controls { margin: 0 0 1.4rem; }
+.mb-filter-count { font-size: 12px; color: var(--text-dim); margin: 0.55rem 0 0 0.35rem; }
+#mb-toc { margin: 0 auto 1.6rem; }  /* .page-toc default assumes a spot under the header; here it sits below the chips */
+/* Category groups run 1–16 entries, so the shared flex layout leaves tall gaps —
+   pack them into CSS columns instead (groups never split across a column). */
+#mb-toc[open] .toc-groups { display: block; column-width: 270px; column-gap: 2.5rem; }
+#mb-toc .toc-group { break-inside: avoid; margin-bottom: 1.35rem; }
 .mb-filters {
   display: inline-flex;
   flex-wrap: wrap;

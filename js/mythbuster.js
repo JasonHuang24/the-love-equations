@@ -2018,6 +2018,46 @@
     return chips;
   }
 
+  /* ── Table of contents (shared .page-toc component), generated from the same
+     entries the cards render from, grouped by category in first-seen order.
+     Groups follow the active filter chip (whole group shows/hides — the filter
+     axis IS the grouping axis), mirroring the VMSS law-polling TOC. ── */
+  function tocLabel(m) {
+    if (m.question) return m.question;
+    var t = (m.claims && m.claims[0] && m.claims[0].text) || '';
+    if (t.length > 72) t = t.slice(0, 69).replace(/\s+\S*$/, '') + '…';
+    return t || m.id;
+  }
+
+  function tocGroupsHTML(list) {
+    var byCat = {}, cats = [];
+    list.forEach(function (m) {
+      var c = m.category || 'Uncategorized';
+      if (!byCat[c]) { byCat[c] = []; cats.push(c); }
+      byCat[c].push(m);
+    });
+    return cats.map(function (cat) {
+      var links = byCat[cat].map(function (m) {
+        var num = String(m.id || '').replace(/^M-TBD-/, '');
+        return '<a class="toc-entry" href="#' + esc(m.id) + '">' +
+          '<span class="toc-num">' + esc(num) + '</span> ' + esc(tocLabel(m)) + '</a>';
+      }).join('');
+      return '<div class="toc-group" data-category="' + esc(cat) + '">' +
+        '<div class="toc-group-label">' + esc(cat) +
+          '<span class="toc-count">' + byCat[cat].length + '</span></div>' +
+        links +
+      '</div>';
+    }).join('');
+  }
+
+  function setFilterCount(shown, total) {
+    var el = document.getElementById('mb-filter-count');
+    if (!el) return;
+    el.textContent = shown === total
+      ? 'Showing all ' + total + ' entries'
+      : 'Showing ' + shown + ' of ' + total + ' entries';
+  }
+
   /* ── Preview mode ("the docket"): show gate-FAILED entries for grading, but
      ONLY on localhost with ?preview=1. On the live site this is inert, and a
      normal load (no param) is unaffected. Kept a PURE function of its args (not
@@ -2085,6 +2125,13 @@
       filters.innerHTML = chipsHTML(cats);
     }
 
+    // TOC + count line draw from the same source as the chips (preview folds
+    // the docket in, so Jason can jump to ungraded cards while grading).
+    var tocMount = document.getElementById('mb-toc-groups');
+    var tocSource = preview ? rendered.concat(docket) : rendered;
+    if (tocMount) tocMount.innerHTML = tocGroupsHTML(tocSource);
+    setFilterCount(tocSource.length, tocSource.length);
+
     return rendered.length;
   }
 
@@ -2103,9 +2150,17 @@
           c.classList.toggle('active', on);
           c.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
+        var shown = 0, total = 0;
         list.querySelectorAll('.mb-card').forEach(function (card) {
           var show = cat === 'all' || card.dataset.category === cat;
           card.classList.toggle('is-hidden', !show);
+          total++;
+          if (show) shown++;
+        });
+        setFilterCount(shown, total);
+        // The TOC follows the active filter (group axis = filter axis).
+        document.querySelectorAll('#mb-toc-groups .toc-group').forEach(function (g) {
+          g.style.display = (cat === 'all' || g.dataset.category === cat) ? '' : 'none';
         });
       });
     }

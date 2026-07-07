@@ -958,6 +958,12 @@ body {
   padding-bottom: 0.42rem; margin-bottom: 0.5rem;
   border-bottom: 0.5px solid var(--border);
 }
+.toc-group-label .toc-count {
+  display: inline-block; margin-left: 0.55em; padding: 0 7px;
+  border-radius: 999px; background: var(--scarlet-pale); color: var(--scarlet-dim);
+  font-size: 10px; font-weight: 800; letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
 .toc-entry {
   display: flex; align-items: baseline; gap: 9px;
   text-decoration: none; color: var(--text-muted);

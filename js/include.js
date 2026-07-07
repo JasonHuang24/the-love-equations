@@ -41,7 +41,7 @@
   }
 
   // Back-to-top button — long reference pages only
-  const TOP_PAGES = ['frameworks', 'statistics'];
+  const TOP_PAGES = ['frameworks', 'statistics', 'mythbuster', 'lexicon'];
   if (TOP_PAGES.includes(page)) {
     const btn = document.createElement('button');
     btn.type = 'button';
