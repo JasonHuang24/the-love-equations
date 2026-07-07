@@ -1492,7 +1492,7 @@
         ],
         researchNotes: 'Graded 2026-07-07 at Jason\u2019s request, closing the last docket hold. The 2026-07-06 gap \u2014 no direct test of stalled early-stage courtships \u2014 is closed to \u2018evidence\u2019 (not hard-data) by the ghosting literature: Koessler, Kohut & Campbell measured the association directly (ghost-ended relationships shorter, lower-commitment), verified this session via the Semantic Scholar API record of DOI 10.1525/collabra.230 because UC Press 403s automated fetchers. Their prevalence figures (64.5% report having ghosted, MTurk sample) circulate in secondary summaries but are not in the abstract, so they are not cited. No study measures the conditional rate the claim needs \u2014 P(complete cutoff | stall after 1\u20132 dates) \u2014 so its \u2018usually\u2019 stays an inference; the claim\u2019s hedges (\u2018tends to be\u2019) keep it at Oversimplified rather than worse. Nothing verified shows a sex difference in ghosting, so the \u2018once a woman files you\u2019 mechanism is scored against the claim. Bullock et al. and Roberts & Dunbar re-verified this session (abstract and full text respectively).',
       },
-      related: [ { label: 'GD card: Romance is fragile; friendship is durable', href: 'gender-dynamics.html#gd-romance-fragile' } ],
+      related: [ { label: 'Ruling M-TBD-33: the situationship economy', href: 'mythbuster.html#M-TBD-33' }, { label: 'Lexicon: Friend zone', href: 'lexicon.html#term-friend-zone' } ],
     },
     {
       id: 'M-TBD-55',
