@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Single Parenthood &mdash; The Love Equations</title>
+  <meta name="description" content="The one-parent home is not new — it changed owners. Death built it, divorce rebuilt it, and the never-married route runs it now, with America leading the world at 23% of children in solo-parent households against a 7% global share. A Deep Dive that walks the century, the custody split, the class gradient, and what the outcome data actually survives scrutiny. Extends the single-parenthood charts on the Statistics page." />
+  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+        integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
+  <script src="js/include.js" defer></script>
+  <link rel="stylesheet" href="css/deep-dive-essay.css?v=1.5" />
+  <script src="js/deep-dive.js?v=1.6" defer></script>
+</head>
+<body data-page="deep-dive">
+  <div data-include="navigation-bar"></div>
+
+  <div class="page">
+    <header class="dd-essay-hero">
+      <div class="dd-essay-hero-inner">
+        <a class="dd-back" href="deep-dive.html"><i class="ti ti-arrow-left" aria-hidden="true"></i> All Deep Dives</a>
+        <div class="page-eyebrow">Deep Dive &middot; Essay 05</div>
+        <h1 class="dd-essay-title">Single Parenthood</h1>
+        <p class="dd-standfirst">The one-parent home is not new. It changed owners: the widow&rsquo;s house became the divorc&eacute;e&rsquo;s, then the never-married mother&rsquo;s.</p>
+        <div class="dd-essay-meta">
+          <span><i class="ti ti-clock" aria-hidden="true"></i> ~16 min read</span>
+          <span><i class="ti ti-timeline" aria-hidden="true"></i> 1909 &ndash; today</span>
+          <span><i class="ti ti-books" aria-hidden="true"></i> Records cited &middot; Frameworks flagged &middot; Voices on the record</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Nav strip: primary navigation spine — REBUILD ERAS along a century axis.
+         The five segments are the three construction eras of the American
+         one-parent home (death → divorce → never-married) plus where the curve
+         landed and what the ledger says. This is thesis-as-UI, the same move
+         essays 03 (TFR-ordered regions) and 04 (age bands) made: the strip
+         itself says "the single-parent share didn't spike on one villainous
+         decade — it was rebuilt three times across a century." The axis below
+         is a year ruler whose labels sit on the SEGMENT BOUNDARIES (1900 /
+         1960 / 1980 / 2000 / 2020 / now), a conceptual axis like essay 04's,
+         not a linear scale. deep-dive.js never parses era labels, axis labels,
+         or data-start/-end (scrollspy uses live offsetTop; the progress rail is
+         index-based), so the strip needs no css/js change; data-start/-end
+         carry the years as unused numeric forward-compat placeholders. -->
+    <nav class="dd-timeline" aria-label="Era strip — jump to a section">
+      <div class="dd-timeline-track">
+        <a class="dd-era" href="#widows-house" data-start="1900" data-end="1959">
+          <span class="dd-era-label">1900 &ndash; 1959</span>
+          <span class="dd-era-range">the widow&rsquo;s house</span>
+        </a>
+        <a class="dd-era" href="#divorce-rebuilds" data-start="1960" data-end="1979">
+          <span class="dd-era-label">1960 &ndash; 1979</span>
+          <span class="dd-era-range">divorce rebuilds it</span>
+        </a>
+        <a class="dd-era" href="#route-in-flips" data-start="1980" data-end="1999">
+          <span class="dd-era-label">1980 &ndash; 1999</span>
+          <span class="dd-era-range">the route in flips</span>
+        </a>
+        <a class="dd-era" href="#worlds-highest" data-start="2000" data-end="2019">
+          <span class="dd-era-label">2000 &ndash; 2019</span>
+          <span class="dd-era-range">the world&rsquo;s highest</span>
+        </a>
+        <a class="dd-era" href="#the-ledger" data-start="2020" data-end="2026">
+          <span class="dd-era-label">2020s</span>
+          <span class="dd-era-range">the ledger</span>
+        </a>
+      </div>
+      <div class="dd-timeline-progress" aria-hidden="true"><span class="dd-timeline-progress-fill"></span></div>
+      <div class="dd-timeline-axis" aria-hidden="true">
+        <span class="start" style="left:0%">1900</span>
+        <span style="left:20%">1960</span>
+        <span style="left:40%">1980</span>
+        <span style="left:60%">2000</span>
+        <span style="left:80%">2020</span>
+        <span class="end" style="left:100%">now</span>
+      </div>
+    </nav>
+
+    <div class="dd-layout">
+      <article class="dd-article">
+
+        <section class="dd-section" id="widows-house">
+          <h2 class="dd-h2">1900 to 1959: The Widow&rsquo;s House<a class="dd-anchor" href="#widows-house" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p class="dd-dropcap">No figure in the gender discourse works harder than the single mother. One side reads her as the proof of male abandonment, the other as the price of female choices, and the statistics posters have her raising 85% of the youth in prison and most of the dropouts and runaways besides &mdash; numbers that close arguments precisely because nobody checks them. This essay checks them. It walks the American one-parent home across a century and a quarter, and the first thing the walk turns up is that the house is old. What is new is who lives in it, and how they came to.</p>
+
+          <p>For the first half of the twentieth century, the single parent was, archetypally, a widow. Mortality did then what divorce and drift do now: fathers died in mines, mills, epidemics, and wars, and the mother carried the household on alone. And the culture knew exactly what it thought of her. She was the deserving poor made flesh &mdash; the one claimant on public sympathy that every faction, from settlement-house reformers to machine politicians, agreed the state could decently help. When Theodore Roosevelt summoned the first White House conference on children in 1909, she was the figure the whole proceeding orbited.</p>
+
+          <figure class="dd-callout voice">
+            <div class="dd-callout-label"><i class="ti ti-quote" aria-hidden="true"></i> Voice</div>
+            <blockquote class="dd-voice-quote">&ldquo;Home life is the highest and finest product of civilization. Children should not be deprived of it except for urgent and compelling reasons. &hellip; Surely poverty alone should not disrupt the home. &hellip; The widowed or deserted mother, if a good woman, willing to work and to do her best, should ordinarily be helped in such fashion as will enable her to bring up her children herself in their natural home.&rdquo;</blockquote>
+            <figcaption class="dd-voice-attr">&mdash; Theodore Roosevelt, Special Message to Congress on the Conference on the Care of Dependent Children, 15 February 1909</figcaption>
+          </figure>
+
+          <p>That sentiment did not stay sentiment. It became the first family welfare architecture the country ever built &mdash; and it was built, explicitly, for her.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>Illinois passed the first statewide mothers&rsquo; pension law in 1911: cash aid so that a mother deprived of a breadwinner could raise her children in her own home rather than surrender them to an orphanage. Eighteen states had such laws by 1913, thirty-nine by 1919, and by 1934 the count stood at forty-six states plus the District of Columbia &mdash; with the earliest statutes written for widows above all. In 1935 the Social Security Act absorbed the pensions into federal Aid to Dependent Children. America&rsquo;s first cash welfare program was, by origin and design, a single-mother program.</p>
+            <span class="dd-callout-cite">Source &mdash; Social Security Administration historical archives; Social Welfare History Project (VCU), &ldquo;Mothers&rsquo; Aid&rdquo;; mothers&rsquo; pension statutes 1911&ndash;1935.</span>
+          </div>
+
+          <p>The archetype held for half a century, and the census caught its portrait on nearly the last day it was true.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>In 1960, more than eight in ten American single mothers &mdash; 82% &mdash; were divorced, separated, or widowed. Just 4% had never been married. The one-parent home, at the moment the modern discourse usually starts its clock, was overwhelmingly a house that marriage had built and death or desertion had emptied.</p>
+            <span class="dd-callout-cite">Source &mdash; Pew Research Center (2013), analysis of U.S. decennial census / Current Population Survey data, in &ldquo;Breadwinner Moms,&rdquo; ch. 4.</span>
+          </div>
+
+          <p>Hold that 4% in mind. Everything the next two sections describe is, in one sense, the story of that single number growing elevenfold.</p>
+        </section>
+
+        <section class="dd-section" id="divorce-rebuilds">
+          <h2 class="dd-h2">1960 to 1979: Divorce Rebuilds It<a class="dd-anchor" href="#divorce-rebuilds" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p>When the Census Bureau first drew its modern series in 1968, the old world was still largely intact: 85% of American children lived with two parents, 11% with their mother only, 1% with their father only. Then the legal ground moved. California signed the country&rsquo;s first no-fault divorce law in 1969 &mdash; Governor Ronald Reagan&rsquo;s signature, an irony the discourse rarely retrieves &mdash; and within fifteen years nearly every state had followed. Divorce stopped requiring an accusation and became something one spouse could simply decide.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>The U.S. divorce rate more than doubled in twenty years &mdash; from 2.2 divorces per 1,000 Americans in 1960 to 5.2 by 1980, the neighborhood of its all-time peak, before beginning the long decline it has been on since. The children of that surge moved, overwhelmingly, into their mothers&rsquo; houses: the divorc&eacute;e displaced the widow as the country&rsquo;s archetypal single parent within a single generation.</p>
+            <span class="dd-callout-cite">Source &mdash; NCHS, &ldquo;100 Years of Marriage and Divorce Statistics&rdquo; and national vital statistics; crude divorce rate per 1,000 total population.</span>
+          </div>
+
+          <p>Who wanted those endings is its own chart, and it complicates every simple telling: among marriages that end today, <a href="statistics.html#stat-divorce">women want roughly seven in ten of the divorces</a> &mdash; though non-marital breakups split close to even, which points the asymmetry at the institution rather than at the sex. The unbundling behind all of it &mdash; marriage losing its monopoly on sex, children, and adult standing, function by function &mdash; is <a href="dd-relationships-throughout-history.html#great-unbundling">the companion history essay&rsquo;s whole subject</a>.</p>
+
+          <p>It was in the middle of this turn, in 1965, that a young Assistant Secretary of Labor named Daniel Patrick Moynihan wrote the most argued-over memo in American social science, on the state of the Black family. It deserves to be quoted exactly, because almost nobody who invokes it has read it.</p>
+
+          <figure class="dd-callout voice">
+            <div class="dd-callout-label"><i class="ti ti-quote" aria-hidden="true"></i> Voice</div>
+            <blockquote class="dd-voice-quote">&ldquo;At the heart of the deterioration of the fabric of Negro society is the deterioration of the Negro family. &hellip; There is probably no single fact of Negro American life so little understood by whites.&rdquo;</blockquote>
+            <figcaption class="dd-voice-attr">&mdash; Daniel Patrick Moynihan, <cite>The Negro Family: The Case for National Action</cite>, U.S. Department of Labor, March 1965</figcaption>
+          </figure>
+
+          <p>The report&rsquo;s alarm bell was a bullet reading &ldquo;nearly one-quarter of Negro births are now illegitimate.&rdquo; Read that against the present: by 2023, the share of births outside marriage was 26.8% among non-Hispanic white mothers &mdash; higher than the figure that struck 1965 as a national emergency &mdash; 54.2% among Hispanic mothers, 69.3% among Black mothers, and 40.0% overall. Whatever else the Moynihan Report was, hindsight makes it a dispatch from the leading edge of a curve every group was about to walk. The essay on the world&rsquo;s regions found the same shape between countries: <a href="dd-relationships-by-country.html">the West as pilot program, not exception</a>. Here the pilot program was internal.</p>
+        </section>
+
+        <section class="dd-section" id="route-in-flips">
+          <h2 class="dd-h2">1980 to 1999: The Route In Flips<a class="dd-anchor" href="#route-in-flips" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p>The divorce boom crested around 1980 and receded. The single-parent share kept climbing anyway, because the route into the one-parent home was changing underneath it: children stopped arriving in marriages that later broke, and started arriving outside marriage in the first place.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>Births to unmarried mothers were about 5% of all U.S. births in 1960, 18% in 1980, and 33% by 2000. The share peaked at 41% around 2009&ndash;2010 and has drifted just below it since &mdash; 39.5% of the roughly 3.6 million American births in 2024. It has held near four in ten for a decade and a half: not a spike, a resettled baseline.</p>
+            <span class="dd-callout-cite">Source &mdash; CDC/NCHS national vital statistics (FastStats, &ldquo;Unmarried Childbearing,&rdquo; 2024; &ldquo;Nonmarital Childbearing in the United States, 1940&ndash;99&rdquo;); Pew Research Center (2013) for the 1960 baseline.</span>
+          </div>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>The composition of single motherhood flipped accordingly. The never-married share of single mothers surged elevenfold, from 4% in 1960 to 44% by 2011 &mdash; pulling nearly level with the 50% who were divorced, separated, or widowed combined. The widow, who had defined the category for the first half of the century, had by now nearly vanished from it.</p>
+            <span class="dd-callout-cite">Source &mdash; Pew Research Center (2013), &ldquo;Breadwinner Moms&rdquo; ch. 4 and &ldquo;More of today&rsquo;s single mothers have never been married&rdquo; (Census/CPS analysis).</span>
+          </div>
+
+          <p>One thing did not flip: who holds the child. Fathers raising children alone grew faster in percentage terms than any other arrangement &mdash; and remained a rounding error beside mothers doing the same.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>Of the 12.9 million custodial parents in the United States in 2018, 80% were mothers and 20% were fathers &mdash; a four-to-one split that has moved only a few points in three decades of Census measurement. Father-only households did more than quadruple across the long series, from 1% of children in 1968 to 4.5% in 2020; mother-only households went from 11% to 21% over the same years. Whichever door a family came through &mdash; death, divorce, or never-married &mdash; the room on the other side is, four times out of five, a woman&rsquo;s.</p>
+            <span class="dd-callout-cite">Source &mdash; U.S. Census Bureau, Current Population Survey Child Support Supplement (custodial parents, 2018 report); Census historical living-arrangements series CH-1 (1968&ndash;2020).</span>
+          </div>
+
+          <p>That four-to-one is the essay&rsquo;s load-bearing asymmetry, and the final section returns to it &mdash; because a market fact that concentrated on one sex is going to be priced by the other.</p>
+        </section>
+
+        <section class="dd-section" id="worlds-highest">
+          <h2 class="dd-h2">2000 to 2019: The World&rsquo;s Highest<a class="dd-anchor" href="#worlds-highest" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p>Where did the curve land? Higher than anywhere else on Earth. Not among the highest &mdash; the highest, of every country measured.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>Across 130 countries and territories, 23% of American children under 18 live with one parent and no other adult &mdash; more than three times the global share of 7%, and the highest rate in the study. China sits at 3%, Nigeria at 4%, India at 5%. Two definitions matter. First, this counts <em>solo</em>-parent households: one parent, no other adult in the home. Second, part of the American lead is a housing fact as much as a family one &mdash; single mothers elsewhere far more often live inside extended families, so the same broken pairing produces a &ldquo;single-parent household&rdquo; in Ohio and a three-generation household in Lagos or Chennai.</p>
+            <span class="dd-callout-cite">Source &mdash; Pew Research Center (Dec 2019), &ldquo;U.S. has world&rsquo;s highest rate of children living in single-parent households&rdquo; (130-country study).</span>
+          </div>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>The domestic series behind that ranking: in 1968, 85% of U.S. children lived with two parents; by 2020, 70% did. Mother-only went from 11% to 21%, father-only from 1% to 4.5%, and children living with no parent &mdash; mostly with grandparents &mdash; from 3% to 4%. Note that the Census counts unmarried parents living together as two-parent homes: the two-parent decline is about adults in the house, not weddings.</p>
+            <span class="dd-callout-cite">Source &mdash; U.S. Census Bureau (2021), &ldquo;Number of Children Living Only With Their Mothers Has Doubled in Past 50 Years&rdquo;; CPS historical series.</span>
+          </div>
+
+          <p>And &ldquo;unmarried&rdquo; increasingly does not mean &ldquo;alone,&rdquo; either: by a Bowling Green estimate cited by Child Trends, about 62% of births to never-married women now arrive to cohabiting couples &mdash; two adults at the crib, no ring. The one-parent statistics are real, but they sit on a spectrum of arrangements the single word &ldquo;single&rdquo; flattens.</p>
+
+          <p>The sharpest fact about the American number, though, is not its height. It is its gradient. Single parenthood did not rise evenly across the country; it rose steeply down the education ladder and barely at all up top.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>Between 1980 and 2019, the share of American children living with married parents fell from 77% to 63%. But for children of four-year-college-graduate mothers it slipped only from 90% to 84%, while for children whose mothers finished high school or attended some college it fell from 83% to 60%, and for children of mothers without a high-school degree from 80% to 57%. The two-parent home held for the college class and eroded for everyone else &mdash; which is why the economist who assembled these figures titled the result a &ldquo;privilege.&rdquo;</p>
+            <span class="dd-callout-cite">Source &mdash; Melissa S. Kearney, <cite>The Two-Parent Privilege</cite> (2023), from Census/CPS data, 1980&ndash;2019.</span>
+          </div>
+
+          <p>Set this beside the marriage-delay chart on the statistics page &mdash; <a href="statistics.html#stat-marriage-age">median first marriage climbing toward 30</a> &mdash; and the two curves tell one story: marriage in America was not abandoned so much as it moved upmarket, and the children of everyone below the new price of entry increasingly grow up outside it.</p>
+        </section>
+
+        <section class="dd-section" id="the-ledger">
+          <h2 class="dd-h2">The 2020s: The Ledger<a class="dd-anchor" href="#the-ledger" aria-label="Link to this section"><i class="ti ti-link" aria-hidden="true"></i></a></h2>
+          <p>So what does the one-adult house actually cost? The honest answer has three entries: a money line that is brutal and undisputed, an outcomes line that is real but smaller than advertised, and a meme line that is mostly fabricated. They deserve to be kept apart.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>The money line first. In 2023, 5.5% of married-couple families with children lived below the official poverty line. For single-father families the figure was 16.0%; for single-mother families, 31.6% &mdash; roughly one such household in three, and near six times the married rate. Whatever one believes about causes, a second adult in the house is the single largest anti-poverty program in American life.</p>
+            <span class="dd-callout-cite">Source &mdash; U.S. Census Bureau, CPS ASEC, &ldquo;Poverty in the United States: 2023&rdquo; (families with children under 18, official poverty measure).</span>
+          </div>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>The outcomes line, from the strongest review of the causal evidence: father absence does have negative effects that survive rigorous designs &mdash; sibling comparisons, fixed-effects models, natural experiments &mdash; with the most consistent findings on high-school graduation, children&rsquo;s social-emotional adjustment (especially externalizing behavior), and adult mental health, and larger effects when the absence begins in early childhood. But across the board, the causal estimates come out <em>smaller</em> than the raw gaps between family types &mdash; because families that break differ from families that don&rsquo;t before anything breaks. Part of the observed damage is the sorting, not the split.</p>
+            <span class="dd-callout-cite">Source &mdash; McLanahan, Tach &amp; Schneider (2013), &ldquo;The Causal Effects of Father Absence,&rdquo; <em>Annual Review of Sociology</em> 39.</span>
+          </div>
+
+          <p>That last clause is the same selection lesson <a href="statistics.html#body-count">the body-count chart</a> teaches: a raw gap between groups is not a dose-response curve, and who ends up in each group is doing much of the work. Which brings the essay back to the numbers it opened with &mdash; the prison percentages that decorate every fatherlessness meme.</p>
+
+          <div class="dd-callout record">
+            <div class="dd-callout-label"><i class="ti ti-archive" aria-hidden="true"></i> Record</div>
+            <p>The claim that 85% of imprisoned youth &mdash; or 90% of felons &mdash; come from fatherless homes has no traceable source; fact-checkers who followed it back found decades-old, unlocatable citations. The measured figure runs far lower: in the Justice Department&rsquo;s 2004 national inmate survey, 43% of state prisoners reported growing up with both parents and 57% in other arrangements &mdash; federal prisons nearly identical at 45% and 55%. A real gap, nowhere near the meme. And even the meme&rsquo;s own arithmetic is inverted: the share of prisoners who are fatherless says almost nothing about the share of the fatherless who end up in prison, which stays in the low single digits under any plausible assumption.</p>
+            <span class="dd-callout-cite">Source &mdash; Bureau of Justice Statistics, 2004 Survey of Inmates in State and Federal Correctional Facilities, via PolitiFact (2013), &ldquo;Rep. John Duncan Jr. says 90 percent of felons grew up in fatherless households.&rdquo;</span>
+          </div>
+
+          <div class="dd-callout framework">
+            <div class="dd-callout-label"><i class="ti ti-flask-2" aria-hidden="true"></i> Framework</div>
+            <p>Read through The Love Equations, the dating market&rsquo;s twin doctrines about single parents both fail the same audit. The manosphere&rsquo;s rule &mdash; never date single mothers &mdash; takes three true entries in the ledger (the time and money constraints are real, the poverty line is real, the custody split prices nearly all of it onto women) and absolutizes them into a caste, exactly the move that turns a cost curve into a cliff. The blue-pill mirror &mdash; that noticing the ledger at all is bigotry, and a good partner simply absorbs it &mdash; is the same dodge run in reverse: it asks the market to pretend a load is weightless, and markets never pretend for long. The record supports something plainer than either. Single parenthood is a load, not a verdict: carried four times out of five by women, priced by everyone who dates them, heaviest exactly where money is already shortest, and lighter than the memes claim on every outcome that has been measured honestly. A load can be shared, planned around, or declined &mdash; what it cannot honestly be is either denied or turned into a sentence about a person&rsquo;s worth. Note too what the market data elsewhere on this site suggests about who is even competing: <a href="statistics.html#stat-why-single">among singles over 40, most women say they are not looking</a> &mdash; many single mothers are not asking the market&rsquo;s permission for anything.</p>
+            <p>That is an interpretive lens, not a documented fact &mdash; a way of reading the record, offered as such.</p>
+          </div>
+        </section>
+
+        <!-- ── Related Cards: LE cards this essay extends ── -->
+        <div class="dd-related">
+          <div class="dd-related-head"><i class="ti ti-cards" aria-hidden="true"></i> Cards this essay extends</div>
+          <div class="dd-related-list">
+            <a class="dd-related-card" href="statistics.html#stat-single-parent-world">
+              <span class="dd-related-icon"><i class="ti ti-home" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">Single parenthood, by the numbers</span>
+                <span class="dd-related-where">Statistics &middot; the companion charts to this essay</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="dd-related-card" href="statistics.html#stat-never-married">
+              <span class="dd-related-icon"><i class="ti ti-users-minus" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">The permanent single class</span>
+                <span class="dd-related-where">Statistics &middot; never-married at 40, the adjacent curve</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="dd-related-card" href="statistics.html#body-count">
+              <span class="dd-related-icon"><i class="ti ti-chart-bar" aria-hidden="true"></i></span>
+              <span>
+                <span class="dd-related-name">Divorce by body count</span>
+                <span class="dd-related-where">Statistics &middot; the selection-confound lesson this essay reuses</span>
+              </span>
+              <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+</body>
+</html>
