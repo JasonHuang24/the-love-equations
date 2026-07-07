@@ -273,44 +273,40 @@
   margin: 0 0 1rem;
 }
 
-/* ── Synthesized split ("Our stake"): proportion bar + legend under the ruling
-   head. Deliberately NOT verdict-coloured — it is a share-of-the-truth readout,
-   not a verdict — so the segments step down through the ruling's scarlet family
-   (s0 strongest share → s2 faintest). The legend carries the numbers as text;
-   the bar is decorative. ── */
-.mb-split { margin: -0.1rem 0 0.85rem; }
-.mb-split-bar {
+/* ── Stake bar ("Our stake"): one numbers-free row under the ruling head — the
+   percentages live on the claim stamps in the left column. Deliberately NOT
+   verdict-coloured — it is a share-of-the-truth readout, not a verdict — so the
+   segments step down through the ruling's scarlet family in claim order
+   (s0 first claim → faintest = the ruling's remainder on lone/mirror claims). ── */
+.mb-split {
   display: flex;
-  gap: 2px;
-  height: 7px;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.35rem;
-}
-.mb-split-seg { display: block; height: 100%; }
-.mb-split-seg.s0 { background: var(--scarlet); }
-.mb-split-seg.s1 { background: rgba(196, 30, 58, 0.32); }
-.mb-split-seg.s2 { background: rgba(196, 30, 58, 0.14); }
-.mb-split-legend {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  align-items: center;
+  gap: 0.55rem;
+  margin: -0.1rem 0 0.85rem;
 }
 .mb-split-head {
   font-size: 9.5px;
   font-weight: 800;
   letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-dim);
-  margin-right: 0.15rem;
+  white-space: nowrap;
 }
-.mb-split-key b { font-size: 11.5px; font-weight: 800; color: var(--text); letter-spacing: 0.02em; }
-.mb-split-sep { color: var(--text-dim); font-weight: 400; }
+.mb-split-bar {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 2px;
+  height: 7px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.mb-split-seg { display: block; height: 100%; }
+.mb-split-seg.s0 { background: var(--scarlet); }
+.mb-split-seg.s1 { background: rgba(196, 30, 58, 0.32); }
+.mb-split-seg.s2 { background: rgba(196, 30, 58, 0.14); }
+
+/* Staked-% suffix inside a claim's verdict chip ("OVERSIMPLIFIED · 45%"). */
+.mb-verdict .mb-truth { font-weight: 800; opacity: 0.9; }
 .mb-evidence { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 
 /* Tier pill — statistics/.chart-tier family */

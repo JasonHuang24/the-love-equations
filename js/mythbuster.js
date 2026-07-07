@@ -9,12 +9,19 @@
  *     one card type, one render function. No per-card HTML.
  *   - Each claim carries its own verdict; the entry's `ruling` holds the
  *     data-backed conclusion, its evidence tier, and its sources.
- *   - A ruling MAY stake a synthesized split — `split: [ { label, pct }, … ]`,
- *     2–3 parts, integer pcts summing to exactly 100 — quantifying how the truth
- *     divides: True/False share for a lone claim, share-of-the-truth per camp
- *     when claims compete. Splits are SYNTHESIZED judgment calls, not measurements
- *     — staked on purpose so they can be refuted and refined. Clean poles
- *     (Confirmed / False / Backwards / agreed entries) deliberately carry none.
+ *   - Claims MAY stake a synthesized truth share — `truth: <int 1–99>` on every
+ *     claim of an entry (all or none) — rendered as a % suffix inside the claim's
+ *     verdict stamp: the claim's staked market share of the evidenced truth.
+ *     Mirror claims (one assertion, two lenses) carry the SAME number; competing
+ *     camps' numbers sum to exactly 100 (shares of the table). The gate enforces
+ *     both shapes.
+ *   - The ruling column derives a proportion bar from those truths (segments in
+ *     claim order; single/mirror entries show claim-share vs the ruling's faint
+ *     remainder — the truth only the ruling supplies). When the BEST claim stakes
+ *     under 25%, ALL metrics are omitted on purpose: the silence says neither
+ *     claim meaningfully reflects reality — the ruling is the ground truth.
+ *     Clean poles carry no numbers at all. Stakes are SYNTHESIZED judgment
+ *     calls, not measurements — staked so they can be refuted and refined.
  *   - render() REFUSES an entry missing `ruling.tier`, with an empty
  *     `ruling.sources`, with a duplicate id, or otherwise structurally broken —
  *     it is skipped and a console.warn fires. No unsourced ruling reaches the DOM.
@@ -65,14 +72,13 @@
       claims: [
         { camp: 'Ani',
           text: 'Complimenting a customer and keeping the conversation going is not standard barista behavior. Girls don\u2019t put in that kind of effort with customers unless they enjoy their company \u2014 she was most likely at least a little interested.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 25 },
         { camp: 'Mika',
           text: 'Girls in customer-service jobs are trained to be chatty, and some are just naturally social. If she were actually flirting she\u2019d be flirting with dozens of guys every single day \u2014 real flirting is selective and treats you differently from everyone else.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 75 },
       ],
       ruling: {
         badge: 'Advantage Mika',
-        split: [ { label: 'Mika', pct: 75 }, { label: 'Ani', pct: 25 } ],
         text: 'Men systematically over-read warmth as romantic interest \u2014 the sexual overperception bias \u2014 and service-industry friendliness is occupational, which inflates the false-positive rate further. The discriminating cue is the one Mika names: differential treatment and effort to extend the interaction, not baseline warmth.',
         tier: 'hard-data',
         sources: [
@@ -90,14 +96,13 @@
       claims: [
         { camp: 'Ani',
           text: 'Most girls will give you signals and wait to see if you do something. They\u2019re not going to risk rejection by being super obvious \u2014 listen to what they do, not what they say.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
         { camp: 'Mika',
           text: 'Most girls who are actually interested give multiple hints that are pretty obvious if you\u2019re paying attention \u2014 laughing at unfunny jokes, staying in the conversation longer than needed, personal questions. If she\u2019s truly interested she doesn\u2019t make it nearly that hard.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Both half right',
-        split: [ { label: 'Ani', pct: 55 }, { label: 'Mika', pct: 45 } ],
         text: 'Interested women do emit identifiable cues \u2014 the ones Mika lists are the documented ones \u2014 but detection is genuinely bad: in lab interactions, actual flirting was correctly recognized only about a third of the time, and observers did no better than participants. Signals exist and get missed at high rates. Each camp holds half the picture.',
         tier: 'hard-data',
         sources: [
@@ -114,14 +119,13 @@
       claims: [
         { camp: 'Ani',
           text: 'Girls don\u2019t give guys a bad reputation for politely asking for a number when the vibe is good. Bad reputations come from being pushy, entitled, or bitter after rejection \u2014 most girls respect a guy who makes a clean move and takes no well.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 70 },
         { camp: 'Mika',
           text: 'Perception matters more than how nicely you take the rejection. If she never gave real signals, your advance is unwanted attention no matter how polite it is \u2014 and repeatedly misreading friendliness as flirting damages your reputation, because girls talk.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Advantage Ani',
-        split: [ { label: 'Ani', pct: 70 }, { label: 'Mika', pct: 30 } ],
         text: 'The pursuit literature puts the damage where Ani puts it: across 241 people\'s dual pursuer/target accounts, targets\' negative reactions attached to persistence after explicit rejection \u2014 and pursuers, especially men, over-reported reciprocation signals and under-reported the no. No study shows a polite, once-and-done ask costing reputation. Mika\'s mechanism is real but narrower: identical advances get labeled harassment more often when the initiator is less attractive, and interested men do overperceive attraction \u2014 so "the vibe was good" is the unreliable part, not the graceful exit.',
         tier: 'evidence',
         sources: [
@@ -140,17 +144,16 @@
       claims: [
         { camp: 'Ani',
           text: '[Reported \u2014 paraphrase] Anyone who thinks anything positive of you \u2014 finds you cute, laughs at your jokes, has you on their mind \u2014 has a crush.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 20 },
         { camp: 'Mika',
           text: 'A crush is romantic interest with emotional investment \u2014 someone excited or nervous to be around you who wants your attention. Finding someone cute or enjoying their company is basic attraction, not a crush.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 30 },
         { camp: 'Gender Dynamics',
           text: 'A crush isn\'t only the serious, want-to-date-them kind; for most people it just means a flicker of attraction plus a little lift when someone\'s around \u2014 sparked by looks, personality, or both, and easily running several at once. The one real boundary is that a crush needs some pull of attraction; pure fondness with none \u2014 the sweet elderly neighbor \u2014 doesn\'t qualify.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 50 },
       ],
       ruling: {
         badge: 'Opposite errors',
-        split: [ { label: 'GD', pct: 50 }, { label: 'Mika', pct: 30 }, { label: 'Ani', pct: 20 } ],
         text: 'Definitionally both miss, in opposite directions. Crush research treats a crush as an attraction-based, usually unilateral and uncommunicated longing that ranges from light to intense (O\'Sullivan et al. 2022, n=3,585). That sinks Ani\'s \u201cany positive thought counts\u201d \u2014 fondness, or a laughed-at joke with no attraction behind it, isn\'t a crush. But it also undercuts Mika\'s demand for nervous, emotionally invested pining: a crush can be mild. The real line is attraction at any intensity \u2014 not mere liking, and not full limerence (Tennov).',
         tier: 'definitional',
         sources: [
@@ -168,14 +171,13 @@
       claims: [
         { camp: 'Ani',
           text: 'Average guys who consistently shoot their shot on any sensed interest get rejected a lot but also get far more yeses than the overthinkers \u2014 many girls are open to dating and just don\u2019t want to be the one who initiates. The bold guy wins more often than people admit.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 25 },
         { camp: 'Mika',
           text: 'The polite refusal wins by a huge margin \u2014 cold flirting in public has a very low success rate, and the numbers game burns confidence and reputation. High-quality contexts (apps, social circles, hobbies) beat high-quantity approaches.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 75 },
       ],
       ruling: {
         badge: 'Advantage Mika',
-        split: [ { label: 'Mika', pct: 75 }, { label: 'Ani', pct: 25 } ],
         text: 'Where couples actually form: friends, family, coworkers, school and \u2014 now the leading channel \u2014 online dating account for the bulk of matches; meeting cold in a public place is a small and shrinking share. Initiative matters within a context, but as a strategy, venue beats volume.',
         tier: 'hard-data',
         sources: [
@@ -193,11 +195,10 @@
       claims: [
         { camp: 'Mika',
           text: 'Those stories are extremely rare \u2014 usually she was already strongly attracted, or she friend-zoned the slow guy and is retelling it kindly. For every girl who liked that he waited, hundreds lost interest because he never tried. For average guys, waiting too long is usually a death sentence.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'It depends',
-        split: [ { label: 'True', pct: 40 }, { label: 'False', pct: 60 } ],
         text: 'On long-term outcomes the claim inverts: among 2,035 married individuals, later sexual timing predicted better communication, satisfaction, perceived stability, and sexual quality \u2014 controlling for religiosity, education, partner count, and relationship length. Decisiveness may help short-term attraction, but \u201cdeath sentence\u201d depends entirely on which finish line you\u2019re measuring.',
         tier: 'evidence',
         sources: [
@@ -259,11 +260,10 @@
       id: 'M-TBD-9',
       category: 'Attraction',
       claims: [
-        { camp: '', text: 'Opposites attract.', verdict: 'oversimplified' },
+        { camp: '', text: 'Opposites attract.', verdict: 'oversimplified', truth: 15 },
       ],
       ruling: {
         badge: 'Oversimplified',
-        split: [ { label: 'True', pct: 15 }, { label: 'False', pct: 85 } ],
         text: 'Similarity \u2014 actual and perceived \u2014 strongly predicts attraction: r = .47 and .39 across 313 studies. One wrinkle: in established relationships it is perceived similarity that carries the effect, not measured similarity. Evidence for complementarity (\u201copposites\u201d) is weak and trait-specific.',
         tier: 'hard-data',
         sources: [
@@ -298,14 +298,13 @@
       claims: [
         { camp: 'The classic',
           text: 'Men are visual. Women barely care about looks at all.',
-          verdict: 'false' },
+          verdict: 'false', truth: 35 },
         { camp: 'The leveler',
           text: 'Everyone weighs looks the same. The gap is a myth.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 65 },
       ],
       ruling: {
         badge: 'Both wrong',
-        split: [ { label: 'Leveler', pct: 65 }, { label: 'Classic', pct: 35 } ],
         text: 'In stated preferences the traditional gap is real and replicated: men rate looks as more important, women rate earning prospects higher. But in live speed-dating behavior the sex differences disappear \u2014 both sexes\u2019 actual romantic interest tracked partners\u2019 attractiveness about equally. The stated gap exists; the behavioral gap is a fraction of what either camp believes.',
         tier: 'hard-data',
         sources: [
@@ -334,17 +333,16 @@
       claims: [
         { camp: 'Male perspective',
           text: 'A guy who just says "wanna have sex" gets shut down immediately, but a guy who goes on three pretend dates gets it. Same goal, opposite outcome. The market rewards the guy willing to play the long game \u2014 the pretend dates, the slow-built vibe, the gradual escalation over multiple conversations \u2014 and punishes the guy who\'s honest about what he wants up front. So it ends up rewarding indirect communicators and punishing direct ones.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 25 },
         { camp: 'Female perspective',
           text: 'When a man is direct and honest about wanting you, it often kills the spark \u2014 and when he plays it cool, teases, and keeps you guessing, it pulls you in. Multiply that across millions of women and you get a training program: men learn that honesty gets them rejected and games get them results.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 25 },
         { camp: 'The rebuttal',
           text: 'Blurting "I want to have sex" out of nowhere reads as low-effort and a little gross \u2014 like she\'s just a hole you\'re trying to use. No romance, no buildup, no seduction. Most women want to feel desired, not just needed for sex, and the wording is where that lives. It\'s not directness they hate. It\'s crude, low-effort directness.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 50 },
       ],
       ruling: {
         badge: 'Right pattern, wrong lesson',
-        split: [ { label: 'Rebuttal', pct: 50 }, { label: 'Male', pct: 25 }, { label: 'Female', pct: 25 } ],
         text: 'The outcome asymmetry is real and repeatedly replicated: in Clark and Hatfield\'s field experiments, 69\u201375% of men accepted a stranger\'s "go to bed with me tonight," zero women did \u2014 yet roughly half of women in the same experiments accepted a date request. The lesson drawn is wrong, though. Women\'s refusals track perceived danger and low expected sexual pleasure, and in a subjectively safe lab setting the gender gap vanishes. The slow route wins because it delivers safety and information \u2014 not because the market punishes honesty.',
         tier: 'hard-data',
         sources: [
@@ -389,14 +387,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'A lot of the same people who complain loudest about fuckboys and players are the ones who keep rewarding that behavior and rejecting the honest guys. They author the outcome they complain about.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
         { camp: 'Female perspective',
           text: 'If you\'re endlessly frustrated by fuckboys and players, look honestly at the pattern in who you actually give your time, attention, and chances to. A lot of the heartbreak comes from rewarding the exact behavior you complain about while writing off the steadier men as "boring."',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Half right',
-        split: [ { label: 'True', pct: 40 }, { label: 'False', pct: 60 } ],
         text: 'At first contact, partly yes: narcissists are more popular at first sight, and the charming traits are precisely the toxic ones \u2014 exploitativeness and entitlement (Back et al. 2010). But the reward is front-loaded: across three weeks of real contact the advantage decays as arrogance and untrustworthiness surface (Leckelt et al., n=311). The "rejecting the honest guys" half fails outright \u2014 women chose the nice guy for dates and serious relationships, with looks mattering mainly for casual sex. And no study shows the loudest complainers are the same women doing the rewarding.',
         tier: 'evidence',
         sources: [
@@ -417,11 +414,10 @@
       claims: [
         { camp: '',
           text: 'Given the choice, a lot of women would rather be with the guy who has smooth game \u2014 even knowing he\'s probably dishonest \u2014 than the awkward but honest one. The ability to make her feel butterflies and say the right thing at the right moment beats honesty for a lot of people. Charm and confidence win over honesty.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'True at first sight',
-        split: [ { label: 'True', pct: 40 }, { label: 'False', pct: 60 } ],
         text: 'At first contact, yes \u2014 confidence and smoothness win. Narcissists are rated more popular at zero acquaintance and earn higher short-term mate appeal in real courtship interactions, via social boldness rather than empathy. But the claim\'s "even knowing he\'s dishonest" clause fails: describing a target as honest raises attractiveness ratings (replicated at n=457), and narcissists\' popularity decays precisely as they come to be seen as untrustworthy. Charm wins because the dishonesty isn\'t visible yet \u2014 not because women knowingly discount it.',
         tier: 'evidence',
         sources: [
@@ -443,14 +439,13 @@
       claims: [
         { camp: 'Male perspective',
           text: '"I want a guy with game" sounds shallow and a little manipulative, while "I want an honest guy" makes you look like you have good values. So people keep saying the thing that makes them look good, even when it isn\'t what they actually respond to. It\'s branding. What someone says they want and what they actually chase are two different data sets \u2014 and the second one is the one that predicts behavior.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
         { camp: 'Female perspective',
           text: '"I just want a nice, honest guy" sounds good and makes you look like you\'ve got your priorities straight \u2014 but if the men who actually make you feel something are the confident, cocky, smooth ones, then "honest guy" is branding, not your real preference.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Half right',
-        split: [ { label: 'True', pct: 45 }, { label: 'False', pct: 55 } ],
         text: 'Partly. In live speed dating, ideals stated beforehand failed to predict who actually inspired desire \u2014 the stated/revealed gap is real and replicated at first attraction. But "branding" overreaches: stated ideals prospectively predicted the traits of partners singles ended up with five months later (N=763), and across 43 countries, partners matching one\'s own ideals were rated better (corrected \u03b2=.19, N=10,358). "Honest" is near-universal boilerplate, so it carries little distinctive signal \u2014 but the gap reflects weak introspection, not image management, and stated ideals do predict selection.',
         tier: 'hard-data',
         sources: [
@@ -472,14 +467,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'A lot of guys just say "fuck this" and check out entirely. Some go monk mode and pour everything into money and themselves; others swallow their pride and learn to become players too. For the ones who only ever wanted to be decent and honest, it really is a raw deal, and a lot of them are losing hope.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
         { camp: 'Female perspective',
           text: 'For a long time dating ran on an unspoken default: men approach, women select. That arrangement is quietly breaking. A growing share of younger men are opting out of approaching altogether \u2014 worn down by the apps, the rejection, and years of being told they\'re the problem. If your whole strategy is to look good and wait to be approached, the supply you\'re counting on is drying up, through no decision of your own.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Real trend, shaky story',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'The checkout is measurable: only 50% of single U.S. men were looking for a relationship or dates in July 2022, down from 61% in 2019 (Pew, n=6,034); 63% of men under 30 are single; and past-year sexlessness among men 18\u201324 rose from 19% to 31% between 2000\u20132002 and 2016\u20132018 (GSS). But the why is embellished: singles\' top stated reasons are enjoying single life and other priorities, and the rise concentrates among unmarried men, and sexual inactivity is disproportionately found among low-income and part-time/unemployed men \u2014 not monk-mode self-improvers.',
         tier: 'hard-data',
         sources: [
@@ -499,14 +493,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'That mix of confidence and game is magnetic to a lot of women \u2014 even when the guy is genuinely a dick or full of it. So the very traits women say they can\'t stand \u2014 arrogance, being full of yourself \u2014 are often the ones that get rewarded most.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
         { camp: 'Female perspective',
           text: 'The cocky, arrogant, slightly-too-confident man often gets you in a way the kind, humble one doesn\'t \u2014 even when you can see he\'s a bit of a jerk. That confidence reads as high value, and it\'s genuinely magnetic. The traits you\'ll publicly say you can\'t stand \u2014 arrogance, a little bit of an edge \u2014 are frequently the ones that actually move you.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'True at first sight',
-        split: [ { label: 'True', pct: 45 }, { label: 'False', pct: 55 } ],
         text: 'At first sight, yes \u2014 this paradox is a replicated finding. Narcissists were more popular at zero acquaintance (73-person round-robin, 2,628 dyads), the entitled, exploitative facet was the most attractive of all, and narcissism predicted real courtship success. But the decomposition matters: the pull runs through confidence, boldness, and appearance \u2014 when observers read a man as arrogant per se, desirability drops. And this evidence covers first impressions and short-term appeal, where the dick side hasn\'t had time to surface.',
         tier: 'hard-data',
         sources: [
@@ -527,14 +520,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women will ignore massive red flags if the guy has enough charisma and confidence. They convince themselves "he\'ll change for me" or "I\'m different," then act shocked when the guy who slept with 300 women behaves exactly like a guy who slept with 300 women.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
         { camp: 'Female perspective',
           text: 'The smoother and more confident he is, the more you\'ll be tempted to wave off the warning signs \u2014 the inconsistency, the history, the way he treats other people. "He\'s different with me" and "he\'ll change for me" are the famous last words here. The men who hurt you most are rarely the obvious creeps; they\'re the charming ones you decided to trust because they made you feel something.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Charm expires',
-        split: [ { label: 'True', pct: 45 }, { label: 'False', pct: 55 } ],
         text: 'Temporarily, yes \u2014 and not just on women. In a 73-person round-robin of first meetings (2,628 dyads), the most exploitative, entitled narcissism facets were exactly the most charming at first sight. But the spell decays: across three weeks of group contact, narcissists were increasingly read as untrustworthy and their popularity sank. The base-rate warning is real too \u2014 prior cheaters carried triple the odds of cheating again. Charm masks flags at first glance; it doesn\'t erase them, and it isn\'t female gullibility.',
         tier: 'evidence',
         sources: [
@@ -555,14 +547,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women are drawn to men who other women visibly want. Seeing that you have options \u2014 that you\'re genuinely chosen and pursued \u2014 spikes interest, because it triggers competition and the instinct that "if all these women want him, there must be something good here." This is why a female friend vouching for you does almost nothing, while visibly having women chase you does a lot: one reads as safe, the other as desirable.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
         { camp: 'Female perspective',
           text: 'A man becomes more attractive the moment you can tell other women want him \u2014 it\'s why the taken guy, the popular one, the one with options pulls harder than the equally-good man nobody\'s noticed. It feels like taste; a lot of it is just social proof.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Real but overstated',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'Mate-choice copying is real and asymmetric in the claim\'s favor: in Hill & Buss (N=847), women rated a man as more desirable when shown surrounded by women, while men rated a woman as less desirable when surrounded by men. But the 2018 Gouda-Vossos meta-analysis found the effect modest, highly heterogeneous, and inflated by moderate publication bias \u2014 reliable for women choosing men, weak-to-mixed for men. "One of the strongest forces" overstates it; the vouching-does-nothing claim is untested.',
         tier: 'hard-data',
         sources: [
@@ -582,14 +573,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'A woman with a high body count is widely read as a red flag \u2014 impulsive, low-value, maybe not loyal. A man with a high body count often reads the other way: a lot of women see it as high value, because "if that many women wanted him, he must have something." It\'s preselection again \u2014 her history signals risk, his signals demand.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 30 },
         { camp: 'Female perspective',
           text: 'Something men rarely say to your face but very often think: a high body count reads to a lot of them as a yellow or red flag, even the ones who\'ll happily sleep with you. The culture says it shouldn\'t matter, and plenty of men won\'t admit it out loud to avoid sounding judgmental \u2014 but in their actual long-term choices, it frequently does.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 70 },
       ],
       ruling: {
         badge: 'Slight lean, not reversal',
-        split: [ { label: 'Female', pct: 70 }, { label: 'Male', pct: 30 } ],
         text: 'The direction is real, the magnitude inflated. Endendijk et al.\'s meta-analysis (99 studies, 123,343 people) finds a traditional double standard \u2014 men\'s sexual activity is evaluated more positively than women\'s \u2014 but the effect is small (d\u22480.25) and shows up only when people rate male vs. female targets (largely implicit vignette-style evaluation studies), vanishing on explicit Likert-scale double-standard questionnaires. Crucially, a high count is no plus for men: Stewart-Williams et al. (2017) found willingness peaks at a modest history then falls sharply, with both sexes equally reluctant about an extensive record. A slight lean, not opposite verdicts.',
         tier: 'hard-data',
         sources: [
@@ -609,14 +599,13 @@
       claims: [
         { camp: 'Male perspective',
           text: '"Stop sexualizing me \u2014 just treat me like a human." It sounds like a principle, but watch when it actually gets deployed: almost always toward men they\'re not attracted to. The same women are usually fine \u2014 happy, even \u2014 being sexualized by the men they do find attractive. The same exact behavior reads as "hot" from a man she wants and "creepy \u2014 why can\'t you just treat me like a human?" from one she doesn\'t.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
         { camp: 'Female perspective',
           text: 'Be honest about the "just treat me like a human, stop sexualizing me" instinct: it usually fires for men you\'re not attracted to, not the ones you are. The same comment that feels gross from one man feels flattering \u2014 even hot \u2014 from another.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Half true',
-        split: [ { label: 'True', pct: 40 }, { label: 'False', pct: 60 } ],
         text: 'Partly \u2014 the perceptual asymmetry is real. In vignette experiments, identical ambiguous behavior was judged less harassing when the man was attractive (Golden et al. 2001, N=150); a second N=591 study found attractive opposite-sex perpetrators were judged less harassing (LaRocca & Kromrey 1999). But "unwanted" is built into what harassment means: attention that varies in welcomeness by source is consent logic, not hypocrisy. And "happy, even" fails outright \u2014 objectification by women\'s own chosen partners predicts lower sexual satisfaction, weaker refusal ability, and more coercion (S\u00e1ez et al. 2019).',
         tier: 'evidence',
         sources: [
@@ -637,14 +626,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'When a man likes a female celebrity, it\'s mostly physical and contained \u2014 "she\'s gorgeous," and that\'s about it. When a woman likes a male celebrity, it far more often turns into something intense and emotional \u2014 fan edits, paragraphs, jealousy when he dates someone real, a full parasocial fantasy of actually being with him: "he\'s my husband, he\'s the standard, no real man compares." Male desire tends to run physical and bounded; female desire tends to run emotional, narrative, and fantasy-driven.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 50 },
         { camp: 'Female perspective',
           text: 'Where a man\'s interest in a celebrity tends to stay physical and contained, women\'s often run emotional and narrative \u2014 the fan edits, the "he\'s my husband," the genuine pang when he\'s seen with someone else. That\'s not silly; it\'s a window into how female desire often works: emotional, story-driven, fantasy-forward.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 50 },
       ],
       ruling: {
         badge: 'Half right',
-        split: [ { label: 'True', pct: 50 }, { label: 'False', pct: 50 } ],
         text: 'Half of it holds. Girls\' and women\'s celebrity crushes running emotional and narrative is documented: adolescent idols serve as safe practice targets for romantic love \u2014 talked over with peers, complete with excitement and jealousy of the idol\'s real and on-screen relationships (Karniol 2001). The "male desire stays bounded" half breaks: a systematic review finds sex differences in celebrity-worship intensity mixed and inconsistent, most studies find no sex difference at all, and where differences appear, men more often score higher on borderline-pathological worship and slightly likelier to endorse celebrity stalking (one study). The visible fan-edit culture skews female; the obsession that escapes containment tilts male.',
         tier: 'evidence',
         sources: [
@@ -665,14 +653,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'On the apps, most women swipe left on the large majority of men based almost entirely on looks. Personality only gets a turn once she\'s already physically attracted to you. So the "average guy with a great personality" usually can\'t just get girls \u2014 he has to clear the looks filter first, and for most average guys that filter is brutal. "Personality is the most important thing" is largely marketing.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
         { camp: 'Female perspective',
           text: 'For most women, attractiveness is the first filter just like it is for men; his personality only gets a turn once his photos clear the bar. The honest version isn\'t "looks don\'t matter to me," it\'s "looks decide who I\'ll even consider, and then I judge the rest."',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 65 },
       ],
       ruling: {
         badge: 'True at the gate',
-        split: [ { label: 'Female', pct: 65 }, { label: 'Male', pct: 35 } ],
         text: 'At the gate, confirmed: a field experiment planting curated profiles before nearly half a million Tinder users found male profiles matched on just 0.6% of their likes (female profiles: 10.5%), in the paper\'s companion survey 93% of women reported liking only profiles they\'re explicitly attracted to, and the same man\'s profile with three photos instead of one drew roughly seven-fold more matches. Initial desire tracks looks in both sexes, and stated ideals don\'t predict it. The overreach is "largely marketing": lengthen acquaintance and the gate measurably weakens \u2014 friends-first couples barely sort on attractiveness.',
         tier: 'evidence',
         sources: [
@@ -693,14 +680,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Somewhere along the way it became socially acceptable \u2014 even trendy \u2014 to state it outright, so women own it with zero shame: "6ft minimum," right there in the bio, on TikTok, in interviews, almost worn as a personality trait. Height is the one physical preference women will openly admit to caring about. Every other looks-based filter \u2014 baldness, weight, face, even income preferences \u2014 usually gets hidden behind a more respectable excuse.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 60 },
         { camp: 'Female perspective',
           text: 'Every other looks-based preference \u2014 weight, baldness, his face \u2014 you\'ll usually hide behind a more acceptable reason. But somewhere it became socially fine to state height outright, so "6ft minimum" goes right in the bio, no embarrassment at all.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 60 },
       ],
       ruling: {
         badge: 'Loudest, not only',
-        split: [ { label: 'True', pct: 60 }, { label: 'False', pct: 40 } ],
         text: 'The height half is solid: women state it openly and strongly \u2014 48.9% of women\'s Yahoo dating ads demanded a taller man outright (versus 13.5% of men wanting shorter), and women\'s height minimums are more selective and more consistent than men\'s. The exclusivity half fails: "even income preferences get hidden" is wrong \u2014 women openly rated good financial prospects higher than men in all 45 countries of the largest cross-cultural replication of Buss\'s mate-preference battery. Height is the loudest openly-owned filter, not the only one.',
         tier: 'hard-data',
         sources: [
@@ -721,14 +707,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women generally care far more about what other women think than what men think. Take OnlyFans \u2014 most men say plainly they\'d never seriously date a woman who does it, yet it stays popular. Why? Because her female social circle supports it, stays neutral, or at least doesn\'t shame her for it. Male disapproval is loud and consistent, but it loses to the approval of her peers almost every time.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
         { camp: 'Female perspective',
           text: 'A lot of the choices that read as "for men" \u2014 the OnlyFans, the heavy filler, the cosmetic work \u2014 keep happening even when most men say plainly they prefer the natural version. Why? Because your friends and your feed hype it up, and their approval lands harder than any man\'s disapproval. The audience you\'re really dressing for is other women.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Oversimplified',
-        split: [ { label: 'True', pct: 40 }, { label: 'False', pct: 60 } ],
         text: 'The real finding: policing of women\'s sexual reputation is done chiefly by other women. Baumeister & Twenge\'s 2002 review found the claim that men suppress female sexuality got "hardly any support" \u2014 women stifle each other\'s; Vaillancourt\'s work shows women aim indirect aggression at sexually-available peers. But female peers are the enforcers, not the ultimate audience: intrasexual competition is a contest to attract men, and OnlyFans itself runs on paying male demand. "Far more, almost every time" overreaches.',
         tier: 'evidence',
         sources: [
@@ -748,14 +733,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women tend to operate far more as a hive mind than most people want to admit \u2014 much more sensitive to social consensus, trends, and what other women are doing and saying. If one popular woman declares something attractive (or a red flag, or a new rule), a huge share start repeating it, and it spreads like wildfire \u2014 the "6ft minimum," "never split the bill," "the bar is in hell." Men hold more individual, idiosyncratic opinions, even unpopular ones; women tend to move together.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 25 },
         { camp: 'Female perspective',
           text: 'Trends in standards, red flags, what\'s attractive, what\'s embarrassing \u2014 they sweep through women fast and almost universally, because most of us are far more tuned to social consensus than we admit. One popular voice says "6ft minimum" or "the bar is in hell," and overnight it\'s everyone\'s opinion.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 25 },
       ],
       ruling: {
         badge: 'Everyone conforms',
-        split: [ { label: 'True', pct: 25 }, { label: 'False', pct: 75 } ],
         text: 'The kernel: classic meta-analytic work \u2014 Eagly & Carli\'s 148-study review \u2014 did report women as slightly more conforming, a small difference partly tied to masculine-biased test content. The modern record shrinks it further: a 2024 systematic review (48 articles covering 78 conformity studies) found only a minority detect any gender effect, and recent studies show no significant disparity; a 2023 Asch replication (n=202) found no sex difference while a third of judgments in the baseline condition bent to an obviously wrong majority. Conformity is human, not female; "hive mind versus independent men" is a caricature.',
         tier: 'hard-data',
         sources: [
@@ -776,14 +760,13 @@
       claims: [
         { camp: 'Male perspective',
           text: '"I just want to feel safe" sounds reasonable, but a lot of the time it\'s pretty words. Watch the actions: the same women who say they want a safe guy are often chasing the exciting, unpredictable, slightly dangerous one who gives them butterflies. They say safety; they go for chaos. What they actually want is a guy who makes them feel safe and excited \u2014 very few want a genuinely stable, low-drama guy if he\'s also boring.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
         { camp: 'Female perspective',
           text: 'Often "safe" means emotionally safe (he won\'t hurt or abandon you), while the spark still drags you toward the exciting, unpredictable, slightly dangerous guy. Very few women actually want a genuinely stable, low-drama man if he also bores them.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'Short-term only',
-        split: [ { label: 'True', pct: 35 }, { label: 'False', pct: 65 } ],
         text: 'At first sight, the kernel holds: 128 women rated a Dark Triad character as more attractive than a control with looks held constant, and a warm, responsive male stranger earned no attraction boost \u2014 that cue works on men, not on women. But at the choosing stage the claim collapses: women picked the nice guy over the jerk roughly eight to one, and niceness was the most salient factor for serious relationships. Excitement wins the first spark; safe wins the actual pick.',
         tier: 'evidence',
         sources: [
@@ -804,11 +787,10 @@
       claims: [
         { camp: '',
           text: 'Most guys are flat-out terrified of being alone. They\'ll tolerate disrespect, games, and low effort, and hold far lower standards than you would, just to avoid being single. A lot would rather sit in a shitty situationship or simp for someone who barely respects them than face being single long-term \u2014 and that desperation is exactly what inflates the entitlement on the other side.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Real but overstated',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'The mechanism checks out: people high on Spielmann\'s Fear of Being Single Scale stay dependent in unsatisfying relationships and warm to less responsive, less attractive partners across seven studies. The sex direction has real support too \u2014 single men are likelier to want a partner (Pew: 61% looking vs 38% of single women) and less happy single (Hoan & MacDonald, ~6,000 singles). But "most guys are terrified" overshoots: 39% of single men \u2014 the complement of Pew\'s 61% \u2014 aren\'t looking at all, and fear-driven settling appears in both sexes.',
         tier: 'evidence',
         sources: [
@@ -829,11 +811,10 @@
       claims: [
         { camp: '',
           text: 'Being honest about a lack of dating or relationship experience often reads as a red flag \u2014 while inventing a past full of situationships or toxic exes would probably earn more respect. People say they want an honest guy with no baggage, but when they actually meet one, they get suspicious or turned off.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Real, but capped',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'The stigma is real: across three studies of nearly 5,900 adults, sexually inexperienced people were rated less desirable partners \u2014 even by other inexperienced adults \u2014 and desirability rises from zero past partners to a modest few. But the claim overshoots on the fix: heavy histories get punished harder, with willingness to consider a long-term partner dropping sharply as counts climb (d = 0.87 from 4 to 12 partners, replicated across 11 countries). A bit of a past beats a blank slate; a pile of toxic exes beats neither.',
         tier: 'evidence',
         sources: [
@@ -854,14 +835,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Dating apps turned mating into a winner-take-most market \u2014 the top sliver of men get a flood of options while the bottom 60\u201370% get filtered out and "locked out" of dating entirely, a Pareto / 80\u201320 distribution.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
         { camp: 'Female perspective',
           text: 'The apps funnel a huge share of women toward the same small tier of top men. Those men get near-unlimited options \u2014 which is exactly why they have so little reason to commit to any one woman. Meanwhile the steadier, average men who would commit get written off as beneath the bar. So you can have a full inbox and still struggle to find a relationship, because you\'re competing with everyone else for the few who are least likely to choose just you.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'Skew, not lock-out',
-        split: [ { label: 'True', pct: 35 }, { label: 'False', pct: 65 } ],
         text: 'The attention skew is real: male Tinder test profiles converted just 0.6% of likes into matches versus 10.5% for female profiles, and messaging follows a long tail \u2014 one New York woman drew 1,504 messages in a month. But "locked out" fails arithmetic: 61% of U.S. men aged 25\u201354 were married or cohabiting in 2019, and Bruch & Newman found daters at every desirability level still send messages and get replies \u2014 typically aiming 25% above their own league. Unequal attention, yes; Pareto exile, no.',
         tier: 'hard-data',
         sources: [
@@ -882,11 +862,10 @@
       claims: [
         { camp: '',
           text: 'Dating apps are now where most couples meet \u2014 numbers like "40%" or even "half" get thrown around.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Online, not apps',
-        split: [ { label: 'True', pct: 30 }, { label: 'False', pct: 70 } ],
         text: 'Online is the single biggest channel for newly formed couples \u2014 Rosenfeld\'s nationally representative HCMST data put it at 39% of heterosexual couples who met in 2017, having overtaken meeting through friends around 2013. But "online" bundles apps, sites, and social media, and 39% isn\'t "most." Across all existing couples, Pew (2023 report; survey July 2022, n=6,034) finds just 10% met their partner on a dating site or app \u2014 20% among adults under 30. Biggest single channel: yes. Where most couples meet: no.',
         tier: 'hard-data',
         sources: [
@@ -907,11 +886,10 @@
       claims: [
         { camp: '',
           text: 'Situationships have become the dominant form of dating, and the incentives explain why. Women with abundant options often don\'t want to lock down one guy \u2014 they want the benefits of a relationship (attention, emotional support, sex, validation) without the commitment, while keeping their options open in case someone better shows up. Meanwhile a lot of guys are so starved for attention and affection that they\'ll accept those half-assed terms just to have some connection.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Common, not dominant',
-        split: [ { label: 'True', pct: 30 }, { label: 'False', pct: 70 } ],
         text: 'No. Situationships are genuinely widespread \u2014 a 2024 YouGov poll finds half of 18\u201334-year-olds have ever been in one, and a 2026 college-sample study classified 34% of relationship experiences as situationships \u2014 but committed relationships still outnumbered them in the one sample that measured the mix (65.9% vs 34.1% in the college study). The claim\'s gendered engine also runs backwards: in Pew\'s representative sample, women daters are the ones likelier to want commitment-only (36% vs 22% of men). Common, rising, and worth naming; dominant, no.',
         tier: 'evidence',
         sources: [
@@ -932,14 +910,13 @@
       claims: [
         { camp: 'Bluepill',
           text: 'Game, charisma, confidence, and self-improvement could get almost anyone into the running: learn to talk to girls, dress decently, and you can compete.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
         { camp: 'Blackpill',
           text: 'It\'s not about game at all, it\'s about looks, height, jawline, and frame. Many decided the game was rigged before they ever stepped on the field.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Both overshoot',
-        split: [ { label: 'Blackpill', pct: 55 }, { label: 'Bluepill', pct: 45 } ],
         text: 'Both poles overshoot. In real speed-dating studies (Asendorpf, Penke & Back 2011, n=382 followed a year; Eastwick & Finkel 2008), physical attractiveness is the single most powerful predictor of being chosen \u2014 so the bluepill\'s "almost anyone can compete on game alone" is too rosy. But for men, women additionally weighted sociosexuality, low shyness, openness, education and income \u2014 controllable factors \u2014 so the blackpill\'s "it\'s not about game at all, the fixed face decides" overshoots too. Looks lead; they don\'t lock the gate.',
         tier: 'hard-data',
         sources: [
@@ -966,7 +943,6 @@
       ],
       ruling: {
         badge: 'Both wrong',
-        split: [ { label: 'Promise', pct: 50 }, { label: 'Blackpill', pct: 50 } ],
         text: 'No. The guarantee is dead on the data: a record 25% of US 40-year-olds had never married by 2021, and Pew projected in 2014 that a quarter of then-young adults would still be unmarried by their mid-40s to mid-50s \u2014 versus 5% for the cohort that hit midlife in 1980. But the blackpill inference dies on the same page: of those still unmarried at 40 in 2001, one in four married by age 60, and 22% of never-married 40-to-44-year-olds were cohabiting (2022). Lifelong aloneness is a real minority outcome \u2014 not a fixed sentence for any individual.',
         tier: 'hard-data',
         sources: [
@@ -1010,11 +986,10 @@
       claims: [
         { camp: '',
           text: 'Physical attraction is the first filter for both sexes \u2014 not just men. If she\'s not attractive enough, most men feel no desire; if he\'s not attractive enough, most women feel none either. The real difference isn\'t the mechanism, it\'s the honesty about it. Everything else \u2014 personality, confidence, game \u2014 only gets weighed once that first physical filter is passed.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 75 },
       ],
       ruling: {
         badge: 'Mostly holds up',
-        split: [ { label: 'True', pct: 75 }, { label: 'False', pct: 25 } ],
         text: 'In live interactions, physical attractiveness predicts romantic interest at r \u2248 .40 for both sexes \u2014 the sex difference is .03 and nonsignificant across a 97-study meta-analysis \u2014 and in a speed-dating study it was the single strongest predictor for men and women alike. The stated-preference gap is real, but behavioral parity wins: both sexes run the filter. Two trims: attractiveness is the dominant weight, not a literal pass-first gate; and "honesty" is the wrong word \u2014 stated ideals fail to predict live desire for either sex, so it\'s poor self-insight, not packaging.',
         tier: 'hard-data',
         sources: [
@@ -1062,11 +1037,10 @@
       claims: [
         { camp: '',
           text: 'A lot of men treat women like sex objects \u2014 interested only until it\'s clear sex isn\'t happening easily, then gone. A lot of women treat men like walking wallets \u2014 interested only until it\'s clear he can\'t provide the money, status, or lifestyle, then gone. Both sides end up feeling valued for what they can supply \u2014 a body, a paycheck \u2014 rather than for who they are.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Real but lopsided',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'Both currencies are documented. Across 45 countries (N=14,399), women rate financial prospects higher and men rate looks and youth higher in stated preferences \u2014 and a 1990 personal-ads study was literally titled "men as success objects and women as sex objects." But the mirror is lopsided: in live speed-dating, both sexes\' actual desire tracked looks about equally, and earning prospects only weakly \u2014 for both alike. The body screen operates in real-time behavior for everyone; the wallet screen\'s sex skew lives in stated standards and long-term provider expectations, not instant verdicts.',
         tier: 'hard-data',
         sources: [
@@ -1088,11 +1062,10 @@
       claims: [
         { camp: '',
           text: 'Rejection tends to come in two flavors, split loosely along sex lines. Women more often get \u2014 and give \u2014 the cushioned version: "I\'m busy," "I\'m not ready," a slow fade, anything that dodges a hard no. Men, leaning more direct, are likelier to deliver the unvarnished version, sometimes brutally ("I\'m just not attracted to you").',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'Lens, not law',
-        split: [ { label: 'True', pct: 35 }, { label: 'False', pct: 65 } ],
         text: 'Only loosely. Indirect, face-saving rejection is common for both sexes, and the documented driver is safety, not rejector sex. Women report roughly twice men\'s worry about the repercussions of saying no \u2014 being hit, followed, touched (n=465) \u2014 and salient safety concerns push rejectors toward ghosting. But in a 414-person registered report, male and female rejectors responded alike (no significant gender interaction), and meta-analytic sex differences in assertive speech are negligible (d=.09). The "men reject brutally" half has no direct evidence. A lens, not a law.',
         tier: 'evidence',
         sources: [
@@ -1113,11 +1086,10 @@
       claims: [
         { camp: '',
           text: 'I date for potential.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Half-true',
-        split: [ { label: 'True', pct: 40 }, { label: 'False', pct: 60 } ],
         text: 'Half of this line is bankable: in Buss\'s 37-culture data (N=10,047) and the 45-country 2020 replication (N=14,399), women rate a partner\'s financial prospects higher than men do (both datasets), and ambition too (Buss 1989) \u2014 trajectory genuinely counts on paper. The other half isn\'t: in live speed-dating, stated preferences for earning prospects failed to predict whom people actually desired. Visible momentum gets credited; unrealized potential mostly doesn\'t. "Dating for potential" describes questionnaires better than choices \u2014 a demonstrated trajectory beats a promised one.',
         tier: 'evidence',
         sources: [
@@ -1163,11 +1135,10 @@
       claims: [
         { camp: '',
           text: 'Ask how the actual married couples you know got together and a pattern shows up fast. A big chunk met in college. The rest mostly met through some version of a lucky accident. Most people who end up married weren\'t social butterflies running elaborate game with tons of dating reps. They got dropped into a high-contact environment, or got lucky once and didn\'t fumble it.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Apps, not college',
-        split: [ { label: 'True', pct: 40 }, { label: 'False', pct: 60 } ],
         text: 'In the nationally representative HCMST surveys, "met in college" was never a big chunk \u2014 about 9% of heterosexual couples at its 1995 peak, 4% by 2017. Among 19,131 Americans married 2005\u20132012, all school combined was 11% of the couples who met offline \u2014 roughly 7% of all marriages. The claim\'s core survives: most spouses met through repeated-contact channels \u2014 friends (33% in 1995, 20% by 2017), work, school, bars \u2014 not elaborate game. But the biggest channel is now deliberate search, not luck: meeting online reached ~39% of couples by 2017, and over a third of recent marriages began online.',
         tier: 'hard-data',
         sources: [
@@ -1226,11 +1197,10 @@
       claims: [
         { camp: '',
           text: 'The work is wildly one-sided. He\'s expected to lead, start the conversation, keep it entertaining, escalate at the right moments, read every signal correctly, and calibrate in real time to her energy \u2014 while she can largely just sit back, exist, and react. If the vibe dies, it\'s almost always chalked up as his failure. Do everything right and he might get rewarded with a date; slip up anywhere along the way and he\'s out. It genuinely feels like auditioning while she plays judge.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Half the ledger',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'The overt burden is real: in Kreager et al.\'s six-month dating-site dataset, women were four times less likely to send a first message \u2014 the visible asking falls on men. But \'she can largely just sit back\' fails direct observation: Moore\'s naturalistic courtship research, confirmed in Wade\'s 2018 review, found women\'s nonverbal solicitation signals reliably preceded a male approach within 15 seconds. Her early-stage work is covert signaling and filtering \u2014 invisible, not absent. Real asymmetry in visible effort; \'wildly one-sided\' overdraws the ledger.',
         tier: 'evidence',
         sources: [
@@ -1251,14 +1221,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'A lot of women aren\'t smarter than their instincts. They like to think they are, but when an attractive guy with good game shows up, emotion and attraction override the brain. On some level they know the smooth player probably isn\'t good for them \u2014 and they choose him anyway, over and over. Logic loses to feelings almost every time.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 30 },
         { camp: 'Female perspective',
           text: 'When a man you\'re genuinely attracted to shows up, emotion and chemistry can steamroll everything your rational mind already knows. On some level you might know he\'s not good for you \u2014 and choose him anyway, more than once. That\'s not stupidity; logic loses to feelings for almost everyone.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 70 },
       ],
       ruling: {
         badge: 'True of everyone',
-        split: [ { label: 'Female', pct: 70 }, { label: 'Male', pct: 30 } ],
         text: 'Attraction genuinely bypasses the deliberating brain \u2014 in everyone. Stated ideals fail to predict who actually sparks desire in live speed dating (Eastwick & Finkel, 2008), and across a 97-study meta-analysis looks predict romantic evaluations at r\u2248.40 for both sexes, with sex differences nonsignificant. The cleanest override evidence is on men: Ariely & Loewenstein\'s aroused male subjects endorsed acts their cool-state selves rejected, and couldn\'t predict the shift. The mechanism is human wiring; casting it as a female defect is the part that fails.',
         tier: 'hard-data',
         sources: [
@@ -1279,11 +1248,10 @@
       claims: [
         { camp: '',
           text: 'Most of it isn\'t designed to help you succeed \u2014 it\'s designed to make the speaker sound socially acceptable and virtuous. "Just be yourself, looks don\'t matter, treat her like a human, the right girl will come along" \u2014 these are the nice, comfortable, group-approved answers. Saying the uncomfortable truth \u2014 that looks and status matter a lot, that standards are sky-high, that a nice average guy often isn\'t enough \u2014 would make her look shallow in front of other women.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Bad advice, unproven motive',
-        split: [ { label: 'True', pct: 45 }, { label: 'False', pct: 55 } ],
         text: 'The advice itself really is unreliable: \'looks don\'t matter\' fails the revealed-preference test \u2014 attractiveness predicts romantic desire at r\u2248.40 for both sexes across 97 studies, and stated ideals don\'t predict whom people actually want. Social pressure also measurably bends self-reports in this domain: under a bogus lie detector, sex differences in reported sexuality collapsed. But \'designed to protect her image\' asserts a motive no study tests \u2014 men\'s stated ideals fail identically, so honest introspective blindness explains the same data without any performance.',
         tier: 'evidence',
         sources: [
@@ -1326,11 +1294,10 @@
       claims: [
         { camp: '',
           text: 'The blunt reality is that there are really only two wildcards that override the need for game: getting very rich, or becoming extremely physically attractive. With one of those, you can skip the game; without either, it\'s genuinely hard out there for the honest, humble guy.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'Wrong two wildcards',
-        split: [ { label: 'True', pct: 35 }, { label: 'False', pct: 65 } ],
         text: 'Trade-off studies miscast the two \'wildcards.\' In Li et al.\'s (2002) budget paradigm, kindness and intelligence were necessities for both sexes \u2014 women prioritized status/resources and men looks alongside those basics, not instead of them. And in live attraction, the Eastwick et al. (2014) meta (k=97) puts physical attractiveness at r\u2248.40 but earning prospects at only r\u2248.10 for both sexes. Exceptional looks genuinely are a wildcard; wealth is a screening threshold, not an override; and the kind, smart honest guy holds necessity cards this claim zeroes out.',
         tier: 'hard-data',
         sources: [
@@ -1352,14 +1319,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'A woman swipes left on a bald guy instantly \u2014 but instead of saying "I\'m not attracted to bald men," she\'ll say "he\'s catfishing" or "why\'s he wearing a hat in every photo?" She knows exactly why she rejected him; she just won\'t say it out loud, because the honest version sounds shallow. So she manufactures a more acceptable reason.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
         { camp: 'Female perspective',
           text: 'Often the real reason is simply that you weren\'t attracted to him \u2014 but "I\'m not into bald guys" or "he\'s just not attractive to me" feels shallow to say, so it comes out as "he was catfishing," "the vibe was off," "something felt wrong."',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 65 },
       ],
       ruling: {
         badge: 'Gap real, motive unproven',
-        split: [ { label: 'Female', pct: 65 }, { label: 'Male', pct: 35 } ],
         text: 'The gap is real; the mind-reading isn\'t. Women\'s stated weighting of looks undershoots behavior: across 97 studies attractiveness predicts romantic interest at r\u2248.40 for both sexes, and stated ideals fail to predict live desire (Eastwick & Finkel 2008; Eastwick et al. 2014). People also bend rejections to spare feelings \u2014 singles accepted unattractive \'real\' dates far more often than hypothetical ones (Joel et al. 2014). But no study catches the manufactured excuse itself, and ideals mispredict even in private: often she genuinely doesn\'t know, not knows-and-won\'t-say.',
         tier: 'evidence',
         sources: [
@@ -1403,11 +1369,10 @@
       claims: [
         { camp: '',
           text: 'On the apps especially, looks get you the match \u2014 but that\'s all they get you. When a woman matches on your photos, she\'s usually expecting the full package to follow: charisma, smooth texting, witty banter, confidence. If you don\'t deliver that "popular guy" energy fast \u2014 if the first few messages don\'t create a spark or keep her entertained \u2014 she loses interest and ghosts, even though she found you attractive enough to match.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Looks keep working',
-        split: [ { label: 'True', pct: 45 }, { label: 'False', pct: 55 } ],
         text: 'The looks half holds: Tyson et al.\'s Tinder field study measured a 0.6% match rate for male profiles versus 10.5% for female. The \'game\' half wobbles: most matches die in silence \u2014 only 21% of men and 7% of women send any message after matching, and the median male opener is 12 characters \u2014 while Bruch & Newman found longer, harder-working messages barely lift reply rates, and replies track relative desirability instead. Looks don\'t stop working at the match; the claim retires them too early.',
         tier: 'evidence',
         sources: [
@@ -1427,11 +1392,10 @@
       claims: [
         { camp: '',
           text: 'A woman can call you a "platonic friend" while still keeping you very close \u2014 initiating most of the conversations, hitting you up first, talking nearly every day, even being the one who pushed to exchange contacts in the first place. That\'s not typical "just a friend" behavior. Most women don\'t pour consistent effort into a guy they\'re not at least a little interested in, and few take the lead like that unless they\'re feeling something.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Overreads the signal',
-        split: [ { label: 'True', pct: 30 }, { label: 'False', pct: 70 } ],
         text: 'Behavior can leak interest, but this card licenses the classic misread. Attraction inside cross-sex friendships is common yet asymmetric: Bleske-Rechek et al. (2012) found young men report substantially more attraction to their female friends than women report toward male friends, and both sexes name it a cost more often than a benefit. Men also systematically over-perceive women\'s friendliness as sexual interest (Haselton & Buss, 2000). No study validates initiation frequency as an interest gauge \u2014 \'she texts first, so she feels something\' is the overperception this literature warns against.',
         tier: 'evidence',
         sources: [
@@ -1472,14 +1436,13 @@
       claims: [
         { camp: 'Male perspective',
           text: '"I want someone who likes me for me" usually means: accept all my flaws \u2014 but that grace rarely runs the other direction. The same person still wants you socially smooth, confident, funny on demand, and good at flirting, even if you\'re naturally awkward. Very few are actually willing to date a guy who\'s genuinely awkward, low-charisma, and bad at the social game, even when he\'s kind, loyal, and honest.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
         { camp: 'Female perspective',
           text: '"I just want a man who likes me for me" is fair \u2014 but notice whether the grace runs both ways. Often it means: accept all my flaws, while I still expect you to be tall, fit, confident, funny, successful, and smooth. Wanting to be loved as you are, while holding him to the "upgraded" version of himself, is a double standard.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 60 },
       ],
       ruling: {
         badge: 'Runs both ways',
-        split: [ { label: 'Female', pct: 60 }, { label: 'Male', pct: 40 } ],
         text: 'The double standard is real; the one-way framing isn\'t. In Li et al.\'s (2002) budget studies nobody buys \'as-is\' acceptance: with tight budgets women spend first on status and resources, men on physical attractiveness; kindness and intelligence are necessities for both \u2014 necessary, not sufficient, the kind-but-awkward man\'s exact problem. And looks predict live romantic interest at r\u2248.40 for both sexes (Eastwick et al., 2014, k=97). \'Like me for me\' coexists with a demands list in both directions; only \'rarely runs the other way\' overreaches.',
         tier: 'evidence',
         sources: [
@@ -1500,14 +1463,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'When average women have tons of options, constant attention, and a crowd of guys orbiting them, it inflates their sense of their own value \u2014 even when they\'re not particularly special. The male thirst is the supply that props up the leverage, and that power dynamic goes to a lot of their heads.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 40 },
         { camp: 'Female perspective',
           text: 'When your inbox is full and there\'s always another option, it\'s easy to conclude you\'re more in-demand than you actually are \u2014 and to keep raising the bar accordingly. But a flood of low-effort attention from men casting a wide net isn\'t the same as genuine high value, and the men you actually want judge by a different standard.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 60 },
       ],
       ruling: {
         badge: 'Real effect, oversold',
-        split: [ { label: 'Female', pct: 60 }, { label: 'Male', pct: 40 } ],
         text: 'The mechanism is real. In controlled experiments (Kavanagh, Robins & Ellis, 2010), being accepted by attractive opposite-sex others raised participants\' mating aspirations, mediated by a lift in state self-esteem \u2014 so incoming attention genuinely inflates self-assessed value and pushes standards up. In real markets both sexes already message partners about 25% more desirable than themselves (Bruch & Newman, 2018). The female lens\'s caveat \u2014 low-effort attention isn\'t genuine demand \u2014 is apt. The male lens\'s \'average, not special\' contempt is editorial, not measured.',
         tier: 'evidence',
         sources: [
@@ -1528,14 +1490,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'It doesn\'t hold up: if the bar were really that low, they\'d date anyone. What it actually means is the bar is in hell for guys they\'re not attracted to \u2014 and on the roof for the ones they are. They\'ll overlook massive red flags for a hot or charismatic guy, then turn around and say a normal, decent guy doesn\'t meet their standards. It\'s not low standards; it\'s selective standards.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 35 },
         { camp: 'Female perspective',
           text: 'If your bar were genuinely low, you\'d date almost anyone; you don\'t. What\'s actually happening is that the bar sits on the floor for men you\'re not attracted to and on the roof for the ones you are. You\'ll forgive a charming, high-value man things you\'d never tolerate from an average one.',
-          verdict: 'confirmed' },
+          verdict: 'confirmed', truth: 65 },
       ],
       ruling: {
         badge: 'Selective, not low',
-        split: [ { label: 'Female', pct: 65 }, { label: 'Male', pct: 35 } ],
         text: 'Attraction really does bend the ruler. Meta-analytically, physically attractive people are judged and treated more positively across domains (Langlois et al., 2000), and attractiveness predicts live romantic desire at r\u2248.40 for both sexes (Eastwick et al., 2014) \u2014 so tolerance is conditioned on attraction, not uniformly low. \'Selective, not low\' is the correct reframe. Two caveats drop the male lens to oversimplified: this halo is human-universal, not a female trait, and the effects are real but modest \u2014 \'overlook massive red flags\' overstates the magnitude.',
         tier: 'hard-data',
         sources: [
@@ -1556,14 +1517,13 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Most women genuinely don\'t grasp how rough the dating market has gotten for average men \u2014 because their own experience is the opposite. When you personally have endless options, you assume everyone does: "I get tons of attention, so men must too."',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
         { camp: 'Female perspective',
           text: 'If you get steady attention, it\'s natural to assume men have it just as easy \u2014 so when you hear that a huge share of average guys get almost nothing, it sounds exaggerated. It isn\'t. The market is brutally lopsided, and your abundance is the exact thing that hides that from you.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Gap real, blindness unproven',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'The asymmetry is real. In a Tinder field experiment women accumulated matches rapidly while men accrued them slowly (Tyson et al., 2016); in a full dating market men overwhelmingly message up, where replies from more-desirable women never top 21% and men hear back twice as often from less-desirable ones (Bruch & Newman, 2018). So women do receive more attention and average men face steep odds. But the \'women can\'t perceive it\' half is asserted, not measured \u2014 a plausible egocentric bias, not a proven one.',
         tier: 'evidence',
         sources: [
@@ -1583,11 +1543,10 @@
       claims: [
         { camp: '',
           text: 'Younger guys still in their early 20s have years to course-correct; by your early-to-mid 30s that luxury is mostly gone \u2014 the window has narrowed. Most women looking to settle down are aiming at men roughly 28\u201338, but they specifically want men who already have their act together: career, social skills, dating experience. The cruel part is that it compounds \u2014 the longer you sit on the sidelines, the harder it becomes to jump back in, because you fall further behind on exactly the things they\'re screening for.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Partly real, partly unproven',
-        split: [ { label: 'True', pct: 45 }, { label: 'False', pct: 55 } ],
         text: 'Partly grounded, partly not. Women do prefer slightly older partners within a narrower age band (Antfolk, 2017), and romantically/sexually inexperienced adults are stigmatized and less desired (Gesselman et al., 2017) \u2014 so \'they screen for an established, experienced man\' holds. But the \'window narrows by your mid-30s\' framing runs against evidence that men\'s online desirability actually rises with age, peaking near 50 (Bruch & Newman, 2018). The specific 28\u201338 target and the \'sitting out compounds\' claim are untested assertions.',
         tier: 'evidence',
         sources: [
@@ -1632,11 +1591,10 @@
       claims: [
         { camp: '',
           text: 'A lot of women stay uncommitted because they\'re holding out for a better option: they\'ll keep a decent "good enough" guy around as a backup while they keep looking, never fully locking in because they\'re always wondering if someone higher-value is a swipe away. A lot of men stay uncommitted for a simpler reason: they want to keep their options open to keep sleeping around. Same refusal to commit, opposite motives.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Real but overstated',
-        split: [ { label: 'True', pct: 45 }, { label: 'False', pct: 55 } ],
         text: 'The sex-typed split is half-real. Schmitt\'s 48-nation study (N=14,059) confirms men score reliably higher on unrestricted sociosexuality \u2014 the \'variety\' motive is well-founded and cross-culturally robust. Apostolou et al. (2020) likewise found men more often single to \'flirt around\' or avoid family life. But the tidy \'women hoard a backup\' half wobbles: Dibble & Drouin (2014) found men, not women, report more \'back burners,\' and women\'s own top single-reasons were pickiness and fear of getting hurt. Overlapping motives, not clean opposites.',
         tier: 'evidence',
         sources: [
@@ -1657,11 +1615,10 @@
       claims: [
         { camp: '',
           text: 'A woman making the first explicit move \u2014 not a covert signal, but actually saying it \u2014 is genuinely rare, so when it happens it tends to carry more weight than men give it. When a woman compliments your looks unprompted, asks for your number, or says something like "you smell nice," she\'s usually spent real social risk to do it. Men routinely wave these off ("she\'s just being friendly") and only count interest once it\'s spelled out.',
-          verdict: 'oversimplified' },
+          verdict: 'oversimplified', truth: 55 },
       ],
       ruling: {
         badge: 'Rare yes, ignored no',
-        split: [ { label: 'True', pct: 55 }, { label: 'False', pct: 45 } ],
         text: 'Rarity and weight check out; the \'men ignore it\' half is shakier. Kreager et al. (2014) found women send first messages four times less often than men \u2014 and those who do initiate connect with more desirable partners, so an explicit move is both rare and a costly, informative signal. But \'men routinely wave these off\' cuts against Haselton & Buss (2000): men tend to OVERperceive women\'s sexual interest, not under-read it. Treat an explicit move as strong; the dismissal claim is the weak link.',
         tier: 'evidence',
         sources: [
@@ -1706,26 +1663,6 @@
       }
       if (!r.badge) problems.push('missing ruling.badge');
       if (!r.text) problems.push('missing ruling.text');
-      // Optional synthesized split: when present it must be structurally sound —
-      // 2–3 labeled parts, positive integer pcts, summing to exactly 100. A badly
-      // staked number is worse than none, so a broken split fails the whole gate.
-      if (r.split != null) {
-        if (!Array.isArray(r.split) || r.split.length < 2 || r.split.length > 3) {
-          problems.push('ruling.split must be an array of 2–3 parts');
-        } else {
-          var pctSum = 0, splitShapeOk = true;
-          r.split.forEach(function (p, i) {
-            if (!p || typeof p !== 'object' || !p.label) { problems.push('split[' + i + '] missing label'); splitShapeOk = false; }
-            if (!p || typeof p.pct !== 'number' || !isFinite(p.pct) || p.pct !== Math.round(p.pct) || p.pct <= 0 || p.pct >= 100) {
-              problems.push('split[' + i + '] pct must be an integer in 1–99');
-              splitShapeOk = false;
-            } else {
-              pctSum += p.pct;
-            }
-          });
-          if (splitShapeOk && pctSum !== 100) problems.push('ruling.split pcts must sum to 100 (got ' + pctSum + ')');
-        }
-      }
     }
 
     if (!Array.isArray(entry.claims) || entry.claims.length === 0) {
@@ -1736,16 +1673,50 @@
         if (!c.text) problems.push('claim[' + i + '] missing text');
         if (!VERDICTS[c.verdict]) problems.push('claim[' + i + '] invalid verdict');
       });
+      // Optional synthesized truth stakes: all-or-none across an entry's claims;
+      // integers 1–99; and for 2+ claims the numbers must either sum to exactly
+      // 100 (competing camps: shares of the table) or all be equal (mirror
+      // claims: one shared kernel). A half-staked or non-additive entry is a
+      // badly staked number — worse than none — so it fails the whole gate.
+      var staked = entry.claims.filter(function (c) { return c && c.truth != null; });
+      if (staked.length) {
+        if (staked.length !== entry.claims.length) {
+          problems.push('claim.truth must be staked on all claims or none');
+        }
+        var truthShapeOk = true;
+        staked.forEach(function (c, i) {
+          var t = c.truth;
+          if (typeof t !== 'number' || !isFinite(t) || t !== Math.round(t) || t <= 0 || t >= 100) {
+            problems.push('claim truth[' + i + '] must be an integer in 1–99');
+            truthShapeOk = false;
+          }
+        });
+        if (truthShapeOk && staked.length === entry.claims.length && entry.claims.length > 1) {
+          var truthSum = 0, allEqual = true;
+          entry.claims.forEach(function (c) {
+            truthSum += c.truth;
+            if (c.truth !== entry.claims[0].truth) allEqual = false;
+          });
+          if (truthSum !== 100 && !allEqual) {
+            problems.push('claim truths must sum to 100 (camps) or all be equal (mirrors); got ' + truthSum);
+          }
+        }
+      }
     }
     return problems;
   }
 
-  /* ── One claim (camp + verdict chip on a line, then the quotation) ── */
-  function claimHTML(c) {
+  /* ── One claim (camp + verdict chip on a line, then the quotation).
+     `metricsOn` (the entry-level 25% floor, computed once in cardHTML) gates the
+     staked-% suffix inside the chip — a sub-floor entry shows bare stamps. ── */
+  function claimHTML(c, metricsOn) {
     const camp = c.camp ? '<span class="mb-camp">' + esc(c.camp) + '</span>' : '';
+    const truth = (metricsOn && c.truth != null)
+      ? '<span class="mb-truth" title="This claim&#39;s staked share of the truth here — synthesized, revised on better data.">&nbsp;&middot; ' + Number(c.truth) + '%</span>'
+      : '';
     return '<div class="mb-claim">' +
         '<div class="mb-claim-head">' + camp +
-          '<span class="mb-verdict ' + esc(c.verdict) + '">' + esc(VERDICTS[c.verdict].label) + '</span>' +
+          '<span class="mb-verdict ' + esc(c.verdict) + '">' + esc(VERDICTS[c.verdict].label) + truth + '</span>' +
         '</div>' +
         '<blockquote class="mb-quote">&ldquo;' + esc(c.text) + '&rdquo;</blockquote>' +
       '</div>';
@@ -1764,20 +1735,34 @@
       '</div>';
   }
 
-  /* ── Synthesized-split block (optional): a proportion bar + "Our stake" legend
-     rendered directly under the ruling head, quantifying the badge. The bar is
-     decorative (aria-hidden) — the legend carries the same numbers as text. ── */
-  function splitHTML(r) {
-    if (!Array.isArray(r.split) || r.split.length === 0) return '';
-    var segs = r.split.map(function (p, i) {
-      return '<span class="mb-split-seg s' + i + '" style="width:' + Number(p.pct) + '%"></span>';
+  /* ── Stake bar segments, derived from the claims' truth stakes (post-gate, so
+     shapes are trusted). Returns null when the entry stakes nothing OR when the
+     best claim is under the 25% floor — the deliberate-omission case: no chip
+     %s, no bar; the ruling stands alone as the ground truth.
+       N=1            → [claim share, ruling remainder]
+       N≥2 all equal  → mirror claims (one shared kernel) → [share, remainder]
+       N≥2 sum = 100  → competing camps → one segment per claim, claim order ── */
+  function stakeSegments(claims) {
+    var truths = claims.map(function (c) { return c.truth; });
+    if (truths.some(function (t) { return t == null; })) return null;
+    if (Math.max.apply(null, truths) < 25) return null;
+    var allEqual = truths.every(function (t) { return t === truths[0]; });
+    if (truths.length === 1 || allEqual) return [truths[0], 100 - truths[0]];
+    return truths.slice();
+  }
+
+  /* ── Stake bar (optional): "Our stake" + a proportion bar under the ruling
+     head. Numbers-free on purpose — the percentages live on the claim stamps
+     (left column); segments follow the claims top-to-bottom. aria-hidden: the
+     chip suffixes carry the same data as visible text. ── */
+  function stakeBarHTML(segs) {
+    if (!segs) return '';
+    var spans = segs.map(function (pct, i) {
+      return '<span class="mb-split-seg s' + i + '" style="width:' + Number(pct) + '%"></span>';
     }).join('');
-    var keys = r.split.map(function (p, i) {
-      return '<span class="mb-split-key k' + i + '">' + esc(p.label) + '&nbsp;<b>' + Number(p.pct) + '%</b></span>';
-    }).join('<span class="mb-split-sep" aria-hidden="true">/</span>');
-    return '<div class="mb-split" title="Synthesized split — our staked read of how the truth divides here. Not a measurement: refute it with better data and the number moves.">' +
-        '<div class="mb-split-bar" aria-hidden="true">' + segs + '</div>' +
-        '<div class="mb-split-legend"><span class="mb-split-head">Our stake</span>' + keys + '</div>' +
+    return '<div class="mb-split" title="Synthesized stake — segments follow the claims top to bottom; on a lone or mirrored claim the faint remainder is the truth only the ruling supplies. Not a measurement: refute it with better data and the numbers move.">' +
+        '<span class="mb-split-head">Our stake</span>' +
+        '<div class="mb-split-bar" aria-hidden="true">' + spans + '</div>' +
       '</div>';
   }
 
@@ -1786,6 +1771,7 @@
     const claims = m.claims;
     const n = claims.length;
     const r = m.ruling;
+    const stakes = stakeSegments(claims);   // null = no stakes, or under the 25% floor
     const sourcesId = 'sources-' + m.id;
 
     const draftChip = m.draft
@@ -1842,16 +1828,18 @@
         // Heading (visible question, or sr-only claim-derived heading)
         heading +
 
-        // Body: claims (left/top) | ruling (right/bottom), split by a hairline
+        // Body: claims (left/top) | ruling (right/bottom), split by a hairline.
+        // One entry-level stake computation feeds both columns: chip %s on the
+        // claims, the numbers-free bar on the ruling.
         '<div class="mb-body">' +
-          '<div class="mb-col mb-claims">' + claims.map(claimHTML).join('') + '</div>' +
+          '<div class="mb-col mb-claims">' + claims.map(function (c) { return claimHTML(c, !!stakes); }).join('') + '</div>' +
           '<div class="mb-col mb-ruling">' +
             // Label (left) + verdict badge (right) share one row.
             '<div class="mb-ruling-head">' +
               '<div class="mb-col-label mb-ruling-label">The ruling</div>' +
               '<div class="mb-ruling-badge">' + esc(r.badge) + '</div>' +
             '</div>' +
-            splitHTML(r) +
+            stakeBarHTML(stakes) +
             '<p class="mb-ruling-text">' + esc(r.text) + '</p>' +
             '<div class="mb-evidence">' +
               '<span class="mb-tier ' + esc(r.tier) + '">' + SVG_TIER + esc(TIERS[r.tier].label) + '</span>' +
