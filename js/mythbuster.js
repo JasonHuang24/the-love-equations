@@ -15,13 +15,21 @@
  *     Mirror claims (one assertion, two lenses) carry the SAME number; competing
  *     camps' numbers sum to exactly 100 (shares of the table). The gate enforces
  *     both shapes.
+ *   - Truth semantics (Jason's calibration rule): a claim's number is its market
+ *     share of the ANSWER TO THE QUESTION, against the counter-position —
+ *     anchored to real data where the ruling carries one (e.g. height: ~70% of
+ *     women state the preference → 70). Garnish failures trim a few points;
+ *     central-thrust failures sink the number. Mid-range values must be EARNED
+ *     by genuinely split evidence — never produced by averaging a true core
+ *     with a false extrapolation (that reads as a toss-up and misleads).
  *   - The ruling column derives a proportion bar from those truths (segments in
  *     claim order; single/mirror entries show claim-share vs the ruling's faint
- *     remainder — the truth only the ruling supplies). When the BEST claim stakes
- *     under 25%, ALL metrics are omitted on purpose: the silence says neither
- *     claim meaningfully reflects reality — the ruling is the ground truth.
- *     Clean poles carry no numbers at all. Stakes are SYNTHESIZED judgment
- *     calls, not measurements — staked so they can be refuted and refined.
+ *     remainder — the truth only the ruling supplies). The 25% floor tests EVERY
+ *     staked claim: if any argument on the card stakes under 25%, ALL metrics
+ *     are omitted — a rout is not a contest, and the silence says the losing
+ *     claim doesn't meaningfully reflect reality; the ruling is the ground
+ *     truth. Clean poles carry no numbers at all. Stakes are SYNTHESIZED
+ *     judgment calls, not measurements — staked to be refuted and refined.
  *   - render() REFUSES an entry missing `ruling.tier`, with an empty
  *     `ruling.sources`, with a duplicate id, or otherwise structurally broken —
  *     it is skipped and a console.warn fires. No unsourced ruling reaches the DOM.
@@ -195,7 +203,7 @@
       claims: [
         { camp: 'Mika',
           text: 'Those stories are extremely rare \u2014 usually she was already strongly attracted, or she friend-zoned the slow guy and is retelling it kindly. For every girl who liked that he waited, hundreds lost interest because he never tried. For average guys, waiting too long is usually a death sentence.',
-          verdict: 'oversimplified', truth: 40 },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'It depends',
@@ -260,7 +268,7 @@
       id: 'M-TBD-9',
       category: 'Attraction',
       claims: [
-        { camp: '', text: 'Opposites attract.', verdict: 'oversimplified', truth: 15 },
+        { camp: '', text: 'Opposites attract.', verdict: 'oversimplified', truth: 10 },
       ],
       ruling: {
         badge: 'Oversimplified',
@@ -414,7 +422,7 @@
       claims: [
         { camp: '',
           text: 'Given the choice, a lot of women would rather be with the guy who has smooth game \u2014 even knowing he\'s probably dishonest \u2014 than the awkward but honest one. The ability to make her feel butterflies and say the right thing at the right moment beats honesty for a lot of people. Charm and confidence win over honesty.',
-          verdict: 'oversimplified', truth: 40 },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'True at first sight',
@@ -439,10 +447,10 @@
       claims: [
         { camp: 'Male perspective',
           text: '"I want a guy with game" sounds shallow and a little manipulative, while "I want an honest guy" makes you look like you have good values. So people keep saying the thing that makes them look good, even when it isn\'t what they actually respond to. It\'s branding. What someone says they want and what they actually chase are two different data sets \u2014 and the second one is the one that predicts behavior.',
-          verdict: 'oversimplified', truth: 45 },
+          verdict: 'oversimplified', truth: 35 },
         { camp: 'Female perspective',
           text: '"I just want a nice, honest guy" sounds good and makes you look like you\'ve got your priorities straight \u2014 but if the men who actually make you feel something are the confident, cocky, smooth ones, then "honest guy" is branding, not your real preference.',
-          verdict: 'oversimplified', truth: 45 },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'Half right',
@@ -467,10 +475,10 @@
       claims: [
         { camp: 'Male perspective',
           text: 'A lot of guys just say "fuck this" and check out entirely. Some go monk mode and pour everything into money and themselves; others swallow their pride and learn to become players too. For the ones who only ever wanted to be decent and honest, it really is a raw deal, and a lot of them are losing hope.',
-          verdict: 'oversimplified', truth: 55 },
+          verdict: 'oversimplified', truth: 70 },
         { camp: 'Female perspective',
           text: 'For a long time dating ran on an unspoken default: men approach, women select. That arrangement is quietly breaking. A growing share of younger men are opting out of approaching altogether \u2014 worn down by the apps, the rejection, and years of being told they\'re the problem. If your whole strategy is to look good and wait to be approached, the supply you\'re counting on is drying up, through no decision of your own.',
-          verdict: 'oversimplified', truth: 55 },
+          verdict: 'oversimplified', truth: 70 },
       ],
       ruling: {
         badge: 'Real trend, shaky story',
@@ -520,10 +528,10 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women will ignore massive red flags if the guy has enough charisma and confidence. They convince themselves "he\'ll change for me" or "I\'m different," then act shocked when the guy who slept with 300 women behaves exactly like a guy who slept with 300 women.',
-          verdict: 'oversimplified', truth: 45 },
+          verdict: 'oversimplified', truth: 40 },
         { camp: 'Female perspective',
           text: 'The smoother and more confident he is, the more you\'ll be tempted to wave off the warning signs \u2014 the inconsistency, the history, the way he treats other people. "He\'s different with me" and "he\'ll change for me" are the famous last words here. The men who hurt you most are rarely the obvious creeps; they\'re the charming ones you decided to trust because they made you feel something.',
-          verdict: 'oversimplified', truth: 45 },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Charm expires',
@@ -547,10 +555,10 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women are drawn to men who other women visibly want. Seeing that you have options \u2014 that you\'re genuinely chosen and pursued \u2014 spikes interest, because it triggers competition and the instinct that "if all these women want him, there must be something good here." This is why a female friend vouching for you does almost nothing, while visibly having women chase you does a lot: one reads as safe, the other as desirable.',
-          verdict: 'oversimplified', truth: 55 },
+          verdict: 'oversimplified', truth: 65 },
         { camp: 'Female perspective',
           text: 'A man becomes more attractive the moment you can tell other women want him \u2014 it\'s why the taken guy, the popular one, the one with options pulls harder than the equally-good man nobody\'s noticed. It feels like taste; a lot of it is just social proof.',
-          verdict: 'oversimplified', truth: 55 },
+          verdict: 'oversimplified', truth: 65 },
       ],
       ruling: {
         badge: 'Real but overstated',
@@ -599,10 +607,10 @@
       claims: [
         { camp: 'Male perspective',
           text: '"Stop sexualizing me \u2014 just treat me like a human." It sounds like a principle, but watch when it actually gets deployed: almost always toward men they\'re not attracted to. The same women are usually fine \u2014 happy, even \u2014 being sexualized by the men they do find attractive. The same exact behavior reads as "hot" from a man she wants and "creepy \u2014 why can\'t you just treat me like a human?" from one she doesn\'t.',
-          verdict: 'oversimplified', truth: 40 },
+          verdict: 'oversimplified', truth: 45 },
         { camp: 'Female perspective',
           text: 'Be honest about the "just treat me like a human, stop sexualizing me" instinct: it usually fires for men you\'re not attracted to, not the ones you are. The same comment that feels gross from one man feels flattering \u2014 even hot \u2014 from another.',
-          verdict: 'oversimplified', truth: 40 },
+          verdict: 'oversimplified', truth: 45 },
       ],
       ruling: {
         badge: 'Half true',
@@ -680,10 +688,10 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Somewhere along the way it became socially acceptable \u2014 even trendy \u2014 to state it outright, so women own it with zero shame: "6ft minimum," right there in the bio, on TikTok, in interviews, almost worn as a personality trait. Height is the one physical preference women will openly admit to caring about. Every other looks-based filter \u2014 baldness, weight, face, even income preferences \u2014 usually gets hidden behind a more respectable excuse.',
-          verdict: 'oversimplified', truth: 60 },
+          verdict: 'oversimplified', truth: 65 },
         { camp: 'Female perspective',
           text: 'Every other looks-based preference \u2014 weight, baldness, his face \u2014 you\'ll usually hide behind a more acceptable reason. But somewhere it became socially fine to state height outright, so "6ft minimum" goes right in the bio, no embarrassment at all.',
-          verdict: 'oversimplified', truth: 60 },
+          verdict: 'oversimplified', truth: 65 },
       ],
       ruling: {
         badge: 'Loudest, not only',
@@ -707,10 +715,10 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women generally care far more about what other women think than what men think. Take OnlyFans \u2014 most men say plainly they\'d never seriously date a woman who does it, yet it stays popular. Why? Because her female social circle supports it, stays neutral, or at least doesn\'t shame her for it. Male disapproval is loud and consistent, but it loses to the approval of her peers almost every time.',
-          verdict: 'oversimplified', truth: 40 },
+          verdict: 'oversimplified', truth: 35 },
         { camp: 'Female perspective',
           text: 'A lot of the choices that read as "for men" \u2014 the OnlyFans, the heavy filler, the cosmetic work \u2014 keep happening even when most men say plainly they prefer the natural version. Why? Because your friends and your feed hype it up, and their approval lands harder than any man\'s disapproval. The audience you\'re really dressing for is other women.',
-          verdict: 'oversimplified', truth: 40 },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'Oversimplified',
@@ -733,10 +741,10 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Women tend to operate far more as a hive mind than most people want to admit \u2014 much more sensitive to social consensus, trends, and what other women are doing and saying. If one popular woman declares something attractive (or a red flag, or a new rule), a huge share start repeating it, and it spreads like wildfire \u2014 the "6ft minimum," "never split the bill," "the bar is in hell." Men hold more individual, idiosyncratic opinions, even unpopular ones; women tend to move together.',
-          verdict: 'oversimplified', truth: 25 },
+          verdict: 'oversimplified', truth: 20 },
         { camp: 'Female perspective',
           text: 'Trends in standards, red flags, what\'s attractive, what\'s embarrassing \u2014 they sweep through women fast and almost universally, because most of us are far more tuned to social consensus than we admit. One popular voice says "6ft minimum" or "the bar is in hell," and overnight it\'s everyone\'s opinion.',
-          verdict: 'oversimplified', truth: 25 },
+          verdict: 'oversimplified', truth: 20 },
       ],
       ruling: {
         badge: 'Everyone conforms',
@@ -760,10 +768,10 @@
       claims: [
         { camp: 'Male perspective',
           text: '"I just want to feel safe" sounds reasonable, but a lot of the time it\'s pretty words. Watch the actions: the same women who say they want a safe guy are often chasing the exciting, unpredictable, slightly dangerous one who gives them butterflies. They say safety; they go for chaos. What they actually want is a guy who makes them feel safe and excited \u2014 very few want a genuinely stable, low-drama guy if he\'s also boring.',
-          verdict: 'oversimplified', truth: 35 },
+          verdict: 'oversimplified', truth: 30 },
         { camp: 'Female perspective',
           text: 'Often "safe" means emotionally safe (he won\'t hurt or abandon you), while the spark still drags you toward the exciting, unpredictable, slightly dangerous guy. Very few women actually want a genuinely stable, low-drama man if he also bores them.',
-          verdict: 'oversimplified', truth: 35 },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Short-term only',
@@ -811,7 +819,7 @@
       claims: [
         { camp: '',
           text: 'Being honest about a lack of dating or relationship experience often reads as a red flag \u2014 while inventing a past full of situationships or toxic exes would probably earn more respect. People say they want an honest guy with no baggage, but when they actually meet one, they get suspicious or turned off.',
-          verdict: 'oversimplified', truth: 55 },
+          verdict: 'oversimplified', truth: 65 },
       ],
       ruling: {
         badge: 'Real, but capped',
@@ -835,10 +843,10 @@
       claims: [
         { camp: 'Male perspective',
           text: 'Dating apps turned mating into a winner-take-most market \u2014 the top sliver of men get a flood of options while the bottom 60\u201370% get filtered out and "locked out" of dating entirely, a Pareto / 80\u201320 distribution.',
-          verdict: 'oversimplified', truth: 35 },
+          verdict: 'oversimplified', truth: 25 },
         { camp: 'Female perspective',
           text: 'The apps funnel a huge share of women toward the same small tier of top men. Those men get near-unlimited options \u2014 which is exactly why they have so little reason to commit to any one woman. Meanwhile the steadier, average men who would commit get written off as beneath the bar. So you can have a full inbox and still struggle to find a relationship, because you\'re competing with everyone else for the few who are least likely to choose just you.',
-          verdict: 'oversimplified', truth: 35 },
+          verdict: 'oversimplified', truth: 25 },
       ],
       ruling: {
         badge: 'Skew, not lock-out',
@@ -862,7 +870,7 @@
       claims: [
         { camp: '',
           text: 'Dating apps are now where most couples meet \u2014 numbers like "40%" or even "half" get thrown around.',
-          verdict: 'oversimplified', truth: 30 },
+          verdict: 'oversimplified', truth: 25 },
       ],
       ruling: {
         badge: 'Online, not apps',
@@ -886,7 +894,7 @@
       claims: [
         { camp: '',
           text: 'Situationships have become the dominant form of dating, and the incentives explain why. Women with abundant options often don\'t want to lock down one guy \u2014 they want the benefits of a relationship (attention, emotional support, sex, validation) without the commitment, while keeping their options open in case someone better shows up. Meanwhile a lot of guys are so starved for attention and affection that they\'ll accept those half-assed terms just to have some connection.',
-          verdict: 'oversimplified', truth: 30 },
+          verdict: 'oversimplified', truth: 25 },
       ],
       ruling: {
         badge: 'Common, not dominant',
@@ -1062,7 +1070,7 @@
       claims: [
         { camp: '',
           text: 'Rejection tends to come in two flavors, split loosely along sex lines. Women more often get \u2014 and give \u2014 the cushioned version: "I\'m busy," "I\'m not ready," a slow fade, anything that dodges a hard no. Men, leaning more direct, are likelier to deliver the unvarnished version, sometimes brutally ("I\'m just not attracted to you").',
-          verdict: 'oversimplified', truth: 35 },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Lens, not law',
@@ -1135,7 +1143,7 @@
       claims: [
         { camp: '',
           text: 'Ask how the actual married couples you know got together and a pattern shows up fast. A big chunk met in college. The rest mostly met through some version of a lucky accident. Most people who end up married weren\'t social butterflies running elaborate game with tons of dating reps. They got dropped into a high-contact environment, or got lucky once and didn\'t fumble it.',
-          verdict: 'oversimplified', truth: 40 },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Apps, not college',
@@ -1248,7 +1256,7 @@
       claims: [
         { camp: '',
           text: 'Most of it isn\'t designed to help you succeed \u2014 it\'s designed to make the speaker sound socially acceptable and virtuous. "Just be yourself, looks don\'t matter, treat her like a human, the right girl will come along" \u2014 these are the nice, comfortable, group-approved answers. Saying the uncomfortable truth \u2014 that looks and status matter a lot, that standards are sky-high, that a nice average guy often isn\'t enough \u2014 would make her look shallow in front of other women.',
-          verdict: 'oversimplified', truth: 45 },
+          verdict: 'oversimplified', truth: 65 },
       ],
       ruling: {
         badge: 'Bad advice, unproven motive',
@@ -1294,7 +1302,7 @@
       claims: [
         { camp: '',
           text: 'The blunt reality is that there are really only two wildcards that override the need for game: getting very rich, or becoming extremely physically attractive. With one of those, you can skip the game; without either, it\'s genuinely hard out there for the honest, humble guy.',
-          verdict: 'oversimplified', truth: 35 },
+          verdict: 'oversimplified', truth: 30 },
       ],
       ruling: {
         badge: 'Wrong two wildcards',
@@ -1369,7 +1377,7 @@
       claims: [
         { camp: '',
           text: 'On the apps especially, looks get you the match \u2014 but that\'s all they get you. When a woman matches on your photos, she\'s usually expecting the full package to follow: charisma, smooth texting, witty banter, confidence. If you don\'t deliver that "popular guy" energy fast \u2014 if the first few messages don\'t create a spark or keep her entertained \u2014 she loses interest and ghosts, even though she found you attractive enough to match.',
-          verdict: 'oversimplified', truth: 45 },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Looks keep working',
@@ -1392,7 +1400,7 @@
       claims: [
         { camp: '',
           text: 'A woman can call you a "platonic friend" while still keeping you very close \u2014 initiating most of the conversations, hitting you up first, talking nearly every day, even being the one who pushed to exchange contacts in the first place. That\'s not typical "just a friend" behavior. Most women don\'t pour consistent effort into a guy they\'re not at least a little interested in, and few take the lead like that unless they\'re feeling something.',
-          verdict: 'oversimplified', truth: 30 },
+          verdict: 'oversimplified', truth: 25 },
       ],
       ruling: {
         badge: 'Overreads the signal',
@@ -1543,7 +1551,7 @@
       claims: [
         { camp: '',
           text: 'Younger guys still in their early 20s have years to course-correct; by your early-to-mid 30s that luxury is mostly gone \u2014 the window has narrowed. Most women looking to settle down are aiming at men roughly 28\u201338, but they specifically want men who already have their act together: career, social skills, dating experience. The cruel part is that it compounds \u2014 the longer you sit on the sidelines, the harder it becomes to jump back in, because you fall further behind on exactly the things they\'re screening for.',
-          verdict: 'oversimplified', truth: 45 },
+          verdict: 'oversimplified', truth: 40 },
       ],
       ruling: {
         badge: 'Partly real, partly unproven',
@@ -1615,7 +1623,7 @@
       claims: [
         { camp: '',
           text: 'A woman making the first explicit move \u2014 not a covert signal, but actually saying it \u2014 is genuinely rare, so when it happens it tends to carry more weight than men give it. When a woman compliments your looks unprompted, asks for your number, or says something like "you smell nice," she\'s usually spent real social risk to do it. Men routinely wave these off ("she\'s just being friendly") and only count interest once it\'s spelled out.',
-          verdict: 'oversimplified', truth: 55 },
+          verdict: 'oversimplified', truth: 65 },
       ],
       ruling: {
         badge: 'Rare yes, ignored no',
@@ -1736,16 +1744,19 @@
   }
 
   /* ── Stake bar segments, derived from the claims' truth stakes (post-gate, so
-     shapes are trusted). Returns null when the entry stakes nothing OR when the
-     best claim is under the 25% floor — the deliberate-omission case: no chip
-     %s, no bar; the ruling stands alone as the ground truth.
+     shapes are trusted). Returns null when the entry stakes nothing OR when ANY
+     staked claim is under the 25% floor — the deliberate-omission case: a rout
+     is not a contest, so no chip %s, no bar; the stamps and the ruling stand
+     alone as the ground truth. (The floor tests only the claims' own stakes —
+     a lone claim at 80% shows fine; its 20% remainder is the ruling's, not an
+     argument's.)
        N=1            → [claim share, ruling remainder]
        N≥2 all equal  → mirror claims (one shared kernel) → [share, remainder]
        N≥2 sum = 100  → competing camps → one segment per claim, claim order ── */
   function stakeSegments(claims) {
     var truths = claims.map(function (c) { return c.truth; });
     if (truths.some(function (t) { return t == null; })) return null;
-    if (Math.max.apply(null, truths) < 25) return null;
+    if (Math.min.apply(null, truths) < 25) return null;
     var allEqual = truths.every(function (t) { return t === truths[0]; });
     if (truths.length === 1 || allEqual) return [truths[0], 100 - truths[0]];
     return truths.slice();
