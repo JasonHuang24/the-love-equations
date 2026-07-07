@@ -71,8 +71,8 @@
   font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap;
 }
 .ev.solid     { background: #E1F5EE; color: #1B7A57; }
-.ev.mixed     { background: #FAEEDA; color: #98640F; }
-.ev.contested { background: #FBE7DB; color: #B0501C; }
+.ev.mixed     { background: #FAEEDA; color: #93610F; } /* darkened from #98640F (4.40:1 AA fail) to 4.63:1 */
+.ev.contested { background: #FBE7DB; color: #AA4D1B; } /* darkened from #B0501C (4.38:1 AA fail) to 4.64:1 */
 .ev.lens      { background: #EEE9F7; color: #5B4B8A; }
 
 /* ── Factor selector ── */

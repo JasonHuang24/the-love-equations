@@ -88,7 +88,7 @@
 .bc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
 .bc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
 .bc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
-.bc-srcbadge.heur  { color: #A06A12; background: #FBEFD6; }
+.bc-srcbadge.heur  { color: #936211; background: #FBEFD6; } /* darkened from #A06A12 (4.03:1 AA fail) to 4.61:1 */
 .bc-other { font-size: 12px; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5; }
 .bc-empty { text-align: center; color: var(--text-dim); font-size: 13px; padding: 2.4rem 1rem; line-height: 1.6; }
 .bc-empty i { font-size: 30px; display: block; margin-bottom: 0.5rem; color: var(--border); }

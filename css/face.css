@@ -87,7 +87,7 @@
 .lc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
 .lc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
 .lc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
-.lc-srcbadge.heur  { color: #A06A12; background: #FBEFD6; }
+.lc-srcbadge.heur  { color: #936211; background: #FBEFD6; } /* darkened from #A06A12 (4.03:1 AA fail) to 4.61:1 */
 .lc-other { font-size: 12px; color: var(--text-dim); margin-top: 0.5rem; line-height: 1.5; }
 .lc-empty { text-align: center; color: var(--text-dim); font-size: 13px; padding: 2.4rem 1rem; line-height: 1.6; }
 .lc-empty i { font-size: 30px; display: block; margin-bottom: 0.5rem; color: var(--border); }
