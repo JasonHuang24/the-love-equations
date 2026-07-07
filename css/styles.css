@@ -1,5 +1,24 @@
 /* ── The Love Equations — Shared Styles ── */
 
+/* ── Playfair Display (self-hosted variable font, SIL OFL — fonts/OFL-PlayfairDisplay.txt).
+   Declared as the display face across the site (nav logo, calc scores, essay headings) but
+   never actually loaded until now — every page silently fell back to Georgia. Vendored
+   rather than CDN'd: no third-party request, no version drift, works offline. ── */
+@font-face {
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-display-var.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-display-italic-var.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* Design tokens (palette, radii, shadows) live in the v1.6 Synthesis Layer
    :root block further down — that layer fully supersedes the original v1.0
    tokens, so they are defined once, there. */

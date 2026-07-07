@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compatibility Calculator &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="css/styles.css?v=1.8" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/compatibility.css?v=1.9" />
+  <link rel="stylesheet" href="css/compatibility.css?v=2.0" />
 </head>
 <body data-page="compatibility">
   <div data-include="navigation-bar"></div>
@@ -252,10 +252,12 @@
             const id = fid(h.key, ti, fi);
             return `<div class="factor-row">
               <div class="factor-top">
-                <span class="factor-name" title="${f.desc}">${f.name}</span>
+                <button type="button" class="factor-name" title="${f.desc}" aria-expanded="false"
+                        aria-controls="d-${id}" onclick="toggleFactorDesc('${id}')">${f.name}<i class="ti ti-info-circle" aria-hidden="true"></i></button>
                 <input class="factor-box" style="color:${color}" type="number" min="1" max="10" step="0.1"
                        value="1.0" id="b-${id}" oninput="onBox('${id}')" onchange="normBox('${id}')" aria-label="${f.name} score" />
               </div>
+              <div class="factor-desc" id="d-${id}" hidden>${f.desc}</div>
               <input type="range" min="1" max="10" step="0.1" value="1" id="s-${id}"
                      style="--sld:${color}" oninput="onSlider('${id}')" aria-label="${f.name} slider" />
             </div>`;
@@ -458,6 +460,17 @@
     }
 
     let compatExportJSON = '';
+    // factor descriptions were title-tooltip-only — unreachable on touch and for keyboard/AT
+    // users. The name is now a real button that toggles the description inline.
+    function toggleFactorDesc(id) {
+      const d = document.getElementById('d-' + id);
+      const b = document.querySelector('[aria-controls="d-' + id + '"]');
+      if (!d) return;
+      const show = d.hidden;
+      d.hidden = !show;
+      if (b) b.setAttribute('aria-expanded', show ? 'true' : 'false');
+    }
+
     function setExportPackage(pkg) {
       compatExportJSON = JSON.stringify(pkg);
       const disp = document.getElementById('profile-export-readout');
