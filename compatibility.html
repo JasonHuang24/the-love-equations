@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compatibility Calculator &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.6" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+        integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
   <link rel="stylesheet" href="css/compatibility.css?v=1.9" />
 </head>
@@ -476,12 +477,12 @@
       const name = pkg.importDisplayName || pkg.subjectLabel || (pkg.source === 'love-equations.smv' ? 'SMV profile' : 'Profile');
       const meta = [];
       if (pkg.hierarchyLabel) meta.push(escHtml(pkg.hierarchyLabel));
-      if (pkg.source === 'love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+pkg.age); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall === 'number') meta.push('SMV '+pkg.overall+' / 10'); }
+      if (pkg.source === 'love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+escHtml(pkg.age)); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall === 'number') meta.push('SMV '+pkg.overall+' / 10'); }
       let html = '<div class="pkg-readout-name">'+escHtml(name)+'</div>';
       if (meta.length) html += '<div class="pkg-readout-sub">'+meta.join(' &middot; ')+'</div>';
       if (Array.isArray(pkg.factors) && pkg.factors.length){
         html += '<ul class="pkg-readout-stats">'+pkg.factors.map(f =>
-          '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?f.score:'&mdash;')+'</b></li>').join('')+'</ul>';
+          '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?escHtml(f.score):'&mdash;')+'</b></li>').join('')+'</ul>';
       }
       return html;
     }

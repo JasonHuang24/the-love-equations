@@ -108,23 +108,35 @@ def load():
     for r in csv.DictReader(LABELS_CSV.open(encoding="utf-8")):
         labels[r["filename"]] = {"rating": float(r["mean_rating"]), "subset": r["subset"]}
     rows = []
+    unmatched = 0
     for r in csv.DictReader(BATCH_CSV.open(encoding="utf-8", newline="")):
         if r["outcome"] != "scored" or not r["model_raw"]:
-            rows.append({"filename": r["filename"], "outcome": r["outcome"], "raw": None,
+            # the batch harness emits outcome=='scored' with an EMPTY model_raw when the model is
+            # absent / times out / fails — rewrite the outcome so this row can never leak into the
+            # scored set with raw=None (=> NaN percentiles printed, then a KeyError crash)
+            outcome = r["outcome"] if r["model_raw"] or r["outcome"] != "scored" else "no-model-raw"
+            rows.append({"filename": r["filename"], "outcome": outcome, "raw": None,
                          "bp": r["bp"], "cv": r["cv"], "refusal": r["refusal_reason"]})
             continue
         lab = labels.get(r["filename"])
         if lab is None:
+            unmatched += 1
             continue
         rows.append({"filename": r["filename"], "outcome": "scored", "raw": float(r["model_raw"]),
                      "bp": r["bp"], "cv": r["cv"], "rating": lab["rating"], "subset": lab["subset"]})
+    if unmatched:
+        # a silent join failure here shifts the anchors while the run still looks clean
+        print(f"WARNING: {unmatched} scored rows had no labels.csv match and were dropped "
+              f"(renamed export / case mismatch?) — anchors are computed WITHOUT them.")
     return rows
 
 
 def main():
     rows = load()
-    scored = [r for r in rows if r["outcome"] == "scored"]
-    refused = [r for r in rows if r["outcome"] != "scored"]
+    scored = [r for r in rows if r["outcome"] == "scored" and r["raw"] is not None]
+    refused = [r for r in rows if r["outcome"] != "scored" or r["raw"] is None]
+    if not scored:
+        raise SystemExit("No usable scored rows (model_raw present) in the batch CSV — nothing to calibrate.")
     raws = np.array([r["raw"] for r in scored], float)
     ratings = np.array([r["rating"] for r in scored], float)
 

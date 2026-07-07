@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Matchmaker &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.6" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+        integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
   <link rel="stylesheet" href="css/matchmaker.css?v=8.5" />
 </head>
@@ -3598,7 +3599,7 @@
   // ── state ──
   let userSex = 'm', mode = 'looks', pyramid = 'you', simpleMode = false, simpleShowAll = false;
   let importedFace = null, importedBody = null, importedLooks = null, importedSMV = null;
-  let manualLooks = 1, manualSMV = 6;
+  let manualLooks = 6, manualSMV = 6;
   let overrideLooks = false, overrideSMV = false;   // manual override of an imported score
   let compatValues = {}, compatImported = false;
   let selfGrades = {};
@@ -3627,7 +3628,9 @@
     importedBody = readCv('loveEquations.bodyScore.v2');
     importedLooks = (importedFace!=null && importedBody!=null) ? round1((importedFace+importedBody)/2)
                   : (importedFace!=null ? importedFace : (importedBody!=null ? importedBody : null));
-    const smv = readLS('loveEquations.smvCalculator.v5');
+    // v6 = the SMV Calc's current key (it deletes v5 on load). answers[0] is sex ('m'/'f');
+    // answers[1] is an age BAND ('25-29', '50+') — parseInt reads its lower edge.
+    const smv = readLS('loveEquations.smvCalculator.v6');
     importedSMV = (smv && typeof smv.overall==='number' && isFinite(smv.overall)) ? smv.overall : null;
     if (smv && Array.isArray(smv.answers)){
       if (smv.answers[0]==='m'||smv.answers[0]==='f') userSex = smv.answers[0];
@@ -4153,7 +4156,7 @@
         <div class="mm-sb-line"><b>Looks</b> (attraction): ${looksLine}.</div>
         <div class="mm-sb-line"><b>SMV</b> (overall value): ${smvLine}.</div>
         <div class="mm-sb-line">${netLine}. <span style="color:var(--text-dim)">Tolerances from the <a href="frameworks.html#attention-market">Attention Market</a>.</span></div></div>
-      <div class="mm-sb-rank">Ranked by <b>desire &times; odds</b>: their <b>${cV.toFixed(1)}</b> &times; <b>${x.p}%</b> = <b>${(cV*x.p/100).toFixed(2)}</b>.</div>
+      <div class="mm-sb-rank">Ranked by <b>desire &times; odds</b>: their <b>${cV.toFixed(1)}</b> &times; <b>${x.p}%</b>${DESIRE_W[x.v.key]<1 ? ` &times; <b>${DESIRE_W[x.v.key]}</b> (below-your-level discount)` : ''} = <b>${x.rank.toFixed(2)}</b>.</div>
     </div>`;
   }
   function renderResultsSimple(list, uV){
@@ -4413,13 +4416,13 @@
     const name = pkg.importDisplayName || pkg.subjectLabel || (pkg.source==='love-equations.smv' ? 'SMV profile' : 'Profile');
     const meta = [];
     if (pkg.hierarchyLabel) meta.push(escHtml(pkg.hierarchyLabel));
-    if (pkg.source==='love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+pkg.age); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall==='number') meta.push('SMV '+pkg.overall+' / 10'); }
+    if (pkg.source==='love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+escHtml(pkg.age)); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall==='number') meta.push('SMV '+pkg.overall+' / 10'); }
     // overall is omitted for compatibility/standard packages: it's a tool-specific derived aggregate (it would mismatch on round-trip); the per-factor scores below are the real, stable data.
     let html = '<div class="pkg-readout-name">'+escHtml(name)+'</div>';
     if (meta.length) html += '<div class="pkg-readout-sub">'+meta.join(' &middot; ')+'</div>';
     if (Array.isArray(pkg.factors) && pkg.factors.length){
       html += '<ul class="pkg-readout-stats">'+pkg.factors.map(f =>
-        '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?f.score:'&mdash;')+'</b></li>').join('')+'</ul>';
+        '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?escHtml(f.score):'&mdash;')+'</b></li>').join('')+'</ul>';
     }
     return html;
   }
@@ -4562,7 +4565,7 @@
   // Step 1 (Your profile): sex→man, mode→by looks, age→30, manual scores→6, drop overrides
   // (imported calc scores stay — they're pulled in, not entered here; clearing overrides re-shows them).
   function resetStep1(){
-    userSex='m'; mode='looks'; manualLooks=1; manualSMV=6; overrideLooks=false; overrideSMV=false;
+    userSex='m'; mode='looks'; manualLooks=6; manualSMV=6; overrideLooks=false; overrideSMV=false;
     const ageEl=document.getElementById('user-age'); if(ageEl) ageEl.value=30;
     syncToggle('sex-toggle','sex',userSex); syncToggle('mode-toggle','mode',mode);
     if (!PYRAMIDS[pyramid] || PYRAMIDS[pyramid].describes !== targetSex()) pyramid = pyramidsForTarget()[0];

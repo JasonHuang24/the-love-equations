@@ -745,8 +745,19 @@ body {
 
 .dossier-note strong { color: var(--text); }
 
-/* ── Mobile navigation: collapsible hamburger ── */
-@media (max-width: 1024px) {
+/* ── Laptop tier: the full 15-link row measures ~1573px at 14px Georgia, so between the
+   hamburger cutoff and ~1700px it must compress or the tail links push off-screen
+   (sticky bar + no overflow guard = horizontal page scroll). Same row, tighter type. ── */
+@media (max-width: 1700px) {
+  .nav { padding: 0 1.25rem; }
+  .nav-logo { font-size: 18px; }
+  .nav-links { gap: 0; }
+  .nav-link { padding: 0 6px; font-size: 12.5px; letter-spacing: 0; }
+}
+
+/* ── Mobile navigation: collapsible hamburger. 1320px, not 1024: the compressed link row
+   above still needs ~1302px — below that only the hamburger fits all 15 destinations. ── */
+@media (max-width: 1320px) {
   .nav {
     flex-wrap: wrap;
     align-items: center;

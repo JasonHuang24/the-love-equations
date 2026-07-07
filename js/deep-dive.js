@@ -199,6 +199,11 @@
 
   window.addEventListener('scroll', requestTick, { passive: true });
   window.addEventListener('resize', onResize, { passive: true });
+  // include.js injects the nav/footer partials AFTER deferred scripts run, shifting every
+  // cached offset by the sticky nav's height — re-measure when they land (and once more on
+  // window load, when late images/fonts have settled the final geometry).
+  document.addEventListener('partials:loaded', () => { activeId = null; lastPct = -1; measure(); requestTick(); });
+  window.addEventListener('load', () => { activeId = null; lastPct = -1; measure(); requestTick(); });
   measure();
   requestTick();
 })();

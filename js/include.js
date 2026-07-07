@@ -17,7 +17,7 @@
   const page = document.body.dataset.page;
   if (page) {
     const link = document.querySelector(`.nav-link[data-page="${page}"]`);
-    if (link) link.classList.add('active');
+    if (link) { link.classList.add('active'); link.setAttribute('aria-current', 'page'); }
   }
 
   // Mobile hamburger toggle

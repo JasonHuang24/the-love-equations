@@ -137,14 +137,18 @@ def main():
 
     drops = spec.get("drops", [])
     if drops and not args.dry:
+        # Two passes: edit ALL text first, write the file, and only then unlink. A mid-loop failure
+        # (e.g. remove_path_from_text raising on a lead path) must not leave earlier files deleted
+        # from disk while still wired into the un-rewritten page — broken images the tool created.
         text = mm_data.MATCHMAKER.read_text(encoding="utf-8")
         for rel in drops:
             text = remove_path_from_text(text, rel)
+        mm_data.MATCHMAKER.write_text(text, encoding="utf-8", newline="\n")
+        for rel in drops:
             f = mm_data.ROOT / rel
             if f.is_file():
                 f.unlink()
             print(f"drop {rel}")
-        mm_data.MATCHMAKER.write_text(text, encoding="utf-8", newline="\n")
     elif drops:
         for rel in drops:
             print(f"[dry] drop {rel}")

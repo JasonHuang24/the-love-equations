@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Body Calculator &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.6" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+        integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
   <script src="js/composite-score.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
@@ -66,7 +67,7 @@
               <video id="bc-video" playsinline hidden></video>
               <canvas id="bc-canvas" hidden></canvas>
             </div>
-            <div class="bc-status" id="bc-status">Loading the on-device pose model&hellip;</div>
+            <div class="bc-status" id="bc-status" role="status" aria-live="polite">Loading the on-device pose model&hellip;</div>
             <div class="bc-note bc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
           </div>
 
@@ -1075,9 +1076,17 @@
       BC.sex = null; BC.sexSource = 'unknown'; BC.sexConf = null; BC.sexUnknownReason = reason || '';
       setStatus(bcStatusNote(), false, true); renderResult();
     };
-    window.bcSetModelScore = function(t, raw){ BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
+    window.bcSetModelScore = function(t, raw){ BC.deferredRefusal = null; BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.bcModelReady = function(ok){ BC.modelReady = ok; };
-    window.bcResetResult = function(){ BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    // The geometry gates were bypassed on the model's credit but the model will never deliver for the
+    // current photo (load failed / inference failed) — apply the stashed refusal: drop the un-gated
+    // geometry score (and its persisted composite entry) and show the refusal the gates would have given.
+    window.bcApplyDeferredRefusal = function(){
+      if (!BC.deferredRefusal) return;
+      const msg = BC.deferredRefusal; BC.deferredRefusal = null;
+      window.bcSetStatus(msg, true); window.bcResetResult();
+    };
+    window.bcResetResult = function(){ BC.deferredRefusal = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
@@ -1544,7 +1553,7 @@
           recyclePoseWorker(worker);                 // kills a native spin; next upload gets a clean WASM runtime
           if (landmarks){
             resolve({ landmarks, silhouette:null,
-              warning:'silhouette analysis timed out - no score was produced' });
+              warning:'silhouette analysis timed out, so the outline cues were skipped' });
           } else {
             const error = new Error('Pose analysis timed out during ' + stage + '.');
             error.stage = stage; reject(error);
@@ -1598,6 +1607,8 @@
       } catch(e){
         session = null; modelState='absent'; window.bcModelReady(false); console.warn('[body] CNN model load FAILED:', e.message);
         window.bcSetStatus('No trained body model loaded — running on the geometry. Drop models/body-beauty.onnx to enable it.');
+        // a photo analysed during the load window may have passed the gates on the model's credit
+        if (window.bcApplyDeferredRefusal) window.bcApplyDeferredRefusal();
       }
     }
     initModel();
@@ -1651,7 +1662,8 @@
       } catch(_){ return 0; }
     }
     async function inferAndSet(data, gen){
-      const ort=window.ort; if (!ort || !session) return;
+      const ort=window.ort;
+      if (!ort || !session){ if (gen === currentGen && window.bcApplyDeferredRefusal) window.bcApplyDeferredRefusal(); return; }
       try {
         const S=MODEL_CONFIG.inputSize;
         const inName=MODEL_CONFIG.inputName || session.inputNames[0];
@@ -1662,7 +1674,13 @@
         if (!Number.isFinite(raw)) throw new Error('model returned a non-finite value');
         const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
         window.bcSetModelScore(norm, raw);
-      } catch(e){ if (gen === currentGen) window.bcSetStatus('Trained-model inference failed: '+e.message, true); }
+      } catch(e){
+        if (gen === currentGen){
+          window.bcSetStatus('Trained-model inference failed: '+e.message, true);
+          // the headline was promised to the model; if the gates were bypassed on its credit, refuse now
+          if (window.bcApplyDeferredRefusal) window.bcApplyDeferredRefusal();
+        }
+      }
     }
 
     // ── Sex classifier (InsightFace genderage.onnx, on-device). Drop models/face-sex.onnx to enable. ──
@@ -1765,7 +1783,7 @@
 
     let bcBusy = false;
     async function drawAndScore(srcEl, W, H){
-      if (bcBusy) return;
+      if (bcBusy){ window.bcSetStatus('Still analysing the previous photo — drop this one again when it finishes.', true); return; }
       bcBusy = true;
       const gen = ++currentGen;
       try {
@@ -1804,6 +1822,10 @@
         // drop them so they aren't scored as if measured. The composite renormalizes over what's left.
         const framing = (poseResult.quality && poseResult.quality.framing) || 'full';
         if (framing === 'torso'){ skel.legTorso = null; skel.symmetry = null; }
+        // No quality object at all (worker timeout / task failure): framing is UNKNOWN, so treat the
+        // whole-body cues as unmeasured rather than defaulting to 'full' and scoring leg:torso /
+        // symmetry from joints that may be extrapolated off-frame.
+        if (!poseResult.quality){ skel.legTorso = null; skel.symmetry = null; }
 
         // Resolution / distance gate (M2). A subject filling little of the frame gives a coarse mask,
         // imprecise joints (width ratios compress toward 1.0 → a real V-taper flattens) and an upscaled CNN
@@ -1836,26 +1858,35 @@
         const useModel = (!!session || modelState === 'loading') && !bareBody;
         BC.routeBare = bareBody; BC.routeUseModel = useModel;   // instrumentation only: the TRUE routing decision (incl. the model-load window) for the debug batch harness — no logic change
         const px = poseResult.silhouette || null;
-        if (!px && !useModel){
-          window.bcSetStatus('The pose was readable, but the body outline was not reliable enough to score. No number was produced; try a neutral standing photo with clear contrast and fitted clothing.', true);
-          window.bcResetResult(); return;
-        }
         const metrics = window.bcBodyRatios(px, skel);
         // The waist read (V-taper / waist-to-hip) is the discriminating frame cue; shoulder breadth + Tier-3
         // proportions alone are too thin for an honest GEOMETRY headline. If an arm hid the waist the worker drops
         // those cues upstream — so (no model) refuse with a fix-it rather than score the remnants.
         const hasWaist = metrics.vTaper != null || metrics.whr != null;
-        if (!hasWaist && !useModel){
-          const which = px && px.waistArm ? (px.hipArm ? 'across your waist and hips' : 'across your waist')
-                      : px && px.hipArm ? 'resting on your hip' : '';
-          window.bcSetStatus(which
+        // The refusal is computed for BOTH routes. Geometry headline → refuse now. Model headline →
+        // the gates are bypassed on the model's CREDIT (still loading, or inference pending); if the
+        // model never delivers for this photo, the stashed refusal fires instead of letting an
+        // un-gated geometry score stand and persist (see bcApplyDeferredRefusal).
+        let geoRefusalMsg = null;
+        if (!px){
+          geoRefusalMsg = 'The pose was readable, but the body outline was not reliable enough to score. No number was produced; try a neutral standing photo with clear contrast and fitted clothing.';
+        } else if (!hasWaist){
+          const which = px.waistArm ? (px.hipArm ? 'across your waist and hips' : 'across your waist')
+                      : px.hipArm ? 'resting on your hip' : '';
+          geoRefusalMsg = which
             ? 'An arm is '+which+', which hides your waistline — the frame can’t be read from a silhouette. Retake standing with your arms a few inches out from your sides.'
-            : 'The body outline wasn’t reliable enough to score. Try a neutral standing photo, arms a few inches out, fitted clothing.', true);
+            : 'The body outline wasn’t reliable enough to score. Try a neutral standing photo, arms a few inches out, fitted clothing.';
+        }
+        if (geoRefusalMsg && !useModel){
+          window.bcSetStatus(geoRefusalMsg, true);
           window.bcResetResult(); return;
         }
 
         // reliability caveats (non-blocking) — the body has more ways to read soft than the face
         const warns = [];
+        // the worker's own degradation note (silhouette model unavailable / analysis failed) — without
+        // it a model-headline score renders with no hint that the silhouette breakdown is missing
+        if (poseResult.warning) warns.push(poseResult.warning);
         if (px && (px.waistArm || px.hipArm)) warns.push('an arm covered part of your waist or hips, so that cue was skipped — arms a few inches out reads the full frame');
         else if (skel.armNearWaist) warns.push('an arm is by your waist, which can widen the silhouette — stand with arms slightly out');
         if (skel.tilt > 0.06) warns.push('shoulders/hips look tilted — stand square to the camera');
@@ -1871,6 +1902,13 @@
         // A bare-physique image routes to geometry, so a late model-load must NOT silently override its headline.
         if (useModel){ pendingTensor = tensorData; pendingTensorGen = gen; }
         else { pendingTensor = null; }
+        if (useModel && !tensorData && geoRefusalMsg){
+          // The model was to carry the headline past the geometry gates, but its crop failed —
+          // it can never score this photo, so the geometry refusal applies after all.
+          window.bcSetStatus(geoRefusalMsg, true);
+          window.bcResetResult(); return;
+        }
+        BC.deferredRefusal = (useModel && geoRefusalMsg) ? geoRefusalMsg : null;
 
         // read sex from the face (overrides the unreliable frame guess); skipped if the face isn't visible OR if
         // the eyes are hidden (sunglasses make genderage confidently mis-sex women → don't trust it; fall back to

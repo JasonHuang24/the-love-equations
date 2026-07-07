@@ -219,7 +219,7 @@ def js_obj_literal(obj):
             rendered = "[" + ", ".join(repr(x) for x in value) + "]"
         else:
             rendered = repr(value)
-        parts.append(f"{repr(key)}:{rendered}")
+        parts.append(f"{repr(key)}: {rendered}")   # the space matters: wire_roster_candidates.py matches "'{slug}': ["
     return "{" + ", ".join(parts) + "}"
 
 
@@ -288,14 +288,16 @@ def main():
     else:
         items_to_fill = sorted(CURATED.items())
 
+    credits_text = CREDITS.read_text(encoding="utf-8") if CREDITS.exists() else ""
     for slug, data in items_to_fill:
         print(f"[fill] {slug}")
         avatar = data["avatar"]
         avatar_rel = f"images/roster/{slug}.jpg"
-        save_or_keep(avatar, ROSTER_DIR / f"{slug}.jpg", (420, 560), 84)
+        avatar_downloaded = save_or_keep(avatar, ROSTER_DIR / f"{slug}.jpg", (420, 560), 84)
         img_map[slug] = avatar_rel
         manifest[slug] = avatar_rel
-        credit_rows.append(("avatar", slug, "lead", avatar["source"]))
+        if avatar_downloaded:   # a kept file already has its credit row from the run that fetched it
+            credit_rows.append(("avatar", slug, "lead", avatar["source"]))
         time.sleep(1.0)
 
         existing = list(gal_map.get(slug, []))
@@ -309,6 +311,10 @@ def main():
         for shot in data.get("gallery", []):
             if len(gallery) >= 5:
                 break
+            # rerun guard: slots are freshly numbered, so without this check the same curated
+            # shot re-downloads into a NEW slot on every run (duplicate photos + credit rows)
+            if shot["source"] in credits_text and f"| {slug} |" in credits_text:
+                continue
             rel = f"images/roster/{slug}/{next_slot}.jpg"
             save_or_keep(shot, ROSTER_DIR / slug / f"{next_slot}.jpg", (1100, 900), 84)
             gallery.append(rel)
