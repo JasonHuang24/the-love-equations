@@ -475,8 +475,8 @@
 
     function renderResult(){
       const host = document.getElementById('lc-result');
-      // Verbose red calibration row (model raw output): shown on localhost (the dev/calibration build) or
-      // with ?debug, hidden in a deployed build.
+      // Verbose red calibration row (model raw output): shown on localhost or with ?debug — the
+      // ?debug param deliberately works anywhere (personal site; it's the calibration escape hatch).
       const LE_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
       if (!LC.geo){
         host.innerHTML = '<div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; switch lenses any time.</div>';
@@ -1024,7 +1024,7 @@
     (function lcBatchMode(){
       const DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname==='localhost' || location.hostname==='127.0.0.1';
       const panel = document.getElementById('lc-batch');
-      if (!DEBUG || !panel) return;                 // additive, debug-gated: a deployed build never shows this
+      if (!DEBUG || !panel) return;                 // additive, debug-gated: hidden unless localhost or an explicit ?debug
       panel.hidden = false;
       const LC = window.lcState;
 

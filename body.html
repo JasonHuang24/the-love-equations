@@ -871,8 +871,8 @@
 
     function renderResult(){
       const host = document.getElementById('bc-result');
-      // Verbose red calibration rows (skin %, model raw, face read): shown on localhost (the dev/calibration
-      // build) or with ?debug, hidden in a deployed build. See also LE_DEBUG note on the Face Calc.
+      // Verbose red calibration rows (skin %, model raw, face read): shown on localhost or with ?debug —
+      // the ?debug param deliberately works anywhere (personal site; calibration escape hatch). See Face Calc.
       const BC_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
       const t0 = computeTier0();          // objective spine, or null unless the three numbers + a sex are all in
       const hasInputs = !!t0;
