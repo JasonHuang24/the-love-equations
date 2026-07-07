@@ -1,0 +1,11 @@
+# Python deps for tools/ and models/ maintenance scripts.
+#   pip install -r tools/requirements.txt          # roster/calibration tooling
+#   pip install -r tools/requirements.txt torch torchvision onnxruntime
+#                                                  # + these three only for models/train_body_beauty.py
+#
+# Version floors are the versions the scripts were last run against — anything newer is expected to work.
+Pillow>=10.0
+numpy>=1.26
+# scipy is optional everywhere it's imported (guarded try/except), but epoch selection in
+# models/train_body_beauty.py is Spearman-based — install it for any real training run.
+scipy>=1.11

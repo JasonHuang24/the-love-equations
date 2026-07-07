@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SMV Calculator &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.6" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+        integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
   <link rel="stylesheet" href="css/smvcalc.css?v=1.8" />
 </head>
@@ -173,7 +174,7 @@
           </div>
           <div class="pb-layout">
             <div>
-              <label class="pb-label">Name or description</label>
+              <label class="pb-label" for="pb-name">Name or description</label>
               <input class="pb-input" id="pb-name" placeholder="e.g. coworker, ex, ideal type..." oninput="updateB()" />
               <div id="pb-sliders"></div>
             </div>
@@ -944,7 +945,11 @@
       document.getElementById('a-questions').classList.add('visible');
       const auto = document.getElementById('auto-next');
       if (auto) auto.checked = autoNext;
-      curQ = 0;
+      // resume a part-done quiz at its saved question (loadState restored curQ) — a reload
+      // 25 questions in must not restart at question 1. A fresh or reset run (all answers
+      // null) and a post-completion re-entry still start from the top.
+      const hasProgress = !aCompleted && answers.some(a => a !== null && a !== undefined);
+      curQ = hasProgress ? Math.max(0, Math.min(QUESTIONS.length - 1, curQ)) : 0;
       renderQ();
       saveState();
     }
@@ -1099,7 +1104,7 @@
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
             ${q.money ? '<span class="income-prefix">$</span>' : ''}
-            <input type="text" inputmode="numeric" id="count-field" class="income-field" autocomplete="off"
+            <input type="text" inputmode="numeric" id="count-field" class="income-field" aria-label="Lifetime partner count" autocomplete="off"
                    value="${has ? Number(v).toLocaleString('en-US') : ''}" placeholder="${q.placeholder || ''}" oninput="onCountInput(this)" ${isNA ? 'disabled' : ''} />
             <span class="income-suffix">${q.unit || ''}</span>
           </div>
@@ -1116,7 +1121,7 @@
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
             <span class="income-prefix">$</span>
-            <input type="text" inputmode="numeric" id="income-field" class="income-field" autocomplete="off"
+            <input type="text" inputmode="numeric" id="income-field" class="income-field" aria-label="Annual income" autocomplete="off"
                    value="${has ? Number(answers[curQ]).toLocaleString('en-US') : ''}" placeholder="e.g. 85,000" oninput="onIncomeInput(this)" />
             <span class="income-suffix">/ year</span>
           </div>
@@ -1129,7 +1134,7 @@
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
             <span class="income-prefix">$</span>
-            <input type="text" inputmode="text" id="networth-field" class="income-field" autocomplete="off"
+            <input type="text" inputmode="text" id="networth-field" class="income-field" aria-label="Net worth" autocomplete="off"
                    value="${has ? fmtMoneyVal(answers[curQ]) : ''}" placeholder="e.g. 50,000 or -15,000" oninput="onNetWorthInput(this)" />
             <span class="income-suffix">total</span>
           </div>
@@ -1162,9 +1167,9 @@
         const inch = has ? totIn % 12 : '';
         const cmVal = has ? Math.round(cm) : '';
         const fields = imperial
-          ? `<input type="text" inputmode="numeric" id="h-ft" class="num-field short" autocomplete="off" value="${ft}" placeholder="5" oninput="onHeightInput()" /><span class="unit-lbl">ft</span>
-             <input type="text" inputmode="numeric" id="h-in" class="num-field short" autocomplete="off" value="${inch}" placeholder="10" oninput="onHeightInput()" /><span class="unit-lbl">in</span>`
-          : `<input type="text" inputmode="numeric" id="h-cm" class="num-field" autocomplete="off" value="${cmVal}" placeholder="178" oninput="onHeightInput()" /><span class="unit-lbl">cm</span>`;
+          ? `<input type="text" inputmode="numeric" id="h-ft" class="num-field short" aria-label="Height, feet" autocomplete="off" value="${ft}" placeholder="5" oninput="onHeightInput()" /><span class="unit-lbl">ft</span>
+             <input type="text" inputmode="numeric" id="h-in" class="num-field short" aria-label="Height, inches" autocomplete="off" value="${inch}" placeholder="10" oninput="onHeightInput()" /><span class="unit-lbl">in</span>`
+          : `<input type="text" inputmode="numeric" id="h-cm" class="num-field" aria-label="Height in centimetres" autocomplete="off" value="${cmVal}" placeholder="178" oninput="onHeightInput()" /><span class="unit-lbl">cm</span>`;
         const preview = has
           ? `${cmVal} cm (${ft}&prime;${inch}&Prime;) maps to <strong>${heightToScore(cm, getSex()).toFixed(1)} / 10</strong> for a ${getSex() === 'f' ? 'female' : 'male'} profile.`
           : '<span class="num-hint">Enter your height to see where it lands.</span>';
@@ -1193,8 +1198,8 @@
         const lb = has ? Math.round(kg / 0.453592) : '';
         const kgVal = has ? Math.round(kg) : '';
         const fields = imperial
-          ? `<input type="text" inputmode="numeric" id="w-lb" class="num-field" autocomplete="off" value="${lb}" placeholder="170" oninput="onWeightInput()" /><span class="unit-lbl">lb</span>`
-          : `<input type="text" inputmode="numeric" id="w-kg" class="num-field" autocomplete="off" value="${kgVal}" placeholder="77" oninput="onWeightInput()" /><span class="unit-lbl">kg</span>`;
+          ? `<input type="text" inputmode="numeric" id="w-lb" class="num-field" aria-label="Weight in pounds" autocomplete="off" value="${lb}" placeholder="170" oninput="onWeightInput()" /><span class="unit-lbl">lb</span>`
+          : `<input type="text" inputmode="numeric" id="w-kg" class="num-field" aria-label="Weight in kilograms" autocomplete="off" value="${kgVal}" placeholder="77" oninput="onWeightInput()" /><span class="unit-lbl">kg</span>`;
         let preview;
         const h = answers[HEIGHT_IDX];
         if (!h) preview = '<span class="num-hint">Set your height first (previous question) so BMI can be computed.</span>';
@@ -1488,12 +1493,12 @@
       const name = pkg.importDisplayName || pkg.subjectLabel || (pkg.source === 'love-equations.smv' ? 'SMV profile' : 'Profile');
       const meta = [];
       if (pkg.hierarchyLabel) meta.push(escHtml(pkg.hierarchyLabel));
-      if (pkg.source === 'love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+pkg.age); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall === 'number') meta.push('SMV '+pkg.overall+' / 10'); }
+      if (pkg.source === 'love-equations.smv'){ if (pkg.sex==='m'||pkg.sex==='f') meta.push(pkg.sex==='m'?'man':'woman'); if (pkg.age) meta.push('age '+escHtml(pkg.age)); if (pkg.lens) meta.push(escHtml(pkg.lens)); if (typeof pkg.overall === 'number') meta.push('SMV '+pkg.overall+' / 10'); }
       let html = '<div class="pkg-readout-name">'+escHtml(name)+'</div>';
       if (meta.length) html += '<div class="pkg-readout-sub">'+meta.join(' &middot; ')+'</div>';
       if (Array.isArray(pkg.factors) && pkg.factors.length){
         html += '<ul class="pkg-readout-stats">'+pkg.factors.map(f =>
-          '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?f.score:'&mdash;')+'</b></li>').join('')+'</ul>';
+          '<li><span>'+escHtml(f.name||'')+'</span><b>'+(f.score!=null?escHtml(f.score):'&mdash;')+'</b></li>').join('')+'</ul>';
       }
       return html;
     }

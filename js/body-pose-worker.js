@@ -6,7 +6,7 @@
 const VISION_MODULE_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs';
 const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm';
 const POSE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task';
-const SILHOUETTE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite';
+const SILHOUETTE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/1/selfie_segmenter.tflite';   // pinned like the pose model above — /latest/ can silently swap the silhouette model under the calibrated scoring
 // MediaPipe Pose landmark indices (BlazePose 33-landmark order). Only the shoulder/hip
 // corners are addressed symbolically — they define the torso box used for width ratios.
 // Other landmarks are referenced by raw index at their (few) use sites; REQUIRED lists the

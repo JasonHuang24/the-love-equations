@@ -189,6 +189,9 @@
       try {
         localStorage.removeItem(FACE_KEY); localStorage.removeItem(BODY_KEY);
         localStorage.removeItem('loveEquations.faceShot.v1'); localStorage.removeItem('loveEquations.bodyShot.v1');
+        // also drop the body calc's saved height/weight/bf inputs — body.html re-persists a
+        // bodyScore from them on its next load, silently resurrecting the score just reset here
+        localStorage.removeItem('loveEquations.bodyInputs.v1');
       } catch (e) {}
       if (window.bcResetAll) window.bcResetAll();   // clear the body calc's photo + result if we're on body.html
       if (window.lcResetAll) window.lcResetAll();   // ditto the face calc if we're on face.html

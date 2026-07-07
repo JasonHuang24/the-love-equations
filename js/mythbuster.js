@@ -1105,6 +1105,12 @@
       if (!TIERS[r.tier]) problems.push('missing/invalid ruling.tier');              // spec: hard-refuse
       if (!Array.isArray(r.sources) || r.sources.length === 0) {
         problems.push('empty ruling.sources');                                       // spec: hard-refuse
+      } else {
+        r.sources.forEach(function (s, i) {
+          // A source with no fetchable URL is unsourced in practice — enforce the header's
+          // "no unsourced ruling reaches the DOM" guarantee literally (empty href renders a dead link).
+          if (!s || !s.url || !/^https?:\/\//.test(s.url)) problems.push('source[' + i + '] missing/invalid url');
+        });
       }
       if (!r.badge) problems.push('missing ruling.badge');
       if (!r.text) problems.push('missing ruling.text');

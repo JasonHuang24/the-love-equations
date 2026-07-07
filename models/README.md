@@ -176,7 +176,7 @@ score automatically (on-device, via onnxruntime-web). Until then the page runs o
 | `url`        | `models/body-beauty.onnx` | where the page fetches the model |
 | `inputSize`  | `224`                  | square RGB input, **NCHW** `[1,3,224,224]` |
 | `mean`/`std` | ImageNet               | `[0.485,0.456,0.406]` / `[0.229,0.224,0.225]` |
-| `outMin/outMax` | `26.234` / `69.261` | current anchors — one grouped-**holdout** split's 2nd/98th-pct studio predictions (provisional, *not* validated real-photo calibration). **Re-anchor** from your own holdout prediction quantiles per real-photo batch. |
+| `outMin/outMax` | `14.247` / `58.628` | current anchors — the 2026-06-21 **real-photo** recalibration shipped in body.html (it replaced the 26.234/69.261 studio-holdout percentiles, which crushed every real body into 1–3). **Re-anchor** from your own holdout prediction quantiles per real-photo batch; body.html's `MODEL_CONFIG` is the source of truth. |
 | `inputName`/`outputName` | `null`     | `null` = use the graph's first input/output |
 
 The page crops a **square, aspect-preserving box around the detected person** (pose-landmark

@@ -344,7 +344,16 @@ def main():
         pr = pearsonr(P, Tg)[0] if pearsonr else float("nan")
         sp = spearmanr(P, Tg)[0] if spearmanr else float("nan")
         print(f"[ep {ep:02d}] val RMSE={rmse:.3f}  Pearson={pr:.3f}  Spearman={sp:.3f}")
-        if sp > best["sp"]:
+        # NaN Spearman (scipy absent, or a constant-prediction epoch) never beats -2, so without
+        # a fallback `best` stays empty for the whole run and the export crashes at the end.
+        # Selection: a valid-Spearman checkpoint always outranks a NaN one; among valid, highest
+        # Spearman; if the whole run is NaN (no scipy), lowest RMSE.
+        prev_valid = best["state"] is not None and best["sp"] == best["sp"]
+        if sp == sp:
+            improved = (not prev_valid) or sp > best["sp"]
+        else:
+            improved = best["state"] is None or (not prev_valid and rmse < best.get("rmse", float("inf")))
+        if improved:
             best = {"sp": sp, "pr": pr, "rmse": rmse,
                     "state": {k: v.cpu().clone() for k, v in model.state_dict().items()},
                     "preds": P, "tgts": Tg}

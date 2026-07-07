@@ -449,8 +449,9 @@ body[data-page="deep-dive"] {
 }
 .dd-related-card > i:last-child { margin-left: auto; color: var(--text-dim); font-size: 16px; }
 
-/* ── Responsive ── */
-@media (max-width: 1024px) {
+/* ── Responsive. 1320px matches the hamburger cutoff in styles.css — the 64px `top`
+   below assumes the shorter mobile nav, so the two breakpoints must move together. ── */
+@media (max-width: 1320px) {
   .dd-timeline {
     top: 64px; /* shorter mobile nav */
     padding: 0.7rem 1rem 0.65rem;
