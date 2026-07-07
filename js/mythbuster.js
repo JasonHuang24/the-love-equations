@@ -18,13 +18,19 @@
  *   - Truth semantics (Jason's calibration rule): a claim's number is its market
  *     share of the ANSWER TO THE QUESTION, against the counter-position —
  *     anchored to real data where the ruling carries one (e.g. height: ~70% of
- *     women state the preference → 70). Garnish failures trim a few points;
- *     central-thrust failures sink the number. Mid-range values must be EARNED
- *     by genuinely split evidence — never produced by averaging a true core
- *     with a false extrapolation (that reads as a toss-up and misleads).
+ *     women state the preference → 70). THE QUESTION DEFINES THE CONTESTED
+ *     AXIS: a claim earns NOTHING for premises the ruling agrees with — it is
+ *     graded where it actually disagrees. (M-TBD-47's question asks about the
+ *     advice's MOTIVE, so its claim grades on the motive contest — not on the
+ *     agreed "advice is bad" premise. M-TBD-17's question asks about the
+ *     checkout TREND, so its claims grade on the trend.) Garnish failures trim
+ *     a few points; central-thrust failures sink the number. Mid-range values
+ *     must be EARNED by genuinely split evidence — never produced by averaging
+ *     a true core with a false extrapolation (that reads as a toss-up).
  *   - The ruling column derives a proportion bar from those truths (segments in
- *     claim order; single/mirror entries show claim-share vs the ruling's faint
- *     remainder — the truth only the ruling supplies). The 25% floor tests EVERY
+ *     claim order). On single/mirror entries the faint remainder is the
+ *     COUNTER-POSITION'S share — the ruling's side of the question — so the
+ *     bar reads naturally as claim vs ruling. The 25% floor tests EVERY
  *     staked claim: if any argument on the card stakes under 25%, ALL metrics
  *     are omitted — a rout is not a contest, and the silence says the losing
  *     claim doesn't meaningfully reflect reality; the ruling is the ground
@@ -1256,7 +1262,7 @@
       claims: [
         { camp: '',
           text: 'Most of it isn\'t designed to help you succeed \u2014 it\'s designed to make the speaker sound socially acceptable and virtuous. "Just be yourself, looks don\'t matter, treat her like a human, the right girl will come along" \u2014 these are the nice, comfortable, group-approved answers. Saying the uncomfortable truth \u2014 that looks and status matter a lot, that standards are sky-high, that a nice average guy often isn\'t enough \u2014 would make her look shallow in front of other women.',
-          verdict: 'oversimplified', truth: 65 },
+          verdict: 'oversimplified', truth: 35 },
       ],
       ruling: {
         badge: 'Bad advice, unproven motive',
@@ -1720,7 +1726,7 @@
   function claimHTML(c, metricsOn) {
     const camp = c.camp ? '<span class="mb-camp">' + esc(c.camp) + '</span>' : '';
     const truth = (metricsOn && c.truth != null)
-      ? '<span class="mb-truth" title="This claim&#39;s staked share of the truth here — synthesized, revised on better data.">&nbsp;&middot; ' + Number(c.truth) + '%</span>'
+      ? '<span class="mb-truth" title="This claim&#39;s staked share of the answer to the question — graded where it disagrees with the ruling, not on agreed premises. Synthesized, revised on better data.">&nbsp;&middot; ' + Number(c.truth) + '%</span>'
       : '';
     return '<div class="mb-claim">' +
         '<div class="mb-claim-head">' + camp +
@@ -1771,7 +1777,7 @@
     var spans = segs.map(function (pct, i) {
       return '<span class="mb-split-seg s' + i + '" style="width:' + Number(pct) + '%"></span>';
     }).join('');
-    return '<div class="mb-split" title="Synthesized stake — segments follow the claims top to bottom; on a lone or mirrored claim the faint remainder is the truth only the ruling supplies. Not a measurement: refute it with better data and the numbers move.">' +
+    return '<div class="mb-split" title="Synthesized stake — segments follow the claims top to bottom; on a lone or mirrored claim the faint remainder is the counter-position&#39;s share, the ruling&#39;s side of the question. Not a measurement: refute it with better data and the numbers move.">' +
         '<span class="mb-split-head">Our stake</span>' +
         '<div class="mb-split-bar" aria-hidden="true">' + spans + '</div>' +
       '</div>';
