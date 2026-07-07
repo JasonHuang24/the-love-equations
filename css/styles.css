@@ -75,23 +75,62 @@ body {
 .nav-link:hover { color: var(--scarlet); }
 .nav-link.active { color: var(--scarlet); border-bottom-color: var(--scarlet); }
 
-/* ── Footer ── */
+/* ── Footer — grouped site map (taxonomy mirrors the landing page:
+   doctrine / instruments / evidence / library) ── */
 .footer {
   background: var(--footer-bg);
-  padding: 1.75rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem 2rem;
+  padding: 2.5rem 2rem 0;
   margin-top: auto;
 }
-.footer-logo { font-size: 13px; color: #4A3030; letter-spacing: 0.05em; }
+.footer-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 2fr);
+  gap: 2rem 3rem;
+  padding-bottom: 2rem;
+}
+.footer-logo {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 19px; font-weight: 700; letter-spacing: -0.01em;
+  color: #4A3030; margin-bottom: 0.7rem;
+}
 .footer-logo span { color: #8A3040; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 14px 24px; }
-.footer-link { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #3A2020; text-decoration: none; }
+.footer-credo { font-size: 12px; line-height: 1.7; color: #3A2020; max-width: 300px; margin: 0; }
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem 1.25rem;
+}
+.footer-col { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.footer-col-h {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #6A4040; margin-bottom: 2px;
+}
+.footer-link { font-size: 12px; color: #3A2020; text-decoration: none; line-height: 1.4; }
 .footer-link:hover { color: #6A4040; }
+.footer-bottom {
+  max-width: var(--container);
+  margin: 0 auto;
+  border-top: 0.5px solid rgba(247, 234, 220, 0.14);
+  padding: 1rem 0 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.5rem 2rem;
+}
 .footer-copy { font-size: 10px; color: #2A1818; letter-spacing: 0.04em; }
+.footer-home {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #3A2020; text-decoration: none;
+}
+.footer-home:hover { color: #6A4040; }
+@media (max-width: 900px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 1.75rem; }
+  .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .footer-cols { grid-template-columns: 1fr; }
+}
 
 /* ── Page wrapper ── */
 .page { flex: 1; }
@@ -654,11 +693,19 @@ body {
 .footer-logo,
 .footer-logo span,
 .footer-link,
-.footer-copy {
+.footer-copy,
+.footer-home {
   color: #f7eadc;
 }
 
-.footer-link:hover {
+.footer-credo { color: rgba(247, 234, 220, 0.66); }
+.footer-col-h { color: rgba(247, 234, 220, 0.45); }
+.footer-copy, .footer-home { color: rgba(247, 234, 220, 0.55); }
+.footer-link { color: rgba(247, 234, 220, 0.82); }
+.footer-logo span { color: #ff9aad; }
+
+.footer-link:hover,
+.footer-home:hover {
   color: #ff9aad;
 }
 
