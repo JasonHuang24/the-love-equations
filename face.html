@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Face Calculator &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.7" />
+  <link rel="stylesheet" href="css/styles.css?v=1.9" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
@@ -475,8 +475,8 @@
 
     function renderResult(){
       const host = document.getElementById('lc-result');
-      // Verbose red calibration row (model raw output): shown on localhost (the dev/calibration build) or
-      // with ?debug, hidden in a deployed build.
+      // Verbose red calibration row (model raw output): shown on localhost or with ?debug — the
+      // ?debug param deliberately works anywhere (personal site; it's the calibration escape hatch).
       const LE_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
       if (!LC.geo){
         host.innerHTML = '<div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; switch lenses any time.</div>';
@@ -1024,7 +1024,7 @@
     (function lcBatchMode(){
       const DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname==='localhost' || location.hostname==='127.0.0.1';
       const panel = document.getElementById('lc-batch');
-      if (!DEBUG || !panel) return;                 // additive, debug-gated: a deployed build never shows this
+      if (!DEBUG || !panel) return;                 // additive, debug-gated: hidden unless localhost or an explicit ?debug
       panel.hidden = false;
       const LC = window.lcState;
 
