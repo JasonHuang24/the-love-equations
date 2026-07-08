@@ -881,7 +881,10 @@
     }
 
     function clampScore(v) {
-      return Math.max(1, Math.min(10, Number(v) || 5.5));
+      // NB: `Number(v) || 5.5` would turn a legitimate 0 into 5.5 (0 is falsy), inverting the
+      // worst rating into neutral — clamp only non-finite input to the 5.5 default.
+      var n = Number(v);
+      return Math.max(1, Math.min(10, Number.isFinite(n) ? n : 5.5));
     }
 
     function weightLabel(w) {
@@ -1104,7 +1107,7 @@
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
             ${q.money ? '<span class="income-prefix">$</span>' : ''}
-            <input type="text" inputmode="numeric" id="count-field" class="income-field" aria-label="Lifetime partner count" autocomplete="off"
+            <input type="text" inputmode="numeric" id="count-field" class="income-field" aria-label="${escapeHtml(q.text)}" autocomplete="off"
                    value="${has ? Number(v).toLocaleString('en-US') : ''}" placeholder="${q.placeholder || ''}" oninput="onCountInput(this)" ${isNA ? 'disabled' : ''} />
             <span class="income-suffix">${q.unit || ''}</span>
           </div>

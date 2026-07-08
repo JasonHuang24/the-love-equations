@@ -343,16 +343,18 @@
     }
 
     function pslTier(s, sex){
-      const f = sex === 'f';                       // female ladder swaps the sex-coded rungs (Chad→Stacy, incel→femcel)
+      // Sex-coded rungs: male / female / sex-neutral. An undetermined sex must NOT resolve to one
+      // ladder (it read female before this) — show the combined label, mirroring composite-score.js.
+      const coded = (m, f, neutral) => sex === 'm' ? m : sex === 'f' ? f : neutral;
       if (s<2.5) return 'Sub-tier';
-      if (s<3.5) return f ? 'Femcel-tier' : 'Incel-tier';
+      if (s<3.5) return coded('Incel-tier', 'Femcel-tier', 'Incel / Femcel-tier');
       if (s<4.5) return 'Below average';
       if (s<5.0) return 'LTN · Low-Tier Normie';
       if (s<5.5) return 'MTN · Mid-Tier Normie';
       if (s<6.5) return 'HTN · High-Tier Normie';
-      if (s<7.5) return f ? 'Stacylite' : 'Chadlite';
-      if (s<8.5) return f ? 'Stacy' : 'Chad';
-      return f ? 'Gigastacy / Model' : 'Gigachad / Model';
+      if (s<7.5) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
+      if (s<8.5) return coded('Chad', 'Stacy', 'Chad / Stacy');
+      return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
     }
     function convTier(s){
       if (s<3) return 'Well below average';
@@ -494,7 +496,8 @@
         ? '<div class="lc-srcbadge model">Trained CNN score &middot; the breakdown below is the transparent geometry</div>'
         : '<div class="lc-srcbadge heur">Geometry heuristic &middot; no trained model loaded (see note)</div>';
       const sexKnown = LC.sex === 'm' || LC.sex === 'f';
-      const sex = sexKnown ? LC.sex : 'f';   // fallback ONLY for the sex-agnostic headline label; sex-conditional blocks gate on sexKnown
+      const sex = sexKnown ? LC.sex : 'f';   // 'f' fallback ONLY re-bases the (hidden) sex-conditional bands; sex-conditional blocks gate on sexKnown
+      const tierSex = sexKnown ? LC.sex : null;   // tier labels get the TRUE sex (or null → sex-neutral rung), never the 'f' fallback
       const comp = sexKnown ? computeComposites(LC.geo, sex) : null;
       const sexConflict = lcSexConflict();   // a manual pick the classifier confidently disagrees with (non-blocking)
       const resolve = m => Object.assign({}, m, { band: bandFor(m, sex) });
@@ -541,12 +544,12 @@
       host.innerHTML =
         '<div class="lc-score-wrap">'
         + '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">'+prof.unit+'</span></div>'
-        + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score, sex)+'</div>'
+        + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score, tierSex)+'</div>'
         + srcBadge
         + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Low-res read.</strong> '+LC.reliability.replace(/^ · small\/distant face /, '').replace(/^ · /, '')+'</div>' : '')
         + (sexConflict ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:var(--scarlet)"><strong>Your sex pick and the photo disagree.</strong> You set the sex to <strong>'+(sexConflict.manual==='m'?'male':'female')+'</strong>, but the photo&rsquo;s face classifier reads <strong>'+(sexConflict.cls==='m'?'male':'female')+'</strong> ('+Math.round(sexConflict.conf*100)+'% confident). The panel below uses <strong>your selection</strong> &mdash; the headline score is the same either way. <strong><a href="#" class="lc-sexflip" data-sex="'+sexConflict.cls+'" style="color:var(--scarlet)">Use the '+(sexConflict.cls==='m'?'male':'female')+' read instead &rarr;</a></strong></div>' : '')
         + (LE_DEBUG && usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
-        + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+').</div>'
+        + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, tierSex)+').</div>'
         + '</div>'
         + '<div class="lc-note-line" style="margin-top:0.8rem">Where this face sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl

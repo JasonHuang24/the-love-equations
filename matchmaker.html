@@ -4571,7 +4571,8 @@
     if (!PYRAMIDS[pyramid] || PYRAMIDS[pyramid].describes !== targetSex()) pyramid = pyramidsForTarget()[0];
     renderIntake(); renderPyramid(); liveReRank();
   }
-  // Step 2 (Your standard): default pyramid, every bar back to 6, drop any Compatibility import.
+  // Step 2 (Your standard): default pyramid, every bar back to its default of 1 (empty selfGrades →
+  // renderPyramid/assess/buildStandardPackage all fall back to 1), drop any Compatibility import.
   function resetStep2(){
     selfGrades = {}; compatValues = {}; compatImported = false; simpleMode = false;
     pyramid = pyramidsForTarget()[0];

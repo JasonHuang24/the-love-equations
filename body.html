@@ -879,6 +879,11 @@
       bcSyncInputsPreview();              // keep the Step-1 preview's photo-aware tail current (focus-safe span-only update)
       if (!BC.metrics){
         if (hasInputs){ renderNumbersOnly(host, t0, BC_DEBUG); return; }   // State C — numbers only
+        // No photo AND no numbers read: the calc is empty, so drop any score it previously
+        // saved — otherwise blanking a required input (e.g. clearing weight after a numbers-only
+        // read) leaves a stale body score blended into the Overall composite. Mirrors the same
+        // clearBody() guards on the skip-toggle (below) and bcResetResult.
+        if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody();
         host.innerHTML = BC.skipInputs
           ? '<div class="bc-empty"><i class="ti ti-body-scan"></i><strong>Photo-only mode.</strong> Manual inputs are skipped &mdash; drop a full-body or upper-body photo and the shape read appears here. Untick <em>Skip the manual inputs</em> in Step&nbsp;1 to add the measured spine.</div>'
           : bcInputsAny()
