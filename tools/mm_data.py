@@ -94,7 +94,7 @@ def load_data(names=DATA_NAMES):
 def inline_script(text=None):
     """Return (script_source, start_line) of the single inline <script> block."""
     text = text or MATCHMAKER.read_text(encoding="utf-8")
-    m = re.search(r"<script>\n(.*)\n  </script>", text, re.S)
+    m = re.search(r"<script>\r?\n(.*)\r?\n  </script>", text, re.S)
     if not m:
         raise ValueError("inline <script> block not found")
     return m.group(1), text[: m.start()].count("\n") + 2

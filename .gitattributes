@@ -1,0 +1,16 @@
+# Store and check out text as LF everywhere. Keeps the repo stable across
+# Windows checkouts (core.autocrlf=true) and keeps LF-sensitive tooling working
+# (tools/verify_matchmaker.py, tools/mm_data.py inline_script).
+* text=auto eol=lf
+
+# Binary assets — never normalize line endings or diff.
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.onnx  binary
+*.woff  binary
+*.woff2 binary
+*.pdf   binary

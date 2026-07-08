@@ -27,9 +27,26 @@ def check(ok, label):
         FAILURES.append(label)
 
 
+def eol_consistent(raw):
+    """True if the file uses one EOL convention throughout (pure LF or pure CRLF).
+
+    A Windows checkout (core.autocrlf, or a .gitattributes eol=lf tree not yet
+    renormalized) can hand us CRLF even though the committed blob is LF-only, so a
+    uniform CRLF working tree is fine — .gitattributes normalizes the commit to LF.
+    Only a mixed or CR-only file, which would corrupt the commit, is rejected.
+    """
+    crlf = raw.count(b"\r\n")
+    cr = raw.count(b"\r")
+    lf = raw.count(b"\n")
+    if cr != crlf:                  # a bare CR appears -> CR-only or mixed endings
+        return False
+    return crlf == 0 or crlf == lf  # pure LF, or every LF paired into CRLF
+
+
 def main():
     raw = mm_data.MATCHMAKER.read_bytes()
-    check(b"\r\n" not in raw, "line endings are LF-only")
+    check(eol_consistent(raw),
+          "line endings consistent (LF, or uniform CRLF from a Windows checkout)")
 
     script, _ = mm_data.inline_script(raw.decode("utf-8"))
     tmp_dir = mm_data.ROOT / ".roster-audit" / "tmp"

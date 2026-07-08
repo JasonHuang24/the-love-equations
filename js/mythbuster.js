@@ -1,7 +1,7 @@
 /* ── The Mythbuster — data + render system ──
  *
- * PROOF OF CONCEPT. Every entry in ENTRIES below is a DRAFT placeholder:
- * plausible in shape, but NOT canon. Jason will replace all content.
+ * Canonical, public content: every entry in ENTRIES below is graded and
+ * ratified — no drafts, no docket holds. (See the Data note above ENTRIES.)
  *
  * Architecture:
  *   - The atomic unit is a QUESTION with 1..N competing claims. A single-claim
@@ -75,15 +75,14 @@
   // Leading glyph on the evidence-tier pill (bar-chart; inherits the tier's colour).
   const SVG_TIER = '<svg class="mb-svg mb-tier-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M7 20v-4"/><path d="M12 20v-9"/><path d="M17 20v-14"/></svg>';
 
-  /* ── Data: 41 graded DRAFT entries (all with valid verdicts + fetch-verified sourced
-     rulings — render with DRAFT chips) plus 2 docket holds (verdict/tier 'todo'):
-     M-TBD-4 (blocked on Ani's primary quote) and M-TBD-36 (2026-07-06 grading held
-     back by the source-coverage audit — see its researchNotes). M-TBD-3 and the
-     gender-dynamics ports M-TBD-12..43 were graded 2026-07-06 by the Fable grading
-     loop (per-entry web research + dual adversarial verification of every source);
-     those rulings are Fable-PROPOSED drafts pending Jason's ratification. Docket
-     entries intentionally FAIL the gate and log one console.warn each. Rendered
-     cards carry id="<entry id>" anchors so other pages can deep-link
+  /* ── Data: 62 graded entries, all ratified. Every entry carries valid verdicts
+     and fetch-verified sourced rulings and passes the render gate — no drafts and
+     no docket holds remain (the last hold, M-TBD-54, was graded 2026-07-07).
+     Grading ran across 2026-07-06/07 via per-entry web research plus dual
+     adversarial source verification, then Jason ratified. The gate still skips any
+     structurally broken entry with a console.warn, and the localhost ?preview=1
+     docket surfaces such entries for grading (currently none). Rendered cards carry
+     id="<entry id>" anchors so other pages can deep-link
      (statistics.html → mythbuster.html#M-TBD-6 etc.). ── */
   const ENTRIES = [
     {
@@ -278,11 +277,9 @@
     },
 
     /* ── Fable-authored entries from the design mockups ──
-     * Unlike the Ani/Mika extractions above, these are FULLY FILLED: claims,
-     * proposed verdicts, ruling text, and VERIFIED sources (checked 2026-07-06).
-     * They will pass the render gate and display with DRAFT chips. Verdicts and
-     * ruling copy are Claude-proposed — Jason ratifies or regrades, then strips
-     * the draft flag. */
+     * Unlike the Ani/Mika extractions above, these were authored fully filled:
+     * claims, verdicts, ruling text, and VERIFIED sources (checked 2026-07-06).
+     * Graded and ratified by Jason. */
     {
       id: 'M-TBD-9',
       category: 'Attraction',
@@ -350,9 +347,8 @@
      * (gate-ignored fields). Graded later the same day by the Fable grading loop
      * (per-entry web research; every source URL fetch-verified; each ruling passed
      * a source-integrity skeptic + a grading-consistency skeptic, with the
-     * skeptics' exact repairs applied). Rulings are Fable-PROPOSED drafts — Jason
-     * ratifies or regrades. M-TBD-36 failed its sourcing audit and stays on the
-     * docket ungraded. */
+     * skeptics' exact repairs applied), then ratified by Jason. M-TBD-36's sourcing
+     * audit was resolved and it is graded (tier: evidence). */
     {
       id: 'M-TBD-12',
       category: 'Approach',
