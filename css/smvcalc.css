@@ -410,6 +410,12 @@
   padding: 0.35rem 0.9rem; border-radius: 999px; transition: background 120ms ease, color 120ms ease;
 }
 .unitbtn.active { background: var(--scarlet); color: #fff; }
+/* Stacked variant for long labels (E2 reference-window select): full-width, vertical, left-aligned. */
+.unit-toggle-stack {
+  display: flex; flex-direction: column; align-items: stretch;
+  gap: 4px; border-radius: 14px; width: 100%;
+}
+.unit-toggle-stack .unitbtn { text-align: left; border-radius: 11px; padding: 0.5rem 0.9rem; }
 .num-input-wrap {
   display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
   background: rgba(255,252,247,0.86); border: 0.5px solid var(--border); border-radius: var(--radius-md);

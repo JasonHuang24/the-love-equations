@@ -273,7 +273,7 @@
 
     const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
     const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E', 'F'];
-    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v7';
+    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v7_2';
 
     // ── Calibrated income → score curve ─────────────────────────────────────
     // Objective replacement for the old vibes-based "how attractive is your income" A–E.
@@ -383,6 +383,19 @@
     }
     function faceImport() { return readCalcCv('loveEquations.faceScore.v2'); }
     function bodyImport() { return readCalcCv('loveEquations.bodyScore.v2'); }
+    // §10.3 body-fat import — the Body Calc persists its measured/hybrid body-fat estimate under
+    // tier0.bf of the SAME bodyScore.v2 record the frame read (cv) rides on. Unlike cv this is a raw
+    // physical percentage (sex-agnostic measurement), so no sex-provenance guard is needed — the
+    // sex-specific anchors resolve at score time off the SMV sex. Present only when the user ran the
+    // Body Calc WITH numeric inputs (the model-only / geometry-only paths carry no tier0); otherwise
+    // null → the self-estimate path, mirroring how face falls back when the Face Calc has not run.
+    function bodyFatImport() {
+      try {
+        const o = JSON.parse(localStorage.getItem('loveEquations.bodyScore.v2') || 'null');
+        if (o && o.tier0 && typeof o.tier0.bf === 'number' && isFinite(o.tier0.bf) && o.tier0.bf >= 0) return o.tier0.bf;
+      } catch (e) {}
+      return null;
+    }
 
     // ── Count-question machinery (v6 de-vibe pass) ───────────────────────────
     // 'count' questions take a real number and score it on percentile-anchored curves,
@@ -615,10 +628,17 @@
 
     // E2 new people met, split IRL vs online. An in-person exchange is a richer at-bat than an
     // online one (×1.0 vs ×0.6); the effective count feeds the same anchors the old single box used.
+    // §10.2: a shared reference-window select decays the effective count for stale activity BEFORE the
+    // anchors — a dating hiatus should not zero this question. Same philosophy and near-identical
+    // constants as the Personal Best recency decay in Charm's orbit (ORBIT_RECENCY): stale at-bats
+    // still count, but not at par. w0 (a typical month right now) is full credit; the oldest stretch
+    // keeps 0.7. Default w0 when unset so existing/blank answers are read as current.
     const MET_ANCHORS = [[0, 2.0], [1, 3.5], [3, 5.0], [5, 5.8], [10, 7.0], [20, 8.2], [40, 9.5]];
+    const MET_WINDOW = { w0: 1.0, w1: 0.95, w2: 0.85, w3: 0.7 };   // now / ≤2y / 2–5y ago / longer ago
     function metMixEffective(a) {
       if (!a || typeof a !== 'object') return 0;
-      return (Number(a.inperson) || 0) + 0.6 * (Number(a.online) || 0);
+      const raw = (Number(a.inperson) || 0) + 0.6 * (Number(a.online) || 0);
+      return raw * (MET_WINDOW[a.window] || 1.0);
     }
     function metMixScore(a) { return interpLogAnchors(MET_ANCHORS, metMixEffective(a)); }
 
@@ -898,10 +918,37 @@
       },
       {
         factor: 0,
-        weight: 1.6,
+        // §10.3: build weight drops 1.6 → 1.4 so the body (build + body fat, both Body-Calc-fed) does
+        // not double-count against face. The overlap is accepted by design — build reads FRAME, the new
+        // body-fat question reads LEANNESS; two different axes of the same silhouette.
+        weight: 1.4,
         type: 'build',
         text: 'What is your build?',
         sub: 'Best read by the Body Calc, which measures your actual frame — pulled in automatically if you have run it. Otherwise estimated from BMI, which cannot tell muscle from fat.'
+      },
+      {
+        factor: 0,
+        weight: 1.0,
+        type: 'bodyfat',
+        unit: '%',
+        placeholder: 'e.g. 18',
+        // §10.3 body fat % — placed between build (frame) and face. Type is count-style (the raw % feeds
+        // countToScore via the sex-specific anchors below); imported from the Body Calc's measured/hybrid
+        // read (tier0.bf) exactly like face imports from the Face Calc, else an honest self-estimate flagged
+        // soft. Anchors are PIECEWISE and NON-MONOTONIC — leanness is an inverted-U: score peaks lean and
+        // falls off at BOTH extremes (essential-fat gaunt on one side, obese on the other). Calibration
+        // (spec §10.3): male peak 10–12% → 9.0, male median ~25% → 5.2, 38%+ → ≤2.8; female peak 18–21% →
+        // 9.0, female median ~38% → 5.2, 50%+ → ≤2.5. Median is median even when the read is a soft estimate.
+        anchors: {
+          // m: essential fat ~3–5% reads gaunt/stringy (5.0), a lean-athletic 10–12% is the peak (9.0),
+          // ~25% is the male median (5.2), obesity (38%+) floors toward 2.8 and below.
+          m: [[3, 5.0], [6, 7.5], [10, 9.0], [12, 9.0], [15, 8.0], [18, 7.0], [25, 5.2], [30, 4.0], [38, 2.8], [50, 1.5]],
+          // f: women carry more essential fat, so the whole curve shifts right — ~12% is amenorrhea-lean
+          // (5.0), an 18–21% athletic-fit band is the peak (9.0), ~38% is the female median (5.2), 50%+ ≤2.5.
+          f: [[12, 5.0], [15, 7.5], [18, 9.0], [21, 9.0], [25, 8.0], [30, 6.8], [38, 5.2], [44, 3.8], [50, 2.5], [60, 1.2]]
+        },
+        text: 'What is your body-fat percentage?',
+        sub: 'Read best by the Body Calc, which estimates it from your photo and measurements — pulled in automatically if you have run it. Otherwise give an honest self-estimate, flagged as soft. Leanness is scored as an inverted-U on a sex-specific curve: lean is best, but too lean reads as gaunt and too high reads as soft.'
       },
       {
         factor: 0,
@@ -1123,7 +1170,7 @@
         weight: 1.30,
         type: 'orbit',
         // C2 orbit — active-now (a current SMV read, 0.65) vs peak-ever (the demonstrated ceiling,
-        // 0.35, decayed by recency). The PB rescues the situationally suppressed. See orbitScore().
+        // 0.35, decayed by recency). The Personal Best rescues the situationally suppressed. See orbitScore().
         anchors: [[0, 3.5], [1, 5.0], [2, 5.8], [3, 6.5], [5, 7.5], [8, 8.5], [12, 9.5]],
         text: 'How many people are in your orbit?',
         sub: 'Active orbit is a current read; your personal best marks the ceiling you have actually demonstrated. Both count, but the current number carries more weight.',
@@ -1189,10 +1236,18 @@
         weight: 1.35,
         type: 'metmix',
         // E2 new people met, split IRL vs online (an in-person exchange is a richer at-bat, ×1.0 vs
-        // ×0.6). Effective count feeds the same anchors the old single box used. See metMixScore().
+        // ×0.6). Effective count feeds the same anchors the old single box used. §10.2: a shared
+        // reference-window select decays that effective count for stale activity, so a hiatus does not
+        // zero the question (see metMixScore/MET_WINDOW). See metMixScore().
         anchors: [[0, 2.0], [1, 3.5], [3, 5.0], [5, 5.8], [10, 7.0], [20, 8.2], [40, 9.5]],
-        text: 'In a typical month, how many new people in your dating range do you actually meet?',
-        sub: 'Raw at-bats: new people in your age range who are plausibly single, whether or not anything comes of it. Split by in person vs online — an in-person exchange is a richer at-bat. This counts exposure, not success (conversion lives in Charm).'
+        text: 'How many new people in your dating range do you actually meet?',
+        sub: 'Raw at-bats: new people in your age range who are plausibly single, whether or not anything comes of it. Answer from your last genuinely active period, split by in person vs online — an in-person exchange is a richer at-bat. The window below tells the quiz how current that evidence is. This counts exposure, not success (conversion lives in Charm).',
+        windowOpts: [
+          ['w0', 'A typical month right now'],
+          ['w1', 'A typical month within the last ~2 years'],
+          ['w2', 'My last active stretch, 2–5 years ago'],
+          ['w3', 'My last active stretch, longer ago']
+        ]
       },
       {
         factor: 4,
@@ -1248,21 +1303,11 @@
         },
         text: 'How many people express clear romantic interest in you without you initiating?',
         sub: 'Unambiguous inbound — asked you out, told you directly, sustained pursuit. Do not count app likes (counted separately) or politeness. Weighted by sex: inbound is the main female exposure channel, a bonus one for men.'
-      },
-      {
-        factor: 4,
-        weight: 0.85,
-        type: 'count',
-        scale: 'log',
-        unit: '/ month',
-        placeholder: 'e.g. 4',
-        // E7 unsolicited invitations — relocated from Charm (it is an exposure/surface-area signal,
-        // not a residual-leverage one), weighted as the softest exposure input (0.85). Text, sub, and
-        // anchors are unchanged from the old Q24. Presence measured by its countable trace.
-        anchors: [[0, 3.5], [1, 4.5], [3, 5.5], [6, 6.7], [12, 7.8], [25, 9.0], [50, 10]],
-        text: 'In a typical month, how many social invitations do you receive that you did not initiate?',
-        sub: 'Plans, parties, trips, "come join us" — from anyone, romantic or not. A countable trace of whether people want you back in the room. Zero is a real answer, not a failure.'
       }
+      // §10.2: the old E7 "unsolicited invitations" question is CUT. Owner rationale: invite volume is a
+      // life-stage artifact (high school / college), not an adult market signal — even high-status adults
+      // are not swamped with invitations. It was the softest-weighted Exposure input and carried a flat
+      // sex weight, so removing it leaves the per-sex Exposure weight totals equal (re-asserted in the panel).
     ];
 
     const TIERS = [
@@ -1425,6 +1470,7 @@
         case 'sex': return a === 'm' || a === 'f';
         case 'age': return AGE_BANDS.indexOf(a) >= 0;
         case 'build': return bodyImport() != null || a != null;
+        case 'bodyfat': return bodyFatImport() != null || typeof a === 'number';
         case 'face': return faceImport() != null || a != null;
         case 'count': return a === 'na' || typeof a === 'number';
         case 'unitcount': return !!(a && typeof a.n === 'number' && isFinite(a.n));
@@ -1537,6 +1583,21 @@
       const el = document.getElementById('face-val'); if (el) el.textContent = parseFloat(v).toFixed(1) + ' / 10';
       refreshNav();
       saveState();
+    }
+    // §10.3 body-fat self-estimate — a raw % clamped to a plausible human range (essential fat ~3% to
+    // morbid ~70%). Scored via the count anchors, exactly as an imported measurement would be.
+    function onBodyFatEstimate() {
+      const raw = parseFloat((document.getElementById('bf-pct') || {}).value || '');
+      const v = (!isNaN(raw) && raw >= 0) ? Math.max(3, Math.min(70, raw)) : null;
+      answers[curQ] = v;
+      const el = document.getElementById('bf-preview'); if (el) el.innerHTML = bodyFatPreviewHtml(v);
+      refreshNav();
+      saveState();
+    }
+    function bodyFatPreviewHtml(v) {
+      if (typeof v !== 'number') return '<span class="num-hint">Enter your body-fat %, or run the Body Calc for an objective read.</span>';
+      const q = QUESTIONS[curQ];
+      return `${v.toFixed(0)}% maps to <strong>${countToScore(q, v).toFixed(1)} / 10</strong> on the ${getSex() === 'f' ? 'female' : 'male'} leanness curve. <span class="soft-flag">Leanness is an inverted-U — lean scores best, but too lean and too high both cost.</span>`;
     }
 
     function renderRail() {
@@ -1783,7 +1844,7 @@
               <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="orbit-active" class="income-field" aria-label="Active orbit" autocomplete="off" value="${typeof a.active === 'number' ? a.active : ''}" placeholder="e.g. 2" oninput="onOrbitInput()" /></div>
             </div>
             <div class="grid-row">
-              <label class="grid-label" for="orbit-peak">Peak orbit ever (your PB)<span class="nw-line-hint">the most that was ever simultaneously true</span></label>
+              <label class="grid-label" for="orbit-peak">Peak orbit ever (your Personal Best)<span class="nw-line-hint">the most that was ever simultaneously true</span></label>
               <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="orbit-peak" class="income-field" aria-label="Peak orbit" autocomplete="off" value="${typeof a.peak === 'number' ? a.peak : ''}" placeholder="e.g. 5" oninput="onOrbitInput()" /></div>
             </div>
           </div>
@@ -1830,6 +1891,7 @@
       }
       if (q.type === 'metmix') {
         const a = answers[curQ] || {};
+        const win = a.window || 'w0';
         document.getElementById('q-container').innerHTML = head + `
           <div class="grid-inputs">
             <div class="grid-row">
@@ -1840,6 +1902,10 @@
               <label class="grid-label" for="met-on">Met online<span class="nw-line-hint">counts a little less — ×0.6</span></label>
               <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="met-on" class="income-field" aria-label="Met online" autocomplete="off" value="${typeof a.online === 'number' ? a.online : ''}" placeholder="e.g. 4" oninput="onMetInput()" /></div>
             </div>
+          </div>
+          <div class="grid-label" style="margin:0.4rem 0 0.5rem">These numbers describe:</div>
+          <div class="unit-toggle unit-toggle-stack">
+            ${q.windowOpts.map(([k, label]) => `<button type="button" class="unitbtn${win === k ? ' active' : ''}" onclick="setMetWindow('${k}')">${label}</button>`).join('')}
           </div>
           <div class="income-preview" id="met-preview">${metPreviewHtml(a)}</div>`;
         return;
@@ -1938,6 +2004,27 @@
           </div>
           <div class="num-input-wrap">${fields}</div>
           <div class="num-preview" id="h-preview">${preview}</div>`;
+        return;
+      }
+      if (q.type === 'bodyfat') {
+        const imp = bodyFatImport();
+        if (imp != null) {
+          document.getElementById('q-container').innerHTML = head + `
+            <div class="calc-import">
+              <i class="ti ti-circle-check" aria-hidden="true"></i>
+              <div><strong>Imported from your Body Calc: ${imp.toFixed(1)}% body fat</strong> → <strong>${countToScore(q, imp).toFixed(1)} / 10</strong> on the ${getSex() === 'f' ? 'female' : 'male'} leanness curve — the objective measurement. <a href="body.html">Re-run the Body Calc &rarr;</a></div>
+            </div>`;
+          return;
+        }
+        const v = answers[curQ];
+        const has = typeof v === 'number';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="soft-banner"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Soft self-estimate — not an objective measure. <a href="body.html">Run the Body Calc</a> for a real read; it will override this.</div>
+          <div class="num-input-wrap">
+            <input type="text" inputmode="numeric" id="bf-pct" class="num-field" aria-label="Body-fat percentage" autocomplete="off" value="${has ? v : ''}" placeholder="18" oninput="onBodyFatEstimate()" /><span class="unit-lbl">% body fat</span>
+          </div>
+          <div class="num-preview" id="bf-preview">${bodyFatPreviewHtml(v)}</div>
+          <div class="calc-link"><a href="body.html"><i class="ti ti-camera" aria-hidden="true"></i> Run the Body Calc for an objective body-fat read &rarr;</a></div>`;
         return;
       }
       if (q.type === 'build') {
@@ -2337,7 +2424,7 @@
     }
     function orbitPreviewHtml(a) {
       if (!a || typeof a.active !== 'number' || typeof a.peak !== 'number') return '<span class="income-hint">Enter your current active orbit and your personal best.</span>';
-      return `Active ${a.active}, PB ${a.peak} → <strong>${orbitScore(a).toFixed(1)} / 10</strong> (current weighted 0.65, PB 0.35 after recency decay).`;
+      return `Active ${a.active}, Personal Best ${a.peak} → <strong>${orbitScore(a).toFixed(1)} / 10</strong> (current weighted 0.65, Personal Best 0.35 after recency decay).`;
     }
 
     // Punching above your weight (C3)
@@ -2390,13 +2477,20 @@
       const ip = readIntField('met-ip'), on = readIntField('met-on');
       if (ip == null) delete a.inperson; else a.inperson = ip;
       if (on == null) delete a.online; else a.online = on;
+      if (!a.window) a.window = 'w0';
       a.touched = true;
       const prev = document.getElementById('met-preview'); if (prev) prev.innerHTML = metPreviewHtml(a);
       refreshNav(); saveState();
     }
+    function setMetWindow(k) {
+      const a = ensureAnswerObj(); a.window = k; a.touched = true; renderQ(); saveState();
+    }
     function metPreviewHtml(a) {
+      const raw = (Number(a.inperson) || 0) + 0.6 * (Number(a.online) || 0);
       const eff = metMixEffective(a);
-      return `Effective at-bats <strong>${eff.toFixed(1)} / mo</strong> (in-person + 0.6 × online) → <strong>${metMixScore(a).toFixed(1)} / 10</strong>.`;
+      const decayed = (a.window && a.window !== 'w0');
+      const decayNote = decayed ? ` × ${(MET_WINDOW[a.window] || 1).toFixed(2)} staleness decay = ${eff.toFixed(1)}` : '';
+      return `Effective at-bats <strong>${eff.toFixed(1)} / mo</strong> (${raw.toFixed(1)} raw${decayNote}) → <strong>${metMixScore(a).toFixed(1)} / 10</strong>.`;
     }
 
     // Dating apps, outbound vs inbound (E4)
@@ -2472,6 +2566,14 @@
             value = isFinite(bmi) ? bmiToScore(bmi, getSex()) : 5.5;
             weight = 1.25;
           }
+          break;
+        }
+        case 'bodyfat': {
+          // Count-style: the raw % (imported measurement or soft self-estimate) feeds the sex-specific
+          // non-monotonic anchors via countToScore. Full weight either way — a soft % is still a real read.
+          const imp = bodyFatImport();
+          const bf = imp != null ? imp : (typeof a === 'number' ? a : null);
+          value = bf != null ? countToScore(q, bf) : 5.5;   // unanswered → neutral, like the other looks inputs
           break;
         }
         case 'face': { const imp = faceImport(); value = imp != null ? imp : (a == null ? 5.5 : clampScore(a)); break; }
@@ -3388,9 +3490,11 @@
 
     restoringState = true;
     // Stale rosters must never load into the current one (indices shifted, question types
-    // replaced): the v7 rebuild replaced Status and Charm wholesale, so purge v5 and v6 too.
+    // replaced): the v7 rebuild replaced Status and Charm wholesale, and §10 (v7.2) shifted the
+    // Looks indices (+body fat) and cut the E7 invitations question — so purge v5, v6 and v7 too.
     try { localStorage.removeItem('loveEquations.smvCalculator.v5'); } catch (e) {}
     try { localStorage.removeItem('loveEquations.smvCalculator.v6'); } catch (e) {}
+    try { localStorage.removeItem('loveEquations.smvCalculator.v7'); } catch (e) {}
     loadState();
     renderFactorMap();
     renderLensControls();
