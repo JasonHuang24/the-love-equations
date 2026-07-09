@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/smvcalc.css?v=1.8" />
+  <link rel="stylesheet" href="css/smvcalc.css?v=1.9" />
 </head>
 <body data-page="smvcalc">
   <div data-include="navigation-bar"></div>
@@ -110,6 +110,7 @@
               <div class="result-title">Your factor profile</div>
               <div class="result-copy" id="res-summary">The total score matters, but the shape matters more. One strong factor can open doors; one weak factor can quietly cap everything else.</div>
               <div class="factor-breakdown" id="res-factors"></div>
+              <div class="status-mods" id="res-status-mods"></div>
               <div class="insight-grid" id="insight-grid"></div>
             </div>
           </div>
@@ -225,18 +226,18 @@
         name: 'Status',
         icon: 'ti-crown',
         color: '#7F77DD',
-        short: 'Reputation and social proof',
-        desc: 'Where you stand in your world, who respects you, and whether other people make you look chosen.',
-        lever: 'Build visible competence and social proof. Become useful, known, invited, and vouched for in a real environment.'
+        short: 'Legible markers strangers read',
+        desc: 'The status markers a stranger can actually read on sight: fame, job title, education, criminal record, and family position — where you visibly stand, not behaviors that merely correlate with standing.',
+        lever: 'Move the markers that read on sight: a more prestigious title or credential, a cleaner record, and genuine reach. These compound slowly but land instantly once earned.'
       },
       {
         key: 'charm',
         name: 'Charm',
         icon: 'ti-messages',
         color: '#D4537E',
-        short: 'Presence and calibration',
-        desc: 'Conversation, warmth, wit, flirtation, confidence, and your ability to create comfort and tension. Measured here by interaction outcomes (do people stay engaged, convert, and come back), so it partly reflects your looks and status too — there is no clean way to isolate pure charm.',
-        lever: 'Get more live reps. Practice conversation, listening, teasing, escalation, and emotional steadiness around real people.'
+        short: 'Retention and residual leverage',
+        desc: 'Retention and leverage — the residual pull you have beyond what your looks alone predict: how long you keep partners, the orbit of people around you, whether you punch above your weight, and the friends who stay for years. Every question here is a view of that residual.',
+        lever: 'The residual is built by being worth keeping: deeper live reps, real retention, and relationships that outlast the first spark. It is the hardest factor here to fake and the slowest to farm.'
       },
       {
         key: 'exposure',
@@ -272,7 +273,7 @@
 
     const DEFAULT_OPTION_SCORES = [1, 3.25, 5.5, 7.75, 10];
     const OPTION_MARKS = ['A', 'B', 'C', 'D', 'E', 'F'];
-    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v6';
+    const SMV_STORAGE_KEY = 'loveEquations.smvCalculator.v7';
 
     // ── Calibrated income → score curve ─────────────────────────────────────
     // Objective replacement for the old vibes-based "how attractive is your income" A–E.
@@ -411,6 +412,468 @@
     // is invalidated when sex changes (see setSex) — unlike sex-anchored ones, which re-score.
     function resolveQ(q) { return q.variants ? Object.assign({}, q, q.variants[getSex()]) : q; }
 
+    // ── v7 recalibration machinery ───────────────────────────────────────────
+    // The v7 rebuild de-vibes Looks Q6, rebuilds Status and Charm entirely, and itemizes
+    // several Exposure inputs. Every new input type below EXTENDS the count/anchor system
+    // (interpAnchors / interpLogAnchors) rather than inventing a parallel one, and every
+    // anchor set carries its percentile reasoning in the same voice as the existing curves.
+
+    // Checklist (Looks Q6 presentation, Exposure E3 venues): the answer is a decomposition of
+    // a judgment into objective facts — {checked:[bool...], other:n} — and the score is simply
+    // how many are true, mapped through a linear anchor set. Cold facts replace a self-rating.
+    function checklistCount(q, a) {
+      if (!a || typeof a !== 'object') return 0;
+      const checked = Array.isArray(a.checked) ? a.checked.filter(Boolean).length : 0;
+      const other = q.otherMax ? Math.min(q.otherMax, Number(a.other) || 0) : 0;
+      return checked + other;
+    }
+    function checklistScore(q, a) { return interpAnchors(q.anchors, checklistCount(q, a)); }
+
+    // Income (Q8) now stores {annual, monthly, unit}: a monthly entry × 12 normalizes to annual
+    // for the existing curve, and Q12's expense ratio reads the monthly figure back out.
+    function incomeAnnual(a)  { if (a == null) return null; return typeof a === 'number' ? a : (Number(a.annual) || 0); }
+    function incomeMonthly(a) { if (a == null) return null; return typeof a === 'number' ? a / 12 : (Number(a.monthly) || 0); }
+
+    // Net worth (Q7) is summed live from a 4-line mini-calculator; the answer is
+    // {t, cash, home, other, debt, direct}. The scored value is the total t, which flows into
+    // the existing (age-adjusted) net-worth curve unchanged. A plain number is still accepted.
+    function networthTotal(a) {
+      if (a == null) return null;
+      if (typeof a === 'number') return a;
+      if (typeof a.t === 'number') return a.t;
+      return (Number(a.cash)||0) + (Number(a.home)||0) + (Number(a.other)||0) - (Number(a.debt)||0);
+    }
+
+    // Q9 car — the wealth marker people actually read, judged as it presents. "No car" is the
+    // second cross-question adjustment in the codebase (net-worth × age is the precedent):
+    // metro-adjusted, because car-free is neutral in a dense transit metro (Q25 ≥ 4M) and a
+    // mild negative anywhere you'd be expected to drive. Applied at scoring time.
+    const CAR_SCORES = [null, 4.5, 5.5, 6.8, 8.0, 9.3];   // idx 0 = no car (metro-adjusted below)
+    function carScore(idx) {
+      if (idx === 0) {
+        const metro = METRO_IDX >= 0 ? Number(answers[METRO_IDX]) : NaN;   // raw Q25 pool size
+        return (isFinite(metro) && metro >= 4000000) ? 5.5 : 3.5;
+      }
+      return CAR_SCORES[idx] != null ? CAR_SCORES[idx] : 5.5;
+    }
+
+    // Q12 obligations → a cold ratio. disposable share = 1 − expenses/income (both monthly);
+    // the third cross-question link (it divides Q8's income into Q12's expenses). Anchors sit
+    // on the SHARE: the US personal saving rate ~5% lands just under median; saving 50% ≈ top
+    // few percent. interpAnchors clamps a negative share (spending past income) to the 2.0 floor.
+    const DISPOSABLE_ANCHORS = [[0, 2.0], [0.05, 4.5], [0.15, 5.5], [0.30, 7.0], [0.50, 8.5], [0.70, 9.5]];
+    function expensesScore(expensesMonthly) {
+      const incM = INCOME_IDX >= 0 ? incomeMonthly(answers[INCOME_IDX]) : null;
+      if (!incM || incM <= 0) return expensesMonthly > 0 ? 2.0 : 5.5;   // no income: any expense floors; both 0 unanswerable
+      return interpAnchors(DISPOSABLE_ANCHORS, 1 - (expensesMonthly / incM));
+    }
+
+    // S1 fame — fame collapsed to a count. Zero is the normal case (5.0), not a failure; the
+    // log curve compresses the long tail (a scene, a school, a market, an audience). A name
+    // that currently works against you forfeits reach entirely (reputation compounds slowly,
+    // forfeits fast — kept from the old Q13 floor): scores 2.5 regardless of how many know it.
+    const FAME_ANCHORS = [[0, 5.0], [500, 6.0], [5000, 7.0], [25000, 7.8], [100000, 8.5], [1000000, 9.5], [10000000, 10]];
+    function fameScore(a) {
+      if (!a || typeof a !== 'object') return 5.0;
+      if (a.against) return 2.5;
+      return interpLogAnchors(FAME_ANCHORS, Number(a.n) || 0);
+    }
+
+    // S2 following, itemized by platform. Effective reach = Σ(count × coefficient); the
+    // coefficient is durability × engagement per follow. A YouTube subscription is deliberate
+    // and monetizable (1.0); TikTok's algorithmic feed makes a follow the cheapest of all (0.2).
+    // The platform decomposition removes the noise that justified the old low weight, so the
+    // effective reach feeds the SAME follower anchors the old single-box question used.
+    const FOLLOW_COEF = { yt: 1.0, tw: 0.6, ig: 0.45, x: 0.4, sc: 0.3, tt: 0.2, other: 0.5 };
+    const FOLLOWER_ANCHORS = [[0, 4.8], [200, 5.5], [1000, 6.2], [5000, 7.0], [20000, 7.9], [100000, 8.8], [1000000, 10]];
+    function followingReach(a) {
+      if (!a || typeof a !== 'object') return 0;
+      return Object.keys(FOLLOW_COEF).reduce((s, k) => s + (Number(a[k]) || 0) * FOLLOW_COEF[k], 0);
+    }
+    function followingScore(a) { return interpLogAnchors(FOLLOWER_ANCHORS, followingReach(a)); }
+
+    // S4 education — degree level × institution tier. Degree base scores map the ladder to the
+    // 0–10 curve with the median (some college / associate) landing ~5.2. The tier modifier
+    // only applies at bachelor's+ and HALVES at the advanced level: for an MD or JD the title
+    // already did the talking, so the school adds little on top.
+    const DEGREE_BASE  = [3.0, 4.5, 5.2, 6.2, 7.2];   // no HS / HS / assoc-some college / bachelor's / advanced
+    const TIER_BACHELOR = [1.0, 0.5, 0, -0.3];        // elite / selective / typical / low-signal
+    const TIER_ADVANCED = [0.5, 0.25, 0, -0.15];      // halved at the advanced level
+    function educationScore(a) {
+      if (!a || typeof a !== 'object' || a.degree == null) return 5.5;
+      const base = DEGREE_BASE[a.degree] != null ? DEGREE_BASE[a.degree] : 5.5;
+      if (a.degree < 3 || a.tier == null) return base;   // tier only meaningful at bachelor's+
+      const mods = a.degree === 4 ? TIER_ADVANCED : TIER_BACHELOR;
+      return clampScore(base + (mods[a.tier] || 0));
+    }
+
+    // S5 kids — a POST-AVERAGE Status modifier (§9.1), NOT a question inside the weighted mean.
+    // Market position, not finances (Money Q12 carries the budget impact; different causal channel).
+    // No kids reads as a slight upside (+0.2), not dead neutral — a clean slate is a real market
+    // advantage in the younger bands. Otherwise it SUBTRACTS: a base magnitude that grows with count,
+    // age-graded off the existing age answer (net-worth × age is the precedent) so an old kid weighs
+    // far less than a new one, and reduced for shared (~70%) and non-custodial (~40%) custody. The
+    // result is added to the S1–S4 mean and the whole thing is clamped to [1,10] by the caller.
+    // Sex-neutral: the sex-asymmetric option (anchors {m,f} machinery supports it) was considered
+    // and DEFERRED — the market asymmetry is real but contested.
+    const KID_BASE    = { 1: 2.5, 2: 3.0, 3: 3.5 };   // full-custody, 18–29 subtraction magnitude
+    const KID_CUSTODY = { full: 1.0, shared: 0.7, non: 0.4 };
+    const KID_AGE     = { '18-24': 1.0, '25-29': 1.0, '30-34': 0.75, '35-39': 0.55, '40-49': 0.35, '50+': 0.15 };
+    function kidsModifier(a) {
+      if (!a || typeof a !== 'object' || !a.count) return 0.2;   // no kids → slight upside
+      const base = KID_BASE[a.count] || 3.5;
+      const cf   = KID_CUSTODY[a.custody] != null ? KID_CUSTODY[a.custody] : 1.0;
+      const age  = getAge();
+      const af   = (age && KID_AGE[age] != null) ? KID_AGE[age] : 1.0;
+      return -(base * af * cf);   // e.g. 42yo, 1 kid, shared → −(2.5 × 0.35 × 0.7) ≈ −0.6
+    }
+
+    // S6 criminal record — also a POST-AVERAGE Status modifier (§9.1). Downside-only, but a clean
+    // record now reads as a slight upside (+0.2) to mirror the no-kids bonus. Parallel to the record
+    // question's option order (clean / misdemeanor / felony / multiple-or-in-system). Added to the
+    // S1–S4 mean; the caller clamps [1,10]. A single felony now costs a full −3.5 (was compressed to
+    // a 2.0 score inside the average), so the downside can honestly reach the clamp floor.
+    const RECORD_MOD = [0.2, -1.5, -3.5, -4.5];
+    function recordModifier(a) {
+      return (typeof a === 'number' && RECORD_MOD[a] != null) ? RECORD_MOD[a] : 0.2;
+    }
+
+    // Reusable partner-tier component: classify another person above/at/below the user WITHOUT
+    // any self-assessment. The user's level = the quiz's computed Looks factor score; the
+    // partner's level is decomposed into four observable facts (0–4 checked). estimate = 4.0 +
+    // 1.5 × checked → 4.0–10.0; differential = estimate − user's Looks score.
+    function partnerEstimate(checks) {
+      const n = Array.isArray(checks) ? checks.filter(Boolean).length : 0;
+      return 4.0 + 1.5 * n;
+    }
+    function partnerC1Delta(checks, looksScore) {
+      const diff = partnerEstimate(checks) - looksScore;
+      if (diff >= 1.0) return 0.8;     // above
+      if (diff <= -1.0) return -0.3;   // below
+      return 0;                        // at level (within ±1.0)
+    }
+
+    // C1 longest committed relationship — the anti-farm retention metric (kept-for-years beats
+    // converted-last-month). Age-banded because a fixed duration reads very differently by age:
+    // a 4-year relationship at 22 is most of adult life; at 45 it is one chapter. Interpolate
+    // months within the band; 0 is a real answer, never skipped.
+    const REL_ANCHORS = {
+      '18-24': [[0, 4.5], [6, 5.3], [12, 6.0], [24, 7.0], [48, 8.0]],   // young: even a short one is on-curve
+      '25-29': [[0, 3.8], [12, 5.0], [24, 5.8], [48, 7.2], [84, 8.3]],  // never having held one starts to read
+      '30-39': [[0, 3.0], [12, 4.3], [24, 5.5], [60, 7.5], [120, 8.7]], // a multi-year run is now expected
+      '40+':   [[0, 2.5], [24, 4.3], [60, 6.0], [120, 8.0], [240, 9.0]] // decades on, no long relationship reads low
+    };
+    function relBand(age) {
+      if (age === '18-24') return REL_ANCHORS['18-24'];
+      if (age === '25-29') return REL_ANCHORS['25-29'];
+      if (age === '30-34' || age === '35-39') return REL_ANCHORS['30-39'];
+      if (age === '40-49' || age === '50+') return REL_ANCHORS['40+'];
+      return REL_ANCHORS['25-29'];   // default band when age is unset
+    }
+    function relationshipScore(a, looksScore) {
+      if (!a || typeof a !== 'object' || typeof a.months !== 'number') return 5.5;
+      const base = interpAnchors(relBand(getAge()), a.months);
+      return clampScore(base + partnerC1Delta(a.partner, looksScore));   // partner tier applied after the curve
+    }
+
+    // C2 orbit, decomposed into active-now vs peak-ever. Active dominates (0.65) because SMV is
+    // a CURRENT read; the personal best (0.35, decayed by recency) rescues the situationally
+    // suppressed — just moved, just left a long relationship — and marks the demonstrated ceiling.
+    const ORBIT_ANCHORS = [[0, 3.5], [1, 5.0], [2, 5.8], [3, 6.5], [5, 7.5], [8, 8.5], [12, 9.5]];
+    const ORBIT_RECENCY = { r0: 1.0, r1: 0.85, r2: 0.7 };   // within ~2y / 2–5y ago / longer ago
+    function orbitScore(a) {
+      if (!a || typeof a !== 'object') return 5.5;
+      const activeS = interpLogAnchors(ORBIT_ANCHORS, Number(a.active) || 0);
+      const peakS   = interpLogAnchors(ORBIT_ANCHORS, Number(a.peak) || 0) * (ORBIT_RECENCY[a.recency] || 1.0);
+      return clampScore(0.65 * activeS + 0.35 * peakS);
+    }
+
+    // C3 punching above your weight — the residual, measured directly. Asymmetric BY DESIGN
+    // (the owner's rule: below is only subtractive when above AND at-level are both lacking).
+    // above_share buys up to +3.0; the mostly-below pattern costs a flat −1.5, nothing in between.
+    function aboveShareBonus(share) { return interpAnchors([[0, 0], [0.2, 1.0], [0.4, 2.0], [0.6, 3.0]], share); }
+    function aboveScore(a) {
+      if (!a || typeof a !== 'object' || a.na) return null;   // skipped → excluded from the Charm denominator
+      const above = Number(a.above) || 0, at = Number(a.at) || 0, below = Number(a.below) || 0;
+      const answered = above + at + below;
+      if (answered <= 0) return null;
+      const aboveShare = above / answered, atShare = at / answered;
+      let s = 5.5 + aboveShareBonus(aboveShare);
+      if (aboveShare < 0.10 && atShare < 0.30) s -= 1.5;   // the pattern is mostly-below
+      return clampScore(s);
+    }
+
+    // C4 exclusivity retention — people who KNOW you wanting more of you (un-farmable, unlike a
+    // first date). Count 0–5; the "one was above my level" checkbox is a +0.5 partner-tier nod.
+    const RETENTION_ANCHORS = [[0, 3.0], [1, 4.5], [2, 5.5], [3, 6.8], [4, 8.0], [5, 9.0]];
+    function retentionScore(a) {
+      if (!a || typeof a !== 'object' || a.na) return null;   // skipped → excluded from the Charm denominator
+      let s = interpAnchors(RETENTION_ANCHORS, Number(a.n) || 0);
+      if (a.above) s += 0.5;
+      return clampScore(s);
+    }
+
+    // E2 new people met, split IRL vs online. An in-person exchange is a richer at-bat than an
+    // online one (×1.0 vs ×0.6); the effective count feeds the same anchors the old single box used.
+    const MET_ANCHORS = [[0, 2.0], [1, 3.5], [3, 5.0], [5, 5.8], [10, 7.0], [20, 8.2], [40, 9.5]];
+    function metMixEffective(a) {
+      if (!a || typeof a !== 'object') return 0;
+      return (Number(a.inperson) || 0) + 0.6 * (Number(a.online) || 0);
+    }
+    function metMixScore(a) { return interpLogAnchors(MET_ANCHORS, metMixEffective(a)); }
+
+    // E4 dating apps — two boxes for everyone (the old full fork is gone). Sex-specific anchors
+    // per box, blended by sex: men are read on what they SEND (81% of first moves), women on
+    // what ARRIVES. Inbound-for-men and outbound-for-women are rare, so they're informative upside.
+    const APP_OUT_M = [[0, 3.0], [3, 4.5], [10, 5.5], [25, 6.8], [60, 8.0], [150, 9.2]];   // men outbound (existing)
+    const APP_IN_F  = [[0, 2.5], [10, 4.5], [30, 5.5], [75, 6.8], [200, 8.2], [500, 9.3]]; // women inbound (existing)
+    const APP_IN_M  = [[0, 5.0], [3, 6.0], [10, 7.0], [30, 8.2], [100, 9.3]];              // men inbound (rare → informative)
+    const APP_OUT_W = [[0, 5.0], [3, 6.5], [10, 8.0], [30, 9.3]];                          // women outbound (initiative = pure upside)
+    function appsScore(a) {
+      if (!a || typeof a !== 'object') return 5.5;
+      const male = getSex() !== 'f';
+      const outS = interpLogAnchors(male ? APP_OUT_M : APP_OUT_W, Number(a.out) || 0);
+      const inS  = interpLogAnchors(male ? APP_IN_M  : APP_IN_F,  Number(a.in)  || 0);
+      return male ? (0.7 * outS + 0.3 * inS) : (0.3 * outS + 0.7 * inS);   // sex-weighted blend
+    }
+
+    // E5/E6 unit toggle — the raw count is entered per week / month / year and normalized to
+    // MONTHLY before the existing sex-specific anchors, so "4 per year" no longer rounds to a
+    // false 0. Anchors and mirrored sex weights are unchanged from the old Q29/Q30.
+    const UNIT_TO_MONTHLY = { week: 4.33, month: 1, year: 1 / 12 };
+    function unitMonthly(a) {
+      if (!a || typeof a !== 'object' || typeof a.n !== 'number' || !isFinite(a.n)) return null;
+      return a.n * (UNIT_TO_MONTHLY[a.unit] || 1);
+    }
+    function unitCountScore(q, a) {
+      const m = unitMonthly(a);
+      return m == null ? 5.5 : interpLogAnchors(anchorsFor(q), m);
+    }
+
+    // S3 job-title prestige list — occupational-prestige-style ratings mapped to the 0–10 curve,
+    // median occupation ≈ 5.0–5.3. Calibration anchors (per spec): surgeon 9.3, physician 9.2,
+    // lawyer 8.0, professor 7.8, software engineer 7.4, RN 6.6, teacher 6.4, police 6.0,
+    // electrician/plumber 5.8, office admin 5.0, retail associate 3.8, unemployed 3.0. Income
+    // variance WITHIN a profession is deliberately NOT captured here — Money owns that (see Q11).
+    // Matched case-insensitively on substrings of title + keywords; synonyms matter more than count.
+    const JOB_TITLES = [
+      // Medicine
+      { title: 'Surgeon', score: 9.3, keywords: ['surgeon', 'surgery', 'neurosurgeon', 'orthopedic surgeon'] },
+      { title: 'Physician / Doctor (attending)', score: 9.2, keywords: ['physician', 'doctor', 'md', 'attending', 'medicine', 'cardiologist', 'oncologist', 'radiologist'] },
+      { title: 'Anesthesiologist', score: 9.1, keywords: ['anesthesiologist', 'anaesthetist'] },
+      { title: 'Psychiatrist', score: 8.8, keywords: ['psychiatrist'] },
+      { title: 'Dentist', score: 8.5, keywords: ['dentist', 'dental surgeon', 'orthodontist'] },
+      { title: 'Optometrist', score: 7.6, keywords: ['optometrist'] },
+      { title: 'Resident physician', score: 7.6, keywords: ['resident', 'medical resident', 'intern doctor'] },
+      { title: 'Veterinarian', score: 8.0, keywords: ['veterinarian', 'vet'] },
+      { title: 'Pharmacist', score: 7.6, keywords: ['pharmacist', 'pharmacy'] },
+      { title: 'Nurse practitioner', score: 7.5, keywords: ['nurse practitioner', 'np'] },
+      { title: 'Physician assistant', score: 7.4, keywords: ['physician assistant', 'pa-c'] },
+      { title: 'Physical therapist', score: 6.8, keywords: ['physical therapist', 'physiotherapist'] },
+      { title: 'Occupational therapist', score: 6.8, keywords: ['occupational therapist'] },
+      { title: 'Speech-language pathologist', score: 6.6, keywords: ['speech therapist', 'speech pathologist', 'slp'] },
+      { title: 'Registered nurse', score: 6.6, keywords: ['registered nurse', 'rn', 'nurse'] },
+      { title: 'Midwife', score: 6.6, keywords: ['midwife'] },
+      { title: 'Dietitian / Nutritionist', score: 6.2, keywords: ['dietitian', 'nutritionist'] },
+      { title: 'Dental hygienist', score: 6.0, keywords: ['dental hygienist', 'hygienist'] },
+      { title: 'Paramedic / EMT', score: 5.6, keywords: ['paramedic', 'emt', 'ambulance'] },
+      { title: 'Licensed practical nurse', score: 5.4, keywords: ['lpn', 'licensed practical nurse', 'lvn'] },
+      { title: 'Veterinary technician', score: 5.0, keywords: ['vet tech', 'veterinary technician'] },
+      { title: 'Medical assistant', score: 4.6, keywords: ['medical assistant'] },
+      { title: 'Nursing assistant / CNA', score: 4.2, keywords: ['cna', 'nursing assistant', 'nurse aide'] },
+      { title: 'Home health aide', score: 3.9, keywords: ['home health aide', 'caregiver'] },
+      // Law / legal
+      { title: 'Judge', score: 9.0, keywords: ['judge', 'magistrate', 'justice'] },
+      { title: 'Law firm partner', score: 8.7, keywords: ['law partner', 'managing partner', 'partner attorney', 'equity partner'] },
+      { title: 'Prosecutor / District attorney', score: 7.8, keywords: ['prosecutor', 'district attorney', 'da', 'crown counsel'] },
+      { title: 'Lawyer / Attorney', score: 8.0, keywords: ['lawyer', 'attorney', 'counsel', 'esq', 'solicitor', 'barrister'] },
+      { title: 'Attorney (associate)', score: 7.4, keywords: ['associate attorney', 'associate lawyer', 'junior attorney'] },
+      { title: 'Public defender', score: 7.0, keywords: ['public defender'] },
+      { title: 'Paralegal', score: 5.0, keywords: ['paralegal'] },
+      { title: 'Legal secretary', score: 4.6, keywords: ['legal secretary', 'legal assistant'] },
+      // Engineering / tech
+      { title: 'CTO / VP Engineering', score: 8.6, keywords: ['cto', 'vp engineering', 'chief technology', 'head of engineering'] },
+      { title: 'Engineering manager', score: 7.9, keywords: ['engineering manager', 'eng manager', 'dev manager'] },
+      { title: 'Senior / Staff software engineer', score: 7.7, keywords: ['senior software engineer', 'staff engineer', 'principal engineer', 'senior developer'] },
+      { title: 'Software engineer', score: 7.4, keywords: ['software engineer', 'software developer', 'programmer', 'coder', 'developer', 'swe', 'software dev'] },
+      { title: 'Machine learning engineer', score: 7.7, keywords: ['machine learning', 'ml engineer', 'ai engineer'] },
+      { title: 'Data scientist', score: 7.5, keywords: ['data scientist'] },
+      { title: 'Aerospace engineer', score: 7.6, keywords: ['aerospace engineer', 'rocket engineer'] },
+      { title: 'Electrical engineer', score: 7.4, keywords: ['electrical engineer'] },
+      { title: 'Chemical engineer', score: 7.4, keywords: ['chemical engineer'] },
+      { title: 'DevOps / Cloud engineer', score: 7.4, keywords: ['devops', 'cloud engineer', 'site reliability', 'sre'] },
+      { title: 'Mechanical engineer', score: 7.3, keywords: ['mechanical engineer'] },
+      { title: 'Civil engineer', score: 7.3, keywords: ['civil engineer', 'structural engineer'] },
+      { title: 'Cybersecurity analyst', score: 7.0, keywords: ['cybersecurity', 'security analyst', 'infosec', 'penetration tester'] },
+      { title: 'UX / Product designer', score: 6.6, keywords: ['ux designer', 'ui designer', 'product designer'] },
+      { title: 'Web developer', score: 6.6, keywords: ['web developer', 'front end', 'frontend', 'full stack'] },
+      { title: 'Data analyst', score: 6.4, keywords: ['data analyst', 'business analyst'] },
+      { title: 'QA / Test engineer', score: 5.8, keywords: ['qa', 'quality assurance', 'test engineer', 'tester'] },
+      { title: 'Systems administrator', score: 5.8, keywords: ['sysadmin', 'systems administrator', 'network administrator'] },
+      { title: 'IT support technician', score: 5.2, keywords: ['it support', 'help desk', 'desktop support'] },
+      // Finance / business
+      { title: 'Chief executive (CEO)', score: 8.8, keywords: ['ceo', 'chief executive', 'managing director'] },
+      { title: 'Hedge fund / Portfolio manager', score: 8.8, keywords: ['hedge fund', 'portfolio manager', 'fund manager'] },
+      { title: 'CFO', score: 8.6, keywords: ['cfo', 'chief financial'] },
+      { title: 'COO', score: 8.5, keywords: ['coo', 'chief operating'] },
+      { title: 'Investment banker', score: 8.3, keywords: ['investment banker', 'i-banking', 'banking analyst', 'private equity'] },
+      { title: 'Entrepreneur / Founder (established company)', score: 7.8, keywords: ['founder', 'entrepreneur', 'startup founder', 'ceo founder'] },
+      { title: 'Management consultant', score: 7.6, keywords: ['management consultant', 'strategy consultant', 'consultant'] },
+      { title: 'Actuary', score: 7.4, keywords: ['actuary'] },
+      { title: 'Financial analyst', score: 6.6, keywords: ['financial analyst'] },
+      { title: 'Financial advisor / Wealth manager', score: 6.6, keywords: ['financial advisor', 'wealth manager', 'financial planner'] },
+      { title: 'Marketing manager', score: 6.6, keywords: ['marketing manager', 'brand manager'] },
+      { title: 'Project manager', score: 6.6, keywords: ['project manager', 'program manager', 'scrum master'] },
+      { title: 'Accountant / CPA', score: 6.4, keywords: ['accountant', 'cpa', 'accounting'] },
+      { title: 'Human resources manager', score: 6.4, keywords: ['hr manager', 'human resources'] },
+      { title: 'Sales manager', score: 6.4, keywords: ['sales manager'] },
+      { title: 'Small business owner', score: 6.2, keywords: ['small business owner', 'shop owner', 'business owner'] },
+      { title: 'Recruiter', score: 5.6, keywords: ['recruiter', 'talent acquisition'] },
+      { title: 'Real estate agent', score: 5.6, keywords: ['real estate agent', 'realtor', 'estate agent'] },
+      { title: 'Executive assistant', score: 5.4, keywords: ['executive assistant'] },
+      { title: 'Marketing coordinator', score: 5.4, keywords: ['marketing coordinator', 'marketing associate'] },
+      { title: 'Sales representative', score: 5.4, keywords: ['sales rep', 'salesperson', 'account executive', 'account manager'] },
+      { title: 'Office manager', score: 5.4, keywords: ['office manager'] },
+      { title: 'Self-employed / Freelancer', score: 5.4, keywords: ['freelance', 'self employed', 'contractor', 'gig worker'] },
+      { title: 'Insurance agent', score: 5.2, keywords: ['insurance agent', 'insurance broker'] },
+      { title: 'Office administrator / Admin assistant', score: 5.0, keywords: ['administrator', 'admin assistant', 'administrative assistant', 'secretary', 'clerk'] },
+      { title: 'Bookkeeper', score: 5.0, keywords: ['bookkeeper'] },
+      { title: 'Bank teller', score: 4.4, keywords: ['bank teller', 'teller'] },
+      { title: 'Receptionist', score: 4.4, keywords: ['receptionist', 'front desk'] },
+      { title: 'Call center / Customer service rep', score: 4.2, keywords: ['call center', 'customer service', 'customer support'] },
+      // Education
+      { title: 'University professor', score: 7.8, keywords: ['professor', 'full professor', 'academic'] },
+      { title: 'Associate professor', score: 7.4, keywords: ['associate professor'] },
+      { title: 'School principal', score: 7.0, keywords: ['principal', 'headmaster', 'head teacher'] },
+      { title: 'Lecturer / Adjunct', score: 6.2, keywords: ['lecturer', 'adjunct', 'instructor'] },
+      { title: 'School counselor', score: 6.2, keywords: ['school counselor', 'guidance counselor'] },
+      { title: 'Teacher (K–12)', score: 6.4, keywords: ['teacher', 'schoolteacher', 'educator', 'elementary teacher', 'high school teacher'] },
+      { title: 'Librarian', score: 6.0, keywords: ['librarian'] },
+      { title: 'Tutor', score: 5.0, keywords: ['tutor'] },
+      { title: 'Substitute teacher', score: 4.8, keywords: ['substitute teacher'] },
+      { title: 'Teaching assistant', score: 4.6, keywords: ['teaching assistant', 'teacher aide'] },
+      { title: 'Preschool / Daycare teacher', score: 4.6, keywords: ['preschool teacher', 'daycare', 'childcare worker'] },
+      // Trades / construction
+      { title: 'Construction manager', score: 6.6, keywords: ['construction manager', 'site manager'] },
+      { title: 'General contractor', score: 6.2, keywords: ['general contractor', 'builder'] },
+      { title: 'Electrician', score: 5.8, keywords: ['electrician'] },
+      { title: 'Plumber', score: 5.8, keywords: ['plumber'] },
+      { title: 'HVAC technician', score: 5.6, keywords: ['hvac', 'air conditioning technician'] },
+      { title: 'Carpenter', score: 5.4, keywords: ['carpenter', 'joiner'] },
+      { title: 'Welder', score: 5.4, keywords: ['welder'] },
+      { title: 'Machinist', score: 5.4, keywords: ['machinist', 'cnc operator'] },
+      { title: 'Heavy equipment operator', score: 5.2, keywords: ['equipment operator', 'crane operator', 'excavator operator'] },
+      { title: 'Auto mechanic', score: 5.2, keywords: ['mechanic', 'auto technician', 'automotive technician'] },
+      { title: 'Mason / Bricklayer', score: 5.0, keywords: ['mason', 'bricklayer'] },
+      { title: 'Apprentice (trade)', score: 5.0, keywords: ['apprentice'] },
+      { title: 'Handyman', score: 4.6, keywords: ['handyman'] },
+      { title: 'Painter (trade)', score: 4.6, keywords: ['house painter', 'painter decorator'] },
+      { title: 'Construction worker / Laborer', score: 4.4, keywords: ['construction worker', 'laborer', 'labourer'] },
+      { title: 'Roofer', score: 4.4, keywords: ['roofer'] },
+      { title: 'Landscaper / Groundskeeper', score: 4.2, keywords: ['landscaper', 'groundskeeper', 'gardener'] },
+      // Service / retail / hospitality
+      { title: 'Executive / Head chef', score: 6.2, keywords: ['head chef', 'executive chef', 'chef'] },
+      { title: 'Hotel manager', score: 6.0, keywords: ['hotel manager', 'general manager hotel'] },
+      { title: 'Flight attendant', score: 5.6, keywords: ['flight attendant', 'cabin crew'] },
+      { title: 'Restaurant manager', score: 5.6, keywords: ['restaurant manager'] },
+      { title: 'Retail store manager', score: 5.4, keywords: ['store manager', 'retail manager'] },
+      { title: 'Personal trainer', score: 5.4, keywords: ['personal trainer', 'fitness trainer'] },
+      { title: 'Massage therapist', score: 5.0, keywords: ['massage therapist'] },
+      { title: 'Fitness / Yoga instructor', score: 5.0, keywords: ['fitness instructor', 'yoga instructor', 'group fitness'] },
+      { title: 'Hair stylist / Barber', score: 4.8, keywords: ['hair stylist', 'barber', 'hairdresser'] },
+      { title: 'Cosmetologist / Esthetician', score: 4.8, keywords: ['cosmetologist', 'esthetician', 'nail technician', 'makeup artist'] },
+      { title: 'Bartender', score: 4.6, keywords: ['bartender', 'mixologist'] },
+      { title: 'Line cook', score: 4.4, keywords: ['cook', 'line cook', 'prep cook'] },
+      { title: 'Security guard', score: 4.2, keywords: ['security guard', 'bouncer'] },
+      { title: 'Nanny / Babysitter', score: 4.2, keywords: ['nanny', 'au pair', 'babysitter'] },
+      { title: 'Barista', score: 4.0, keywords: ['barista'] },
+      { title: 'Server / Waiter', score: 3.9, keywords: ['server', 'waiter', 'waitress'] },
+      { title: 'Retail associate / Cashier', score: 3.8, keywords: ['retail associate', 'sales associate', 'cashier', 'store associate', 'retail'] },
+      { title: 'Housekeeper / Janitor', score: 3.6, keywords: ['housekeeper', 'cleaner', 'janitor', 'custodian'] },
+      { title: 'Fast food worker', score: 3.6, keywords: ['fast food', 'crew member', 'kitchen crew'] },
+      // Transport / logistics
+      { title: 'Airline pilot', score: 8.0, keywords: ['airline pilot', 'pilot', 'aviator', 'captain airline'] },
+      { title: 'Commercial pilot', score: 7.6, keywords: ['commercial pilot', 'charter pilot'] },
+      { title: 'Air traffic controller', score: 7.2, keywords: ['air traffic controller', 'atc'] },
+      { title: 'Ship captain / Merchant marine', score: 6.8, keywords: ['ship captain', 'merchant marine', 'sea captain'] },
+      { title: 'Logistics / Supply chain manager', score: 6.2, keywords: ['logistics manager', 'supply chain', 'operations manager'] },
+      { title: 'Train conductor / Engineer', score: 5.2, keywords: ['train conductor', 'locomotive engineer', 'train driver'] },
+      { title: 'Postal worker / Mail carrier', score: 4.8, keywords: ['postal worker', 'mail carrier', 'mailman', 'letter carrier'] },
+      { title: 'Truck driver', score: 4.6, keywords: ['truck driver', 'trucker', 'cdl driver', 'hgv driver'] },
+      { title: 'Bus driver', score: 4.4, keywords: ['bus driver', 'coach driver'] },
+      { title: 'Delivery driver', score: 4.0, keywords: ['delivery driver', 'courier', 'parcel driver'] },
+      { title: 'Warehouse worker', score: 4.0, keywords: ['warehouse worker', 'forklift operator', 'picker packer'] },
+      { title: 'Taxi / Rideshare driver', score: 4.0, keywords: ['taxi driver', 'uber driver', 'rideshare', 'lyft driver'] },
+      // Government / military / public safety
+      { title: 'Diplomat / Foreign service officer', score: 7.6, keywords: ['diplomat', 'foreign service', 'ambassador'] },
+      { title: 'Federal agent (FBI/CIA)', score: 7.4, keywords: ['fbi', 'federal agent', 'cia', 'secret service', 'special agent'] },
+      { title: 'Politician / Elected official', score: 7.4, keywords: ['politician', 'senator', 'congressman', 'mayor', 'legislator', 'elected official', 'councilmember'] },
+      { title: 'Military officer', score: 7.0, keywords: ['military officer', 'army officer', 'naval officer', 'lieutenant', 'colonel', 'general', 'commander'] },
+      { title: 'Police detective', score: 6.6, keywords: ['detective', 'investigator police'] },
+      { title: 'Firefighter', score: 6.2, keywords: ['firefighter', 'fireman', 'fire officer'] },
+      { title: 'Police officer', score: 6.0, keywords: ['police officer', 'cop', 'law enforcement', 'sheriff', 'deputy', 'constable', 'state trooper'] },
+      { title: 'Social worker', score: 5.6, keywords: ['social worker', 'case worker'] },
+      { title: 'Enlisted military', score: 5.4, keywords: ['soldier', 'marine', 'sailor', 'airman', 'enlisted', 'army', 'navy', 'infantry'] },
+      { title: 'Civil servant / Government employee', score: 5.4, keywords: ['government employee', 'civil servant', 'public servant', 'government worker'] },
+      { title: 'Corrections officer', score: 4.8, keywords: ['corrections officer', 'prison guard', 'jailer'] },
+      // Science / agriculture
+      { title: 'Physicist', score: 7.6, keywords: ['physicist'] },
+      { title: 'Research scientist', score: 7.6, keywords: ['research scientist', 'scientist', 'researcher'] },
+      { title: 'Economist', score: 7.4, keywords: ['economist'] },
+      { title: 'Psychologist', score: 7.4, keywords: ['psychologist'] },
+      { title: 'Statistician', score: 7.2, keywords: ['statistician', 'biostatistician'] },
+      { title: 'Biologist', score: 7.0, keywords: ['biologist', 'microbiologist', 'geneticist'] },
+      { title: 'Chemist', score: 7.0, keywords: ['chemist'] },
+      { title: 'Environmental scientist', score: 6.8, keywords: ['environmental scientist', 'ecologist', 'geologist'] },
+      { title: 'Laboratory technician', score: 5.4, keywords: ['lab technician', 'laboratory technician'] },
+      { title: 'Farmer / Rancher', score: 5.2, keywords: ['farmer', 'rancher', 'agriculture'] },
+      { title: 'Farm worker', score: 3.8, keywords: ['farm worker', 'farmhand', 'agricultural laborer'] },
+      // Arts / media
+      { title: 'Architect', score: 7.6, keywords: ['architect'] },
+      { title: 'Film director', score: 7.4, keywords: ['film director', 'filmmaker', 'director film'] },
+      { title: 'Producer', score: 6.8, keywords: ['producer', 'executive producer'] },
+      { title: 'Radio / TV host / Anchor', score: 6.4, keywords: ['host', 'anchor', 'broadcaster', 'presenter'] },
+      { title: 'Editor', score: 6.2, keywords: ['editor', 'copy editor', 'managing editor'] },
+      { title: 'Interior designer', score: 6.0, keywords: ['interior designer'] },
+      { title: 'Journalist / Reporter', score: 6.0, keywords: ['journalist', 'reporter', 'correspondent'] },
+      { title: 'Actor', score: 6.0, keywords: ['actor', 'actress', 'performer'] },
+      { title: 'Graphic designer', score: 5.8, keywords: ['graphic designer'] },
+      { title: 'Writer / Author', score: 5.8, keywords: ['writer', 'author', 'novelist', 'copywriter'] },
+      { title: 'Content creator / Influencer', score: 5.6, keywords: ['influencer', 'content creator', 'youtuber', 'streamer', 'tiktoker', 'podcaster'] },
+      { title: 'Musician', score: 5.6, keywords: ['musician', 'singer', 'guitarist', 'band member', 'dj'] },
+      { title: 'Photographer', score: 5.4, keywords: ['photographer', 'videographer'] },
+      { title: 'Artist (fine art)', score: 5.2, keywords: ['artist', 'painter', 'illustrator', 'sculptor'] },
+      // Sports / fitness
+      { title: 'Professional athlete', score: 8.0, keywords: ['professional athlete', 'pro athlete', 'nba', 'nfl', 'footballer', 'pro sports'] },
+      { title: 'Sports coach', score: 6.0, keywords: ['coach', 'sports coach', 'head coach', 'athletic coach'] },
+      // Faith / care
+      { title: 'Clergy / Pastor', score: 6.2, keywords: ['pastor', 'priest', 'clergy', 'minister', 'rabbi', 'imam', 'chaplain'] },
+      { title: 'Therapist / Counselor', score: 6.4, keywords: ['therapist', 'counselor', 'mental health counselor', 'psychotherapist'] },
+      // Students / not working
+      { title: 'Graduate student', score: 5.2, keywords: ['graduate student', 'phd student', 'grad student', 'masters student', 'doctoral'] },
+      { title: 'Retired', score: 5.2, keywords: ['retired', 'retiree', 'pensioner'] },
+      { title: 'Homemaker / Stay-at-home parent', score: 4.6, keywords: ['homemaker', 'stay at home', 'housewife', 'househusband', 'stay-at-home parent'] },
+      { title: 'College student', score: 4.4, keywords: ['student', 'college student', 'undergraduate', 'undergrad', 'university student'] },
+      { title: 'Not working (health/disability)', score: 3.4, keywords: ['disability', 'disabled', 'on disability', 'not working'] },
+      { title: 'Unemployed', score: 3.0, keywords: ['unemployed', 'jobless', 'out of work', 'between jobs'] }
+    ];
+    // Fallback 6-band self-placement ladder (mandatory) — used when the search finds no match.
+    const JOB_FALLBACK = [
+      ['Student or unemployed', 3.8],
+      ['Service or manual work', 4.5],
+      ['Skilled trade or clerical', 5.5],
+      ['Professional (degreed, salaried)', 6.5],
+      ['Licensed professional or senior management', 7.5],
+      ['Executive or elite professional', 8.5]
+    ];
+    function searchJobs(query) {
+      const q = (query || '').trim().toLowerCase();
+      if (q.length < 2) return [];
+      return JOB_TITLES.filter(j =>
+        j.title.toLowerCase().includes(q) || j.keywords.some(k => k.includes(q) || q.includes(k))
+      ).slice(0, 8);
+    }
+
     const QUESTIONS = [
       {
         factor: 0,
@@ -450,17 +913,23 @@
       {
         factor: 0,
         weight: 0.8,
-        // Percentile-reasoned: modal adult ("competent and normal") = median 5.5; careless ≈ bottom
-        // decile → 2.5 (floors principle, not 1); "dialed in" ≈ top 5% → 9.0. Reasoned estimate.
-        scores: [2.5, 4.3, 5.5, 7.5, 9.0],
-        text: 'How polished is your presentation?',
-        sub: 'Hair, grooming, clothes, scent, skin, dental care, and whether the package looks intentional. The one looks lever that is genuinely a self-report.',
-        opts: [
-          ['Unpolished or careless', 'The details quietly lower how people read me.'],
-          ['Basic maintenance, little style', 'Clean enough, but not especially attractive or coherent.'],
-          ['Competent and normal', 'I look presentable in most situations.'],
-          ['Well put together', 'Style and grooming actively help the first impression.'],
-          ['Distinctive and dialed in', 'Presentation feels curated without looking fake.']
+        type: 'checklist',
+        // De-vibed: the old 5-option self-rating becomes a checklist of objective facts, score =
+        // count checked. Percentile-reasoned on the count: the modal adult checks 3–4 (basic upkeep)
+        // → median ~5.5; zero checked ≈ bottom decile → 2.5 (floors principle, not 1); all eight ≈
+        // top 5% → 9.0. Linear anchors on the count.
+        anchors: [[0, 2.5], [2, 4.0], [4, 5.5], [6, 7.5], [8, 9.0]],
+        text: 'How many of these are true of you?',
+        sub: 'Check what is factually true — each is a thing you do or own, not a judgment. This replaces a self-rating with a count of observable facts.',
+        items: [
+          'My hair is cut or maintained on a regular cadence (roughly every 4–6 weeks, or a deliberately maintained style)',
+          'My everyday clothes actually fit — fitted or tailored, not just clean',
+          'I have a daily skincare routine beyond soap',
+          'My teeth are straight/white or under active care (whitening, aligners, regular dental work)',
+          'I wear a fragrance regularly',
+          { m: 'My facial hair is deliberately groomed or deliberately clean-shaven', f: 'I have a makeup routine I would call intentional' },
+          'I own at least one sharp, occasion-ready outfit that I could wear tonight',
+          'Someone complimented my style or appearance in the last month'
         ]
       },
       {
@@ -468,28 +937,35 @@
         weight: 1.15,
         type: 'networth',
         text: 'What is your net worth?',
-        sub: 'Everything you own minus everything you owe — savings, investments, property, and equity, less debt. Enter a real number; it can be negative. Income is your flow, this is the stock you have actually built. Age-adjusted: the same balance counts for more the younger you are.'
+        sub: 'Everything you own minus everything you owe. Build it up from the four lines below, or enter the total directly if you know it — it can be negative. Income is your flow; this is the stock you have actually built. Age-adjusted: the same balance counts for more the younger you are.'
       },
       {
         factor: 1,
         weight: 1.30,
         type: 'income',
-        text: 'What is your annual income?',
-        sub: 'Your real, current pre-tax yearly income from all sources, in USD. Enter an actual number rather than a bracket — income scales, so the curve keeps rewarding the top end instead of flattening it, with diminishing returns toward the very top.'
+        text: 'What is your income?',
+        sub: 'Your real, current pre-tax income from all sources, in USD. Enter annual or monthly — a monthly figure is normalized to annual for the curve. Enter an actual number rather than a bracket: income scales, so the curve keeps rewarding the top end with diminishing returns toward the very top.'
       },
       {
         factor: 1,
         weight: 0.90,
-        type: 'count',
-        money: true,
-        scale: 'log',
-        unit: 'from savings',
-        placeholder: 'e.g. 5,000',
-        // Fed SHED: ~37% of US adults could not cover a $400 emergency with cash → $400 ≈ 35–40th
-        // pct → 4.0. Median transaction-account balance ≈ $8k (Fed SCF 2022) → 5.5. Top reasoned.
-        anchors: [[0, 1.5], [400, 4.0], [2000, 4.8], [8000, 5.5], [25000, 6.6], [100000, 7.8], [500000, 9.0], [2000000, 10]],
-        text: 'What is the largest unexpected expense you could cover today from savings, without borrowing?',
-        sub: 'Cash and easily-tapped savings only — no credit, no selling assets, no family. This is spending freedom: absorbing surprises and creating experiences without strain. Net worth is the stock; this is the part of it you can actually reach. Fed benchmark: about 4 in 10 US adults could not cover a $400 emergency from cash.'
+        type: 'car',
+        // Replaces the old emergency-expense question (which triple-counted net worth + income).
+        // The wealth marker people actually read, judged as it presents, not by the loan behind it.
+        // Percentile-reasoned: an average commuter car is the modal read → 5.5; a beater is a mild
+        // negative → 4.5; luxury/exotic are the top tail. "No car" is metro-adjusted at scoring time
+        // (carScore): neutral in a dense transit metro, a mild negative anywhere you'd be expected
+        // to drive — the second cross-question adjustment in the codebase.
+        text: 'What do you drive?',
+        sub: 'The wealth marker people actually read. Judged as it presents, not by the loan behind it.',
+        opts: [
+          ['No car', 'I do not own or lease a vehicle. (Neutral in a dense transit metro, a mild negative elsewhere.)'],
+          ['Older economy car or beater', 'It runs, but it reads as make-do.'],
+          ['Average commuter car', 'A normal, unremarkable daily driver.'],
+          ['New or nice mid-range', 'Recent, clean, clearly not struggling.'],
+          ['Luxury brand', 'A recognized premium marque.'],
+          ['Exotic or collector', 'A car people stop to look at.']
+        ]
       },
       {
         factor: 1,
@@ -513,7 +989,7 @@
         weight: 1.20,
         scores: [3.5, 5.5, 7.0, 8.3, 8.8],
         text: 'What is your career stage?',
-        sub: 'Where you sit on the professional ladder — a proxy for standing and ceiling. Level only; whether you are actually winning at that level shows up in income and net worth.',
+        sub: 'Where you sit on the professional ladder — a proxy for standing and ceiling. This is the Money-side LADDER LEVEL; the Status section separately scores the prestige of the occupation itself. Level only; whether you are actually winning at that level shows up in income and net worth.',
         opts: [
           ['Student, entry-level, or between jobs', 'Not yet established in a career.'],
           ['Established individual contributor', 'A stable, working professional.'],
@@ -525,216 +1001,185 @@
       {
         factor: 1,
         weight: 0.85,
-        scores: [2.5, 4.0, 5.5, 7.5, 8.5],
-        text: 'How heavy are your recurring financial obligations?',
-        sub: 'Debt payments and dependents that claim your income every month — the drag that raw income and net worth do not show. Fewer fixed claims means more free resources.',
-        opts: [
-          ['Crushing', 'Debt or dependents dominate my monthly budget.'],
-          ['Heavy', 'A large share of my income is already committed.'],
-          ['Moderate / typical', 'Normal adult obligations, manageable.'],
-          ['Light', 'Few fixed claims on my income.'],
-          ['None to speak of', 'No significant debt or dependents.']
-        ]
+        type: 'expenses',
+        // Replaces the old 5-option feelings ladder with a cold ratio: disposable share =
+        // 1 − expenses/income (both monthly), scored on DISPOSABLE_ANCHORS. See expensesScore().
+        text: 'What are your total monthly expenses?',
+        sub: 'Everything that leaves your account in a normal month — housing, debt payments, dependents, subscriptions, food, all of it. Scored against your income as your disposable share.'
       },
       {
         factor: 2,
-        weight: 1.20,
-        // Percentile-reasoned: known-to-close-circle is the MAJORITY condition → median 5.0.
-        // Local scene ≈ top 25–30% → 6.0; city/field ≈ top 8% → 7.5; regional ≈ top 1.5% → 8.7.
-        // The negative-reputation floor is what lets Status actually read LOW — status is
-        // right-skewed, so the median adult sits at the bottom of every positive marker;
-        // the low end of the scale is reserved for actively bad standing, not obscurity.
-        scores: [2.5, 5.0, 6.0, 7.5, 8.7, 10],
-        text: 'How widely are you actually known?',
-        sub: 'The reach of your name and reputation — how far beyond your immediate circle people recognize you. Known mainly to your own circle is the normal baseline, not a low score. Reputation compounds slowly and forfeits fast — if your name currently works against you, that outranks reach.',
-        opts: [
-          ['Known negatively where I am known', 'My name currently works against me in my own circles.'],
-          ['Only my close circle', 'Known to friends, family, and immediate coworkers.'],
-          ['Known in one local scene', 'A recognized regular in a workplace, school, or community.'],
-          ['Known across my city or field', 'My name carries across a local market or profession.'],
-          ['Regionally or industry-wide known', 'Recognized well beyond my immediate area or niche.'],
-          ['Nationally or globally recognized', 'A public profile many strangers would know.']
+        weight: 1.15,
+        type: 'fame',
+        // S1 fame collapsed to a count. Log scale + the against-you checkbox: see fameScore().
+        // Zero is the normal case, not a failure (5.0). The reputation-forfeit floor (2.5) is kept
+        // from the old Q13 — a name that works against you outranks any amount of reach.
+        anchors: [[0, 5.0], [500, 6.0], [5000, 7.0], [25000, 7.8], [100000, 8.5], [1000000, 9.5], [10000000, 10]],
+        placeholder: 'e.g. 2,000',
+        unit: 'strangers',
+        text: 'Roughly how many people who have never met you know who you are?',
+        sub: 'Fame collapsed to a number. Zero is the normal case, not a failure. Count real name/face recognition — a scene, a school, a market, an audience.'
+      },
+      {
+        factor: 2,
+        weight: 0.95,
+        type: 'following',
+        // S2 following, itemized by platform (weight up from 0.75 — the decomposition removes the
+        // noise that justified the old low weight). Effective reach = Σ(count × coefficient), shown
+        // live, then fed to the same follower anchors the old single-box question used. See
+        // followingScore() and FOLLOW_COEF.
+        text: 'Across platforms, how many people follow or subscribe to you?',
+        sub: 'Real, engaged reach per platform — not bought or inactive numbers. Each platform is weighted by how deliberate and durable a follow there tends to be, and the effective reach is shown live so the math is not a black box. Most high-status people have no following, so zero is neutral, not a deficit.',
+        platforms: [
+          ['yt', 'YouTube'], ['tw', 'Twitch'], ['ig', 'Instagram'], ['x', 'Twitter / X'],
+          ['sc', 'Snapchat'], ['tt', 'TikTok'], ['other', 'Other (newsletter, podcast…)']
         ]
       },
       {
         factor: 2,
         weight: 1.30,
-        // Percentile-reasoned: "almost none" is the MODAL answer — most people attend, few convene —
-        // so it sits just under median at 4.8; "the hub" ≈ top 2% → 9.3. Reasoned estimate.
-        scores: [4.8, 5.8, 7.0, 8.3, 9.3],
-        text: 'Of your social plans, how many do you organize or host?',
-        sub: 'A behavioral read on centrality — who actually convenes the group, rather than how central you feel. Think across your recent get-togethers. Kept as a share rather than a count: recall over "your last ten plans" is less reliable than the overall pattern.',
-        opts: [
-          ['Almost none', 'Others organize; I attend.'],
-          ['Occasionally I host or organize', 'Now and then I pull something together.'],
-          ['A fair share', 'I organize a meaningful chunk of plans.'],
-          ['Most of them', 'My circle’s plans mostly run through me.'],
-          ['I am the hub', 'People come to me to make things happen, and to be introduced.']
+        type: 'jobtitle',
+        // S3 job title — the section anchor. Prestige ONLY; income variance within a profession is
+        // deliberately NOT captured here (Money owns it; see the career-stage note). Type-ahead over
+        // JOB_TITLES (~180 curated entries), with the mandatory JOB_FALLBACK 6-band ladder when no
+        // match is found. See searchJobs() and educationScore()'s sibling calibration.
+        text: 'What is your job title?',
+        sub: 'Search for the closest match to what you actually do. This scores the prestige of the occupation, not how much you earn in it (income is scored separately in Money). No good match? Use the ladder below.'
+      },
+      {
+        factor: 2,
+        weight: 0.85,
+        type: 'education',
+        // S4 education — degree level × institution tier on one screen. Base scores map the ladder
+        // with the median (some college / associate) ~5.2; the tier modifier applies at bachelor's+
+        // and halves at the advanced level. See educationScore(), DEGREE_BASE, TIER_*.
+        text: 'What is your education?',
+        sub: 'Degree level first; then, at bachelor’s and above, the kind of institution. The four institution buckets are common knowledge and self-placed.',
+        degrees: [
+          'No high-school diploma', 'High-school diploma', 'Associate or some college',
+          'Bachelor’s degree', 'Advanced or professional degree (Master’s, PhD, MD, JD…)'
+        ],
+        tiers: [
+          ['Elite / household-name', 'Ivy-tier or a name most people would recognize.'],
+          ['Selective / well-regarded', 'Competitive admission, strong regional or national reputation.'],
+          ['Typical', 'A normal accredited college or university.'],
+          ['Low-signal', 'Open-enrollment or for-profit.']
         ]
       },
       {
         factor: 2,
-        weight: 1.00,
-        type: 'count',
-        scale: 'log',
-        unit: 'people',
-        placeholder: 'e.g. 3',
-        // Percentile-anchored: most workers supervise no one (0 = median = 5.0); roughly 1 in 5 US
-        // workers supervises anyone (BLS-derived, reasoned); 50+ reports ≈ top 2–3% → 9.1.
-        anchors: [[0, 5.0], [1, 5.8], [3, 6.5], [8, 7.4], [20, 8.3], [50, 9.1], [200, 10]],
-        text: 'How many people report to you or answer to you, across every arena?',
-        sub: 'Work teams, projects, volunteers, communities, or mentees — anyone who answers to you. Enter the real headcount. Leading no one is the common case, not a failure: zero scores as the population median.'
+        type: 'kids',
+        statusMod: 'kids',
+        // S5 kids — a POST-AVERAGE Status modifier (§9.1), NOT part of the weighted mean. No weight:
+        // it does not enter the S1–S4 average, it adjusts the result afterward. Market position, NOT
+        // finances (Money Q12 carries the budget impact; different causal channel). Age-graded off the
+        // existing age answer and custody-scaled. Sex-neutral; the sex-asymmetric option was considered
+        // and deferred. See kidsModifier().
+        text: 'How many children do you have?',
+        sub: 'This measures market position, not money — the budget impact is already scored in Money. No kids is a slight plus; kids adjust your Status down, less so when they are older or not in your custody.',
+        counts: ['None', '1', '2', '3 or more'],
+        custody: [
+          ['Full-time', 'They live with me most or all of the time.'],
+          ['Shared', 'Roughly split custody or co-parenting.'],
+          ['Non-custodial', 'They live primarily with the other parent.']
+        ]
       },
       {
         factor: 2,
-        weight: 1.00,
-        type: 'count',
-        unit: 'groups',
-        placeholder: 'e.g. 1',
-        max: 50,
-        // Percentile-reasoned: the median adult belongs to 0 selective groups → 5.0; each additional
-        // one is a real percentile jump. Linear scale — small integers, no long tail.
-        anchors: [[0, 5.0], [1, 6.2], [2, 7.2], [3, 8.0], [5, 9.0], [8, 10]],
-        text: 'How many invite-only or competitively selected groups are you currently part of?',
-        sub: 'Groups you had to be admitted to or chosen for: boards, competitive teams, fellowships, juried or members-only organizations — not casual groups anyone can join. Enter the count.'
-      },
-      {
-        factor: 2,
-        weight: 0.75,
-        type: 'count',
-        scale: 'log',
-        unit: 'followers',
-        placeholder: 'e.g. 500',
-        // Percentile-reasoned: the median adult's ENGAGED reach ≈ 0 → 4.8 — a hair under neutral,
-        // because the absence of a bonus signal is not a deficit; 100k+ is a fraction of a percent.
-        anchors: [[0, 4.8], [200, 5.5], [1000, 6.2], [5000, 7.0], [20000, 7.9], [100000, 8.8], [1000000, 10]],
-        text: 'Across platforms, how many people actively follow, subscribe to, or pay attention to you?',
-        sub: 'Real, engaged reach, not bought or inactive numbers — add up what actually pays attention. Weighted modestly: most high-status people have no following, so this is a bonus signal, not a core one.'
-      },
-      {
-        factor: 2,
-        weight: 1.15,
-        type: 'count',
-        scale: 'log',
-        unit: 'times / 12 months',
-        placeholder: 'e.g. 2',
-        // Prestige — the doctrine's "more durable route to status" (Henrich & Gil-White; Cheng et
-        // al. 2013). Percentile-reasoned: the median adult is sought out for their skill ~0 times a
-        // year → 5.0; even one genuine invitation marks visible competence → 6.0.
-        anchors: [[0, 5.0], [1, 6.0], [3, 7.0], [6, 7.8], [12, 8.6], [30, 9.4], [100, 10]],
-        text: 'In the last 12 months, how many times were you sought out for your skill — invited to speak, teach, perform, consult, judge, or advise?',
-        sub: 'Prestige is rank through freely-given respect: being genuinely good at something people value. Count the times others came to you because of what you are good at. Do not count gigs you applied for.'
+        statusMod: 'record',
+        // S6 criminal record — a POST-AVERAGE Status modifier (§9.1), NOT part of the weighted mean.
+        // Downside-only, but a clean record (incl. tickets/fines) reads as a slight upside (+0.2),
+        // mirroring the no-kids bonus. A felony is a hard, legible negative that now subtracts a full
+        // −3.5; multiple felonies or active supervision reaches −4.5 near the clamp floor. See
+        // recordModifier() — RECORD_MOD is parallel to the options below.
+        text: 'What does your record look like?',
+        sub: 'Background checks are a dating-app feature for a reason. Traffic tickets and fines count as clean. A clean record is a slight plus; convictions adjust your Status down.',
+        opts: [
+          ['Clean', 'No convictions (traffic tickets and fines count as clean).'],
+          ['Misdemeanor', 'One or more misdemeanor convictions, nothing more.'],
+          ['Felony', 'A felony conviction on my record.'],
+          ['Multiple felonies, or currently in the system', 'Multiple felonies, or on probation, parole, or with pending charges.']
+        ]
       },
       {
         factor: 3,
-        weight: 1.00,
-        // Percentile-reasoned: "about half the time" = median 5.5; "rarely" ≈ bottom decile → 3.0
-        // (floors principle). A frequency judgment, not a clean count — stays a self-report.
-        scores: [3.0, 4.3, 5.5, 7.3, 9.0],
-        naIndex: 5,
-        text: 'When you talk with someone new, how often do they stay engaged?',
-        sub: 'The observable result of your presence and conversation — do new people lean in and keep it going, or does it fizzle? Judge by their reaction over your recent conversations, not your effort.',
-        opts: [
-          ['Rarely', 'Conversations usually fizzle or stay flat.'],
-          ['Sometimes', 'It lands occasionally, often not.'],
-          ['About half the time', 'A fair share of conversations come alive.'],
-          ['Usually', 'New people typically engage and stay in it.'],
-          ['Almost always', 'I reliably pull people into real conversation.'],
-          ['Not enough recent conversations to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
+        weight: 1.25,
+        type: 'relationship',
+        // C1 longest committed relationship — the anti-farm retention metric (kept-for-years beats
+        // converted-last-month). Age-banded (REL_ANCHORS) + the partner-tier tag applied after the
+        // curve. 0 is a real answer, never skipped. See relationshipScore() and partnerC1Delta().
+        text: 'How long was your longest committed relationship?',
+        sub: 'The clearest anti-farm signal here: first dates can be gamed, years cannot. Enter your best figure in years and months. Zero is a real answer.',
+        partnerLabel: 'That person, relative to you — check what actually happened:',
+        partnerItems: [
+          'Friends or strangers commented on their looks unprompted',
+          'They got approached or hit on while you were together',
+          'They had visibly abundant options when you met them',
+          'People openly wondered how you pulled them'
+        ]
+      },
+      {
+        factor: 3,
+        weight: 1.30,
+        type: 'orbit',
+        // C2 orbit — active-now (a current SMV read, 0.65) vs peak-ever (the demonstrated ceiling,
+        // 0.35, decayed by recency). The PB rescues the situationally suppressed. See orbitScore().
+        anchors: [[0, 3.5], [1, 5.0], [2, 5.8], [3, 6.5], [5, 7.5], [8, 8.5], [12, 9.5]],
+        text: 'How many people are in your orbit?',
+        sub: 'Active orbit is a current read; your personal best marks the ceiling you have actually demonstrated. Both count, but the current number carries more weight.',
+        recencyOpts: [
+          ['r0', 'Within ~2 years'], ['r1', '2–5 years ago'], ['r2', 'Longer ago']
         ]
       },
       {
         factor: 3,
         weight: 1.35,
-        type: 'count',
-        unit: 'of your last 10',
-        placeholder: 'e.g. 4',
-        max: 10,
+        type: 'above',
         allowNA: true,
-        naLabel: 'Fewer than ~10 recent first dates — skip',
-        // Sex-anchored (reasoned estimates): men accept second dates more readily than women do, so
-        // the same raw conversion means more for a male profile — male median ≈ 5/10, female ≈ 6/10.
-        anchors: {
-          m: [[0, 2.0], [2, 4.0], [5, 5.5], [7, 7.0], [9, 8.5], [10, 9.5]],
-          f: [[0, 1.8], [3, 4.0], [6, 5.5], [8, 7.0], [9, 8.0], [10, 9.2]]
-        },
-        text: 'Of your last 10 first dates with people you wanted to see again, how many led to a second date?',
-        sub: 'Your conversion rate, not your volume (volume is Exposure). Count real seconds — met again or clearly scheduled. If you have not had close to ten recent first dates, skip rather than guess.'
+        naLabel: 'Fewer than ~10 people dated recently — skip',
+        // C3 punching above your weight — the residual, measured directly. Base 5.5, asymmetric by
+        // the owner's rule (below only subtracts when above AND at-level are lacking). See aboveScore().
+        text: 'Of the last ~10 people you dated, how did they rank against you?',
+        sub: 'Split your last ~10 into above / at / below your level — leverage from money or fame counts as leverage, the outcome is the signal. "Above" means, roughly: friends or strangers commented on their looks unprompted, they got hit on while you were together, they had visibly abundant options, or people openly wondered how you pulled them. Boxes should sum to ≤ 10.'
       },
       {
         factor: 3,
-        weight: 1.35,
-        type: 'count',
-        unit: 'of the last 10',
-        placeholder: 'e.g. 3',
-        max: 10,
+        weight: 1.10,
+        type: 'retention',
         allowNA: true,
-        naLabel: 'Have not met ~10 new people recently — skip',
-        // Sex-anchored: the 81/19 first-message asymmetry (Tier 1, statistics.html) generalizes to
-        // who follows up — women are re-contacted by default (median ≈ 7/10), men are not (≈ 3/10),
-        // so the same raw count reads very differently per sex. Medians are reasoned estimates.
-        anchors: {
-          m: [[0, 2.5], [1, 4.0], [3, 5.5], [5, 6.8], [7, 8.0], [10, 9.5]],
-          f: [[0, 1.5], [3, 3.8], [5, 4.8], [7, 5.5], [9, 7.5], [10, 9.0]]
-        },
-        text: 'Of the last 10 new people you genuinely hit it off with, how many reached out first afterward?',
-        sub: 'Who re-initiates — did they text first, follow up, or try to see you again? A direct read on the pull you leave behind. Anchored by sex: women get chased by default, so the same count means different things.'
-      },
-      {
-        factor: 3,
-        weight: 1.20,
-        // Percentile-reasoned: modal adults straddle "rattled" / "quiet and detached" around the
-        // median; secure-and-warm ≈ top decile → 8.8; spiral/lash-out ≈ bottom decile → 2.0.
-        scores: [2.0, 4.2, 5.2, 6.8, 8.8],
-        text: 'When someone goes cold or pulls back, what actually happens?',
-        sub: 'Charm holds up under pressure. Judge by your behavior over your last few pullbacks — what you actually did next — not by how you felt inside.',
-        opts: [
-          ['I spiral or lash out', 'I get needy, bitter, or chaotic, and it shows.'],
-          ['It rattles me for a while', 'I hold it together unevenly.'],
-          ['I go quiet and detached', 'I shut down or pull away — calm, but cold.'],
-          ['I stay calm and unbothered', 'Nothing fazes me, though I keep my distance.'],
-          ['I stay grounded and warm', 'I keep both composure and warmth — secure, not cold.']
-        ]
-      },
-      {
-        factor: 3,
-        weight: 1.05,
-        scores: [3.0, 4.5, 5.5, 7.5, 9.0],
-        naIndex: 5,
-        text: 'How often do people tell you you are fun or easy to be around?',
-        sub: 'The feedback you actually receive — being told you are funny, easy, interesting, or that time flew. Count what people say unprompted, not what you hope.',
-        opts: [
-          ['Almost never', 'I rarely get this kind of feedback.'],
-          ['Occasionally', 'Once in a while someone says it.'],
-          ['Sometimes', 'I hear it from time to time.'],
-          ['Often', 'People regularly tell me I am easy or fun to be around.'],
-          ['Constantly', 'It is a recurring, specific thing people say about me.'],
-          ['Not enough recent social contact to say', 'Skipped — left out of the Charm score rather than scored as a zero.']
-        ]
+        naLabel: 'Fewer than ~5 such people — skip',
+        // C4 exclusivity retention — people who KNOW you wanting more of you (un-farmable). Count 0–5
+        // + an above-my-level checkbox worth +0.5 (partner-tier nod). See retentionScore().
+        anchors: [[0, 3.0], [1, 4.5], [2, 5.5], [3, 6.8], [4, 8.0], [5, 9.0]],
+        text: 'Of the last ~5 people you dated more than a few times, how many wanted to make it exclusive or keep it going?',
+        sub: 'First dates can be farmed; people who know you wanting more of you cannot. Count clear signals — asked for exclusivity, wanted to continue, pushed for more.',
+        aboveLabel: 'At least one of these was above my level'
       },
       {
         factor: 3,
         weight: 1.00,
         type: 'count',
         scale: 'log',
-        unit: '/ month',
+        unit: 'friends',
         placeholder: 'e.g. 4',
-        // Presence (doctrine: "whether people remember the feeling of being around you") measured by
-        // its countable trace. Percentile-reasoned: median connected adult ≈ 2–4 invitations/month →
-        // 3 = 5.5; zero is genuinely below median but floored at 3.5, not treated as social death.
-        anchors: [[0, 3.5], [1, 4.5], [3, 5.5], [6, 6.7], [12, 7.8], [25, 9.0], [50, 10]],
-        text: 'In a typical month, how many social invitations do you receive that you did not initiate?',
-        sub: 'Plans, parties, trips, "come join us" — from anyone, romantic or not. A countable trace of whether people want you back in the room. Zero is a real answer, not a failure.'
+        // C5 friend retention — Charm outside the romantic arena, and the hardest number here to
+        // farm. Percentile-reasoned: the median adult keeps ~2–4 long-tenure friends → 3 = 5.5;
+        // 20+ is a genuinely rare social base → 9.5. Log scale.
+        anchors: [[0, 3.0], [1, 4.3], [3, 5.5], [5, 6.5], [8, 7.5], [12, 8.5], [20, 9.5]],
+        text: 'How many friends have you kept for 5+ years?',
+        sub: 'Charm outside the romantic arena, and the hardest number here to farm — the only way to score is to have been worth keeping around for half a decade.'
       },
       {
         factor: 4,
         weight: 1.15,
         type: 'count',
         scale: 'log',
+        id: 'metro',
         unit: 'people in metro',
         placeholder: 'e.g. 2,500,000',
         // Percentile-anchored: metros over 1M hold ~56% of the US population (Census), so the median
-        // American's metro ≈ 1.5M → 5.5. Capped at 9.0 — pool SIZE is not pool ACCESS.
+        // American's metro ≈ 1.5M → 5.5. Capped at 9.0 — pool SIZE is not pool ACCESS. Read by the
+        // Q9 car cross-adjust (dense metro ≥ 4M makes car-free neutral).
         anchors: [[1000, 2.0], [20000, 3.5], [100000, 4.5], [500000, 5.0], [1500000, 5.5], [4000000, 6.5], [10000000, 7.8], [25000000, 9.0]],
         text: 'How many people live in your metro area?',
         sub: 'Your best figure for the metro you actually date in — e.g. New York ≈ 20,000,000; Denver ≈ 3,000,000; a mid-size metro ≈ 500,000; a small town ≈ 20,000. A rough figure is fine; location sets the raw pool, not your effort or appeal.'
@@ -742,94 +1187,81 @@
       {
         factor: 4,
         weight: 1.35,
-        type: 'count',
-        scale: 'log',
-        unit: '/ month',
-        placeholder: 'e.g. 5',
-        // Percentile-reasoned: out-of-school adults meet ~3–5 genuinely new eligible people a month
-        // at the median → 5.8 at 5; near-daily new contact ≈ top few percent.
+        type: 'metmix',
+        // E2 new people met, split IRL vs online (an in-person exchange is a richer at-bat, ×1.0 vs
+        // ×0.6). Effective count feeds the same anchors the old single box used. See metMixScore().
         anchors: [[0, 2.0], [1, 3.5], [3, 5.0], [5, 5.8], [10, 7.0], [20, 8.2], [40, 9.5]],
-        text: 'In a typical month, how many new people in your dating range do you actually meet — at least a real exchange, in person or online?',
-        sub: 'Raw at-bats: new people in your age range who are plausibly single, whether or not anything comes of it. This counts exposure, not success (conversion lives in Charm).'
+        text: 'In a typical month, how many new people in your dating range do you actually meet?',
+        sub: 'Raw at-bats: new people in your age range who are plausibly single, whether or not anything comes of it. Split by in person vs online — an in-person exchange is a richer at-bat. This counts exposure, not success (conversion lives in Charm).'
       },
       {
         factor: 4,
         weight: 1.05,
-        type: 'count',
-        unit: 'settings',
-        placeholder: 'e.g. 2',
-        max: 10,
-        // Percentile-reasoned: the median adult has ~1 recurring setting with rotating people → 5.0;
-        // zero means relying on luck or apps → 3.2. Linear — small integers, no long tail.
+        type: 'checklist',
+        otherMax: 2,
+        // E3 venues — now a checkbox grid, score = count checked (+1 per "other", capped at 2). Same
+        // anchors the old count question used. See checklistScore().
         anchors: [[0, 3.2], [1, 5.0], [2, 6.2], [3, 7.3], [5, 8.5], [8, 9.5]],
-        text: 'How many recurring settings put you around new or rotating people at least monthly?',
-        sub: 'Classes, clubs, hobby scenes, friend groups, work-adjacent circles, communities — repeated-contact settings where fresh faces appear. A fixed office with the same 12 people does not count.'
+        text: 'Which recurring settings put you around new or rotating people at least monthly?',
+        sub: 'Repeated-contact settings where fresh faces appear. A fixed office with the same 12 people does not count. Check all that apply.',
+        items: [
+          'Gym or fitness classes', 'Hobby clubs or classes', 'Sports leagues', 'Nightlife or bars',
+          'Religious community', 'Volunteering', 'Coworking or work-adjacent scenes', 'Regular friend-group gatherings'
+        ],
+        otherLabel: 'Other recurring scene'
       },
       {
         factor: 4,
         weight: 1.10,
-        type: 'count',
-        scale: 'log',
-        unit: '/ week',
-        // FULL FORK: the two sexes' app exposure is a different QUANTITY — men send, women receive
-        // (men send 81% of first messages, Tier 1; 54% of women vs 25% of men report being
-        // overwhelmed by app messages, Pew Tier 1 — both on statistics.html). Answer is invalidated
-        // on sex change (see setSex). Medians per active user are reasoned estimates.
-        variants: {
-          m: {
-            placeholder: 'e.g. 10',
-            text: 'In a typical week, how many first messages or intent-driven likes do you send on dating apps?',
-            sub: 'A man’s app exposure is what he sends: men send 81% of opening messages, so outbound volume is the male at-bat count. Attempts, not results. Not on apps = 0.'
-          },
-          f: {
-            placeholder: 'e.g. 30',
-            text: 'In a typical week, how many likes and messages arrive in your dating-app inbox?',
-            sub: 'A woman’s app exposure is what arrives: 54% of women (vs 25% of men) report being overwhelmed by app messages, so inbound volume is the female at-bat count. Not on apps = 0.'
-          }
-        },
-        anchors: {
-          m: [[0, 3.0], [3, 4.5], [10, 5.5], [25, 6.8], [60, 8.0], [150, 9.2]],
-          f: [[0, 2.5], [10, 4.5], [30, 5.5], [75, 6.8], [200, 8.2], [500, 9.3]]
-        },
-        text: 'In a typical week, how many first messages or intent-driven likes do you send on dating apps?',
-        sub: 'Your online at-bats — attempts, not results. Not on apps = 0.'
+        type: 'apps',
+        // E4 dating apps — two boxes for everyone (the old full fork is gone). Sex-specific anchors
+        // per box, blended by sex (men 0.7 out / 0.3 in, women 0.3 / 0.7). Weight is flat 1.10 both
+        // sexes so the per-sex Exposure weight totals stay balanced. See appsScore() and APP_*.
+        text: 'Your dating-app activity in a typical week',
+        sub: 'Two numbers: what you send (first messages / intent-driven likes) and what arrives (likes + messages). Both count, blended by sex — men are read mostly on outbound, women mostly on inbound. Not on apps = 0 in both.'
       },
       {
         factor: 4,
         weight: 1.35,
         weights: { m: 1.35, f: 0.90 },
-        type: 'count',
-        scale: 'log',
-        unit: '/ month',
-        placeholder: 'e.g. 2',
-        // Sex-anchored + sex-weighted: men carry most of the initiation load (81/19 first-move
-        // split), so 0 approaches is a real male exposure deficit but the female MEDIAN (her 19%
-        // share ⇒ most women initiate ~0/month) — for her, initiative is pure upside. Weights
-        // mirror the inbound question so per-sex Exposure weight totals stay equal.
+        type: 'unitcount',
+        // E5 approaches — now with a per week / month / year unit toggle (normalized to monthly), so
+        // "4 per year" no longer rounds to a false 0. Sex-anchored + sex-weighted, mirroring E6 so
+        // per-sex Exposure weight totals stay equal. See unitCountScore().
         anchors: {
           m: [[0, 2.5], [1, 4.5], [2, 5.5], [5, 7.0], [10, 8.3], [20, 9.5]],
           f: [[0, 5.0], [1, 6.5], [3, 8.0], [6, 9.2], [12, 10]]
         },
-        text: 'In a typical month, how many people do you directly approach or ask out, face to face?',
+        text: 'How many people do you directly approach or ask out, face to face?',
         sub: 'First moves in the physical world — a romantic-frame conversation you start, a number you ask for, a date you propose. Anchored and weighted by sex: men carry most of the initiation load, so for women consistent initiative is upside, not a requirement.'
       },
       {
         factor: 4,
         weight: 0.90,
         weights: { m: 0.90, f: 1.35 },
-        type: 'count',
-        scale: 'log',
-        unit: '/ month',
-        placeholder: 'e.g. 1',
-        // Mirror of the initiative question. Sex-anchored: the median man receives ~0 clear inbound
-        // interest a month → 0 = his median; the median woman ≈ a few → 3 = 5.5, and 0 for a woman
-        // signals genuinely low market surface. Reasoned from the same 81/19 asymmetry.
+        type: 'unitcount',
+        // E6 inbound interest — mirror of E5, with the same unit toggle (normalized to monthly).
+        // Sex-anchored: the median man receives ~0 clear inbound a month; the median woman ~a few.
         anchors: {
           m: [[0, 5.0], [1, 6.3], [2, 7.3], [4, 8.5], [8, 9.6]],
           f: [[0, 2.0], [1, 3.8], [3, 5.5], [6, 6.7], [12, 8.0], [30, 9.3]]
         },
-        text: 'In a typical month, how many people express clear romantic interest in you without you initiating?',
+        text: 'How many people express clear romantic interest in you without you initiating?',
         sub: 'Unambiguous inbound — asked you out, told you directly, sustained pursuit. Do not count app likes (counted separately) or politeness. Weighted by sex: inbound is the main female exposure channel, a bonus one for men.'
+      },
+      {
+        factor: 4,
+        weight: 0.85,
+        type: 'count',
+        scale: 'log',
+        unit: '/ month',
+        placeholder: 'e.g. 4',
+        // E7 unsolicited invitations — relocated from Charm (it is an exposure/surface-area signal,
+        // not a residual-leverage one), weighted as the softest exposure input (0.85). Text, sub, and
+        // anchors are unchanged from the old Q24. Presence measured by its countable trace.
+        anchors: [[0, 3.5], [1, 4.5], [3, 5.5], [6, 6.7], [12, 7.8], [25, 9.0], [50, 10]],
+        text: 'In a typical month, how many social invitations do you receive that you did not initiate?',
+        sub: 'Plans, parties, trips, "come join us" — from anyone, romantic or not. A countable trace of whether people want you back in the room. Zero is a real answer, not a failure.'
       }
     ];
 
@@ -838,8 +1270,13 @@
       { min: 3, max: 4.9, label: 'Below Average', color: '#BA7517', bg: '#FAEEDA', desc: 'You have some workable pieces, but the market is probably inconsistent and unforgiving. Focused work can move this tier faster than you think.' },
       { min: 5, max: 6.4, label: 'Average', color: '#C41E3A', bg: '#FAECEE', desc: 'You are near the market midpoint. That means options exist, but selectivity and consistency are limited unless one factor clearly overperforms.' },
       { min: 6.5, max: 7.9, label: 'Above Average', color: '#1D9E75', bg: '#E1F5EE', desc: 'You have real pull. The question is no longer whether you can get attention, but which bottleneck keeps you from getting the kind you want.' },
-      { min: 8, max: 9.4, label: 'High Value', color: '#7F77DD', bg: '#EEEDFE', desc: 'The market starts behaving differently here. You have leverage, but selection and maintenance matter more because attention is not the same as fit.' },
-      { min: 9.5, max: 10, label: 'Elite', color: '#D4537E', bg: '#FBEAF0', desc: 'This is outlier territory. You are not optimizing for access anymore; you are optimizing for discernment, boundaries, and choosing well.' }
+      { min: 8, max: 8.9, label: 'High Value', color: '#7F77DD', bg: '#EEEDFE', desc: 'The market starts behaving differently here. You have leverage, but selection and maintenance matter more because attention is not the same as fit.' },
+      // §9.2 rescale: the old Elite floor (9.5) was unreachable now that §9.1 lets Status hit ~9.4 —
+      // the max-everything Ceiling fixture lands 9.3, so Elite drops to 9.0 (High Value tops out 8.9).
+      // Boundary set empirically against the panel: nothing below the Ceiling reaches 9.0 (next is
+      // Davidson 7.7), so no other fixture is pulled into Elite; Low SMV (0–2.9) already catches the
+      // Floor fixture (2.7) and the middle boundaries are unchanged — no other fixture's tier moves.
+      { min: 9.0, max: 10, label: 'Elite', color: '#D4537E', bg: '#FBEAF0', desc: 'This is outlier territory. You are not optimizing for access anymore; you are optimizing for discernment, boundaries, and choosing well.' }
     ];
 
     const bVals = [5.5, 5.5, 5.5, 5.5, 5.5];
@@ -850,9 +1287,18 @@
     let scores = Array(FACTORS.length).fill(0);
     let heightUnit = 'imperial';   // 'imperial' (ft/in) | 'metric' (cm)
     let weightUnit = 'imperial';   // 'imperial' (lb)    | 'metric' (kg)
+    let incomeUnit = 'year';       // 'year' | 'month'   (Q8 annual/monthly toggle)
     const SEX_IDX = QUESTIONS.findIndex(q => q.type === 'sex');
     const AGE_IDX = QUESTIONS.findIndex(q => q.type === 'age');
     const HEIGHT_IDX = QUESTIONS.findIndex(q => q.type === 'height');
+    const METRO_IDX = QUESTIONS.findIndex(q => q.id === 'metro');       // Q9 car reads this raw pool size
+    const INCOME_IDX = QUESTIONS.findIndex(q => q.type === 'income');   // Q12 expense ratio reads this monthly
+    const LOOKS_FACTOR = FACTORS.findIndex(f => f.key === 'looks');     // C1 partner-tier reads this factor score
+    const STATUS_FACTOR = FACTORS.findIndex(f => f.key === 'status');   // S5/S6 are post-average modifiers on this factor
+    const KIDS_IDX = QUESTIONS.findIndex(q => q.statusMod === 'kids');   // S5 kids modifier reads this answer
+    const RECORD_IDX = QUESTIONS.findIndex(q => q.statusMod === 'record'); // S6 record modifier reads this answer
+    function statusKidsMod() { return KIDS_IDX < 0 ? 0 : kidsModifier(answers[KIDS_IDX]); }
+    function statusRecordMod() { return RECORD_IDX < 0 ? 0 : recordModifier(answers[RECORD_IDX]); }
     const AGE_BANDS = ['18-24', '25-29', '30-34', '35-39', '40-49', '50+'];
     let autoNext = false;
     let aCompleted = false;
@@ -974,12 +1420,32 @@
     }
     function isAnswered(i) {
       const q = QUESTIONS[i];
-      if (q.type === 'sex') return answers[i] === 'm' || answers[i] === 'f';
-      if (q.type === 'age') return AGE_BANDS.indexOf(answers[i]) >= 0;
-      if (q.type === 'build') return bodyImport() != null || answers[i] != null;
-      if (q.type === 'face') return faceImport() != null || answers[i] != null;
-      if (q.type === 'count') return answers[i] === 'na' || typeof answers[i] === 'number';
-      return answers[i] !== null && answers[i] !== undefined;
+      const a = answers[i];
+      switch (q.type) {
+        case 'sex': return a === 'm' || a === 'f';
+        case 'age': return AGE_BANDS.indexOf(a) >= 0;
+        case 'build': return bodyImport() != null || a != null;
+        case 'face': return faceImport() != null || a != null;
+        case 'count': return a === 'na' || typeof a === 'number';
+        case 'unitcount': return !!(a && typeof a.n === 'number' && isFinite(a.n));
+        case 'income': return a != null && (typeof a === 'number' || typeof a.annual === 'number');
+        case 'networth': return a != null && (typeof a === 'number' || typeof a.t === 'number');
+        case 'checklist': return !!(a && a.touched);
+        case 'following': return !!(a && a.touched);
+        case 'metmix': return !!(a && a.touched);
+        case 'apps': return !!(a && a.touched);
+        case 'car': return typeof a === 'number';
+        case 'expenses': return typeof a === 'number';
+        case 'fame': return !!(a && (a.against || typeof a.n === 'number'));
+        case 'jobtitle': return !!(a && typeof a.score === 'number');
+        case 'education': return !!(a && a.degree != null);
+        case 'kids': return !!(a && a.count != null && (a.count === 0 || a.custody != null));
+        case 'relationship': return !!(a && typeof a.months === 'number');
+        case 'orbit': return !!(a && typeof a.active === 'number' && typeof a.peak === 'number');
+        case 'above': return !!(a && (a.na || (typeof a.above === 'number' && typeof a.at === 'number' && typeof a.below === 'number')));
+        case 'retention': return !!(a && (a.na || typeof a.n === 'number'));
+        default: return a !== null && a !== undefined;   // options questions (housing, career, record…)
+      }
     }
     function answeredCount() {
       let n = 0;
@@ -1119,29 +1585,318 @@
         return;
       }
       if (q.type === 'income') {
-        const has = answers[curQ] !== null && answers[curQ] !== undefined;
-        const previewHtml = incomePreviewHtml(answers[curQ]);
+        const a = answers[curQ];
+        const unit = (a && a.unit) || incomeUnit;
+        incomeUnit = unit;
+        const shown = a ? (unit === 'month' ? a.monthly : a.annual) : null;
+        const has = shown != null;
         document.getElementById('q-container').innerHTML = head + `
+          <div class="unit-toggle">
+            <button type="button" class="unitbtn${unit === 'year' ? ' active' : ''}" onclick="setIncomeUnit('year')">Annual</button>
+            <button type="button" class="unitbtn${unit === 'month' ? ' active' : ''}" onclick="setIncomeUnit('month')">Monthly</button>
+          </div>
           <div class="income-input-wrap">
             <span class="income-prefix">$</span>
-            <input type="text" inputmode="numeric" id="income-field" class="income-field" aria-label="Annual income" autocomplete="off"
-                   value="${has ? Number(answers[curQ]).toLocaleString('en-US') : ''}" placeholder="e.g. 85,000" oninput="onIncomeInput(this)" />
-            <span class="income-suffix">/ year</span>
+            <input type="text" inputmode="numeric" id="income-field" class="income-field" aria-label="Income" autocomplete="off"
+                   value="${has ? Number(shown).toLocaleString('en-US') : ''}" placeholder="${unit === 'month' ? 'e.g. 7,000' : 'e.g. 85,000'}" oninput="onIncomeInput(this)" />
+            <span class="income-suffix">/ ${unit === 'month' ? 'month' : 'year'}</span>
           </div>
-          <div class="income-preview" id="income-preview">${previewHtml}</div>`;
+          <div class="income-preview" id="income-preview">${incomePreviewHtml(a)}</div>`;
         return;
       }
       if (q.type === 'networth') {
-        const has = answers[curQ] !== null && answers[curQ] !== undefined;
-        const previewHtml = networthPreviewHtml(answers[curQ]);
+        const a = answers[curQ] && typeof answers[curQ] === 'object' ? answers[curQ] : null;
+        const legacy = typeof answers[curQ] === 'number' ? answers[curQ] : null;
+        const fld = (v) => (v == null || v === '') ? '' : fmtMoneyVal(v);
+        const lines = [
+          ['cash', 'Cash, savings & investments', 'includes retirement accounts', 'e.g. 30,000'],
+          ['home', 'Home equity', 'market value minus what you owe (0 if you don’t own)', 'e.g. 120,000 or 0'],
+          ['other', 'Other big assets', 'vehicles, business equity', 'e.g. 15,000'],
+          ['debt', 'Minus: total debts', 'loans, cards, student debt', 'e.g. 40,000']
+        ];
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="nw-calc">
+            ${lines.map(([k, label, hint, ph]) => `
+              <div class="nw-line">
+                <div class="nw-line-label">${label}<span class="nw-line-hint">${hint}</span></div>
+                <div class="income-input-wrap nw-field-wrap">
+                  <span class="income-prefix">$</span>
+                  <input type="text" inputmode="text" id="nw-${k}" class="income-field" aria-label="${label}" autocomplete="off"
+                         value="${a ? fld(a[k]) : ''}" placeholder="${ph}" oninput="onNetworthInput()" />
+                </div>
+              </div>`).join('')}
+            <div class="nw-total" id="nw-total"></div>
+            <div class="nw-direct">
+              <label class="nw-line-label" for="nw-direct">Or just enter the total<span class="nw-line-hint">if you already know your number — overrides the lines above</span></label>
+              <div class="income-input-wrap nw-field-wrap">
+                <span class="income-prefix">$</span>
+                <input type="text" inputmode="text" id="nw-direct" class="income-field" aria-label="Net worth total" autocomplete="off"
+                       value="${a && a.direct ? fld(a.t) : (legacy != null ? fld(legacy) : '')}" placeholder="e.g. 50,000 or -15,000" oninput="onNetworthInput()" />
+              </div>
+            </div>
+          </div>
+          <div class="income-preview" id="networth-preview">${networthPreviewHtml(networthTotal(answers[curQ]))}</div>`;
+        updateNetworthTotalLine();
+        return;
+      }
+      if (q.type === 'expenses') {
+        const v = answers[curQ];
+        const has = typeof v === 'number';
         document.getElementById('q-container').innerHTML = head + `
           <div class="income-input-wrap">
             <span class="income-prefix">$</span>
-            <input type="text" inputmode="text" id="networth-field" class="income-field" aria-label="Net worth" autocomplete="off"
-                   value="${has ? fmtMoneyVal(answers[curQ]) : ''}" placeholder="e.g. 50,000 or -15,000" oninput="onNetWorthInput(this)" />
-            <span class="income-suffix">total</span>
+            <input type="text" inputmode="numeric" id="expenses-field" class="income-field" aria-label="Monthly expenses" autocomplete="off"
+                   value="${has ? Number(v).toLocaleString('en-US') : ''}" placeholder="e.g. 3,500" oninput="onExpensesInput(this)" />
+            <span class="income-suffix">/ month</span>
           </div>
-          <div class="income-preview" id="networth-preview">${previewHtml}</div>`;
+          <div class="income-preview" id="expenses-preview">${expensesPreviewHtml(v)}</div>`;
+        return;
+      }
+      if (q.type === 'fame') {
+        const a = answers[curQ] || {};
+        const has = typeof a.n === 'number';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="income-input-wrap">
+            <input type="text" inputmode="numeric" id="fame-field" class="income-field" aria-label="People who know of you" autocomplete="off"
+                   value="${has ? Number(a.n).toLocaleString('en-US') : ''}" placeholder="${q.placeholder || ''}" ${a.against ? 'disabled' : ''} oninput="onFameInput(this)" />
+            <span class="income-suffix">${q.unit || ''}</span>
+          </div>
+          <div class="income-preview" id="fame-preview">${famePreviewHtml(a)}</div>
+          <button type="button" class="na-btn${a.against ? ' selected' : ''}" onclick="toggleFameAgainst()">
+            <i class="ti ${a.against ? 'ti-circle-check' : 'ti-circle-off'}" aria-hidden="true"></i> My name currently works against me where I'm known
+          </button>`;
+        return;
+      }
+      if (q.type === 'following') {
+        const a = answers[curQ] || {};
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="grid-inputs">
+            ${q.platforms.map(([k, label]) => `
+              <div class="grid-row">
+                <label class="grid-label" for="fl-${k}">${label}</label>
+                <div class="income-input-wrap grid-field-wrap">
+                  <input type="text" inputmode="numeric" id="fl-${k}" class="income-field" aria-label="${label} followers" autocomplete="off"
+                         value="${typeof a[k] === 'number' ? a[k].toLocaleString('en-US') : ''}" placeholder="0" oninput="onFollowingInput()" />
+                </div>
+              </div>`).join('')}
+          </div>
+          <div class="income-preview" id="following-preview">${followingPreviewHtml(a)}</div>`;
+        return;
+      }
+      if (q.type === 'jobtitle') {
+        const a = answers[curQ] || null;
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="income-input-wrap">
+            <i class="ti ti-search" aria-hidden="true" style="color:var(--text-muted)"></i>
+            <input type="text" id="job-search" class="income-field" aria-label="Search job titles" autocomplete="off"
+                   value="${a && a.mode === 'pick' ? escapeHtml(a.query || a.label) : ''}" placeholder="Start typing — e.g. nurse, software, plumber" oninput="onJobSearch(this)" />
+          </div>
+          <div class="job-results" id="job-results"></div>
+          <div class="income-preview" id="job-preview">${jobPreviewHtml(a)}</div>
+          <div class="job-fallback">
+            <div class="grid-label" style="margin-bottom:0.5rem">No good match? Place yourself:</div>
+            <div class="options-grid">
+              ${JOB_FALLBACK.map((b, i) => `
+                <button type="button" class="opt${a && a.mode === 'fallback' && a.band === i ? ' selected' : ''}" onclick="pickJobFallback(${i})">
+                  <span class="opt-mark">${OPTION_MARKS[i] || '·'}</span>
+                  <span class="opt-main"><span class="opt-title">${b[0]}</span></span>
+                </button>`).join('')}
+            </div>
+          </div>`;
+        renderJobResults();
+        return;
+      }
+      if (q.type === 'education') {
+        const a = answers[curQ] || {};
+        const showTiers = a.degree != null && a.degree >= 3;
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="grid-label" style="margin-bottom:0.5rem">Highest degree</div>
+          <div class="options-grid">
+            ${q.degrees.map((d, i) => `
+              <button type="button" class="opt${a.degree === i ? ' selected' : ''}" onclick="setDegree(${i})">
+                <span class="opt-mark">${OPTION_MARKS[i] || '·'}</span>
+                <span class="opt-main"><span class="opt-title">${d}</span></span>
+              </button>`).join('')}
+          </div>
+          ${showTiers ? `
+          <div class="grid-label" style="margin:1rem 0 0.5rem">Institution</div>
+          <div class="options-grid">
+            ${q.tiers.map((t, i) => `
+              <button type="button" class="opt${a.tier === i ? ' selected' : ''}" onclick="setTier(${i})">
+                <span class="opt-mark">${OPTION_MARKS[i] || '·'}</span>
+                <span class="opt-main"><span class="opt-title">${t[0]}</span><span class="opt-detail">${t[1]}</span></span>
+              </button>`).join('')}
+          </div>` : ''}
+          <div class="income-preview" id="edu-preview">${educationPreviewHtml(a)}</div>`;
+        return;
+      }
+      if (q.type === 'kids') {
+        const a = answers[curQ] || {};
+        const showCustody = typeof a.count === 'number' && a.count > 0;
+        const custodyKeys = ['full', 'shared', 'non'];   // parallel to q.custody rows
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="sex-grid age-grid" style="grid-template-columns:repeat(4,1fr)">
+            ${q.counts.map((c, i) => `<button type="button" class="sexbtn${a.count === i ? ' selected' : ''}" onclick="setKidCount(${i})">${c}</button>`).join('')}
+          </div>
+          ${showCustody ? `
+          <div class="grid-label" style="margin:0.4rem 0 0.5rem">Custody</div>
+          <div class="options-grid">
+            ${q.custody.map((c, i) => `
+              <button type="button" class="opt${a.custody === custodyKeys[i] ? ' selected' : ''}" onclick="setKidCustody('${custodyKeys[i]}')">
+                <span class="opt-main"><span class="opt-title">${c[0]}</span><span class="opt-detail">${c[1]}</span></span>
+              </button>`).join('')}
+          </div>` : ''}
+          <div class="income-preview" id="kids-preview">${kidsPreviewHtml(a)}</div>`;
+        return;
+      }
+      if (q.type === 'relationship') {
+        const a = answers[curQ] || {};
+        const has = typeof a.months === 'number';
+        const yrs = has ? Math.floor(a.months / 12) : '';
+        const mos = has ? a.months % 12 : '';
+        const partner = a.partner || [];
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="num-input-wrap">
+            <input type="text" inputmode="numeric" id="rel-yr" class="num-field short" aria-label="Years" autocomplete="off" value="${yrs}" placeholder="2" oninput="onRelInput()" /><span class="unit-lbl">years</span>
+            <input type="text" inputmode="numeric" id="rel-mo" class="num-field short" aria-label="Months" autocomplete="off" value="${mos}" placeholder="0" oninput="onRelInput()" /><span class="unit-lbl">months</span>
+          </div>
+          <div class="partner-box">
+            <div class="grid-label">${q.partnerLabel}</div>
+            <div class="check-grid">
+              ${q.partnerItems.map((item, i) => `
+                <button type="button" class="check-item${partner[i] ? ' checked' : ''}" onclick="togglePartner(${i})">
+                  <span class="check-box"><i class="ti ${partner[i] ? 'ti-check' : ''}" aria-hidden="true"></i></span>
+                  <span class="check-text">${item}</span>
+                </button>`).join('')}
+            </div>
+          </div>
+          <div class="income-preview" id="rel-preview">${relationshipPreviewHtml(a)}</div>`;
+        return;
+      }
+      if (q.type === 'orbit') {
+        const a = answers[curQ] || {};
+        const rec = a.recency || 'r0';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="grid-inputs">
+            <div class="grid-row">
+              <label class="grid-label" for="orbit-active">Active orbit now<span class="nw-line-hint">people actively dating, talking to you, or showing clear ongoing interest</span></label>
+              <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="orbit-active" class="income-field" aria-label="Active orbit" autocomplete="off" value="${typeof a.active === 'number' ? a.active : ''}" placeholder="e.g. 2" oninput="onOrbitInput()" /></div>
+            </div>
+            <div class="grid-row">
+              <label class="grid-label" for="orbit-peak">Peak orbit ever (your PB)<span class="nw-line-hint">the most that was ever simultaneously true</span></label>
+              <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="orbit-peak" class="income-field" aria-label="Peak orbit" autocomplete="off" value="${typeof a.peak === 'number' ? a.peak : ''}" placeholder="e.g. 5" oninput="onOrbitInput()" /></div>
+            </div>
+          </div>
+          <div class="grid-label" style="margin:0.4rem 0 0.5rem">When was that peak?</div>
+          <div class="unit-toggle">
+            ${q.recencyOpts.map(([k, label]) => `<button type="button" class="unitbtn${rec === k ? ' active' : ''}" onclick="setRecency('${k}')">${label}</button>`).join('')}
+          </div>
+          <div class="income-preview" id="orbit-preview">${orbitPreviewHtml(a)}</div>`;
+        return;
+      }
+      if (q.type === 'above') {
+        const a = answers[curQ] || {};
+        const na = a.na === true;
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="grid-inputs">
+            ${[['above', 'Above your level'], ['at', 'At your level'], ['below', 'Below your level']].map(([k, label]) => `
+              <div class="grid-row">
+                <label class="grid-label" for="ab-${k}">${label}</label>
+                <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="ab-${k}" class="income-field" aria-label="${label}" autocomplete="off" value="${typeof a[k] === 'number' ? a[k] : ''}" placeholder="0" ${na ? 'disabled' : ''} oninput="onAboveInput()" /></div>
+              </div>`).join('')}
+          </div>
+          <div class="income-preview" id="above-preview">${abovePreviewHtml(a)}</div>
+          <button type="button" class="na-btn${na ? ' selected' : ''}" onclick="setAboveNA()">
+            <i class="ti ${na ? 'ti-circle-check' : 'ti-circle-off'}" aria-hidden="true"></i> ${q.naLabel}
+          </button>`;
+        return;
+      }
+      if (q.type === 'retention') {
+        const a = answers[curQ] || {};
+        const na = a.na === true;
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="sex-grid age-grid" style="grid-template-columns:repeat(6,1fr)">
+            ${[0, 1, 2, 3, 4, 5].map(n => `<button type="button" class="sexbtn${a.n === n && !na ? ' selected' : ''}" onclick="setRetentionCount(${n})">${n}</button>`).join('')}
+          </div>
+          <button type="button" class="check-item${a.above ? ' checked' : ''}" onclick="toggleRetentionAbove()" style="margin-bottom:0.9rem">
+            <span class="check-box"><i class="ti ${a.above ? 'ti-check' : ''}" aria-hidden="true"></i></span>
+            <span class="check-text">${q.aboveLabel}</span>
+          </button>
+          <div class="income-preview" id="ret-preview">${retentionPreviewHtml(a)}</div>
+          <button type="button" class="na-btn${na ? ' selected' : ''}" onclick="setRetentionNA()">
+            <i class="ti ${na ? 'ti-circle-check' : 'ti-circle-off'}" aria-hidden="true"></i> ${q.naLabel}
+          </button>`;
+        return;
+      }
+      if (q.type === 'metmix') {
+        const a = answers[curQ] || {};
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="grid-inputs">
+            <div class="grid-row">
+              <label class="grid-label" for="met-ip">Met in person<span class="nw-line-hint">a real exchange, per month</span></label>
+              <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="met-ip" class="income-field" aria-label="Met in person" autocomplete="off" value="${typeof a.inperson === 'number' ? a.inperson : ''}" placeholder="e.g. 3" oninput="onMetInput()" /></div>
+            </div>
+            <div class="grid-row">
+              <label class="grid-label" for="met-on">Met online<span class="nw-line-hint">counts a little less — ×0.6</span></label>
+              <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="met-on" class="income-field" aria-label="Met online" autocomplete="off" value="${typeof a.online === 'number' ? a.online : ''}" placeholder="e.g. 4" oninput="onMetInput()" /></div>
+            </div>
+          </div>
+          <div class="income-preview" id="met-preview">${metPreviewHtml(a)}</div>`;
+        return;
+      }
+      if (q.type === 'apps') {
+        const a = answers[curQ] || {};
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="grid-inputs">
+            <div class="grid-row">
+              <label class="grid-label" for="app-out">Outbound<span class="nw-line-hint">first messages / intent-driven likes sent, per week</span></label>
+              <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="app-out" class="income-field" aria-label="Outbound" autocomplete="off" value="${typeof a.out === 'number' ? a.out : ''}" placeholder="e.g. 10" oninput="onAppsInput()" /></div>
+            </div>
+            <div class="grid-row">
+              <label class="grid-label" for="app-in">Inbound<span class="nw-line-hint">likes + messages arriving, per week</span></label>
+              <div class="income-input-wrap grid-field-wrap"><input type="text" inputmode="numeric" id="app-in" class="income-field" aria-label="Inbound" autocomplete="off" value="${typeof a.in === 'number' ? a.in : ''}" placeholder="e.g. 30" oninput="onAppsInput()" /></div>
+            </div>
+          </div>
+          <div class="income-preview" id="apps-preview">${appsPreviewHtml(a)}</div>`;
+        return;
+      }
+      if (q.type === 'unitcount') {
+        const a = answers[curQ] || {};
+        const unit = a.unit || 'month';
+        const has = typeof a.n === 'number';
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="unit-toggle">
+            ${[['week', 'Per week'], ['month', 'Per month'], ['year', 'Per year']].map(([k, label]) => `<button type="button" class="unitbtn${unit === k ? ' active' : ''}" onclick="setUnit('${k}')">${label}</button>`).join('')}
+          </div>
+          <div class="income-input-wrap">
+            <input type="text" inputmode="numeric" id="unit-field" class="income-field" aria-label="${escapeHtml(q.text)}" autocomplete="off" value="${has ? a.n : ''}" placeholder="e.g. 2" oninput="onUnitInput()" />
+            <span class="income-suffix">/ ${unit}</span>
+          </div>
+          <div class="income-preview" id="unit-preview">${unitPreviewHtml(q, a)}</div>`;
+        return;
+      }
+      if (q.type === 'checklist') {
+        const a = answers[curQ] || {};
+        const checked = a.checked || [];
+        const items = q.items.map(it => (typeof it === 'string') ? it : it[getSex()]);
+        document.getElementById('q-container').innerHTML = head + `
+          <div class="check-grid">
+            ${items.map((item, i) => `
+              <button type="button" class="check-item${checked[i] ? ' checked' : ''}" onclick="toggleCheck(${i})">
+                <span class="check-box"><i class="ti ${checked[i] ? 'ti-check' : ''}" aria-hidden="true"></i></span>
+                <span class="check-text">${item}</span>
+              </button>`).join('')}
+          </div>
+          ${q.otherMax ? `
+          <div class="other-stepper">
+            <span class="grid-label">${q.otherLabel || 'Other'} <span class="nw-line-hint">+1 each, up to ${q.otherMax}</span></span>
+            <div class="stepper">
+              <button type="button" class="step-btn" onclick="setChecklistOther(-1)" aria-label="Decrease">−</button>
+              <span class="step-val" id="other-val">${a.other || 0}</span>
+              <button type="button" class="step-btn" onclick="setChecklistOther(1)" aria-label="Increase">+</button>
+            </div>
+          </div>` : ''}
+          <div class="income-preview" id="check-preview">${checklistPreviewHtml(q, a)}</div>`;
         return;
       }
       if (q.type === 'sex') {
@@ -1267,9 +2022,11 @@
 
     // Preview HTML for the income / net-worth fields — shared by the initial render (renderQ)
     // and the in-place input handlers, so the copy and the curve mapping can never drift apart.
-    function incomePreviewHtml(v) {
-      if (v === null || v === undefined) return '<span class="income-hint">Enter your annual income to see where it lands on the curve.</span>';
-      return '$' + Number(v).toLocaleString('en-US') + ' / yr maps to <strong>' + incomeToScore(v).toFixed(1) + ' / 10</strong> on the income curve. ' + incomeBand(v);
+    function incomePreviewHtml(a) {
+      const annual = incomeAnnual(a);
+      if (annual === null || annual === undefined) return '<span class="income-hint">Enter your income to see where it lands on the curve.</span>';
+      const monthly = incomeMonthly(a);
+      return '$' + Number(annual).toLocaleString('en-US') + ' / yr (≈ $' + Math.round(monthly).toLocaleString('en-US') + ' / mo) maps to <strong>' + incomeToScore(annual).toFixed(1) + ' / 10</strong> on the income curve. ' + incomeBand(annual);
     }
     function networthPreviewHtml(v) {
       if (v === null || v === undefined) return '<span class="income-hint">Enter your net worth (it can be negative) to see where it lands on the curve.</span>';
@@ -1277,9 +2034,22 @@
     }
 
     // Income field handler — updates score/preview/nav in place (no full re-render, so the field keeps focus).
+    function setIncomeUnit(u) {
+      incomeUnit = u;
+      const a = answers[curQ];
+      if (a && typeof a === 'object') a.unit = u;
+      renderQ();
+      saveState();
+    }
     function onIncomeInput(el) {
       const digits = (el.value || '').replace(/[^0-9]/g, '');
-      answers[curQ] = digits ? Math.min(999999999999, parseInt(digits, 10)) : null;
+      if (!digits) { answers[curQ] = null; }
+      else {
+        const n = Math.min(999999999999, parseInt(digits, 10));
+        answers[curQ] = incomeUnit === 'month'
+          ? { annual: n * 12, monthly: n, unit: 'month' }
+          : { annual: n, monthly: Math.round(n / 12), unit: 'year' };
+      }
       const prev = document.getElementById('income-preview');
       if (prev) prev.innerHTML = incomePreviewHtml(answers[curQ]);
       refreshNav();
@@ -1329,17 +2099,336 @@
       }
     }
 
-    // Net-worth field handler — allows a leading minus; updates score/preview/nav in place.
-    function onNetWorthInput(el) {
-      const raw = el.value || '';
-      const neg = /^\s*-/.test(raw);
+    // ── v7 input handlers & previews ─────────────────────────────────────────
+    function ensureAnswerObj() {
+      if (!answers[curQ] || typeof answers[curQ] !== 'object') answers[curQ] = {};
+      return answers[curQ];
+    }
+    function readIntField(id) {
+      const el = document.getElementById(id); if (!el) return null;
+      const digits = (el.value || '').replace(/[^0-9]/g, '');
+      return digits ? parseInt(digits, 10) : null;
+    }
+    function readSignedField(id) {
+      const el = document.getElementById(id); if (!el) return null;
+      const raw = el.value || ''; const neg = /^\s*-/.test(raw);
       const digits = raw.replace(/[^0-9]/g, '');
-      if (!digits) { answers[curQ] = null; }
-      else { const v = Math.min(999999999999, parseInt(digits, 10)); answers[curQ] = neg ? -v : v; }
+      if (!digits) return null;
+      const v = Math.min(999999999999, parseInt(digits, 10));
+      return neg ? -v : v;
+    }
+    // Computes just the Looks factor score on the fly (no side effects) so C1's partner-tier
+    // preview can show above/at/below live, mirroring how calculateScores hands it to Charm.
+    function latestLooksScore() {
+      const ctx = { looks: 5.5 };
+      const weighted = QUESTIONS.map((q, i) => q.factor === LOOKS_FACTOR ? scoreQuestion(q, i, ctx) : null).filter(Boolean);
+      if (!weighted.length) return 5.5;
+      const tw = weighted.reduce((s, it) => s + it.weight, 0);
+      return Math.round((weighted.reduce((s, it) => s + it.value * it.weight, 0) / tw) * 10) / 10;
+    }
+
+    // Checklist (Looks Q6 presentation, Exposure E3 venues) — toggles re-render the whole card.
+    function toggleCheck(i) {
+      const a = ensureAnswerObj();
+      if (!Array.isArray(a.checked)) a.checked = [];
+      a.checked[i] = !a.checked[i];
+      a.touched = true;
+      renderQ(); saveState();
+    }
+    function setChecklistOther(d) {
+      const q = QUESTIONS[curQ]; const a = ensureAnswerObj();
+      a.other = Math.max(0, Math.min(q.otherMax || 0, (a.other || 0) + d));
+      a.touched = true;
+      renderQ(); saveState();
+    }
+    function checklistPreviewHtml(q, a) {
+      const n = checklistCount(q, a);
+      const total = (q.items ? q.items.length : 0) + (q.otherMax || 0);
+      return `${n} of ${total} true → maps to <strong>${checklistScore(q, a).toFixed(1)} / 10</strong>.`;
+    }
+
+    // Net worth mini-calculator (Q7) — one handler reads all five fields; the direct total wins.
+    function onNetworthInput() {
+      const direct = readSignedField('nw-direct');
+      const cash = readSignedField('nw-cash'), home = readSignedField('nw-home'),
+            other = readSignedField('nw-other'), debt = readSignedField('nw-debt');
+      const anyPart = [cash, home, other, debt].some(v => v != null);
+      if (direct == null && !anyPart) { answers[curQ] = null; }
+      else {
+        const t = direct != null ? direct : ((cash || 0) + (home || 0) + (other || 0) - (debt || 0));
+        answers[curQ] = { t, cash, home, other, debt, direct: direct != null };
+      }
+      updateNetworthTotalLine();
       const prev = document.getElementById('networth-preview');
-      if (prev) prev.innerHTML = networthPreviewHtml(answers[curQ]);
-      refreshNav();
-      saveState();
+      if (prev) prev.innerHTML = networthPreviewHtml(networthTotal(answers[curQ]));
+      refreshNav(); saveState();
+    }
+    function updateNetworthTotalLine() {
+      const el = document.getElementById('nw-total'); if (!el) return;
+      const a = answers[curQ];
+      const t = networthTotal(a);
+      if (t == null) { el.innerHTML = '<span class="income-hint">Fill the lines above, or enter your total directly.</span>'; return; }
+      el.innerHTML = (a && a.direct) ? `Using your entered total: <strong>${fmtMoney(t)}</strong>.` : `Summed net worth: <strong>${fmtMoney(t)}</strong>.`;
+    }
+
+    // Expenses → disposable share (Q12)
+    function onExpensesInput(el) {
+      const digits = (el.value || '').replace(/[^0-9]/g, '');
+      answers[curQ] = digits ? Math.min(999999999999, parseInt(digits, 10)) : null;
+      const prev = document.getElementById('expenses-preview');
+      if (prev) prev.innerHTML = expensesPreviewHtml(answers[curQ]);
+      refreshNav(); saveState();
+    }
+    function expensesPreviewHtml(v) {
+      if (typeof v !== 'number') return '<span class="income-hint">Enter your total monthly expenses to see your disposable share.</span>';
+      const incM = INCOME_IDX >= 0 ? incomeMonthly(answers[INCOME_IDX]) : null;
+      if (!incM || incM <= 0) return `No monthly income recorded yet (answer the income question) — scored <strong>${expensesScore(v).toFixed(1)} / 10</strong> for now.`;
+      const share = Math.max(0, 1 - v / incM);
+      return `$${v.toLocaleString('en-US')} / mo against $${Math.round(incM).toLocaleString('en-US')} income = <strong>${Math.round(share * 100)}%</strong> disposable → <strong>${expensesScore(v).toFixed(1)} / 10</strong>.`;
+    }
+
+    // Fame (S1)
+    function onFameInput(el) {
+      const digits = (el.value || '').replace(/[^0-9]/g, '');
+      const a = ensureAnswerObj();
+      if (digits) a.n = Math.min(999999999999, parseInt(digits, 10)); else delete a.n;
+      const prev = document.getElementById('fame-preview');
+      if (prev) prev.innerHTML = famePreviewHtml(a);
+      refreshNav(); saveState();
+    }
+    function toggleFameAgainst() {
+      const a = ensureAnswerObj();
+      a.against = !a.against;
+      renderQ(); saveState();
+    }
+    function famePreviewHtml(a) {
+      if (a && a.against) return 'A name that works against you forfeits reach → <strong>2.5 / 10</strong>.';
+      if (!a || typeof a.n !== 'number') return '<span class="income-hint">Enter roughly how many strangers recognize you. Zero is the normal case.</span>';
+      return `${a.n.toLocaleString('en-US')} strangers → <strong>${fameScore(a).toFixed(1)} / 10</strong>.`;
+    }
+
+    // Following, itemized by platform (S2)
+    function onFollowingInput() {
+      const q = QUESTIONS[curQ]; const a = ensureAnswerObj();
+      q.platforms.forEach(([k]) => { const v = readIntField('fl-' + k); if (v == null) delete a[k]; else a[k] = v; });
+      a.touched = true;
+      const prev = document.getElementById('following-preview');
+      if (prev) prev.innerHTML = followingPreviewHtml(a);
+      refreshNav(); saveState();
+    }
+    function followingPreviewHtml(a) {
+      const reach = Math.round(followingReach(a));
+      return `Effective reach <strong>${reach.toLocaleString('en-US')}</strong> (weighted by platform) → <strong>${followingScore(a).toFixed(1)} / 10</strong>.`;
+    }
+
+    // Job title (S3) — type-ahead over JOB_TITLES, with the fallback ladder.
+    let jobResults = [];
+    function onJobSearch(el) {
+      const query = el.value;
+      const a = ensureAnswerObj();
+      a.query = query;
+      if (a.mode === 'pick' && a.label && a.label.toLowerCase() !== (query || '').toLowerCase()) { a.mode = 'searching'; delete a.score; }
+      jobResults = searchJobs(query);
+      renderJobResults();
+      const prev = document.getElementById('job-preview'); if (prev) prev.innerHTML = jobPreviewHtml(answers[curQ]);
+      refreshNav(); saveState();
+    }
+    function renderJobResults() {
+      const box = document.getElementById('job-results'); if (!box) return;
+      box.innerHTML = jobResults.map((j, i) => `
+        <button type="button" class="job-result" onclick="pickJob(${i})">
+          <span class="job-result-title">${escapeHtml(j.title)}</span>
+          <span class="job-result-score">${j.score.toFixed(1)}</span>
+        </button>`).join('');
+    }
+    function pickJob(i) {
+      const j = jobResults[i]; if (!j) return;
+      answers[curQ] = { mode: 'pick', label: j.title, query: j.title, score: j.score };
+      jobResults = [];
+      renderQ(); saveState();
+    }
+    function pickJobFallback(i) {
+      const b = JOB_FALLBACK[i]; if (!b) return;
+      answers[curQ] = { mode: 'fallback', band: i, label: b[0], score: b[1] };
+      jobResults = [];
+      renderQ(); saveState();
+    }
+    function jobPreviewHtml(a) {
+      if (a && typeof a.score === 'number') return `<strong>${escapeHtml(a.label)}</strong> → <strong>${a.score.toFixed(1)} / 10</strong> (prestige only — income is scored in Money).`;
+      return '<span class="income-hint">Search for your occupation, or place yourself on the ladder below.</span>';
+    }
+
+    // Education degree × tier (S4)
+    function setDegree(i) {
+      const a = ensureAnswerObj();
+      a.degree = i;
+      if (i < 3) delete a.tier;   // tier only meaningful at bachelor's+
+      renderQ(); saveState();
+    }
+    function setTier(i) {
+      const a = ensureAnswerObj();
+      a.tier = i;
+      renderQ(); saveState();
+    }
+    function educationPreviewHtml(a) {
+      if (!a || a.degree == null) return '<span class="income-hint">Pick your highest degree.</span>';
+      if (a.degree >= 3 && a.tier == null) return 'Now pick the institution tier to finish scoring.';
+      return `Maps to <strong>${educationScore(a).toFixed(1)} / 10</strong>.`;
+    }
+
+    // Kids × custody × age (S5)
+    function setKidCount(i) {
+      const a = ensureAnswerObj();
+      a.count = i;
+      if (i === 0) delete a.custody;
+      renderQ(); saveState();
+    }
+    function setKidCustody(k) {
+      const a = ensureAnswerObj();
+      a.custody = k;
+      renderQ(); saveState();
+    }
+    function kidsPreviewHtml(a) {
+      if (!a || a.count == null) return '<span class="income-hint">Select how many children you have.</span>';
+      if (a.count > 0 && a.custody == null) return 'Pick a custody arrangement to finish.';
+      // Displayed as a ± Status adjustment (§9.1), not a 0–10 score — this question is a modifier.
+      return `Adjusts Status by <strong>${fmtMod(kidsModifier(a))}</strong>${a.count === 0 ? ' (no kids — a slight plus).' : ' (age-graded).'}`;
+    }
+    // Format a signed modifier for display, e.g. +0.2 / −0.6 (Unicode minus, matches the sub-text copy).
+    function fmtMod(v) { return (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1); }
+
+    // Longest relationship + partner tier (C1)
+    function onRelInput() {
+      const yEl = document.getElementById('rel-yr'), mEl = document.getElementById('rel-mo');
+      const hasAny = (yEl && yEl.value.trim() !== '') || (mEl && mEl.value.trim() !== '');
+      const a = ensureAnswerObj();
+      if (!hasAny) { delete a.months; }
+      else { a.months = (readIntField('rel-yr') || 0) * 12 + (readIntField('rel-mo') || 0); }
+      const prev = document.getElementById('rel-preview'); if (prev) prev.innerHTML = relationshipPreviewHtml(a);
+      refreshNav(); saveState();
+    }
+    function togglePartner(i) {
+      const a = ensureAnswerObj();
+      if (!Array.isArray(a.partner)) a.partner = [];
+      a.partner[i] = !a.partner[i];
+      renderQ(); saveState();
+    }
+    function relationshipPreviewHtml(a) {
+      if (!a || typeof a.months !== 'number') return '<span class="income-hint">Enter your longest relationship in years and months. Zero is a real answer.</span>';
+      const yr = Math.floor(a.months / 12), mo = a.months % 12;
+      const looks = latestLooksScore();
+      const delta = partnerC1Delta(a.partner, looks);
+      const tier = delta > 0 ? 'above you' : delta < 0 ? 'below you' : 'at your level';
+      return `${yr}y ${mo}m, that partner reads <strong>${tier}</strong> → <strong>${relationshipScore(a, looks).toFixed(1)} / 10</strong> (age-banded).`;
+    }
+
+    // Orbit active vs peak (C2)
+    function onOrbitInput() {
+      const a = ensureAnswerObj();
+      const act = readIntField('orbit-active'), pk = readIntField('orbit-peak');
+      if (act == null) delete a.active; else a.active = act;
+      if (pk == null) delete a.peak; else a.peak = pk;
+      if (!a.recency) a.recency = 'r0';
+      const prev = document.getElementById('orbit-preview'); if (prev) prev.innerHTML = orbitPreviewHtml(a);
+      refreshNav(); saveState();
+    }
+    function setRecency(k) {
+      const a = ensureAnswerObj(); a.recency = k; renderQ(); saveState();
+    }
+    function orbitPreviewHtml(a) {
+      if (!a || typeof a.active !== 'number' || typeof a.peak !== 'number') return '<span class="income-hint">Enter your current active orbit and your personal best.</span>';
+      return `Active ${a.active}, PB ${a.peak} → <strong>${orbitScore(a).toFixed(1)} / 10</strong> (current weighted 0.65, PB 0.35 after recency decay).`;
+    }
+
+    // Punching above your weight (C3)
+    function onAboveInput() {
+      const a = ensureAnswerObj();
+      ['above', 'at', 'below'].forEach(k => { const v = readIntField('ab-' + k); if (v == null) delete a[k]; else a[k] = v; });
+      a.na = false;
+      const prev = document.getElementById('above-preview'); if (prev) prev.innerHTML = abovePreviewHtml(a);
+      refreshNav(); saveState();
+    }
+    function setAboveNA() {
+      const a = ensureAnswerObj();
+      a.na = !a.na;
+      renderQ(); saveState();
+      if (autoNext && a.na) window.setTimeout(() => { curQ === QUESTIONS.length - 1 ? finishA() : nextQ(); }, 150);
+    }
+    function abovePreviewHtml(a) {
+      if (a && a.na) return '<span class="income-hint">Skipped — excluded from the Charm score.</span>';
+      const s = aboveScore(a);
+      if (s == null) return '<span class="income-hint">Enter how your recent dates ranked against you (boxes should sum to ≤ 10).</span>';
+      return `Maps to <strong>${s.toFixed(1)} / 10</strong> — above-share drives it; below only bites when above and at-level are both thin.`;
+    }
+
+    // Exclusivity retention (C4)
+    function setRetentionCount(n) {
+      const a = ensureAnswerObj();
+      a.n = n; a.na = false;
+      renderQ(); saveState();
+    }
+    function toggleRetentionAbove() {
+      const a = ensureAnswerObj();
+      a.above = !a.above; a.na = false;
+      renderQ(); saveState();
+    }
+    function setRetentionNA() {
+      const a = ensureAnswerObj();
+      a.na = !a.na;
+      renderQ(); saveState();
+      if (autoNext && a.na) window.setTimeout(() => { curQ === QUESTIONS.length - 1 ? finishA() : nextQ(); }, 150);
+    }
+    function retentionPreviewHtml(a) {
+      if (a && a.na) return '<span class="income-hint">Skipped — excluded from the Charm score.</span>';
+      if (!a || typeof a.n !== 'number') return '<span class="income-hint">Pick how many wanted to keep it going (0–5).</span>';
+      return `Maps to <strong>${retentionScore(a).toFixed(1)} / 10</strong>${a.above ? ' (+0.5 for an above-level partner)' : ''}.`;
+    }
+
+    // New people met, IRL vs online (E2)
+    function onMetInput() {
+      const a = ensureAnswerObj();
+      const ip = readIntField('met-ip'), on = readIntField('met-on');
+      if (ip == null) delete a.inperson; else a.inperson = ip;
+      if (on == null) delete a.online; else a.online = on;
+      a.touched = true;
+      const prev = document.getElementById('met-preview'); if (prev) prev.innerHTML = metPreviewHtml(a);
+      refreshNav(); saveState();
+    }
+    function metPreviewHtml(a) {
+      const eff = metMixEffective(a);
+      return `Effective at-bats <strong>${eff.toFixed(1)} / mo</strong> (in-person + 0.6 × online) → <strong>${metMixScore(a).toFixed(1)} / 10</strong>.`;
+    }
+
+    // Dating apps, outbound vs inbound (E4)
+    function onAppsInput() {
+      const a = ensureAnswerObj();
+      const out = readIntField('app-out'), inb = readIntField('app-in');
+      if (out == null) delete a.out; else a.out = out;
+      if (inb == null) delete a.in; else a.in = inb;
+      a.touched = true;
+      const prev = document.getElementById('apps-preview'); if (prev) prev.innerHTML = appsPreviewHtml(a);
+      refreshNav(); saveState();
+    }
+    function appsPreviewHtml(a) {
+      return `Blended by sex (${getSex() === 'f' ? '0.3 out / 0.7 in' : '0.7 out / 0.3 in'}) → <strong>${appsScore(a).toFixed(1)} / 10</strong>.`;
+    }
+
+    // Unit-toggle counts (E5 approaches, E6 inbound)
+    function setUnit(u) {
+      const a = ensureAnswerObj(); a.unit = u; renderQ(); saveState();
+    }
+    function onUnitInput() {
+      const q = QUESTIONS[curQ]; const a = ensureAnswerObj();
+      if (!a.unit) a.unit = 'month';
+      const v = readIntField('unit-field');
+      if (v == null) delete a.n; else a.n = v;
+      const prev = document.getElementById('unit-preview'); if (prev) prev.innerHTML = unitPreviewHtml(q, a);
+      refreshNav(); saveState();
+    }
+    function unitPreviewHtml(q, a) {
+      const m = unitMonthly(a);
+      if (m == null) return '<span class="income-hint">Enter a number and choose a time unit.</span>';
+      return `≈ <strong>${m.toFixed(1)} / month</strong> → <strong>${interpLogAnchors(anchorsFor(q), m).toFixed(1)} / 10</strong> for a ${getSex() === 'f' ? 'female' : 'male'} profile.`;
     }
 
     function toggleAutoNext(checked) {
@@ -1364,46 +2453,116 @@
       }
     }
 
+    // Score one question → { value, weight } or null (excluded from its factor's denominator).
+    // ctx carries earlier-computed factor scores (Charm's partner-tier reads the Looks score).
+    function scoreQuestion(q, i, ctx) {
+      const a = answers[i];
+      if (q.statusMod) return null;                                          // S5/S6 are post-average modifiers, not averaged inputs (§9.1)
+      let value, weight = qWeight(q);   // per-sex weight where defined, else q.weight
+      switch (q.type) {
+        case 'sex': case 'age': return null;                                 // parameters, not scored inputs
+        case 'income':   value = a == null ? 5.5 : incomeToScore(incomeAnnual(a)); break;
+        case 'networth': value = a == null ? 5.5 : networthScore(networthTotal(a)); break;
+        case 'height':   value = a == null ? 5.5 : heightToScore(a, getSex()); break;
+        case 'build': {
+          const imp = bodyImport();
+          if (imp != null) { value = imp; }                                  // objective Body Calc read keeps full weight
+          else {                                                             // BMI-only fallback is less reliable (Codex)
+            const bmi = a == null ? NaN : bmiFromKg(a);
+            value = isFinite(bmi) ? bmiToScore(bmi, getSex()) : 5.5;
+            weight = 1.25;
+          }
+          break;
+        }
+        case 'face': { const imp = faceImport(); value = imp != null ? imp : (a == null ? 5.5 : clampScore(a)); break; }
+        case 'count': {
+          if (a === 'na') return null;                                       // skipped — excluded from the factor denominator
+          value = typeof a === 'number' ? countToScore(q, a) : 5.5;
+          break;
+        }
+        case 'unitcount': value = unitCountScore(q, a); break;
+        case 'checklist': value = checklistScore(q, a); break;
+        case 'following': value = followingScore(a); break;
+        case 'metmix':    value = metMixScore(a); break;
+        case 'apps':      value = appsScore(a); break;
+        case 'car':       value = typeof a === 'number' ? carScore(a) : 5.5; break;
+        case 'expenses':  value = typeof a === 'number' ? expensesScore(a) : 5.5; break;
+        case 'fame':      value = fameScore(a); break;
+        case 'jobtitle':  value = (a && typeof a.score === 'number') ? clampScore(a.score) : 5.5; break;
+        case 'education': value = educationScore(a); break;
+        case 'relationship': value = relationshipScore(a, ctx.looks); break;
+        case 'orbit':     value = orbitScore(a); break;
+        case 'above':     { const s = aboveScore(a); if (s == null) return null; value = s; break; }
+        case 'retention': { const s = retentionScore(a); if (s == null) return null; value = s; break; }
+        default: {                                                           // options questions
+          if (q.naIndex != null && a === q.naIndex) return null;             // "insufficient sample" → excluded
+          value = a == null ? 5.5 : (q.scores || DEFAULT_OPTION_SCORES)[a];
+        }
+      }
+      return { value, weight };
+    }
+
     function calculateScores() {
       if (aInputMode === 'import') {
         scores = scores.map(clampScore);
         return weightedTotal(scores, selectedLensA);
       }
-      scores = FACTORS.map((_, f) => {
-        const factorQs = QUESTIONS.map((q, i) => q.factor === f ? i : -1).filter(i => i >= 0);
-        const weighted = factorQs.map(i => {
-          const q = QUESTIONS[i];
-          let value, weight = q.weight || 1;
-          if (q.type === 'sex' || q.type === 'age') return null;              // parameters, not scored inputs
-          else if (q.type === 'income') value = answers[i] == null ? 5.5 : incomeToScore(answers[i]);
-          else if (q.type === 'networth') value = answers[i] == null ? 5.5 : networthScore(answers[i]);
-          else if (q.type === 'height') value = answers[i] == null ? 5.5 : heightToScore(answers[i], getSex());
-          else if (q.type === 'build') {
-            const imp = bodyImport();
-            if (imp != null) { value = imp; }                                 // objective Body Calc read keeps full weight
-            else {                                                            // BMI-only fallback is less reliable (Codex)
-              const bmi = answers[i] == null ? NaN : bmiFromKg(answers[i]);
-              value = isFinite(bmi) ? bmiToScore(bmi, getSex()) : 5.5;
-              weight = 1.25;
-            }
-          }
-          else if (q.type === 'face') { const imp = faceImport(); value = imp != null ? imp : (answers[i] == null ? 5.5 : clampScore(answers[i])); }
-          else if (q.type === 'count') {
-            if (answers[i] === 'na') return null;                           // skipped — excluded from the factor denominator
-            weight = qWeight(q);                                            // per-sex weight where defined
-            value = typeof answers[i] === 'number' ? countToScore(q, answers[i]) : 5.5;
-          }
-          else {
-            if (q.naIndex != null && answers[i] === q.naIndex) return null;   // "insufficient sample" → excluded from the factor denominator
-            value = answers[i] == null ? 5.5 : (q.scores || DEFAULT_OPTION_SCORES)[answers[i]];
-          }
-          return { value, weight };
-        }).filter(Boolean);
-        if (weighted.length === 0) return 5.5;                                 // every input excluded (e.g. all Charm Qs marked N/A) → neutral
-        const totalWeight = weighted.reduce((a, item) => a + item.weight, 0);
-        return Math.round((weighted.reduce((a, item) => a + (item.value * item.weight), 0) / totalWeight) * 10) / 10;
-      });
+      // Sequential (not FACTORS.map) so a later factor can read an earlier one: Charm's C1
+      // partner-tier needs the computed Looks factor score, and Looks (0) precedes Charm (3).
+      const out = Array(FACTORS.length).fill(5.5);
+      const ctx = { looks: 5.5 };
+      for (let f = 0; f < FACTORS.length; f++) {
+        const weighted = QUESTIONS
+          .map((q, i) => q.factor === f ? scoreQuestion(q, i, ctx) : null)
+          .filter(Boolean);
+        let raw;
+        if (weighted.length === 0) { raw = 5.5; }                             // every input excluded → neutral
+        else {
+          const totalWeight = weighted.reduce((s, item) => s + item.weight, 0);
+          raw = weighted.reduce((s, item) => s + item.value * item.weight, 0) / totalWeight;
+        }
+        if (f === STATUS_FACTOR) {
+          // §9.1: Status is the weighted mean of S1–S4 (fame/following/job/education) only; the two
+          // downside questions S5 (kids) and S6 (record) are excluded above by scoreQuestion (they
+          // return null for statusMod) and applied HERE as post-average ± modifiers, then clamped.
+          // This lets the four legible markers keep their full range (max Status ~9.3–9.7, min → the
+          // clamp floor of 1.0) instead of being compressed by two neutral-floored questions.
+          raw = clampScore(raw + statusKidsMod() + statusRecordMod());
+        }
+        out[f] = Math.round(raw * 10) / 10;
+        if (f === LOOKS_FACTOR) ctx.looks = out[f];                          // hand the Looks score to Charm's partner-tier
+      }
+      scores = out;
       return weightedTotal(scores, selectedLensA);
+    }
+
+    // §9.1: S5 (kids) and S6 (record) never enter the Status average — they adjust it. Show each as
+    // a ± line item under the factor bars so the modifier is legible, not a hidden hand on the total.
+    function renderStatusMods() {
+      const host = document.getElementById('res-status-mods');
+      if (!host) return;
+      const rows = [];
+      if (KIDS_IDX >= 0) {
+        const a = answers[KIDS_IDX];
+        const m = statusKidsMod();
+        const label = (a && a.count) ? `${QUESTIONS[KIDS_IDX].counts[a.count]} kid${a.count > 1 ? 's' : ''}` : 'No kids';
+        rows.push({ name: 'Kids', label, m });
+      }
+      if (RECORD_IDX >= 0) {
+        const a = answers[RECORD_IDX];
+        const m = statusRecordMod();
+        const opts = QUESTIONS[RECORD_IDX].opts;
+        const label = (typeof a === 'number' && opts[a]) ? opts[a][0] : 'Clean';
+        rows.push({ name: 'Record', label, m });
+      }
+      host.innerHTML = rows.length ? `
+        <div class="status-mods-title">Status adjustments (applied after the four marker questions)</div>
+        ${rows.map(r => `
+          <div class="status-mod-row">
+            <span class="status-mod-name">${r.name}</span>
+            <span class="status-mod-label">${r.label}</span>
+            <span class="status-mod-val" style="color:${r.m >= 0 ? '#1D9E75' : '#C41E3A'}">${fmtMod(r.m)}</span>
+          </div>`).join('')}` : '';
     }
 
     function renderAResults(showScreen = true) {
@@ -1443,6 +2602,8 @@
           <div class="fb-score" style="color:${f.color}">${scores[i].toFixed(1)} / 10 - ${scoreLabel(scores[i])}</div>
         </div>
       `).join('');
+
+      renderStatusMods();
 
       document.getElementById('insight-grid').innerHTML = `
         <div class="insight-card">
@@ -1988,8 +3149,8 @@
     const LEVER_PLAYS = {
       looks:    { move: 'the visible package — fitness, grooming, hair, skin, clothes, posture, photos — and it compounds fastest when the work is concrete', slow: false },
       money:    { move: 'the financial floor — income, stability, debt, a credible upward trajectory', slow: true },
-      status:   { move: 'visible competence and social proof — becoming useful, known, invited, and vouched for in a real environment', slow: true },
-      charm:    { move: 'live reps — conversation, listening, teasing, escalation, emotional steadiness around real people', slow: false },
+      status:   { move: 'the legible markers — a stronger title or credential, a cleaner record, and genuine reach that strangers can read on sight', slow: true },
+      charm:    { move: 'the residual — deeper live reps, real retention, and relationships that outlast the first spark', slow: false },
       exposure: { move: 'qualified surface area — better photos, stronger apps, recurring social spaces, events, introductions', slow: false }
     };
 
@@ -2226,8 +3387,10 @@
     }
 
     restoringState = true;
-    // v5 state must never load into the v6 roster (indices shifted, counts replaced options) — purge it.
+    // Stale rosters must never load into the current one (indices shifted, question types
+    // replaced): the v7 rebuild replaced Status and Charm wholesale, so purge v5 and v6 too.
     try { localStorage.removeItem('loveEquations.smvCalculator.v5'); } catch (e) {}
+    try { localStorage.removeItem('loveEquations.smvCalculator.v6'); } catch (e) {}
     loadState();
     renderFactorMap();
     renderLensControls();
