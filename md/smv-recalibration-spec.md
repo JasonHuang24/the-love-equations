@@ -401,3 +401,58 @@ six tiers.
 - All other fixture bands unchanged; re-verify they still pass (the +0.4 clean-profile
   drift on Status will move totals slightly — adjust only the spec-documented bands if a
   fixture sits on a boundary, and log any band you touch).
+
+---
+
+## 10. v7.2 amendment — hiatus windows, invitations cut, body fat
+
+Owner review of the built v7.1 quiz. Four changes; total question count stays 30
+(Looks becomes 7, Exposure becomes 6).
+
+### 10.1 E2 (new people met) — reference-window select with staleness decay
+
+A dating hiatus currently zeroes this question unfairly. Both count boxes (in person /
+online) gain a single shared window select — "these numbers describe:"
+- **A typical month right now** — ×1.0
+- **A typical month within the last ~2 years** — ×0.95
+- **My last active stretch, 2–5 years ago** — ×0.85
+- **My last active stretch, longer ago** — ×0.7
+The decay multiplies the effective count before the anchors (same philosophy and similar
+constants as the Personal Best recency decay in Charm's orbit question — stale activity
+counts, but not at par). Sub-text: answer from your last genuinely active period; the
+window tells the quiz how current that evidence is.
+
+### 10.2 E7 (unsolicited invitations) — CUT entirely
+
+Owner rationale, recorded: invite volume is a life-stage artifact (high school/college),
+not an adult market signal — even high-status adults are not swamped with invitations.
+It was already the weakest-weighted Exposure question and carries a flat sex weight, so
+removing it cannot unbalance the per-sex Exposure totals (re-assert this in the panel).
+
+### 10.3 New Looks question — body fat %
+
+Placed between build and face (section order: sex, age, height, build, **body fat**, face,
+presentation checklist). Type `count`, unit '%', weight **1.0**. Imported from the Body
+Calc when available, exactly like face imports from the Face Calc; otherwise an honest
+self-estimate flagged as soft. Sex-specific anchors (piecewise, non-monotonic — score
+peaks lean and declines at both extremes), house-style comments required. Calibration
+points: male peak 10–12% → 9.0, male median ~25% → 5.2, 38%+ → ≤2.8; female peak
+18–21% → 9.0, female median ~38% → 5.2, 50%+ → ≤2.5. Median is median even when the
+median is soft.
+
+**Build (Q4) weight drops 1.6 → 1.4** so the body (build + body fat, both Body-Calc-fed)
+doesn't double-count against face; the overlap is accepted — build reads frame, body fat
+reads leanness.
+
+### 10.4 Copy
+
+Spell out "Personal Best" wherever the orbit question's UI says "PB".
+
+### 10.5 Mechanics
+
+Question indices shift (Looks +1, invitations gone) — bump the localStorage schema
+version and purge the stale key. Update the panel fixtures for the new shape (answer the
+new body-fat and window inputs per archetype; delete invitation answers), re-assert:
+30 questions total, per-sex Exposure weight totals still equal, all existing fixture
+bands and tier expectations still pass. Adjust a band only if a fixture sits on a moved
+boundary, and log any touched band in a code comment.

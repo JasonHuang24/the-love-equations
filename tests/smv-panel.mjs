@@ -39,6 +39,7 @@ const harness = `
     age: idx(q => q.type === 'age'),
     height: idx(q => q.type === 'height'),
     build: idx(q => q.type === 'build'),
+    bodyfat: idx(q => q.type === 'bodyfat'),
     face: idx(q => q.type === 'face'),
     look6: idx(q => q.type === 'checklist' && q.factor === 0),
     networth: idx(q => q.type === 'networth'),
@@ -66,7 +67,7 @@ const harness = `
   const unitcounts = QUESTIONS.map((q, i) => q.type === 'unitcount' ? i : -1).filter(i => i >= 0);
   I.approaches = unitcounts[0];
   I.inbound = unitcounts[1];
-  I.invites = idx((q) => q.factor === 4 && q.type === 'count' && q.id !== 'metro');
+  // §10.2: E7 invitations is gone — the fixtures no longer answer it.
 
   const checks = n => { const a = { checked: [], touched: true }; for (let i = 0; i < n; i++) a.checked[i] = true; return a; };
 
@@ -88,7 +89,7 @@ const harness = `
   //    following, mogul-level career. Charm/orbit are generous public-figure estimates.
   F.ceiling = () => run('m', (a) => {
     a[I.age] = '30-34';
-    a[I.height] = 198; a[I.build] = 92; a[I.face] = 10; a[I.look6] = checks(8);   // BMI ~23.5, elite frame
+    a[I.height] = 198; a[I.build] = 92; a[I.bodyfat] = 11; a[I.face] = 10; a[I.look6] = checks(8);   // BMI ~23.5, elite frame, ~11% lean → 9.0
     a[I.networth] = { t: 900000000 }; a[I.income] = { annual: 120000000, monthly: 10000000, unit: 'year' };
     a[I.car] = 5; a[I.housing] = 4; a[I.career] = 4; a[I.expenses] = 200000;
     a[I.fame] = { n: 90000000 };
@@ -102,18 +103,17 @@ const harness = `
     a[I.above] = { above: 8, at: 2, below: 0 };
     a[I.retention] = { n: 5, above: true };
     a[I.friends] = 20;
-    a[I.metro] = 25000000; a[I.metmix] = { inperson: 40, online: 40, touched: true };
+    a[I.metro] = 25000000; a[I.metmix] = { inperson: 40, online: 40, window: 'w0', touched: true };
     a[I.venues] = { checked: [1,1,1,1,1,1,1,1], other: 2, touched: true };
     a[I.apps] = { out: 150, in: 200, touched: true };           // maximal at-bats
     a[I.approaches] = { n: 20, unit: 'month' }; a[I.inbound] = { n: 8, unit: 'month' };
-    a[I.invites] = 40;
   });
 
   // 2) Median — 35yo teacher, 1.5M metro, $58k income, modest savings, bachelor's typical school,
   //    clean record, no kids, 2-year longest relationship, small orbit, a couple of venues, light apps.
   F.median = () => run('f', (a) => {
     a[I.age] = '35-39';
-    a[I.height] = 162; a[I.build] = 68; a[I.face] = 5.0; a[I.look6] = checks(3);   // BMI ~25, plain-median
+    a[I.height] = 162; a[I.build] = 68; a[I.bodyfat] = 37; a[I.face] = 5.0; a[I.look6] = checks(3);   // BMI ~25, plain-median; ~37% ≈ female median → ~5.4
     a[I.networth] = { t: 60000 }; a[I.income] = { annual: 58000, monthly: 4833, unit: 'year' };
     a[I.car] = 2; a[I.housing] = 2; a[I.career] = 1; a[I.expenses] = 4100;
     a[I.fame] = { n: 0 };
@@ -127,18 +127,17 @@ const harness = `
     a[I.above] = { above: 2, at: 5, below: 3 };
     a[I.retention] = { n: 2, above: false };
     a[I.friends] = 4;
-    a[I.metro] = 1500000; a[I.metmix] = { inperson: 3, online: 2, touched: true };
+    a[I.metro] = 1500000; a[I.metmix] = { inperson: 3, online: 2, window: 'w0', touched: true };
     a[I.venues] = { checked: [1,1], touched: true };
     a[I.apps] = { out: 2, in: 25, touched: true };
     a[I.approaches] = { n: 0, unit: 'month' }; a[I.inbound] = { n: 3, unit: 'month' };
-    a[I.invites] = 3;
   });
 
   // 3) Rich-anonymous — 45yo, $5M net worth, $800k income, luxury car, owns outright, but median
   //    looks and zero fame/following, median charm/exposure. Money/Looks fine; Status is the ceiling.
   F.richAnon = () => run('m', (a) => {
     a[I.age] = '40-49';
-    a[I.height] = 175; a[I.build] = 82; a[I.face] = 5.5; a[I.look6] = checks(4);
+    a[I.height] = 175; a[I.build] = 82; a[I.bodyfat] = 24; a[I.face] = 5.5; a[I.look6] = checks(4);   // ~24% ≈ male median → ~5.5
     a[I.networth] = { t: 5000000 }; a[I.income] = { annual: 800000, monthly: 66667, unit: 'year' };
     a[I.car] = 4; a[I.housing] = 4; a[I.career] = 3; a[I.expenses] = 15000;
     a[I.fame] = { n: 0 };
@@ -152,18 +151,17 @@ const harness = `
     a[I.above] = { above: 1, at: 6, below: 3 };
     a[I.retention] = { n: 2, above: false };
     a[I.friends] = 4;
-    a[I.metro] = 1500000; a[I.metmix] = { inperson: 3, online: 1, touched: true };
+    a[I.metro] = 1500000; a[I.metmix] = { inperson: 3, online: 1, window: 'w0', touched: true };
     a[I.venues] = { checked: [1,1], touched: true };
     a[I.apps] = { out: 8, in: 2, touched: true };
     a[I.approaches] = { n: 2, unit: 'month' }; a[I.inbound] = { n: 1, unit: 'month' };
-    a[I.invites] = 3;
   });
 
   // 4) Famous-broke — 24yo viral TikToker: 2M TikTok (×0.2 = 400k effective), 100k strangers know
   //    her, negative net worth, no car, rents with roommates. Money is clearly the bottleneck.
   F.famousBroke = () => run('f', (a) => {
     a[I.age] = '18-24';
-    a[I.height] = 168; a[I.build] = 58; a[I.face] = 7.5; a[I.look6] = checks(7);   // BMI ~20.5
+    a[I.height] = 168; a[I.build] = 58; a[I.bodyfat] = 22; a[I.face] = 7.5; a[I.look6] = checks(7);   // BMI ~20.5, lean ~22% → ~8.8
     a[I.networth] = { t: -15000 }; a[I.income] = { annual: 30000, monthly: 2500, unit: 'year' };
     a[I.car] = 0; a[I.housing] = 1; a[I.career] = 0; a[I.expenses] = 2600;
     a[I.fame] = { n: 100000 };
@@ -177,17 +175,16 @@ const harness = `
     a[I.above] = { above: 3, at: 5, below: 2 };
     a[I.retention] = { n: 3, above: false };
     a[I.friends] = 5;
-    a[I.metro] = 4000000; a[I.metmix] = { inperson: 8, online: 15, touched: true };
+    a[I.metro] = 4000000; a[I.metmix] = { inperson: 8, online: 15, window: 'w0', touched: true };
     a[I.venues] = { checked: [1,1,1], touched: true };
     a[I.apps] = { out: 5, in: 120, touched: true };
     a[I.approaches] = { n: 2, unit: 'month' }; a[I.inbound] = { n: 15, unit: 'month' };
-    a[I.invites] = 12;
   });
 
   // 5) Looks-only — 26yo model-tier looks (face 9+, build 9, tall), everything else median-or-worse.
   F.looksOnly = () => run('f', (a) => {
     a[I.age] = '25-29';
-    a[I.height] = 178; a[I.build] = 58; a[I.face] = 9.2; a[I.look6] = checks(6);   // tall, BMI ~18.3
+    a[I.height] = 178; a[I.build] = 58; a[I.bodyfat] = 19; a[I.face] = 9.2; a[I.look6] = checks(6);   // tall, BMI ~18.3, model-lean ~19% → peak 9.0
     a[I.networth] = { t: 10000 }; a[I.income] = { annual: 40000, monthly: 3333, unit: 'year' };
     a[I.car] = 1; a[I.housing] = 1; a[I.career] = 0; a[I.expenses] = 3600;
     a[I.fame] = { n: 0 };
@@ -201,18 +198,17 @@ const harness = `
     a[I.above] = { above: 1, at: 5, below: 4 };
     a[I.retention] = { n: 2, above: false };
     a[I.friends] = 3;
-    a[I.metro] = 1000000; a[I.metmix] = { inperson: 3, online: 3, touched: true };
+    a[I.metro] = 1000000; a[I.metmix] = { inperson: 3, online: 3, window: 'w0', touched: true };
     a[I.venues] = { checked: [1], touched: true };
     a[I.apps] = { out: 1, in: 60, touched: true };
     a[I.approaches] = { n: 0, unit: 'month' }; a[I.inbound] = { n: 6, unit: 'month' };
-    a[I.invites] = 4;
   });
 
   // 6) Floor — 29yo: unemployed, felony, negative net worth, no car (small town), lives with parents,
   //    no degree, 2 kids full custody, no relationship over 3 months, empty orbit, tiny metro, nothing.
   F.floor = () => run('m', (a) => {
     a[I.age] = '25-29';
-    a[I.height] = 170; a[I.build] = 105; a[I.face] = 3.0; a[I.look6] = checks(0);   // BMI ~36
+    a[I.height] = 170; a[I.build] = 105; a[I.bodyfat] = 40; a[I.face] = 3.0; a[I.look6] = checks(0);   // BMI ~36, obese ~40% → ~2.6
     a[I.networth] = { t: -40000 }; a[I.income] = { annual: 8000, monthly: 667, unit: 'year' };
     a[I.car] = 0; a[I.housing] = 0; a[I.career] = 0; a[I.expenses] = 900;
     a[I.fame] = { n: 0 };
@@ -226,18 +222,17 @@ const harness = `
     a[I.above] = { above: 0, at: 1, below: 9 };
     a[I.retention] = { n: 0, above: false };
     a[I.friends] = 0;
-    a[I.metro] = 15000; a[I.metmix] = { inperson: 0, online: 0, touched: true };
+    a[I.metro] = 15000; a[I.metmix] = { inperson: 0, online: 0, window: 'w0', touched: true };
     a[I.venues] = { checked: [], touched: true };
     a[I.apps] = { out: 0, in: 0, touched: true };
     a[I.approaches] = { n: 0, unit: 'month' }; a[I.inbound] = { n: 0, unit: 'month' };
-    a[I.invites] = 0;
   });
 
   // 7) The Davidson case — median-to-modest looks, real fame (millions know him), solid money, C3
   //    answered mostly-above, big orbit PB. Charm should read as a top factor; total 7.5+.
   F.davidson = () => run('m', (a) => {
     a[I.age] = '25-29';
-    a[I.height] = 185; a[I.build] = 74; a[I.face] = 5.5; a[I.look6] = checks(5);
+    a[I.height] = 185; a[I.build] = 74; a[I.bodyfat] = 20; a[I.face] = 5.5; a[I.look6] = checks(5);   // ~20% average-lean → ~6.5
     a[I.networth] = { t: 8000000 }; a[I.income] = { annual: 6000000, monthly: 500000, unit: 'year' };
     a[I.car] = 3; a[I.housing] = 3; a[I.career] = 2; a[I.expenses] = 120000;
     a[I.fame] = { n: 5000000 };
@@ -251,18 +246,17 @@ const harness = `
     a[I.above] = { above: 9, at: 1, below: 0 };                 // the residual-leverage signature
     a[I.retention] = { n: 5, above: true };
     a[I.friends] = 20;
-    a[I.metro] = 20000000; a[I.metmix] = { inperson: 10, online: 5, touched: true };
+    a[I.metro] = 20000000; a[I.metmix] = { inperson: 10, online: 5, window: 'w0', touched: true };
     a[I.venues] = { checked: [1,1,1,1], touched: true };
     a[I.apps] = { out: 8, in: 60, touched: true };
     a[I.approaches] = { n: 4, unit: 'month' }; a[I.inbound] = { n: 8, unit: 'month' };
-    a[I.invites] = 15;
   });
 
   // ── Structural profiles ─────────────────────────────────────────────────
   // (a) all-median-inputs: every input picked to score ~5.5. Total must land within ±0.5 of 5.5.
   F.allMedian = () => run('m', (a) => {
     a[I.age] = '30-34';
-    a[I.height] = 171; a[I.build] = 84; a[I.face] = 5.5; a[I.look6] = checks(4);   // BMI ~28.7 → ~5.4
+    a[I.height] = 171; a[I.build] = 84; a[I.bodyfat] = 24; a[I.face] = 5.5; a[I.look6] = checks(4);   // BMI ~28.7 → ~5.4; ~24% → ~5.5
     a[I.networth] = { t: 75000 }; a[I.income] = { annual: 60000, monthly: 5000, unit: 'year' };
     a[I.car] = 2; a[I.housing] = 1; a[I.career] = 1; a[I.expenses] = 4250;         // 15% disposable → 5.5
     a[I.fame] = { n: 20 };
@@ -276,11 +270,10 @@ const harness = `
     a[I.above] = { above: 0, at: 6, below: 4 };
     a[I.retention] = { n: 2, above: false };
     a[I.friends] = 3;
-    a[I.metro] = 1500000; a[I.metmix] = { inperson: 3, online: 2, touched: true };
+    a[I.metro] = 1500000; a[I.metmix] = { inperson: 3, online: 2, window: 'w0', touched: true };
     a[I.venues] = { checked: [1], touched: true };
     a[I.apps] = { out: 10, in: 3, touched: true };
     a[I.approaches] = { n: 2, unit: 'month' }; a[I.inbound] = { n: 0, unit: 'month' };
-    a[I.invites] = 3;
   });
 
   // §9.3 probes — the Status ceiling/floor are REAL, proven directly. Only the four marker inputs
@@ -324,7 +317,11 @@ const harness = `
     statusIdx: FACTORS.findIndex(f => f.key === 'status'),
     expoWeightM: expoWeight('m'),
     expoWeightF: expoWeight('f'),
-    jobCount: JOB_TITLES.length
+    jobCount: JOB_TITLES.length,
+    questionCount: QUESTIONS.length,
+    looksCount: QUESTIONS.filter(q => q.factor === 0).length,
+    exposureCount: QUESTIONS.filter(q => q.factor === 4).length,
+    bodyfatIdx: I.bodyfat
   };
 })();
 `;
@@ -407,6 +404,12 @@ console.log('-'.repeat(96));
 
 // ── Structural assertions ───────────────────────────────────────────────────
 console.log('\nSTRUCTURAL ASSERTIONS');
+
+// §10.5: total question count stays 30 (Looks 7, Exposure 6 after the body-fat add + invitations cut).
+const qcOK = P.questionCount === 30 && P.looksCount === 7 && P.exposureCount === 6 && P.bodyfatIdx >= 0;
+if (!qcOK) fail.push(`question shape wrong: total=${P.questionCount} (want 30), Looks=${P.looksCount} (want 7), Exposure=${P.exposureCount} (want 6), bodyfatIdx=${P.bodyfatIdx}`);
+console.log(`  (0) question shape: total=${P.questionCount}, Looks=${P.looksCount}, Exposure=${P.exposureCount}  ${qcOK ? 'OK' : 'FAIL'}`);
+
 const am = P.results.allMedian;
 const amOK = Math.abs(am.total - 5.5) <= 0.5;
 if (!amOK) fail.push(`all-median total ${am.total.toFixed(1)} not within ±0.5 of 5.5`);
