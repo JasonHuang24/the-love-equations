@@ -110,6 +110,7 @@
               <div class="result-title">Your factor profile</div>
               <div class="result-copy" id="res-summary">The total score matters, but the shape matters more. One strong factor can open doors; one weak factor can quietly cap everything else.</div>
               <div class="factor-breakdown" id="res-factors"></div>
+              <div class="status-mods" id="res-status-mods"></div>
               <div class="insight-grid" id="insight-grid"></div>
             </div>
           </div>
@@ -506,22 +507,35 @@
       return clampScore(base + (mods[a.tier] || 0));
     }
 
-    // S5 kids — market position, not finances (Money Q12 carries the budget impact; different
-    // causal channel, not double-counting). No kids = 5.5 (modal for the younger bands —
-    // unremarkable, not impressive). The penalty scales with count, is age-graded off the
-    // existing age answer (net-worth × age is the precedent), and is reduced for shared (~70%)
-    // and non-custodial (~40%). Sex-neutral: the sex-asymmetric option (anchors {m,f} machinery
-    // supports it) was considered and DEFERRED — the market asymmetry is real but contested.
-    const KID_GAP     = { 1: 2.5, 2: 3.0, 3: 3.5 };   // full-custody 18–29 gap subtracted from 5.5 → 3.0 / 2.5 / 2.0
+    // S5 kids — a POST-AVERAGE Status modifier (§9.1), NOT a question inside the weighted mean.
+    // Market position, not finances (Money Q12 carries the budget impact; different causal channel).
+    // No kids reads as a slight upside (+0.2), not dead neutral — a clean slate is a real market
+    // advantage in the younger bands. Otherwise it SUBTRACTS: a base magnitude that grows with count,
+    // age-graded off the existing age answer (net-worth × age is the precedent) so an old kid weighs
+    // far less than a new one, and reduced for shared (~70%) and non-custodial (~40%) custody. The
+    // result is added to the S1–S4 mean and the whole thing is clamped to [1,10] by the caller.
+    // Sex-neutral: the sex-asymmetric option (anchors {m,f} machinery supports it) was considered
+    // and DEFERRED — the market asymmetry is real but contested.
+    const KID_BASE    = { 1: 2.5, 2: 3.0, 3: 3.5 };   // full-custody, 18–29 subtraction magnitude
     const KID_CUSTODY = { full: 1.0, shared: 0.7, non: 0.4 };
     const KID_AGE     = { '18-24': 1.0, '25-29': 1.0, '30-34': 0.75, '35-39': 0.55, '40-49': 0.35, '50+': 0.15 };
-    function kidsScore(a) {
-      if (!a || typeof a !== 'object' || !a.count) return 5.5;
-      const gap = KID_GAP[a.count] || 3.5;
-      const cf  = KID_CUSTODY[a.custody] != null ? KID_CUSTODY[a.custody] : 1.0;
-      const age = getAge();
-      const af  = (age && KID_AGE[age] != null) ? KID_AGE[age] : 1.0;
-      return clampScore(5.5 - gap * af * cf);   // e.g. 42yo, 1 kid, shared → 5.5 − 2.5×0.35×0.7 ≈ 4.9
+    function kidsModifier(a) {
+      if (!a || typeof a !== 'object' || !a.count) return 0.2;   // no kids → slight upside
+      const base = KID_BASE[a.count] || 3.5;
+      const cf   = KID_CUSTODY[a.custody] != null ? KID_CUSTODY[a.custody] : 1.0;
+      const age  = getAge();
+      const af   = (age && KID_AGE[age] != null) ? KID_AGE[age] : 1.0;
+      return -(base * af * cf);   // e.g. 42yo, 1 kid, shared → −(2.5 × 0.35 × 0.7) ≈ −0.6
+    }
+
+    // S6 criminal record — also a POST-AVERAGE Status modifier (§9.1). Downside-only, but a clean
+    // record now reads as a slight upside (+0.2) to mirror the no-kids bonus. Parallel to the record
+    // question's option order (clean / misdemeanor / felony / multiple-or-in-system). Added to the
+    // S1–S4 mean; the caller clamps [1,10]. A single felony now costs a full −3.5 (was compressed to
+    // a 2.0 score inside the average), so the downside can honestly reach the clamp floor.
+    const RECORD_MOD = [0.2, -1.5, -3.5, -4.5];
+    function recordModifier(a) {
+      return (typeof a === 'number' && RECORD_MOD[a] != null) ? RECORD_MOD[a] : 0.2;
     }
 
     // Reusable partner-tier component: classify another person above/at/below the user WITHOUT
@@ -1054,13 +1068,15 @@
       },
       {
         factor: 2,
-        weight: 1.00,
         type: 'kids',
-        // S5 kids — market position, NOT finances (Money Q12 carries the budget impact; different
-        // causal channel). Age-graded off the existing age answer and custody-scaled. Sex-neutral;
-        // the sex-asymmetric option was considered and deferred. See kidsScore().
+        statusMod: 'kids',
+        // S5 kids — a POST-AVERAGE Status modifier (§9.1), NOT part of the weighted mean. No weight:
+        // it does not enter the S1–S4 average, it adjusts the result afterward. Market position, NOT
+        // finances (Money Q12 carries the budget impact; different causal channel). Age-graded off the
+        // existing age answer and custody-scaled. Sex-neutral; the sex-asymmetric option was considered
+        // and deferred. See kidsModifier().
         text: 'How many children do you have?',
-        sub: 'This measures market position, not money — the budget impact is already scored in Money. No kids is the modal answer for the younger bands: unremarkable, not a low score.',
+        sub: 'This measures market position, not money — the budget impact is already scored in Money. No kids is a slight plus; kids adjust your Status down, less so when they are older or not in your custody.',
         counts: ['None', '1', '2', '3 or more'],
         custody: [
           ['Full-time', 'They live with me most or all of the time.'],
@@ -1070,13 +1086,14 @@
       },
       {
         factor: 2,
-        weight: 0.90,
-        // S6 criminal record — downside-only. Percentile-reasoned: clean (incl. tickets/fines) is
-        // the modal, unremarkable case → 5.5; a felony is a hard, legible negative; multiple felonies
-        // or active supervision is near the floor. A plain options question — no cross-adjust needed.
-        scores: [5.5, 4.0, 2.0, 1.2],
+        statusMod: 'record',
+        // S6 criminal record — a POST-AVERAGE Status modifier (§9.1), NOT part of the weighted mean.
+        // Downside-only, but a clean record (incl. tickets/fines) reads as a slight upside (+0.2),
+        // mirroring the no-kids bonus. A felony is a hard, legible negative that now subtracts a full
+        // −3.5; multiple felonies or active supervision reaches −4.5 near the clamp floor. See
+        // recordModifier() — RECORD_MOD is parallel to the options below.
         text: 'What does your record look like?',
-        sub: 'Background checks are a dating-app feature for a reason. Traffic tickets and fines count as clean.',
+        sub: 'Background checks are a dating-app feature for a reason. Traffic tickets and fines count as clean. A clean record is a slight plus; convictions adjust your Status down.',
         opts: [
           ['Clean', 'No convictions (traffic tickets and fines count as clean).'],
           ['Misdemeanor', 'One or more misdemeanor convictions, nothing more.'],
@@ -1253,8 +1270,13 @@
       { min: 3, max: 4.9, label: 'Below Average', color: '#BA7517', bg: '#FAEEDA', desc: 'You have some workable pieces, but the market is probably inconsistent and unforgiving. Focused work can move this tier faster than you think.' },
       { min: 5, max: 6.4, label: 'Average', color: '#C41E3A', bg: '#FAECEE', desc: 'You are near the market midpoint. That means options exist, but selectivity and consistency are limited unless one factor clearly overperforms.' },
       { min: 6.5, max: 7.9, label: 'Above Average', color: '#1D9E75', bg: '#E1F5EE', desc: 'You have real pull. The question is no longer whether you can get attention, but which bottleneck keeps you from getting the kind you want.' },
-      { min: 8, max: 9.4, label: 'High Value', color: '#7F77DD', bg: '#EEEDFE', desc: 'The market starts behaving differently here. You have leverage, but selection and maintenance matter more because attention is not the same as fit.' },
-      { min: 9.5, max: 10, label: 'Elite', color: '#D4537E', bg: '#FBEAF0', desc: 'This is outlier territory. You are not optimizing for access anymore; you are optimizing for discernment, boundaries, and choosing well.' }
+      { min: 8, max: 8.9, label: 'High Value', color: '#7F77DD', bg: '#EEEDFE', desc: 'The market starts behaving differently here. You have leverage, but selection and maintenance matter more because attention is not the same as fit.' },
+      // §9.2 rescale: the old Elite floor (9.5) was unreachable now that §9.1 lets Status hit ~9.4 —
+      // the max-everything Ceiling fixture lands 9.3, so Elite drops to 9.0 (High Value tops out 8.9).
+      // Boundary set empirically against the panel: nothing below the Ceiling reaches 9.0 (next is
+      // Davidson 7.7), so no other fixture is pulled into Elite; Low SMV (0–2.9) already catches the
+      // Floor fixture (2.7) and the middle boundaries are unchanged — no other fixture's tier moves.
+      { min: 9.0, max: 10, label: 'Elite', color: '#D4537E', bg: '#FBEAF0', desc: 'This is outlier territory. You are not optimizing for access anymore; you are optimizing for discernment, boundaries, and choosing well.' }
     ];
 
     const bVals = [5.5, 5.5, 5.5, 5.5, 5.5];
@@ -1272,6 +1294,11 @@
     const METRO_IDX = QUESTIONS.findIndex(q => q.id === 'metro');       // Q9 car reads this raw pool size
     const INCOME_IDX = QUESTIONS.findIndex(q => q.type === 'income');   // Q12 expense ratio reads this monthly
     const LOOKS_FACTOR = FACTORS.findIndex(f => f.key === 'looks');     // C1 partner-tier reads this factor score
+    const STATUS_FACTOR = FACTORS.findIndex(f => f.key === 'status');   // S5/S6 are post-average modifiers on this factor
+    const KIDS_IDX = QUESTIONS.findIndex(q => q.statusMod === 'kids');   // S5 kids modifier reads this answer
+    const RECORD_IDX = QUESTIONS.findIndex(q => q.statusMod === 'record'); // S6 record modifier reads this answer
+    function statusKidsMod() { return KIDS_IDX < 0 ? 0 : kidsModifier(answers[KIDS_IDX]); }
+    function statusRecordMod() { return RECORD_IDX < 0 ? 0 : recordModifier(answers[RECORD_IDX]); }
     const AGE_BANDS = ['18-24', '25-29', '30-34', '35-39', '40-49', '50+'];
     let autoNext = false;
     let aCompleted = false;
@@ -2264,8 +2291,11 @@
     function kidsPreviewHtml(a) {
       if (!a || a.count == null) return '<span class="income-hint">Select how many children you have.</span>';
       if (a.count > 0 && a.custody == null) return 'Pick a custody arrangement to finish.';
-      return `Maps to <strong>${kidsScore(a).toFixed(1)} / 10</strong>${a.count === 0 ? ' (no kids — modal, unremarkable).' : ' (age-graded).'}`;
+      // Displayed as a ± Status adjustment (§9.1), not a 0–10 score — this question is a modifier.
+      return `Adjusts Status by <strong>${fmtMod(kidsModifier(a))}</strong>${a.count === 0 ? ' (no kids — a slight plus).' : ' (age-graded).'}`;
     }
+    // Format a signed modifier for display, e.g. +0.2 / −0.6 (Unicode minus, matches the sub-text copy).
+    function fmtMod(v) { return (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1); }
 
     // Longest relationship + partner tier (C1)
     function onRelInput() {
@@ -2427,6 +2457,7 @@
     // ctx carries earlier-computed factor scores (Charm's partner-tier reads the Looks score).
     function scoreQuestion(q, i, ctx) {
       const a = answers[i];
+      if (q.statusMod) return null;                                          // S5/S6 are post-average modifiers, not averaged inputs (§9.1)
       let value, weight = qWeight(q);   // per-sex weight where defined, else q.weight
       switch (q.type) {
         case 'sex': case 'age': return null;                                 // parameters, not scored inputs
@@ -2459,7 +2490,6 @@
         case 'fame':      value = fameScore(a); break;
         case 'jobtitle':  value = (a && typeof a.score === 'number') ? clampScore(a.score) : 5.5; break;
         case 'education': value = educationScore(a); break;
-        case 'kids':      value = kidsScore(a); break;
         case 'relationship': value = relationshipScore(a, ctx.looks); break;
         case 'orbit':     value = orbitScore(a); break;
         case 'above':     { const s = aboveScore(a); if (s == null) return null; value = s; break; }
@@ -2485,15 +2515,54 @@
         const weighted = QUESTIONS
           .map((q, i) => q.factor === f ? scoreQuestion(q, i, ctx) : null)
           .filter(Boolean);
-        if (weighted.length === 0) { out[f] = 5.5; }                          // every input excluded → neutral
+        let raw;
+        if (weighted.length === 0) { raw = 5.5; }                             // every input excluded → neutral
         else {
           const totalWeight = weighted.reduce((s, item) => s + item.weight, 0);
-          out[f] = Math.round((weighted.reduce((s, item) => s + item.value * item.weight, 0) / totalWeight) * 10) / 10;
+          raw = weighted.reduce((s, item) => s + item.value * item.weight, 0) / totalWeight;
         }
+        if (f === STATUS_FACTOR) {
+          // §9.1: Status is the weighted mean of S1–S4 (fame/following/job/education) only; the two
+          // downside questions S5 (kids) and S6 (record) are excluded above by scoreQuestion (they
+          // return null for statusMod) and applied HERE as post-average ± modifiers, then clamped.
+          // This lets the four legible markers keep their full range (max Status ~9.3–9.7, min → the
+          // clamp floor of 1.0) instead of being compressed by two neutral-floored questions.
+          raw = clampScore(raw + statusKidsMod() + statusRecordMod());
+        }
+        out[f] = Math.round(raw * 10) / 10;
         if (f === LOOKS_FACTOR) ctx.looks = out[f];                          // hand the Looks score to Charm's partner-tier
       }
       scores = out;
       return weightedTotal(scores, selectedLensA);
+    }
+
+    // §9.1: S5 (kids) and S6 (record) never enter the Status average — they adjust it. Show each as
+    // a ± line item under the factor bars so the modifier is legible, not a hidden hand on the total.
+    function renderStatusMods() {
+      const host = document.getElementById('res-status-mods');
+      if (!host) return;
+      const rows = [];
+      if (KIDS_IDX >= 0) {
+        const a = answers[KIDS_IDX];
+        const m = statusKidsMod();
+        const label = (a && a.count) ? `${QUESTIONS[KIDS_IDX].counts[a.count]} kid${a.count > 1 ? 's' : ''}` : 'No kids';
+        rows.push({ name: 'Kids', label, m });
+      }
+      if (RECORD_IDX >= 0) {
+        const a = answers[RECORD_IDX];
+        const m = statusRecordMod();
+        const opts = QUESTIONS[RECORD_IDX].opts;
+        const label = (typeof a === 'number' && opts[a]) ? opts[a][0] : 'Clean';
+        rows.push({ name: 'Record', label, m });
+      }
+      host.innerHTML = rows.length ? `
+        <div class="status-mods-title">Status adjustments (applied after the four marker questions)</div>
+        ${rows.map(r => `
+          <div class="status-mod-row">
+            <span class="status-mod-name">${r.name}</span>
+            <span class="status-mod-label">${r.label}</span>
+            <span class="status-mod-val" style="color:${r.m >= 0 ? '#1D9E75' : '#C41E3A'}">${fmtMod(r.m)}</span>
+          </div>`).join('')}` : '';
     }
 
     function renderAResults(showScreen = true) {
@@ -2533,6 +2602,8 @@
           <div class="fb-score" style="color:${f.color}">${scores[i].toFixed(1)} / 10 - ${scoreLabel(scores[i])}</div>
         </div>
       `).join('');
+
+      renderStatusMods();
 
       document.getElementById('insight-grid').innerHTML = `
         <div class="insight-card">

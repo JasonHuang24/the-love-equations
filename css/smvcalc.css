@@ -641,6 +641,41 @@
 .fb-score {
   font-size: 12px;
 }
+.status-mods {
+  margin: 0.2rem 0 1rem;
+}
+.status-mods-title {
+  color: var(--text-soft, var(--text));
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.45rem;
+  opacity: 0.75;
+}
+.status-mod-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.6rem;
+  border: 0.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: rgba(255,252,247,0.6);
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.status-mod-name {
+  font-weight: 600;
+  color: var(--text);
+  min-width: 58px;
+}
+.status-mod-label {
+  color: var(--text-soft, var(--text));
+  opacity: 0.8;
+  flex: 1;
+}
+.status-mod-val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
 .insight-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

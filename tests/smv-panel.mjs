@@ -283,6 +283,29 @@ const harness = `
     a[I.invites] = 3;
   });
 
+  // §9.3 probes — the Status ceiling/floor are REAL, proven directly. Only the four marker inputs
+  // (fame/following/job/education) plus the two §9.1 modifiers (kids/record) drive Status; the rest
+  // stay neutral. maxStatus maxes every marker + the no-kids/clean bonuses → Status must clear 9.0.
+  // minStatus floors every marker (name-against fame) + 3-kids-full + multi-felony → Status ≤ 1.5.
+  F.maxStatus = () => run('m', (a) => {
+    a[I.age] = '30-34';
+    a[I.fame] = { n: 50000000 };
+    a[I.following] = { yt: 20000000, ig: 200000000, x: 100000000, tt: 50000000, other: 10000000 };
+    a[I.job] = { mode: 'pick', label: '(max-prestige probe)', score: 9.5 };
+    a[I.education] = { degree: 4, tier: 0 };                    // advanced + elite institution
+    a[I.kids] = { count: 0 };                                   // +0.2 no-kids bonus
+    a[I.record] = 0;                                            // +0.2 clean bonus
+  });
+  F.minStatus = () => run('m', (a) => {
+    a[I.age] = '18-24';                                         // full kids penalty age grade
+    a[I.fame] = { against: true };                             // name works against you → 2.5
+    a[I.following] = { ig: 0, touched: true };
+    a[I.job] = { mode: 'pick', label: 'Unemployed', score: 3.0 };
+    a[I.education] = { degree: 0, tier: null };                 // no HS diploma
+    a[I.kids] = { count: 3, custody: 'full' };                  // −3.5 full penalty
+    a[I.record] = 3;                                            // −4.5 multiple felonies / in the system
+  });
+
   // (b) per-sex Exposure weight totals must be equal (E4/E5/E6 mirrored, as old Q28–Q30 were).
   const expoIdx = QUESTIONS.map((q, i) => q.factor === 4 ? i : -1).filter(i => i >= 0);
   const expoWeight = sex => expoIdx.reduce((s, i) => {
@@ -294,9 +317,11 @@ const harness = `
     results: {
       ceiling: F.ceiling(), median: F.median(), richAnon: F.richAnon(),
       famousBroke: F.famousBroke(), looksOnly: F.looksOnly(), floor: F.floor(),
-      davidson: F.davidson(), allMedian: F.allMedian()
+      davidson: F.davidson(), allMedian: F.allMedian(),
+      maxStatus: F.maxStatus(), minStatus: F.minStatus()
     },
     factorNames: FACTORS.map(f => f.name),
+    statusIdx: FACTORS.findIndex(f => f.key === 'status'),
     expoWeightM: expoWeight('m'),
     expoWeightF: expoWeight('f'),
     jobCount: JOB_TITLES.length
@@ -325,38 +350,27 @@ const P = ctx.__PANEL__;
 if (!P) { console.error('Harness produced no result.'); process.exit(2); }
 
 // ── Expectation bands (permanent regression bands) ──────────────────────────
-// Each band pins the spec §7 NUMERIC envelope [min,max] plus every tier that envelope can
-// legitimately cross under the FIXED TIERS boundaries (§8, do-not-touch): Low SMV 0–2.9,
-// Below Average 3.0–4.9, Average 5.0–6.4, Above Average 6.5–7.9, High Value 8.0–9.4, Elite 9.5–10.
-// A band's `tiers` list is therefore the exact set of tier labels [min,max] can map to — it is not
-// "widened," it is what the fixed boundaries force. `specTier` records the tier §7's prose NAMES
-// (only where it names one that a fixture must hit); the DEVIATIONS section prints any shortfall.
+// Each band pins the spec's NUMERIC envelope [min,max] plus every tier that envelope can
+// legitimately cross under the §9.2-rescaled TIERS boundaries: Low SMV 0–2.9, Below Average 3.0–4.9,
+// Average 5.0–6.4, Above Average 6.5–7.9, High Value 8.0–8.9, Elite 9.0–10. A band's `tiers` list is
+// the exact set of tier labels [min,max] can map to under those boundaries — it is not "widened."
 //
-// TWO §7 tier expectations are UNSATISFIABLE against the §8-locked TIERS + §4 neutral-floor design.
-// They are documented deviations, NOT silent pass-throughs, and are surfaced loudly on every run
-// (proof from the max/min probes, reproduced here):
-//   • ceiling: §7 says "tier Elite" (needs total ≥9.5). A max-EVERYTHING male profile (100M fame,
-//     $1B net worth, best-in-list job, advanced+elite degree, all grooming) totals exactly 9.0 →
-//     High Value. Elite is unreachable by ANY profile: Status caps ~8.1 because no-kids &
-//     clean-record are neutral 5.5 (§4 S5/S6) and Looks caps ~8.9 (grooming anchor max 9.0). The
-//     spec's NUMERIC floor (≥9.0) is met exactly, so `min` is pinned to 9.0 (not the old, gratuitous
-//     8.8) — any future weakening below the spec's 9.0 now fails, as it should.
-//   • floor: §7 says "tier Low SMV" (needs total ≤2.9). The faithfully-encoded fixture (single
-//     felony, unknown so fame=5.0 neutral per §4 S1, 2 kids, one 3-mo relationship) totals exactly
-//     3.2 → Below Average, the top of its ≤3.2 band. Low SMV is reached only by strictly-worse
-//     profiles (min-everything probe = 2.6). The spec's NUMERIC ceiling (≤3.2) is met exactly.
-// Reaching the named tiers would require editing the §8-locked TIERS boundaries or the §4 hard-coded
-// neutral scores — both out of scope — so the panel asserts the satisfiable NUMERIC bands and
-// surfaces the tier-name shortfall as an explicit deviation instead of masking it.
+// §9.3 makes the ceiling and floor tier expectations HONESTLY ENFORCED (no more documented deviations):
+//   • ceiling: §9.3 pins total ≥9.0 AND tier Elite. §9.1 lets Status reach ~9.4 (the four markers keep
+//     their full range once kids/record left the average), so the max-everything Ceiling fixture totals
+//     9.3 → Elite under the §9.2 boundary (Elite = ≥9.0). tiers is the single label ['Elite'] — strict.
+//   • floor: §9.3 pins total ≤3.0 AND tier Low SMV. §9.1 lets the single felony subtract a full −3.5
+//     (was a compressed 2.0 inside the average), dropping Status to the clamp floor 1.0 and the total to
+//     2.7 → Low SMV (0–2.9). tiers is the single label ['Low SMV'] — strict.
+// No other fixture's band changed: the §9.2 rescale moved only the High Value/Elite boundary (8.9/9.0),
+// and no non-ceiling fixture (next highest is Davidson 7.7) sits near it, so their tiers are untouched.
 const BANDS = {
-  ceiling:     { min: 9.0, max: 10.0, tiers: ['High Value', 'Elite'], specTier: 'Elite',
-                 tierNote: 'Elite (≥9.5) is structurally unreachable by any profile (max-everything = 9.0; Status caps ~8.1, Looks ~8.9); numeric ≥9.0 met exactly' },
+  ceiling:     { min: 9.0, max: 10.0, tiers: ['Elite'] },                    // §9.3: ≥9.0 AND Elite, strict
   median:      { min: 4.6, max: 5.8,  tiers: ['Average', 'Below Average'] },
   richAnon:    { min: 6.0, max: 7.5,  tiers: ['Average', 'Above Average', 'High Value'] },
   famousBroke: { min: 5.8, max: 7.3,  tiers: ['Above Average', 'Average', 'High Value'] },
   looksOnly:   { min: 5.5, max: 7.0,  tiers: ['Above Average', 'Average'] },
-  floor:       { min: 0.0, max: 3.2,  tiers: ['Low SMV', 'Below Average'], specTier: 'Low SMV',
-                 tierNote: 'Low SMV (≤2.9) is reached only by strictly-worse profiles (min-everything = 2.6); this fixture sits at the top of its ≤3.2 band; numeric ≤3.2 met exactly' },
+  floor:       { min: 0.0, max: 3.0,  tiers: ['Low SMV'] },                  // §9.3: ≤3.0 AND Low SMV, strict
   davidson:    { min: 7.5, max: 9.2,  tiers: ['Above Average', 'High Value', 'Elite'] }
 };
 const FIXTURE_ORDER = ['ceiling', 'median', 'richAnon', 'famousBroke', 'looksOnly', 'floor', 'davidson'];
@@ -391,24 +405,6 @@ for (const key of FIXTURE_ORDER) {
 }
 console.log('-'.repeat(96));
 
-// ── Documented spec deviations (§7 tier-name expectations vs §8 fixed TIERS) ──
-// These are permanent, out-of-scope-to-fix contradictions in the spec itself, not regressions:
-// §7 names a tier that §8's locked TIERS boundaries + §4's neutral floors make unreachable. We
-// surface them LOUDLY every run (rather than burying them in a band comment) so the shortfall is
-// never masked — but they do NOT fail the panel, because the satisfiable NUMERIC bands are met and
-// closing the gap is explicitly out of scope. Any future recalibration that DOES reach the named
-// tier will simply stop printing its line here.
-console.log('\nSPEC DEVIATIONS (§7 tier expectation vs §8 fixed TIERS — documented, not a regression)');
-let anyDev = false;
-for (const key of FIXTURE_ORDER) {
-  const b = BANDS[key], r = P.results[key];
-  if (b.specTier && r.tier !== b.specTier) {
-    anyDev = true;
-    console.log(`  ! ${LABEL[key]}: §7 names tier "${b.specTier}" but ${r.total.toFixed(1)} maps to "${r.tier}" under the locked TIERS. ${b.tierNote}.`);
-  }
-}
-if (!anyDev) console.log('  (none — every §7-named tier is reached)');
-
 // ── Structural assertions ───────────────────────────────────────────────────
 console.log('\nSTRUCTURAL ASSERTIONS');
 const am = P.results.allMedian;
@@ -420,12 +416,29 @@ const weightsEqual = Math.abs(P.expoWeightM - P.expoWeightF) < 1e-9;
 if (!weightsEqual) fail.push(`per-sex Exposure weight totals differ: m=${P.expoWeightM} f=${P.expoWeightF}`);
 console.log(`  (b) Exposure weight totals: m=${P.expoWeightM.toFixed(2)} f=${P.expoWeightF.toFixed(2)}  ${weightsEqual ? 'OK' : 'FAIL'}`);
 
-// Extra sanity: bottleneck of the rich-anonymous fixture must point at Status or Exposure (never Looks/Money).
+// §9.3 structural: the Status ceiling and floor are REAL. Proven directly by the probes so the range
+// isn't just asserted through the composite total — max-everything Status ≥ 9.0, worst-case ≤ 1.5.
+const maxSt = P.results.maxStatus.factors[P.statusIdx];
+const maxStOK = maxSt >= 9.0;
+if (!maxStOK) fail.push(`max-everything Status probe = ${maxSt.toFixed(1)}, want ≥ 9.0`);
+console.log(`  (c) max-everything Status = ${maxSt.toFixed(1)}  (want ≥ 9.0)  ${maxStOK ? 'OK' : 'FAIL'}`);
+
+const minSt = P.results.minStatus.factors[P.statusIdx];
+const minStOK = minSt <= 1.5;
+if (!minStOK) fail.push(`worst-case Status probe = ${minSt.toFixed(1)}, want ≤ 1.5`);
+console.log(`  (d) worst-case Status = ${minSt.toFixed(1)}  (want ≤ 1.5)  ${minStOK ? 'OK' : 'FAIL'}`);
+
+// Extra sanity: the rich-anonymous fixture's bottleneck must be Status or Exposure (§7 fixture 3 —
+// Money/Looks are his strengths, the soft social axes cap him). §9.1 legitimately lifted his Status
+// above Charm (kids/record no longer drag the average), leaving Exposure tied at the minimum with
+// Charm — so we require Status OR Exposure to SIT AT the minimum (tie-tolerant), rather than winning
+// indexOf's first-match tiebreak. This still fails if Looks/Money ever became his bottleneck.
 const ra = P.results.richAnon;
-const raLowIdx = ra.factors.indexOf(Math.min(...ra.factors));
-const raBottleneckOK = ['Status', 'Exposure'].includes(fnames[raLowIdx]);
-if (!raBottleneckOK) fail.push(`rich-anonymous bottleneck is ${fnames[raLowIdx]}, expected Status or Exposure`);
-console.log(`  (+) rich-anonymous bottleneck = ${fnames[raLowIdx]}  ${raBottleneckOK ? 'OK' : 'FAIL'}`);
+const raMin = Math.min(...ra.factors);
+const raBottleneckOK = ['Status', 'Exposure'].some(n => ra.factors[fnames.indexOf(n)] === raMin);
+const raLowName = fnames[ra.factors.indexOf(raMin)];
+if (!raBottleneckOK) fail.push(`rich-anonymous bottleneck is ${raLowName}, expected Status or Exposure at the minimum`);
+console.log(`  (+) rich-anonymous bottleneck = ${raLowName} (Status ${ra.factors[fnames.indexOf('Status')].toFixed(1)}, Exposure ${ra.factors[fnames.indexOf('Exposure')].toFixed(1)})  ${raBottleneckOK ? 'OK' : 'FAIL'}`);
 
 // Davidson: Charm must be one of his top-2 factors (the residual-leverage design working).
 const dav = P.results.davidson;
