@@ -345,10 +345,59 @@ Also assert the two structural properties: (a) an all-median-inputs profile land
 ±0.5 of 5.5 total; (b) per-sex Exposure weight totals remain equal (the E4/E5/E6 sex
 weights must still balance, as old Q28–Q30 did).
 
-## 8. Out of scope — do not touch
+## 8. Out of scope — do not touch (amended by §9: TIERS boundaries are now IN scope)
 
 Face Calc / Body Calc import machinery (but their imported values keep flowing into Q4/Q5
 and the Looks score the partner-tier component reads), Profile B sliders and lenses,
 TIERS boundaries and copy, other pages, and md/ docs other than this file. Preserve
 localStorage persistence across the new question types (answers serialize; bump the
 storage schema version if the shape changes so stale v6 answers don't corrupt v7 state).
+
+---
+
+## 9. v7.1 amendment — Status modifiers and tier rescale
+
+Owner review of the v7 panel found the Status ceiling (~8.0) artificial: a 9+ Status must
+be achievable for the metric to be legitimate, zero kids / clean record should read as a
+*slight upside* rather than dead neutral, and the bottom end should extend lower. This
+section supersedes §4 S5/S6 scoring, §7 fixtures 1 and 6, and §8's TIERS lock.
+
+### 9.1 S5 (kids) and S6 (record) become post-average modifiers
+
+Both remain questions #5 and #6 of the Status section in the UI, but they no longer enter
+the weighted average. Status = weighted mean of S1–S4 only (weights 1.15 / 0.95 / 1.30 /
+0.85), then + kids modifier + record modifier, clamped to [1, 10]. The results screen
+still shows both as line items, displayed as their ± adjustment.
+
+**Kids modifier:** no kids → **+0.2**. Otherwise a subtraction:
+base (full custody, ages 18–29): 1 kid −2.5, 2 kids −3.0, 3+ −3.5;
+× custody factor (full 1.0 / shared 0.7 / non-custodial 0.4);
+× age grade (18–29: 1.0 / 30–34: 0.75 / 35–39: 0.55 / 40–49: 0.35 / 50+: 0.15).
+Worked example: 42yo, 1 kid, shared → −(2.5 × 0.35 × 0.7) ≈ −0.6. Still sex-neutral with
+the deferred-asymmetry comment.
+
+**Record modifier:** clean (incl. tickets/fines) → **+0.2**; misdemeanor → **−1.5**;
+felony → **−3.5**; multiple felonies or currently in the system → **−4.5**.
+
+Consequences (the point of the change): max Status ≈ 9.3–9.7 (9+ achievable), min Status
+reaches the clamp floor of 1.0, and the two downside questions no longer compress the
+range of the four marker questions.
+
+### 9.2 TIERS rescale
+
+TIERS boundaries may now be changed (labels, colors, and desc copy stay). Recalibrate the
+boundaries empirically against the panel so that: the Ceiling fixture lands **Elite**, the
+Floor fixture lands **Low SMV**, the Median teacher stays **Average**, and the lopsided
+fixtures keep their current tiers. Expected landing zone: Elite ≈ ≥9.0, Low SMV ≈ ≤2.9–3.0,
+with the middle boundaries nudged only if a fixture's tier would otherwise change. Keep
+six tiers.
+
+### 9.3 Panel updates
+
+- Fixture 1 (Ceiling): expect total ≥ 9.0 **and tier Elite** (now honestly enforced).
+- Fixture 6 (Floor): expect total ≤ 3.0 **and tier Low SMV**.
+- New structural assertion: a max-everything probe profile must reach **Status ≥ 9.0**
+  and the Floor-or-worse probe must reach **Status ≤ 1.5** — the ceiling/floor are real.
+- All other fixture bands unchanged; re-verify they still pass (the +0.4 clean-profile
+  drift on Status will move totals slightly — adjust only the spec-documented bands if a
+  fixture sits on a boundary, and log any band you touch).
