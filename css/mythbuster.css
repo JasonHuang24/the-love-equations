@@ -426,15 +426,6 @@
 .mb-sources.open .mb-sources-inner { visibility: visible; transition: visibility 0s 0s; }
 .mb-sources-content { padding: 0.35rem 1.15rem 1.15rem; }
 
-.mb-sources-block { margin-top: 0.4rem; }
-.mb-sources-head {
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  margin-bottom: 0.45rem;
-}
 .mb-source-list {
   list-style: none;
   margin: 0 0 0.9rem;

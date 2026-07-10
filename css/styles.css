@@ -244,15 +244,6 @@ body {
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
 .grid-cell {
   background: var(--card);
   padding: 1.35rem 1.25rem;
@@ -369,12 +360,9 @@ input[type=range] {
 }
 
 /* ── Utility ── */
-.mt-1 { margin-top: 0.75rem; }
 .mt-2 { margin-top: 1.25rem; }
 .mt-3 { margin-top: 2rem; }
-.mb-1 { margin-bottom: 0.75rem; }
 .mb-2 { margin-bottom: 1.25rem; }
-.mb-3 { margin-bottom: 2rem; }
 
 
 /* ─────────────────────────────────────────────
@@ -569,26 +557,19 @@ body {
   font-size: 1rem;
 }
 
-.content,
-.sections-area {
+.content {
   max-width: var(--container);
   margin-inline: auto;
 }
 
 .card,
 .grid-3,
-.grid-2,
 .dos-card,
 .mechanism-box,
 .inv-box,
 .qlink,
 .factor-card,
-.rule-box,
-.profile-card,
-.calc-shell,
-.smv-card,
-.result-box,
-.assessment-panel {
+.rule-box {
   border-color: var(--border) !important;
   border-radius: var(--radius-lg) !important;
   box-shadow: var(--shadow-soft);
@@ -598,15 +579,11 @@ body {
 .grid-cell,
 .dos-card,
 .factor-card,
-.qlink,
-.assessment-panel,
-.result-box,
-.smv-card {
+.qlink {
   background: linear-gradient(145deg, rgba(255,255,255,0.88), rgba(255, 250, 243, 0.72)) !important;
 }
 
-.grid-3,
-.grid-2 {
+.grid-3 {
   gap: 1rem !important;
   background: transparent !important;
   border: 0 !important;
@@ -620,8 +597,7 @@ body {
 }
 
 .grid-cell:hover,
-.qlink:hover,
-.smv-card:hover {
+.qlink:hover {
   transform: translateY(-2px);
   border-color: rgba(196, 30, 58, 0.38) !important;
   box-shadow: var(--shadow);
@@ -675,7 +651,6 @@ body {
 .dos-body p,
 .mech-text,
 .inv-note,
-.sc-desc,
 .factor-sub,
 .rule-box,
 .page-sub,
@@ -710,35 +685,6 @@ body {
 }
 
 /* v1.4 hierarchy diagram, recolored into cream/scarlet */
-.hierarchy-synthesis-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
-  gap: 2.5rem;
-  align-items: center;
-  margin-bottom: 3rem;
-}
-
-.hierarchy-intro-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.88), rgba(250,230,232,0.48));
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-soft);
-}
-
-.hierarchy-intro-card h2 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(2rem, 4.3vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  margin-bottom: 1rem;
-}
-
-.hierarchy-intro-card p {
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-}
-
 .pyramid-stage {
   width: min(100%, 650px);
   display: flex;
@@ -866,12 +812,7 @@ body {
 }
 
 @media (max-width: 980px) {
-  .hierarchy-synthesis-grid {
-    grid-template-columns: 1fr;
-  }
-
   .grid-3,
-  .grid-2,
   .factors-row,
   .inv-grid,
   .quick-links {
@@ -887,8 +828,7 @@ body {
 @media (max-width: 720px) {
   .hero,
   .page-header,
-  .content,
-  .sections-area {
+  .content {
     padding-left: 1rem;
     padding-right: 1rem;
   }
@@ -919,9 +859,6 @@ body {
     text-align: left;
   }
 
-  .footer-links {
-    gap: 12px 20px;
-  }
 }
 
 /* ── On-page table of contents (frameworks, statistics) ── */
@@ -1063,7 +1000,6 @@ body {
   display: inline-block; margin-top: 0.7rem; font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
   text-transform: uppercase; color: #51606F; background: #eef1f4; border-radius: 999px; padding: 0.32rem 0.8rem;
 }
-.composite-other { font-size: 12.5px; color: var(--text-muted); margin-top: 0.7rem; }
 .composite-breakdown { font-size: 12.5px; color: var(--text-muted); margin-top: 0.35rem; }
 .composite-note {
   font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin-top: 1.1rem;

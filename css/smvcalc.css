@@ -755,20 +755,6 @@
   padding: 1rem;
   margin: 1.2rem 0 1.45rem;
 }
-.import-box {
-  width: 100%;
-  min-height: 86px;
-  resize: vertical;
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.58);
-  color: var(--text-muted);
-  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-  font-size: 10.5px;
-  line-height: 1.45;
-  padding: 0.65rem 0.75rem;
-  margin: 0.65rem 0 0.75rem;
-}
 .import-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1056,14 +1042,6 @@
   font-size: 12px;
   line-height: 1.55;
 }
-.section-label-sm {
-  color: var(--text-dim);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
 @media (max-width: 860px) {
   .exam-stats,
   .score-grid,

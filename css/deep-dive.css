@@ -110,17 +110,6 @@ a.dd-feature:hover {
 .dd-feature.upcoming .dd-feature-kicker { color: var(--text-dim); }
 .dd-feature.upcoming:hover { transform: none; box-shadow: var(--shadow-soft); border-color: var(--border); }
 
-.dd-soon {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 800;
-  color: var(--text-dim);
-}
-
 @media (max-width: 720px) {
   .dd-hub-grid { grid-template-columns: 1fr; }
 }

@@ -116,12 +116,6 @@ input[type=range]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px rgba(1
 .profile-import { margin-top: 1.3rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); }
 .profile-export { margin-top: 1.3rem; padding-top: 1.25rem; border-top: 0.5px solid var(--border); }
 .export-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0.75rem 0; }
-.export-box {
-  width: 100%; min-height: 88px; resize: vertical; border: 0.5px solid var(--border);
-  border-radius: var(--radius-md); background: rgba(255,252,247,0.86); color: var(--text-muted);
-  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; font-size: 10.5px;
-  line-height: 1.45; padding: 0.7rem 0.8rem;
-}
 .export-status { font-size: 11px; color: var(--text-dim); }
 .pkg-readout { margin: 10px 0 0; }
 .pkg-readout:empty { display: none; }

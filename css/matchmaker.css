@@ -68,13 +68,10 @@
 .mm-import { margin: 1.1rem 0 0 32px; padding-top: 0.95rem; border-top: 0.5px solid var(--border); }
 .mm-import-label { font-size: 11.5px; color: var(--text-muted); line-height: 1.55; margin-bottom: 0.55rem; }
 .mm-import-label a { color: var(--scarlet-dim); }
-.mm-import-box { width: 100%; min-height: 52px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: var(--text); background: var(--card-solid); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; resize: vertical; box-sizing: border-box; }
-.mm-import-box:focus { outline: 2px solid var(--scarlet); outline-offset: 1px; }
 .mm-import-actions { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
 .mm-import-btn { font-family: inherit; font-size: 12.5px; font-weight: 700; color: #fffaf3; background: var(--scarlet); border: none; border-radius: var(--radius-sm); padding: 8px 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
 .mm-import-btn:hover { background: var(--scarlet-dim); }
 .mm-import-status { font-size: 11px; color: var(--text-dim); }
-.mm-export { margin-top: 0.95rem; padding-top: 0.9rem; border-top: 0.5px dashed var(--border); }
 .mm-iobox { padding: 0.8rem 0.9rem; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: rgba(0,0,0,0.012); margin-top: 0.8rem; }
 .mm-iobox:first-child { margin-top: 0; }
 .mm-import-btn.mm-btn-ghost { background: transparent; color: var(--scarlet); border: 0.5px solid var(--border); }
@@ -346,8 +343,6 @@
 
 /* the profile card (scrolls only if a profile overflows a short viewport) */
 .mmw-card { flex: 1; min-height: 0; overflow-y: auto; padding: 1rem 1.1rem; }
-.mmw-card-top { display: flex; align-items: center; gap: .8rem; }
-.mmw-av-lg { width: 58px !important; height: 58px !important; font-size: 21px !important; }
 .mmw-name { font-family: Georgia, serif; font-size: 22px; color: var(--text); line-height: 1.1; }
 .mmw-meta { font-size: 13px; color: var(--text-dim); margin-top: .15rem; }
 .mmw-card-pill { margin-left: auto; text-align: right; }
@@ -410,8 +405,6 @@
 .mmw-export-head i { color: var(--scarlet); }
 .mmw-export-sub { font-size: 11px; color: var(--text-dim); line-height: 1.5; margin: .35rem 0 .5rem; }
 .mmw-export-sub a { color: var(--scarlet-dim); }
-.mmw-export-box { width: 100%; min-height: 46px; box-sizing: border-box; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 10.5px; color: var(--text-muted); background: var(--card-solid); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 7px 9px; resize: vertical; line-height: 1.45; }
-.mmw-export-box:focus { outline: 2px solid var(--scarlet); outline-offset: 1px; }
 .mmw-export-actions { display: flex; align-items: center; gap: 10px; margin-top: 7px; flex-wrap: wrap; }
 .mmw-export-btn { font-family: inherit; font-size: 12px; font-weight: 700; color: #fffaf3; background: var(--scarlet); border: none; border-radius: var(--radius-sm); padding: 7px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .mmw-export-btn:hover { background: var(--scarlet-dim); }
@@ -429,6 +422,5 @@
 @media (max-width: 560px) {
   .mmw:not(.is-minimized) { left: .6rem; right: .6rem; bottom: .6rem; width: auto; }
   .mmw-card { padding: .85rem; }
-  .mmw-card-top { gap: .6rem; }
   .mmw-name { font-size: 20px; }
 }
