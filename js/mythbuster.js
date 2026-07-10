@@ -1717,6 +1717,18 @@
     if (!entry || typeof entry !== 'object') return ['not an object'];
     if (!entry.id) problems.push('missing id');
     else if (seenIds && seenIds.has(entry.id)) problems.push('duplicate id');
+    // category is load-bearing: cards stamp data-category, the TOC groups on it, and the
+    // filter chips skip missing ones — an uncategorized entry would render a TOC group with
+    // no matching chip. Require it outright (Sol audit #12).
+    if (!entry.category || typeof entry.category !== 'string') problems.push('missing category');
+    // `related` is optional, but the renderer dereferences rel.href/rel.label unguarded —
+    // one malformed entry would throw inside cardHTML and kill the whole deck (Sol audit #12).
+    if (entry.related != null) {
+      if (!Array.isArray(entry.related)) problems.push('related must be an array');
+      else entry.related.forEach(function (rel, i) {
+        if (!rel || typeof rel !== 'object' || !rel.href || !rel.label) problems.push('related[' + i + '] needs href + label');
+      });
+    }
 
     const r = entry.ruling;
     if (!r || typeof r !== 'object') {
@@ -1730,6 +1742,8 @@
           // A source with no fetchable URL is unsourced in practice — enforce the header's
           // "no unsourced ruling reaches the DOM" guarantee literally (empty href renders a dead link).
           if (!s || !s.url || !/^https?:\/\//.test(s.url)) problems.push('source[' + i + '] missing/invalid url');
+          // the footer attribution line and source list both print s.label (Sol audit #12)
+          if (!s || !s.label) problems.push('source[' + i + '] missing label');
         });
       }
       if (!r.badge) problems.push('missing ruling.badge');

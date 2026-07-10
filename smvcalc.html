@@ -372,11 +372,14 @@
     function readCalcCv(key) {
       try { const o = JSON.parse(localStorage.getItem(key) || 'null');
         if (!(o && !o.needsSex && typeof o.cv === 'number' && isFinite(o.cv))) return null;
-        // Sex-provenance guard (Codex): geometry/heuristic scores are computed against a
-        // sex-specific rubric, so a score generated under one sex must NOT be silently reused
-        // after the SMV sex is changed. Model/CNN headline reads are sex-agnostic → stay reusable.
+        // Sex-provenance guard (Codex; allowlist per Sol audit #2): a score computed on a
+        // sex-specific rubric must NOT be silently reused after the SMV sex is changed. Only two
+        // sources are sex-AGNOSTIC and stay reusable — the CNN headline ('model') and the Face
+        // Calc's 'heuristic' (fixed ideals, no sex input; its panel bands re-base by sex, the
+        // headline doesn't). Everything else — the Body Calc's 'geometry'/'measured'/'hybrid'
+        // (FFMI + leanness curves fork by sex) and any future source — rejects on mismatch.
         const chosen = (typeof SEX_IDX !== 'undefined' && (answers[SEX_IDX] === 'm' || answers[SEX_IDX] === 'f')) ? answers[SEX_IDX] : null;
-        if (chosen && o.sex && o.sex !== chosen && /geometry|heuristic/i.test(o.source || '')) return null;
+        if (chosen && o.sex && o.sex !== chosen && !/^(model|heuristic)$/i.test(o.source || '')) return null;
         return o.cv;
       } catch (e) {}
       return null;
@@ -2870,7 +2873,9 @@
       try {
         const nameInput = document.getElementById('pb-name');
         localStorage.setItem(SMV_STORAGE_KEY, JSON.stringify({
-          overall: (function(){ const e = document.getElementById('res-num'); const v = e ? parseFloat(e.textContent) : NaN; return isFinite(v) ? v : null; })(),
+          // From state, never the #res-num DOM text — resetA() hides the results panel without
+          // clearing its text, so a DOM read would re-save the previous run's overall after Restart.
+          overall: (aCompleted && typeof aTotal === 'number' && isFinite(aTotal)) ? Number(aTotal.toFixed(1)) : null,
           selectedLensA,
           selectedLensB,
           answers,
@@ -2926,6 +2931,14 @@
 
     function clearSavedState() {
       try { localStorage.removeItem(SMV_STORAGE_KEY); } catch (err) {}
+      // First-visit defaults for the saved preferences too — "clear" forgets auto-next and
+      // units, not just answers; without this the re-save below persists them straight back.
+      // (The #auto-next checkbox re-syncs from the variable in startA.)
+      autoNext = false;
+      heightUnit = 'imperial';
+      weightUnit = 'imperial';
+      const statusB = document.getElementById('import-status-b');
+      if (statusB) statusB.textContent = 'Copy a package, then paste it here.';
       resetA();
       bVals.forEach((_, i) => { bVals[i] = 5.5; });
       selectedLensA = 'balanced';
@@ -2945,6 +2958,11 @@
       const pkg = JSON.parse(text.trim());
       if (!pkg || pkg.source !== 'love-equations.compatibility' || !Array.isArray(pkg.factors)) {
         throw new Error('This does not look like a Love Equations compatibility export package.');
+      }
+      // Schema fence (Sol audit #11): a package declaring a different version was written by a
+      // calculator this reader doesn't know — refuse it rather than clamp its numbers into nonsense.
+      if (pkg.version != null && pkg.version !== 1) {
+        throw new Error('This package uses schema version ' + pkg.version + ' — this page only reads version 1.');
       }
       return pkg;
     }

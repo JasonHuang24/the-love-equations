@@ -349,7 +349,9 @@
 
   // ── four hierarchies — mirrored from compatibility.html (key + tier/factor ORDER must
   //    match so saved `${key}-${ti}-${fi}` values import cleanly). Each factor is
-  //    [name, desc, SRC] where SRC names the derivation used to score a candidate on it. ──
+  //    [name, desc, SRC] where SRC names the derivation used to score a candidate on it.
+  //    ORDER IS A WIRE FORMAT: packages import positionally — inserting, cutting or
+  //    reordering factors requires bumping the package `version` (both pages fence on it). ──
   const PYRAMIDS = {
     you: { title:'Female 1', subtitle:"Jason's hierarchy", describes:'f', lean:'looks', tiers:[
       { name:'Primary factors', factors:[ ['Physical attractiveness','what registers first','looks'],['Classiness','grace, not crude','class'],['Attraction toward you','the pull runs both ways','desire'] ] },
@@ -3622,20 +3624,33 @@
 
   // ── localStorage imports (same keys/shape as the calc pages) ──
   function readLS(key){ try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){ return null; } }
-  function readCv(key){ const o = readLS(key); return (o && !o.needsSex && typeof o.cv==='number' && isFinite(o.cv)) ? o.cv : null; }
+  function readCv(key, expectSex){
+    const o = readLS(key);
+    if (!(o && !o.needsSex && typeof o.cv==='number' && isFinite(o.cv))) return null;
+    // Sex-provenance guard (Sol audit #2, mirrors smvcalc's readCalcCv): reads scored on a
+    // sex-specific rubric (Body Calc geometry/measured/hybrid) don't survive a sex mismatch;
+    // only the CNN 'model' headline and the Face Calc's sex-agnostic 'heuristic' reuse freely.
+    if (expectSex && o.sex && o.sex !== expectSex && !/^(model|heuristic)$/i.test(o.source || '')) return null;
+    return o.cv;
+  }
   function initImports(){
-    importedFace = readCv('loveEquations.faceScore.v2');
-    importedBody = readCv('loveEquations.bodyScore.v2');
-    importedLooks = (importedFace!=null && importedBody!=null) ? round1((importedFace+importedBody)/2)
-                  : (importedFace!=null ? importedFace : (importedBody!=null ? importedBody : null));
-    // v6 = the SMV Calc's current key (it deletes v5 on load). answers[0] is sex ('m'/'f');
+    // SMV first: its saved sex is the provenance authority for the face/body reads below.
+    // v7_2 = the SMV Calc's current key (it deletes v5/v6/v7 on load). answers[0] is sex ('m'/'f');
     // answers[1] is an age BAND ('25-29', '50+') — parseInt reads its lower edge.
-    const smv = readLS('loveEquations.smvCalculator.v6');
+    const smv = readLS('loveEquations.smvCalculator.v7_2');
     importedSMV = (smv && typeof smv.overall==='number' && isFinite(smv.overall)) ? smv.overall : null;
+    let smvSex = null;
     if (smv && Array.isArray(smv.answers)){
-      if (smv.answers[0]==='m'||smv.answers[0]==='f') userSex = smv.answers[0];
+      if (smv.answers[0]==='m'||smv.answers[0]==='f'){ smvSex = smv.answers[0]; userSex = smvSex; }
       const a = parseInt(smv.answers[1],10); if (isFinite(a) && a>=18 && a<=80){ const el=document.getElementById('user-age'); if (el) el.value=a; }
     }
+    importedFace = readCv('loveEquations.faceScore.v2', smvSex);
+    importedBody = readCv('loveEquations.bodyScore.v2', smvSex);
+    // Both-or-nothing (Sol audit #3): a lone Face or Body read is NOT an overall Looks score —
+    // the shared composite (composite-score.js) refuses to blend without both, so the intake
+    // must too. A partial read still shows as a chip hint; the 50/50 average below mirrors
+    // the composite's FACE_WEIGHT = 0.5.
+    importedLooks = (importedFace!=null && importedBody!=null) ? round1((importedFace+importedBody)/2) : null;
     const compat = readLS('loveEquations.compatibilityCalculator.v1');
     if (compat && compat.values && typeof compat.values==='object'){
       const ak = compat.activeKey;
@@ -3688,11 +3703,19 @@
   function renderIntake(){
     const looksFound = importedLooks!=null, smvFound = importedSMV!=null;
     const looksManual = !looksFound || overrideLooks, smvManual = !smvFound || overrideSMV;
+    // looksFound implies BOTH reads exist (both-or-nothing above); a lone read is a hint, not a score.
+    const looksSrc = looksFound
+      ? `Face ${importedFace.toFixed(1)} &middot; Body ${importedBody.toFixed(1)} (avg). From <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.`
+      : importedFace!=null
+      ? `Face ${importedFace.toFixed(1)} imported &mdash; Looks needs the <a href="body.html">Body calc</a> too. Set it manually until then.`
+      : importedBody!=null
+      ? `Body ${importedBody.toFixed(1)} imported &mdash; Looks needs the <a href="face.html">Face calc</a> too. Set it manually until then.`
+      : `No saved score &mdash; set it, or run the <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.`;
     document.getElementById('intake-grid').innerHTML = `
       <div class="mm-chip">
         <div class="mm-chip-head"><span class="mm-chip-label">Looks</span><span class="mm-chip-state ${looksFound&&!overrideLooks?'found':'manual'}">${looksFound?(overrideLooks?'manual override':'imported'):'manual'}</span></div>
         <div class="mm-chip-val" id="chipval-looks">${userLooks().toFixed(1)}<small>/10</small></div>
-        <div class="mm-chip-src">${looksFound ? `Face ${importedFace!=null?importedFace.toFixed(1):'—'} &middot; Body ${importedBody!=null?importedBody.toFixed(1):'—'} (avg). From <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.` : `No saved score &mdash; set it, or run the <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.`}</div>
+        <div class="mm-chip-src">${looksSrc}</div>
         ${looksFound?`<label class="mm-ovr"><input type="checkbox" ${overrideLooks?'checked':''} onchange="mmToggleOverride('looks',this.checked)"> Set manually</label>`:''}
         ${looksManual?`<input class="mm-range" type="range" min="1" max="10" step="0.5" value="${userLooks()}" aria-label="Your looks score, 1 to 10" oninput="mmSetManual('looks',this.value)">`:''}
       </div>
@@ -4444,6 +4467,11 @@
   function applyStandardPackage(pkg){
     const key = pkg.hierarchyKey;
     if (!PYRAMIDS[key]) return false;
+    // Positional import — factor semantics ride on array order (see the PYRAMIDS note). A
+    // package with a different factor count was written against another shape of this
+    // hierarchy; refuse it rather than silently misassign every score after the shift (Sol #6).
+    const localCount = PYRAMIDS[key].tiers.reduce((n,t)=>n+t.factors.length,0);
+    if (pkg.factors.length !== localCount) return false;
     const vals = {}; let idx = 0;
     PYRAMIDS[key].tiers.forEach((t,ti)=>t.factors.forEach((f,fi)=>{ const fac = pkg.factors[idx++]; if (fac && typeof fac.score==='number' && isFinite(fac.score)) vals[key+'-'+ti+'-'+fi] = clamp(fac.score, 1, 10); }));
     compatValues = Object.assign({}, compatValues, vals);
@@ -4468,6 +4496,9 @@
   function parseClip(text, statusEl){
     let pkg; try { pkg = JSON.parse((text||'').trim()); } catch(e){ if (statusEl) statusEl.textContent = 'Clipboard doesn’t contain a profile package.'; return null; }
     if (!pkg || !pkg.source){ if (statusEl) statusEl.textContent = 'Clipboard doesn’t contain a recognized package.'; return null; }
+    // Schema fence (Sol audit #11): a declared version this reader doesn't know means a newer
+    // (or hand-edited) writer — refuse rather than clamp its numbers into 1–10 nonsense.
+    if (pkg.version != null && pkg.version !== 1){ if (statusEl) statusEl.textContent = 'That package uses schema version ' + pkg.version + ' — this page only reads version 1.'; return null; }
     return pkg;
   }
   async function importSmvFromClipboard(){
@@ -4475,6 +4506,9 @@
     const text = await readClip(st); if (text===null) return;
     const pkg = parseClip(text, st); if (!pkg) return;
     if (pkg.source === 'love-equations.smv'){
+      // SMV packages declare scale:10 for `overall`; any other declared scale would be clamped
+      // into nonsense by applySmvPackage's 1–10 clamp — refuse it instead (Sol audit #11).
+      if (pkg.scale != null && pkg.scale !== 10){ st.textContent = 'That SMV package declares a ' + pkg.scale + '-point scale — this page expects 0–10.'; return; }
       applySmvPackage(pkg);   // re-renders the SMV readout via renderIntake → refreshSmvExport
       st.textContent = 'Imported SMV ' + (typeof pkg.overall==='number'?pkg.overall.toFixed(1):'profile') + (pkg.sex?(' · '+(pkg.sex==='m'?'man':'woman')):'') + '.';
       liveReRank();
@@ -4489,7 +4523,7 @@
     const text = await readClip(st); if (text===null) return;
     const pkg = parseClip(text, st); if (!pkg) return;
     if (isStandardPkg(pkg)){
-      if (!applyStandardPackage(pkg)){ st.textContent = 'That package uses a hierarchy this tool does not know.'; return; }
+      if (!applyStandardPackage(pkg)){ st.textContent = 'That package doesn’t match this tool’s hierarchies — unknown key, or a factor layout from another version.'; return; }
       st.textContent = 'Imported standard: ' + PYRAMIDS[pkg.hierarchyKey].title + ' (' + PYRAMIDS[pkg.hierarchyKey].subtitle + ').';   // std readout re-rendered by renderPyramid → refreshStandardExport
       liveReRank();
     } else if (pkg.source === 'love-equations.smv'){
@@ -4507,7 +4541,9 @@
     P.tiers.forEach((t,ti)=>t.factors.forEach((f,fi)=>{
       const id = pyramid+'-'+ti+'-'+fi;
       const v = selfGrades[id]!=null ? selfGrades[id] : 1;
-      factors.push({ tier: t.name, name: f[0], score: v });
+      // description travels with the factor (Sol audit #5): SMV's mapper reads name+description
+      // tokens, and factors like "Attraction toward you" only map to Charm via their description.
+      factors.push({ tier: t.name, name: f[0], description: f[1], score: v });
       sum += v; n++;
     }));
     return {
@@ -4630,12 +4666,6 @@
     let wsum=0, w=0;
     tiers.forEach((t,i) => { if(t.avg!=null){ wsum += PW_TIER_W[i]*t.avg; w += PW_TIER_W[i]; } });
     return { tiers, overall: w ? wsum/w : null };
-  }
-
-  function pwAvatar(c, lg){
-    const initials = c.name.split(' ').slice(0,2).map(w=>w[0]).join('');
-    let h=0; for(let i=0;i<c.slug.length;i++) h=(h*31+c.slug.charCodeAt(i))>>>0;
-    return `<span class="mm-avatar${lg?' mmw-av-lg':''}" style="background:${AV_COLORS[h%AV_COLORS.length]}">${initials}${avatarPhoto(c)}</span>`;
   }
 
   function renderPwSeg(){

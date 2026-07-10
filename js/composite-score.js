@@ -66,14 +66,18 @@
     return Math.round(s / 86400) + 'd ago';
   }
 
-  // Tiers are fed the RAW score, same thresholds the calcs use, so the labels stay consistent with them.
+  // Tiers are fed the RAW score. The blackpill ladder mirrors the Face Calc's pslTier exactly (the
+  // composite already speaks PSL vocabulary; the Body Calc keeps its own physique ladder by design);
+  // the conventional ladder matches both calcs' convTier thresholds.
   function tierFor(s, lens, sex) {
     if (lens === 'blackpill') {
       var coded = function (m, fem, neutral) { return sex === 'm' ? m : sex === 'f' ? fem : neutral; };
-      if (s < 3) return 'Sub-tier';
+      if (s < 2.5) return 'Sub-tier';
+      if (s < 3.5) return coded('Incel-tier', 'Femcel-tier', 'Incel / Femcel-tier');
       if (s < 4.5) return 'Below average';
-      if (s < 5.5) return 'Mid-tier normie';
-      if (s < 6.5) return 'High-tier normie';
+      if (s < 5.0) return 'LTN · Low-Tier Normie';
+      if (s < 5.5) return 'MTN · Mid-Tier Normie';
+      if (s < 6.5) return 'HTN · High-Tier Normie';
       if (s < 7.5) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
       if (s < 8.5) return coded('Chad', 'Stacy', 'Chad / Stacy');
       return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
@@ -192,6 +196,14 @@
         // also drop the body calc's saved height/weight/bf inputs — body.html re-persists a
         // bodyScore from them on its next load, silently resurrecting the score just reset here
         localStorage.removeItem('loveEquations.bodyInputs.v1');
+        // the single global Reset: instrument state persists across pages by design, and this
+        // button is the one place that clears ALL of it — every key any page writes
+        localStorage.removeItem(LENS_KEY);
+        localStorage.removeItem('loveEquations.smvCalculator.v7_2');
+        localStorage.removeItem('loveEquations.compatibilityCalculator.v1');
+        localStorage.removeItem('loveEquations.matchmaker.v1');
+        localStorage.removeItem('loveEquations.matchmaker.pwMin');
+        localStorage.removeItem('loveHierarchyBuilder');
       } catch (e) {}
       if (window.bcResetAll) window.bcResetAll();   // clear the body calc's photo + result if we're on body.html
       if (window.lcResetAll) window.lcResetAll();   // ditto the face calc if we're on face.html

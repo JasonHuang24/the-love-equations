@@ -57,7 +57,7 @@ No build step, no framework — plain HTML/CSS/JS served statically.
   provides face/pose landmarks. See `models/README.md` for training, calibration anchors, and the
   export contract. Nothing leaves the browser.
 - **Cross-page state:** calculators share `localStorage` keys — `loveEquations.faceScore.v2`,
-  `bodyScore.v2`, the shot keys, `smvCalculator.v6`, `compatibilityCalculator.v1`, `matchmaker.v1` — and a
+  `bodyScore.v2`, the shot keys, `smvCalculator.v7_2`, `compatibilityCalculator.v1`, `matchmaker.v1` — and a
   clipboard "profile package" JSON format (`source: 'love-equations.compatibility' | 'love-equations.smv'`)
   for explicit exchange between SMV Calc, Compatibility, and Matchmaker.
 - **Fonts & CDN:** Playfair Display is self-hosted in `fonts/` (variable woff2, SIL OFL). The only external

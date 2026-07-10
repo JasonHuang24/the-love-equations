@@ -100,6 +100,9 @@
     // weight template for the three comparison hierarchies (descending by tier, sums to 1.00)
     const W = [0.16, 0.15, 0.14, 0.12, 0.11, 0.10, 0.09, 0.07, 0.06];
 
+    // NOTE: tier/factor ORDER here is a wire format — matchmaker.html's PYRAMIDS mirrors it,
+    // packages import positionally, and saved values key on `${key}-${ti}-${fi}`. Inserting,
+    // cutting or reordering factors REQUIRES bumping the package `version` and COMPAT_STORAGE_KEY.
     const HIERARCHIES = [
       {
         key: 'you', tab: 'Jason’s hierarchy', theme: 'blue', special: true,
@@ -345,6 +348,11 @@
       switchHier('you');
       const status = document.getElementById('export-status');
       if (status) status.textContent = 'Scores reset. Package ready with defaults.';
+      // the import panel would otherwise keep narrating the previous package (Sol audit #10)
+      const impStatus = document.getElementById('compat-import-status');
+      if (impStatus) impStatus.textContent = 'Copy a profile, then paste it here.';
+      const impReadout = document.getElementById('compat-import-readout');
+      if (impReadout) impReadout.innerHTML = '';
       saveCompatState();
     }
 
@@ -518,6 +526,9 @@
       let pkg;
       try { pkg = JSON.parse((text || '').trim()); } catch (e) { reject('Clipboard doesn’t contain a profile package.'); return; }
       if (!pkg || typeof pkg !== 'object') { reject('Clipboard doesn’t contain a recognized package.'); return; }
+      // Schema fence (Sol audit #11): refuse a declared version this reader doesn't know
+      // rather than clamp its numbers into 1–10 nonsense.
+      if (pkg.version != null && pkg.version !== 1) { reject('That package uses schema version ' + pkg.version + ' — this page only reads version 1.'); return; }
       if (!Array.isArray(pkg.factors)) {
         reject(pkg.source === 'love-equations.smv'
           ? 'That is an SMV headline package — paste it into the SMV Calculator. This grid needs per-factor scores.'
@@ -527,6 +538,11 @@
       const key = pkg.hierarchyKey;
       const h = HIERARCHIES.find(x => x.key === key);
       if (!h) { reject('That package uses a hierarchy this page does not know.'); return; }
+      // Positional import — semantics ride on factor order (see the HIERARCHIES note). A
+      // different factor count means a package from another shape of this hierarchy; refuse
+      // it rather than silently misassign every score after the shift (Sol audit #6).
+      const localCount = h.tiers.reduce((n, t) => n + t.factors.length, 0);
+      if (pkg.factors.length !== localCount) { reject('That package was exported from a different version of this hierarchy — its factor layout doesn’t match.'); return; }
       switchHier(key);
       let idx = 0, filled = 0;
       h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {
