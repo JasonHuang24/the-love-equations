@@ -47,7 +47,7 @@
           </div>
           <div class="mm-ctl">
             <span class="mm-ctl-label">My age</span>
-            <input id="user-age" type="number" min="18" max="80" value="30" style="width:64px;font-family:inherit;font-size:13px;padding:6px 8px;border:0.5px solid var(--border);border-radius:8px;background:var(--card-solid);color:var(--text);" />
+            <input id="user-age" type="number" min="18" max="80" value="30" autocomplete="off" style="width:64px;font-family:inherit;font-size:13px;padding:6px 8px;border:0.5px solid var(--border);border-radius:8px;background:var(--card-solid);color:var(--text);" />
           </div>
         </div>
 
@@ -3633,24 +3633,38 @@
     if (expectSex && o.sex && o.sex !== expectSex && !/^(model|heuristic)$/i.test(o.source || '')) return null;
     return o.cv;
   }
+  let looksFromPackage = false;   // importedLooks came from a pasted SMV package, not the calc fold
+  function refreshCalcImports(){
+    // Silent localStorage imports re-validate against the CURRENT effective sex, on boot and on
+    // every sex-toggle flip — a wrong-rubric read must never fold into this profile or its
+    // exports (Sol review #2). An explicitly PASTED package's Looks is the user's own assertion
+    // (chip shows "imported") and sticks until re-pasted or overridden.
+    const expect = (userSex==='m'||userSex==='f') ? userSex : null;
+    importedFace = readCv('loveEquations.faceScore.v2', expect);
+    importedBody = readCv('loveEquations.bodyScore.v2', expect);
+    // Both-or-nothing (Sol audit #3): a lone Face or Body read is NOT an overall Looks score —
+    // the shared composite (composite-score.js) refuses to blend without both, so the intake
+    // must too. A partial read still shows as a chip hint; the 50/50 average below mirrors
+    // the composite's FACE_WEIGHT = 0.5.
+    if (!looksFromPackage) importedLooks = (importedFace!=null && importedBody!=null) ? round1((importedFace+importedBody)/2) : null;
+  }
   function initImports(){
-    // SMV first: its saved sex is the provenance authority for the face/body reads below.
+    // SMV first: its record's sex is the provenance authority for the face/body reads. With no
+    // SMV record, the SAVED matchmaker sex is peeked before the guarded reads run (loadState
+    // re-applies the same value moments later), so the guard and the UI agree (Sol review #2).
     // v7_2 = the SMV Calc's current key (it deletes v5/v6/v7 on load). answers[0] is sex ('m'/'f');
     // answers[1] is an age BAND ('25-29', '50+') — parseInt reads its lower edge.
     const smv = readLS('loveEquations.smvCalculator.v7_2');
-    importedSMV = (smv && typeof smv.overall==='number' && isFinite(smv.overall)) ? smv.overall : null;
+    // aCompleted must be true: pre-remediation Restart/Clear wrote stale DOM-scraped overalls
+    // into otherwise-cleared records (Sol review #3) — an incomplete record is not a score.
+    importedSMV = (smv && smv.aCompleted === true && typeof smv.overall==='number' && isFinite(smv.overall)) ? smv.overall : null;
     let smvSex = null;
     if (smv && Array.isArray(smv.answers)){
       if (smv.answers[0]==='m'||smv.answers[0]==='f'){ smvSex = smv.answers[0]; userSex = smvSex; }
       const a = parseInt(smv.answers[1],10); if (isFinite(a) && a>=18 && a<=80){ const el=document.getElementById('user-age'); if (el) el.value=a; }
     }
-    importedFace = readCv('loveEquations.faceScore.v2', smvSex);
-    importedBody = readCv('loveEquations.bodyScore.v2', smvSex);
-    // Both-or-nothing (Sol audit #3): a lone Face or Body read is NOT an overall Looks score —
-    // the shared composite (composite-score.js) refuses to blend without both, so the intake
-    // must too. A partial read still shows as a chip hint; the 50/50 average below mirrors
-    // the composite's FACE_WEIGHT = 0.5.
-    importedLooks = (importedFace!=null && importedBody!=null) ? round1((importedFace+importedBody)/2) : null;
+    if (!smvSex){ const savedMM = readLS(MM_KEY); if (savedMM && (savedMM.userSex==='m'||savedMM.userSex==='f')) userSex = savedMM.userSex; }
+    refreshCalcImports();
     const compat = readLS('loveEquations.compatibilityCalculator.v1');
     if (compat && compat.values && typeof compat.values==='object'){
       const ak = compat.activeKey;
@@ -3703,8 +3717,12 @@
   function renderIntake(){
     const looksFound = importedLooks!=null, smvFound = importedSMV!=null;
     const looksManual = !looksFound || overrideLooks, smvManual = !smvFound || overrideSMV;
-    // looksFound implies BOTH reads exist (both-or-nothing above); a lone read is a hint, not a score.
-    const looksSrc = looksFound
+    // Three sources for a found Looks: a pasted SMV package (takes precedence — the chip value
+    // is the package's own number, so it must NOT be labelled as a Face×Body average), the
+    // calc fold (both reads present), or nothing yet. A lone calc read is a hint, not a score.
+    const looksSrc = looksFromPackage && looksFound
+      ? `From your pasted SMV package&rsquo;s Looks factor.`
+      : (importedFace!=null && importedBody!=null)
       ? `Face ${importedFace.toFixed(1)} &middot; Body ${importedBody.toFixed(1)} (avg). From <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.`
       : importedFace!=null
       ? `Face ${importedFace.toFixed(1)} imported &mdash; Looks needs the <a href="body.html">Body calc</a> too. Set it manually until then.`
@@ -4459,9 +4477,10 @@
   function isStandardPkg(pkg){ return (pkg.source==='love-equations.compatibility' || pkg.source==='love-equations.matchmaker.roster') && Array.isArray(pkg.factors); }
   function applySmvPackage(pkg){
     if (typeof pkg.overall === 'number' && isFinite(pkg.overall)) importedSMV = clamp(pkg.overall, 1, 10);
-    if (Array.isArray(pkg.factors)){ const lf = pkg.factors.find(f => /look/i.test(f.name||'')); if (lf && typeof lf.score==='number' && isFinite(lf.score)) importedLooks = clamp(lf.score, 1, 10); }
+    if (Array.isArray(pkg.factors)){ const lf = pkg.factors.find(f => /look/i.test(f.name||'')); if (lf && typeof lf.score==='number' && isFinite(lf.score)) { importedLooks = clamp(lf.score, 1, 10); looksFromPackage = true; } }
     if (pkg.sex==='m'||pkg.sex==='f'){ userSex = pkg.sex; document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); }); }
     if (typeof pkg.age==='number' && isFinite(pkg.age)){ const el=document.getElementById('user-age'); if (el) el.value = clamp(Math.round(pkg.age), 18, 80); }
+    refreshCalcImports();   // face/body chips re-guard under the package's sex (package Looks sticks via the flag)
     renderPyramid(); renderIntake();
   }
   function applyStandardPackage(pkg){
@@ -4820,13 +4839,17 @@
     if (pref !== null) setPwMin(pref === 'true'); else setPwMin(true);   // click-driven: start collapsed, opens on first match click
   }
 
+  // bfcache: a Back-restored page revives pre-Reset JS state, and the next interaction would
+  // re-save it — force a fresh boot from (possibly just-cleared) localStorage (Sol review #4).
+  window.addEventListener('pageshow', e => { if (e.persisted) window.location.reload(); });
+
   document.addEventListener('DOMContentLoaded', () => {
     initImports();
     loadState();   // restore the user's last matchmaker session over the calc-derived defaults
     renderIntake(); renderPyramid(); renderQuiz(); applySimpleUI();
     document.querySelectorAll('#sex-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.sex===userSex; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
     document.querySelectorAll('#mode-toggle .mm-toggle-btn').forEach(b=>{ const on=b.dataset.mode===mode; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
-    wireToggle('sex-toggle', 'sex', v => userSex=v);
+    wireToggle('sex-toggle', 'sex', v => { userSex=v; refreshCalcImports(); });   // re-guard silent imports under the new sex (Sol review #2)
     wireToggle('mode-toggle', 'mode', v => mode=v);
     const ageEl = document.getElementById('user-age');
     ageEl.addEventListener('input', liveReRank);

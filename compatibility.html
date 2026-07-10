@@ -335,6 +335,10 @@
       } catch (err) {}
     }
 
+    // bfcache: a Back-restored page revives pre-Reset JS/slider state, and the next input
+    // would re-save it — force a fresh boot from localStorage (Sol review #4).
+    window.addEventListener('pageshow', e => { if (e.persisted) window.location.reload(); });
+
     function resetCompatibilityState() {
       try { localStorage.removeItem(COMPAT_STORAGE_KEY); } catch (err) {}
       HIERARCHIES.forEach(h => h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {

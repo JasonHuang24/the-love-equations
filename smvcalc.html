@@ -3506,6 +3506,10 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // bfcache: a Back-restored page revives pre-Reset/pre-Clear JS state, and the next
+    // interaction would re-save it — force a fresh boot from localStorage (Sol review #4).
+    window.addEventListener('pageshow', e => { if (e.persisted) window.location.reload(); });
+
     restoringState = true;
     // Stale rosters must never load into the current one (indices shifted, question types
     // replaced): the v7 rebuild replaced Status and Charm wholesale, and §10 (v7.2) shifted the

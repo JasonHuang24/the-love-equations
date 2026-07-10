@@ -216,4 +216,8 @@
   // in case the partial is already in the DOM (idempotent).
   document.addEventListener('partials:loaded', render);
   if (document.getElementById('composite-result')) render();
+
+  // bfcache (face + body pages): a Back-restored page revives pre-Reset calc state, and the
+  // next render would re-persist the just-cleared scores — force a fresh boot (Sol review #4).
+  window.addEventListener('pageshow', function (e) { if (e.persisted) window.location.reload(); });
 })();

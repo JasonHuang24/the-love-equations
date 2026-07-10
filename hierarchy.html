@@ -382,6 +382,10 @@
 
   <script>
     (function () {
+      // bfcache: a Back-restored page revives pre-Reset builder state, and the next edit
+      // would re-save it — force a fresh boot from localStorage (Sol review #4).
+      window.addEventListener('pageshow', e => { if (e.persisted) window.location.reload(); });
+
       const STORAGE_KEY = 'loveHierarchyBuilder';
       const MAX_PER_TIER = 5;
       const MAX_TIERS = 6;
