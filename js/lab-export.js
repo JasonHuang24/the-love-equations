@@ -1,3 +1,5 @@
+import { validSourceProvenanceUrl } from './lab-intake.js?v=1.3';
+
 /*
  * LE Lab export adapters.
  * These functions serialize the versioned analysis result; they never rebuild
@@ -45,8 +47,19 @@ function timestampLabel(item) {
     : `${minutes}:${String(remainder).padStart(2, '0')}`;
 }
 
+function sourceForExport(source = {}) {
+  const provenanceUrl = validSourceProvenanceUrl(source.url);
+  if (provenanceUrl) return { ...source, url: provenanceUrl };
+  const { url: _invalidUrl, ...withoutInvalidUrl } = source;
+  return withoutInvalidUrl;
+}
+
+function resultForExport(result) {
+  return { ...result, source: sourceForExport(result.source) };
+}
+
 function sourceLine(result) {
-  const source = result.source || {};
+  const source = sourceForExport(result.source);
   const parts = [markdownText(source.title || 'Untitled source')];
   if (source.type) parts.push(markdownText(source.type));
   if (source.url) parts.push(markdownLink(source.url, source.url));
@@ -203,7 +216,7 @@ export function researchQueueToMarkdown(result, { includeHeading = true } = {}) 
 
 export function analysisToJson(result, { pretty = true } = {}) {
   if (!result) throw new Error('There is no analysis to export.');
-  return JSON.stringify(result, null, pretty ? 2 : 0);
+  return JSON.stringify(resultForExport(result), null, pretty ? 2 : 0);
 }
 
 export function researchQueueToJson(result, { pretty = true } = {}) {
@@ -212,7 +225,7 @@ export function researchQueueToJson(result, { pretty = true } = {}) {
     schemaVersion: 'le-lab.research-queue/1.0',
     analysisId: result.id,
     generatedAt: result.generatedAt,
-    source: result.source,
+    source: sourceForExport(result.source),
     canonIndex: result.canonIndex,
     analysisMode: result.analysisMode,
     extractionWarnings: result.source?.extractionWarnings || [],

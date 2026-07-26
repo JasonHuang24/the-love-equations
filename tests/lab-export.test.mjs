@@ -101,3 +101,30 @@ test('structured exports retain mapped passages and the research queue', () => {
   assert.deepEqual(queue.queue.items.map((item) => item.location.startTime), TIMES_MS);
   assert.equal(queue.queue.items[2].excerpt, 'Research candidate 3.');
 });
+
+test('malformed provenance is omitted from every export surface', () => {
+  const result = fixture();
+  result.source.url = 'not a URL';
+
+  const analysisMarkdown = analysisToMarkdown(result);
+  const researchMarkdown = researchQueueToMarkdown(result);
+  const analysis = JSON.parse(analysisToJson(result));
+  const queue = JSON.parse(researchQueueToJson(result));
+
+  assert.doesNotMatch(analysisMarkdown, /not a URL/);
+  assert.doesNotMatch(researchMarkdown, /not a URL/);
+  assert.equal('url' in analysis.source, false);
+  assert.equal('url' in queue.source, false);
+});
+
+test('valid transcript provenance remains present in Markdown and JSON exports', () => {
+  const result = fixture();
+  result.source.url = 'https://youtu.be/example';
+
+  assert.match(analysisToMarkdown(result), /https:\/\/youtu\.be\/example/);
+  assert.equal(JSON.parse(analysisToJson(result)).source.url, 'https://youtu.be/example');
+  assert.equal(
+    JSON.parse(researchQueueToJson(result)).source.url,
+    'https://youtu.be/example'
+  );
+});

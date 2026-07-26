@@ -1328,34 +1328,80 @@ export function classifySourceUrl(value) {
   };
 }
 
+export function validSourceProvenanceUrl(value) {
+  try {
+    return classifySourceUrl(value).url;
+  } catch {
+    return null;
+  }
+}
+
 export function assessSourceInputReadiness({
   text = '',
   normalizedDocument = null,
   sourceUrl = '',
   companionFile = null
 } = {}) {
-  const hasSuppliedText = Boolean(
+  const hasAnalyzableContent = Boolean(
     cleanControlCharacters(text).trim()
     || normalizedDocument
     || companionFile
   );
+  const rawSourceUrl = cleanControlCharacters(sourceUrl).trim();
   let classification = null;
   let urlError = null;
-  if (cleanControlCharacters(sourceUrl).trim()) {
+  if (rawSourceUrl) {
     try {
       classification = classifySourceUrl(sourceUrl);
     } catch (error) {
       urlError = error;
     }
   }
+  const retrievalEligible = Boolean(classification?.canFetchText);
+  const provenanceUrl = classification?.url || null;
+  const urlState = !rawSourceUrl
+    ? 'empty'
+    : urlError
+      ? hasAnalyzableContent ? 'warning' : 'blocking-error'
+      : 'valid';
   return {
-    canAnalyze: !urlError && Boolean(hasSuppliedText || classification?.canFetchText),
-    hasSuppliedText,
+    canAnalyze: Boolean(hasAnalyzableContent || retrievalEligible),
+    hasAnalyzableContent,
+    hasSuppliedText: hasAnalyzableContent,
+    retrievalEligible,
+    provenanceValid: Boolean(provenanceUrl),
+    provenanceUrl,
+    blockingUrlError: urlState === 'blocking-error' ? urlError : null,
+    metadataUrlWarning: urlState === 'warning' ? urlError : null,
+    urlState,
     classification,
     urlError
   };
 }
 
+export function applyOptionalSourceMetadata(documentValue, {
+  title = '',
+  sourceUrl = ''
+} = {}) {
+  if (!documentValue || typeof documentValue !== 'object') {
+    throw new LabIntakeError(
+      'INVALID_NORMALIZED_DOCUMENT',
+      'A normalized document is required before source metadata can be applied.'
+    );
+  }
+  const typedUrl = cleanControlCharacters(sourceUrl).trim();
+  const provenanceCandidate = typedUrl || documentValue.source?.url;
+  const provenanceUrl = validSourceProvenanceUrl(provenanceCandidate);
+  return {
+    ...documentValue,
+    source: {
+      ...documentValue.source,
+      title: cleanControlCharacters(title).trim() || documentValue.source?.title,
+      url: provenanceUrl
+    }
+  };
+}
+
 export function canAttemptSourceUrlExtraction(value) {
-  return assessSourceInputReadiness({ sourceUrl: value }).canAnalyze;
+  return assessSourceInputReadiness({ sourceUrl: value }).retrievalEligible;
 }

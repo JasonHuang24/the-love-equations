@@ -5,6 +5,7 @@ import {
   INTAKE_LIMITS,
   LabIntakeError,
   NORMALIZED_DOCUMENT_SCHEMA,
+  applyOptionalSourceMetadata,
   assessSourceInputReadiness,
   canAttemptSourceUrlExtraction,
   canonicalizeUrl,
@@ -367,52 +368,115 @@ test('URL provenance routes transcript-only classes honestly and strips credenti
   );
 });
 
-test('combined source readiness requires usable text or a fetchable URL', () => {
-  assert.equal(
-    assessSourceInputReadiness({ sourceUrl: 'https://youtu.be/example' }).canAnalyze,
-    false
-  );
-  assert.equal(
-    assessSourceInputReadiness({
-      sourceUrl: 'https://podcasts.apple.com/us/podcast/example/id1'
-    }).canAnalyze,
-    false
-  );
-  assert.equal(
-    assessSourceInputReadiness({ sourceUrl: 'https://cdn.example.com/talk.mp3' }).canAnalyze,
-    false
-  );
-  assert.equal(
-    assessSourceInputReadiness({ sourceUrl: 'https://example.com/article' }).canAnalyze,
-    true
-  );
-  assert.equal(
-    assessSourceInputReadiness({
-      sourceUrl: 'https://youtu.be/example',
-      text: 'A supplied transcript remains the analyzable layer.'
-    }).canAnalyze,
-    true
-  );
-  assert.equal(
-    assessSourceInputReadiness({
-      sourceUrl: 'https://podcasts.apple.com/us/podcast/example/id1',
-      normalizedDocument: { schema: NORMALIZED_DOCUMENT_SCHEMA }
-    }).canAnalyze,
-    true
-  );
-  assert.equal(
-    assessSourceInputReadiness({
-      sourceUrl: 'https://cdn.example.com/talk.mp4',
-      companionFile: { name: 'talk.vtt' }
-    }).canAnalyze,
-    true
-  );
-  const malformed = assessSourceInputReadiness({
+test('source readiness separates blocking URL errors from optional metadata warnings', () => {
+  const malformedOnly = assessSourceInputReadiness({ sourceUrl: 'not a URL' });
+  assert.equal(malformedOnly.canAnalyze, false);
+  assert.equal(malformedOnly.urlState, 'blocking-error');
+  assert.equal(malformedOnly.blockingUrlError?.code, 'INVALID_SOURCE_URL');
+  assert.equal(malformedOnly.provenanceUrl, null);
+
+  const malformedWithText = assessSourceInputReadiness({
     sourceUrl: 'not a URL',
-    text: 'Text does not make invalid provenance metadata valid.'
+    text: 'A supplied transcript remains the analyzable layer.'
   });
-  assert.equal(malformed.canAnalyze, false);
-  assert.equal(malformed.urlError?.code, 'INVALID_SOURCE_URL');
+  assert.equal(malformedWithText.canAnalyze, true);
+  assert.equal(malformedWithText.urlState, 'warning');
+  assert.equal(malformedWithText.metadataUrlWarning?.code, 'INVALID_SOURCE_URL');
+  assert.equal(malformedWithText.retrievalEligible, false);
+  assert.equal(malformedWithText.provenanceUrl, null);
+
+  const document = normalizeInput({
+    text: 'A normalized local document remains analyzable.',
+    source: { title: 'Local document', type: 'text-file' },
+    createdAt: FIXED_TIME
+  });
+  assert.equal(assessSourceInputReadiness({
+    sourceUrl: 'not a URL',
+    normalizedDocument: document
+  }).canAnalyze, true);
+  assert.equal(assessSourceInputReadiness({
+    sourceUrl: 'not a URL',
+    companionFile: { name: 'talk.vtt' }
+  }).canAnalyze, true);
+});
+
+test('valid provenance-only URLs retain their existing eligibility contract', () => {
+  for (const sourceUrl of [
+    'https://youtu.be/example',
+    'https://podcasts.apple.com/us/podcast/example/id1',
+    'https://cdn.example.com/talk.mp3'
+  ]) {
+    const provenanceOnly = assessSourceInputReadiness({ sourceUrl });
+    assert.equal(provenanceOnly.canAnalyze, false);
+    assert.equal(provenanceOnly.retrievalEligible, false);
+    assert.equal(provenanceOnly.provenanceUrl, sourceUrl);
+
+    const withText = assessSourceInputReadiness({
+      sourceUrl,
+      text: 'A supplied transcript remains the analyzable layer.'
+    });
+    assert.equal(withText.canAnalyze, true);
+    assert.equal(withText.provenanceUrl, sourceUrl);
+  }
+
+  const mediaWithCompanion = assessSourceInputReadiness({
+    sourceUrl: 'https://cdn.example.com/talk.mp4',
+    companionFile: { name: 'talk.vtt' }
+  });
+  assert.equal(mediaWithCompanion.canAnalyze, true);
+  assert.equal(mediaWithCompanion.provenanceUrl, 'https://cdn.example.com/talk.mp4');
+
+  const podcastWithDocument = assessSourceInputReadiness({
+    sourceUrl: 'https://podcasts.apple.com/us/podcast/example/id1',
+    normalizedDocument: { schema: NORMALIZED_DOCUMENT_SCHEMA }
+  });
+  assert.equal(podcastWithDocument.canAnalyze, true);
+  assert.equal(
+    podcastWithDocument.provenanceUrl,
+    'https://podcasts.apple.com/us/podcast/example/id1'
+  );
+
+  for (const sourceUrl of [
+    'https://example.com/article',
+    'https://example.com/podcast/feed.xml'
+  ]) {
+    const readiness = assessSourceInputReadiness({ sourceUrl });
+    assert.equal(readiness.canAnalyze, true);
+    assert.equal(readiness.retrievalEligible, true);
+  }
+
+  const corrected = assessSourceInputReadiness({
+    sourceUrl: 'https://example.com/corrected',
+    text: 'The same transcript remains ready.'
+  });
+  assert.equal(corrected.urlState, 'valid');
+  assert.equal(corrected.metadataUrlWarning, null);
+  assert.equal(corrected.provenanceUrl, 'https://example.com/corrected');
+});
+
+test('optional source metadata excludes malformed provenance from normalized documents', () => {
+  const document = normalizeInput({
+    text: 'Valid text should survive invalid optional metadata.',
+    source: {
+      title: 'Sanitization fixture',
+      type: 'pasted-text',
+      url: 'https://example.com/original'
+    },
+    createdAt: FIXED_TIME
+  });
+  const invalid = applyOptionalSourceMetadata(document, {
+    sourceUrl: 'not a URL'
+  });
+  assert.equal(invalid.source.url, null);
+  assert.equal(invalid.text, document.text);
+
+  const retained = applyOptionalSourceMetadata(document);
+  assert.equal(retained.source.url, 'https://example.com/original');
+
+  const valid = applyOptionalSourceMetadata(document, {
+    sourceUrl: 'https://youtu.be/example'
+  });
+  assert.equal(valid.source.url, 'https://youtu.be/example');
 });
 
 test('format and local-file classifiers cover required intake families', () => {
