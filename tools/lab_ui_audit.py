@@ -92,11 +92,28 @@ if 'data-page="lab"' not in html_text:
     errors.append("lab body is missing data-page=lab")
 if 'id="lab-app"' not in html_text or 'id="lab-workspace"' not in html_text:
     errors.append("Lab root/workspace hooks missing")
+for required_id in (
+    "lab-domain-note",
+    "lab-research-empty-title",
+    "lab-research-empty-copy",
+):
+    if required_id not in id_set:
+        errors.append(f"Lab relevance UI hook missing: #{required_id}")
 
 css_text = (ROOT / "css" / "lab.css").read_text(encoding="utf-8")
 without_comments = re.sub(r"/\*.*?\*/", "", css_text, flags=re.S)
 if without_comments.count("{") != without_comments.count("}"):
     errors.append("css/lab.css has unbalanced braces")
+if ".lab-domain-note" not in css_text:
+    errors.append("Lab relevance aggregate has no page-specific styling")
+
+app_text = (ROOT / "js" / "lab-app.js").read_text(encoding="utf-8")
+for phrase in (
+    "No relationship-domain claims were detected in this source.",
+    "Original source text remains intact in Source.",
+):
+    if phrase not in app_text:
+        errors.append(f"Lab relevance result copy missing: {phrase}")
 
 nav_text = (ROOT / "partials" / "navigation-bar.html").read_text(encoding="utf-8")
 footer_text = (ROOT / "partials" / "footer.html").read_text(encoding="utf-8")

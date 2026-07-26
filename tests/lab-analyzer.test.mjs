@@ -7,12 +7,14 @@ import { createDemoDocument } from '../js/lab-demo.js';
 import {
   ANALYSIS_SCHEMA_VERSION,
   analyzeDocument,
+  classifyDomainRelevance,
   detectClaimUnits,
   prepareCanonIndex,
 } from '../js/lab-analyzer.js';
 import {
   analysisToJson,
   analysisToMarkdown,
+  researchQueueToJson,
   researchQueueToMarkdown,
 } from '../js/lab-export.js';
 
@@ -231,12 +233,12 @@ test('independent mixed fixtures do not inherit SMV or gender signatures', async
     {
       known: 'Looks, money, status, charm, and exposure shape market leverage without measuring moral worth.',
       expectedCanonId: 'smv:overview',
-      novel: 'A new claim says Saturn rings cause delayed replies.',
+      novel: 'A new claim says Saturn rings cause romantic partners to delay replies.',
     },
     {
       known: 'All women always choose the highest-status man.',
       expectedCanonId: 'lexicon:term-awalt-all-women-are-like-that',
-      novel: 'A new claim says volcanic ash predicts who cancels a date.',
+      novel: 'A new claim says volcanic ash predicts which romantic partner cancels a date.',
     },
   ];
 
@@ -359,11 +361,194 @@ test('Markdown and JSON exports carry provenance, schemas, citations, limitation
   const queueMarkdown = researchQueueToMarkdown(result);
   const json = JSON.parse(analysisToJson(result));
   assert.match(markdown, /Canon index/);
-  assert.match(markdown, /Coverage is the share of detected claim-like segments/);
+  assert.match(markdown, /Coverage is the share of retained relationship-domain claim-like segments/);
   assert.match(markdown, /&lt;img/);
   assert.doesNotMatch(markdown, /<script>/);
   assert.match(queueMarkdown, /Research candidates/);
   assert.equal(json.schemaVersion, ANALYSIS_SCHEMA_VERSION);
   assert.equal(json.source.url, 'https://example.com/source');
   assert.ok(Array.isArray(json.limitations));
+});
+
+function relevanceDecision(text) {
+  const document = normalizeInput({
+    text,
+    source: { title: 'Relevance decision fixture' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  });
+  return classifyDomainRelevance(detectClaimUnits(document))[0];
+}
+
+test('clearly non-domain assertions are ignored before mapping and residue construction', async () => {
+  const sourceText = [
+    'The sky is blue.',
+    'The weather is hot.',
+    'The train always arrived at noon.',
+    'Water freezes at zero degrees Celsius.',
+    'Copper conducts electricity under ordinary laboratory conditions.',
+  ].join(' ');
+  const document = normalizeInput({
+    text: sourceText,
+    source: { title: 'Non-domain fixture' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  });
+  const result = await analyzeDocument(document, REAL_CANON);
+
+  assert.equal(result.metrics.ignoredDomainSegments, 5);
+  assert.ok(result.metrics.ignoredDomainWords > 20);
+  assert.equal(result.metrics.claimLikeSegments, 0);
+  assert.equal(result.metrics.mappedClaimSegments, 0);
+  assert.equal(result.metrics.unmappedClaimSegments, 0);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, 0);
+  assert.deepEqual(result.segments, []);
+  assert.deepEqual(result.strongestMatches, []);
+  assert.deepEqual(result.pressureTests, []);
+  assert.deepEqual(result.researchQueue.items, []);
+  assert.ok(result.warnings.some((warning) => /No relationship-domain claims/.test(warning.message)));
+});
+
+test('clearly relevant mapped behavior is unchanged by the separate relevance gate', async () => {
+  const claim = 'Attraction does not guarantee selection, compatibility, or retention.';
+  const result = await analyzeDocument(normalizeInput({
+    text: claim,
+    source: { title: 'Mapped relevance fixture' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  }), REAL_CANON);
+  const passage = result.segments[0];
+
+  assert.equal(passage.unit.domainRelevance.status, 'relevant');
+  assert.ok(passage.mapped);
+  assert.ok(passage.matches.some((match) => match.canonId === 'frameworks:conversion-ladder'));
+  assert.equal(result.metrics.claimLikeSegments, 1);
+  assert.equal(result.metrics.ignoredDomainSegments, 0);
+});
+
+test('novel relationship claims remain retained as unmapped research residue', async () => {
+  const claims = [
+    'Shared ownership of a pet can make breakups harder to unwind.',
+    'Remote work may reduce spontaneous opportunities to meet partners.',
+  ];
+  const result = await analyzeDocument(normalizeInput({
+    text: claims.join(' '),
+    source: { title: 'Novel relationship fixture' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  }), REAL_CANON);
+
+  assert.deepEqual(result.segments.map((segment) => segment.unit.text), claims);
+  assert.ok(result.segments.every((segment) => segment.unit.domainRelevance.status === 'relevant'));
+  assert.ok(result.segments.every((segment) => !segment.mapped));
+  assert.deepEqual(result.researchQueue.items.map((item) => item.excerpt), claims);
+  assert.equal(result.metrics.unmappedClaimSegments, 2);
+  assert.equal(result.metrics.ignoredDomainSegments, 0);
+});
+
+test('mixed sources exclude non-domain residue while preserving order and the true denominator', async () => {
+  const weather = 'The weather is hot.';
+  const mapped = 'Attraction is not selection.';
+  const science = 'Water freezes at zero degrees Celsius.';
+  const novel = 'Shared ownership of a pet can make breakups harder to unwind.';
+  const document = normalizeInput({
+    text: [weather, mapped, science, novel].join(' '),
+    source: { title: 'Mixed relevance fixture' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  });
+  const result = await analyzeDocument(document, REAL_CANON);
+
+  assert.deepEqual(result.segments.map((segment) => segment.unit.text), [mapped, novel]);
+  assert.equal(result.metrics.ignoredDomainSegments, 2);
+  assert.equal(result.metrics.claimLikeSegments, 2);
+  assert.equal(result.metrics.mappedClaimSegments, 1);
+  assert.equal(result.metrics.unmappedClaimSegments, 1);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, 50);
+  assert.deepEqual(result.researchQueue.items.map((item) => item.excerpt), [novel]);
+  assert.equal(document.text, [weather, mapped, science, novel].join(' '));
+});
+
+test('domain relevance uses one bounded predecessor and never cascades', () => {
+  const relevantPair = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps encourage rapid visual judgments. This makes profile photographs unusually important.',
+  })));
+  assert.equal(relevantPair[0].domainRelevance.status, 'relevant');
+  assert.equal(relevantPair[1].domainRelevance.status, 'relevant');
+  assert.equal(relevantPair[1].domainRelevance.contextHelp?.sourceUnitId, relevantPair[0].id);
+  assert.equal(relevantPair[1].domainRelevance.localStatus, 'uncertain');
+
+  const irrelevantPair = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'The sky is blue. This is visible during the afternoon.',
+  })));
+  assert.ok(irrelevantPair.every((unit) => unit.domainRelevance.status === 'irrelevant'));
+
+  const noContamination = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps encourage rapid visual judgments. The train arrived at noon.',
+  })));
+  assert.equal(noContamination[1].domainRelevance.status, 'irrelevant');
+
+  const noCascade = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps encourage rapid visual judgments. This makes profile photos important. This changes everything. This is obvious.',
+  })));
+  assert.equal(noCascade[1].domainRelevance.status, 'relevant');
+  assert.equal(noCascade[2].domainRelevance.status, 'irrelevant');
+  assert.equal(noCascade[3].domainRelevance.status, 'irrelevant');
+});
+
+test('domain rules disambiguate hot and market language while retaining adjacent outcome claims', () => {
+  assert.equal(relevanceDecision('She is hot.').domainRelevance.status, 'uncertain');
+  assert.equal(relevanceDecision('The room is hot.').domainRelevance.status, 'irrelevant');
+  assert.equal(relevanceDecision('The market is competitive.').domainRelevance.status, 'irrelevant');
+  assert.equal(relevanceDecision('The dating market is competitive.').domainRelevance.status, 'relevant');
+  assert.equal(relevanceDecision('The relationship between temperature and pressure is linear.').domainRelevance.status, 'irrelevant');
+  assert.equal(relevanceDecision('My laboratory partner recorded the temperature.').domainRelevance.status, 'irrelevant');
+
+  const adjacent = [
+    'People increasingly meet partners through apps.',
+    'Economic insecurity may delay marriage.',
+    'Warm weather increases attendance at social venues where singles meet.',
+    'Remote work may reduce opportunities for spontaneous pair formation.',
+    'Local housing policy can affect when couples marry.',
+    'Geography shapes which partners people can meet.',
+    'Sexual attraction does not guarantee partner compatibility.',
+  ];
+  adjacent.forEach((claim) => {
+    assert.equal(relevanceDecision(claim).domainRelevance.status, 'relevant', claim);
+  });
+
+  assert.equal(relevanceDecision('Attachment can change slowly over time.').domainRelevance.status, 'uncertain');
+  assert.equal(relevanceDecision('Dating App Effects').isClaimLike, false);
+  assert.equal(relevanceDecision('Dating App Effects').domainRelevance.status, 'relevant');
+});
+
+test('rhetorical, quoted, negated, and uncertain relationship claims remain analyzable', async () => {
+  const claims = [
+    'Could economic insecurity delay marriage?',
+    'Dating does not determine compatibility.',
+    '"Remote work may reduce opportunities to meet partners," she said.',
+    'Attachment can change slowly over time.',
+  ];
+  const result = await analyzeDocument(normalizeInput({ text: claims.join(' ') }), REAL_CANON);
+  assert.deepEqual(result.segments.map((segment) => segment.unit.text), claims);
+  assert.ok(result.segments.some((segment) => segment.unit.domainRelevance.status === 'uncertain'));
+  assert.equal(result.metrics.ignoredDomainSegments, 0);
+  assert.ok(result.researchQueue.items.length >= 1);
+});
+
+test('no-domain exports omit ignored lines while preserving aggregate metrics and normalized fidelity', async () => {
+  const sourceText = 'The sky is blue. Water freezes at zero degrees Celsius.';
+  const document = normalizeInput({ text: sourceText, source: { title: 'No-domain export fixture' } });
+  const result = await analyzeDocument(document, REAL_CANON);
+  const markdown = analysisToMarkdown(result);
+  const queueMarkdown = researchQueueToMarkdown(result);
+  const json = JSON.parse(analysisToJson(result));
+  const queueJson = JSON.parse(researchQueueToJson(result));
+
+  [markdown, queueMarkdown].forEach((output) => {
+    assert.doesNotMatch(output, /The sky is blue/);
+    assert.doesNotMatch(output, /Water freezes/);
+    assert.match(output, /2 clearly non-domain passages ignored/);
+  });
+  assert.deepEqual(json.segments, []);
+  assert.deepEqual(json.researchQueue.items, []);
+  assert.equal(json.metrics.ignoredDomainSegments, 2);
+  assert.equal(queueJson.domainRelevance.ignoredSegments, 2);
+  assert.deepEqual(queueJson.queue.items, []);
+  assert.equal(document.text, sourceText);
 });

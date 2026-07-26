@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=1.3';
+} from './lab-intake.js?v=1.4';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,18 +15,18 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=1.3';
-import { createDemoDocument } from './lab-demo.js?v=1.3';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.3';
+} from './lab-extractors.js?v=1.4';
+import { createDemoDocument } from './lab-demo.js?v=1.4';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.4';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=1.3';
+} from './lab-export.js?v=1.4';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.3';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.4';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -85,6 +85,7 @@ const ui = {
   metricSegments: byId('lab-metric-segments'),
   metricClaims: byId('lab-metric-claims'),
   metricCoverage: byId('lab-metric-coverage'),
+  domainNote: byId('lab-domain-note'),
   copyMarkdown: byId('lab-copy-markdown'),
   downloadMarkdown: byId('lab-download-markdown'),
   downloadJson: byId('lab-download-json'),
@@ -113,6 +114,8 @@ const ui = {
   pressureSummary: byId('lab-pressure-summary'),
   pressureList: byId('lab-pressure-list'),
   researchEmpty: byId('lab-research-empty'),
+  researchEmptyTitle: byId('lab-research-empty-title'),
+  researchEmptyCopy: byId('lab-research-empty-copy'),
   researchList: byId('lab-research-list'),
   sourceMetaTitle: byId('lab-source-meta-title'),
   sourceMetaType: byId('lab-source-meta-type'),
@@ -646,6 +649,7 @@ function alignmentDistribution(result) {
 function renderLedger(result) {
   clearNode(ui.mapTableBody);
   const claims = result.segments.filter((segment) => segment.unit.isClaimLike);
+  const noDomainClaims = claims.length === 0 && result.metrics.ignoredDomainSegments > 0;
   claims.slice(0, MAX_RENDERED_LEDGER_ROWS).forEach((segment) => {
     const row = document.createElement('tr');
     const refCell = document.createElement('td');
@@ -690,11 +694,15 @@ function renderLedger(result) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
     cell.colSpan = 5;
-    cell.textContent = 'No claim-like passages were detected.';
+    cell.textContent = noDomainClaims
+      ? 'No relationship-domain claims were detected in this source.'
+      : 'No claim-like passages were detected.';
     row.appendChild(cell);
     ui.mapTableBody.appendChild(row);
   }
-  ui.mapSummary.textContent = `${formatNumber(result.metrics.mappedClaimSegments)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped credibly.`;
+  ui.mapSummary.textContent = noDomainClaims
+    ? 'No relationship-domain claims were detected in this source.'
+    : `${formatNumber(result.metrics.mappedClaimSegments)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped credibly.`;
 }
 
 function relatedTitle(id) {
@@ -812,7 +820,15 @@ function appendNearestConcepts(container, concepts) {
 function renderResearchQueue(result) {
   clearNode(ui.researchList);
   const items = result.researchQueue?.items || [];
+  const noDomainClaims = result.metrics.claimLikeSegments === 0
+    && result.metrics.ignoredDomainSegments > 0;
   ui.researchEmpty.hidden = items.length > 0;
+  ui.researchEmptyTitle.textContent = noDomainClaims
+    ? 'No relationship-domain claims detected'
+    : 'No research candidates yet';
+  ui.researchEmptyCopy.textContent = noDomainClaims
+    ? 'Clearly non-relationship passages were excluded from the assay and remain intact in the normalized Source view.'
+    : 'Unmapped claim-like passages will remain visible here instead of being forced into the nearest canon bucket.';
   items.forEach((item) => {
     const fragment = ui.researchTemplate.content.cloneNode(true);
     field(fragment, 'segment-ref').textContent = segmentReference({
@@ -902,6 +918,12 @@ function renderNormalizedDocument(documentValue) {
 function renderResult(result, documentValue) {
   state.analysis = result;
   const coverage = result.coverage.mappedClaimSegmentSharePct;
+  const ignored = Number(result.metrics.ignoredDomainSegments || 0);
+  const ignoredWords = Number(result.metrics.ignoredDomainWords || 0);
+  ui.domainNote.hidden = ignored === 0;
+  ui.domainNote.textContent = ignored === 0
+    ? ''
+    : `${formatNumber(ignored)} clearly non-domain passage${ignored === 1 ? '' : 's'} ignored by the assay (${formatNumber(ignoredWords)} words). Original source text remains intact in Source.`;
   setText(ui.metricWords, formatNumber(result.metrics.totalWords));
   setText(ui.metricSegments, formatNumber(result.metrics.sourceSegments));
   setText(ui.metricClaims, formatNumber(result.metrics.claimLikeSegments));
@@ -938,12 +960,15 @@ function renderResult(result, documentValue) {
   renderWarnings(combinedWarnings);
 
   const mapped = result.metrics.mappedClaimSegments;
+  const noDomainClaims = result.metrics.claimLikeSegments === 0 && ignored > 0;
   const nextState = !mapped
     ? 'no-match'
     : extractionWarnings.some((warning) => warning.severity === 'warning' || warning.severity === 'error')
       ? 'partial'
       : 'success';
-  const detail = !mapped
+  const detail = noDomainClaims
+    ? 'No relationship-domain claims were detected in this source. Clearly non-domain passages remain intact in Source.'
+    : !mapped
     ? `No claim-like passage cleared the credible threshold; ${formatNumber(result.researchQueue.itemCount)} research candidate(s) remain visible.`
     : `${formatNumber(mapped)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped; ${formatNumber(result.pressureTests.length)} prioritized tension(s).`;
   setLabState(nextState, detail);
@@ -1073,6 +1098,8 @@ function resetVisualResults() {
   ui.coverageMarker.style.left = '0';
   ui.coverageMarker.style.opacity = '0';
   ui.coverageTrack.setAttribute('aria-label', 'No mapped share of claim-like segments yet');
+  ui.domainNote.hidden = true;
+  ui.domainNote.textContent = '';
   ui.mapSummary.textContent = 'No source has been mapped.';
   clearNode(ui.mapTableBody);
   const emptyRow = document.createElement('tr');
@@ -1092,6 +1119,8 @@ function resetVisualResults() {
   }));
   clearNode(ui.researchList);
   ui.researchEmpty.hidden = false;
+  ui.researchEmptyTitle.textContent = 'No research candidates yet';
+  ui.researchEmptyCopy.textContent = 'Unmapped claim-like passages will remain visible here instead of being forced into the nearest canon bucket.';
   [ui.citationCount, ui.pressureCount, ui.researchCount].forEach((node) => { node.textContent = '0'; });
   [ui.copyMarkdown, ui.downloadMarkdown, ui.downloadJson, ui.exportResearch]
     .forEach((button) => { button.disabled = true; });

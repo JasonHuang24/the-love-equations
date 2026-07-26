@@ -1,4 +1,4 @@
-import { validSourceProvenanceUrl } from './lab-intake.js?v=1.3';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=1.4';
 
 /*
  * LE Lab export adapters.
@@ -80,14 +80,17 @@ export function analysisToMarkdown(result) {
     `- **Canon index:** ${markdownText(result.canonIndex?.version)} · ${result.canonIndex?.conceptCount || 0} concepts across ${result.canonIndex?.sourceCount || 0} LE sources`,
     `- **Schema:** \`${markdownText(result.schemaVersion)}\``,
     '',
-    '> Coverage is the share of detected claim-like segments that mapped to a credible LE connection. It describes this document, not a population or whether a claim is true.',
+    '> Coverage is the share of retained relationship-domain claim-like segments that mapped to a credible LE connection. It describes this document, not a population or whether a claim is true.',
     '',
     '## Coverage',
     '',
     `- ${Number(metrics.totalWords || 0).toLocaleString()} source words`,
     `- ${Number(metrics.sourceSegments || 0).toLocaleString()} normalized source segments`,
-    `- ${Number(metrics.claimLikeSegments || 0).toLocaleString()} detected claim-like segments`,
+    `- ${Number(metrics.claimLikeSegments || 0).toLocaleString()} detected relationship-domain claim-like segments`,
     `- ${Number(metrics.mappedClaimSegments || 0).toLocaleString()} mapped claim-like segments · ${Number(metrics.unmappedClaimSegments || 0).toLocaleString()} unmapped`,
+    ...(Number(metrics.ignoredDomainSegments || 0) > 0
+      ? [`- ${Number(metrics.ignoredDomainSegments).toLocaleString()} clearly non-domain passages ignored (${Number(metrics.ignoredDomainWords || 0).toLocaleString()} words); original source text remains preserved in the normalized source`]
+      : []),
     `- **Mapped share of claim-like segments:** ${percent(coverage.mappedClaimSegmentSharePct)}`,
     `- **Mapped share of words within claim-like segments:** ${percent(coverage.mappedClaimWordSharePct)}`,
     '',
@@ -182,8 +185,16 @@ export function analysisToMarkdown(result) {
 
 export function researchQueueToMarkdown(result, { includeHeading = true } = {}) {
   const queue = result?.researchQueue || result;
+  const ignored = Number(result?.metrics?.ignoredDomainSegments || 0);
+  const ignoredWords = Number(result?.metrics?.ignoredDomainWords || 0);
   const lines = [];
   if (includeHeading) lines.push('## Unmapped research queue', '', '_Research candidates — not new LE doctrine._', '');
+  if (ignored > 0) {
+    lines.push(
+      `_${ignored.toLocaleString()} clearly non-domain passage${ignored === 1 ? '' : 's'} ignored (${ignoredWords.toLocaleString()} words); original source text remains preserved in the normalized source._`,
+      '',
+    );
+  }
   if (!queue?.items?.length) {
     lines.push('_No unmapped claim-like passages in this analysis._');
     return lines.join('\n');
@@ -229,6 +240,7 @@ export function researchQueueToJson(result, { pretty = true } = {}) {
     canonIndex: result.canonIndex,
     analysisMode: result.analysisMode,
     extractionWarnings: result.source?.extractionWarnings || [],
+    domainRelevance: result.domainRelevance,
     queue: result.researchQueue,
     limitations: result.limitations,
   };

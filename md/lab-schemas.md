@@ -88,6 +88,9 @@ The deterministic local adapter returns:
 - source provenance and extraction warnings;
 - analyzer mode and exact canon-index version;
 - word, source-segment, claim-segment, mapped, and unmapped counts;
+- a deterministic domain-relevance summary with relevant, uncertain-retained,
+  ignored-passage, and ignored-word counts; clearly non-domain passages remain
+  in the normalized source but are absent from analysis mappings and residue;
 - mapped claim-segment and claim-word coverage, explicitly labeled as document
   coverage rather than population evidence;
 - excerpt-level canon matches with stance, confidence, lexical trace, deep
@@ -98,6 +101,12 @@ The deterministic local adapter returns:
 - adjacent doctrine;
 - an independently exportable Research Queue;
 - ambiguity warnings and limitations.
+
+Each retained `segments[].unit` includes a `domainRelevance` decision with its
+local status, weighted evidence, and any tightly bounded previous-sentence
+assistance. `relevant` and conservative `uncertain` passages continue into
+canon retrieval; `irrelevant` passages are represented only by aggregate
+metrics and are never exported as individual analysis or research rows.
 
 `segments[].matches[].score` is a bounded local lexical score, not a probability
 that a claim is true. Optional `segments[].matches[].contextHelp` records tightly
