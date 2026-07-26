@@ -1,13 +1,13 @@
 import {
   LabIntakeError,
-  canAttemptSourceUrlExtraction,
+  assessSourceInputReadiness,
   canonicalizeUrl,
   classifyLocalFile,
   classifySourceUrl,
   countWords,
   normalizeInput,
   validateNormalizedDocument,
-} from './lab-intake.js';
+} from './lab-intake.js?v=1.2';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,18 +15,18 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js';
-import { createDemoDocument } from './lab-demo.js';
-import { LabAnalyzerClient } from './lab-analyzer-client.js';
+} from './lab-extractors.js?v=1.2';
+import { createDemoDocument } from './lab-demo.js?v=1.2';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.2';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js';
+} from './lab-export.js?v=1.2';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.1';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.2';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -283,23 +283,30 @@ function handleAnalysisProgress(progress) {
   ui.intakeStatus.textContent = progress?.message || 'Analyzing source locally.';
 }
 
-function hasPotentialInput() {
-  return Boolean(
-    ui.text.value.trim()
-    || state.normalizedDocument
-    || canAttemptSourceUrlExtraction(ui.sourceUrl.value)
-    || state.companionFile,
-  );
+function currentInputReadiness() {
+  return assessSourceInputReadiness({
+    text: ui.text.value,
+    normalizedDocument: state.normalizedDocument,
+    sourceUrl: ui.sourceUrl.value,
+    companionFile: state.companionFile,
+  });
+}
+
+function hasPotentialInput(readiness = currentInputReadiness()) {
+  return readiness.canAnalyze;
 }
 
 function refreshReadyState() {
   const words = countWords(ui.text.value);
   ui.textCount.textContent = `${formatNumber(words)} ${words === 1 ? 'word' : 'words'}`;
-  const canAnalyze = hasPotentialInput() && Boolean(state.canonIndex) && !state.busy;
+  const readiness = currentInputReadiness();
+  const canAnalyze = hasPotentialInput(readiness) && Boolean(state.canonIndex) && !state.busy;
   ui.analyze.disabled = !canAnalyze;
 
   if (!state.canonIndex) {
     ui.readyNote.textContent = 'The canon index must load before analysis.';
+  } else if (readiness.urlError) {
+    ui.readyNote.textContent = readiness.urlError.message;
   } else if (state.media && !state.normalizedDocument) {
     ui.readyNote.textContent = 'Attach a companion transcript; media alone is not analyzable text.';
   } else if (state.normalizedDocument && state.activeInput === 'document') {
@@ -307,14 +314,9 @@ function refreshReadyState() {
   } else if (ui.text.value.trim()) {
     ui.readyNote.textContent = `${formatNumber(words)} pasted words ready to normalize.`;
   } else if (ui.sourceUrl.value.trim()) {
-    try {
-      const classification = classifySourceUrl(ui.sourceUrl.value);
-      ui.readyNote.textContent = classification.canFetchText
-        ? 'The Lab will make an explicit request to this publisher and analyze usable returned text locally.'
-        : classification.guidance;
-    } catch (error) {
-      ui.readyNote.textContent = error.message;
-    }
+    ui.readyNote.textContent = readiness.classification.canFetchText
+      ? 'The Lab will make an explicit request to this publisher and analyze usable returned text locally.'
+      : readiness.classification.guidance;
   } else {
     ui.readyNote.textContent = 'Add analyzable text to begin.';
   }

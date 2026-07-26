@@ -1328,10 +1328,34 @@ export function classifySourceUrl(value) {
   };
 }
 
-export function canAttemptSourceUrlExtraction(value) {
-  try {
-    return Boolean(classifySourceUrl(value).canFetchText);
-  } catch {
-    return false;
+export function assessSourceInputReadiness({
+  text = '',
+  normalizedDocument = null,
+  sourceUrl = '',
+  companionFile = null
+} = {}) {
+  const hasSuppliedText = Boolean(
+    cleanControlCharacters(text).trim()
+    || normalizedDocument
+    || companionFile
+  );
+  let classification = null;
+  let urlError = null;
+  if (cleanControlCharacters(sourceUrl).trim()) {
+    try {
+      classification = classifySourceUrl(sourceUrl);
+    } catch (error) {
+      urlError = error;
+    }
   }
+  return {
+    canAnalyze: !urlError && Boolean(hasSuppliedText || classification?.canFetchText),
+    hasSuppliedText,
+    classification,
+    urlError
+  };
+}
+
+export function canAttemptSourceUrlExtraction(value) {
+  return assessSourceInputReadiness({ sourceUrl: value }).canAnalyze;
 }

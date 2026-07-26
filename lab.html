@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="css/styles.css?v=2.2" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=1.1" />
+  <link rel="stylesheet" href="css/lab.css?v=1.2" />
   <script src="js/include.js" defer></script>
-  <script type="module" src="js/lab-app.js?v=1.1"></script>
+  <script type="module" src="js/lab-app.js?v=1.2"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
@@ -24,7 +24,7 @@
           <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> On-device canon mapper &amp; pressure lab</div>
           <h1>The Love Equations <em>Lab</em></h1>
           <p class="lab-product-line">Bring a claim. See where it fits, where it strains, and what the map is missing.</p>
-          <p class="lab-hero-sub">Paste a transcript, drop a source, or keep a URL as provenance. The Lab traces claim-like passages into the actual LE canon, shows its confidence, challenges the reasoning, and preserves what does not fit instead of forcing an answer.</p>
+          <p class="lab-hero-sub">Paste a transcript, drop a file, or keep a URL as provenance. The Lab returns a cited claim map, pressure tests, and a research queue for what does not fit.</p>
           <div class="lab-hero-actions">
             <a class="btn btn-scarlet" href="#lab-workbench">Bring a source <i class="ti ti-arrow-down" aria-hidden="true"></i></a>
             <button class="btn lab-demo-button" id="lab-load-demo" type="button">
@@ -37,25 +37,31 @@
           <div class="lab-method-mark" aria-hidden="true">
             <i class="ti ti-binary-tree-2"></i>
           </div>
-          <div>
+          <div class="lab-method-intro">
             <div class="lab-method-label">Current instrument</div>
             <div class="lab-method-title">Local lexical analysis</div>
-            <p>Deterministic and inspectable. Exact language, weighted concept overlap, canon relationships, and explicit reasoning checks&mdash;no invisible AI verdict.</p>
+            <p>Deterministic, local, and inspectable&mdash;never an invisible AI verdict.</p>
           </div>
-          <dl class="lab-method-meta">
-            <div>
-              <dt>Canon</dt>
-              <dd id="lab-index-meta" aria-live="polite">Loading the canon index&hellip;</dd>
+          <details class="lab-method-details">
+            <summary>How this instrument works</summary>
+            <div class="lab-method-details-body">
+              <p>Exact language, weighted concept overlap, canon relationships, and explicit reasoning checks produce a traceable map rather than a verdict.</p>
+              <dl class="lab-method-meta">
+                <div>
+                  <dt>Canon</dt>
+                  <dd id="lab-index-meta" aria-live="polite">Loading the canon index&hellip;</dd>
+                </div>
+                <div>
+                  <dt>Contracts</dt>
+                  <dd id="lab-schema-meta">Input v1 &middot; Analysis v1</dd>
+                </div>
+                <div>
+                  <dt>Mode</dt>
+                  <dd id="lab-analysis-mode">On-device lexical</dd>
+                </div>
+              </dl>
             </div>
-            <div>
-              <dt>Contracts</dt>
-              <dd id="lab-schema-meta">Input v1 &middot; Analysis v1</dd>
-            </div>
-            <div>
-              <dt>Mode</dt>
-              <dd id="lab-analysis-mode">On-device lexical</dd>
-            </div>
-          </dl>
+          </details>
         </aside>
       </div>
     </header>

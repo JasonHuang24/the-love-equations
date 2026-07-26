@@ -72,6 +72,7 @@ No build step, no framework — plain HTML/CSS/JS served statically.
 - **Analysis:** `js/lab-analyzer.js` is the same deterministic lexical engine in browser and fixtures. It uses exact aliases, weighted overlap, dependency/neighbor context, a small inspectable LE signature layer, confidence penalties, reasoning-risk detectors, and an honest no-match path. The worker client falls back to the same main-thread implementation.
 - **Contracts and exports:** `md/lab-schemas.md` documents normalized input, canon index, analysis result, and Research Queue schemas. Markdown/JSON exports retain provenance, extraction warnings, index/mode versions, segment references, citations, confidence, and limitations.
 - **Canon maintenance:** `scripts/build-canon-index.mjs` extracts canonical HTML/JS into `data/le-canon-index.json`; `data/canon-overlay.json` contains only semantic aliases, relations, boundaries, and pressure questions that markup cannot provide. The validator rejects drift, bad relations, missing pages/fragments, duplicate IDs, and malformed evidence types.
+- **Lab release token:** the shared `?v=` token deploys `css/lab.css`, the entry module, every recursively reachable first-party Lab module and worker, and the runtime canon-index request as one static release. Bump it everywhere when any item in that boundary changes; `tools/lab_release_audit.py` traverses the live graph and rejects omissions or disagreement. The canon index's internal `indexVersion` is an independent analytical contract.
 
 No npm packages or build step are required. Lab tests use Node and the repository Python tooling:
 
@@ -80,6 +81,7 @@ npm run test:lab                         # intake + analyzer + canon + HTML/ARIA
 node scripts/build-canon-index.mjs       # regenerate after canonical source changes
 node scripts/validate-canon-index.mjs    # validate committed runtime index
 python tools/lab_ui_audit.py             # Lab DOM/ARIA/link/CSS contract
+python tools/lab_release_audit.py        # recursive Lab module/resource release-token graph
 python tools/site_integrity_audit.py     # whole-site local links/fragments/IDs/ARIA
 ```
 

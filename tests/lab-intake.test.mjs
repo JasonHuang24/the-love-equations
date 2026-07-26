@@ -5,6 +5,7 @@ import {
   INTAKE_LIMITS,
   LabIntakeError,
   NORMALIZED_DOCUMENT_SCHEMA,
+  assessSourceInputReadiness,
   canAttemptSourceUrlExtraction,
   canonicalizeUrl,
   classifyLocalFile,
@@ -366,6 +367,54 @@ test('URL provenance routes transcript-only classes honestly and strips credenti
   );
 });
 
+test('combined source readiness requires usable text or a fetchable URL', () => {
+  assert.equal(
+    assessSourceInputReadiness({ sourceUrl: 'https://youtu.be/example' }).canAnalyze,
+    false
+  );
+  assert.equal(
+    assessSourceInputReadiness({
+      sourceUrl: 'https://podcasts.apple.com/us/podcast/example/id1'
+    }).canAnalyze,
+    false
+  );
+  assert.equal(
+    assessSourceInputReadiness({ sourceUrl: 'https://cdn.example.com/talk.mp3' }).canAnalyze,
+    false
+  );
+  assert.equal(
+    assessSourceInputReadiness({ sourceUrl: 'https://example.com/article' }).canAnalyze,
+    true
+  );
+  assert.equal(
+    assessSourceInputReadiness({
+      sourceUrl: 'https://youtu.be/example',
+      text: 'A supplied transcript remains the analyzable layer.'
+    }).canAnalyze,
+    true
+  );
+  assert.equal(
+    assessSourceInputReadiness({
+      sourceUrl: 'https://podcasts.apple.com/us/podcast/example/id1',
+      normalizedDocument: { schema: NORMALIZED_DOCUMENT_SCHEMA }
+    }).canAnalyze,
+    true
+  );
+  assert.equal(
+    assessSourceInputReadiness({
+      sourceUrl: 'https://cdn.example.com/talk.mp4',
+      companionFile: { name: 'talk.vtt' }
+    }).canAnalyze,
+    true
+  );
+  const malformed = assessSourceInputReadiness({
+    sourceUrl: 'not a URL',
+    text: 'Text does not make invalid provenance metadata valid.'
+  });
+  assert.equal(malformed.canAnalyze, false);
+  assert.equal(malformed.urlError?.code, 'INVALID_SOURCE_URL');
+});
+
 test('format and local-file classifiers cover required intake families', () => {
   assert.equal(detectTextFormat({ fileName: 'talk.SRT' }), 'srt');
   assert.equal(detectTextFormat({ mimeType: 'text/vtt' }), 'vtt');
@@ -400,7 +449,8 @@ test('media adapter never claims speech-to-text support', () => {
   assert.equal(SPEECH_TO_TEXT_CAPABILITY.sendsMediaOffDevice, false);
   assert.throws(
     () => transcribeMedia(),
-    (error) => error instanceof LabIntakeError && error.code === 'LOCAL_STT_NOT_SHIPPED'
+    (error) => error.name === 'LabIntakeError'
+      && error.code === 'LOCAL_STT_NOT_SHIPPED'
   );
 });
 
@@ -421,7 +471,7 @@ test('extraction session reset aborts active work and runs cleanup hooks', async
 test('system clipboard adapter fails soft outside a browser', async () => {
   await assert.rejects(
     () => readSystemClipboard(),
-    (error) => error instanceof LabIntakeError
+    (error) => error.name === 'LabIntakeError'
       && error.code === 'CLIPBOARD_API_UNAVAILABLE'
   );
 });
