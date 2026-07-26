@@ -1,12 +1,13 @@
 import {
   LabIntakeError,
-  canonicalizeUrl,
+  applyOptionalSourceMetadata,
+  assessSourceInputReadiness,
   classifyLocalFile,
-  classifySourceUrl,
   countWords,
   normalizeInput,
+  validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js';
+} from './lab-intake.js?v=1.3';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -14,18 +15,18 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js';
-import { createDemoDocument } from './lab-demo.js';
-import { LabAnalyzerClient } from './lab-analyzer-client.js';
+} from './lab-extractors.js?v=1.3';
+import { createDemoDocument } from './lab-demo.js?v=1.3';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.3';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js';
+} from './lab-export.js?v=1.3';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.0';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.3';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -282,23 +283,52 @@ function handleAnalysisProgress(progress) {
   ui.intakeStatus.textContent = progress?.message || 'Analyzing source locally.';
 }
 
-function hasPotentialInput() {
-  return Boolean(
-    ui.text.value.trim()
-    || state.normalizedDocument
-    || ui.sourceUrl.value.trim()
-    || state.companionFile,
+function currentInputReadiness() {
+  return assessSourceInputReadiness({
+    text: ui.text.value,
+    normalizedDocument: state.normalizedDocument,
+    sourceUrl: ui.sourceUrl.value,
+    companionFile: state.companionFile,
+  });
+}
+
+function hasPotentialInput(readiness = currentInputReadiness()) {
+  return readiness.canAnalyze;
+}
+
+function renderUrlGuidance(readiness) {
+  const value = ui.sourceUrl.value.trim();
+  if (!value) {
+    ui.urlNote.textContent = 'A URL alone is not a transcript. If the browser cannot retrieve usable text, the Lab keeps the link and asks you to paste or attach the transcript.';
+    return;
+  }
+  if (readiness.urlError) {
+    ui.urlNote.textContent = readiness.metadataUrlWarning
+      ? `${readiness.urlError.message} The source can still be analyzed; this value will not be included as provenance.`
+      : readiness.urlError.message;
+    return;
+  }
+  const classification = readiness.classification;
+  ui.urlNote.textContent = classification.guidance || (
+    classification.canFetchText
+      ? 'The Lab can attempt a browser-side text fetch. Publisher CORS rules still decide whether it succeeds.'
+      : 'Keep this link as provenance and paste or attach the transcript.'
   );
 }
 
-function refreshReadyState() {
+function refreshReadyState(readiness = currentInputReadiness()) {
+  renderUrlGuidance(readiness);
   const words = countWords(ui.text.value);
   ui.textCount.textContent = `${formatNumber(words)} ${words === 1 ? 'word' : 'words'}`;
-  const canAnalyze = hasPotentialInput() && Boolean(state.canonIndex) && !state.busy;
+  const canAnalyze = hasPotentialInput(readiness) && Boolean(state.canonIndex) && !state.busy;
   ui.analyze.disabled = !canAnalyze;
 
   if (!state.canonIndex) {
     ui.readyNote.textContent = 'The canon index must load before analysis.';
+  } else if (readiness.urlError) {
+    ui.readyNote.textContent = readiness.metadataUrlWarning
+      ? 'The source is ready to analyze, but this URL is invalid and will be omitted from provenance.'
+      : readiness.urlError.message;
   } else if (state.media && !state.normalizedDocument) {
     ui.readyNote.textContent = 'Attach a companion transcript; media alone is not analyzable text.';
   } else if (state.normalizedDocument && state.activeInput === 'document') {
@@ -306,48 +336,23 @@ function refreshReadyState() {
   } else if (ui.text.value.trim()) {
     ui.readyNote.textContent = `${formatNumber(words)} pasted words ready to normalize.`;
   } else if (ui.sourceUrl.value.trim()) {
-    ui.readyNote.textContent = 'The Lab will attempt an explicit text fetch or ask for a transcript.';
+    ui.readyNote.textContent = readiness.classification.canFetchText
+      ? 'The Lab will make an explicit request to this publisher and analyze usable returned text locally.'
+      : readiness.classification.guidance;
   } else {
     ui.readyNote.textContent = 'Add analyzable text to begin.';
   }
 }
 
 function updateUrlGuidance() {
-  const value = ui.sourceUrl.value.trim();
-  if (!value) {
-    ui.urlNote.textContent = 'A URL alone is not a transcript. If the browser cannot retrieve usable text, the Lab keeps the link and asks you to paste or attach the transcript.';
-    refreshReadyState();
-    return;
-  }
-  try {
-    const classification = classifySourceUrl(value);
-    ui.urlNote.textContent = classification.guidance || (
-      classification.canFetchText
-        ? 'The Lab can attempt a browser-side text fetch. Publisher CORS rules still decide whether it succeeds.'
-        : 'Keep this link as provenance and paste or attach the transcript.'
-    );
-  } catch (error) {
-    ui.urlNote.textContent = error.message;
-  }
-  refreshReadyState();
-}
-
-function canonicalSourceUrl() {
-  const value = ui.sourceUrl.value.trim();
-  return value ? canonicalizeUrl(value) : null;
+  refreshReadyState(currentInputReadiness());
 }
 
 function documentWithCurrentProvenance(documentValue) {
-  const title = ui.sourceTitle.value.trim() || documentValue.source.title;
-  const url = canonicalSourceUrl() || documentValue.source.url || null;
-  return {
-    ...documentValue,
-    source: {
-      ...documentValue.source,
-      title,
-      url,
-    },
-  };
+  return applyOptionalSourceMetadata(documentValue, {
+    title: ui.sourceTitle.value,
+    sourceUrl: ui.sourceUrl.value,
+  });
 }
 
 function updateLoadedDocument(documentValue, { inputKind = 'document', announce = true } = {}) {
@@ -355,17 +360,20 @@ function updateLoadedDocument(documentValue, { inputKind = 'document', announce 
   if (!validation.valid) {
     throw new LabIntakeError('INVALID_NORMALIZED_DOCUMENT', validation.errors.join(' '));
   }
-  state.normalizedDocument = documentValue;
+  const loadedDocument = documentWithCurrentProvenance(documentValue);
+  state.normalizedDocument = loadedDocument;
   state.activeInput = inputKind;
-  if (!ui.sourceTitle.value.trim()) ui.sourceTitle.value = documentValue.source.title;
-  if (!ui.sourceUrl.value.trim() && documentValue.source.url) ui.sourceUrl.value = documentValue.source.url;
-  renderNormalizedDocument(documentWithCurrentProvenance(documentValue));
-  renderWarnings(documentValue.extraction.warnings);
+  if (!ui.sourceTitle.value.trim()) ui.sourceTitle.value = loadedDocument.source.title;
+  const existingUrl = validSourceProvenanceUrl(loadedDocument.source.url);
+  if (!ui.sourceUrl.value.trim() && existingUrl) ui.sourceUrl.value = existingUrl;
+  renderNormalizedDocument(loadedDocument);
+  renderWarnings(loadedDocument.extraction.warnings);
   if (announce) {
-    ui.intakeStatus.textContent = `${formatNumber(documentValue.stats.words)} words normalized locally.`;
+    ui.intakeStatus.textContent = `${formatNumber(loadedDocument.stats.words)} words normalized locally.`;
     setLabState('empty', 'A normalized source is ready. Nothing has been analyzed yet.');
   }
   refreshReadyState();
+  return loadedDocument;
 }
 
 function setFileSummary(file, classification) {
@@ -438,7 +446,7 @@ async function prepareSelectedFile(file) {
       session: extractionSession,
       onProgress: handleExtractionProgress,
       title: ui.sourceTitle.value.trim() || undefined,
-      url: canonicalSourceUrl(),
+      url: currentInputReadiness().provenanceUrl,
     });
     if (extracted?.schema === 'le-lab.local-media') {
       state.media = extracted;
@@ -477,7 +485,7 @@ async function prepareCompanion(file) {
       session: extractionSession,
       onProgress: handleExtractionProgress,
       title: ui.sourceTitle.value.trim() || undefined,
-      url: canonicalSourceUrl(),
+      url: currentInputReadiness().provenanceUrl,
     });
     state.activeInput = 'document';
     ui.companionStatus.textContent = `${file.name} linked · ${formatNumber(documentValue.stats.words)} analyzable words.`;
@@ -508,14 +516,14 @@ async function prepareClipboard({ event = null } = {}) {
         onProgress: handleExtractionProgress,
         preferImage: true,
         title: ui.sourceTitle.value.trim() || undefined,
-        url: canonicalSourceUrl(),
+        url: currentInputReadiness().provenanceUrl,
       })
       : await readSystemClipboard({
         signal,
         session: extractionSession,
         onProgress: handleExtractionProgress,
         title: ui.sourceTitle.value.trim() || undefined,
-        url: canonicalSourceUrl(),
+        url: currentInputReadiness().provenanceUrl,
       });
     if (documentValue.source.type === 'clipboard-text') {
       ui.text.value = documentValue.text;
@@ -532,6 +540,7 @@ async function prepareClipboard({ event = null } = {}) {
 
 async function documentForAnalysis() {
   const pastedText = ui.text.value.trim();
+  const readiness = currentInputReadiness();
   if (pastedText && (state.activeInput === 'text' || !state.normalizedDocument)) {
     const documentValue = normalizeInput({
       text: pastedText,
@@ -539,12 +548,11 @@ async function documentForAnalysis() {
       source: {
         title: ui.sourceTitle.value.trim() || 'Pasted commentary',
         type: 'pasted-text',
-        url: canonicalSourceUrl(),
+        url: readiness.provenanceUrl,
       },
       extraction: { method: 'direct-text' },
     });
-    updateLoadedDocument(documentValue, { inputKind: 'text', announce: false });
-    return documentValue;
+    return updateLoadedDocument(documentValue, { inputKind: 'text', announce: false });
   }
   if (state.normalizedDocument) return documentWithCurrentProvenance(state.normalizedDocument);
   if (state.media) {
@@ -553,17 +561,22 @@ async function documentForAnalysis() {
       'The local media is previewable, but there is no analyzable transcript. Attach TXT, MD, SRT, VTT, JSON, or CSV first.',
     );
   }
-  const url = ui.sourceUrl.value.trim();
-  if (url) {
+  if (readiness.retrievalEligible) {
     setLabState('extracting', 'Attempting an explicit browser-side text fetch.');
     const signal = extractionSession.begin();
-    const documentValue = await extractUrlText(url, {
+    const documentValue = await extractUrlText(readiness.provenanceUrl, {
       signal,
       onProgress: handleExtractionProgress,
       title: ui.sourceTitle.value.trim() || undefined,
     });
-    updateLoadedDocument(documentValue, { inputKind: 'document', announce: false });
-    return documentValue;
+    return updateLoadedDocument(documentValue, { inputKind: 'document', announce: false });
+  }
+  if (readiness.blockingUrlError) throw readiness.blockingUrlError;
+  if (readiness.classification?.requiresTranscript) {
+    throw new LabIntakeError(
+      'URL_TRANSCRIPT_REQUIRED',
+      readiness.classification.guidance || 'This source URL needs transcript text before it can be analyzed.'
+    );
   }
   throw new LabIntakeError('EMPTY_INPUT', 'Paste text, choose a supported file, or provide a fetchable article URL before analyzing.');
 }

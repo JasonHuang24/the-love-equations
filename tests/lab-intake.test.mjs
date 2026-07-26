@@ -5,6 +5,9 @@ import {
   INTAKE_LIMITS,
   LabIntakeError,
   NORMALIZED_DOCUMENT_SCHEMA,
+  applyOptionalSourceMetadata,
+  assessSourceInputReadiness,
+  canAttemptSourceUrlExtraction,
   canonicalizeUrl,
   classifyLocalFile,
   classifySourceUrl,
@@ -349,6 +352,12 @@ test('URL provenance routes transcript-only classes honestly and strips credenti
   assert.equal(classifySourceUrl('https://cdn.example.com/talk.mp4').kind, 'direct-video');
   assert.equal(classifySourceUrl('https://example.com/podcast/feed.xml').kind, 'rss');
   assert.equal(classifySourceUrl('https://example.com/article').kind, 'article');
+  assert.equal(canAttemptSourceUrlExtraction('https://example.com/article'), true);
+  assert.equal(canAttemptSourceUrlExtraction('https://example.com/podcast/feed.xml'), true);
+  assert.equal(canAttemptSourceUrlExtraction('https://youtu.be/example'), false);
+  assert.equal(canAttemptSourceUrlExtraction('https://podcasts.apple.com/us/podcast/example/id1'), false);
+  assert.equal(canAttemptSourceUrlExtraction('https://cdn.example.com/talk.mp3'), false);
+  assert.equal(canAttemptSourceUrlExtraction('not a URL'), false);
   assert.equal(
     canonicalizeUrl('https://user:secret@example.com/article#private'),
     'https://example.com/article'
@@ -357,6 +366,117 @@ test('URL provenance routes transcript-only classes honestly and strips credenti
     () => classifySourceUrl('javascript:alert(1)'),
     (error) => error instanceof LabIntakeError && error.code === 'UNSAFE_SOURCE_URL'
   );
+});
+
+test('source readiness separates blocking URL errors from optional metadata warnings', () => {
+  const malformedOnly = assessSourceInputReadiness({ sourceUrl: 'not a URL' });
+  assert.equal(malformedOnly.canAnalyze, false);
+  assert.equal(malformedOnly.urlState, 'blocking-error');
+  assert.equal(malformedOnly.blockingUrlError?.code, 'INVALID_SOURCE_URL');
+  assert.equal(malformedOnly.provenanceUrl, null);
+
+  const malformedWithText = assessSourceInputReadiness({
+    sourceUrl: 'not a URL',
+    text: 'A supplied transcript remains the analyzable layer.'
+  });
+  assert.equal(malformedWithText.canAnalyze, true);
+  assert.equal(malformedWithText.urlState, 'warning');
+  assert.equal(malformedWithText.metadataUrlWarning?.code, 'INVALID_SOURCE_URL');
+  assert.equal(malformedWithText.retrievalEligible, false);
+  assert.equal(malformedWithText.provenanceUrl, null);
+
+  const document = normalizeInput({
+    text: 'A normalized local document remains analyzable.',
+    source: { title: 'Local document', type: 'text-file' },
+    createdAt: FIXED_TIME
+  });
+  assert.equal(assessSourceInputReadiness({
+    sourceUrl: 'not a URL',
+    normalizedDocument: document
+  }).canAnalyze, true);
+  assert.equal(assessSourceInputReadiness({
+    sourceUrl: 'not a URL',
+    companionFile: { name: 'talk.vtt' }
+  }).canAnalyze, true);
+});
+
+test('valid provenance-only URLs retain their existing eligibility contract', () => {
+  for (const sourceUrl of [
+    'https://youtu.be/example',
+    'https://podcasts.apple.com/us/podcast/example/id1',
+    'https://cdn.example.com/talk.mp3'
+  ]) {
+    const provenanceOnly = assessSourceInputReadiness({ sourceUrl });
+    assert.equal(provenanceOnly.canAnalyze, false);
+    assert.equal(provenanceOnly.retrievalEligible, false);
+    assert.equal(provenanceOnly.provenanceUrl, sourceUrl);
+
+    const withText = assessSourceInputReadiness({
+      sourceUrl,
+      text: 'A supplied transcript remains the analyzable layer.'
+    });
+    assert.equal(withText.canAnalyze, true);
+    assert.equal(withText.provenanceUrl, sourceUrl);
+  }
+
+  const mediaWithCompanion = assessSourceInputReadiness({
+    sourceUrl: 'https://cdn.example.com/talk.mp4',
+    companionFile: { name: 'talk.vtt' }
+  });
+  assert.equal(mediaWithCompanion.canAnalyze, true);
+  assert.equal(mediaWithCompanion.provenanceUrl, 'https://cdn.example.com/talk.mp4');
+
+  const podcastWithDocument = assessSourceInputReadiness({
+    sourceUrl: 'https://podcasts.apple.com/us/podcast/example/id1',
+    normalizedDocument: { schema: NORMALIZED_DOCUMENT_SCHEMA }
+  });
+  assert.equal(podcastWithDocument.canAnalyze, true);
+  assert.equal(
+    podcastWithDocument.provenanceUrl,
+    'https://podcasts.apple.com/us/podcast/example/id1'
+  );
+
+  for (const sourceUrl of [
+    'https://example.com/article',
+    'https://example.com/podcast/feed.xml'
+  ]) {
+    const readiness = assessSourceInputReadiness({ sourceUrl });
+    assert.equal(readiness.canAnalyze, true);
+    assert.equal(readiness.retrievalEligible, true);
+  }
+
+  const corrected = assessSourceInputReadiness({
+    sourceUrl: 'https://example.com/corrected',
+    text: 'The same transcript remains ready.'
+  });
+  assert.equal(corrected.urlState, 'valid');
+  assert.equal(corrected.metadataUrlWarning, null);
+  assert.equal(corrected.provenanceUrl, 'https://example.com/corrected');
+});
+
+test('optional source metadata excludes malformed provenance from normalized documents', () => {
+  const document = normalizeInput({
+    text: 'Valid text should survive invalid optional metadata.',
+    source: {
+      title: 'Sanitization fixture',
+      type: 'pasted-text',
+      url: 'https://example.com/original'
+    },
+    createdAt: FIXED_TIME
+  });
+  const invalid = applyOptionalSourceMetadata(document, {
+    sourceUrl: 'not a URL'
+  });
+  assert.equal(invalid.source.url, null);
+  assert.equal(invalid.text, document.text);
+
+  const retained = applyOptionalSourceMetadata(document);
+  assert.equal(retained.source.url, 'https://example.com/original');
+
+  const valid = applyOptionalSourceMetadata(document, {
+    sourceUrl: 'https://youtu.be/example'
+  });
+  assert.equal(valid.source.url, 'https://youtu.be/example');
 });
 
 test('format and local-file classifiers cover required intake families', () => {
@@ -393,7 +513,8 @@ test('media adapter never claims speech-to-text support', () => {
   assert.equal(SPEECH_TO_TEXT_CAPABILITY.sendsMediaOffDevice, false);
   assert.throws(
     () => transcribeMedia(),
-    (error) => error instanceof LabIntakeError && error.code === 'LOCAL_STT_NOT_SHIPPED'
+    (error) => error.name === 'LabIntakeError'
+      && error.code === 'LOCAL_STT_NOT_SHIPPED'
   );
 });
 
@@ -414,7 +535,7 @@ test('extraction session reset aborts active work and runs cleanup hooks', async
 test('system clipboard adapter fails soft outside a browser', async () => {
   await assert.rejects(
     () => readSystemClipboard(),
-    (error) => error instanceof LabIntakeError
+    (error) => error.name === 'LabIntakeError'
       && error.code === 'CLIPBOARD_API_UNAVAILABLE'
   );
 });
