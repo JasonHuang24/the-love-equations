@@ -16,7 +16,7 @@ The landing page presents the content in a deliberate hierarchy; the repo follow
 |---|---|
 | `hierarchy.html` | The Love Hierarchy — the three-tier gate model (Primary/Secondary/Tertiary) everything else sits on, four takes side by side, plus a build-your-own tool |
 | `smvlevers.html` | The Five Levers of SMV — Looks, Money, Status, Charm, Exposure, scaled by clock/market/context |
-| `frameworks.html` | Rules & Frameworks — the 7–7 Rule, the Conversion Ladder, SMV Matching, and the big claims stress-tested |
+| `frameworks.html` | Rules & Frameworks — the Conversion Ladder, Interaction and Readiness gates, selection/pairing rules, relationship-maintenance rules, SMV Matching, and the big claims stress-tested |
 | `gender-dynamics.html` | Gender Dynamics — the market read from each side, candid and evidence-tagged |
 
 **The instruments** — everything scores on-device; photos never upload:
