@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.0",
-  "indexVersion": "1.0.0+ae431fa62341",
-  "generatedAt": "2026-07-26T11:57:23.520Z",
+  "indexVersion": "1.0.0+6dc9bff7b0fe",
+  "generatedAt": "2026-07-26T17:07:50.303Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -11,7 +11,7 @@
       "inputs": [
         "hierarchy.html"
       ],
-      "sha256": "25fda2a24a2fe03c131f71722830406212934df22400c56065576cef0d958408",
+      "sha256": "2e8d2abf49aa407770319086f2bac3732d62c73e3624674473ac4cc9eef1de57",
       "conceptCount": 41
     },
     {
@@ -22,7 +22,7 @@
       "inputs": [
         "smvlevers.html"
       ],
-      "sha256": "8f4e8b35db0b6fa359afe317848ba39bc2927c693399605cb44ddb285159722e",
+      "sha256": "10fe112a39b618469873a226c168355216897a051c8d6b65d0496b28074c05c7",
       "conceptCount": 35
     },
     {
@@ -78,7 +78,7 @@
       "inputs": [
         "pills.html"
       ],
-      "sha256": "6b4244c2a0068974cd82a26e4d70ee44e25a8c27e73a4eb914072510ba5b8322",
+      "sha256": "0399e6c95e8321fd054c38f9d9e13c3f4a30c4a64c42652a8a1bbc550342bd02",
       "conceptCount": 12
     },
     {
@@ -100,7 +100,7 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "30660be5471832cdbe925db1edb4c93dbfe65f74d013ec1bf18f26da5e869a73",
+      "sha256": "9f40ebede31b740f253b2663e31638147df6ff1797ed759767e2520499b2fd72",
       "conceptCount": 5
     },
     {
@@ -111,7 +111,7 @@
       "inputs": [
         "dd-relationships-throughout-history.html"
       ],
-      "sha256": "08d99d8d5935410240f73a91bf46caa0aa52e74724955541d0171f4ca8a36567",
+      "sha256": "cf8aeb5929d65f06d7b036402589cfeada8b1aa2e391c715a4969a2961414e32",
       "conceptCount": 6
     },
     {
@@ -122,7 +122,7 @@
       "inputs": [
         "dd-third-spaces.html"
       ],
-      "sha256": "d3da09800e716824991c9b38c5169d99b118bf9dcde04c0cc96067da3d57d9d2",
+      "sha256": "bf84871046ef4f86c40badecd31311529f0bc785d7eb89a7b3a93538f59432af",
       "conceptCount": 6
     },
     {
@@ -133,7 +133,7 @@
       "inputs": [
         "dd-relationships-by-country.html"
       ],
-      "sha256": "8bd7ca2aa9c5d2d6973725a8f50d29dbfce8e22a2e7323d4b18943443bf8105c",
+      "sha256": "a5f679f9160cb8450daafcdf5442a2651a36bcd726ff83656af2c57f3d91634a",
       "conceptCount": 6
     },
     {
@@ -144,7 +144,7 @@
       "inputs": [
         "dd-what-the-wall-actually-is.html"
       ],
-      "sha256": "3ceef31723bcbf95de1f88995fecf8c522d9f5349e9a36c1c04764737fe8a5d5",
+      "sha256": "af932cd386aa56ada94e5d217924c8833ae8b40d7bbb226490aee88f8924d988",
       "conceptCount": 6
     },
     {
@@ -155,7 +155,7 @@
       "inputs": [
         "dd-single-parenthood.html"
       ],
-      "sha256": "a4a40ba320613f3bcf1f6c16df005831198987ed1e9a3048f1b9251467ea74e2",
+      "sha256": "4bae809b68265ebe35be9be4967e810f7c7f1b0e5eb56ff3b3ebd7761828f524",
       "conceptCount": 6
     },
     {
@@ -177,7 +177,7 @@
       "inputs": [
         "compatibility.html"
       ],
-      "sha256": "65a5138b663f4f5587125ca0cbf5105d7f0766f6e1be84346a803cf50f305689",
+      "sha256": "8c5a1f66ec445b79d4f506e46e272f11c4462cfae3d7e9d603329315d5f64bdb",
       "conceptCount": 1
     },
     {
@@ -188,7 +188,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "74a8914580b496f6a654d0a46f1cc7217fa6f962d60208898dc2c6def1c306e2",
+      "sha256": "eec2a655bfff1abccc8224f7262812fd9efda62590fa2efa98295c2ab3956b0b",
       "conceptCount": 1
     },
     {
@@ -199,7 +199,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "93def74039e7b9c376020369293ef04b1c0e930f049d83a3d61e9d2e4bfae331",
+      "sha256": "c5ad9bd9c2ab05b0009e042697418b5b394d1fe71a491bf81b7ac75696d128c2",
       "conceptCount": 1
     },
     {
@@ -210,7 +210,7 @@
       "inputs": [
         "matchmaker.html"
       ],
-      "sha256": "8c61c98822cbaa10a9697a0cb802bdd22d81971c5e5a52ac51e0c89f9a321b9d",
+      "sha256": "04310015d24e4e3d4b731f00e6b9177a0b9b8ba485618a94b1d7655af9777146",
       "conceptCount": 1
     }
   ],
