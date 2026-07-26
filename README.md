@@ -19,7 +19,7 @@ The landing page presents the content in a deliberate hierarchy; the repo follow
 | `frameworks.html` | Rules & Frameworks — the Conversion Ladder, Interaction and Readiness gates, selection/pairing rules, relationship-maintenance rules, SMV Matching, and the big claims stress-tested |
 | `gender-dynamics.html` | Gender Dynamics — the market read from each side, candid and evidence-tagged |
 
-**The instruments** — everything scores on-device; photos never upload:
+**The instruments** — analysis runs on-device; photos and Lab sources never upload silently:
 
 | Page | What it is |
 |---|---|
@@ -28,6 +28,7 @@ The landing page presents the content in a deliberate hierarchy; the repo follow
 | `body.html` | Body Calculator — pose + silhouette geometry with a CNN headline, folded with Face into one Looks score |
 | `compatibility.html` | Compatibility Calculator — score anyone against any of the four hierarchies, 7–7 Rule verdicts |
 | `matchmaker.html` | Matchmaker — your scores against a 150-profile roster, desire × odds ranking with the math shown |
+| `lab.html` | LE Lab — normalize pasted transcripts and local sources, map claim-like passages into the LE canon, pressure-test the reasoning, and export unmapped research candidates |
 
 **The evidence:**
 
@@ -56,12 +57,31 @@ No build step, no framework — plain HTML/CSS/JS served statically.
 - **On-device models:** `models/*.onnx` run via onnxruntime-web (pinned CDN); MediaPipe tasks-vision (pinned)
   provides face/pose landmarks. See `models/README.md` for training, calibration anchors, and the
   export contract. Nothing leaves the browser.
+- **LE Lab contracts:** `lab.html` is the instrument shell; modular browser extractors normalize every successful input into a versioned document before the deterministic analyzer returns a versioned result. Raw source material stays in session memory by default, and Reset cancels active work and revokes local media previews.
 - **Cross-page state:** calculators share `localStorage` keys — `loveEquations.faceScore.v2`,
   `bodyScore.v2`, the shot keys, `smvCalculator.v7_2`, `compatibilityCalculator.v1`, `matchmaker.v1` — and a
   clipboard "profile package" JSON format (`source: 'love-equations.compatibility' | 'love-equations.smv'`)
   for explicit exchange between SMV Calc, Compatibility, and Matchmaker.
-- **Fonts & CDN:** Playfair Display is self-hosted in `fonts/` (variable woff2, SIL OFL). The only external
-  runtime deps are the pinned, SRI-tagged Tabler icon font and the pinned onnxruntime/MediaPipe bundles.
+- **Fonts & CDN:** Playfair Display is self-hosted in `fonts/` (variable woff2, SIL OFL). Tabler icons and calculator model runtimes remain version-pinned. LE Lab lazy-loads PDF.js 3.11.174 and Tesseract.js 5.1.1 only when needed; top-level bundles carry SRI, worker/core/model URLs are exact-version pinned, failures leave transcript intake usable, and library downloads are labeled separately from source upload.
+
+### LE Lab architecture and maintenance
+
+- **Normalized intake:** paste/clipboard text; TXT, Markdown, SRT, VTT, JSON/JSONL, CSV, HTML, and basic RTF; local PDF text; image/clipboard OCR; and local audio/video metadata plus a companion transcript all converge on `le-lab.normalized-document/1.0.0`.
+- **Media honesty:** local audio/video gets a private object-URL preview and analyzable companion subtitles/transcript. No speech-to-text model is shipped, so the UI never describes a media preview as transcription.
+- **URL behavior:** ordinary CORS-readable HTML/text can be extracted explicitly. YouTube, podcast/media links without readable text, and CORS-blocked pages remain provenance and route the visitor to paste/upload a transcript.
+- **Analysis:** `js/lab-analyzer.js` is the same deterministic lexical engine in browser and fixtures. It uses exact aliases, weighted overlap, dependency/neighbor context, a small inspectable LE signature layer, confidence penalties, reasoning-risk detectors, and an honest no-match path. The worker client falls back to the same main-thread implementation.
+- **Contracts and exports:** `md/lab-schemas.md` documents normalized input, canon index, analysis result, and Research Queue schemas. Markdown/JSON exports retain provenance, extraction warnings, index/mode versions, segment references, citations, confidence, and limitations.
+- **Canon maintenance:** `scripts/build-canon-index.mjs` extracts canonical HTML/JS into `data/le-canon-index.json`; `data/canon-overlay.json` contains only semantic aliases, relations, boundaries, and pressure questions that markup cannot provide. The validator rejects drift, bad relations, missing pages/fragments, duplicate IDs, and malformed evidence types.
+
+No npm packages or build step are required. Lab tests use Node and the repository Python tooling:
+
+```bash
+npm run test:lab                         # intake + analyzer + canon + HTML/ARIA/link audits
+node scripts/build-canon-index.mjs       # regenerate after canonical source changes
+node scripts/validate-canon-index.mjs    # validate committed runtime index
+python tools/lab_ui_audit.py             # Lab DOM/ARIA/link/CSS contract
+python tools/site_integrity_audit.py     # whole-site local links/fragments/IDs/ARIA
+```
 
 ## Local development
 
@@ -89,12 +109,15 @@ read `models/README.md` first — the calibration anchors in `body.html` are the
 ```
 *.html            the pages (flat, one file per section)
 css/              one stylesheet per page + styles.css (shared tokens, nav, footer)
-js/               include.js, composite-score.js, mythbuster.js, deep-dive.js, body-pose-worker.js
+js/               site modules plus the modular Lab intake/analyzer/worker/export pipeline
+data/             generated LE canon index + semantic overlay
+scripts/          canon index generator and validator
 partials/         runtime-injected nav / footer / composite section
 fonts/            self-hosted Playfair Display (OFL)
 images/           roster photos (manifest.json is generated — don't hand-edit)
 models/           ONNX models + training/calibration docs
-tools/            Python maintenance scripts + requirements.txt
+tests/            deterministic Lab/canon fixtures plus the standing SMV panel harness
+tools/            Python maintenance scripts, integrity audits, and requirements.txt
 md/               project ledger (mission-notes.md — read this first for history), specs, briefs
 ```
 

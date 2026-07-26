@@ -158,6 +158,50 @@
   display: flex; align-items: center; justify-content: center;
   color: var(--scarlet); font-size: 16px; margin-bottom: 0.7rem;
 }
+.inst-card-lab {
+  position: relative;
+  overflow: hidden;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.34fr) minmax(280px, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.25rem 1.5rem;
+  border-color: rgba(196, 30, 58, 0.28);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.94), rgba(250,230,232,0.58)) !important;
+}
+.inst-card-lab::after {
+  content: "";
+  position: absolute;
+  width: 9rem; height: 9rem; right: -5rem; bottom: -6rem;
+  border: 1px solid rgba(196,30,58,0.13); border-radius: 50%;
+}
+.inst-lab-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+.inst-lab-badge {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--scarlet-dim); background: var(--scarlet-pale);
+  border: 0.5px solid rgba(196,30,58,0.18); border-radius: 999px; padding: 3px 8px;
+}
+.inst-lab-route {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 3px;
+  margin-top: 0.85rem; color: var(--text-dim);
+  font-size: 8.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.inst-lab-route i { color: var(--scarlet); font-size: 10px; }
+.inst-card-lab .inst-lab-top { grid-column: 1; grid-row: 1 / span 2; justify-content: flex-start; align-items: center; }
+.inst-card-lab .inst-icon { margin-bottom: 0; }
+.inst-card-lab .inst-name { grid-column: 2; grid-row: 1; margin-bottom: 0; }
+.inst-card-lab .inst-desc { grid-column: 2; grid-row: 2; max-width: 680px; }
+.inst-card-lab .inst-lab-route { grid-column: 3; grid-row: 1 / span 2; justify-content: flex-end; margin-top: 0; }
+@media (max-width: 760px) {
+  .inst-card-lab { grid-template-columns: 1fr; grid-template-rows: auto; gap: 0.55rem; }
+  .inst-card-lab .inst-lab-top,
+  .inst-card-lab .inst-name,
+  .inst-card-lab .inst-desc,
+  .inst-card-lab .inst-lab-route { grid-column: 1; grid-row: auto; }
+  .inst-card-lab .inst-lab-route { justify-content: flex-start; margin-top: 0.2rem; }
+}
 .inst-name {
   font-family: "Playfair Display", Georgia, serif;
   font-size: 16.5px; letter-spacing: -0.01em; color: var(--text);

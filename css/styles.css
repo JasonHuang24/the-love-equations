@@ -757,8 +757,8 @@ body {
 
 .dossier-note strong { color: var(--text); }
 
-/* ── Laptop tier: the full 15-link row measures ~1573px at 14px Georgia, so between the
-   hamburger cutoff and ~1700px it must compress or the tail links push off-screen
+/* ── Laptop tier: the full 16-link row needs the compressed type before it can share
+   the bar with the logo, or the tail links push off-screen
    (sticky bar + no overflow guard = horizontal page scroll). Same row, tighter type. ── */
 @media (max-width: 1700px) {
   .nav { padding: 0 1.25rem; }
@@ -767,9 +767,9 @@ body {
   .nav-link { padding: 0 6px; font-size: 12.5px; letter-spacing: 0; }
 }
 
-/* ── Mobile navigation: collapsible hamburger. 1320px, not 1024: the compressed link row
-   above still needs ~1302px — below that only the hamburger fits all 15 destinations. ── */
-@media (max-width: 1320px) {
+/* ── Mobile navigation: collapsible hamburger. With LE Lab, the compressed link row
+   still needs roughly 1380px — below that only the hamburger fits all 16 destinations. ── */
+@media (max-width: 1400px) {
   .nav {
     flex-wrap: wrap;
     align-items: center;

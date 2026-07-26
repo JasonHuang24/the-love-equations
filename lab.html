@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bring dating commentary to The Love Equations Lab. Map its claims to the LE canon, pressure-test the reasoning, and keep the unmapped residue as a research queue—all on-device." />
+  <title>LE Lab &mdash; The Love Equations</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="css/styles.css?v=2.2" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+        integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
+  <link rel="stylesheet" href="css/lab.css?v=1.0" />
+  <script src="js/include.js" defer></script>
+  <script type="module" src="js/lab-app.js?v=1.0"></script>
+</head>
+<body data-page="lab">
+  <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
+  <div data-include="navigation-bar"></div>
+
+  <main class="page lab-page" id="lab-app" data-lab-state="empty">
+    <header class="lab-hero">
+      <div class="lab-hero-inner">
+        <div class="lab-hero-copy">
+          <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> On-device canon mapper &amp; pressure lab</div>
+          <h1>The Love Equations <em>Lab</em></h1>
+          <p class="lab-product-line">Bring a claim. See where it fits, where it strains, and what the map is missing.</p>
+          <p class="lab-hero-sub">Paste a transcript, drop a source, or keep a URL as provenance. The Lab traces claim-like passages into the actual LE canon, shows its confidence, challenges the reasoning, and preserves what does not fit instead of forcing an answer.</p>
+          <div class="lab-hero-actions">
+            <a class="btn btn-scarlet" href="#lab-workbench">Bring a source <i class="ti ti-arrow-down" aria-hidden="true"></i></a>
+            <button class="btn lab-demo-button" id="lab-load-demo" type="button">
+              <i class="ti ti-player-play" aria-hidden="true"></i> Run the demonstration
+            </button>
+          </div>
+        </div>
+
+        <aside class="lab-method-card" aria-label="Lab method and canon index status">
+          <div class="lab-method-mark" aria-hidden="true">
+            <i class="ti ti-binary-tree-2"></i>
+          </div>
+          <div>
+            <div class="lab-method-label">Current instrument</div>
+            <div class="lab-method-title">Local lexical analysis</div>
+            <p>Deterministic and inspectable. Exact language, weighted concept overlap, canon relationships, and explicit reasoning checks&mdash;no invisible AI verdict.</p>
+          </div>
+          <dl class="lab-method-meta">
+            <div>
+              <dt>Canon</dt>
+              <dd id="lab-index-meta" aria-live="polite">Loading the canon index&hellip;</dd>
+            </div>
+            <div>
+              <dt>Contracts</dt>
+              <dd id="lab-schema-meta">Input v1 &middot; Analysis v1</dd>
+            </div>
+            <div>
+              <dt>Mode</dt>
+              <dd id="lab-analysis-mode">On-device lexical</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </header>
+
+    <div class="lab-shell" id="lab-workbench">
+      <noscript>
+        <div class="lab-noscript" role="alert">
+          <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+          The Lab needs JavaScript to read and analyze a source. The rest of The Love Equations remains available without it.
+        </div>
+      </noscript>
+
+      <section class="lab-bench" aria-labelledby="lab-intake-title">
+        <div class="lab-panel lab-intake-panel">
+          <div class="lab-panel-head">
+            <div>
+              <div class="lab-section-kicker">01 &middot; Source intake</div>
+              <h2 id="lab-intake-title">Place a source on the bench.</h2>
+              <p>Text is the analyzable layer. Files, images, documents, and companion subtitles all normalize into the same ordered segment format before any claim matching begins.</p>
+            </div>
+            <span class="lab-local-badge"><i class="ti ti-device-laptop" aria-hidden="true"></i> Local by default</span>
+          </div>
+
+          <form id="lab-intake-form" novalidate>
+            <div class="lab-source-meta">
+              <div class="lab-field">
+                <label for="lab-source-title">Source title <span>optional</span></label>
+                <input id="lab-source-title" name="sourceTitle" type="text" maxlength="180"
+                       autocomplete="off" placeholder="e.g. Dating Advice Episode 42" />
+              </div>
+              <div class="lab-field">
+                <label for="lab-source-url">Source URL <span>provenance, optional</span></label>
+                <div class="lab-input-icon">
+                  <i class="ti ti-link" aria-hidden="true"></i>
+                  <input id="lab-source-url" name="sourceUrl" type="url" inputmode="url"
+                         autocomplete="url" placeholder="https://youtube.com/watch?v=..." />
+                </div>
+                <p class="lab-field-note" id="lab-url-note">A URL alone is not a transcript. If the browser cannot retrieve usable text, the Lab keeps the link and asks you to paste or attach the transcript.</p>
+              </div>
+            </div>
+
+            <div class="lab-intake-methods">
+              <div class="lab-paste-pane">
+                <div class="lab-field lab-text-field">
+                  <div class="lab-label-row">
+                    <label for="lab-text-input">Paste text or a transcript</label>
+                    <span id="lab-text-count" aria-live="polite">0 words</span>
+                  </div>
+                  <textarea id="lab-text-input" name="sourceText" rows="15"
+                            spellcheck="true" aria-describedby="lab-text-hint"
+                            placeholder="Paste commentary, an article, show notes, or a transcript here. Speaker labels and timestamps are welcome."></textarea>
+                  <p class="lab-field-note" id="lab-text-hint">Long sources are segmented locally. The Lab preserves recoverable speakers, timestamps, and original excerpt boundaries.</p>
+                </div>
+                <div class="lab-inline-actions">
+                  <button class="btn lab-subtle-button" id="lab-paste-button" type="button">
+                    <i class="ti ti-clipboard-text" aria-hidden="true"></i> Read clipboard
+                  </button>
+                  <button class="btn lab-subtle-button" id="lab-clear-text" type="button">
+                    <i class="ti ti-eraser" aria-hidden="true"></i> Clear text
+                  </button>
+                </div>
+              </div>
+
+              <div class="lab-file-pane">
+                <input class="lab-visually-hidden" id="lab-file-input" name="sourceFile" type="file"
+                       accept=".txt,.md,.srt,.vtt,.json,.csv,.pdf,.html,.htm,text/plain,text/markdown,text/csv,application/json,application/pdf,text/html,image/*,audio/*,video/*" />
+                <button class="lab-drop-zone" id="lab-drop-zone" type="button"
+                        aria-describedby="lab-file-types lab-drop-status">
+                  <span class="lab-drop-icon" aria-hidden="true"><i class="ti ti-file-upload"></i></span>
+                  <span class="lab-drop-title">Drop a source here</span>
+                  <span class="lab-drop-or">or choose a local file</span>
+                  <span class="lab-drop-types" id="lab-file-types">TXT, MD, SRT, VTT, JSON, CSV, PDF, HTML, images, audio, or video</span>
+                </button>
+                <p class="lab-drop-status" id="lab-drop-status">Nothing selected.</p>
+
+                <div class="lab-file-summary" id="lab-file-summary" hidden>
+                  <div class="lab-file-glyph" aria-hidden="true"><i class="ti ti-file-description"></i></div>
+                  <div class="lab-file-copy">
+                    <strong id="lab-file-name"></strong>
+                    <span id="lab-file-meta"></span>
+                  </div>
+                  <button class="lab-icon-button" id="lab-remove-file" type="button" aria-label="Remove selected source file">
+                    <i class="ti ti-x" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+                <details class="lab-media-companion" id="lab-media-companion">
+                  <summary>
+                    <span><i class="ti ti-wave-sine" aria-hidden="true"></i> Media &amp; companion transcript</span>
+                    <i class="ti ti-chevron-down lab-details-chevron" aria-hidden="true"></i>
+                  </summary>
+                  <div class="lab-media-body">
+                    <p>Local audio and video can be previewed without upload. Attach subtitles or a transcript to make the source analyzable.</p>
+                    <div class="lab-media-preview" id="lab-media-preview" hidden aria-label="Local media preview"></div>
+                    <label class="lab-companion-label" for="lab-companion-input">
+                      <span><i class="ti ti-file-text" aria-hidden="true"></i> Attach companion transcript</span>
+                      <small>TXT, MD, SRT, VTT, JSON, or CSV</small>
+                    </label>
+                    <input class="lab-visually-hidden" id="lab-companion-input" name="companionFile" type="file"
+                           accept=".txt,.md,.srt,.vtt,.json,.csv,text/plain,text/markdown,text/csv,application/json" />
+                    <p class="lab-field-note" id="lab-companion-status">No companion transcript attached.</p>
+                    <p class="lab-honesty-note"><i class="ti ti-info-circle" aria-hidden="true"></i> A media player is not transcription. The Lab analyzes only text it actually extracted or that you supplied.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+
+            <div class="lab-intake-feedback" id="lab-intake-feedback">
+              <div class="lab-intake-status" id="lab-intake-status" role="status" aria-live="polite" aria-atomic="true">
+                <span class="lab-status-dot" aria-hidden="true"></span>
+                <span id="lab-intake-status-message">Ready for a source.</span>
+              </div>
+              <div class="lab-progress-wrap" id="lab-progress-wrap" hidden>
+                <div class="lab-progress-label">
+                  <span id="lab-intake-progress-label">Preparing source&hellip;</span>
+                  <span id="lab-intake-progress-value">0%</span>
+                </div>
+                <progress id="lab-intake-progress" max="100" value="0">0%</progress>
+              </div>
+              <ul class="lab-warning-list" id="lab-intake-warnings" aria-live="polite"></ul>
+              <div class="lab-error-box" id="lab-intake-error" role="alert" hidden>
+                <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+                <div>
+                  <strong>That source could not be prepared.</strong>
+                  <p id="lab-intake-error-message"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="lab-form-actions">
+              <button class="btn btn-scarlet lab-analyze-button" id="lab-analyze" type="submit" disabled>
+                <i class="ti ti-flask" aria-hidden="true"></i> Map this source
+              </button>
+              <button class="btn lab-cancel-button" id="lab-cancel" type="button" hidden>
+                <i class="ti ti-player-stop" aria-hidden="true"></i> Cancel
+              </button>
+              <button class="btn lab-reset-button" id="lab-reset" type="button">
+                <i class="ti ti-refresh" aria-hidden="true"></i> Reset Lab
+              </button>
+              <p class="lab-ready-note" id="lab-ready-note">Add analyzable text to begin.</p>
+            </div>
+          </form>
+        </div>
+
+        <aside class="lab-bench-aside">
+          <div class="lab-privacy-card">
+            <div class="lab-privacy-icon" aria-hidden="true"><i class="ti ti-shield-lock"></i></div>
+            <div class="lab-section-kicker">Privacy model</div>
+            <h2>Your source stays at your bench.</h2>
+            <p>Pasted text and local files are processed in this browser tab. Raw media and transcripts are not persisted by default, and no source material is silently transmitted.</p>
+            <ul>
+              <li><i class="ti ti-check" aria-hidden="true"></i> Reset cancels work, revokes local previews, and clears the session.</li>
+              <li><i class="ti ti-check" aria-hidden="true"></i> Extractor or model downloads are labeled separately from source upload.</li>
+              <li><i class="ti ti-check" aria-hidden="true"></i> URL retrieval fails honestly when permissions or CORS block it.</li>
+            </ul>
+          </div>
+
+          <div class="lab-capability-card">
+            <div class="lab-section-kicker">What reaches the analyzer</div>
+            <ol class="lab-pipeline-list">
+              <li>
+                <span>01</span>
+                <div><strong>Extract</strong><small>Text, subtitles, documents, OCR, or a companion transcript</small></div>
+              </li>
+              <li>
+                <span>02</span>
+                <div><strong>Normalize</strong><small>Ordered segments with stable IDs, speakers, timestamps, and warnings</small></div>
+              </li>
+              <li>
+                <span>03</span>
+                <div><strong>Map &amp; strain</strong><small>Canon matches, transparent confidence, pressure tests, and unmapped residue</small></div>
+              </li>
+            </ol>
+          </div>
+        </aside>
+      </section>
+
+      <section class="lab-workspace" id="lab-workspace" aria-labelledby="lab-workspace-title" aria-busy="false">
+        <div class="lab-workspace-head">
+          <div>
+            <div class="lab-section-kicker">02 &middot; Analysis bench</div>
+            <h2 id="lab-workspace-title">Source assay</h2>
+            <p id="lab-workspace-subtitle">The empty instrument shows the route. Run the demonstration or bring a source to populate every chamber with real, source-derived results.</p>
+          </div>
+          <div class="lab-export-controls" aria-label="Analysis exports">
+            <button class="btn lab-export-button" id="lab-copy-markdown" type="button" disabled>
+              <i class="ti ti-copy" aria-hidden="true"></i> Copy Markdown
+            </button>
+            <button class="btn lab-export-button" id="lab-download-markdown" type="button" disabled>
+              <i class="ti ti-file-type-md" aria-hidden="true"></i> Markdown
+            </button>
+            <button class="btn lab-export-button" id="lab-download-json" type="button" disabled>
+              <i class="ti ti-braces" aria-hidden="true"></i> JSON
+            </button>
+          </div>
+        </div>
+
+        <div class="lab-state-strip" id="lab-analysis-status" role="status" aria-live="polite" aria-atomic="true">
+          <div class="lab-state-orbit" aria-hidden="true"><span></span></div>
+          <div class="lab-state-copy">
+            <strong class="lab-state-message" data-state-message="empty">Waiting for a specimen</strong>
+            <strong class="lab-state-message" data-state-message="extracting">Extracting the analyzable layer</strong>
+            <strong class="lab-state-message" data-state-message="analyzing">Tracing claims through the canon</strong>
+            <strong class="lab-state-message" data-state-message="success">Assay complete</strong>
+            <strong class="lab-state-message" data-state-message="partial">Assay complete with extraction warnings</strong>
+            <strong class="lab-state-message" data-state-message="no-match">No credible canon match found</strong>
+            <strong class="lab-state-message" data-state-message="failure">The assay stopped</strong>
+            <span id="lab-analysis-status-detail">No source is loaded. Nothing has been analyzed.</span>
+          </div>
+          <div class="lab-state-progress" id="lab-analysis-progress-wrap" hidden>
+            <progress id="lab-analysis-progress" max="100" value="0">0%</progress>
+          </div>
+        </div>
+
+        <div class="lab-metrics" aria-label="Document coverage summary">
+          <div class="lab-metric">
+            <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-letter-w"></i></span>
+            <div><output id="lab-metric-words">&mdash;</output><span>Total words</span></div>
+          </div>
+          <div class="lab-metric">
+            <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-section"></i></span>
+            <div><output id="lab-metric-segments">&mdash;</output><span>Segments</span></div>
+          </div>
+          <div class="lab-metric">
+            <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-message-question"></i></span>
+            <div><output id="lab-metric-claims">&mdash;</output><span>Claim-like segments</span></div>
+          </div>
+          <div class="lab-metric lab-metric-coverage">
+            <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-route"></i></span>
+            <div><output id="lab-metric-coverage">&mdash;</output><span>Meaningfully mapped</span></div>
+            <small>Document coverage, not proof</small>
+          </div>
+        </div>
+
+        <div class="lab-tab-list" id="lab-result-tabs" role="tablist" aria-label="Lab result views">
+          <button class="lab-tab is-active" id="lab-tab-map" type="button" role="tab"
+                  aria-selected="true" aria-controls="lab-panel-map" tabindex="0" data-lab-tab="map">
+            <i class="ti ti-route-2" aria-hidden="true"></i> Map
+          </button>
+          <button class="lab-tab" id="lab-tab-citations" type="button" role="tab"
+                  aria-selected="false" aria-controls="lab-panel-citations" tabindex="-1" data-lab-tab="citations">
+            <i class="ti ti-notes" aria-hidden="true"></i> Citations
+            <span class="lab-tab-count" id="lab-citation-count">0</span>
+          </button>
+          <button class="lab-tab" id="lab-tab-pressure" type="button" role="tab"
+                  aria-selected="false" aria-controls="lab-panel-pressure" tabindex="-1" data-lab-tab="pressure">
+            <i class="ti ti-gauge" aria-hidden="true"></i> Pressure Test
+            <span class="lab-tab-count" id="lab-pressure-count">0</span>
+          </button>
+          <button class="lab-tab" id="lab-tab-research" type="button" role="tab"
+                  aria-selected="false" aria-controls="lab-panel-research" tabindex="-1" data-lab-tab="research">
+            <i class="ti ti-bulb" aria-hidden="true"></i> Research Queue
+            <span class="lab-tab-count" id="lab-research-count">0</span>
+          </button>
+          <button class="lab-tab" id="lab-tab-source" type="button" role="tab"
+                  aria-selected="false" aria-controls="lab-panel-source" tabindex="-1" data-lab-tab="source">
+            <i class="ti ti-file-description" aria-hidden="true"></i> Source
+          </button>
+        </div>
+
+        <div class="lab-tab-panel is-active" id="lab-panel-map" role="tabpanel" tabindex="0"
+             aria-labelledby="lab-tab-map" data-lab-panel="map">
+          <figure class="lab-assay" aria-labelledby="lab-assay-title" aria-describedby="lab-assay-caption">
+            <div class="lab-assay-head">
+              <div>
+                <div class="lab-section-kicker">Routing diagram</div>
+                <h3 id="lab-assay-title">From source to mapped residue</h3>
+              </div>
+              <div class="lab-assay-legend" aria-label="Map legend">
+                <span><i class="lab-legend-dot is-mapped" aria-hidden="true"></i> Mapped</span>
+                <span><i class="lab-legend-dot is-tension" aria-hidden="true"></i> Tension</span>
+                <span><i class="lab-legend-dot is-unmapped" aria-hidden="true"></i> Unmapped</span>
+              </div>
+            </div>
+
+            <div class="lab-assay-flow" id="lab-map-visual">
+              <section class="lab-assay-stage is-source" data-flow-stage="source" aria-label="Source stage">
+                <span class="lab-stage-number">01</span>
+                <div class="lab-stage-vessel">
+                  <i class="ti ti-file-text" aria-hidden="true"></i>
+                  <output id="lab-flow-source-count">&mdash;</output>
+                </div>
+                <strong>Source</strong>
+                <small id="lab-flow-source-label">No normalized document</small>
+              </section>
+              <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
+              <section class="lab-assay-stage is-claims" data-flow-stage="claims" aria-label="Claims stage">
+                <span class="lab-stage-number">02</span>
+                <div class="lab-stage-vessel">
+                  <i class="ti ti-message-circle-question" aria-hidden="true"></i>
+                  <output id="lab-flow-claims-count">&mdash;</output>
+                </div>
+                <strong>Claims</strong>
+                <small id="lab-flow-claims-label">Claim-like segments</small>
+              </section>
+              <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
+              <section class="lab-assay-stage is-canon" data-flow-stage="canon" aria-label="LE connections stage">
+                <span class="lab-stage-number">03</span>
+                <div class="lab-stage-vessel">
+                  <i class="ti ti-binary-tree" aria-hidden="true"></i>
+                  <output id="lab-flow-canon-count">&mdash;</output>
+                </div>
+                <strong>LE connections</strong>
+                <small id="lab-flow-canon-label">Credible canon matches</small>
+              </section>
+              <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
+              <section class="lab-assay-stage is-tensions" data-flow-stage="tensions" aria-label="Tensions stage">
+                <span class="lab-stage-number">04</span>
+                <div class="lab-stage-vessel">
+                  <i class="ti ti-activity-heartbeat" aria-hidden="true"></i>
+                  <output id="lab-flow-tension-count">&mdash;</output>
+                </div>
+                <strong>Tensions</strong>
+                <small id="lab-flow-tension-label">Prioritized reasoning strains</small>
+              </section>
+              <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
+              <section class="lab-assay-stage is-unmapped" data-flow-stage="unmapped" aria-label="Unmapped residue stage">
+                <span class="lab-stage-number">05</span>
+                <div class="lab-stage-vessel">
+                  <i class="ti ti-grain" aria-hidden="true"></i>
+                  <output id="lab-flow-unmapped-count">&mdash;</output>
+                </div>
+                <strong>Unmapped residue</strong>
+                <small id="lab-flow-unmapped-label">Research candidates, not doctrine</small>
+              </section>
+            </div>
+
+            <div class="lab-assay-readouts">
+              <section class="lab-spectrum" aria-labelledby="lab-spectrum-title">
+                <div class="lab-readout-head">
+                  <h4 id="lab-spectrum-title">Canon concentration</h4>
+                  <span id="lab-dominant-category">Waiting for results</span>
+                </div>
+                <div class="lab-category-spectrum" id="lab-category-spectrum">
+                  <p>Matched categories will form a concentration profile here.</p>
+                </div>
+              </section>
+              <section class="lab-coverage-readout" aria-labelledby="lab-coverage-title">
+                <div class="lab-readout-head">
+                  <h4 id="lab-coverage-title">Document coverage</h4>
+                  <output id="lab-coverage-label">&mdash;</output>
+                </div>
+                <div class="lab-coverage-track" id="lab-coverage-track" role="img" aria-label="No document coverage result yet">
+                  <span class="lab-coverage-fill" id="lab-coverage-fill"></span>
+                  <span class="lab-coverage-marker" id="lab-coverage-marker"></span>
+                </div>
+                <div class="lab-coverage-axis" aria-hidden="true"><span>0%</span><span>Mapped share of source segments</span><span>100%</span></div>
+                <p>Coverage measures how much of this document found a meaningful LE connection. It is not a truth score, population statistic, or claim of causation.</p>
+              </section>
+            </div>
+            <figcaption id="lab-assay-caption">The diagram summarizes routing volume and concentration. The ledger below is the accessible, excerpt-level equivalent.</figcaption>
+          </figure>
+
+          <section class="lab-ledger" aria-labelledby="lab-ledger-title">
+            <div class="lab-subsection-head">
+              <div>
+                <div class="lab-section-kicker">Text equivalent</div>
+                <h3 id="lab-ledger-title">Connection ledger</h3>
+              </div>
+              <p id="lab-map-summary">No source has been mapped.</p>
+            </div>
+            <div class="lab-table-scroll" tabindex="0" aria-label="Scrollable connection ledger">
+              <table class="lab-map-table" id="lab-map-table">
+                <caption>Source segments mapped to The Love Equations canon</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Segment</th>
+                    <th scope="col">Source excerpt</th>
+                    <th scope="col">Alignment</th>
+                    <th scope="col">LE connection</th>
+                    <th scope="col">Confidence</th>
+                  </tr>
+                </thead>
+                <tbody id="lab-map-table-body">
+                  <tr id="lab-map-table-empty">
+                    <td colspan="5">Run an analysis to populate the segment-by-segment map.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="lab-distributions" aria-label="Match distributions">
+            <div>
+              <div class="lab-readout-head"><h3>Alignment</h3><span>What the source is doing</span></div>
+              <div class="lab-distribution-list" id="lab-alignment-distribution">
+                <p>No alignment labels yet.</p>
+              </div>
+            </div>
+            <div>
+              <div class="lab-readout-head"><h3>Evidence tier</h3><span>What the matched canon carries</span></div>
+              <div class="lab-distribution-list" id="lab-evidence-distribution">
+                <p>No matched evidence tiers yet.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="lab-tab-panel" id="lab-panel-citations" role="tabpanel" tabindex="0"
+             aria-labelledby="lab-tab-citations" data-lab-panel="citations" hidden>
+          <div class="lab-view-intro">
+            <div>
+              <div class="lab-section-kicker">Canon retrieval</div>
+              <h3>Excerpts beside the LE text they touched.</h3>
+              <p>Every match keeps the source passage, the canon-faithful synopsis, its exact LE page or anchor, and the language that earned the confidence. Weak overlap stays weak.</p>
+            </div>
+            <div class="lab-confidence-key" aria-label="Confidence key">
+              <span class="is-strong">Strong</span>
+              <span class="is-moderate">Moderate</span>
+              <span class="is-low">Low</span>
+            </div>
+          </div>
+          <div class="lab-empty-result" id="lab-citations-empty">
+            <i class="ti ti-notes-off" aria-hidden="true"></i>
+            <strong>No citations yet</strong>
+            <p>Credible canon matches will appear here. The Lab does not turn generic shared words into a citation.</p>
+          </div>
+          <div class="lab-result-list" id="lab-citations-list"></div>
+        </div>
+
+        <div class="lab-tab-panel" id="lab-panel-pressure" role="tabpanel" tabindex="0"
+             aria-labelledby="lab-tab-pressure" data-lab-panel="pressure" hidden>
+          <div class="lab-view-intro">
+            <div>
+              <div class="lab-section-kicker">Reasoning under load</div>
+              <h3>Where the claim strains&mdash;and what would change the read.</h3>
+              <p>The Lab prioritizes consequential tensions: universal language, causal leaps, stage collapse, moralized market value, scope errors, and boundaries the source ignored. A flag is a question to investigate, not an automatic conviction.</p>
+            </div>
+            <div class="lab-risk-key" aria-label="Common pressure-test flags">
+              <span>Absolute</span><span>Causal</span><span>Gender scope</span><span>Stage collapse</span><span>Boundary</span>
+            </div>
+          </div>
+          <div class="lab-pressure-summary" id="lab-pressure-summary">
+            <i class="ti ti-gauge" aria-hidden="true"></i>
+            <p>Run an analysis to see which matched claims deserve pressure first.</p>
+          </div>
+          <div class="lab-result-list" id="lab-pressure-list"></div>
+        </div>
+
+        <div class="lab-tab-panel" id="lab-panel-research" role="tabpanel" tabindex="0"
+             aria-labelledby="lab-tab-research" data-lab-panel="research" hidden>
+          <div class="lab-view-intro">
+            <div>
+              <div class="lab-section-kicker">Unmapped research queue</div>
+              <h3>Keep the residue. Do not quietly promote it.</h3>
+              <p>Unmapped and weakly mapped claims are grouped into research candidates with a nearest concept, possible destination, empirical question, search terms, falsifier, and risk flags.</p>
+            </div>
+            <button class="btn lab-export-button" id="lab-export-research" type="button" disabled>
+              <i class="ti ti-download" aria-hidden="true"></i> Export queue
+            </button>
+          </div>
+          <div class="lab-research-banner">
+            <i class="ti ti-microscope" aria-hidden="true"></i>
+            <div><strong>Research candidates&mdash;not new LE doctrine.</strong><p>A useful gap can still be wrong, unfalsifiable, too narrow, or already explained by a nearby framework.</p></div>
+          </div>
+          <div class="lab-empty-result" id="lab-research-empty">
+            <i class="ti ti-flask-empty" aria-hidden="true"></i>
+            <strong>No research candidates yet</strong>
+            <p>Unmapped claim-like passages will remain visible here instead of being forced into the nearest canon bucket.</p>
+          </div>
+          <div class="lab-result-list" id="lab-research-list"></div>
+        </div>
+
+        <div class="lab-tab-panel" id="lab-panel-source" role="tabpanel" tabindex="0"
+             aria-labelledby="lab-tab-source" data-lab-panel="source" hidden>
+          <div class="lab-view-intro">
+            <div>
+              <div class="lab-section-kicker">Normalized document</div>
+              <h3>The exact layer the analyzer received.</h3>
+              <p>Inspect extraction method, warnings, speakers, timestamps, stable segment IDs, and ordered excerpts. If extraction was partial, the limitation belongs beside the results.</p>
+            </div>
+          </div>
+          <dl class="lab-source-metadata" id="lab-source-metadata">
+            <div><dt>Title</dt><dd id="lab-source-meta-title">&mdash;</dd></div>
+            <div><dt>Type</dt><dd id="lab-source-meta-type">&mdash;</dd></div>
+            <div><dt>Extraction</dt><dd id="lab-source-meta-method">&mdash;</dd></div>
+            <div><dt>Speakers</dt><dd id="lab-source-meta-speakers">&mdash;</dd></div>
+            <div><dt>URL</dt><dd id="lab-source-meta-url">&mdash;</dd></div>
+            <div><dt>Schema</dt><dd id="lab-source-meta-schema">le-normalized-document/v1</dd></div>
+          </dl>
+          <section class="lab-source-warnings" id="lab-source-warnings" aria-labelledby="lab-source-warnings-title" hidden>
+            <h4 id="lab-source-warnings-title"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Extraction warnings</h4>
+            <ul id="lab-extraction-warnings"></ul>
+          </section>
+          <div class="lab-empty-result" id="lab-source-empty">
+            <i class="ti ti-file-search" aria-hidden="true"></i>
+            <strong>No normalized source yet</strong>
+            <p>Load a demonstration, paste text, or attach a supported source to inspect its normalized segments.</p>
+          </div>
+          <ol class="lab-source-segments" id="lab-source-segments" aria-label="Normalized source segments"></ol>
+        </div>
+      </section>
+
+      <section class="lab-limits" aria-labelledby="lab-limits-title">
+        <div>
+          <div class="lab-section-kicker">Instrument limits</div>
+          <h2 id="lab-limits-title">A map is not a verdict.</h2>
+        </div>
+        <div class="lab-limit-grid">
+          <p><strong>Matching is not proof.</strong> Lexical and dependency overlap can retrieve a relevant LE concept; it cannot establish that either source is true.</p>
+          <p><strong>Coverage is document coverage.</strong> A high mapped share means the source touched more indexed concepts, not that it represents a population.</p>
+          <p><strong>Unmapped is useful.</strong> It may be noise, a source error, an LE limitation, or a research lead. The queue keeps those possibilities separate.</p>
+        </div>
+      </section>
+    </div>
+
+    <template id="lab-category-bar-template">
+      <div class="lab-category-row">
+        <div class="lab-category-label"><span data-field="category"></span><output data-field="count"></output></div>
+        <div class="lab-category-track"><span data-field="bar"></span></div>
+      </div>
+    </template>
+
+    <template id="lab-citation-template">
+      <article class="lab-result-card lab-citation-card">
+        <header>
+          <span class="lab-alignment-badge" data-field="alignment"></span>
+          <span class="lab-confidence-badge" data-field="confidence"></span>
+          <span class="lab-segment-ref" data-field="segment-ref"></span>
+        </header>
+        <div class="lab-result-columns">
+          <blockquote>
+            <span class="lab-card-label">Source excerpt</span>
+            <p data-field="excerpt"></p>
+          </blockquote>
+          <div class="lab-canon-match">
+            <span class="lab-card-label" data-field="category"></span>
+            <h4><a data-field="canon-link"><span data-field="canon-title"></span> <i class="ti ti-arrow-up-right" aria-hidden="true"></i></a></h4>
+            <p data-field="canon-synopsis"></p>
+            <div class="lab-card-badges" data-field="evidence-badges"></div>
+          </div>
+        </div>
+        <div class="lab-match-reason"><strong>Why this matched</strong><p data-field="reason"></p></div>
+        <div class="lab-adjacent" data-field="adjacent"></div>
+        <ul class="lab-external-sources" data-field="external-sources"></ul>
+      </article>
+    </template>
+
+    <template id="lab-pressure-template">
+      <article class="lab-result-card lab-pressure-card">
+        <header>
+          <span class="lab-pressure-priority" data-field="priority"></span>
+          <span class="lab-segment-ref" data-field="segment-ref"></span>
+        </header>
+        <h4 data-field="title"></h4>
+        <blockquote data-field="excerpt"></blockquote>
+        <dl class="lab-pressure-grid">
+          <div><dt>LE states</dt><dd data-field="canon-rule"></dd></div>
+          <div><dt>Boundary conditions</dt><dd data-field="boundaries"></dd></div>
+          <div><dt>What would strain it</dt><dd data-field="strain-scenario"></dd></div>
+          <div><dt>Evidence that would change the read</dt><dd data-field="change-evidence"></dd></div>
+          <div><dt>Did the source supply it?</dt><dd data-field="evidence-supplied"></dd></div>
+          <div><dt>Tension points to</dt><dd data-field="tension-type"></dd></div>
+        </dl>
+        <div class="lab-risk-flags" data-field="risk-flags"></div>
+      </article>
+    </template>
+
+    <template id="lab-research-template">
+      <article class="lab-result-card lab-research-card">
+        <header>
+          <span class="lab-candidate-badge">Research candidate</span>
+          <span class="lab-segment-ref" data-field="segment-ref"></span>
+        </header>
+        <blockquote data-field="excerpt"></blockquote>
+        <p class="lab-unmapped-reason" data-field="reason"></p>
+        <dl class="lab-research-grid">
+          <div><dt>Nearest LE concepts</dt><dd data-field="nearest"></dd></div>
+          <div><dt>Possible destination</dt><dd data-field="destination"></dd></div>
+          <div><dt>Empirical question</dt><dd data-field="question"></dd></div>
+          <div><dt>What would falsify it</dt><dd data-field="falsifier"></dd></div>
+          <div><dt>Suggested search terms</dt><dd data-field="search-terms"></dd></div>
+        </dl>
+        <div class="lab-risk-flags" data-field="risk-flags"></div>
+      </article>
+    </template>
+
+    <template id="lab-source-segment-template">
+      <li class="lab-source-segment">
+        <div class="lab-segment-meta">
+          <span data-field="segment-id"></span>
+          <time data-field="timestamp"></time>
+          <strong data-field="speaker"></strong>
+        </div>
+        <p data-field="text"></p>
+      </li>
+    </template>
+
+    <template id="lab-warning-template">
+      <li><i class="ti ti-alert-circle" aria-hidden="true"></i><span data-field="message"></span></li>
+    </template>
+  </main>
+
+  <div data-include="footer"></div>
+</body>
+</html>

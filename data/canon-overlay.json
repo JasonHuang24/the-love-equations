@@ -1,0 +1,830 @@
+{
+  "schemaVersion": "le-canon-overlay/1.0",
+  "entries": {
+    "hierarchy:overview": {
+      "aliases": [
+        "Love Hierarchy",
+        "relationship qualification funnel"
+      ],
+      "phrases": [
+        "primary secondary tertiary",
+        "each tier must be passed in sequence"
+      ],
+      "related": [
+        "frameworks:conversion-ladder",
+        "frameworks:readiness-gate",
+        "frameworks:seven-seven-rule"
+      ],
+      "boundaryConditions": [
+        "The hierarchy describes a qualification sequence within each stated perspective; it is not one universal ranking shared by every person."
+      ],
+      "commonMisreadings": [
+        "Passing a person's listed factors does not create attraction, consent, compatibility, or entitlement to a relationship."
+      ],
+      "pressureTests": [
+        "Would the same candidate pass short-term primary factors but fail long-term secondary or tertiary factors?"
+      ]
+    },
+    "smv:overview": {
+      "aliases": [
+        "SMV",
+        "sexual market value",
+        "dating-market desirability"
+      ],
+      "phrases": [
+        "Looks Money Status Charm Exposure",
+        "clock market context"
+      ],
+      "related": [
+        "frameworks:smv-matching",
+        "hierarchy:overview",
+        "instrument:smv-calculator",
+        "lexicon:term-smv-sexual-market-value"
+      ],
+      "boundaryConditions": [
+        "SMV is contextual, market-relative, and time-sensitive rather than a fixed trait.",
+        "The five levers model dating-market response, not human worth or moral worth."
+      ],
+      "commonMisreadings": [
+        "A composite market estimate is not a clinical score, a universal rank, or a promise of any individual's response."
+      ],
+      "pressureTests": [
+        "Does the conclusion survive a change of age band, location, platform, relationship goal, or available pool?"
+      ]
+    },
+    "smv:looks": {
+      "aliases": [
+        "physical attractiveness",
+        "appearance"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:looks-rating",
+        "instrument:face-calculator",
+        "instrument:body-calculator"
+      ],
+      "boundaryConditions": [
+        "Looks act as a high-leverage first gate but do not by themselves supply compatibility, availability, or retention."
+      ],
+      "commonMisreadings": [
+        "High looks are not equivalent to high total SMV in every market or to long-term relationship quality."
+      ],
+      "pressureTests": [
+        "Is the claimed effect still present after separating initial attention from being chosen and kept?"
+      ]
+    },
+    "smv:money": {
+      "aliases": [
+        "resources",
+        "provider capacity"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:status-trade"
+      ],
+      "boundaryConditions": [
+        "Money is one lever whose salience varies with life stage, market, and relationship goal."
+      ],
+      "commonMisreadings": [
+        "Resources cannot be assumed to manufacture attraction or erase failures in every other lever."
+      ],
+      "pressureTests": [
+        "Would the same result hold when income is visible but status, generosity, debt, and lifestyle fit differ?"
+      ]
+    },
+    "smv:status": {
+      "aliases": [
+        "social proof",
+        "prestige"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:status-trade",
+        "frameworks:spiderman-effect"
+      ],
+      "boundaryConditions": [
+        "Status is audience- and context-dependent; recognition in one circle may not transfer to another."
+      ],
+      "commonMisreadings": [
+        "Status is not the same as virtue, intimacy, or broad public fame."
+      ],
+      "pressureTests": [
+        "Does the claimed status advantage persist outside the network that recognizes it?"
+      ]
+    },
+    "smv:charm": {
+      "aliases": [
+        "social skill",
+        "charisma"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:charm-ceiling",
+        "frameworks:interaction-gate"
+      ],
+      "boundaryConditions": [
+        "Charm can improve conversion after interaction but cannot reliably rescue a profile that never reaches interaction."
+      ],
+      "commonMisreadings": [
+        "Social skill is neither irrelevant nor an unlimited substitute for all threshold traits."
+      ],
+      "pressureTests": [
+        "Did the source observe an actual interaction, or infer charm's power from profiles that never met?"
+      ]
+    },
+    "smv:exposure": {
+      "aliases": [
+        "opportunity volume",
+        "social exposure"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:spiderman-effect",
+        "deep-dive:third-spaces"
+      ],
+      "boundaryConditions": [
+        "Exposure multiplies opportunities to be evaluated; it does not guarantee favorable evaluation."
+      ],
+      "commonMisreadings": [
+        "A lack of outcomes under very low exposure is not clean evidence of low desirability."
+      ],
+      "pressureTests": [
+        "How many relevant people could actually encounter and evaluate the person under study?"
+      ]
+    },
+    "smv:multiplier:clock": {
+      "aliases": [
+        "age clock",
+        "life-stage timing"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:the-wall"
+      ],
+      "boundaryConditions": [
+        "Age effects vary by sex, goal, fertility plans, cohort, and market; they are slopes and trade-offs, not one cliff."
+      ],
+      "pressureTests": [
+        "Is age being used as a population trend, an individual destiny, or a proxy for an unstated goal?"
+      ]
+    },
+    "smv:multiplier:market": {
+      "aliases": [
+        "dating market",
+        "local pool"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:attention-market",
+        "frameworks:option-pool"
+      ],
+      "boundaryConditions": [
+        "The same profile can face different scarcity, competition, and norms in different markets."
+      ],
+      "pressureTests": [
+        "Would the claim reverse in a market with a different sex ratio, geography, app mix, or relationship norm?"
+      ]
+    },
+    "smv:multiplier:context": {
+      "aliases": [
+        "dating context",
+        "relationship-goal context"
+      ],
+      "dependencies": [
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:interaction-gate",
+        "deep-dive:third-spaces"
+      ],
+      "boundaryConditions": [
+        "Traits are weighted differently in stranger markets, social circles, apps, hookups, and long-term selection."
+      ],
+      "pressureTests": [
+        "Which stage and venue produced the observed response, and is the source generalizing beyond it?"
+      ]
+    },
+    "frameworks:conversion-ladder": {
+      "aliases": [
+        "Seen Noticed Desired Chosen Kept",
+        "dating conversion funnel"
+      ],
+      "phrases": [
+        "attention is not desire",
+        "desire is not commitment",
+        "choice is not retention"
+      ],
+      "dependencies": [
+        "smv:exposure"
+      ],
+      "related": [
+        "lexicon:term-conversion-ladder",
+        "statistics:stat-relationship-quality"
+      ],
+      "boundaryConditions": [
+        "The ladder distinguishes stages analytically; real relationships can loop, stall, regress, or skip observable steps."
+      ],
+      "commonMisreadings": [
+        "Being seen or receiving messages is not proof of desire, selection, compatibility, or durable commitment."
+      ],
+      "pressureTests": [
+        "At exactly which transition did the evidence occur, and what evidence shows movement to the next stage?"
+      ]
+    },
+    "frameworks:interaction-gate": {
+      "aliases": [
+        "Interaction Gate",
+        "profile-to-person boundary"
+      ],
+      "dependencies": [
+        "frameworks:conversion-ladder"
+      ],
+      "related": [
+        "smv:charm",
+        "instrument:compatibility-calculator",
+        "lexicon:term-the-interaction-gate"
+      ],
+      "boundaryConditions": [
+        "Profiles and calculators can reject known mismatches, but positive compatibility remains indeterminate until live interaction."
+      ],
+      "commonMisreadings": [
+        "A high profile score or checklist match cannot establish chemistry, felt safety, or mutual ease."
+      ],
+      "pressureTests": [
+        "What changed after voice, timing, mannerisms, conflict style, and reciprocal interest became observable?"
+      ]
+    },
+    "frameworks:readiness-gate": {
+      "aliases": [
+        "Readiness Gate",
+        "timing gate"
+      ],
+      "dependencies": [
+        "frameworks:interaction-gate"
+      ],
+      "related": [
+        "gender-dynamics:gd-hell-yes",
+        "lexicon:term-the-readiness-gate"
+      ],
+      "boundaryConditions": [
+        "A viable match can still fail when one or both people lack availability, intention, capacity, or timing."
+      ],
+      "commonMisreadings": [
+        "Readiness failure does not prove either person is defective, nor does potential override a present no."
+      ],
+      "pressureTests": [
+        "If attraction and compatibility are held constant, is there evidence of present capacity and reciprocal intent?"
+      ]
+    },
+    "frameworks:seven-seven-rule": {
+      "aliases": [
+        "7-7 Rule",
+        "minimum viable match"
+      ],
+      "dependencies": [
+        "frameworks:interaction-gate",
+        "frameworks:readiness-gate"
+      ],
+      "related": [
+        "frameworks:parity-rule",
+        "instrument:compatibility-calculator"
+      ],
+      "boundaryConditions": [
+        "The thresholds are a practical LE heuristic, not a population law or guarantee of a successful relationship."
+      ],
+      "commonMisreadings": [
+        "Two sufficient scores do not bypass consent, timing, attraction asymmetry, or the Interaction Gate."
+      ],
+      "pressureTests": [
+        "Can a candidate clear both model thresholds yet fail because the measured dimensions omit a decisive live factor?"
+      ]
+    },
+    "frameworks:sub-5-rule": {
+      "aliases": [
+        "Sub-5 Rule",
+        "auto-disqualification threshold"
+      ],
+      "dependencies": [
+        "hierarchy:overview",
+        "smv:overview"
+      ],
+      "related": [
+        "frameworks:parity-rule",
+        "instrument:compatibility-calculator"
+      ],
+      "boundaryConditions": [
+        "The rule represents hard personal minimums inside LE's scoring model, not a moral judgment or a universal cutoff."
+      ],
+      "commonMisreadings": [
+        "A below-threshold model result does not make a person lesser or predict every evaluator's decision."
+      ],
+      "pressureTests": [
+        "Is the disqualifying dimension truly non-negotiable for this evaluator, or an averaged preference treated as absolute?"
+      ]
+    },
+    "frameworks:treatment-markup": {
+      "aliases": [
+        "Treatment Markup",
+        "behavioral desirability signal"
+      ],
+      "dependencies": [
+        "frameworks:interaction-gate"
+      ],
+      "related": [
+        "frameworks:attention-market",
+        "frameworks:parity-rule"
+      ],
+      "boundaryConditions": [
+        "Differential effort can reveal perceived leverage, but context, personality, resources, safety, and strategy can also affect treatment."
+      ],
+      "commonMisreadings": [
+        "Money spent, pursuit intensity, or politeness alone is not a clean meter of attraction."
+      ],
+      "pressureTests": [
+        "Does the treatment difference persist across comparable contexts and costs, or is one anecdote carrying the inference?"
+      ]
+    },
+    "frameworks:looks-rating": {
+      "aliases": [
+        "LE looks scale",
+        "anchor-based looks rating"
+      ],
+      "dependencies": [
+        "smv:looks"
+      ],
+      "related": [
+        "frameworks:parity-rule",
+        "instrument:face-calculator",
+        "instrument:body-calculator"
+      ],
+      "boundaryConditions": [
+        "The scale is an anchor for disciplined comparison, not an objective biometric truth or universal verdict."
+      ],
+      "commonMisreadings": [
+        "A numeric looks estimate should not be presented as more precise than the inputs or evaluator agreement allow."
+      ],
+      "pressureTests": [
+        "How much does the rating move across evaluators, styling, photos, age, and in-person presentation?"
+      ]
+    },
+    "frameworks:parity-rule": {
+      "aliases": [
+        "Parity Rule",
+        "looks parity"
+      ],
+      "dependencies": [
+        "frameworks:looks-rating",
+        "frameworks:smv-matching"
+      ],
+      "related": [
+        "statistics:stat-looks-matching",
+        "frameworks:spiderman-effect"
+      ],
+      "boundaryConditions": [
+        "Assortative matching is a distributional tendency with exceptions, trade-offs, and measurement error."
+      ],
+      "commonMisreadings": [
+        "Population clustering near parity does not decree who any individual may attract or retain."
+      ],
+      "pressureTests": [
+        "What compensating lever, selection channel, or measurement error explains stable off-parity couples?"
+      ]
+    },
+    "frameworks:spiderman-effect": {
+      "aliases": [
+        "Spiderman Effect",
+        "proximity conversion effect"
+      ],
+      "dependencies": [
+        "smv:exposure",
+        "frameworks:interaction-gate"
+      ],
+      "related": [
+        "deep-dive:third-spaces",
+        "frameworks:parity-rule"
+      ],
+      "boundaryConditions": [
+        "Repeated exposure and social context can change evaluation only when real contact occurs; proximity is not entitlement."
+      ],
+      "commonMisreadings": [
+        "Familiarity does not guarantee attraction and must not be used to excuse persistence after rejection."
+      ],
+      "pressureTests": [
+        "Would the outcome survive without repeated low-pressure contact, community trust, or constrained alternatives?"
+      ]
+    },
+    "frameworks:smv-matching": {
+      "aliases": [
+        "SMV Matching",
+        "five-layer matching model"
+      ],
+      "dependencies": [
+        "smv:overview",
+        "frameworks:conversion-ladder"
+      ],
+      "related": [
+        "frameworks:matching-curve",
+        "frameworks:attention-market",
+        "frameworks:option-pool",
+        "frameworks:charm-ceiling",
+        "frameworks:status-trade",
+        "statistics:stat-looks-matching"
+      ],
+      "boundaryConditions": [
+        "The five layers organize recurring patterns; they do not collapse into one deterministic equation for every pair."
+      ],
+      "commonMisreadings": [
+        "Market leverage, attention, and partner quality are distinct outcomes and cannot be substituted for one another."
+      ],
+      "pressureTests": [
+        "Which layer actually explains the case, and what observed exception would the layer fail to explain?"
+      ]
+    },
+    "frameworks:attention-market": {
+      "aliases": [
+        "attention inequality",
+        "online attention market"
+      ],
+      "dependencies": [
+        "frameworks:conversion-ladder",
+        "smv:multiplier:market"
+      ],
+      "related": [
+        "statistics:stat-attention",
+        "frameworks:option-pool"
+      ],
+      "boundaryConditions": [
+        "Online attention distributions depend on platform mechanics and do not directly measure desire, selection, or offline pairing."
+      ],
+      "commonMisreadings": [
+        "Message or swipe concentration is not proof that the same minority monopolizes relationships."
+      ],
+      "pressureTests": [
+        "Does the pattern persist in actual dates and relationships after platform sorting and inactive accounts are removed?"
+      ]
+    },
+    "frameworks:option-pool": {
+      "aliases": [
+        "option pool",
+        "available dating pool"
+      ],
+      "dependencies": [
+        "frameworks:attention-market",
+        "smv:multiplier:market"
+      ],
+      "boundaryConditions": [
+        "Visible options are not equivalent to viable, reciprocal, available, or compatible options."
+      ],
+      "commonMisreadings": [
+        "A large inbox or local population should not be counted as a large pool of relationship candidates."
+      ],
+      "pressureTests": [
+        "After reciprocity, goal, location, attraction, readiness, and compatibility filters, how many options remain?"
+      ]
+    },
+    "frameworks:charm-ceiling": {
+      "aliases": [
+        "Charm Ceiling",
+        "personality conversion ceiling"
+      ],
+      "dependencies": [
+        "smv:charm",
+        "frameworks:interaction-gate"
+      ],
+      "boundaryConditions": [
+        "Charm matters most after interaction and has limits when a hard attraction or safety threshold is not met."
+      ],
+      "commonMisreadings": [
+        "The ceiling does not mean personality is irrelevant; it distinguishes access to interaction from conversion within it."
+      ],
+      "pressureTests": [
+        "Is charm being credited for creating access, or for improving outcomes among people who already had access?"
+      ]
+    },
+    "frameworks:status-trade": {
+      "aliases": [
+        "Status Trade",
+        "cross-lever trade"
+      ],
+      "dependencies": [
+        "smv:money",
+        "smv:status"
+      ],
+      "boundaryConditions": [
+        "Cross-lever compensation is partial and context-specific; no lever universally purchases another person's desire."
+      ],
+      "commonMisreadings": [
+        "A statistical pairing trade-off is not a transactional entitlement."
+      ],
+      "pressureTests": [
+        "Does the apparent trade remain after age, network, shared goals, and direct attraction are considered?"
+      ]
+    },
+    "frameworks:good-news-rule": {
+      "aliases": [
+        "Good-News Rule",
+        "relationship-quality rule"
+      ],
+      "dependencies": [
+        "frameworks:conversion-ladder",
+        "statistics:stat-relationship-quality"
+      ],
+      "related": [
+        "lexicon:term-the-good-news-rule"
+      ],
+      "boundaryConditions": [
+        "The cited relationship-quality finding applies inside an existing relationship and does not erase selection-stage constraints."
+      ],
+      "commonMisreadings": [
+        "Evidence that relationship experience predicts satisfaction is not proof that attraction, matching, or outside stressors never matter."
+      ],
+      "pressureTests": [
+        "Is the source applying an in-relationship association to initial partner selection or treating association as causation?"
+      ]
+    },
+    "frameworks:the-wall": {
+      "aliases": [
+        "The Wall",
+        "age-related attention slope"
+      ],
+      "dependencies": [
+        "smv:multiplier:clock"
+      ],
+      "related": [
+        "deep-dive:what-the-wall-actually-is",
+        "lexicon:term-the-wall"
+      ],
+      "boundaryConditions": [
+        "LE treats the pattern as a gradual, outcome-specific slope shaped by fertility plans, stranger attention, cohort, and market—not a universal cliff."
+      ],
+      "commonMisreadings": [
+        "Changes in average attention or fertility are not proof of zero pairing prospects, lost human worth, or an exact birthday cutoff."
+      ],
+      "pressureTests": [
+        "Which outcome is changing—fertility, app attention, partner age, marriage probability, or satisfaction—and how continuous is the change?"
+      ]
+    },
+    "frameworks:body-count": {
+      "aliases": [
+        "Body Count",
+        "prior sexual partners"
+      ],
+      "related": [
+        "lexicon:term-body-count"
+      ],
+      "boundaryConditions": [
+        "A group-level association cannot establish an individual's character, cause, future behavior, or relationship outcome."
+      ],
+      "commonMisreadings": [
+        "A close-call prior or correlational risk marker should not be presented as certainty or a gender-wide moral verdict."
+      ],
+      "pressureTests": [
+        "Does the evidence distinguish causation from selection effects, reporting bias, religiosity, age, and relationship history?"
+      ]
+    },
+    "gender-dynamics:gd-hell-yes": {
+      "aliases": [
+        "hell yes or hell no",
+        "reciprocity filter"
+      ],
+      "dependencies": [
+        "frameworks:readiness-gate"
+      ],
+      "boundaryConditions": [
+        "The rule is a protective pursuit and commitment heuristic, not a claim that healthy interest must always be instant or theatrically intense."
+      ],
+      "commonMisreadings": [
+        "Ambivalence cannot be coerced into consent, but a cautious communication style is not automatically lack of interest."
+      ],
+      "pressureTests": [
+        "Is uncertainty coming from low interest, low safety, incomplete information, or a genuine readiness constraint?"
+      ]
+    },
+    "statistics:stat-attention": {
+      "related": [
+        "frameworks:attention-market",
+        "frameworks:conversion-ladder"
+      ],
+      "boundaryConditions": [
+        "The chart measures platform attention concentration, not the share of people who date, pair, commit, or remain together."
+      ],
+      "commonMisreadings": [
+        "Online attention inequality should not be universalized to all dating venues or converted into a causal claim about partner outcomes."
+      ],
+      "pressureTests": [
+        "What happens to the concentration after moving from likes and messages to mutual dates and relationships?"
+      ]
+    },
+    "statistics:stat-looks-matching": {
+      "related": [
+        "frameworks:parity-rule",
+        "frameworks:smv-matching"
+      ],
+      "boundaryConditions": [
+        "Average assortative matching permits meaningful dispersion, evaluator disagreement, and compensation across other traits."
+      ],
+      "commonMisreadings": [
+        "A population matching curve is not an individual ceiling."
+      ],
+      "pressureTests": [
+        "How wide is the observed distribution around parity, and which stable exceptions does the average conceal?"
+      ]
+    },
+    "statistics:stat-relationship-quality": {
+      "related": [
+        "frameworks:good-news-rule",
+        "frameworks:conversion-ladder"
+      ],
+      "boundaryConditions": [
+        "The result concerns variation among established relationships and does not answer who receives attention or enters a relationship."
+      ],
+      "commonMisreadings": [
+        "Predictive association is not proof that changing one relationship report will cause the full outcome."
+      ],
+      "pressureTests": [
+        "Is an established-couple finding being used outside its sampled population or dating stage?"
+      ]
+    },
+    "pills:page-blk": {
+      "aliases": [
+        "Black Pill",
+        "constraint-first lens"
+      ],
+      "related": [
+        "pills:height-pill",
+        "pills:face-pill",
+        "frameworks:bone-pill"
+      ],
+      "boundaryConditions": [
+        "LE preserves constraint awareness while rejecting terminal certainty, moral ranking, and the claim that every outcome is fixed."
+      ],
+      "commonMisreadings": [
+        "A lens that identifies hard constraints is not itself proof that effort, context, exposure, or probability no longer matter."
+      ],
+      "pressureTests": [
+        "What observable outcome would falsify the terminal version of the claim without denying the underlying constraint?"
+      ]
+    },
+    "pills:page-rp": {
+      "aliases": [
+        "Red Pill",
+        "strategy-first lens"
+      ],
+      "boundaryConditions": [
+        "Descriptive patterns and strategies remain probabilistic and cannot override autonomy, consent, safety, or individual variation."
+      ],
+      "commonMisreadings": [
+        "A strategy that improves odds does not create entitlement to another person's response."
+      ],
+      "pressureTests": [
+        "Would the strategy still be defensible if the other person's agency and full information were made explicit?"
+      ]
+    },
+    "pills:page-bp": {
+      "aliases": [
+        "Blue Pill",
+        "romantic-default lens"
+      ],
+      "boundaryConditions": [
+        "Hope, character, and compatibility can matter without erasing attraction thresholds, market structure, or timing."
+      ],
+      "commonMisreadings": [
+        "Rejecting fatalism does not require pretending that every preference is negotiable or that effort guarantees selection."
+      ],
+      "pressureTests": [
+        "What observed rejection or selection pattern would the optimistic account need to explain rather than dismiss?"
+      ]
+    },
+    "deep-dive:relationships-throughout-history": {
+      "related": [
+        "deep-dive:relationships-by-country",
+        "frameworks:smv-matching"
+      ],
+      "boundaryConditions": [
+        "Historical institutions and incentives explain context; they do not supply one timeless natural law for intimate behavior."
+      ],
+      "pressureTests": [
+        "Does the proposed rule survive societies with different property, kinship, fertility, labor, and courtship institutions?"
+      ]
+    },
+    "deep-dive:third-spaces": {
+      "related": [
+        "smv:exposure",
+        "frameworks:spiderman-effect",
+        "smv:multiplier:context"
+      ],
+      "boundaryConditions": [
+        "Third spaces can increase repeated, legible interaction but do not guarantee chemistry or make communities mere dating funnels."
+      ],
+      "pressureTests": [
+        "Does the claimed effect persist when exposure is plentiful but reciprocity, trust, or demographic fit is absent?"
+      ]
+    },
+    "deep-dive:relationships-by-country": {
+      "related": [
+        "smv:multiplier:market",
+        "deep-dive:relationships-throughout-history"
+      ],
+      "boundaryConditions": [
+        "Country comparisons are ecological context, not a license to assign every resident the national average."
+      ],
+      "pressureTests": [
+        "Does the conclusion survive within-country variation by age, class, region, urbanization, and cohort?"
+      ]
+    },
+    "deep-dive:what-the-wall-actually-is": {
+      "dependencies": [
+        "frameworks:the-wall"
+      ],
+      "related": [
+        "smv:multiplier:clock"
+      ],
+      "boundaryConditions": [
+        "The essay separates attention, fertility, age preferences, and actual pairing rather than treating them as one outcome."
+      ],
+      "pressureTests": [
+        "Which component moves first, which merely correlates with age, and which remains viable despite the average slope?"
+      ]
+    },
+    "instrument:smv-calculator": {
+      "dependencies": [
+        "smv:overview"
+      ],
+      "boundaryConditions": [
+        "The output is a structured self-assessment under LE's stated model, not an objective rank, diagnosis, or promise of response."
+      ],
+      "commonMisreadings": [
+        "A calculator estimate should not be treated as more precise or universal than its self-reported inputs."
+      ],
+      "pressureTests": [
+        "How does the result change when market, context, evidence quality, or evaluator assumptions change?"
+      ]
+    },
+    "instrument:compatibility-calculator": {
+      "dependencies": [
+        "frameworks:interaction-gate",
+        "frameworks:seven-seven-rule"
+      ],
+      "boundaryConditions": [
+        "The tool can organize known information and flag mismatches; it cannot establish live chemistry or future durability."
+      ],
+      "pressureTests": [
+        "Which high-scoring pair fails in person, and which unmeasured factor explains the miss?"
+      ]
+    },
+    "instrument:face-calculator": {
+      "dependencies": [
+        "smv:looks",
+        "frameworks:looks-rating"
+      ],
+      "boundaryConditions": [
+        "Image-derived proportions are sensitive to pose, lens, lighting, landmark placement, and the model's limited construct."
+      ],
+      "commonMisreadings": [
+        "Facial measurements are not a full judgment of attractiveness, health, identity, or worth."
+      ]
+    },
+    "instrument:body-calculator": {
+      "dependencies": [
+        "smv:looks",
+        "frameworks:looks-rating"
+      ],
+      "boundaryConditions": [
+        "Body estimates depend on self-report and simplified proportions; they are not medical or diagnostic outputs."
+      ],
+      "commonMisreadings": [
+        "A model category is not a universal attractiveness verdict or health assessment."
+      ]
+    },
+    "instrument:matchmaker": {
+      "dependencies": [
+        "frameworks:seven-seven-rule",
+        "frameworks:interaction-gate",
+        "frameworks:readiness-gate"
+      ],
+      "boundaryConditions": [
+        "The instrument compares declared profiles and constraints; every suggested match remains subject to reciprocity and live interaction."
+      ],
+      "commonMisreadings": [
+        "Algorithmic compatibility does not create consent, attraction, or an obligation to meet."
+      ],
+      "pressureTests": [
+        "Which suggested match fails after reciprocal choice and the Interaction Gate are applied?"
+      ]
+    }
+  }
+}
