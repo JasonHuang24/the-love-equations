@@ -5,6 +5,7 @@ import {
   INTAKE_LIMITS,
   LabIntakeError,
   NORMALIZED_DOCUMENT_SCHEMA,
+  canAttemptSourceUrlExtraction,
   canonicalizeUrl,
   classifyLocalFile,
   classifySourceUrl,
@@ -349,6 +350,12 @@ test('URL provenance routes transcript-only classes honestly and strips credenti
   assert.equal(classifySourceUrl('https://cdn.example.com/talk.mp4').kind, 'direct-video');
   assert.equal(classifySourceUrl('https://example.com/podcast/feed.xml').kind, 'rss');
   assert.equal(classifySourceUrl('https://example.com/article').kind, 'article');
+  assert.equal(canAttemptSourceUrlExtraction('https://example.com/article'), true);
+  assert.equal(canAttemptSourceUrlExtraction('https://example.com/podcast/feed.xml'), true);
+  assert.equal(canAttemptSourceUrlExtraction('https://youtu.be/example'), false);
+  assert.equal(canAttemptSourceUrlExtraction('https://podcasts.apple.com/us/podcast/example/id1'), false);
+  assert.equal(canAttemptSourceUrlExtraction('https://cdn.example.com/talk.mp3'), false);
+  assert.equal(canAttemptSourceUrlExtraction('not a URL'), false);
   assert.equal(
     canonicalizeUrl('https://user:secret@example.com/article#private'),
     'https://example.com/article'

@@ -1,5 +1,6 @@
 import {
   LabIntakeError,
+  canAttemptSourceUrlExtraction,
   canonicalizeUrl,
   classifyLocalFile,
   classifySourceUrl,
@@ -25,7 +26,7 @@ import {
   researchQueueToMarkdown,
 } from './lab-export.js';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.0';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.1';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -286,7 +287,7 @@ function hasPotentialInput() {
   return Boolean(
     ui.text.value.trim()
     || state.normalizedDocument
-    || ui.sourceUrl.value.trim()
+    || canAttemptSourceUrlExtraction(ui.sourceUrl.value)
     || state.companionFile,
   );
 }
@@ -306,7 +307,14 @@ function refreshReadyState() {
   } else if (ui.text.value.trim()) {
     ui.readyNote.textContent = `${formatNumber(words)} pasted words ready to normalize.`;
   } else if (ui.sourceUrl.value.trim()) {
-    ui.readyNote.textContent = 'The Lab will attempt an explicit text fetch or ask for a transcript.';
+    try {
+      const classification = classifySourceUrl(ui.sourceUrl.value);
+      ui.readyNote.textContent = classification.canFetchText
+        ? 'The Lab will make an explicit request to this publisher and analyze usable returned text locally.'
+        : classification.guidance;
+    } catch (error) {
+      ui.readyNote.textContent = error.message;
+    }
   } else {
     ui.readyNote.textContent = 'Add analyzable text to begin.';
   }

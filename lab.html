@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="css/styles.css?v=2.2" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=1.0" />
+  <link rel="stylesheet" href="css/lab.css?v=1.1" />
   <script src="js/include.js" defer></script>
-  <script type="module" src="js/lab-app.js?v=1.0"></script>
+  <script type="module" src="js/lab-app.js?v=1.1"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
@@ -204,12 +204,12 @@
           <div class="lab-privacy-card">
             <div class="lab-privacy-icon" aria-hidden="true"><i class="ti ti-shield-lock"></i></div>
             <div class="lab-section-kicker">Privacy model</div>
-            <h2>Your source stays at your bench.</h2>
-            <p>Pasted text and local files are processed in this browser tab. Raw media and transcripts are not persisted by default, and no source material is silently transmitted.</p>
+            <h2>Your supplied source stays at your bench.</h2>
+            <p>Pasted text and local files are processed in this browser tab and are not sent by LE Lab. Raw media and transcripts are not persisted by default.</p>
             <ul>
               <li><i class="ti ti-check" aria-hidden="true"></i> Reset cancels work, revokes local previews, and clears the session.</li>
-              <li><i class="ti ti-check" aria-hidden="true"></i> Extractor or model downloads are labeled separately from source upload.</li>
-              <li><i class="ti ti-check" aria-hidden="true"></i> URL retrieval fails honestly when permissions or CORS block it.</li>
+              <li><i class="ti ti-check" aria-hidden="true"></i> PDF/OCR dependencies contact pinned download hosts; they do not upload your source.</li>
+              <li><i class="ti ti-check" aria-hidden="true"></i> Mapping a fetchable URL explicitly contacts that publisher. Blocked requests fail without converting the URL into analyzable text.</li>
             </ul>
           </div>
 

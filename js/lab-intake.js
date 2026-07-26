@@ -1327,3 +1327,11 @@ export function classifySourceUrl(value) {
     guidance: 'The Lab can try a browser-side article fetch. The publisher must permit cross-origin access.'
   };
 }
+
+export function canAttemptSourceUrlExtraction(value) {
+  try {
+    return Boolean(classifySourceUrl(value).canFetchText);
+  } catch {
+    return false;
+  }
+}

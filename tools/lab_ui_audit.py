@@ -93,6 +93,28 @@ if 'data-page="lab"' not in html_text:
 if 'id="lab-app"' not in html_text or 'id="lab-workspace"' not in html_text:
     errors.append("Lab root/workspace hooks missing")
 
+app_text = (ROOT / "js" / "lab-app.js").read_text(encoding="utf-8")
+cache_key_patterns = {
+    "css/lab.css": r'css/lab\.css\?v=([0-9.]+)',
+    "js/lab-app.js": r'js/lab-app\.js\?v=([0-9.]+)',
+    "data/le-canon-index.json": r'data/le-canon-index\.json\?v=([0-9.]+)',
+}
+cache_versions = {}
+for asset, pattern in cache_key_patterns.items():
+    source = app_text if asset.startswith("data/") else html_text
+    match = re.search(pattern, source)
+    if not match:
+        errors.append(f"{asset} is missing an explicit cache key")
+    else:
+        cache_versions[asset] = match.group(1)
+if len(set(cache_versions.values())) > 1:
+    errors.append(
+        "LE Lab cache keys disagree: "
+        + ", ".join(f"{asset}={version}" for asset, version in cache_versions.items())
+    )
+if any(version == "1.0" for version in cache_versions.values()):
+    errors.append("LE Lab still exposes the stale v=1.0 asset/index cache key")
+
 css_text = (ROOT / "css" / "lab.css").read_text(encoding="utf-8")
 without_comments = re.sub(r"/\*.*?\*/", "", css_text, flags=re.S)
 if without_comments.count("{") != without_comments.count("}"):
