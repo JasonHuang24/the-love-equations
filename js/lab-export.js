@@ -28,14 +28,18 @@ function percent(value) {
 }
 
 function timestampLabel(item) {
-  const start = item?.location?.startTime ?? item?.startTime;
+  const start = item?.location?.startMs
+    ?? item?.location?.startTime
+    ?? item?.startMs
+    ?? item?.startTime;
   if (start == null || start === '') return '';
   if (typeof start === 'string') return start;
-  const seconds = Number(start);
-  if (!Number.isFinite(seconds)) return '';
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainder = Math.floor(seconds % 60);
+  const milliseconds = Number(start);
+  if (!Number.isFinite(milliseconds)) return '';
+  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const remainder = totalSeconds % 60;
   return hours
     ? `${hours}:${String(minutes).padStart(2, '0')}:${String(remainder).padStart(2, '0')}`
     : `${minutes}:${String(remainder).padStart(2, '0')}`;
@@ -63,16 +67,16 @@ export function analysisToMarkdown(result) {
     `- **Canon index:** ${markdownText(result.canonIndex?.version)} · ${result.canonIndex?.conceptCount || 0} concepts across ${result.canonIndex?.sourceCount || 0} LE sources`,
     `- **Schema:** \`${markdownText(result.schemaVersion)}\``,
     '',
-    '> Coverage percentages describe this document, not a population and not whether a claim is true.',
+    '> Coverage is the share of detected claim-like segments that mapped to a credible LE connection. It describes this document, not a population or whether a claim is true.',
     '',
     '## Coverage',
     '',
     `- ${Number(metrics.totalWords || 0).toLocaleString()} source words`,
     `- ${Number(metrics.sourceSegments || 0).toLocaleString()} normalized source segments`,
     `- ${Number(metrics.claimLikeSegments || 0).toLocaleString()} detected claim-like segments`,
-    `- ${Number(metrics.mappedClaimSegments || 0).toLocaleString()} mapped · ${Number(metrics.unmappedClaimSegments || 0).toLocaleString()} unmapped`,
-    `- **Mapped claim share:** ${percent(coverage.mappedClaimSegmentSharePct)}`,
-    `- **Mapped claim-word share:** ${percent(coverage.mappedClaimWordSharePct)}`,
+    `- ${Number(metrics.mappedClaimSegments || 0).toLocaleString()} mapped claim-like segments · ${Number(metrics.unmappedClaimSegments || 0).toLocaleString()} unmapped`,
+    `- **Mapped share of claim-like segments:** ${percent(coverage.mappedClaimSegmentSharePct)}`,
+    `- **Mapped share of words within claim-like segments:** ${percent(coverage.mappedClaimWordSharePct)}`,
     '',
   ];
 

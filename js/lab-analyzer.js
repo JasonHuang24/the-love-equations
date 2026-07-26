@@ -26,6 +26,10 @@ const MAX_CLAIM_UNITS = 2_500;
 const MIN_CREDIBLE_SCORE = 0.43;
 const MIN_WEAK_SCORE = 0.25;
 const MAX_MATCHES_PER_CLAIM = 4;
+const MAX_CONTEXT_CONTINUATION_WORDS = 18;
+const MAX_CONTEXT_SOURCE_WORDS = 60;
+
+const REFERENTIAL_CONTINUATION_CUE = /^(?:that|this|these|those|it|which|such(?:\s+(?:a|an))?|the same)\b/i;
 
 const STOP_WORDS = new Set([
   'a', 'about', 'after', 'again', 'against', 'all', 'also', 'am', 'an', 'and',
@@ -487,6 +491,22 @@ function claimLikelihood(text) {
   return clamp(score);
 }
 
+function boundedPreviousContext(sentences, sentenceIndex, parentSegmentId) {
+  if (sentenceIndex < 1) return null;
+  const text = String(sentences[sentenceIndex] || '').trim();
+  const previousText = String(sentences[sentenceIndex - 1] || '').trim();
+  if (!text || !previousText) return null;
+  if (!REFERENTIAL_CONTINUATION_CUE.test(text)) return null;
+  if (wordCount(text) > MAX_CONTEXT_CONTINUATION_WORDS) return null;
+  if (wordCount(previousText) > MAX_CONTEXT_SOURCE_WORDS) return null;
+  return {
+    kind: 'previous-sentence',
+    sourceUnitId: `${parentSegmentId}.claim-${String(sentenceIndex).padStart(2, '0')}`,
+    parentSegmentId,
+    reason: 'Short referential continuation of the immediately preceding sentence.',
+  };
+}
+
 export function detectClaimUnits(document) {
   if (!document || !Array.isArray(document.segments)) {
     throw new Error('Normalized document must contain an ordered segments array.');
@@ -496,6 +516,7 @@ export function detectClaimUnits(document) {
     const sourceText = String(segment.text || '').trim();
     if (!sourceText) return;
     const sentences = splitSentences(sourceText);
+    const parentId = String(segment.id || `seg-${String(segmentIndex + 1).padStart(4, '0')}`);
     let localSearchStart = 0;
     sentences.forEach((sentence, sentenceIndex) => {
       if (!sentence) return;
@@ -504,14 +525,13 @@ export function detectClaimUnits(document) {
       const end = start + sentence.length;
       localSearchStart = end;
       const likelihood = claimLikelihood(sentence);
-      const parentId = String(segment.id || `seg-${String(segmentIndex + 1).padStart(4, '0')}`);
       units.push({
         id: `${parentId}.claim-${String(sentenceIndex + 1).padStart(2, '0')}`,
         parentSegmentId: parentId,
         segmentIndex,
         sentenceIndex,
         text: sentence,
-        contextText: sourceText,
+        boundedContext: boundedPreviousContext(sentences, sentenceIndex, parentId),
         speaker: segment.speaker || null,
         startTime: segment.startMs ?? segment.startTime ?? segment.start ?? null,
         endTime: segment.endMs ?? segment.endTime ?? segment.end ?? null,
@@ -533,7 +553,10 @@ export function detectClaimUnits(document) {
 
 function scoreEntry(unit, entry, idf) {
   const normalized = normalizeText(unit.text);
-  const signatureText = normalizeText((unit.contextText || '') + ' ' + unit.text);
+  // Signatures are sentence-local. A parent paragraph or speaker turn may
+  // contain several independent claims, so sibling sentences cannot satisfy
+  // one another's concept signatures.
+  const signatureText = normalized;
   const signatureHits = CONCEPT_SIGNATURES
     .filter((signature) => signature.canonId === entry.id && signature.test(signatureText))
     .map((signature) => ({ label: signature.label, score: signature.score }));
@@ -683,27 +706,70 @@ function publicMatch(entry, rawScore) {
     related: entry.related,
     sourceLinks: entry.sourceLinks,
     pressureTests: entry.pressureTests,
+    contextHelp: null,
     _rawScore: rawScore,
   };
 }
 
-function applyNeighborContext(results, entriesById) {
+function hasLocalConceptEvidence(candidate) {
+  const raw = candidate._rawScore;
+  return Boolean(
+    raw.signatureHits.length
+    || raw.phraseHits.length
+    || raw.distinctiveShared.length
+    || raw.sharedTokens.length >= 2
+  );
+}
+
+function applyBoundedContext(results, entriesById) {
   for (let index = 0; index < results.length; index += 1) {
     const result = results[index];
-    const neighbors = [results[index - 1], results[index + 1]].filter(Boolean);
-    const neighborCanonIds = new Set(neighbors.flatMap((neighbor) =>
-      neighbor.candidates.slice(0, 2).map((candidate) => candidate.canonId)));
-    const neighborCategories = new Set(neighbors.flatMap((neighbor) =>
-      neighbor.candidates.slice(0, 1).map((candidate) => candidate.category)));
+    const bridge = result.unit.boundedContext;
+    const previous = results[index - 1];
+    if (!bridge || !previous) continue;
+    if (result.unit.parentSegmentId !== previous.unit.parentSegmentId) continue;
+    if (bridge.sourceUnitId !== previous.unit.id) continue;
+
+    // Only locally credible evidence from the immediately preceding sentence
+    // may help. Using the previous candidate's unboosted score prevents context
+    // from cascading through a chain of elliptical sentences.
+    const previousCanonIds = new Set(previous.candidates
+      .filter((candidate) => candidate._rawScore.score >= MIN_CREDIBLE_SCORE)
+      .slice(0, MAX_MATCHES_PER_CLAIM)
+      .map((candidate) => candidate.canonId));
+
     result.candidates.forEach((candidate) => {
       const entry = entriesById.get(candidate.canonId);
       if (!entry) return;
+      const localScore = candidate._rawScore.score;
+      if (localScore < MIN_WEAK_SCORE || !hasLocalConceptEvidence(candidate)) return;
+
       let boost = 0;
-      if (neighborCategories.has(candidate.category)) boost += 0.025;
-      if (entry.dependencies.some((dependency) => neighborCanonIds.has(dependency))) boost += 0.045;
-      if (entry.related.some((related) => neighborCanonIds.has(related))) boost += 0.025;
+      let relation = '';
+      if (previousCanonIds.has(candidate.canonId)) {
+        boost = 0.045;
+        relation = 'same canon concept';
+      } else if (entry.dependencies.some((dependency) => previousCanonIds.has(dependency))) {
+        boost = 0.035;
+        relation = 'declared dependency';
+      } else if (entry.related.some((related) => previousCanonIds.has(related))) {
+        boost = 0.025;
+        relation = 'declared related concept';
+      }
+      if (!boost) return;
+
       candidate.score = round(clamp(candidate.score + boost));
-      if (boost) candidate.whyMatched.push(`Context boost: ${boost >= 0.04 ? 'dependency' : 'neighboring canon category'}`);
+      candidate.contextHelp = {
+        kind: bridge.kind,
+        sourceUnitId: bridge.sourceUnitId,
+        relation,
+        boost,
+        localScore,
+        reason: bridge.reason,
+      };
+      candidate.whyMatched.push(
+        `Bounded context help: ${relation} in the immediately preceding sentence (+${boost.toFixed(3)}; local score ${localScore.toFixed(3)})`,
+      );
       candidate.confidence = confidenceFor(candidate.score, candidate._rawScore.phraseHits);
     });
     result.candidates.sort((a, b) => b.score - a.score || a.canonId.localeCompare(b.canonId));
@@ -989,7 +1055,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   }
 
   const entriesById = new Map(prepared.entries.map((entry) => [entry.id, entry]));
-  applyNeighborContext(candidatesByUnit, entriesById);
+  applyBoundedContext(candidatesByUnit, entriesById);
   onProgress({ phase: 'evaluating', value: 0.66, message: 'Evaluating stance and confidence' });
 
   const segmentResults = candidatesByUnit.map(({ unit, candidates }) => {

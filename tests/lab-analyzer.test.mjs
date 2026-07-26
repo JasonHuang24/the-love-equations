@@ -98,6 +98,10 @@ const CANON = {
   ],
 };
 
+const REAL_CANON = JSON.parse(
+  readFileSync(new URL('../data/le-canon-index.json', import.meta.url), 'utf8'),
+);
+
 test('canon preparation retains versioned metadata and usable entries', () => {
   const prepared = prepareCanonIndex(CANON);
   assert.equal(prepared.indexVersion, 'fixture-1');
@@ -201,6 +205,115 @@ test('unmapped claims become research candidates rather than doctrine', async ()
   assert.ok(item.riskFlags.includes('causal claim'));
 });
 
+test('sentence-local signatures keep a novel claim unmapped inside a known-concept paragraph', async () => {
+  const known = 'Attraction does not guarantee selection, compatibility, or retention.';
+  const novel = 'A totally new claim says lunar phases determine breakups.';
+  const document = normalizeInput({
+    text: `${known} ${novel}`,
+    source: { title: 'Mixed paragraph regression' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  });
+  const result = await analyzeDocument(document, REAL_CANON);
+  const knownResult = result.segments.find((segment) => segment.unit.text === known);
+  const novelResult = result.segments.find((segment) => segment.unit.text === novel);
+
+  assert.ok(knownResult?.matches.some((match) => match.canonId === 'frameworks:conversion-ladder'));
+  assert.equal(novelResult?.mapped, false);
+  assert.equal(result.metrics.claimLikeSegments, 2);
+  assert.equal(result.metrics.mappedClaimSegments, 1);
+  assert.equal(result.metrics.unmappedClaimSegments, 1);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, 50);
+  assert.ok(result.researchQueue.items.some((item) => item.excerpt === novel));
+});
+
+test('independent mixed fixtures do not inherit SMV or gender signatures', async () => {
+  const fixtures = [
+    {
+      known: 'Looks, money, status, charm, and exposure shape market leverage without measuring moral worth.',
+      expectedCanonId: 'smv:overview',
+      novel: 'A new claim says Saturn rings cause delayed replies.',
+    },
+    {
+      known: 'All women always choose the highest-status man.',
+      expectedCanonId: 'lexicon:term-awalt-all-women-are-like-that',
+      novel: 'A new claim says volcanic ash predicts who cancels a date.',
+    },
+  ];
+
+  for (const fixture of fixtures) {
+    const result = await analyzeDocument(normalizeInput({
+      text: `${fixture.known} ${fixture.novel}`,
+      source: { title: 'Independent mixed fixture' },
+      createdAt: '2026-07-26T12:00:00.000Z',
+    }), REAL_CANON);
+    const knownResult = result.segments.find((segment) => segment.unit.text === fixture.known);
+    const novelResult = result.segments.find((segment) => segment.unit.text === fixture.novel);
+
+    assert.ok(knownResult?.matches.some((match) => match.canonId === fixture.expectedCanonId));
+    assert.equal(novelResult?.mapped, false);
+    assert.equal(result.coverage.mappedClaimSegmentSharePct, 50);
+    assert.ok(result.researchQueue.items.some((item) => item.excerpt === fixture.novel));
+  }
+});
+
+test('a short referential continuation receives only traced one-sentence context help', async () => {
+  const first = 'Attraction does not guarantee selection, compatibility, or retention.';
+  const continuation = 'That distinction means one stage does not guarantee retention.';
+  const result = await analyzeDocument(normalizeInput({
+    text: `${first} ${continuation}`,
+    source: { title: 'Bounded continuation fixture' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  }), REAL_CANON);
+  const firstResult = result.segments.find((segment) => segment.unit.text === first);
+  const continuationResult = result.segments.find((segment) => segment.unit.text === continuation);
+  const match = continuationResult?.matches.find((candidate) =>
+    candidate.canonId === 'frameworks:conversion-ladder');
+
+  assert.ok(firstResult?.mapped);
+  assert.equal(continuationResult?.unit.boundedContext?.sourceUnitId, firstResult?.unit.id);
+  assert.ok(match?.contextHelp);
+  assert.equal(match.contextHelp.kind, 'previous-sentence');
+  assert.equal(match.contextHelp.sourceUnitId, firstResult.unit.id);
+  assert.ok(match.contextHelp.localScore < 0.43);
+  assert.ok(match.score >= 0.43);
+  assert.ok(match.whyMatched.some((reason) => reason.startsWith('Bounded context help:')));
+});
+
+test('separate speaker turns and distant sentences cannot contaminate a novel claim', async () => {
+  const known = 'Attraction does not guarantee selection, compatibility, or retention.';
+  const speakerNovel = 'That totally new claim says lunar phases determine breakups.';
+  const speakerDocument = {
+    schemaVersion: 'le-lab.normalized-document/1.0.0',
+    id: 'speaker-turn-regression',
+    source: { title: 'Separate speaker turns', type: 'transcript' },
+    segments: [
+      { id: 'seg-speaker-a', speaker: 'Ana', text: known },
+      { id: 'seg-speaker-b', speaker: 'Bo', text: speakerNovel },
+    ],
+  };
+  const speakerResult = await analyzeDocument(speakerDocument, REAL_CANON);
+  const secondTurn = speakerResult.segments.find((segment) => segment.unit.text === speakerNovel);
+
+  assert.equal(secondTurn?.unit.boundedContext, null);
+  assert.equal(secondTurn?.mapped, false);
+  assert.ok(speakerResult.researchQueue.items.some((item) => item.excerpt === speakerNovel));
+
+  const filler = Array.from(
+    { length: 12 },
+    (_, index) => `A separate observation ${index + 1} says mineral colors determine message timing.`,
+  ).join(' ');
+  const distantNovel = 'That lunar-phase claim says breakups happen at midnight.';
+  const longResult = await analyzeDocument(normalizeInput({
+    text: `${known} ${filler} ${distantNovel}`,
+    source: { title: 'Long mixed paragraph' },
+    createdAt: '2026-07-26T12:00:00.000Z',
+  }), REAL_CANON);
+  const distantResult = longResult.segments.find((segment) => segment.unit.text === distantNovel);
+
+  assert.equal(distantResult?.mapped, false);
+  assert.ok(!distantResult?.matches.some((match) => match.canonId === 'frameworks:conversion-ladder'));
+  assert.ok(longResult.researchQueue.items.some((item) => item.excerpt === distantNovel));
+});
 test('the original demonstration yields mapped material, pressure, and residue', async () => {
   const result = await analyzeDocument(
     createDemoDocument({ createdAt: '2026-07-26T12:00:00.000Z' }),
@@ -246,7 +359,7 @@ test('Markdown and JSON exports carry provenance, schemas, citations, limitation
   const queueMarkdown = researchQueueToMarkdown(result);
   const json = JSON.parse(analysisToJson(result));
   assert.match(markdown, /Canon index/);
-  assert.match(markdown, /Coverage percentages describe this document/);
+  assert.match(markdown, /Coverage is the share of detected claim-like segments/);
   assert.match(markdown, /&lt;img/);
   assert.doesNotMatch(markdown, /<script>/);
   assert.match(queueMarkdown, /Research candidates/);

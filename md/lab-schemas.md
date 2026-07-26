@@ -100,7 +100,10 @@ The deterministic local adapter returns:
 - ambiguity warnings and limitations.
 
 `segments[].matches[].score` is a bounded local lexical score, not a probability
-that a claim is true. The alignment vocabulary is `Supports`, `Resembles`,
+that a claim is true. Optional `segments[].matches[].contextHelp` records tightly
+bounded adjacent-sentence assistance with its source unit, relation, boost,
+local score, and reason; it is never an untraced parent-paragraph signal.
+The alignment vocabulary is `Supports`, `Resembles`,
 `Extends`, `Challenges`, `Contradicts`, and `Context only`.
 
 ## Research queue — `le-lab.research-queue/1.0`

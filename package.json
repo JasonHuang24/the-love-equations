@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:lab": "node tests/lab-intake.test.mjs && node tests/lab-analyzer.test.mjs && node tests/canon-index-fixtures.mjs && node scripts/validate-canon-index.mjs && python tools/lab_ui_audit.py && python tools/site_integrity_audit.py"
+    "test:lab": "node tests/lab-intake.test.mjs && node tests/lab-analyzer.test.mjs && node tests/lab-export.test.mjs && node tests/canon-index-fixtures.mjs && node scripts/validate-canon-index.mjs && python tools/lab_ui_audit.py && python tools/site_integrity_audit.py"
   }
 }

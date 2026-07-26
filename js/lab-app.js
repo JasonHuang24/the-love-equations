@@ -934,7 +934,7 @@ function renderResult(result, documentValue) {
     ? `No claim-like passage cleared the credible threshold; ${formatNumber(result.researchQueue.itemCount)} research candidate(s) remain visible.`
     : `${formatNumber(mapped)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped; ${formatNumber(result.pressureTests.length)} prioritized tension(s).`;
   setLabState(nextState, detail);
-  ui.workspaceSubtitle.textContent = `${result.source.title} · ${coverage}% claim-segment coverage · ${result.analysisMode.label}.`;
+  ui.workspaceSubtitle.textContent = `${result.source.title} · ${coverage}% claim-like-segment coverage · ${result.analysisMode.label}.`;
   ui.intakeStatus.textContent = nextState === 'partial'
     ? 'Analysis complete with extraction warnings.'
     : 'Analysis complete on this device.';
@@ -1059,7 +1059,7 @@ function resetVisualResults() {
   ui.coverageFill.style.width = '0';
   ui.coverageMarker.style.left = '0';
   ui.coverageMarker.style.opacity = '0';
-  ui.coverageTrack.setAttribute('aria-label', 'No document coverage result yet');
+  ui.coverageTrack.setAttribute('aria-label', 'No mapped share of claim-like segments yet');
   ui.mapSummary.textContent = 'No source has been mapped.';
   clearNode(ui.mapTableBody);
   const emptyRow = document.createElement('tr');

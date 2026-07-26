@@ -270,7 +270,7 @@
           </div>
         </div>
 
-        <div class="lab-metrics" aria-label="Document coverage summary">
+        <div class="lab-metrics" aria-label="Claim-like segments coverage summary">
           <div class="lab-metric">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-letter-w"></i></span>
             <div><output id="lab-metric-words">&mdash;</output><span>Total words</span></div>
@@ -285,8 +285,8 @@
           </div>
           <div class="lab-metric lab-metric-coverage">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-route"></i></span>
-            <div><output id="lab-metric-coverage">&mdash;</output><span>Meaningfully mapped</span></div>
-            <small>Document coverage, not proof</small>
+            <div><output id="lab-metric-coverage">&mdash;</output><span>Claim-like segments mapped</span></div>
+            <small>Share of claim-like segments, not proof</small>
           </div>
         </div>
 
@@ -395,15 +395,15 @@
               </section>
               <section class="lab-coverage-readout" aria-labelledby="lab-coverage-title">
                 <div class="lab-readout-head">
-                  <h4 id="lab-coverage-title">Document coverage</h4>
+                  <h4 id="lab-coverage-title">Claim-like segments mapped</h4>
                   <output id="lab-coverage-label">&mdash;</output>
                 </div>
-                <div class="lab-coverage-track" id="lab-coverage-track" role="img" aria-label="No document coverage result yet">
+                <div class="lab-coverage-track" id="lab-coverage-track" role="img" aria-label="No mapped share of claim-like segments yet">
                   <span class="lab-coverage-fill" id="lab-coverage-fill"></span>
                   <span class="lab-coverage-marker" id="lab-coverage-marker"></span>
                 </div>
-                <div class="lab-coverage-axis" aria-hidden="true"><span>0%</span><span>Mapped share of source segments</span><span>100%</span></div>
-                <p>Coverage measures how much of this document found a meaningful LE connection. It is not a truth score, population statistic, or claim of causation.</p>
+                <div class="lab-coverage-axis" aria-hidden="true"><span>0%</span><span>Mapped share of claim-like segments</span><span>100%</span></div>
+                <p>Coverage is the share of detected claim-like segments that found a credible LE connection. Context-only passages are excluded. It is not a truth score, population statistic, or claim of causation.</p>
               </section>
             </div>
             <figcaption id="lab-assay-caption">The diagram summarizes routing volume and concentration. The ledger below is the accessible, excerpt-level equivalent.</figcaption>
@@ -419,7 +419,7 @@
             </div>
             <div class="lab-table-scroll" tabindex="0" aria-label="Scrollable connection ledger">
               <table class="lab-map-table" id="lab-map-table">
-                <caption>Source segments mapped to The Love Equations canon</caption>
+                <caption>Detected claim-like segments mapped to The Love Equations canon</caption>
                 <thead>
                   <tr>
                     <th scope="col">Segment</th>
@@ -556,7 +556,7 @@
         </div>
         <div class="lab-limit-grid">
           <p><strong>Matching is not proof.</strong> Lexical and dependency overlap can retrieve a relevant LE concept; it cannot establish that either source is true.</p>
-          <p><strong>Coverage is document coverage.</strong> A high mapped share means the source touched more indexed concepts, not that it represents a population.</p>
+          <p><strong>Coverage is document coverage.</strong> A high mapped share means more detected claim-like segments found credible indexed connections, not that the source represents a population.</p>
           <p><strong>Unmapped is useful.</strong> It may be noise, a source error, an LE limitation, or a research lead. The queue keeps those possibilities separate.</p>
         </div>
       </section>
