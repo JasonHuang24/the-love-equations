@@ -75,7 +75,7 @@
   // Leading glyph on the evidence-tier pill (bar-chart; inherits the tier's colour).
   const SVG_TIER = '<svg class="mb-svg mb-tier-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M7 20v-4"/><path d="M12 20v-9"/><path d="M17 20v-14"/></svg>';
 
-  /* ── Data: 62 graded entries, all ratified. Every entry carries valid verdicts
+  /* ── Data: 64 graded entries, all ratified. Every entry carries valid verdicts
      and fetch-verified sourced rulings and passes the render gate — no drafts and
      no docket holds remain (the last hold, M-TBD-54, was graded 2026-07-07).
      Grading ran across 2026-07-06/07 via per-entry web research plus dual
@@ -1699,6 +1699,56 @@
         researchNotes: 'Kreager\'s 4x initiation gap is one large study; female-initiation rarity is widely observed but only this source was verified here. Haselton & Buss concerns overperception of ambiguous cues, not dismissal of explicit stated moves, so the tension with \'men wave it off\' is suggestive rather than decisive. Clark & Hatfield (1989) measures receptivity to offers, not initiation, and its PDF would not extract cleanly this session, so it was not cited.',
       },
       related: [ { label: 'Chart: who sends the first message', href: 'statistics.html#stat-first-message' }, { label: 'Ruling M-TBD-36: the covert-signal base rate', href: 'mythbuster.html#M-TBD-36' } ],
+    },
+    {
+      id: 'M-TBD-63',
+      category: 'Approach',
+      question: 'Should men wait for a choosing signal before approaching?',
+      sourcePage: 'gender-dynamics',
+      sourceCard: 'Be bold has a silent clause',
+      claims: [
+        { camp: '',
+          text: 'Men should wait for a woman to give a choosing signal before approaching. Women commonly initiate indirectly, and approaching without that green light mostly creates low-yield or unwanted attention.',
+          verdict: 'oversimplified' },
+      ],
+      ruling: {
+        badge: 'Signal-preferred, not signal-required',
+        text: 'Choosing signals are useful evidence, not an admission ticket. Moore\u2019s field observations found that women who signaled more were approached more often, so repeated, person-specific cues raise the odds that an opening is welcome. But Hall\u2019s two studies found actual flirting harder to identify than nonflirting; making a detectable green light mandatory would turn ordinary uncertainty into paralysis. The clearest harm boundary in this evidence is Sinclair and Frieze\u2019s: pursuers, especially men, discounted rejection and overstated reciprocation as pursuit continued. A single respectful, context-sensitive hello can be reasonable without a pre-signal; stop at disinterest, and treat any signal as permission to open\u2014not consent to escalate. Venue still matters: this is no license for indiscriminate volume approaching.',
+        tier: 'evidence',
+        sources: [
+          { label: 'Moore (1985), Ethology and Sociobiology \u2014 field observations: women who displayed solicitation signals more often were approached more often across four social contexts', url: 'https://doi.org/10.1016/0162-3095(85)90016-0' },
+          { label: 'Hall, Xing & Brooks (2014), Communication Research \u2014 two studies found actual flirting harder to identify than nonflirting for participants and outside observers', url: 'https://doi.org/10.1177/0093650214534972' },
+          { label: 'Sinclair & Frieze (2005), Sex Roles \u2014 241 pursuer/target accounts: pursuers over-reported reciprocation and under-reported rejection as courtship became unwanted persistence', url: 'https://doi.org/10.1007/s11199-005-4203-4' },
+        ],
+        researchNotes: 'No direct head-to-head outcome study comparing a strict signal-required strategy with a respectful once-and-done approach was found, which prevents a hard-data grade and makes a synthetic truth percentage inappropriate. Moore is observational and shows signaling\u2192approach correlation, not that every approach was welcomed; Hall establishes detection difficulty, not an optimal approach rule; Sinclair & Frieze study retrospective unrequited pursuit rather than a single opening. Together they support signals as a yield multiplier and persistence after disinterest as the meaningful boundary, but they do not make a pre-signal mandatory or turn any signal into consent.',
+      },
+      related: [ { label: 'Ruling M-TBD-3: graceful approach versus persistence', href: 'mythbuster.html#M-TBD-3' }, { label: 'Ruling M-TBD-36: covert female initiation', href: 'mythbuster.html#M-TBD-36' }, { label: 'Ruling M-TBD-5: venue versus volume', href: 'mythbuster.html#M-TBD-5' } ],
+    },
+    {
+      id: 'M-TBD-64',
+      category: 'Psychology',
+      question: 'Do women regret casual sex while men regret passing it up?',
+      claims: [
+        { camp: 'Female pattern',
+          text: 'Women have a tendency to regret casual sex they had more than men do.',
+          verdict: 'confirmed' },
+        { camp: 'Male pattern',
+          text: 'Men have a tendency to regret casual sex they passed up more than women do.',
+          verdict: 'confirmed' },
+      ],
+      ruling: {
+        badge: 'The mirror tendency is real',
+        text: 'The mirror pattern is robust, not destiny. Galperin et al.\u2019s three studies (Ns = 200, 395, and 24,230) found more casual-sex action regret among women and more missed-opportunity regret among men; the Norwegian replication and later two-wave study reproduced the average sex-linked pattern. \u201cTendency\u201d is essential: it does not predict any individual, and it does not mean women usually regret casual sex. In Sagioglou and Dick\u2019s 2026 international sample, most one-night stands were neutral-to-positive and the regret gap was concentrated in heterosexual encounters. The measured gap was substantially mediated by sexual satisfaction\u2014especially orgasm\u2014with low autonomy, intoxication, and reputational concern also contributing. The pattern is descriptive evidence, not proof that sexual-strategies theory is the cause; nor did longitudinal regret reliably change later mating behavior.',
+        tier: 'hard-data',
+        sources: [
+          { label: 'Galperin et al. (2013), Archives of Sexual Behavior \u2014 three descriptive studies (Ns = 200, 395, 24,230) found the casual-sex action/inaction regret pattern across methods and a diverse online sample', url: 'https://pubmed.ncbi.nlm.nih.gov/23179233/' },
+          { label: 'Kennair, Bendixen & Buss (2016), Evolutionary Psychology \u2014 Norwegian replication (N = 263) plus tests of gratification, worry, reputation, and sociosexuality as competing proximate correlates', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10480871/' },
+          { label: 'Kennair, Gr\u00f8ntvedt & Bendixen (2021), Evolutionary Psychology \u2014 two-wave longitudinal test found no clear evidence that regret produced the predicted later mating-behavior shifts', url: 'https://doi.org/10.1177/1474704921998333' },
+          { label: 'Sagioglou & Dick (2026), Archives of Sexual Behavior \u2014 international cross-sectional study (N = 1,044): most one-night stands neutral-to-positive; heterosexual regret gap mediated chiefly by satisfaction and orgasm', url: 'https://doi.org/10.1007/s10508-025-03380-3' },
+        ],
+        researchNotes: 'Hard-data grades the replicated descriptive direction, not a proven evolutionary mechanism. Galperin\u2019s three studies and the Norwegian replication rely on retrospective self-report; the authors\u2019 sexual-strategies interpretation is one proposed distal explanation, not an experimental result. The longitudinal study retained 399 eligible participants at T1 and 222 across both waves and found no reliable strategy shift from prior regret. Sagioglou & Dick sampled 1,044 people from more than 40 nationalities and found mostly neutral-to-positive evaluations; the gap was concentrated in heterosexual encounters, but the same-sex subgroup was only 75 and the interaction was underpowered. Orgasm was the strongest mediator in an exploratory component model, but that decomposition had poor global fit, so the ruling states the mechanism qualitatively rather than treating its percentage as settled.',
+      },
+      related: [ { label: 'Chart: the casual-sex motivation gap', href: 'statistics.html#stat-casual-gap' }, { label: 'Chart: orgasm in casual versus committed sex', href: 'statistics.html#stat-orgasm-context' }, { label: 'Chart: the orgasm gender gap', href: 'statistics.html#stat-orgasm-gender' }, { label: 'Ruling M-TBD-13: casual-sex offers and context', href: 'mythbuster.html#M-TBD-13' } ],
     },
   ];
 
