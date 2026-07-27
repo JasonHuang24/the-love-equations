@@ -17,6 +17,13 @@
     "ignorePrecision": 1.0,
     "junkRecall": 0.8
   },
+  "appends": [
+    {
+      "date": "2026-07-27",
+      "caseIds": ["ap-01", "ap-02", "ap-03", "ap-04", "ap-05", "ap-06"],
+      "agreement": "Maintainer + adversarial reviewer sign-off on md/lab-benchmark-append-proposal-01.md; systematic fix (dating-app-interaction frame + sexed participant terms) landed separately in the preceding commit. Measured after fix: 134 cases at 1.000 / 1.000 / 0.806."
+    }
+  ],
   "cases": [
     { "id": "dd-01", "family": "direct-domain", "expected": "retain", "text": "Women date across and up the status ladder far more often than they date down." },
     { "id": "dd-02", "family": "direct-domain", "expected": "retain", "text": "Most men get almost no matches on dating apps unless their photos are excellent." },
@@ -145,6 +152,12 @@
     { "id": "pj-27", "family": "plain-junk", "expected": "ignore", "text": "The ferry crossing takes forty minutes in calm weather." },
     { "id": "pj-28", "family": "plain-junk", "expected": "ignore", "text": "The documentary follows a year in the life of an Arctic research station." },
     { "id": "pj-29", "family": "plain-junk", "expected": "ignore", "text": "The password must contain at least one number and one symbol." },
-    { "id": "pj-30", "family": "plain-junk", "expected": "ignore", "text": "The garden needs watering twice a day during the heat wave." }
+    { "id": "pj-30", "family": "plain-junk", "expected": "ignore", "text": "The garden needs watering twice a day during the heat wave." },
+    { "id": "ap-01", "family": "indirect-mechanism", "expected": "retain", "text": "By contrast, 64% of men say they have felt insecure because of the lack of messages they received, while four-in-ten women say the same.", "note": "Append #1 (2026-07-27): verbatim production miss from Doctrine Backlog Harvest #1 (Pew source run)." },
+    { "id": "ap-02", "family": "indirect-mechanism", "expected": "retain", "text": "Women get flooded with matches in their first week on the app, while most men's dating profiles sit unseen.", "note": "Append #1 (2026-07-27)." },
+    { "id": "ap-03", "family": "indirect-mechanism", "expected": "retain", "text": "He swipes for an hour every night and gets maybe one match a month.", "note": "Append #1 (2026-07-27)." },
+    { "id": "ap-04", "family": "indirect-mechanism", "expected": "retain", "text": "Most women on the apps only respond to messages from a small fraction of male profiles.", "note": "Append #1 (2026-07-27)." },
+    { "id": "ap-05", "family": "polysemous-trap", "expected": "ignore", "text": "The server rejected the messages after the connection dropped.", "note": "Append #1 (2026-07-27): computing-frame trap for message vocabulary." },
+    { "id": "ap-06", "family": "polysemous-trap", "expected": "ignore", "text": "The advertising campaign's sponsored posts generated record engagement and matches with target demographics.", "note": "Append #1 (2026-07-27): advertising-frame trap for engagement/matches polysemy." }
   ]
 }
