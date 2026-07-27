@@ -6,16 +6,23 @@
  *
  * Contract:
  *   NormalizedDocument (le-lab.normalized-document/1.0)
- *     -> analyzeDocument(document, canonIndex)
- *     -> AnalysisResult (le-lab.analysis/1.0)
+ *     -> analyzeDocument(document, canonIndex, { domainOverrides })
+ *     -> AnalysisResult (le-lab.analysis/2.1)
  *
  * The browser runs this module in a worker when available. Node fixture tests
  * import the same functions; there is no second test-only implementation.
+ *
+ * The domain-relevance gate is heuristic triage, not ground truth. Analysis
+ * v2.1 therefore lists every ignored passage with its decision evidence and
+ * accepts per-passage user overrides (include/exclude) as locked inputs, so a
+ * misclassification is a visible, reversible suggestion rather than silent
+ * data loss.
  */
 
-export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/1.0';
+export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.1';
+export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.0';
 export const ANALYSIS_MODE = Object.freeze({
-  id: 'local-lexical-v1',
+  id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
   semanticModel: false,
   sourceUploaded: false,
@@ -28,8 +35,11 @@ const MIN_WEAK_SCORE = 0.25;
 const MAX_MATCHES_PER_CLAIM = 4;
 const MAX_CONTEXT_CONTINUATION_WORDS = 18;
 const MAX_CONTEXT_SOURCE_WORDS = 60;
+const DOMAIN_RELEVANT_SCORE = 4;
+const DOMAIN_UNCERTAIN_SCORE = 1;
+const NON_DOMAIN_DECISIVE_SCORE = 4;
 
-const REFERENTIAL_CONTINUATION_CUE = /^(?:that|this|these|those|it|which|such(?:\s+(?:a|an))?|the same)\b/i;
+const ANAPHORIC_CONTINUATION_CUE = /^(?:it\b|(?:that|this|these|those|which)\b(?=\s+(?:is|are|was|were|can|could|may|might|will|would|makes?|means?|puts?|leaves?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?|becomes?|suggests?|shows?|also\b))|(?:that|this)\s+(?:distinction|effect|pattern|tradeoff|constraint|change|dynamic|result|mechanism)\b|such(?:\s+(?:a|an))?\b|the same\b)/i;
 
 const STOP_WORDS = new Set([
   'a', 'about', 'after', 'again', 'against', 'all', 'also', 'am', 'an', 'and',
@@ -54,6 +64,16 @@ const GENERIC_TERMS = new Set([
   'better', 'want', 'wants', 'like', 'likes',
 ]);
 
+const LOW_INFORMATION_MATCH_TERMS = new Set([
+  ...GENERIC_TERMS,
+  'available', 'availability', 'build', 'choose', 'common', 'context', 'factor',
+  'factors', 'hard', 'harder', 'important', 'keep', 'option', 'options',
+  'increase', 'increases', 'long', 'matter', 'matters', 'outcome', 'outcomes',
+  'reduce', 'reduces', 'rule', 'same', 'selection', 'stable', 'still', 'sustain',
+  'tell', 'time', 'times', 'whether', 'different', 'effect', 'effects', 'general',
+  'make', 'makes', 'more',
+].flatMap((term) => tokenize(term)));
+
 const CLAIM_CUES = [
   /\b(?:is|are|was|were|means?|shows?|proves?|predicts?|causes?|creates?|drives?|leads?)\b/i,
   /\b(?:can|could|may|might|should|must|will|cannot|can't|won't|need to|have to|tend to|more likely|less likely)\b/i,
@@ -61,8 +81,293 @@ const CLAIM_CUES = [
   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
   /\b(?:prefer|choose|reject|attract|desire|commit|marry|divorce|retain|leave)\w*\b/i,
+  /\b(?:meet|make|put|leave|change|matter|narrow|prolong|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence|sustain|tolerate)\w*\b/i,
 ];
 
+/*
+ * Domain relevance is deliberately separate from claim grammar and canon
+ * retrieval. The gate assembles four inspectable semantic frames:
+ * participants, relationship outcomes, human-social mechanisms, and
+ * affirmative non-domain senses. Each family contributes at most once, so
+ * correlated vocabulary cannot stack into an accidental veto.
+ */
+const HUMAN_PARTICIPANT_FRAMES = Object.freeze([
+  {
+    id: 'human-individuals',
+    label: 'Human individuals or relationship-seeking population',
+    weight: 2,
+    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
+  },
+  {
+    id: 'human-groups',
+    label: 'Human household, family, or community group',
+    weight: 1.5,
+    test: (text) => /\b(?:households?|parents?|famil(?:y|ies)|communities|residents?|roommates?|friends?|friendship networks?|support networks?)\b/i.test(text),
+  },
+  {
+    id: 'human-social-pronouns',
+    label: 'Human personal pronoun',
+    weight: 0.8,
+    test: (text) => /\b(?:he|she|they|we|you|him|her|them)\b/i.test(text),
+  },
+]);
+
+const RELATIONAL_OUTCOME_FRAMES = Object.freeze([
+  {
+    id: 'romantic-courtship-lifecycle',
+    label: 'Dating, courtship, or explicitly romantic lifecycle',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:dating|courtship|romance|romantic|flirt\w*|speed[- ]dating|online dating|dating apps?|dating markets?|dating profiles?)\b/i.test(text),
+  },
+  {
+    id: 'dating-stage-structure',
+    label: 'Attraction, selection, compatibility, or retention stages',
+    weight: 5,
+    decisive: true,
+    test(text) {
+      const stages = [
+        /\b(?:attention|exposure)\b/i,
+        /\b(?:attraction|desire|chemistry)\b/i,
+        /\b(?:selection|reciprocal choice)\b/i,
+        /\bcompatibility\b/i,
+        /\b(?:retention|relationship stability|lasting relationship)\b/i,
+      ];
+      return stages.filter((pattern) => pattern.test(text)).length >= 2;
+    },
+  },
+  {
+    id: 'dating-market-leverage',
+    label: 'SMV or dating-market leverage frame',
+    weight: 5,
+    decisive: true,
+    test(text) {
+      const leverCount = ['looks', 'money', 'status', 'charm', 'exposure']
+        .filter((lever) => new RegExp(`\\b${lever}\\b`, 'i').test(text)).length;
+      return /\b(?:smv|sexual market value|dating market value|market leverage|five levers)\b/i.test(text)
+        || leverCount >= 4
+        || (/\bmarket value\b/i.test(text) && /\b(?:moral worth|human worth|entitlement|consent)\b/i.test(text));
+    },
+  },
+  {
+    id: 'cross-sex-selection',
+    label: 'Human cross-sex preference or selection outcome',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b.{0,70}\b(?:men|women|man|woman|males|females)\b/i.test(text)
+      || /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b/i.test(text),
+  },
+  {
+    id: 'couple-retention',
+    label: 'Couple stability or staying-together outcome',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\bcouples?\b.{0,70}\b(?:stay\w* together|last\w*|separat\w*|remain\w* together|relationship)\b/i.test(text)
+      || /\b(?:stay\w* together|last\w*|separat\w*|remain\w* together)\b.{0,70}\bcouples?\b/i.test(text),
+  },
+  {
+    id: 'marriage-household-formation',
+    label: 'Marriage, cohabitation, or household formation outcome',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:marriage|marry\w*|remarr\w*|wedding|spouses?|husbands?|wives|widow\w*|cohabit\w*|household formation|combine households?|start(?:ing)? a family|have children together)\b/i.test(text),
+  },
+  {
+    id: 'breakup-relationship-loss',
+    label: 'Breakup or human relationship-loss outcome',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:breakups?|breaks? up|heartbreak|relationship loss|relationship dissolution|after separation|reconciliation|infidelity|cheating)\b/i.test(text),
+  },
+  {
+    id: 'partner-access-formation',
+    label: 'Partner access, meeting, selection, or pair formation',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:meet|met|find|found|choose|chose|select|seek|attract|reject|date)\w*\b.{0,65}\b(?:partners?|mates?|dates?|singles?|spouses?)\b/i.test(text)
+      || /\b(?:partners?|mates?|dates?|singles?|spouses?)\b.{0,65}\b(?:meet|met|choose|chose|select|seek|attract|reject|date|pair|match)\w*\b/i.test(text)
+      || /\b(?:mate|partner) selection\b|\bpair formation\b|\b(?:future|potential|romantic) partners?\b|\bromantic networks?\b/i.test(text)
+      || /\b(?:meet|met|meeting)\b.{0,40}\bsome(?:one|body)\b/i.test(text)
+      || /\b(?:first|second|third|blind|next|another)\s+dates?\b|\bdate nights?\b/i.test(text),
+  },
+  {
+    id: 'relationship-maintenance',
+    label: 'Human relationship initiation, maintenance, or retention',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\b(?:relationship (?:initiation|formation|progression|maintenance|satisfaction|stability|quality|readiness|retention)|long-term relationship|committed relationship)\b/i.test(text)
+      || /\b(?:initiat\w*|maintain\w*|sustain\w*|retain\w*|build\w*|end\w*)\b.{0,55}\b(?:a |the |their |our )?(?:romantic )?(?:relationships?|partnership)\b/i.test(text),
+  },
+  {
+    id: 'sexual-intimacy',
+    label: 'Sexual or intimate relationship outcome',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:hookups?|hooking up|one-night stands?|casual sex|sex life|sexual (?:attraction|desire|relationships?|partners?|intimacy|compatibility|behavior)|physical intimacy|have sex|having sex|consent to sex)\b/i.test(text),
+  },
+  {
+    id: 'relationship-transition',
+    label: 'Potentially human separation, divorce, or exclusivity transition',
+    weight: 2.5,
+    decisive: false,
+    test: (text) => /\b(?:divorce\w*|separat\w*|exclusive|exclusivity|commit(?:ment|ted)?)\b/i.test(text),
+  },
+  {
+    id: 'relationship-concept',
+    label: 'Plausible attraction, compatibility, or relationship concept',
+    weight: 2.2,
+    decisive: false,
+    test: (text) => /\b(?:attraction|attractive|desirability|compatib\w*|intimacy|affection|attachment|chemistry|jealousy|rejection|desire|love|relationships?|partners?|mates?|argu(?:e|es|ed|ing|ments?))\b/i.test(text),
+  },
+  {
+    id: 'human-attraction-shorthand',
+    label: 'Human-directed attraction shorthand',
+    weight: 2,
+    decisive: false,
+    test: (text) => /\b(?:he|she|they|this (?:man|woman|person)|that (?:man|woman|person)|someone)\b.{0,24}\b(?:is|seems?|looks?)\s+(?:so |very )?(?:hot|beautiful|handsome|sexy)\b/i.test(text)
+      || /\b(?:hot|beautiful|handsome|sexy)\b.{0,24}\b(?:to|for)\s+(?:him|her|them|someone|people)\b/i.test(text),
+  },
+  {
+    id: 'named-le-framework',
+    label: 'Named LE relationship framework or market lens',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:conversion ladder|readiness gate|love hierarchy|smv|sexual market value|dating market value|five levers)\b/i.test(text),
+  },
+]);
+
+const SOCIAL_MECHANISM_FRAMES = Object.freeze([
+  {
+    id: 'social-contact-opportunity',
+    label: 'Chance contact, repeated exposure, or familiarity mechanism',
+    weight: 2.5,
+    decisive: false,
+    test: (text) => /\b(?:chance|spontaneous|recurring|repeated|regular|social)\s+(?:encounters?|contacts?|exposure|familiarity|access|gatherings?|venues?|spaces?)\b/i.test(text)
+      || /\bopportunit\w*\b.{0,55}\b(?:meet|encounter|become familiar|repeated contact|repeated exposure)\b/i.test(text)
+      || /\b(?:keeps?|kept|continues?[sd]? to) meet(?:ing)?\b/i.test(text),
+  },
+  {
+    id: 'relationship-time-privacy-constraint',
+    label: 'Time, privacy, or realistic-pool constraint on relationships',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\b(?:commut\w*|work hours?|schedules?|time|privacy|realistic pool|dating pool)\b.{0,90}\b(?:meet|date|courtship|romance|relationships?|partnership|partners?|singles?|unattached|(?:realistic|dating|partner) pools?)\b/i.test(text)
+      || /\b(?:meet|date|courtship|romance|relationships?|partnership|partners?|singles?|unattached)\b.{0,90}\b(?:commut\w*|work hours?|schedules?|time|privacy|realistic pool|dating pool)\b/i.test(text),
+  },
+  {
+    id: 'community-contact-structure',
+    label: 'Community turnover, relocation, or gathering structure',
+    weight: 3,
+    decisive: false,
+    test: (text) => /\b(?:relocat\w*|moving frequently|turnover|community|neighborhood|gatherings?|third spaces?|social spaces?)\b.{0,95}\b(?:contacts?|familiarity|exposure|encounters?|opportunities|partners?|romantic networks?)\b/i.test(text)
+      || /\b(?:contacts?|familiarity|exposure|encounters?|opportunities|partners?|romantic networks?)\b.{0,95}\b(?:relocat\w*|turnover|community|neighborhood|gatherings?|third spaces?|social spaces?)\b/i.test(text),
+  },
+  {
+    id: 'household-exit-constraint',
+    label: 'Household, custody, debt, or privacy constraint',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\b(?:shared (?:debt|custody|obligations?)|financial obligations?|household wealth|roommates?|living with other adults?|shared ownership|pet custody)\b.{0,95}\b(?:leav\w*|separat\w*|breakups?|marry\w*|marriage|household formation|privacy|romance|courtship)\b/i.test(text)
+      || /\b(?:leav\w*|separat\w*|breakups?|marry\w*|marriage|household formation|privacy|romance|courtship)\b.{0,95}\b(?:shared (?:debt|custody|obligations?)|financial obligations?|household wealth|roommates?|living with other adults?|shared ownership|pet custody)\b/i.test(text),
+  },
+  {
+    id: 'support-loss-mechanism',
+    label: 'Support or friendship network shaping relationship loss',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\b(?:support|friendship) networks?\b.{0,80}\b(?:relationship loss|breakups?|recover\w*|tolerat\w*|heartbreak)\b/i.test(text)
+      || /\b(?:relationship loss|breakups?|recover\w*|tolerat\w*|heartbreak)\b.{0,80}\b(?:support|friendship) networks?\b/i.test(text),
+  },
+  {
+    id: 'reputation-partner-access',
+    label: 'Reputation changing access to future partners',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\breputation\b.{0,80}\b(?:access|future partners?|potential partners?|dating pool|romantic)\b/i.test(text)
+      || /\b(?:access|future partners?|potential partners?|dating pool|romantic)\b.{0,80}\breputation\b/i.test(text),
+  },
+]);
+
+const NON_DOMAIN_FRAME_DEFINITIONS = Object.freeze([
+  {
+    id: 'computing',
+    label: 'Computing, software, data, or process frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:software|comput\w*|algorith\w*|heuristic\w*|classifi\w*|kernel\w*|operating (?:system|core)|api|endpoint\w*|database\w*|server\w*|linux|postgres\w*|process\w*|network connections?|prediction systems?|pathfind\w*|routing\w*|applications?)\b/i,
+      /\b(?:query\w*|execut\w*|run\w*|uses?|kill\w*|stop\w*|terminat\w*|reject\w*|refus\w*|declin\w*|invalid\w*|malform\w*|payload\w*|inputs?|routes?|paths?|certain\w*|confidence|assign\w*|select\w*|pick\w*|rank\w*|one-to-many|unreliable|created?|spawn\w*)\b/i,
+    ),
+  },
+  {
+    id: 'sports',
+    label: 'Sports, game, or contest frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:teams?|sides?|clubs?|match(?:es)?|games?|contests?|fixtures?|bouts?|tournaments?|leagues?|referees?)\b/i,
+      /\b(?:finish\w*|end\w*|level|equal|scores?|draw|won|win\w*|lost|lose\w*|contest)\b/i,
+    ),
+  },
+  {
+    id: 'corporate-finance-media',
+    label: 'Corporate, finance, property, media, or advertising frame',
+    weight: 7,
+    test: (text) => frameHas(
+      text,
+      /\b(?:firms?|business(?:es)?|companies|company|corporat\w*|joint ventures?|capital|stocks?|stock markets?|equities|stock indexes?|financial markets?|trading|property|box office|actors?|advertis\w*|engagement rates?)\b/i,
+      /\b(?:split\w*|dissolv\w*|merg\w*|ventures?|partnership|divorce\w*|commit\w*|capital|declin\w*|fall\w*|fell|crash\w*|trad\w*|valu\w*|increas\w*|attract\w*|engagement|competitive)\b/i,
+    ) || /\b(?:stock|financial )?market\b.{0,40}\bcompetitive\b/i.test(text),
+  },
+  {
+    id: 'document',
+    label: 'Document, report, typography, or page-structure frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:reports?|documents?|main text|texts?|pages?|fonts?|typograph\w*|sections?|profiles?|mountains?|report body|document body)\b/i,
+      /\b(?:bod(?:y|ies)|divid\w*|contain\w*|lists?|sections?|parts?|dimensions?|visible|layouts?|fonts?)\b/i,
+    ),
+  },
+  {
+    id: 'scientific-mathematical',
+    label: 'Scientific, chemical, material, or mathematical frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:atoms?|atomic|electrons?|orbitals?|materials?|tensile|chemical\w*|molecules?|bonds?|functions?|equations?|theorems?|models?|laborator\w*|temperature|pressure)\b/i,
+      /\b(?:pairs?|share\w*|orbitals?|shells?|strength|stable|continuous|confidence|certain\w*|measure\w*|linear|structures?)\b/i,
+    ),
+  },
+  {
+    id: 'physical-environment',
+    label: 'Weather, room, sky, water, or physical-state observation',
+    weight: 5,
+    test: (text) => frameHas(
+      text,
+      /\b(?:sky|weather|rooms?|water|temperature|afternoon)\b/i,
+      /\b(?:blue|hot|cold|visible|freez\w*|boil\w*|degrees?|celsius|fahrenheit)\b/i,
+    ),
+  },
+  {
+    id: 'transport-schedule',
+    label: 'Transport arrival, departure, or timetable frame',
+    weight: 5,
+    test: (text) => frameHas(
+      text,
+      /\b(?:trains?|buses|bus|flights?|trams?|subways?)\b/i,
+      /\b(?:arriv\w*|depart\w*|delay\w*|noon|on time|timetables?)\b/i,
+    ),
+  },
+  {
+    id: 'technical-relationship',
+    label: 'Technical or scientific use of relationship vocabulary',
+    weight: 6,
+    test: (text) => /\b(?:database|variables?|measurements?|numbers?|sets?|tables?|equations?|quantities|objects?)\b.{0,75}\brelationships?\b/i.test(text)
+      || /\brelationships?\b.{0,75}\b(?:database|variables?|measurements?|numbers?|sets?|tables?|equations?|quantities|objects?|one-to-many)\b/i.test(text)
+      || /\b(?:business|research|laboratory|training|project|trade|tennis|debate)\s+partners?\b/i.test(text),
+  },
+]);
 const SUPPORT_CUES = /\b(?:supports?|confirms?|consistent with|backs? up|holds up|evidence for|exactly right|true that)\b/i;
 const CHALLENGE_CUES = /\b(?:challenges?|questions?|overstates?|too simple|not always|depends on|exception|fails? when|weakens?)\b/i;
 const CONTRADICTION_CUES = /\b(?:contradicts?|false|wrong|myth|backwards|no evidence|does not|doesn't|isn't|aren't|cannot|can't)\b/i;
@@ -354,7 +659,7 @@ function round(value, digits = 3) {
 }
 
 function percentage(numerator, denominator) {
-  return denominator ? round((numerator / denominator) * 100, 1) : 0;
+  return denominator ? round((numerator / denominator) * 100, 1) : null;
 }
 
 function wordCount(text) {
@@ -496,7 +801,7 @@ function boundedPreviousContext(sentences, sentenceIndex, parentSegmentId) {
   const text = String(sentences[sentenceIndex] || '').trim();
   const previousText = String(sentences[sentenceIndex - 1] || '').trim();
   if (!text || !previousText) return null;
-  if (!REFERENTIAL_CONTINUATION_CUE.test(text)) return null;
+  if (!ANAPHORIC_CONTINUATION_CUE.test(text)) return null;
   if (wordCount(text) > MAX_CONTEXT_CONTINUATION_WORDS) return null;
   if (wordCount(previousText) > MAX_CONTEXT_SOURCE_WORDS) return null;
   return {
@@ -551,6 +856,283 @@ export function detectClaimUnits(document) {
   return units.slice(0, MAX_CLAIM_UNITS);
 }
 
+function frameHas(text, entityPattern, predicatePattern) {
+  return entityPattern.test(text) && predicatePattern.test(text);
+}
+
+function collectFrameEvidence(definitions, text, polarity, frame) {
+  return definitions
+    .filter((definition) => definition.test(text))
+    .map((definition) => ({
+      code: definition.id,
+      label: definition.label,
+      weight: definition.weight,
+      decisive: Boolean(definition.decisive),
+      polarity,
+      frame,
+    }));
+}
+
+function summarizeFrame(evidence) {
+  return {
+    detected: evidence.length > 0,
+    score: evidence.reduce((maximum, item) => Math.max(maximum, Number(item.weight) || 0), 0),
+    evidence: evidence.map(({ code, label, decisive }) => ({ code, label, decisive })),
+  };
+}
+
+export const DOMAIN_REASON_LABELS = Object.freeze({
+  'explicit-relational-outcome': 'Explicit relationship outcome',
+  'relational-outcome-overrides-incidental-input': 'Relationship outcome outweighs incidental non-domain vocabulary',
+  'explicit-relational-mechanism': 'Explicit human relationship mechanism',
+  'plausible-human-relational-frame': 'Plausible human relational frame, retained conservatively',
+  'bounded-previous-domain-context': 'Anaphoric continuation of the previous retained passage',
+  'affirmative-non-domain-evidence': 'Affirmative non-relationship frame, no relational anchor',
+  'no-human-relational-frame': 'No participant, relationship outcome, or human-social mechanism detected',
+  'user-override-include': 'Included by the visitor for this session',
+  'user-override-exclude': 'Excluded by the visitor for this session',
+});
+
+function ignoredPassageRecord(unit) {
+  const relevance = unit.domainRelevance;
+  return {
+    segmentId: unit.id,
+    parentSegmentId: unit.parentSegmentId,
+    location: {
+      segmentIndex: unit.segmentIndex,
+      speaker: unit.speaker,
+      startTime: unit.startTime,
+      endTime: unit.endTime,
+    },
+    excerpt: unit.text,
+    wordCount: unit.wordCount,
+    localStatus: relevance.localStatus,
+    reasonCode: relevance.reasonCode,
+    reasonLabel: DOMAIN_REASON_LABELS[relevance.reasonCode] || relevance.reasonCode,
+    frameEvidence: relevance.evidence
+      .filter((item) => item.frame !== 'decision')
+      .slice(0, 6)
+      .map(({ code, label, polarity, frame }) => ({ code, label, polarity, frame })),
+    overridden: relevance.override === 'exclude',
+  };
+}
+
+function localDomainRelevance(unit) {
+  const text = String(unit?.text || '').trim();
+  const participantEvidence = collectFrameEvidence(
+    HUMAN_PARTICIPANT_FRAMES, text, 'domain', 'participant',
+  );
+  const outcomeEvidence = collectFrameEvidence(
+    RELATIONAL_OUTCOME_FRAMES, text, 'domain', 'outcome',
+  );
+  const mechanismEvidence = collectFrameEvidence(
+    SOCIAL_MECHANISM_FRAMES, text, 'domain', 'mechanism',
+  );
+  const nonDomainEvidence = collectFrameEvidence(
+    NON_DOMAIN_FRAME_DEFINITIONS, text, 'non-domain', 'non-domain',
+  );
+  const frames = {
+    participant: summarizeFrame(participantEvidence),
+    outcome: summarizeFrame(outcomeEvidence),
+    mechanism: summarizeFrame(mechanismEvidence),
+    nonDomain: summarizeFrame(nonDomainEvidence),
+  };
+
+  const decisiveOutcome = outcomeEvidence.some((evidence) => evidence.decisive);
+  const decisiveMechanism = mechanismEvidence.some((evidence) => evidence.decisive);
+  const humanGroundedOutcome = frames.participant.detected && frames.outcome.detected;
+  const humanSocialMechanism = frames.participant.detected && frames.mechanism.detected;
+  const plausibleRelationalAnchor = frames.outcome.detected && !frames.nonDomain.detected;
+  const plausibleSocialStructure = frames.mechanism.score >= 3 && !frames.nonDomain.detected;
+  const score = round(Math.max(
+    frames.outcome.score,
+    frames.mechanism.score,
+    humanGroundedOutcome || humanSocialMechanism ? DOMAIN_UNCERTAIN_SCORE : 0,
+  ), 2);
+  // Non-domain categories are capped at their strongest family. Correlated
+  // tokens such as stock/market/finance never become independent veto votes.
+  const nonDomainScore = round(frames.nonDomain.score, 2);
+
+  let status;
+  let reasonCode;
+  if (decisiveOutcome) {
+    status = 'relevant';
+    reasonCode = frames.nonDomain.detected
+      ? 'relational-outcome-overrides-incidental-input'
+      : 'explicit-relational-outcome';
+  } else if (decisiveMechanism) {
+    status = 'relevant';
+    reasonCode = 'explicit-relational-mechanism';
+  } else if (
+    humanGroundedOutcome
+    || humanSocialMechanism
+    || plausibleRelationalAnchor
+    || plausibleSocialStructure
+  ) {
+    status = 'uncertain';
+    reasonCode = 'plausible-human-relational-frame';
+  } else if (frames.nonDomain.detected) {
+    status = 'irrelevant';
+    reasonCode = 'affirmative-non-domain-evidence';
+  } else {
+    status = 'irrelevant';
+    reasonCode = 'no-human-relational-frame';
+  }
+
+  const evidence = [
+    ...participantEvidence,
+    ...outcomeEvidence,
+    ...mechanismEvidence,
+    ...nonDomainEvidence,
+  ];
+  if (!evidence.length) {
+    evidence.push({
+      code: reasonCode,
+      label: 'No participant, relationship outcome, or human-social mechanism was detected',
+      weight: 0,
+      polarity: 'non-domain',
+      frame: 'decision',
+    });
+  }
+
+  return {
+    status,
+    localStatus: status,
+    score,
+    nonDomainScore,
+    reasonCode,
+    decisiveReason: reasonCode,
+    frames,
+    evidence,
+    contextHelp: null,
+  };
+}
+
+function contextContinuityEvidence(unit, previous) {
+  if (unit.domainRelevance.frames?.nonDomain?.detected) return null;
+  const currentText = normalizeText(unit.text);
+  const previousText = normalizeText(previous.text);
+  const previousTokens = new Set(tokenize(previousText, { keepGeneric: false })
+    .filter((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
+  const sharedConcepts = tokenize(currentText, { keepGeneric: false })
+    .filter((token) => previousTokens.has(token) && !LOW_INFORMATION_MATCH_TERMS.has(token));
+  const consequenceLanguage = /\b(?:makes?|puts?|means?|leaves?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?)\b.{0,70}\b(?:photographs?|photos?|profiles?|messages?|swipes?|matches?|meeting|meet|opportunities|choices?|contact|exposure|familiarity|attraction|compatibility|commitment|relationships?|partners?|important|first|harder|easier|likely|unlikely)\b/i.test(unit.text);
+  const localFrameContinuity = unit.domainRelevance.frames?.outcome?.detected
+    || unit.domainRelevance.frames?.mechanism?.detected;
+  if (!localFrameContinuity && !consequenceLanguage && !sharedConcepts.length) return null;
+  return {
+    code: localFrameContinuity
+      ? 'compatible-local-relational-frame'
+      : consequenceLanguage
+        ? 'approved-consequence-language'
+        : 'shared-relationship-concept',
+    sharedConcepts: unique(sharedConcepts).slice(0, 5),
+  };
+}
+
+const DOMAIN_OVERRIDE_ACTIONS = Object.freeze(['include', 'exclude']);
+
+export function normalizeDomainOverrides(rawOverrides) {
+  const normalized = new Map();
+  if (!rawOverrides) return normalized;
+  const entries = rawOverrides instanceof Map
+    ? [...rawOverrides.entries()]
+    : Object.entries(rawOverrides);
+  entries.forEach(([unitId, action]) => {
+    if (typeof unitId !== 'string' || !unitId) return;
+    if (!DOMAIN_OVERRIDE_ACTIONS.includes(action)) return;
+    normalized.set(unitId, action);
+  });
+  return normalized;
+}
+
+function applyDomainOverride(unit, action) {
+  if (!action) return unit;
+  const local = unit.domainRelevance;
+  const include = action === 'include';
+  return {
+    ...unit,
+    // "Include in analysis" is a locked visitor input: it admits the passage
+    // into the analytical population even when claim grammar alone would have
+    // kept it context-only. The machine's grammar verdict stays visible as
+    // machineClaimLike, exactly like localStatus preserves the domain verdict.
+    ...(include ? { isClaimLike: true, machineClaimLike: Boolean(unit.isClaimLike) } : {}),
+    domainRelevance: {
+      ...local,
+      status: include ? 'relevant' : 'irrelevant',
+      reasonCode: include ? 'user-override-include' : 'user-override-exclude',
+      decisiveReason: include ? 'user-override-include' : 'user-override-exclude',
+      override: action,
+      evidence: [
+        ...local.evidence,
+        {
+          code: include ? 'user-override-include' : 'user-override-exclude',
+          label: include
+            ? 'Included by the visitor for this session; the local classifier verdict is preserved above.'
+            : 'Excluded by the visitor for this session; the local classifier verdict is preserved above.',
+          weight: 'override',
+          polarity: include ? 'domain' : 'non-domain',
+          frame: 'override',
+        },
+      ],
+    },
+  };
+}
+
+export function classifyDomainRelevance(units, overrides = new Map()) {
+  const classified = (units || []).map((unit) => applyDomainOverride(
+    { ...unit, domainRelevance: localDomainRelevance(unit) },
+    overrides.get(unit.id),
+  ));
+
+  for (let index = 1; index < classified.length; index += 1) {
+    const unit = classified[index];
+    const previous = classified[index - 1];
+    const bridge = unit.boundedContext;
+    if (unit.domainRelevance.status === 'relevant' || !bridge) continue;
+    // An overridden decision is a locked user input; context never reopens it.
+    if (unit.domainRelevance.override) continue;
+    if (unit.parentSegmentId !== previous.parentSegmentId) continue;
+    if (bridge.sourceUnitId !== previous.id) continue;
+    if (previous.domainRelevance.override === 'exclude') continue;
+    if (previous.domainRelevance.override !== 'include'
+      && !['relevant', 'uncertain'].includes(previous.domainRelevance.localStatus)) continue;
+    // A context-promoted passage never becomes the source of another hop.
+    if (previous.domainRelevance.contextHelp) continue;
+
+    const continuity = contextContinuityEvidence(unit, previous);
+    if (!continuity) continue;
+    unit.domainRelevance = {
+      ...unit.domainRelevance,
+      status: 'relevant',
+      score: Math.max(DOMAIN_RELEVANT_SCORE, unit.domainRelevance.score),
+      reasonCode: 'bounded-previous-domain-context',
+      decisiveReason: 'bounded-previous-domain-context',
+      evidence: [
+        ...unit.domainRelevance.evidence,
+        {
+          code: 'bounded-previous-domain-context',
+          label: 'Anaphoric continuation with semantic continuity to the immediately previous retained passage',
+          weight: 'context',
+          polarity: 'domain',
+          frame: 'context',
+          continuity: continuity.code,
+        },
+      ],
+      contextHelp: {
+        kind: bridge.kind,
+        sourceUnitId: previous.id,
+        localStatus: unit.domainRelevance.localStatus,
+        localScore: unit.domainRelevance.score,
+        reason: bridge.reason,
+        continuity: continuity.code,
+        sharedConcepts: continuity.sharedConcepts,
+      },
+    };
+  }
+
+  return classified;
+}
 function scoreEntry(unit, entry, idf) {
   const normalized = normalizeText(unit.text);
   // Signatures are sentence-local. A parent paragraph or speaker turn may
@@ -566,6 +1148,8 @@ function scoreEntry(unit, entry, idf) {
   const entrySet = new Set(entry._tokens);
   const shared = queryTokens.filter((token) => entrySet.has(token));
   const distinctiveShared = queryDistinctive.filter((token) => entrySet.has(token));
+  const admissionDistinctiveShared = distinctiveShared
+    .filter((token) => !LOW_INFORMATION_MATCH_TERMS.has(token));
 
   const queryWeight = queryTokens.reduce((sum, token) => sum + (idf.get(token) || 1), 0) || 1;
   const entryWeight = entry._tokens.reduce((sum, token) => sum + (idf.get(token) || 1), 0) || 1;
@@ -578,6 +1162,9 @@ function scoreEntry(unit, entry, idf) {
     .sort((a, b) => b.length - a.length);
   const singleAliasHits = entry._phrases
     .filter((phrase) => !phrase.includes(' ') && phrase.length >= 5 && normalized.split(/\W+/).includes(phrase));
+  const credibleSingleAliasHits = singleAliasHits
+    .filter((alias) => tokenize(alias)
+      .some((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
   const phraseStrength = phraseHits.length
     ? clamp(0.54 + Math.min(0.18, (phraseHits[0].split(' ').length - 2) * 0.035))
     : singleAliasHits.length
@@ -614,8 +1201,10 @@ function scoreEntry(unit, entry, idf) {
     canonCoverage: round(canonCoverage),
     signatureHits,
     phraseHits: phraseHits.slice(0, 3),
+    exactAliasHits: credibleSingleAliasHits.slice(0, 3),
     sharedTokens: shared.slice(0, 12),
     distinctiveShared: distinctiveShared.slice(0, 8),
+    admissionDistinctiveShared: admissionDistinctiveShared.slice(0, 8),
     misreadingOverlap: round(misreadingOverlap),
     weakGenericMatch,
   };
@@ -675,6 +1264,9 @@ function transparentWhy(rawScore, entry) {
   if (rawScore.phraseHits.length) {
     reasons.push(`Exact phrase: “${rawScore.phraseHits[0]}”`);
   }
+  if (rawScore.exactAliasHits.length) {
+    reasons.push(`Exact alias: “${rawScore.exactAliasHits[0]}”`);
+  }
   if (rawScore.distinctiveShared.length) {
     reasons.push(`Distinctive overlap: ${rawScore.distinctiveShared.slice(0, 5).join(', ')}`);
   } else if (rawScore.sharedTokens.length) {
@@ -682,6 +1274,9 @@ function transparentWhy(rawScore, entry) {
   }
   if (entry.subcategory) reasons.push(`Canon context: ${entry.category} / ${entry.subcategory}`);
   if (rawScore.weakGenericMatch) reasons.push('Penalty: only generic dating language overlaps');
+  if (!hasCredibleMatchEvidence(rawScore)) {
+    reasons.push('Admission guard: no exact phrase, signature, or two distinctive shared concepts');
+  }
   return reasons;
 }
 
@@ -721,6 +1316,20 @@ function hasLocalConceptEvidence(candidate) {
   );
 }
 
+function hasCredibleMatchEvidence(rawScore) {
+  return Boolean(
+    rawScore.signatureHits.length
+    || rawScore.phraseHits.length
+    || rawScore.exactAliasHits.length
+    || rawScore.admissionDistinctiveShared.length >= 2
+  );
+}
+
+function isCredibleCandidate(candidate) {
+  return candidate.score >= MIN_CREDIBLE_SCORE
+    && hasCredibleMatchEvidence(candidate._rawScore);
+}
+
 function applyBoundedContext(results, entriesById) {
   for (let index = 0; index < results.length; index += 1) {
     const result = results[index];
@@ -734,7 +1343,7 @@ function applyBoundedContext(results, entriesById) {
     // may help. Using the previous candidate's unboosted score prevents context
     // from cascading through a chain of elliptical sentences.
     const previousCanonIds = new Set(previous.candidates
-      .filter((candidate) => candidate._rawScore.score >= MIN_CREDIBLE_SCORE)
+      .filter((candidate) => isCredibleCandidate(candidate))
       .slice(0, MAX_MATCHES_PER_CLAIM)
       .map((candidate) => candidate.canonId));
 
@@ -1026,10 +1635,23 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   const onProgress = typeof options.onProgress === 'function' ? options.onProgress : () => {};
   const isCancelled = typeof options.isCancelled === 'function' ? options.isCancelled : () => false;
   const characters = validateDocumentSize(document);
-  onProgress({ phase: 'segmenting', value: 0.08, message: 'Detecting claim-like passages' });
+  onProgress({ phase: 'segmenting', value: 0.08, message: 'Classifying relationship-domain passages' });
   const prepared = prepareCanonIndex(canonIndex);
-  const units = detectClaimUnits(document);
-  if (!units.length) throw new Error('The extractor found text, but no analyzable passages.');
+  const detectedUnits = detectClaimUnits(document);
+  if (!detectedUnits.length) throw new Error('The extractor found text, but no analyzable passages.');
+  const domainOverrides = normalizeDomainOverrides(options.domainOverrides);
+  const classifiedUnits = classifyDomainRelevance(detectedUnits, domainOverrides);
+  const detectedUnitIds = new Set(detectedUnits.map((unit) => unit.id));
+  const appliedOverrides = [...domainOverrides.entries()]
+    .filter(([unitId]) => detectedUnitIds.has(unitId))
+    .map(([segmentId, action]) => ({ segmentId, action }));
+  const unmatchedOverrideIds = [...domainOverrides.keys()]
+    .filter((unitId) => !detectedUnitIds.has(unitId));
+  const units = classifiedUnits.filter((unit) => unit.domainRelevance.status !== 'irrelevant');
+  const ignoredUnits = classifiedUnits.filter((unit) => unit.domainRelevance.status === 'irrelevant');
+  const relevantUnits = classifiedUnits.filter((unit) => unit.domainRelevance.status === 'relevant');
+  const uncertainUnits = classifiedUnits.filter((unit) => unit.domainRelevance.status === 'uncertain');
+  const ignoredWords = ignoredUnits.reduce((sum, unit) => sum + unit.wordCount, 0);
   if (isCancelled()) throw new DOMException('Analysis cancelled', 'AbortError');
 
   const candidatesByUnit = [];
@@ -1060,14 +1682,14 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
 
   const segmentResults = candidatesByUnit.map(({ unit, candidates }) => {
     const credible = candidates
-      .filter((candidate) => candidate.score >= MIN_CREDIBLE_SCORE)
+      .filter((candidate) => isCredibleCandidate(candidate))
       .slice(0, MAX_MATCHES_PER_CLAIM);
     credible.forEach((match) => {
       match.alignment = stanceFor(unit, match);
       match.why = match.alignment.rationale;
     });
     const weak = candidates
-      .filter((candidate) => candidate.score >= MIN_WEAK_SCORE && candidate.score < MIN_CREDIBLE_SCORE)
+      .filter((candidate) => candidate.score >= MIN_WEAK_SCORE && !isCredibleCandidate(candidate))
       .slice(0, 3);
     const ambiguity = credible.length > 1 && (credible[0].score - credible[1].score) < 0.07
       ? `Two canon entries are separated by only ${round(credible[0].score - credible[1].score, 2)} confidence points.`
@@ -1103,6 +1725,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
 
   const researchItems = unmappedClaims.map(researchItemFor);
   const researchQueue = {
+    schemaVersion: RESEARCH_QUEUE_SCHEMA_VERSION,
     status: 'Research candidates — not LE doctrine',
     itemCount: researchItems.length,
     groups: groupResearchItems(researchItems),
@@ -1141,15 +1764,32 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       totalCharacters: characters,
       sourceSegments: document.segments.length,
       analyzedPassages: units.length,
+      relevantDomainSegments: relevantUnits.length,
+      uncertainDomainSegments: uncertainUnits.length,
+      ignoredDomainSegments: ignoredUnits.length,
+      ignoredDomainWords: ignoredWords,
       claimLikeSegments: claimResults.length,
       mappedClaimSegments: mappedClaims.length,
       unmappedClaimSegments: unmappedClaims.length,
+    },
+    domainRelevance: {
+      policy: 'deterministic-relational-frames-v2',
+      relevantSegments: relevantUnits.length,
+      uncertainRetainedSegments: uncertainUnits.length,
+      ignoredSegments: ignoredUnits.length,
+      ignoredWords,
+      ignoredPassages: ignoredUnits.map(ignoredPassageRecord),
+      overrides: {
+        applied: appliedOverrides,
+        unmatchedIds: unmatchedOverrideIds,
+      },
+      note: 'The relevance gate is heuristic triage, not ground truth. Ignored passages are listed with their decision evidence, remain intact in the normalized source, and can be re-included with a per-passage override; retained passages can likewise be excluded. Overrides are session-scoped visitor decisions and are disclosed in every export.',
     },
     coverage: {
       mappedClaimSegmentSharePct: percentage(mappedClaims.length, claimResults.length),
       unmappedClaimSegmentSharePct: percentage(unmappedClaims.length, claimResults.length),
       mappedClaimWordSharePct: percentage(mappedWords, claimWords),
-      denominator: 'Detected claim-like segments only; context passages are excluded.',
+      denominator: 'Detected claim-like relationship-domain segments only; clearly non-domain and context passages are excluded.',
       interpretation: 'Document coverage, not population statistics, factual accuracy, or proof that a claim is true.',
     },
     categoryDistribution: summarizeDistribution(primaryMatches, 'category'),
@@ -1176,15 +1816,23 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       .filter(Boolean),
     warnings: [
       ...ambiguityWarnings,
-      ...(units.length >= MAX_CLAIM_UNITS
+      ...(unmatchedOverrideIds.length
+        ? [{ segmentId: null, message: `${unmatchedOverrideIds.length} domain override(s) referenced passages that no longer exist in this source and were not applied.` }]
+        : []),
+      ...(detectedUnits.length >= MAX_CLAIM_UNITS
         ? [{ segmentId: null, message: `Only the first ${MAX_CLAIM_UNITS.toLocaleString()} passages were analyzed.` }]
         : []),
-      ...(mappedClaims.length === 0
+      ...(claimResults.length === 0
+        ? [{ segmentId: null, message: 'No relationship-domain claims were detected in this source.' }]
+        : mappedClaims.length === 0
         ? [{ segmentId: null, message: 'No claim-like passage cleared the credible-match threshold. The Research Queue is the primary output.' }]
         : []),
     ],
     limitations: [
       'Matches are deterministic lexical inferences, not judgments from a language model.',
+      'The deterministic relevance gate requires a relationship outcome or a participant-and-mechanism frame; claim grammar alone never establishes domain relevance.',
+      'The relevance gate is lexical triage and can misclassify unseen phrasings in either direction; every ignored passage is listed with its decision evidence and any passage can be re-triaged with a per-passage visitor override.',
+      'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
       'Alignment labels are cue-based and should be reviewed when language is ironic, quoted, highly implicit, or dependent on distant context.',
       'External sources listed by LE are carried through as citations; this analysis does not re-fetch or re-verify them.',
@@ -1200,7 +1848,12 @@ export const analyzerInternals = Object.freeze({
   normalizeText,
   wordCount,
   claimLikelihood,
+  localDomainRelevance,
+  DOMAIN_RELEVANT_SCORE,
+  DOMAIN_UNCERTAIN_SCORE,
+  NON_DOMAIN_DECISIVE_SCORE,
   scoreEntry,
+  hasCredibleMatchEvidence,
   classifyRiskFlags,
   MIN_CREDIBLE_SCORE,
   MIN_WEAK_SCORE,

@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=1.3';
+} from './lab-intake.js?v=1.7';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,21 +15,22 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=1.3';
-import { createDemoDocument } from './lab-demo.js?v=1.3';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.3';
+} from './lab-extractors.js?v=1.7';
+import { createDemoDocument } from './lab-demo.js?v=1.7';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.7';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=1.3';
+} from './lab-export.js?v=1.7';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.3';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.7';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
+const MAX_RENDERED_TRIAGE_ROWS = 120;
 
 const app = document.getElementById('lab-app');
 if (!app) throw new Error('LE Lab root was not found.');
@@ -85,6 +86,9 @@ const ui = {
   metricSegments: byId('lab-metric-segments'),
   metricClaims: byId('lab-metric-claims'),
   metricCoverage: byId('lab-metric-coverage'),
+  triage: byId('lab-triage'),
+  triageHeadline: byId('lab-triage-headline'),
+  triageList: byId('lab-triage-list'),
   copyMarkdown: byId('lab-copy-markdown'),
   downloadMarkdown: byId('lab-download-markdown'),
   downloadJson: byId('lab-download-json'),
@@ -100,6 +104,7 @@ const ui = {
   flowSourceLabel: byId('lab-flow-source-label'),
   categorySpectrum: byId('lab-category-spectrum'),
   dominantCategory: byId('lab-dominant-category'),
+  coverageReadout: byId('lab-coverage-readout'),
   coverageLabel: byId('lab-coverage-label'),
   coverageTrack: byId('lab-coverage-track'),
   coverageFill: byId('lab-coverage-fill'),
@@ -113,6 +118,8 @@ const ui = {
   pressureSummary: byId('lab-pressure-summary'),
   pressureList: byId('lab-pressure-list'),
   researchEmpty: byId('lab-research-empty'),
+  researchEmptyTitle: byId('lab-research-empty-title'),
+  researchEmptyCopy: byId('lab-research-empty-copy'),
   researchList: byId('lab-research-list'),
   sourceMetaTitle: byId('lab-source-meta-title'),
   sourceMetaType: byId('lab-source-meta-type'),
@@ -144,6 +151,8 @@ const state = {
   workController: null,
   busy: false,
   resetSequence: 0,
+  domainOverrides: new Map(),
+  lastAnalyzedDocumentId: null,
 };
 
 const analyzer = new LabAnalyzerClient();
@@ -643,9 +652,137 @@ function alignmentDistribution(result) {
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 }
 
+function triageChip(label, variant = '') {
+  const chip = document.createElement('span');
+  chip.className = `lab-triage-chip${variant ? ` is-${variant}` : ''}`;
+  chip.textContent = label;
+  return chip;
+}
+
+function triageButton(label, ariaLabel, onClick) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'lab-triage-button';
+  button.textContent = label;
+  button.setAttribute('aria-label', ariaLabel);
+  button.addEventListener('click', onClick);
+  return button;
+}
+
+async function setDomainOverride(unitId, action) {
+  if (state.busy) return;
+  if (!action) state.domainOverrides.delete(unitId);
+  else state.domainOverrides.set(unitId, action);
+  await runAnalysis();
+}
+
+function renderTriage(result) {
+  const relevance = result.domainRelevance || {};
+  const ignored = relevance.ignoredPassages || [];
+  const applied = relevance.overrides?.applied || [];
+  const includes = applied.filter((override) => override.action === 'include').length;
+  const excludes = applied.filter((override) => override.action === 'exclude').length;
+  const wasOpen = ui.triage.open;
+  ui.triage.hidden = !ignored.length && !applied.length;
+  ui.triage.open = wasOpen && !ui.triage.hidden;
+
+  const parts = [];
+  parts.push(ignored.length
+    ? `${formatNumber(ignored.length)} passage${ignored.length === 1 ? '' : 's'} set aside as non-domain (${formatNumber(relevance.ignoredWords || 0)} words)`
+    : 'No passages are currently set aside as non-domain');
+  if (includes) parts.push(`${formatNumber(includes)} re-included by you`);
+  if (excludes) parts.push(`${formatNumber(excludes)} excluded by you`);
+  ui.triageHeadline.textContent = `${parts.join(' · ')}. Original text remains intact in Source.`;
+
+  clearNode(ui.triageList);
+  // Re-included passages stay listed here with their Undo, so every visitor
+  // intervention has a control even if its ledger row is truncated.
+  applied
+    .filter((override) => override.action === 'include')
+    .forEach((override) => {
+      const segment = (result.segments || [])
+        .find((candidate) => candidate.unit.id === override.segmentId);
+      if (!segment) return;
+      const item = document.createElement('li');
+      item.className = 'lab-triage-item';
+
+      const head = document.createElement('div');
+      head.className = 'lab-triage-item-head';
+      head.appendChild(triageChip('Included by you', 'override'));
+      const reference = document.createElement('span');
+      reference.className = 'lab-triage-ref';
+      reference.textContent = segmentReference(segment.unit);
+      head.appendChild(reference);
+      item.appendChild(head);
+
+      const excerpt = document.createElement('p');
+      excerpt.className = 'lab-triage-excerpt';
+      excerpt.textContent = segment.unit.text;
+      item.appendChild(excerpt);
+
+      const shortExcerpt = truncateLabel(segment.unit.text, 60);
+      item.appendChild(triageButton('Undo include', `Undo your inclusion of “${shortExcerpt}”`, () => setDomainOverride(segment.unit.id, null)));
+      ui.triageList.appendChild(item);
+    });
+  ignored.slice(0, MAX_RENDERED_TRIAGE_ROWS).forEach((passage) => {
+    const item = document.createElement('li');
+    item.className = 'lab-triage-item';
+
+    const head = document.createElement('div');
+    head.className = 'lab-triage-item-head';
+    head.appendChild(triageChip(
+      passage.overridden ? 'Excluded by you' : passage.reasonLabel,
+      passage.overridden ? 'override' : 'machine',
+    ));
+    const reference = document.createElement('span');
+    reference.className = 'lab-triage-ref';
+    reference.textContent = segmentReference({
+      speaker: passage.location?.speaker,
+      startTime: passage.location?.startTime,
+      id: passage.segmentId,
+    });
+    head.appendChild(reference);
+    item.appendChild(head);
+
+    const excerpt = document.createElement('p');
+    excerpt.className = 'lab-triage-excerpt';
+    excerpt.textContent = passage.excerpt;
+    item.appendChild(excerpt);
+
+    const frames = (passage.frameEvidence || [])
+      .filter((evidence) => evidence.frame !== 'override');
+    if (!passage.overridden && frames.length) {
+      const evidenceLine = document.createElement('p');
+      evidenceLine.className = 'lab-triage-evidence';
+      evidenceLine.textContent = `Decision frames: ${[...new Set(frames.map((evidence) => evidence.label))].slice(0, 3).join(' · ')}`;
+      item.appendChild(evidenceLine);
+    }
+
+    const shortExcerpt = truncateLabel(passage.excerpt, 60);
+    item.appendChild(passage.overridden
+      ? triageButton('Undo exclude', `Undo your exclusion of “${shortExcerpt}”`, () => setDomainOverride(passage.segmentId, null))
+      : triageButton('Include in analysis', `Include “${shortExcerpt}” in the analysis`, () => setDomainOverride(passage.segmentId, 'include')));
+    ui.triageList.appendChild(item);
+  });
+  if (ignored.length > MAX_RENDERED_TRIAGE_ROWS) {
+    const item = document.createElement('li');
+    item.className = 'lab-triage-item';
+    const note = document.createElement('p');
+    note.textContent = `${formatNumber(ignored.length - MAX_RENDERED_TRIAGE_ROWS)} additional set-aside passages are preserved in the JSON export.`;
+    item.appendChild(note);
+    ui.triageList.appendChild(item);
+  }
+}
+
+function truncateLabel(value, limit) {
+  const text = String(value || '');
+  return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
+}
+
 function renderLedger(result) {
   clearNode(ui.mapTableBody);
   const claims = result.segments.filter((segment) => segment.unit.isClaimLike);
+  const noDomainClaims = claims.length === 0 && result.metrics.ignoredDomainSegments > 0;
   claims.slice(0, MAX_RENDERED_LEDGER_ROWS).forEach((segment) => {
     const row = document.createElement('tr');
     const refCell = document.createElement('td');
@@ -653,8 +790,21 @@ function renderLedger(result) {
     const alignmentCell = document.createElement('td');
     const connectionCell = document.createElement('td');
     const confidenceCell = document.createElement('td');
+    const triageCell = document.createElement('td');
+    triageCell.className = 'lab-triage-cell';
     refCell.textContent = segmentReference(segment.unit);
     excerptCell.textContent = segment.unit.text;
+    const relevance = segment.unit.domainRelevance || {};
+    const shortExcerpt = truncateLabel(segment.unit.text, 60);
+    if (relevance.override === 'include') {
+      triageCell.appendChild(triageChip('Included by you', 'override'));
+      triageCell.appendChild(triageButton('Undo', `Undo your inclusion of “${shortExcerpt}”`, () => setDomainOverride(segment.unit.id, null)));
+    } else {
+      if (relevance.status === 'uncertain') {
+        triageCell.appendChild(triageChip('Uncertain · retained', 'uncertain'));
+      }
+      triageCell.appendChild(triageButton('Exclude', `Exclude “${shortExcerpt}” from the analysis`, () => setDomainOverride(segment.unit.id, 'exclude')));
+    }
     if (segment.mapped) {
       const primary = segment.matches[0];
       alignmentCell.textContent = primary.alignment.label;
@@ -675,13 +825,13 @@ function renderLedger(result) {
         ? `Below threshold · ${Math.round(segment.weakMatches[0].score * 100)}/100`
         : '—';
     }
-    row.append(refCell, excerptCell, alignmentCell, connectionCell, confidenceCell);
+    row.append(refCell, excerptCell, alignmentCell, connectionCell, confidenceCell, triageCell);
     ui.mapTableBody.appendChild(row);
   });
   if (claims.length > MAX_RENDERED_LEDGER_ROWS) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 5;
+    cell.colSpan = 6;
     cell.textContent = `${formatNumber(claims.length - MAX_RENDERED_LEDGER_ROWS)} additional rows are preserved in the Markdown and JSON exports.`;
     row.appendChild(cell);
     ui.mapTableBody.appendChild(row);
@@ -689,12 +839,16 @@ function renderLedger(result) {
   if (!claims.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 5;
-    cell.textContent = 'No claim-like passages were detected.';
+    cell.colSpan = 6;
+    cell.textContent = noDomainClaims
+      ? 'No relationship-domain claims were detected in this source.'
+      : 'No claim-like passages were detected.';
     row.appendChild(cell);
     ui.mapTableBody.appendChild(row);
   }
-  ui.mapSummary.textContent = `${formatNumber(result.metrics.mappedClaimSegments)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped credibly.`;
+  ui.mapSummary.textContent = noDomainClaims
+    ? 'No relationship-domain claims were detected in this source.'
+    : `${formatNumber(result.metrics.mappedClaimSegments)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped credibly.`;
 }
 
 function relatedTitle(id) {
@@ -812,7 +966,15 @@ function appendNearestConcepts(container, concepts) {
 function renderResearchQueue(result) {
   clearNode(ui.researchList);
   const items = result.researchQueue?.items || [];
+  const noDomainClaims = result.metrics.claimLikeSegments === 0
+    && result.metrics.ignoredDomainSegments > 0;
   ui.researchEmpty.hidden = items.length > 0;
+  ui.researchEmptyTitle.textContent = noDomainClaims
+    ? 'No relationship-domain claims detected'
+    : 'No research candidates yet';
+  ui.researchEmptyCopy.textContent = noDomainClaims
+    ? 'Clearly non-relationship passages were excluded from the assay and remain intact in the normalized Source view.'
+    : 'Unmapped claim-like passages will remain visible here instead of being forced into the nearest canon bucket.';
   items.forEach((item) => {
     const fragment = ui.researchTemplate.content.cloneNode(true);
     field(fragment, 'segment-ref').textContent = segmentReference({
@@ -902,10 +1064,13 @@ function renderNormalizedDocument(documentValue) {
 function renderResult(result, documentValue) {
   state.analysis = result;
   const coverage = result.coverage.mappedClaimSegmentSharePct;
+  const coverageAvailable = Number.isFinite(coverage);
+  const ignored = Number(result.metrics.ignoredDomainSegments || 0);
+  renderTriage(result);
   setText(ui.metricWords, formatNumber(result.metrics.totalWords));
   setText(ui.metricSegments, formatNumber(result.metrics.sourceSegments));
   setText(ui.metricClaims, formatNumber(result.metrics.claimLikeSegments));
-  setText(ui.metricCoverage, `${coverage}%`);
+  setText(ui.metricCoverage, coverageAvailable ? `${coverage}%` : 'N/A');
   setText(ui.flowSource, formatNumber(result.metrics.sourceSegments));
   setText(ui.flowClaims, formatNumber(result.metrics.claimLikeSegments));
   setText(ui.flowCanon, formatNumber(result.strongestMatches.length));
@@ -914,14 +1079,24 @@ function renderResult(result, documentValue) {
   ui.flowSourceLabel.textContent = `${formatNumber(result.metrics.totalWords)} normalized words`;
 
   renderCategorySpectrum(result.categoryDistribution);
-  ui.coverageLabel.textContent = `${coverage}% of claim-like segments`;
-  ui.coverageFill.style.width = `${coverage}%`;
-  ui.coverageMarker.style.left = `${coverage}%`;
-  ui.coverageMarker.style.opacity = '1';
-  ui.coverageTrack.setAttribute(
-    'aria-label',
-    `${coverage}% of ${result.metrics.claimLikeSegments} detected claim-like segments mapped to credible canon connections. This is document coverage, not proof.`,
-  );
+  ui.coverageReadout.classList.toggle('is-unavailable', !coverageAvailable);
+  ui.coverageLabel.textContent = coverageAvailable
+    ? `${coverage}% of claim-like segments`
+    : 'Not applicable';
+  ui.coverageFill.style.width = coverageAvailable ? `${coverage}%` : '0';
+  ui.coverageMarker.style.left = coverageAvailable ? `${coverage}%` : '0';
+  ui.coverageMarker.style.opacity = coverageAvailable ? '1' : '0';
+  if (coverageAvailable) {
+    ui.coverageTrack.setAttribute(
+      'aria-label',
+      `${coverage}% of ${result.metrics.claimLikeSegments} detected claim-like segments mapped to credible canon connections. This is document coverage, not proof.`,
+    );
+  } else {
+    ui.coverageTrack.setAttribute(
+      'aria-label',
+      'Coverage is unavailable because no relationship-domain claims were detected.',
+    );
+  }
 
   renderLedger(result);
   renderDistribution(ui.alignmentDistribution, alignmentDistribution(result));
@@ -938,16 +1113,23 @@ function renderResult(result, documentValue) {
   renderWarnings(combinedWarnings);
 
   const mapped = result.metrics.mappedClaimSegments;
-  const nextState = !mapped
-    ? 'no-match'
+  const noDomainClaims = result.metrics.claimLikeSegments === 0 && ignored > 0;
+  const nextState = noDomainClaims
+    ? 'no-domain'
+    : !mapped
+      ? 'no-match'
     : extractionWarnings.some((warning) => warning.severity === 'warning' || warning.severity === 'error')
       ? 'partial'
       : 'success';
-  const detail = !mapped
+  const detail = noDomainClaims
+    ? 'No relationship-domain claims were detected in this source. Clearly non-domain passages remain intact in Source.'
+    : !mapped
     ? `No claim-like passage cleared the credible threshold; ${formatNumber(result.researchQueue.itemCount)} research candidate(s) remain visible.`
     : `${formatNumber(mapped)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped; ${formatNumber(result.pressureTests.length)} prioritized tension(s).`;
   setLabState(nextState, detail);
-  ui.workspaceSubtitle.textContent = `${result.source.title} · ${coverage}% claim-like-segment coverage · ${result.analysisMode.label}.`;
+  ui.workspaceSubtitle.textContent = coverageAvailable
+    ? `${result.source.title} · ${coverage}% claim-like-segment coverage · ${result.analysisMode.label}.`
+    : `${result.source.title} · coverage not applicable · ${result.analysisMode.label}.`;
   ui.intakeStatus.textContent = nextState === 'partial'
     ? 'Analysis complete with extraction warnings.'
     : 'Analysis complete on this device.';
@@ -966,14 +1148,23 @@ async function runAnalysis(event) {
   try {
     const documentValue = await documentForAnalysis();
     if (state.workController.signal.aborted) return;
+    // Overrides are keyed to content-derived unit IDs; a different document
+    // means a different source, so stale decisions never carry across.
+    if (state.lastAnalyzedDocumentId !== documentValue.id) {
+      state.domainOverrides.clear();
+      state.lastAnalyzedDocumentId = documentValue.id;
+    }
     setLabState('analyzing', 'Tracing exact terms, weighted overlap, and canon relationships.');
     setBusy(true, 'analyzing');
     ui.analysisProgressWrap.hidden = false;
     const result = await analyzer.analyze(documentValue, state.canonIndex, {
       signal: state.workController.signal,
       onProgress: handleAnalysisProgress,
+      domainOverrides: Object.fromEntries(state.domainOverrides),
     });
     if (state.workController.signal.aborted) return;
+    (result.domainRelevance?.overrides?.unmatchedIds || [])
+      .forEach((unitId) => state.domainOverrides.delete(unitId));
     renderResult(result, documentValue);
   } catch (error) {
     if (error?.name === 'AbortError') {
@@ -1069,10 +1260,15 @@ function resetVisualResults() {
   }));
   ui.dominantCategory.textContent = 'Waiting for results';
   ui.coverageLabel.textContent = '—';
+  ui.coverageReadout.classList.remove('is-unavailable');
   ui.coverageFill.style.width = '0';
   ui.coverageMarker.style.left = '0';
   ui.coverageMarker.style.opacity = '0';
   ui.coverageTrack.setAttribute('aria-label', 'No mapped share of claim-like segments yet');
+  ui.triage.hidden = true;
+  ui.triage.open = false;
+  ui.triageHeadline.textContent = 'No passages were set aside by the relevance gate.';
+  clearNode(ui.triageList);
   ui.mapSummary.textContent = 'No source has been mapped.';
   clearNode(ui.mapTableBody);
   const emptyRow = document.createElement('tr');
@@ -1092,6 +1288,8 @@ function resetVisualResults() {
   }));
   clearNode(ui.researchList);
   ui.researchEmpty.hidden = false;
+  ui.researchEmptyTitle.textContent = 'No research candidates yet';
+  ui.researchEmptyCopy.textContent = 'Unmapped claim-like passages will remain visible here instead of being forced into the nearest canon bucket.';
   [ui.citationCount, ui.pressureCount, ui.researchCount].forEach((node) => { node.textContent = '0'; });
   [ui.copyMarkdown, ui.downloadMarkdown, ui.downloadJson, ui.exportResearch]
     .forEach((button) => { button.disabled = true; });
@@ -1108,6 +1306,8 @@ async function resetLab({ preserveInputs = false } = {}) {
   state.sourceFile = null;
   state.companionFile = null;
   state.media = null;
+  state.domainOverrides.clear();
+  state.lastAnalyzedDocumentId = null;
   if (!preserveInputs) {
     ui.form.reset();
     clearFileSummary();
@@ -1179,7 +1379,7 @@ async function loadCanonIndex() {
     const sources = canonIndex.stats?.sourceCount
       ?? new Set(canonIndex.entries.map((entry) => entry.page)).size;
     ui.indexMeta.textContent = `Indexed ${formatNumber(concepts)} concepts across ${formatNumber(sources)} LE sources · ${canonIndex.indexVersion}`;
-    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 1.0';
+    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 2.1 · Queue 2.0';
     ui.analysisMode.textContent = 'On-device lexical · no semantic model';
     refreshReadyState();
   } catch (error) {

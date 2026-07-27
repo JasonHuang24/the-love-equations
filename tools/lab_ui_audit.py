@@ -92,11 +92,40 @@ if 'data-page="lab"' not in html_text:
     errors.append("lab body is missing data-page=lab")
 if 'id="lab-app"' not in html_text or 'id="lab-workspace"' not in html_text:
     errors.append("Lab root/workspace hooks missing")
+for required_id in (
+    "lab-triage",
+    "lab-triage-headline",
+    "lab-triage-list",
+    "lab-coverage-readout",
+    "lab-research-empty-title",
+    "lab-research-empty-copy",
+):
+    if required_id not in id_set:
+        errors.append(f"Lab relevance UI hook missing: #{required_id}")
 
 css_text = (ROOT / "css" / "lab.css").read_text(encoding="utf-8")
 without_comments = re.sub(r"/\*.*?\*/", "", css_text, flags=re.S)
 if without_comments.count("{") != without_comments.count("}"):
     errors.append("css/lab.css has unbalanced braces")
+for selector in (".lab-triage", ".lab-triage-button", ".lab-triage-chip", ".lab-triage-cell"):
+    if selector not in css_text:
+        errors.append(f"Lab relevance triage has no page-specific styling: {selector}")
+if ".lab-coverage-readout.is-unavailable" not in css_text:
+    errors.append("Lab coverage readout has no unavailable-state styling")
+
+app_text = (ROOT / "js" / "lab-app.js").read_text(encoding="utf-8")
+for phrase in (
+    "No relationship-domain claims were detected in this source.",
+    "Original text remains intact in Source.",
+    "Coverage is unavailable because no relationship-domain claims were detected.",
+    "coverage not applicable",
+    "Analysis 2.1 · Queue 2.0",
+    "Include in analysis",
+    "Exclude",
+    "Included by you",
+):
+    if phrase not in app_text:
+        errors.append(f"Lab relevance result copy missing: {phrase}")
 
 nav_text = (ROOT / "partials" / "navigation-bar.html").read_text(encoding="utf-8")
 footer_text = (ROOT / "partials" / "footer.html").read_text(encoding="utf-8")

@@ -1,4 +1,5 @@
-import { validSourceProvenanceUrl } from './lab-intake.js?v=1.3';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=1.7';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=1.7';
 
 /*
  * LE Lab export adapters.
@@ -26,6 +27,7 @@ function markdownLink(label, href) {
 }
 
 function percent(value) {
+  if (value == null) return 'Not applicable';
   return `${Number(value || 0).toFixed(1).replace(/\.0$/, '')}%`;
 }
 
@@ -80,18 +82,23 @@ export function analysisToMarkdown(result) {
     `- **Canon index:** ${markdownText(result.canonIndex?.version)} · ${result.canonIndex?.conceptCount || 0} concepts across ${result.canonIndex?.sourceCount || 0} LE sources`,
     `- **Schema:** \`${markdownText(result.schemaVersion)}\``,
     '',
-    '> Coverage is the share of detected claim-like segments that mapped to a credible LE connection. It describes this document, not a population or whether a claim is true.',
+    '> Coverage is the share of retained relationship-domain claim-like segments that mapped to a credible LE connection. When no retained claims exist, coverage is not applicable. It describes this document, not a population or whether a claim is true.',
     '',
     '## Coverage',
     '',
     `- ${Number(metrics.totalWords || 0).toLocaleString()} source words`,
     `- ${Number(metrics.sourceSegments || 0).toLocaleString()} normalized source segments`,
-    `- ${Number(metrics.claimLikeSegments || 0).toLocaleString()} detected claim-like segments`,
+    `- ${Number(metrics.claimLikeSegments || 0).toLocaleString()} detected relationship-domain claim-like segments`,
     `- ${Number(metrics.mappedClaimSegments || 0).toLocaleString()} mapped claim-like segments · ${Number(metrics.unmappedClaimSegments || 0).toLocaleString()} unmapped`,
+    ...(Number(metrics.ignoredDomainSegments || 0) > 0
+      ? [`- ${Number(metrics.ignoredDomainSegments).toLocaleString()} clearly non-domain passages ignored (${Number(metrics.ignoredDomainWords || 0).toLocaleString()} words); original source text remains preserved in the normalized source`]
+      : []),
     `- **Mapped share of claim-like segments:** ${percent(coverage.mappedClaimSegmentSharePct)}`,
     `- **Mapped share of words within claim-like segments:** ${percent(coverage.mappedClaimWordSharePct)}`,
     '',
   ];
+
+  lines.push(...relevanceTriageLines(result));
 
   if (result.source?.extractionWarnings?.length) {
     lines.push('## Extraction warnings', '');
@@ -180,10 +187,59 @@ export function analysisToMarkdown(result) {
   return lines.join('\n').replace(/\n{3,}/g, '\n\n');
 }
 
+const MAX_EXPORTED_TRIAGE_ROWS = 40;
+
+function overrideSummary(result) {
+  const applied = result?.domainRelevance?.overrides?.applied || [];
+  if (!applied.length) return '';
+  const includes = applied.filter((override) => override.action === 'include').length;
+  const excludes = applied.filter((override) => override.action === 'exclude').length;
+  return [
+    includes ? `${includes} passage${includes === 1 ? '' : 's'} re-included by the visitor` : '',
+    excludes ? `${excludes} passage${excludes === 1 ? '' : 's'} excluded by the visitor` : '',
+  ].filter(Boolean).join(' · ');
+}
+
+function relevanceTriageLines(result) {
+  const relevance = result?.domainRelevance || {};
+  const ignored = relevance.ignoredPassages || [];
+  const overrides = overrideSummary(result);
+  if (!ignored.length && !overrides) return [];
+  const lines = ['## Relevance triage', ''];
+  lines.push('_The relevance gate is deterministic lexical triage, not ground truth. Set-aside passages are listed with the gate’s reason; visitor overrides are session decisions, disclosed here._', '');
+  if (overrides) lines.push(`- **Visitor overrides:** ${overrides}`);
+  lines.push(`- **Set aside as non-domain:** ${ignored.length.toLocaleString()} passage${ignored.length === 1 ? '' : 's'} (${Number(relevance.ignoredWords || 0).toLocaleString()} words); original text remains in the normalized source`);
+  lines.push('');
+  ignored.slice(0, MAX_EXPORTED_TRIAGE_ROWS).forEach((passage) => {
+    lines.push(`- \`${markdownText(passage.segmentId)}\` — ${markdownText(passage.reasonLabel)} — “${markdownText(passage.excerpt)}”`);
+  });
+  if (ignored.length > MAX_EXPORTED_TRIAGE_ROWS) {
+    lines.push(`- …${(ignored.length - MAX_EXPORTED_TRIAGE_ROWS).toLocaleString()} more set-aside passages are preserved in the JSON export.`);
+  }
+  lines.push('');
+  return lines;
+}
+
 export function researchQueueToMarkdown(result, { includeHeading = true } = {}) {
   const queue = result?.researchQueue || result;
+  const ignored = Number(result?.metrics?.ignoredDomainSegments || 0);
+  const ignoredWords = Number(result?.metrics?.ignoredDomainWords || 0);
   const lines = [];
   if (includeHeading) lines.push('## Unmapped research queue', '', '_Research candidates — not new LE doctrine._', '');
+  if (queue?.schemaVersion) {
+    lines.push(`**Schema:** \`${markdownText(queue.schemaVersion)}\``, '');
+  }
+
+  if (ignored > 0) {
+    lines.push(
+      `_${ignored.toLocaleString()} clearly non-domain passage${ignored === 1 ? '' : 's'} ignored (${ignoredWords.toLocaleString()} words); original source text remains preserved in the normalized source._`,
+      '',
+    );
+  }
+  const overrides = overrideSummary(result);
+  if (overrides) {
+    lines.push(`_Visitor overrides shaped this queue's population: ${overrides}._`, '');
+  }
   if (!queue?.items?.length) {
     lines.push('_No unmapped claim-like passages in this analysis._');
     return lines.join('\n');
@@ -222,13 +278,14 @@ export function analysisToJson(result, { pretty = true } = {}) {
 export function researchQueueToJson(result, { pretty = true } = {}) {
   if (!result) throw new Error('There is no research queue to export.');
   const payload = {
-    schemaVersion: 'le-lab.research-queue/1.0',
+    schemaVersion: result.researchQueue?.schemaVersion || RESEARCH_QUEUE_SCHEMA_VERSION,
     analysisId: result.id,
     generatedAt: result.generatedAt,
     source: sourceForExport(result.source),
     canonIndex: result.canonIndex,
     analysisMode: result.analysisMode,
     extractionWarnings: result.source?.extractionWarnings || [],
+    domainRelevance: result.domainRelevance,
     queue: result.researchQueue,
     limitations: result.limitations,
   };
