@@ -5,8 +5,10 @@
 ```
 DOCTRINE DISTILLATION — CLAUDE RESEARCH LANE (handoff from the 2026-07-27 maintainer session)
 
-RUN THIS LANE AS: Claude Fable 5 (claude-fable-5), reasoning effort HIGH. This is
-synthesis-heavy judgment work — do not downshift the main loop.
+RUN THIS LANE AS: Claude Opus 5 (claude-opus-5), reasoning effort HIGH. (Standing decision
+2026-07-27: scout-heavy lanes run Opus — Fable's safeguards can trip mid-run on bulk sweeps
+over raw discourse content; Fable stays on the maintainer/judgment lane, where hard calls
+can be escalated.)
 SUBAGENT POLICY — state model + effort explicitly on every spawn:
 - Web scouts (source discovery + claim extraction): Sonnet 5, effort MEDIUM. Cheap,
   parallel, disposable; they return raw data, never conclusions.
