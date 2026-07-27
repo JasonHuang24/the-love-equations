@@ -1024,3 +1024,19 @@ body {
 .composite-row.todo a:hover { text-decoration: underline; }
 .composite-row.todo i { color: var(--text-dim); }
 @media (max-width: 880px) { .composite-section { padding: 1.6rem 1rem 2.2rem; } }
+
+/* ── Lab provenance stamp ──────────────────────────────────────────
+   Marks doctrine that entered the site through an LE Lab harvest run:
+   the date the Lab surfaced it and the source it was extracted from.
+   Deliberately neutral (dashed specimen-tag look) — this is provenance,
+   NOT an evidence grade; tier pills keep that job. Links to lab.html. */
+.lab-stamp {
+  display: inline-flex; align-items: center; gap: 5px; vertical-align: middle;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 2px 8px; border: 1px dashed var(--text-dim); border-radius: 4px;
+  color: var(--text-muted); background: var(--surface);
+  text-decoration: none; white-space: nowrap; line-height: 1.6;
+}
+.lab-stamp .ti { font-size: 11px; color: var(--scarlet-dim); }
+.lab-stamp svg { width: 11px; height: 11px; color: var(--scarlet-dim); flex-shrink: 0; }
+a.lab-stamp:hover, a.lab-stamp:focus-visible { border-color: var(--scarlet-dim); color: var(--scarlet-dim); border-style: solid; }

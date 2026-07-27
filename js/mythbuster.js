@@ -74,6 +74,8 @@
   const SVG_CHEVRON = '<svg class="mb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6 -6"/></svg>';
   // Leading glyph on the evidence-tier pill (bar-chart; inherits the tier's colour).
   const SVG_TIER = '<svg class="mb-svg mb-tier-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M7 20v-4"/><path d="M12 20v-9"/><path d="M17 20v-14"/></svg>';
+  // Flask glyph on the Lab provenance stamp (no icon font on this page).
+  const SVG_FLASK = '<svg class="mb-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 9h4"/><path d="M10 3v6l-4 11a.7 .7 0 0 0 .5 1h11a.7 .7 0 0 0 .5 -1l-4 -11v-6"/></svg>';
 
   /* ── Data: 65 graded entries. Every entry carries valid verdicts and
      fetch-verified sourced rulings and passes the render gate — no drafts and
@@ -1771,6 +1773,8 @@
           { label: 'FTC Data Spotlight (Feb 2022) — 2021 romance scams: record $547M reported; median individual loss by age from $750 (18–29) to $9,000 (70+); 18–29 reports up more than tenfold since 2017', url: 'https://www.ftc.gov/news-events/data-visualizations/data-spotlight/2022/02/reports-romance-scams-hit-record-highs-2021' },
           { label: 'FTC Data Spotlight (Feb 2023) — 2022: nearly 70,000 reports, $1.3B reported losses, median $4,400; sextortion reports over six times as likely from 18–29 as from 30+, population-normalized', url: 'https://www.ftc.gov/news-events/data-visualizations/data-spotlight/2023/02/romance-scammers-favorite-lies-exposed' },
         ],
+        // Provenance: entered the site through LE Lab Doctrine Harvest #1.
+        lab: { date: '2026-07-26', source: 'Pew Research Center, Feb 2023 (Doctrine Harvest #1)', sourceShort: 'Pew 2023' },
         researchNotes: 'Axes kept honest: Pew measures self-reported encounters with SUSPECTED scammers (perception, not completed victimization); the FTC counts voluntary reports, and only ~4.8% of mass-market fraud victims complain to any authority (Anderson 2021, cited in both spotlights), so age differences in reporting propensity shade every count — the report mix by age is deliberately not staked. The 2022 median ($4,400) is not comparable to 2021’s ($2,400) because the FTC folded IC3 reports in from the 2023 spotlight on; the age-ladder medians are 2021 Sentinel-only and exclude MoneyGram/Western Union transactions. The gender half of the stereotype is refused rather than reversed: neither spotlight publishes a victim sex split and no such split was verified here — a verified breakdown of losses by sex could move both stakes. Claim staked at 35: it wins the per-person severity axis outright (elder losses are catastrophic where they land) but loses targeting breadth, growth, and the sextortion tail. Both FTC spotlights were read and verified in-session (ftc.gov blocks automated fetchers; verified via full browser page reads).',
       },
       related: [
@@ -2028,6 +2032,11 @@
             '<div class="mb-evidence">' +
               '<span class="mb-tier ' + esc(r.tier) + '">' + SVG_TIER + esc(TIERS[r.tier].label) + '</span>' +
               '<span class="mb-attr">Source &middot; ' + attribution + '</span>' +
+              // Optional Lab provenance stamp: doctrine that entered via an LE
+              // Lab harvest run carries the harvest date + extraction source.
+              (r.lab
+                ? '<a class="lab-stamp" href="lab.html" title="Doctrine surfaced by the LE Lab canon-mapper run of ' + esc(r.lab.date) + ', extracted from ' + esc(r.lab.source) + '">' + SVG_FLASK + 'Lab find &middot; ' + esc(r.lab.date) + ' &middot; ' + esc(r.lab.sourceShort || r.lab.source) + '</a>'
+                : '') +
             '</div>' +
           '</div>' +
         '</div>' +

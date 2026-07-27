@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.0",
-  "indexVersion": "1.0.0+5fbed24e770a",
-  "generatedAt": "2026-07-27T09:45:16.532Z",
+  "indexVersion": "1.0.0+d59d3e3a55be",
+  "generatedAt": "2026-07-27T10:12:31.686Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -11,7 +11,7 @@
       "inputs": [
         "hierarchy.html"
       ],
-      "sha256": "2e8d2abf49aa407770319086f2bac3732d62c73e3624674473ac4cc9eef1de57",
+      "sha256": "d32d3cfe9d39c0507cdbcb8fe99f42902b90144f615f5424f2df707d07eed82b",
       "conceptCount": 41
     },
     {
@@ -22,7 +22,7 @@
       "inputs": [
         "smvlevers.html"
       ],
-      "sha256": "10fe112a39b618469873a226c168355216897a051c8d6b65d0496b28074c05c7",
+      "sha256": "3d1d2430bcb8719d60813b946fe5b116778745189eb6dc0874af650998b77200",
       "conceptCount": 35
     },
     {
@@ -33,7 +33,7 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "6739d6a5954862eb258ffd4a65d5d5dd20a832c17bef9d97e47502c7d15c0902",
+      "sha256": "0438fb757a273071c2a0cec7a4b721dd82bf49b7d98e1672233d2e24e5efbc32",
       "conceptCount": 22
     },
     {
@@ -44,7 +44,7 @@
       "inputs": [
         "gender-dynamics.html"
       ],
-      "sha256": "3a38f159146fda8f890c42a31c2899b0fcfe00ea702d81377dfa48e0171ab4d2",
+      "sha256": "4915138ddf44747ed802f6f6b4bedef3c9427054b5c390c54b197f593817df94",
       "conceptCount": 133
     },
     {
@@ -55,7 +55,7 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "2de497651cf832204e54cd4c7bbd83d98f76c06fa63f9ce75ee7ecdd6b5eafc8",
+      "sha256": "ed79cc8bcb79aab0d0578d75ca8b81dbdc99cc63be415fd2db05a43670ae7f97",
       "conceptCount": 31
     },
     {
@@ -67,7 +67,7 @@
         "mythbuster.html",
         "js/mythbuster.js"
       ],
-      "sha256": "f584f5a930128ff009d1e447f2e5a7c6bce4bb38bcba1b25a184d796a9ecf806",
+      "sha256": "a4efadc42428eb96fc2a6794d1e16e92e513c2b6c4e7b7b2c141be7d32bad21a",
       "conceptCount": 65
     },
     {
@@ -78,7 +78,7 @@
       "inputs": [
         "pills.html"
       ],
-      "sha256": "0399e6c95e8321fd054c38f9d9e13c3f4a30c4a64c42652a8a1bbc550342bd02",
+      "sha256": "bfb6af0b43acb38e37984ce83443cd3a781dfad1f9e8902688c0f808f667cfe4",
       "conceptCount": 12
     },
     {
@@ -89,7 +89,7 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "ca31fcc9dc6de803b4ec8093d199741d04dcaf1182bcde02fffe0f73d4baec78",
+      "sha256": "328524b0cb3d47be644c2b6710f3f8f7740d20ad6953358ef681b4302494a9e6",
       "conceptCount": 71
     },
     {
@@ -100,7 +100,7 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "9f40ebede31b740f253b2663e31638147df6ff1797ed759767e2520499b2fd72",
+      "sha256": "120cd9728a1b02ec64014657e3d15dcf1b90a7c82926152d0abd62c2b52de13b",
       "conceptCount": 5
     },
     {
@@ -111,7 +111,7 @@
       "inputs": [
         "dd-relationships-throughout-history.html"
       ],
-      "sha256": "cf8aeb5929d65f06d7b036402589cfeada8b1aa2e391c715a4969a2961414e32",
+      "sha256": "9f8e6ae456b50370eb4400f132e89c8981ced10eeb92f8b2971066bb6a5ca329",
       "conceptCount": 6
     },
     {
@@ -122,7 +122,7 @@
       "inputs": [
         "dd-third-spaces.html"
       ],
-      "sha256": "bf84871046ef4f86c40badecd31311529f0bc785d7eb89a7b3a93538f59432af",
+      "sha256": "b2437a537041a72f3320b40839d83679f4978089eb056cc0a1b9b1d9592f9ef6",
       "conceptCount": 6
     },
     {
@@ -133,7 +133,7 @@
       "inputs": [
         "dd-relationships-by-country.html"
       ],
-      "sha256": "a5f679f9160cb8450daafcdf5442a2651a36bcd726ff83656af2c57f3d91634a",
+      "sha256": "9e2dddd7f2df0b0bd3b07ae8ded7561ac4774d9fe68a66babf6381f2cce162b1",
       "conceptCount": 6
     },
     {
@@ -144,7 +144,7 @@
       "inputs": [
         "dd-what-the-wall-actually-is.html"
       ],
-      "sha256": "af932cd386aa56ada94e5d217924c8833ae8b40d7bbb226490aee88f8924d988",
+      "sha256": "492dac17a8e9bb8b10fbec54a56db44c7f3f6b06e78233016b6277c3fcd096dd",
       "conceptCount": 6
     },
     {
@@ -155,7 +155,7 @@
       "inputs": [
         "dd-single-parenthood.html"
       ],
-      "sha256": "4bae809b68265ebe35be9be4967e810f7c7f1b0e5eb56ff3b3ebd7761828f524",
+      "sha256": "6735a12568f4fcf43badd22a95e6d9ba4682427b94803a8d0f8f7b76c938c0fc",
       "conceptCount": 6
     },
     {
@@ -166,7 +166,7 @@
       "inputs": [
         "smvcalc.html"
       ],
-      "sha256": "8e111ca4a00cee67d4f11dc65416912b4747d7344e92a5f64bb19da995915401",
+      "sha256": "a961fda6001698de530045b7c9e226f409f3677a4af7a283829d2db596f05c43",
       "conceptCount": 1
     },
     {
@@ -177,7 +177,7 @@
       "inputs": [
         "compatibility.html"
       ],
-      "sha256": "bb8f733eb47fbf2793a67207a4fd627d7d3c2aed0d91a29c265a180e715c30f3",
+      "sha256": "13e8d4e10df54d8891ee16ea61cc5ebe924ec8a2ee4d47c93d2a250fa028efcf",
       "conceptCount": 1
     },
     {
@@ -188,7 +188,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "eec2a655bfff1abccc8224f7262812fd9efda62590fa2efa98295c2ab3956b0b",
+      "sha256": "4c01446290e1d29731d1c0c2fb195ac510808a01fa665488681cd86bb0084c0a",
       "conceptCount": 1
     },
     {
@@ -199,7 +199,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "c5ad9bd9c2ab05b0009e042697418b5b394d1fe71a491bf81b7ac75696d128c2",
+      "sha256": "7a0db3604cd48267a790478ad12fe0e7bbda0188b15975d4c0c161491828e995",
       "conceptCount": 1
     },
     {
@@ -210,7 +210,7 @@
       "inputs": [
         "matchmaker.html"
       ],
-      "sha256": "04310015d24e4e3d4b731f00e6b9177a0b9b8ba485618a94b1d7655af9777146",
+      "sha256": "cd1f253c2d47158d623085f556540a7515ab8fb463dab3951188818217c5372f",
       "conceptCount": 1
     }
   ],
@@ -10006,7 +10006,7 @@
       "anchor": "term-the-abundance-trap",
       "category": "Lexicon",
       "subcategory": "Shared",
-      "synopsis": "What visible abundance does to the chooser: with the whole distribution on screen, evaluation replaces connection and standards drift without the market moving. Choice overload survives replication only as a conditional effect — and dating sits where the conditions concentrate.",
+      "synopsis": "What visible abundance does to the chooser: with the whole distribution on screen, evaluation replaces connection and standards drift without the market moving. Choice overload survives replication only as a conditional effect — and dating sits where the conditions concentrate. Lab find · 2026-07-26 · Pew 2023",
       "evidenceType": "Glossary",
       "contentType": "Definition",
       "aliases": [
