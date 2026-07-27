@@ -832,6 +832,36 @@ test('visitor overrides lock domain decisions and are disclosed end to end', asy
   assert.equal(stale.metrics.ignoredDomainSegments, 1);
 });
 
+test('dating-app interaction mechanics are retained through the agreed append-1 frame', () => {
+  // Agreed benchmark append #1 (md/lab-benchmark-append-proposal-01.md): the
+  // verbatim Harvest #1 production miss must be retained by the systematic
+  // frame, and the polysemous trap senses must stay affirmatively excluded.
+  const [retained] = classifyDomainRelevance([{
+    id: 'ap-01-unit',
+    parentSegmentId: 'bench-ap-01',
+    segmentIndex: 0,
+    text: 'By contrast, 64% of men say they have felt insecure because of the lack of messages they received, while four-in-ten women say the same.',
+    wordCount: 24,
+    isClaimLike: true,
+    boundedContext: null,
+  }]);
+  assert.notEqual(retained.domainRelevance.status, 'irrelevant');
+  assert.ok(retained.domainRelevance.evidence.some(
+    (evidence) => evidence.code === 'dating-app-interaction',
+  ));
+
+  const [trap] = classifyDomainRelevance([{
+    id: 'ap-05-unit',
+    parentSegmentId: 'bench-ap-05',
+    segmentIndex: 0,
+    text: 'The server rejected the messages after the connection dropped.',
+    wordCount: 10,
+    isClaimLike: true,
+    boundedContext: null,
+  }]);
+  assert.equal(trap.domainRelevance.status, 'irrelevant');
+});
+
 test('an include override admits a context-only set-aside as an analyzable claim', async () => {
   // Reviewer contract-violation reproduction (benchmark case pt-03): a passage
   // whose machine isClaimLike is false was included, echoed, but never entered

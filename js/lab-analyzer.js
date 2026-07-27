@@ -96,7 +96,7 @@ const HUMAN_PARTICIPANT_FRAMES = Object.freeze([
     id: 'human-individuals',
     label: 'Human individuals or relationship-seeking population',
     weight: 2,
-    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
+    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|men|women|man|woman|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
   },
   {
     id: 'human-groups',
@@ -285,6 +285,18 @@ const SOCIAL_MECHANISM_FRAMES = Object.freeze([
     decisive: true,
     test: (text) => /\breputation\b.{0,80}\b(?:access|future partners?|potential partners?|dating pool|romantic)\b/i.test(text)
       || /\b(?:access|future partners?|potential partners?|dating pool|romantic)\b.{0,80}\breputation\b/i.test(text),
+  },
+  {
+    // Agreed benchmark append #1 (md/lab-benchmark-append-proposal-01.md):
+    // app-interaction mechanics retain only through paired noun/verb evidence,
+    // so affirmative computing/advertising frames still veto the trap senses.
+    id: 'dating-app-interaction',
+    label: 'Dating-app or courtship messaging interaction mechanics',
+    weight: 3,
+    decisive: false,
+    test: (text) => /\b(?:messages?|matches|swipes?|likes|dating profiles?)\b.{0,60}\b(?:receiv\w*|sent|sends?|get|gets|got|getting|lack(?:ed|ing)?|flood\w*|overwhelm\w*|unseen|ignored|respond\w*|repl(?:y|ies|ied))\b/i.test(text)
+      || /\b(?:receiv\w*|sent|sends?|get|gets|got|getting|lack(?:ed|ing)?|flood\w*|overwhelm\w*|respond\w*|repl(?:y|ies|ied)|no|few(?:er)?)\b.{0,60}\b(?:messages?|matches|swipes?|likes|replies|dating profiles?)\b/i.test(text)
+      || /\b(?:swip(?:e|es|ed|ing)|unmatch\w*|ghost(?:ed|ing)?)\b/i.test(text),
   },
 ]);
 
