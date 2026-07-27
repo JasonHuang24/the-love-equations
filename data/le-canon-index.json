@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.0",
-  "indexVersion": "1.0.0+164bad98935d",
-  "generatedAt": "2026-07-27T08:23:24.842Z",
+  "indexVersion": "1.0.0+28fd3b28e186",
+  "generatedAt": "2026-07-27T08:36:36.609Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "69203cc89e8ace0f2931004f72d5cd367fd1079c1de4a171fd915b4e1caaf264",
-      "conceptCount": 21
+      "sha256": "6739d6a5954862eb258ffd4a65d5d5dd20a832c17bef9d97e47502c7d15c0902",
+      "conceptCount": 22
     },
     {
       "page": "gender-dynamics.html",
@@ -89,8 +89,8 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "7f5f29c5931f61dad8c56efe1b1f33cf46b9d667f92f45751553c272bacb2447",
-      "conceptCount": 70
+      "sha256": "ca31fcc9dc6de803b4ec8093d199741d04dcaf1182bcde02fffe0f73d4baec78",
+      "conceptCount": 71
     },
     {
       "page": "deep-dive.html",
@@ -215,25 +215,25 @@
     }
   ],
   "stats": {
-    "conceptCount": 448,
+    "conceptCount": 450,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
       "Five Levers": 35,
       "Gender Dynamics": 133,
       "Instruments": 5,
-      "Lexicon": 70,
+      "Lexicon": 71,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
-      "Rules & Frameworks": 21,
+      "Rules & Frameworks": 22,
       "Statistics": 31
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 53,
-      "Glossary": 70,
+      "Framework": 54,
+      "Glossary": 71,
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
@@ -249,10 +249,10 @@
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 357,
-    "conceptsWithExternalSources": 70,
-    "dependencyCount": 217,
-    "relatedCount": 290
+    "anchoredConceptCount": 359,
+    "conceptsWithExternalSources": 71,
+    "dependencyCount": 218,
+    "relatedCount": 295
   },
   "entries": [
     {
@@ -2473,6 +2473,7 @@
         "statistics:stat-looks-matching",
         "statistics:stat-attention",
         "frameworks:spiderman-effect",
+        "frameworks:abundance-trap",
         "frameworks:parity-rule",
         "statistics:stat-couples-meet",
         "statistics:stat-provider-norm",
@@ -2540,6 +2541,7 @@
       "related": [
         "statistics:stat-attention",
         "frameworks:spiderman-effect",
+        "frameworks:abundance-trap",
         "frameworks:parity-rule",
         "frameworks:option-pool"
       ],
@@ -2687,6 +2689,56 @@
       "boundaryConditions": [],
       "commonMisreadings": [],
       "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "frameworks:abundance-trap",
+      "title": "The Abundance Trap",
+      "page": "frameworks.html",
+      "anchor": "abundance-trap",
+      "category": "Rules & Frameworks",
+      "subcategory": "Market dynamics",
+      "synopsis": "The apps’ founding promise was that more options would make finding a partner easier. The trap is that visible abundance changes the chooser: with the whole distribution on screen, evaluation replaces connection, the next profile taxes the current one, and standards drift upward without the underlying market moving at all. Both sexes run this loop — whoever holds the fatter option stack runs it harder.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "aliases": [
+        "Abundance Trap"
+      ],
+      "phrases": [],
+      "dependencies": [],
+      "related": [
+        "frameworks:attention-market",
+        "frameworks:spiderman-effect",
+        "statistics:stat-couples-meet"
+      ],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "Iyengar & Lepper (2000), JPSP",
+          "url": "https://doi.org/10.1037/0022-3514.79.6.995"
+        },
+        {
+          "label": "Scheibehenne, Greifeneder & Todd (2010), J. Consumer Research",
+          "url": "https://doi.org/10.1086/651235"
+        },
+        {
+          "label": "Chernev, B&ouml;ckenholt & Goodman (2015), J. Consumer Psychology",
+          "url": "https://doi.org/10.1016/j.jcps.2014.08.002"
+        },
+        {
+          "label": "D’Angelo & Toma (2017), Media Psychology",
+          "url": "https://doi.org/10.1080/15213269.2015.1121827"
+        },
+        {
+          "label": "Pronk & Denissen (2020), Social Psychological and Personality Science",
+          "url": "https://doi.org/10.1177/1948550619866189"
+        },
+        {
+          "label": "Pew Research Center (2023)",
+          "url": "https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/"
+        }
+      ],
       "pressureTests": []
     },
     {
@@ -9940,6 +9992,29 @@
       "phrases": [],
       "dependencies": [
         "M-TBD-58"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-the-abundance-trap",
+      "title": "The Abundance Trap",
+      "page": "lexicon.html",
+      "anchor": "term-the-abundance-trap",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "What visible abundance does to the chooser: with the whole distribution on screen, evaluation replaces connection and standards drift without the market moving. Choice overload survives replication only as a conditional effect — and dating sits where the conditions concentrate.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "aliases": [
+        "Abundance Trap"
+      ],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:abundance-trap"
       ],
       "related": [],
       "boundaryConditions": [],
