@@ -32,11 +32,12 @@ garnish, or rephrasing of existing pages. Expect most candidates to die. A run t
 CORE DOCTRINE HAS TWO SHAPES — do not equate "doctrine" with "new card":
 (a) A NEW ARTIFACT (chart, framework, mythbuster entry, lexicon term) — the Abundance Trap shape.
 (b) An EXPANSION of an existing page — a fundamental theme the discourse runs on that a page
-    covers thinly or not at all. Jason flags the PILL DOSSIERS (pills.html) as a known thin
-    spot: there is red-, blue-, and black-pill content circulating out there that belongs on
-    those pages and isn't there yet. A candidate that deepens an existing dossier is just as
-    valuable as one that mints a new framework — grade it by whether the THEME is core, not
-    by where it would land.
+    covers thinly or not at all. This applies to EVERY page on the site: any dossier, framework
+    group, chart roster, deep dive, or lexicon section can be thin relative to what's actually
+    circulating out there. (Jason's illustrative example: pill content missing from the pill
+    dossiers — but treat that as one instance of the general principle, not the target.) A
+    candidate that deepens an existing page is just as valuable as one that mints a new
+    framework — grade it by whether the THEME is core, not by where it would land.
 
 THIS IS A COLLECTION PHASE. Build the dataset and the distillation dossier. Do NOT
 implement doctrine on the site — no new charts, entries, frameworks, or lexicon terms.
