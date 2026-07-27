@@ -107,7 +107,7 @@ if "Demo Test" not in html_text:
     errors.append("hero demo button must be labeled Demo Test")
 if "Bring a source <" in html_text:
     errors.append("the redundant hero Bring-a-source button must stay removed")
-for hook, minimum in (("data-ledger-filter=", 3), ("data-sort-key=", 6), ("data-lab-goto=", 2)):
+for hook, minimum in (("data-ledger-filter=", 3), ("data-sort-key=", 7), ("data-lab-goto=", 2)):
     if html_text.count(hook) < minimum:
         errors.append(f"ledger QoL hook underrepresented: {hook} (need >= {minimum})")
 
@@ -118,7 +118,7 @@ if without_comments.count("{") != without_comments.count("}"):
 for selector in (
     ".lab-triage", ".lab-triage-button", ".lab-triage-chip", ".lab-triage-cell",
     ".lab-sort-button", ".lab-ledger-filter-note", ".lab-adjacent-more",
-    "button.lab-metric", "button.lab-assay-stage",
+    ".lab-section-cell", "button.lab-metric", "button.lab-assay-stage",
 ):
     if selector not in css_text:
         errors.append(f"Lab QoL control has no page-specific styling: {selector}")

@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.0';
+} from './lab-intake.js?v=2.1';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,18 +15,18 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.0';
-import { createDemoDocument } from './lab-demo.js?v=2.0';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.0';
+} from './lab-extractors.js?v=2.1';
+import { createDemoDocument } from './lab-demo.js?v=2.1';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.1';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.0';
+} from './lab-export.js?v=2.1';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.0';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.1';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -811,6 +811,8 @@ function ledgerSortValue(entry, key) {
       return primary
         ? `0${primary.title.toLowerCase()}`
         : (segment.weakMatches?.[0] ? `1${segment.weakMatches[0].title.toLowerCase()}` : '2');
+    case 'section':
+      return primary ? `0${matchSection(primary).toLowerCase()}` : '1';
     case 'confidence':
       return primary
         ? Number(primary.score || primary.bestScore || 0)
@@ -837,12 +839,18 @@ function compareLedgerEntries(a, b, sort) {
   return sort.dir === 'desc' ? -delta : delta;
 }
 
+function matchSection(match) {
+  return [match.category, match.subcategory].filter(Boolean).join(' · ');
+}
+
 function buildLedgerRow(segment) {
   const row = document.createElement('tr');
   const refCell = document.createElement('td');
   const excerptCell = document.createElement('td');
   const alignmentCell = document.createElement('td');
   const connectionCell = document.createElement('td');
+  const sectionCell = document.createElement('td');
+  sectionCell.className = 'lab-section-cell';
   const confidenceCell = document.createElement('td');
   const triageCell = document.createElement('td');
   triageCell.className = 'lab-triage-cell';
@@ -880,23 +888,30 @@ function buildLedgerRow(segment) {
         extraLink.href = match.href;
         extraLink.textContent = match.title;
         item.appendChild(extraLink);
-        item.appendChild(document.createTextNode(` — ${match.alignment.label} · ${confidenceLabel(match)}`));
+        const sectionSuffix = matchSection(match);
+        item.appendChild(document.createTextNode(
+          ` — ${sectionSuffix ? `${sectionSuffix} · ` : ''}${match.alignment.label} · ${confidenceLabel(match)}`,
+        ));
         list.appendChild(item);
       });
       details.appendChild(list);
       connectionCell.appendChild(details);
     }
+    sectionCell.textContent = matchSection(primary) || '—';
     confidenceCell.textContent = confidenceLabel(primary);
   } else {
     alignmentCell.textContent = 'Unmapped';
     connectionCell.textContent = segment.weakMatches?.[0]
       ? `Nearest: ${segment.weakMatches[0].title}`
       : 'No credible match';
+    sectionCell.textContent = segment.weakMatches?.[0]
+      ? matchSection(segment.weakMatches[0]) || '—'
+      : '—';
     confidenceCell.textContent = segment.weakMatches?.[0]
       ? `Below threshold · ${Math.round(segment.weakMatches[0].score * 100)}/100`
       : '—';
   }
-  row.append(refCell, excerptCell, alignmentCell, connectionCell, confidenceCell, triageCell);
+  row.append(refCell, excerptCell, alignmentCell, connectionCell, sectionCell, confidenceCell, triageCell);
   return row;
 }
 
@@ -947,7 +962,7 @@ function paintLedger() {
   if (visible.length > MAX_RENDERED_LEDGER_ROWS) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 6;
+    cell.colSpan = 7;
     cell.textContent = `${formatNumber(visible.length - MAX_RENDERED_LEDGER_ROWS)} additional rows are preserved in the Markdown and JSON exports.`;
     row.appendChild(cell);
     ui.mapTableBody.appendChild(row);
@@ -955,7 +970,7 @@ function paintLedger() {
   if (!visible.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 6;
+    cell.colSpan = 7;
     if (claims.length) {
       cell.textContent = `No rows match the active filter (${LEDGER_FILTER_LABELS[view.filter]}).`;
     } else {

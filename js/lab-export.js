@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.0';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=2.0';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.1';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=2.1';
 
 /*
  * LE Lab export adapters.
@@ -149,8 +149,9 @@ export function analysisToMarkdown(result) {
         '',
       );
       segment.matches.forEach((match) => {
+        const section = [match.category, match.subcategory].filter(Boolean).join(' · ');
         lines.push(
-          `- **${markdownText(match.alignment?.label)} · ${markdownText(match.confidence)} (${(Number(match.score || 0) * 100).toFixed(0)})** — ${markdownLink(match.title, match.href)}. ${markdownText(match.why)}`,
+          `- **${markdownText(match.alignment?.label)} · ${markdownText(match.confidence)} (${(Number(match.score || 0) * 100).toFixed(0)})** — ${markdownLink(match.title, match.href)}${section ? ` _(${markdownText(section)})_` : ''}. ${markdownText(match.why)}`,
         );
         if (match.whyMatched?.length) {
           lines.push(`  - Match trace: ${match.whyMatched.map(markdownText).join('; ')}`);

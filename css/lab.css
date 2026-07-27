@@ -2550,3 +2550,12 @@ button.lab-metric > small { text-align: right; }
   button.lab-metric:hover,
   button.lab-assay-stage:hover { transform: none; }
 }
+
+/* Section column: category · subsection breadcrumb per canon match (v=2.1) */
+.lab-section-cell {
+  color: var(--text-dim);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
