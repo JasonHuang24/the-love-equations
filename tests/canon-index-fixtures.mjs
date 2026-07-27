@@ -13,7 +13,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.0');
-assert.equal(index.stats.conceptCount, 446);
+assert.equal(index.stats.conceptCount, 448);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 35,
@@ -22,10 +22,10 @@ assert.deepEqual(index.stats.byCategory, {
   Instruments: 5,
   Lexicon: 70,
   'Love Hierarchy': 41,
-  Mythbuster: 64,
+  Mythbuster: 65,
   'Pill Dossiers': 12,
   'Rules & Frameworks': 21,
-  Statistics: 30,
+  Statistics: 31,
 });
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);

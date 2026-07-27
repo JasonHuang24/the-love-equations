@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.0",
-  "indexVersion": "1.0.0+db8e6170a088",
-  "generatedAt": "2026-07-27T05:34:52.516Z",
+  "indexVersion": "1.0.0+164bad98935d",
+  "generatedAt": "2026-07-27T08:23:24.842Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -55,7 +55,7 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "179f8ecdb366eb57e6aaa3755b21cd9e9223e56571d02d1552020770b3bf4c50",
+      "sha256": "20593a361f956578ba59fc2e00ca76fe3b3cedf455888ce9c0d5333d1a94a111",
       "conceptCount": 31
     },
     {
@@ -67,8 +67,8 @@
         "mythbuster.html",
         "js/mythbuster.js"
       ],
-      "sha256": "287ba3ecd8fe68e07848fcdb51cbf89e94fc75f195cf4c7da01e4bfbc0d2598c",
-      "conceptCount": 64
+      "sha256": "f584f5a930128ff009d1e447f2e5a7c6bce4bb38bcba1b25a184d796a9ecf806",
+      "conceptCount": 65
     },
     {
       "page": "pills.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 447,
+    "conceptCount": 448,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -224,7 +224,7 @@
       "Instruments": 5,
       "Lexicon": 70,
       "Love Hierarchy": 41,
-      "Mythbuster": 64,
+      "Mythbuster": 65,
       "Pill Dossiers": 12,
       "Rules & Frameworks": 21,
       "Statistics": 31
@@ -234,7 +234,7 @@
       "Evidence-based": 36,
       "Framework": 53,
       "Glossary": 70,
-      "Hard data": 27,
+      "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
       "Lens": 68,
@@ -249,10 +249,10 @@
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 356,
-    "conceptsWithExternalSources": 69,
+    "anchoredConceptCount": 357,
+    "conceptsWithExternalSources": 70,
     "dependencyCount": 217,
-    "relatedCount": 286
+    "relatedCount": 290
   },
   "entries": [
     {
@@ -5648,7 +5648,9 @@
         "Online daters who say this has happened to them — overall baseline vs. women under 50:"
       ],
       "dependencies": [],
-      "related": [],
+      "related": [
+        "M-TBD-65"
+      ],
       "boundaryConditions": [
         "Method Same Pew ATP probability panel, weighted. Base: ever used online dating (the larger 3,128 base). Women-under-50 figures from Pew's age/gender breakdown."
       ],
@@ -6264,7 +6266,8 @@
         "M-TBD-31",
         "M-TBD-32",
         "M-TBD-43",
-        "M-TBD-35"
+        "M-TBD-35",
+        "M-TBD-65"
       ],
       "boundaryConditions": [],
       "commonMisreadings": [],
@@ -6320,6 +6323,10 @@
         {
           "label": "Pew 2023",
           "url": "https://www.pewresearch.org/short-reads/2023/06/28/a-record-high-share-of-40-year-olds-in-the-us-have-never-been-married/"
+        },
+        {
+          "label": "FTC 2022",
+          "url": "https://www.ftc.gov/news-events/data-visualizations/data-spotlight/2022/02/reports-romance-scams-hit-record-highs-2021"
         }
       ],
       "pressureTests": []
@@ -8978,6 +8985,49 @@
         {
           "label": "Sagioglou & Dick (2026), Archives of Sexual Behavior — international cross-sectional study (N = 1,044): most one-night stands neutral-to-positive; heterosexual regret gap mediated chiefly by satisfaction and orgasm",
           "url": "https://doi.org/10.1007/s10508-025-03380-3"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "M-TBD-65",
+      "title": "Do romance scammers mostly prey on lonely older women?",
+      "page": "mythbuster.html",
+      "anchor": "M-TBD-65",
+      "category": "Mythbuster",
+      "subcategory": "Dating",
+      "synopsis": "The stereotype survives on exactly one axis: check size. FTC median losses climb steeply with age — $750 per report at 18–29 up to $9,000 at 70 and over — so when older adults are taken, they are taken hardest. Targeting cuts the other way: 52% of online daters say they’ve come across a suspected scammer, and men under 50 top the table at 63%, against 44% of women of any age.",
+      "evidenceType": "Hard data",
+      "contentType": "Mythbuster ruling",
+      "aliases": [
+        "Old money, young marks"
+      ],
+      "phrases": [
+        "The romance-scam victim is the lonely grandma wiring her savings to a fake soldier overseas. Young men grew up online — they can smell a catfish a mile away, and scammers don’t waste time on them."
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-safety",
+        "statistics:stat-attention"
+      ],
+      "boundaryConditions": [
+        "Axes kept honest: Pew measures self-reported encounters with SUSPECTED scammers (perception, not completed victimization); the FTC counts voluntary reports, and only ~4.8% of mass-market fraud victims complain to any authority (Anderson 2021, cited in both spotlights), so age differences in reporting propensity shade every count — the report mix by age is…"
+      ],
+      "commonMisreadings": [
+        "oversimplified: The romance-scam victim is the lonely grandma wiring her savings to a fake soldier overseas. Young men grew up online — they can smell a catfish a mile away, and scammers don’t waste time on them."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Pew Research Center (Feb 2023), “Key findings about online dating in the U.S.” — 52% of users encountered a suspected scammer; men under 50 highest at 63% (men 50+: 47%; women of any age: 44%); n = 6,034",
+          "url": "https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/"
+        },
+        {
+          "label": "FTC Data Spotlight (Feb 2022) — 2021 romance scams: record $547M reported; median individual loss by age from $750 (18–29) to $9,000 (70+); 18–29 reports up more than tenfold since 2017",
+          "url": "https://www.ftc.gov/news-events/data-visualizations/data-spotlight/2022/02/reports-romance-scams-hit-record-highs-2021"
+        },
+        {
+          "label": "FTC Data Spotlight (Feb 2023) — 2022: nearly 70,000 reports, $1.3B reported losses, median $4,400; sextortion reports over six times as likely from 18–29 as from 30+, population-normalized",
+          "url": "https://www.ftc.gov/news-events/data-visualizations/data-spotlight/2023/02/romance-scammers-favorite-lies-exposed"
         }
       ],
       "pressureTests": []

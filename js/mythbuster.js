@@ -75,11 +75,13 @@
   // Leading glyph on the evidence-tier pill (bar-chart; inherits the tier's colour).
   const SVG_TIER = '<svg class="mb-svg mb-tier-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M7 20v-4"/><path d="M12 20v-9"/><path d="M17 20v-14"/></svg>';
 
-  /* ── Data: 64 graded entries, all ratified. Every entry carries valid verdicts
-     and fetch-verified sourced rulings and passes the render gate — no drafts and
+  /* ── Data: 65 graded entries. Every entry carries valid verdicts and
+     fetch-verified sourced rulings and passes the render gate — no drafts and
      no docket holds remain (the last hold, M-TBD-54, was graded 2026-07-07).
      Grading ran across 2026-07-06/07 via per-entry web research plus dual
-     adversarial source verification, then Jason ratified. The gate still skips any
+     adversarial source verification, then Jason ratified (64 entries).
+     M-TBD-65 (romance-scam targeting) added 2026-07-27 out of LE Lab
+     doctrine-harvest #1 — Fable-graded, sources verified in-session. The gate still skips any
      structurally broken entry with a console.warn, and the localhost ?preview=1
      docket surfaces such entries for grading (currently none). Rendered cards carry
      id="<entry id>" anchors so other pages can deep-link
@@ -1749,6 +1751,32 @@
         researchNotes: 'Hard-data grades the replicated descriptive direction, not a proven evolutionary mechanism. Galperin\u2019s three studies and the Norwegian replication rely on retrospective self-report; the authors\u2019 sexual-strategies interpretation is one proposed distal explanation, not an experimental result. The longitudinal study retained 399 eligible participants at T1 and 222 across both waves and found no reliable strategy shift from prior regret. Sagioglou & Dick sampled 1,044 people from more than 40 nationalities and found mostly neutral-to-positive evaluations; the gap was concentrated in heterosexual encounters, but the same-sex subgroup was only 75 and the interaction was underpowered. Orgasm was the strongest mediator in an exploratory component model, but that decomposition had poor global fit, so the ruling states the mechanism qualitatively rather than treating its percentage as settled.',
       },
       related: [ { label: 'Chart: the casual-sex motivation gap', href: 'statistics.html#stat-casual-gap' }, { label: 'Chart: orgasm in casual versus committed sex', href: 'statistics.html#stat-orgasm-context' }, { label: 'Chart: the orgasm gender gap', href: 'statistics.html#stat-orgasm-gender' }, { label: 'Ruling M-TBD-13: casual-sex offers and context', href: 'mythbuster.html#M-TBD-13' } ],
+    },
+    {
+      id: 'M-TBD-65',
+      category: 'Dating',
+      question: 'Do romance scammers mostly prey on lonely older women?',
+      claims: [
+        { camp: '',
+          text: 'The romance-scam victim is the lonely grandma wiring her savings to a fake soldier overseas. Young men grew up online — they can smell a catfish a mile away, and scammers don’t waste time on them.',
+          verdict: 'oversimplified', truth: 35 },
+      ],
+      ruling: {
+        badge: 'Old money, young marks',
+        text: 'The stereotype survives on exactly one axis: check size. FTC median losses climb steeply with age — $750 per report at 18–29 up to $9,000 at 70 and over — so when older adults are taken, they are taken hardest. Targeting cuts the other way: 52% of online daters say they’ve come across a suspected scammer, and men under 50 top the table at 63%, against 44% of women of any age. FTC reports rose in every age group — more than tenfold among 18–29 from 2017 to 2021 — and the sextortion variant hits 18–29-year-olds at over six times the rate of everyone older. The federal spotlights don’t even publish the gender split the stereotype assumes. The myth’s real damage is its implication that young men aren’t targets — precisely the group scammers are working hardest.',
+        tier: 'hard-data',
+        truth: 85,
+        sources: [
+          { label: 'Pew Research Center (Feb 2023), “Key findings about online dating in the U.S.” — 52% of users encountered a suspected scammer; men under 50 highest at 63% (men 50+: 47%; women of any age: 44%); n = 6,034', url: 'https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/' },
+          { label: 'FTC Data Spotlight (Feb 2022) — 2021 romance scams: record $547M reported; median individual loss by age from $750 (18–29) to $9,000 (70+); 18–29 reports up more than tenfold since 2017', url: 'https://www.ftc.gov/news-events/data-visualizations/data-spotlight/2022/02/reports-romance-scams-hit-record-highs-2021' },
+          { label: 'FTC Data Spotlight (Feb 2023) — 2022: nearly 70,000 reports, $1.3B reported losses, median $4,400; sextortion reports over six times as likely from 18–29 as from 30+, population-normalized', url: 'https://www.ftc.gov/news-events/data-visualizations/data-spotlight/2023/02/romance-scammers-favorite-lies-exposed' },
+        ],
+        researchNotes: 'Axes kept honest: Pew measures self-reported encounters with SUSPECTED scammers (perception, not completed victimization); the FTC counts voluntary reports, and only ~4.8% of mass-market fraud victims complain to any authority (Anderson 2021, cited in both spotlights), so age differences in reporting propensity shade every count — the report mix by age is deliberately not staked. The 2022 median ($4,400) is not comparable to 2021’s ($2,400) because the FTC folded IC3 reports in from the 2023 spotlight on; the age-ladder medians are 2021 Sentinel-only and exclude MoneyGram/Western Union transactions. The gender half of the stereotype is refused rather than reversed: neither spotlight publishes a victim sex split and no such split was verified here — a verified breakdown of losses by sex could move both stakes. Claim staked at 35: it wins the per-person severity axis outright (elder losses are catastrophic where they land) but loses targeting breadth, growth, and the sextortion tail. Both FTC spotlights were read and verified in-session (ftc.gov blocks automated fetchers; verified via full browser page reads).',
+      },
+      related: [
+        { label: 'Chart: where the safety risk concentrates', href: 'statistics.html#stat-safety' },
+        { label: 'Chart: the market floods one side and starves the other', href: 'statistics.html#stat-attention' },
+      ],
     },
   ];
 
