@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.1';
+} from './lab-intake.js?v=2.1.1';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,18 +15,25 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.1';
-import { createDemoDocument } from './lab-demo.js?v=2.1';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.1';
+} from './lab-extractors.js?v=2.1.1';
+import { createDemoDocument } from './lab-demo.js?v=2.1.1';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.1.1';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.1';
+} from './lab-export.js?v=2.1.1';
+import {
+  LEDGER_COLUMN_COUNT,
+  compareLedgerEntries,
+  ledgerFilterIsActive,
+  ledgerRowMatchesFilter,
+  nextLedgerFilter,
+} from './lab-ledger.js?v=2.1.1';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.1';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.1.1';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -792,53 +799,6 @@ const LEDGER_FILTER_LABELS = {
   unmapped: 'unmapped segments only',
 };
 
-function ledgerRowMatchesFilter(segment, filter) {
-  if (filter === 'mapped') return Boolean(segment.mapped);
-  if (filter === 'unmapped') return !segment.mapped;
-  return true;
-}
-
-function ledgerSortValue(entry, key) {
-  const segment = entry.segment;
-  const primary = segment.mapped ? segment.matches[0] : null;
-  switch (key) {
-    case 'excerpt':
-      return String(segment.unit.text || '').toLowerCase();
-    case 'alignment':
-      // Group label A-Z; the unmapped group sorts after every named alignment.
-      return primary ? `0${primary.alignment.label.toLowerCase()}` : '1unmapped';
-    case 'connection':
-      return primary
-        ? `0${primary.title.toLowerCase()}`
-        : (segment.weakMatches?.[0] ? `1${segment.weakMatches[0].title.toLowerCase()}` : '2');
-    case 'section':
-      return primary ? `0${matchSection(primary).toLowerCase()}` : '1';
-    case 'confidence':
-      return primary
-        ? Number(primary.score || primary.bestScore || 0)
-        : (segment.weakMatches?.[0] ? Number(segment.weakMatches[0].score || 0) - 1 : -2);
-    case 'triage': {
-      const relevance = segment.unit.domainRelevance || {};
-      if (relevance.override === 'include') return 0;
-      if (relevance.status === 'uncertain') return 1;
-      return 2;
-    }
-    case 'order':
-    default:
-      return entry.order;
-  }
-}
-
-function compareLedgerEntries(a, b, sort) {
-  const left = ledgerSortValue(a, sort.key);
-  const right = ledgerSortValue(b, sort.key);
-  let delta;
-  if (typeof left === 'number' && typeof right === 'number') delta = left - right;
-  else delta = String(left).localeCompare(String(right));
-  if (delta === 0) delta = a.order - b.order;
-  return sort.dir === 'desc' ? -delta : delta;
-}
-
 function matchSection(match) {
   return [match.category, match.subcategory].filter(Boolean).join(' · ');
 }
@@ -918,7 +878,7 @@ function buildLedgerRow(segment) {
 function syncLedgerControls() {
   const { filter, sort } = state.ledgerView;
   document.querySelectorAll('[data-ledger-filter]').forEach((tile) => {
-    tile.setAttribute('aria-pressed', String(tile.dataset.ledgerFilter === filter && filter !== 'all'));
+    tile.setAttribute('aria-pressed', String(ledgerFilterIsActive(tile.dataset.ledgerFilter, filter)));
   });
   document.querySelectorAll('.lab-sort-button').forEach((button) => {
     const th = button.closest('th');
@@ -962,7 +922,7 @@ function paintLedger() {
   if (visible.length > MAX_RENDERED_LEDGER_ROWS) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 7;
+    cell.colSpan = LEDGER_COLUMN_COUNT;
     cell.textContent = `${formatNumber(visible.length - MAX_RENDERED_LEDGER_ROWS)} additional rows are preserved in the Markdown and JSON exports.`;
     row.appendChild(cell);
     ui.mapTableBody.appendChild(row);
@@ -970,7 +930,7 @@ function paintLedger() {
   if (!visible.length) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 7;
+    cell.colSpan = LEDGER_COLUMN_COUNT;
     if (claims.length) {
       cell.textContent = `No rows match the active filter (${LEDGER_FILTER_LABELS[view.filter]}).`;
     } else {
@@ -985,7 +945,7 @@ function paintLedger() {
 }
 
 function setLedgerFilter(filter) {
-  const next = state.ledgerView.filter === filter ? 'all' : filter;
+  const next = nextLedgerFilter(state.ledgerView.filter, filter);
   state.ledgerView.filter = next;
   paintLedger();
 }
@@ -1470,7 +1430,7 @@ function resetVisualResults() {
   const emptyRow = document.createElement('tr');
   emptyRow.id = 'lab-map-table-empty';
   const emptyCell = document.createElement('td');
-  emptyCell.colSpan = 5;
+  emptyCell.colSpan = LEDGER_COLUMN_COUNT;
   emptyCell.textContent = 'Run an analysis to populate the segment-by-segment map.';
   emptyRow.appendChild(emptyCell);
   ui.mapTableBody.appendChild(emptyRow);
@@ -1489,6 +1449,7 @@ function resetVisualResults() {
   [ui.citationCount, ui.pressureCount, ui.researchCount].forEach((node) => { node.textContent = '0'; });
   [ui.copyMarkdown, ui.downloadMarkdown, ui.downloadJson, ui.exportResearch]
     .forEach((button) => { button.disabled = true; });
+  syncLedgerControls();
 }
 
 async function resetLab({ preserveInputs = false } = {}) {
