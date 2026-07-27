@@ -695,6 +695,35 @@ function renderTriage(result) {
   ui.triageHeadline.textContent = `${parts.join(' · ')}. Original text remains intact in Source.`;
 
   clearNode(ui.triageList);
+  // Re-included passages stay listed here with their Undo, so every visitor
+  // intervention has a control even if its ledger row is truncated.
+  applied
+    .filter((override) => override.action === 'include')
+    .forEach((override) => {
+      const segment = (result.segments || [])
+        .find((candidate) => candidate.unit.id === override.segmentId);
+      if (!segment) return;
+      const item = document.createElement('li');
+      item.className = 'lab-triage-item';
+
+      const head = document.createElement('div');
+      head.className = 'lab-triage-item-head';
+      head.appendChild(triageChip('Included by you', 'override'));
+      const reference = document.createElement('span');
+      reference.className = 'lab-triage-ref';
+      reference.textContent = segmentReference(segment.unit);
+      head.appendChild(reference);
+      item.appendChild(head);
+
+      const excerpt = document.createElement('p');
+      excerpt.className = 'lab-triage-excerpt';
+      excerpt.textContent = segment.unit.text;
+      item.appendChild(excerpt);
+
+      const shortExcerpt = truncateLabel(segment.unit.text, 60);
+      item.appendChild(triageButton('Undo include', `Undo your inclusion of “${shortExcerpt}”`, () => setDomainOverride(segment.unit.id, null)));
+      ui.triageList.appendChild(item);
+    });
   ignored.slice(0, MAX_RENDERED_TRIAGE_ROWS).forEach((passage) => {
     const item = document.createElement('li');
     item.className = 'lab-triage-item';

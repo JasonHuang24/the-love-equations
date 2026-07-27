@@ -122,8 +122,13 @@ accepts per-passage visitor overrides. `analyzeDocument(document, canonIndex,
 visitor decisions applied after local classification and before any analytical
 population is built. An include joins analysis with `status: "relevant"`,
 `reasonCode: "user-override-include"`, and the machine's original verdict
-preserved in `localStatus`; an exclude moves a passage to the ignored list with
-`overridden: true`. Overrides are session-scoped user decisions keyed to
+preserved in `localStatus`; it also admits the passage as an analyzable claim
+unit even when claim grammar alone would have treated it as context, with the
+machine's grammar verdict preserved in `machineClaimLike` — a locked input is
+honored through every analytical population (claims, coverage, mappings, and
+the Research Queue), never merely echoed. An exclude moves a passage to the
+ignored list with `overridden: true`. Re-included passages stay listed in the
+interface's triage panel with their Undo control alongside their ledger rows. Overrides are session-scoped user decisions keyed to
 content-derived unit IDs — they are disclosed in the result and every export,
 never presented as classifier verdicts, and an overridden passage neither
 receives nor provides context inheritance beyond its locked status.

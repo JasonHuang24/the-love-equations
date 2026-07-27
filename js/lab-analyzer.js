@@ -1052,6 +1052,11 @@ function applyDomainOverride(unit, action) {
   const include = action === 'include';
   return {
     ...unit,
+    // "Include in analysis" is a locked visitor input: it admits the passage
+    // into the analytical population even when claim grammar alone would have
+    // kept it context-only. The machine's grammar verdict stays visible as
+    // machineClaimLike, exactly like localStatus preserves the domain verdict.
+    ...(include ? { isClaimLike: true, machineClaimLike: Boolean(unit.isClaimLike) } : {}),
     domainRelevance: {
       ...local,
       status: include ? 'relevant' : 'irrelevant',

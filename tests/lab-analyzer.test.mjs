@@ -832,6 +832,42 @@ test('visitor overrides lock domain decisions and are disclosed end to end', asy
   assert.equal(stale.metrics.ignoredDomainSegments, 1);
 });
 
+test('an include override admits a context-only set-aside as an analyzable claim', async () => {
+  // Reviewer contract-violation reproduction (benchmark case pt-03): a passage
+  // whose machine isClaimLike is false was included, echoed, but never entered
+  // claims, coverage, or the queue, and lost its Undo surface. A locked
+  // visitor input must be honored through every analytical population.
+  const document = normalizeInput({
+    text: 'The merger married two incompatible corporate cultures.',
+    source: { title: 'pt-03 include fixture' },
+  });
+  const baseline = await analyzeDocument(document, REAL_CANON);
+  assert.equal(baseline.metrics.claimLikeSegments, 0);
+  assert.equal(baseline.metrics.ignoredDomainSegments, 1);
+  const ignoredId = baseline.domainRelevance.ignoredPassages[0].segmentId;
+
+  const included = await analyzeDocument(document, REAL_CANON, {
+    domainOverrides: { [ignoredId]: 'include' },
+  });
+  const unit = included.segments.find((segment) => segment.unit.id === ignoredId)?.unit;
+  assert.ok(unit, 'The included passage is present in analysis segments.');
+  assert.equal(unit.isClaimLike, true);
+  assert.equal(unit.machineClaimLike, false);
+  assert.equal(unit.domainRelevance.status, 'relevant');
+  assert.equal(unit.domainRelevance.localStatus, 'irrelevant');
+  assert.equal(included.metrics.claimLikeSegments, 1);
+  assert.equal(included.metrics.ignoredDomainSegments, 0);
+  assert.notEqual(included.coverage.mappedClaimSegmentSharePct, null,
+    'An included claim gives coverage a denominator.');
+  assert.ok(
+    included.metrics.mappedClaimSegments === 1
+      || included.researchQueue.items.some((item) => item.segmentId === ignoredId),
+    'The included claim lands in a mapping or the Research Queue, never in limbo.',
+  );
+  assert.deepEqual(included.domainRelevance.overrides.applied,
+    [{ segmentId: ignoredId, action: 'include' }]);
+});
+
 test('held-out non-domain frames are ignored before canon retrieval', async () => {
   const families = {
     computing: [
