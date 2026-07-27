@@ -61,7 +61,7 @@ function fixture() {
     strongestMatches: [],
     segments,
     pressureTests: [],
-    researchQueue: { itemCount: items.length, items },
+    researchQueue: { schemaVersion: 'le-lab.research-queue/2.0', itemCount: items.length, items },
     limitations: ['Fixture results are illustrative.'],
   };
 }
@@ -81,6 +81,7 @@ test('research queue export formats numeric timestamps as milliseconds', () => {
     assert.match(markdown, new RegExp(`Guest · ${label} · seg-rq-${index + 1}`));
   });
   assert.match(markdown, /> Research candidate 3\./);
+  assert.match(markdown, /\*\*Schema:\*\* `le-lab\.research-queue\/2\.0`/);
 });
 
 test('string timestamps are preserved verbatim in both Markdown exports', () => {
@@ -149,4 +150,18 @@ test('zero-denominator exports represent coverage as unavailable', () => {
   assert.match(analysisToMarkdown(result), /Mapped share of claim-like segments:\*\* Not applicable/);
   assert.equal(JSON.parse(analysisToJson(result)).coverage.mappedClaimSegmentSharePct, null);
   assert.equal(JSON.parse(researchQueueToJson(result)).schemaVersion, 'le-lab.research-queue/2.0');
+  assert.match(researchQueueToMarkdown(result),
+    /\*\*Schema:\*\* `le-lab\.research-queue\/2\.0`/);
+});
+
+test('research queue Markdown reads its schema from the queue object', () => {
+  const result = fixture();
+  result.researchQueue.schemaVersion = 'le-lab.research-queue/test-version';
+  assert.match(researchQueueToMarkdown(result),
+    /\*\*Schema:\*\* `le-lab\.research-queue\/test-version`/);
+
+  result.researchQueue.items = [];
+  result.researchQueue.itemCount = 0;
+  assert.match(researchQueueToMarkdown(result),
+    /\*\*Schema:\*\* `le-lab\.research-queue\/test-version`/);
 });

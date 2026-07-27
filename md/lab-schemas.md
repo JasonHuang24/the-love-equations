@@ -110,12 +110,15 @@ relationship-domain passages. Those v2 metric meanings are not backward
 compatible with analysis v1, even though several new diagnostic fields are additive.
 
 Each retained `segments[].unit` includes a `domainRelevance` decision with its
-local status, weighted evidence, and any tightly bounded previous-sentence
+local status, decisive reason, participant frame, outcome frame, mechanism
+frame, capped non-domain frame, and any tightly bounded previous-sentence
 assistance. `relevant` and conservative `uncertain` passages continue into
 canon retrieval; `irrelevant` passages are represented only by aggregate
 metrics and are never exported as individual analysis or research rows.
-A claim-like passage without recognized domain vocabulary is retained as
-`uncertain` unless affirmative non-domain sense evidence justifies ignoring it.
+Claim-likeness is grammatical evidence only: a passage needs an explicit
+relationship outcome or a grounded human/social mechanism to be retained.
+Non-domain evidence is capped by semantic family, and an explicit relational
+outcome takes precedence over incidental technical or economic input terms.
 
 `segments[].matches[].score` is a bounded local lexical score, not a probability
 that a claim is true. Optional `segments[].matches[].contextHelp` records tightly

@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=1.5';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=1.5';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=1.6';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=1.6';
 
 /*
  * LE Lab export adapters.
@@ -191,6 +191,10 @@ export function researchQueueToMarkdown(result, { includeHeading = true } = {}) 
   const ignoredWords = Number(result?.metrics?.ignoredDomainWords || 0);
   const lines = [];
   if (includeHeading) lines.push('## Unmapped research queue', '', '_Research candidates — not new LE doctrine._', '');
+  if (queue?.schemaVersion) {
+    lines.push(`**Schema:** \`${markdownText(queue.schemaVersion)}\``, '');
+  }
+
   if (ignored > 0) {
     lines.push(
       `_${ignored.toLocaleString()} clearly non-domain passage${ignored === 1 ? '' : 's'} ignored (${ignoredWords.toLocaleString()} words); original source text remains preserved in the normalized source._`,

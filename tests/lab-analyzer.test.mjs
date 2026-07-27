@@ -338,10 +338,10 @@ test('the generated canon index routes the demo through core LE rules without co
   assert.ok(matchedIds.has('smv:overview'));
   assert.ok(matchedIds.has('lexicon:term-awalt-all-women-are-like-that'));
   assert.ok(matchedIds.has('frameworks:readiness-gate'));
-  assert.equal(result.metrics.claimLikeSegments, 17);
-  assert.equal(result.metrics.mappedClaimSegments, 7);
-  assert.equal(result.metrics.unmappedClaimSegments, 10);
-  assert.equal(result.coverage.mappedClaimSegmentSharePct, 41.2);
+  assert.equal(result.metrics.claimLikeSegments, 11);
+  assert.equal(result.metrics.mappedClaimSegments, 6);
+  assert.equal(result.metrics.unmappedClaimSegments, 5);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, 54.5);
   assert.ok(result.researchQueue.items.some((item) => /82 percent/.test(item.excerpt)));
   const awalt = result.segments.flatMap((segment) => segment.matches)
     .find((match) => match.canonId === 'lexicon:term-awalt-all-women-are-like-that');
@@ -473,7 +473,7 @@ test('domain relevance uses one bounded predecessor and never cascades', () => {
   assert.equal(relevantPair[0].domainRelevance.status, 'relevant');
   assert.equal(relevantPair[1].domainRelevance.status, 'relevant');
   assert.equal(relevantPair[1].domainRelevance.contextHelp?.sourceUnitId, relevantPair[0].id);
-  assert.equal(relevantPair[1].domainRelevance.localStatus, 'uncertain');
+  assert.equal(relevantPair[1].domainRelevance.localStatus, 'irrelevant');
 
   const irrelevantPair = classifyDomainRelevance(detectClaimUnits(normalizeInput({
     text: 'The sky is blue. This is visible during the afternoon.',
@@ -657,7 +657,7 @@ test('domain context requires bounded anaphora plus semantic continuity', () => 
     text: 'Dating apps encourage rapid visual judgments. This makes photographs unusually important.',
   })));
   assert.equal(legitimate[1].domainRelevance.status, 'relevant');
-  assert.equal(legitimate[1].domainRelevance.localStatus, 'uncertain');
+  assert.equal(legitimate[1].domainRelevance.localStatus, 'irrelevant');
   assert.equal(legitimate[1].domainRelevance.contextHelp?.sourceUnitId, legitimate[0].id);
   assert.equal(legitimate[1].domainRelevance.contextHelp?.continuity, 'approved-consequence-language');
 
@@ -704,7 +704,9 @@ test('domain context requires bounded anaphora plus semantic continuity', () => 
     text: 'Attachment can change slowly over time. This makes photographs important.',
   })));
   assert.equal(uncertainPredecessor[0].domainRelevance.localStatus, 'uncertain');
-  assert.equal(uncertainPredecessor[1].domainRelevance.contextHelp, null);
+  assert.equal(uncertainPredecessor[1].domainRelevance.status, 'relevant');
+  assert.equal(uncertainPredecessor[1].domainRelevance.contextHelp?.sourceUnitId,
+    uncertainPredecessor[0].id);
 
   const irrelevantPredecessor = classifyDomainRelevance(detectClaimUnits(normalizeInput({
     text: 'The sky is blue. This makes photographs important.',
@@ -766,4 +768,187 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
   assert.equal(mapped.metrics.claimLikeSegments, 1);
   assert.equal(mapped.metrics.mappedClaimSegments, 1);
   assert.equal(mapped.coverage.mappedClaimSegmentSharePct, 100);
+});
+
+test('held-out non-domain frames are ignored before canon retrieval', async () => {
+  const families = {
+    computing: [
+      'The routing heuristic picked the quickest path.',
+      'The pathfinder selected the shortest route.',
+      'The kernel killed the task.',
+      'The operating core stopped the job.',
+      'The API refused the malformed input.',
+      'The endpoint declined an invalid payload.',
+      'The classifier is 96% certain.',
+      'The prediction system assigned high certainty.',
+    ],
+    corporate: [
+      'The firms split, ending their joint venture.',
+      'The businesses dissolved their partnership.',
+      'The stock index fell sharply.',
+      'Equities declined during trading.',
+    ],
+    sports: [
+      'The teams finished level.',
+      'The sides ended with equal scores.',
+      'The match ended in a draw.',
+      'Neither club won the contest.',
+    ],
+    documents: [
+      'The report body is divided into five parts.',
+      'The main text contains several sections.',
+      'The document profile lists its dimensions.',
+    ],
+    science: [
+      'An atomic pair shares an electron shell.',
+      'The composite material retained considerable strength.',
+      'This family of functions stays continuous.',
+      'The molecular structure remains chemically stable.',
+      'The forecasting model reports strong confidence.',
+    ],
+  };
+  const claims = Object.values(families).flat();
+  const document = normalizeInput({
+    text: claims.join(' '),
+    source: { title: 'Held-out non-domain frames' },
+  });
+  const decisions = classifyDomainRelevance(detectClaimUnits(document));
+  const result = await analyzeDocument(document, REAL_CANON);
+
+  assert.equal(decisions.length, claims.length);
+  decisions.forEach((unit) => {
+    assert.equal(unit.domainRelevance.status, 'irrelevant', unit.text);
+    assert.equal(unit.domainRelevance.reasonCode, 'affirmative-non-domain-evidence', unit.text);
+    assert.equal(unit.domainRelevance.frames.nonDomain.detected, true, unit.text);
+    assert.ok(unit.domainRelevance.frames.nonDomain.evidence.length >= 1, unit.text);
+    assert.notEqual(unit.domainRelevance.reasonCode, 'unresolved-claim-retained');
+  });
+  assert.equal(result.metrics.ignoredDomainSegments, claims.length);
+  assert.equal(result.metrics.claimLikeSegments, 0);
+  assert.deepEqual(result.segments, []);
+  assert.deepEqual(result.strongestMatches, []);
+  assert.deepEqual(result.pressureTests, []);
+  assert.deepEqual(result.researchQueue.items, []);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, null);
+  assert.ok(!result.segments.some((segment) =>
+    segment.matches.some((match) => /Body/i.test(match.title))));
+});
+
+test('explicit relational outcomes outrank incidental finance inputs without score stacking', async () => {
+  const claims = [
+    'The stock market crash can delay marriage.',
+    'Economic losses in the stock market may postpone marriage.',
+    'A collapse in household wealth may cause couples to postpone marrying.',
+    'Financial losses may postpone household formation.',
+  ];
+  const document = normalizeInput({
+    text: claims.join(' '),
+    source: { title: 'Mixed-domain causal frames' },
+  });
+  const decisions = classifyDomainRelevance(detectClaimUnits(document));
+  const result = await analyzeDocument(document, REAL_CANON);
+
+  assert.deepEqual(result.segments.map((segment) => segment.unit.text), claims);
+  assert.equal(result.metrics.ignoredDomainSegments, 0);
+  decisions.forEach((unit) => {
+    assert.equal(unit.domainRelevance.status, 'relevant', unit.text);
+    assert.equal(unit.domainRelevance.frames.outcome.detected, true, unit.text);
+    assert.notEqual(unit.domainRelevance.reasonCode, 'affirmative-non-domain-evidence');
+  });
+  const financeInput = decisions[0].domainRelevance;
+  assert.equal(financeInput.frames.nonDomain.evidence.length, 1);
+  assert.equal(financeInput.nonDomainScore,
+    financeInput.frames.nonDomain.score);
+  result.segments.filter((segment) => !segment.mapped).forEach((segment) => {
+    assert.ok(result.researchQueue.items.some((item) => item.segmentId === segment.unit.id));
+  });
+});
+
+test('held-out human relational mechanisms remain analyzable without phrase allowlisting', async () => {
+  const claims = [
+    'A collapse in household wealth may cause couples to postpone marrying.',
+    'Commuting for several hours leaves less time to maintain a partnership.',
+    'Frequent relocation reduces repeated contact among unattached residents.',
+    'Shared debt can make separation harder.',
+    'Irregular work hours shrink the set of people someone can realistically date.',
+    'Losing recurring neighborhood gatherings reduces opportunities to become familiar with potential partners.',
+    'Strong friendship networks may change how someone recovers after a breakup.',
+    'Living with other adults can reduce privacy while a romance is developing.',
+  ];
+  const result = await analyzeDocument(normalizeInput({
+    text: claims.join(' '),
+    source: { title: 'Held-out relational mechanisms' },
+  }), REAL_CANON);
+
+  assert.deepEqual(result.segments.map((segment) => segment.unit.text), claims);
+  assert.equal(result.metrics.ignoredDomainSegments, 0);
+  result.segments.forEach((segment) => {
+    assert.ok(['relevant', 'uncertain'].includes(segment.unit.domainRelevance.status),
+      segment.unit.text);
+    const frames = segment.unit.domainRelevance.frames;
+    assert.ok(frames.participant.detected || frames.outcome.detected || frames.mechanism.detected,
+      segment.unit.text);
+    if (!segment.mapped) {
+      assert.ok(result.researchQueue.items.some((item) => item.segmentId === segment.unit.id),
+        segment.unit.text);
+    }
+  });
+});
+
+test('anaphora is resolved before the independent frame gate and cannot cascade', async () => {
+  const source = [
+    'Dating apps encourage rapid visual judgments.',
+    'This puts photographs first.',
+    'It can query PostgreSQL.',
+    'It matters a great deal.',
+  ].join(' ');
+  const document = normalizeInput({ text: source, source: { title: 'Context frame ordering' } });
+  const decisions = classifyDomainRelevance(detectClaimUnits(document));
+  const result = await analyzeDocument(document, REAL_CANON);
+
+  assert.deepEqual(decisions.map((unit) => unit.domainRelevance.status),
+    ['relevant', 'relevant', 'irrelevant', 'irrelevant']);
+  assert.equal(decisions[1].domainRelevance.localStatus, 'irrelevant');
+  assert.equal(decisions[1].domainRelevance.contextHelp?.sourceUnitId, decisions[0].id);
+  assert.equal(decisions[1].domainRelevance.contextHelp?.continuity,
+    'approved-consequence-language');
+  assert.equal(decisions[2].domainRelevance.frames.nonDomain.evidence[0].code, 'computing');
+  assert.equal(decisions[2].domainRelevance.contextHelp, null);
+  assert.equal(decisions[3].domainRelevance.reasonCode, 'no-human-relational-frame');
+  assert.equal(decisions[3].domainRelevance.contextHelp, null);
+  assert.deepEqual(result.segments.map((segment) => segment.unit.text), decisions.slice(0, 2).map((unit) => unit.text));
+  assert.equal(result.metrics.ignoredDomainSegments, 2);
+
+  const validVariant = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps can reduce repeated contact. That may make repeated exposure harder.',
+  })));
+  assert.equal(validVariant[1].domainRelevance.status, 'relevant');
+  assert.ok(validVariant[1].domainRelevance.contextHelp);
+
+  const invalidVariant = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps can reduce repeated contact. It uses a different API.',
+  })));
+  assert.equal(invalidVariant[1].domainRelevance.status, 'irrelevant');
+  assert.equal(invalidVariant[1].domainRelevance.contextHelp, null);
+});
+
+test('frame diagnostics expose each decision dimension without a claim-like fallback', () => {
+  const claims = [
+    'The classifier is 96% certain.',
+    'The report body is divided into five parts.',
+    'An unanchored assertion is supposedly important.',
+  ];
+  const decisions = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: claims.join(' '),
+  })));
+
+  decisions.forEach((unit) => {
+    assert.equal(unit.domainRelevance.status, 'irrelevant');
+    assert.ok(unit.domainRelevance.decisiveReason);
+    assert.ok(unit.domainRelevance.frames.participant);
+    assert.ok(unit.domainRelevance.frames.outcome);
+    assert.ok(unit.domainRelevance.frames.mechanism);
+    assert.ok(unit.domainRelevance.frames.nonDomain);
+    assert.notEqual(unit.domainRelevance.reasonCode, 'unresolved-claim-retained');
+  });
 });

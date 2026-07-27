@@ -33,7 +33,7 @@ const DOMAIN_RELEVANT_SCORE = 4;
 const DOMAIN_UNCERTAIN_SCORE = 1;
 const NON_DOMAIN_DECISIVE_SCORE = 4;
 
-const ANAPHORIC_CONTINUATION_CUE = /^(?:it\b|(?:that|this|these|those|which)\b(?=\s+(?:is|are|was|were|can|could|may|might|will|would|makes?|means?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?|becomes?|suggests?|shows?|also\b))|(?:that|this)\s+(?:distinction|effect|pattern|tradeoff|constraint|change|dynamic|result|mechanism)\b|such(?:\s+(?:a|an))?\b|the same\b)/i;
+const ANAPHORIC_CONTINUATION_CUE = /^(?:it\b|(?:that|this|these|those|which)\b(?=\s+(?:is|are|was|were|can|could|may|might|will|would|makes?|means?|puts?|leaves?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?|becomes?|suggests?|shows?|also\b))|(?:that|this)\s+(?:distinction|effect|pattern|tradeoff|constraint|change|dynamic|result|mechanism)\b|such(?:\s+(?:a|an))?\b|the same\b)/i;
 
 const STOP_WORDS = new Set([
   'a', 'about', 'after', 'again', 'against', 'all', 'also', 'am', 'an', 'and',
@@ -75,28 +75,50 @@ const CLAIM_CUES = [
   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
   /\b(?:prefer|choose|reject|attract|desire|commit|marry|divorce|retain|leave)\w*\b/i,
-  /\b(?:meet|make|change|matter|narrow|prolong|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence|sustain|tolerate)\w*\b/i,
+  /\b(?:meet|make|put|leave|change|matter|narrow|prolong|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence|sustain|tolerate)\w*\b/i,
 ];
 
 /*
- * Domain relevance is deliberately separate from canon retrieval. These
- * weighted rules ask whether a passage belongs in an LE analysis at all; they
- * do not ask whether LE already contains a matching concept. Strong direct
- * evidence clears the relevant threshold, while ambiguous but plausible
- * relationship language enters a conservative retained band.
+ * Domain relevance is deliberately separate from claim grammar and canon
+ * retrieval. The gate assembles four inspectable semantic frames:
+ * participants, relationship outcomes, human-social mechanisms, and
+ * affirmative non-domain senses. Each family contributes at most once, so
+ * correlated vocabulary cannot stack into an accidental veto.
  */
-const DOMAIN_RELEVANCE_RULES = Object.freeze([
+const HUMAN_PARTICIPANT_FRAMES = Object.freeze([
   {
-    id: 'dating-courtship',
-    label: 'Direct dating or courtship language',
+    id: 'human-individuals',
+    label: 'Human individuals or relationship-seeking population',
+    weight: 2,
+    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
+  },
+  {
+    id: 'human-groups',
+    label: 'Human household, family, or community group',
+    weight: 1.5,
+    test: (text) => /\b(?:households?|parents?|famil(?:y|ies)|communities|residents?|roommates?|friends?|friendship networks?|support networks?)\b/i.test(text),
+  },
+  {
+    id: 'human-social-pronouns',
+    label: 'Human personal pronoun',
+    weight: 0.8,
+    test: (text) => /\b(?:he|she|they|we|you|him|her|them)\b/i.test(text),
+  },
+]);
+
+const RELATIONAL_OUTCOME_FRAMES = Object.freeze([
+  {
+    id: 'romantic-courtship-lifecycle',
+    label: 'Dating, courtship, or explicitly romantic lifecycle',
     weight: 5,
-    test: (text) => /\b(?:dating|courtship|romantic|romance|flirt(?:s|ed|ing)?|online dating|speed dating)\b/i.test(text)
-      || /\b(?:go(?:ing)? on a date|ask(?:s|ed|ing)? (?:him|her|them|someone) out|date[sd]? (?:him|her|them|someone|people|men|women))\b/i.test(text),
+    decisive: true,
+    test: (text) => /\b(?:dating|courtship|romance|romantic|flirt\w*|speed[- ]dating|online dating|dating apps?|dating markets?|dating profiles?)\b/i.test(text),
   },
   {
     id: 'dating-stage-structure',
     label: 'Attraction, selection, compatibility, or retention stages',
-    weight: 4,
+    weight: 5,
+    decisive: true,
     test(text) {
       const stages = [
         /\b(?:attention|exposure)\b/i,
@@ -110,8 +132,9 @@ const DOMAIN_RELEVANCE_RULES = Object.freeze([
   },
   {
     id: 'dating-market-leverage',
-    label: 'SMV or dating-market leverage language',
+    label: 'SMV or dating-market leverage frame',
     weight: 5,
+    decisive: true,
     test(text) {
       const leverCount = ['looks', 'money', 'status', 'charm', 'exposure']
         .filter((lever) => new RegExp(`\\b${lever}\\b`, 'i').test(text)).length;
@@ -121,186 +144,219 @@ const DOMAIN_RELEVANCE_RULES = Object.freeze([
     },
   },
   {
-    id: 'named-le-framework',
-    label: 'Named LE relationship framework',
+    id: 'cross-sex-selection',
+    label: 'Human cross-sex preference or selection outcome',
     weight: 5,
-    test: (text) => /\b(?:conversion ladder|readiness gate|love hierarchy)\b/i.test(text),
+    decisive: true,
+    test: (text) => /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b.{0,70}\b(?:men|women|man|woman|males|females)\b/i.test(text)
+      || /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b/i.test(text),
   },
   {
-    id: 'relationship-status',
-    label: 'Relationship status or transition',
+    id: 'couple-retention',
+    label: 'Couple stability or staying-together outcome',
     weight: 5,
-    test: (text) => /\b(?:marriage|married|marries|marry|divorce[sd]?|breakups?|breaks? up|infidelity|cheating|exclusive|exclusivity|spouse|husband|wife|boyfriend|girlfriend|fianc(?:e|ee)|widow(?:ed)?|cohabitation|cohabit(?:s|ed|ing)?)\b/i.test(text),
+    decisive: true,
+    test: (text) => /\bcouples?\b.{0,70}\b(?:stay\w* together|last\w*|separat\w*|remain\w* together|relationship)\b/i.test(text)
+      || /\b(?:stay\w* together|last\w*|separat\w*|remain\w* together)\b.{0,70}\bcouples?\b/i.test(text),
   },
   {
-    id: 'partner-formation',
-    label: 'Partner meeting or selection',
+    id: 'marriage-household-formation',
+    label: 'Marriage, cohabitation, or household formation outcome',
     weight: 5,
-    test: (text) => /\b(?:meet|find|choose|select|seek|attract|reject|match(?:es|ed|ing)? with)\b.{0,55}\b(?:partners?|mates?|dates?|spouses?|singles?)\b/i.test(text)
-      || /\b(?:partners?|mates?|dates?|spouses?|singles?)\b.{0,55}\b(?:meet|choose|select|seek|attract|reject|pair|match)\w*\b/i.test(text)
-      || /\b(?:mate|partner) selection\b|\bpair formation\b/i.test(text),
+    decisive: true,
+    test: (text) => /\b(?:marriage|marry\w*|wedding|spouses?|husbands?|wives|cohabit\w*|household formation|combine households?|start(?:ing)? a family|have children together)\b/i.test(text),
   },
   {
-    id: 'relationship-progression',
-    label: 'Relationship initiation, progression, or maintenance',
+    id: 'breakup-relationship-loss',
+    label: 'Breakup or human relationship-loss outcome',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:breakups?|breaks? up|heartbreak|relationship loss|relationship dissolution|after separation|reconciliation|infidelity|cheating)\b/i.test(text),
+  },
+  {
+    id: 'partner-access-formation',
+    label: 'Partner access, meeting, selection, or pair formation',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:meet|find|choose|select|seek|attract|reject|date)\w*\b.{0,65}\b(?:partners?|mates?|dates?|singles?|spouses?)\b/i.test(text)
+      || /\b(?:partners?|mates?|dates?|singles?|spouses?)\b.{0,65}\b(?:meet|choose|select|seek|attract|reject|date|pair|match)\w*\b/i.test(text)
+      || /\b(?:mate|partner) selection\b|\bpair formation\b|\b(?:future|potential|romantic) partners?\b|\bromantic networks?\b/i.test(text),
+  },
+  {
+    id: 'relationship-maintenance',
+    label: 'Human relationship initiation, maintenance, or retention',
     weight: 4,
-    test: (text) => /\b(?:relationship (?:initiation|formation|progression|maintenance|satisfaction|stability|quality|outcomes?)|long-term relationship|committed relationship|relationship readiness|relationship retention|relationship dissolution)\b/i.test(text)
-      || /\b(?:initiat(?:e|es|ed|ing)|maintain(?:s|ed|ing)?|retain(?:s|ed|ing)?|end(?:s|ed|ing)?)\b.{0,45}\b(?:a |the |their |our )?(?:romantic )?relationships?\b/i.test(text),
-  },
-  {
-    id: 'personal-relationship',
-    label: 'Personal or couple relationship',
-    weight: 4,
-    test: (text) => /\b(?:relationships|couples?|lovers?)\b/i.test(text)
-      || /\b(?:a|the|their|our|his|her|your|my)\s+(?:romantic |long-term |committed )?relationship\b/i.test(text),
+    decisive: true,
+    test: (text) => /\b(?:relationship (?:initiation|formation|progression|maintenance|satisfaction|stability|quality|readiness|retention)|long-term relationship|committed relationship)\b/i.test(text)
+      || /\b(?:initiat\w*|maintain\w*|sustain\w*|retain\w*|build\w*|end\w*)\b.{0,55}\b(?:a |the |their |our )?(?:romantic )?(?:relationships?|partnership)\b/i.test(text),
   },
   {
     id: 'sexual-intimacy',
-    label: 'Sexual or intimate relationship behavior',
-    weight: 4,
-    test: (text) => /\b(?:hookups?|hooking up|one-night stands?|casual sex|sex life|sexual (?:attraction|desire|relationships?|partners?|intimacy|compatibility|behavior)|physical intimacy)\b/i.test(text)
-      || /\b(?:have|having|had|want|avoid|initiate|consent to)\s+sex\b/i.test(text),
-  },
-  {
-    id: 'family-formation',
-    label: 'Family formation or partner-linked parenthood',
-    weight: 4,
-    test: (text) => /\b(?:family formation|start(?:ing)? a family|have children together|parenthood|co-parent(?:s|ed|ing)?|single parenthood|single parents?|stepfamil(?:y|ies)|household relationships?)\b/i.test(text),
-  },
-  {
-    id: 'dating-environment',
-    label: 'Dating market, app, venue, or third-space context',
+    label: 'Sexual or intimate relationship outcome',
     weight: 5,
-    test: (text) => /\b(?:dating (?:apps?|platforms?|markets?|pools?|profiles?|venues?|scene)|online (?:matches|profiles|courtship)|singles? (?:events?|venues?|meetups?)|matchmakers?|speed-dating|swip(?:e|es|ed|ing))\b/i.test(text)
-      || /\b(?:third spaces?|social venues?)\b.{0,70}\b(?:singles?|dates?|partners?|couples?|pair formation)\b/i.test(text),
+    decisive: true,
+    test: (text) => /\b(?:hookups?|hooking up|one-night stands?|casual sex|sex life|sexual (?:attraction|desire|relationships?|partners?|intimacy|compatibility|behavior)|physical intimacy|have sex|having sex|consent to sex)\b/i.test(text),
   },
   {
-    id: 'cross-sex-preference',
-    label: 'Mating preference or cross-sex selection',
-    weight: 4,
-    test: (text) => /\b(?:men|women|man|woman|males|females)\b.{0,55}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b.{0,55}\b(?:men|women|man|woman|males|females|partners?|mates?|dates?)\b/i.test(text)
-      || /\b(?:partners?|mates?|dates?|men|women|man|woman|males|females)\b.{0,55}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b.{0,55}\b(?:men|women|man|woman|males|females)\b/i.test(text),
-  },
-  {
-    id: 'relationship-outcome-link',
-    label: 'External condition explicitly linked to a relationship outcome',
-    weight: 3,
-    test: (text) => /\b(?:economic|financial|income|employment|work|remote work|politic(?:al|s)|policy|geograph(?:y|ic)|location|technology|apps?|weather|climate|status|resources?|personality|appearance|looks?|values?|behavior)\b.{0,90}\b(?:dating|attraction|partners?|marriage|divorce|breakups?|relationships?|pair formation|meet singles?|commitment)\b/i.test(text)
-      || /\b(?:dating|attraction|partners?|marriage|divorce|breakups?|relationships?|pair formation|meet singles?|commitment)\b.{0,90}\b(?:economic|financial|income|employment|work|politic(?:al|s)|policy|geograph(?:y|ic)|location|technology|apps?|weather|climate|status|resources?|personality|appearance|looks?|values?|behavior)\b/i.test(text),
+    id: 'relationship-transition',
+    label: 'Potentially human separation, divorce, or exclusivity transition',
+    weight: 2.5,
+    decisive: false,
+    test: (text) => /\b(?:divorce\w*|separat\w*|exclusive|exclusivity|commit(?:ment|ted)?)\b/i.test(text),
   },
   {
     id: 'relationship-concept',
-    label: 'Plausible relationship-domain concept',
-    weight: 2.4,
-    test: (text) => /\b(?:attraction|attractive|desirability|compatibility|commitment|intimacy|affection|attachment|chemistry|heartbreak|jealousy|rejection|desire|love|partners?|mates?|singles?)\b/i.test(text),
+    label: 'Plausible attraction, compatibility, or relationship concept',
+    weight: 2.2,
+    decisive: false,
+    test: (text) => /\b(?:attraction|attractive|desirability|compatib\w*|intimacy|affection|attachment|chemistry|jealousy|rejection|desire|love|relationships?|partners?|mates?)\b/i.test(text),
   },
   {
     id: 'human-attraction-shorthand',
     label: 'Human-directed attraction shorthand',
-    weight: 1.5,
-    test: (text) => /\b(?:he|she|they|this (?:man|woman|person)|that (?:man|woman|person)|someone)\b.{0,24}\b(?:is|seems?|looks?)\s+(?:so |very )?hot\b/i.test(text)
+    weight: 2,
+    decisive: false,
+    test: (text) => /\b(?:he|she|they|this (?:man|woman|person)|that (?:man|woman|person)|someone)\b.{0,24}\b(?:is|seems?|looks?)\s+(?:so |very )?(?:hot|beautiful|handsome|sexy)\b/i.test(text)
       || /\b(?:hot|beautiful|handsome|sexy)\b.{0,24}\b(?:to|for)\s+(?:him|her|them|someone|people)\b/i.test(text),
   },
   {
-    id: 'dating-interface-adjacent',
-    label: 'Possible dating-interface or social-matching context',
-    weight: 1.2,
-    test: (text) => /\b(?:profile (?:photo(?:graph)?s?|bio)|dating matches|social venues?|third spaces?|pairing opportunities)\b/i.test(text),
-  },
-  {
-    id: 'human-relationship-lifecycle',
-    label: 'Human relationship lifecycle or partner-access language',
-    weight: 2.6,
-    test: (text) => /\b(?:unattached adults?|after separation|relationship loss|future partners?|romantic networks?|combine households?|shared custody|shared financial obligations|early courtship|pair formation)\b/i.test(text),
-  },
-  {
-    id: 'social-opportunity-mechanism',
-    label: 'Plausible social opportunity or repeated-contact mechanism',
-    weight: 1.8,
-    test: (text) => /\b(?:remote work|commutes?|demanding schedules?|recurring community spaces?|support networks?|reputation|roommates?|community turnover|high turnover|repeated familiarity|repeated exposure|chance encounters?)\b.{0,100}\b(?:adults?|people|someone|pool|privacy|opportunities|encounters?|exposure|partners?|courtship|relationship|loss|attraction|networks?)\b/i.test(text)
-      || /\b(?:adults?|people|someone|pool|privacy|opportunities|encounters?|exposure|partners?|courtship|relationship|loss|attraction|networks?)\b.{0,100}\b(?:remote work|commutes?|demanding schedules?|recurring community spaces?|support networks?|reputation|roommates?|community turnover|high turnover|repeated familiarity|repeated exposure|chance encounters?)\b/i.test(text),
-  },
-  {
-    id: 'household-entanglement',
-    label: 'Plausible household, custody, or exit-cost mechanism',
-    weight: 2.2,
-    test: (text) => /\b(?:shared custody|combine households?|shared (?:financial )?obligations|housing arrangements?|living with roommates?|cost of leaving|conflict after separation)\b/i.test(text),
-  },
-  {
-    id: 'human-preference-mechanism',
-    label: 'Human preference or emotional decision mechanism',
-    weight: 1.4,
-    test: (text) => /\b(?:a person|people|someone|adults?)\b.{0,80}\b(?:emotional safety|predictability|desirability|commitment|relationship loss|partners?|romantic)\b/i.test(text),
+    id: 'named-le-framework',
+    label: 'Named LE relationship framework or market lens',
+    weight: 5,
+    decisive: true,
+    test: (text) => /\b(?:conversion ladder|readiness gate|love hierarchy|smv|sexual market value|dating market value|five levers)\b/i.test(text),
   },
 ]);
 
-const NON_DOMAIN_SENSE_RULES = Object.freeze([
+const SOCIAL_MECHANISM_FRAMES = Object.freeze([
   {
-    id: 'computing-data-sense',
-    label: 'Computing, database, process, or model terminology',
-    weight: 6,
-    test: (text) => /\b(?:database relationships?|one-to-many|selection algorithms?|operating systems?|linux|servers?|parent processes?|child processes?|application requests?|invalid requests?|network connections?|confidence scores?|process (?:created|terminated|spawned)|algorithm (?:chose|selected|ranked))\b/i.test(text)
-      || /\bmodel\b.{0,30}\bconfidence\b/i.test(text),
+    id: 'social-contact-opportunity',
+    label: 'Chance contact, repeated exposure, or familiarity mechanism',
+    weight: 2.5,
+    decisive: false,
+    test: (text) => /\b(?:chance|spontaneous|recurring|repeated|regular|social)\s+(?:encounters?|contacts?|exposure|familiarity|access|gatherings?|venues?|spaces?)\b/i.test(text)
+      || /\bopportunit\w*\b.{0,55}\b(?:meet|encounter|become familiar|repeated contact|repeated exposure)\b/i.test(text),
   },
   {
-    id: 'physical-scientific-sense',
-    label: 'Physical, chemical, mathematical, or material-science terminology',
-    weight: 6,
-    test: (text) => /\b(?:tensile strength|chemical bonds?|electrons?|orbitals?|family of functions?|continuous functions?|temperature and pressure|degrees? celsius|freez(?:e|es|ing)|laboratory measurements?|physics|typography)\b/i.test(text),
-  },
-  {
-    id: 'sports-game-sense',
-    label: 'Sports, game, or competition terminology',
-    weight: 6,
-    test: (text) => /\b(?:match|game|fixture|bout)\b.{0,45}\b(?:ended|draw|score|won|lost|tournament|league|referee)\b/i.test(text)
-      || /\b(?:draw|score|tournament|league|referee)\b.{0,45}\b(?:match|game|fixture|bout)\b/i.test(text),
-  },
-  {
-    id: 'corporate-commercial-sense',
-    label: 'Corporate, commercial, finance, or media terminology',
-    weight: 7,
-    test: (text) => /\b(?:companies?|corporations?|businesses?)\b.{0,60}\b(?:divorce|merger|partner|relationship|commitment)\b/i.test(text)
-      || /\b(?:divorce|merger|partner|relationship|commitment)\b.{0,60}\b(?:companies?|corporations?|businesses?)\b/i.test(text)
-      || /\b(?:committed capital|stock market|financial markets?|property value|value of (?:the )?property|box office|advertising analytics?|engagement rate|advertisement)\b/i.test(text),
-  },
-  {
-    id: 'document-object-sense',
-    label: 'Document, object, geographic profile, or analytics terminology',
-    weight: 6,
-    test: (text) => /\b(?:body of the document|document body|mountain profile|profile of the mountain|engagement rate|advertisement|page layout|font family)\b/i.test(text),
-  },
-  {
-    id: 'environmental-physical-observation',
-    label: 'Affirmative weather, room, sky, or physical-state observation',
-    weight: 5,
-    test: (text) => /\b(?:sky|weather|room|water|temperature|afternoon)\b.{0,55}\b(?:blue|hot|cold|visible|freez(?:e|es|ing)|boil(?:s|ing)?|degrees?|celsius|fahrenheit)\b/i.test(text)
-      || /\b(?:blue|hot|cold|visible|freez(?:e|es|ing)|boil(?:s|ing)?|degrees?|celsius|fahrenheit)\b.{0,55}\b(?:sky|weather|room|water|temperature|afternoon)\b/i.test(text),
-  },
-  {
-    id: 'transport-schedule-fact',
-    label: 'Transport arrival, departure, or timetable fact',
-    weight: 5,
-    test: (text) => /\b(?:train|bus|flight|tram|subway)\b.{0,45}\b(?:arrived|departed|delayed|at noon|on time|timetable)\b/i.test(text),
-  },
-  {
-    id: 'generic-market-sense',
-    label: 'Unqualified non-dating market terminology',
+    id: 'relationship-time-privacy-constraint',
+    label: 'Time, privacy, or realistic-pool constraint on relationships',
     weight: 4,
-    test: (text) => /\b(?:the |a )?(?:stock |financial )?market\b/i.test(text)
-      && !/\b(?:dating|sexual|romantic|partners?|mates?|singles?)\b/i.test(text),
+    decisive: true,
+    test: (text) => /\b(?:commut\w*|work hours?|schedules?|time|privacy|realistic pool|dating pool)\b.{0,90}\b(?:meet|date|courtship|romance|relationships?|partnership|partners?|singles?|unattached|(?:realistic|dating|partner) pools?)\b/i.test(text)
+      || /\b(?:meet|date|courtship|romance|relationships?|partnership|partners?|singles?|unattached)\b.{0,90}\b(?:commut\w*|work hours?|schedules?|time|privacy|realistic pool|dating pool)\b/i.test(text),
+  },
+  {
+    id: 'community-contact-structure',
+    label: 'Community turnover, relocation, or gathering structure',
+    weight: 3,
+    decisive: false,
+    test: (text) => /\b(?:relocat\w*|moving frequently|turnover|community|neighborhood|gatherings?|third spaces?|social spaces?)\b.{0,95}\b(?:contacts?|familiarity|exposure|encounters?|opportunities|partners?|romantic networks?)\b/i.test(text)
+      || /\b(?:contacts?|familiarity|exposure|encounters?|opportunities|partners?|romantic networks?)\b.{0,95}\b(?:relocat\w*|turnover|community|neighborhood|gatherings?|third spaces?|social spaces?)\b/i.test(text),
+  },
+  {
+    id: 'household-exit-constraint',
+    label: 'Household, custody, debt, or privacy constraint',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\b(?:shared (?:debt|custody|obligations?)|financial obligations?|household wealth|roommates?|living with other adults?|shared ownership|pet custody)\b.{0,95}\b(?:leav\w*|separat\w*|breakups?|marry\w*|marriage|household formation|privacy|romance|courtship)\b/i.test(text)
+      || /\b(?:leav\w*|separat\w*|breakups?|marry\w*|marriage|household formation|privacy|romance|courtship)\b.{0,95}\b(?:shared (?:debt|custody|obligations?)|financial obligations?|household wealth|roommates?|living with other adults?|shared ownership|pet custody)\b/i.test(text),
+  },
+  {
+    id: 'support-loss-mechanism',
+    label: 'Support or friendship network shaping relationship loss',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\b(?:support|friendship) networks?\b.{0,80}\b(?:relationship loss|breakups?|recover\w*|tolerat\w*|heartbreak)\b/i.test(text)
+      || /\b(?:relationship loss|breakups?|recover\w*|tolerat\w*|heartbreak)\b.{0,80}\b(?:support|friendship) networks?\b/i.test(text),
+  },
+  {
+    id: 'reputation-partner-access',
+    label: 'Reputation changing access to future partners',
+    weight: 4,
+    decisive: true,
+    test: (text) => /\breputation\b.{0,80}\b(?:access|future partners?|potential partners?|dating pool|romantic)\b/i.test(text)
+      || /\b(?:access|future partners?|potential partners?|dating pool|romantic)\b.{0,80}\breputation\b/i.test(text),
+  },
+]);
+
+const NON_DOMAIN_FRAME_DEFINITIONS = Object.freeze([
+  {
+    id: 'computing',
+    label: 'Computing, software, data, or process frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:software|comput\w*|algorith\w*|heuristic\w*|classifi\w*|kernel\w*|operating (?:system|core)|api|endpoint\w*|database\w*|server\w*|linux|postgres\w*|process\w*|network connections?|prediction systems?|pathfind\w*|routing\w*|applications?)\b/i,
+      /\b(?:query\w*|execut\w*|run\w*|uses?|kill\w*|stop\w*|terminat\w*|reject\w*|refus\w*|declin\w*|invalid\w*|malform\w*|payload\w*|inputs?|routes?|paths?|certain\w*|confidence|assign\w*|select\w*|pick\w*|rank\w*|one-to-many|unreliable|created?|spawn\w*)\b/i,
+    ),
+  },
+  {
+    id: 'sports',
+    label: 'Sports, game, or contest frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:teams?|sides?|clubs?|match(?:es)?|games?|contests?|fixtures?|bouts?|tournaments?|leagues?|referees?)\b/i,
+      /\b(?:finish\w*|end\w*|level|equal|scores?|draw|won|win\w*|lost|lose\w*|contest)\b/i,
+    ),
+  },
+  {
+    id: 'corporate-finance-media',
+    label: 'Corporate, finance, property, media, or advertising frame',
+    weight: 7,
+    test: (text) => frameHas(
+      text,
+      /\b(?:firms?|business(?:es)?|companies|company|corporat\w*|joint ventures?|capital|stocks?|stock markets?|equities|stock indexes?|financial markets?|trading|property|box office|actors?|advertis\w*|engagement rates?)\b/i,
+      /\b(?:split\w*|dissolv\w*|merg\w*|ventures?|partnership|divorce\w*|commit\w*|capital|declin\w*|fall\w*|fell|crash\w*|trad\w*|valu\w*|increas\w*|attract\w*|engagement|competitive)\b/i,
+    ) || /\b(?:stock|financial )?market\b.{0,40}\bcompetitive\b/i.test(text),
+  },
+  {
+    id: 'document',
+    label: 'Document, report, typography, or page-structure frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:reports?|documents?|main text|texts?|pages?|fonts?|typograph\w*|sections?|profiles?|mountains?|report body|document body)\b/i,
+      /\b(?:bod(?:y|ies)|divid\w*|contain\w*|lists?|sections?|parts?|dimensions?|visible|layouts?|fonts?)\b/i,
+    ),
+  },
+  {
+    id: 'scientific-mathematical',
+    label: 'Scientific, chemical, material, or mathematical frame',
+    weight: 6,
+    test: (text) => frameHas(
+      text,
+      /\b(?:atoms?|atomic|electrons?|orbitals?|materials?|tensile|chemical\w*|molecules?|bonds?|functions?|equations?|theorems?|models?|laborator\w*|temperature|pressure)\b/i,
+      /\b(?:pairs?|share\w*|orbitals?|shells?|strength|stable|continuous|confidence|certain\w*|measure\w*|linear|structures?)\b/i,
+    ),
+  },
+  {
+    id: 'physical-environment',
+    label: 'Weather, room, sky, water, or physical-state observation',
+    weight: 5,
+    test: (text) => frameHas(
+      text,
+      /\b(?:sky|weather|rooms?|water|temperature|afternoon)\b/i,
+      /\b(?:blue|hot|cold|visible|freez\w*|boil\w*|degrees?|celsius|fahrenheit)\b/i,
+    ),
+  },
+  {
+    id: 'transport-schedule',
+    label: 'Transport arrival, departure, or timetable frame',
+    weight: 5,
+    test: (text) => frameHas(
+      text,
+      /\b(?:trains?|buses|bus|flights?|trams?|subways?)\b/i,
+      /\b(?:arriv\w*|depart\w*|delay\w*|noon|on time|timetables?)\b/i,
+    ),
   },
   {
     id: 'technical-relationship',
-    label: 'Technical use of relationship terminology',
+    label: 'Technical or scientific use of relationship vocabulary',
     weight: 6,
-    test: (text) => /\b(?:database )?relationship(?:s)?\b.{0,70}\b(?:variables?|measurements?|temperature|pressure|numbers?|sets?|tables?|equations?|quantities|objects?|one-to-many)\b/i.test(text)
-      || /\b(?:variables?|measurements?|temperature|pressure|numbers?|sets?|tables?|equations?|quantities|objects?|one-to-many)\b.{0,70}\brelationships?\b/i.test(text),
-  },
-  {
-    id: 'non-romantic-partner',
-    label: 'Explicit non-romantic partner sense',
-    weight: 6,
-    test: (text) => /\b(?:business|research|laboratory|training|project|trade|tennis|debate)\s+partners?\b/i.test(text),
+    test: (text) => /\b(?:database|variables?|measurements?|numbers?|sets?|tables?|equations?|quantities|objects?)\b.{0,75}\brelationships?\b/i.test(text)
+      || /\brelationships?\b.{0,75}\b(?:database|variables?|measurements?|numbers?|sets?|tables?|equations?|quantities|objects?|one-to-many)\b/i.test(text)
+      || /\b(?:business|research|laboratory|training|project|trade|tennis|debate)\s+partners?\b/i.test(text),
   },
 ]);
 const SUPPORT_CUES = /\b(?:supports?|confirms?|consistent with|backs? up|holds up|evidence for|exactly right|true that)\b/i;
@@ -791,64 +847,106 @@ export function detectClaimUnits(document) {
   return units.slice(0, MAX_CLAIM_UNITS);
 }
 
+function frameHas(text, entityPattern, predicatePattern) {
+  return entityPattern.test(text) && predicatePattern.test(text);
+}
+
+function collectFrameEvidence(definitions, text, polarity, frame) {
+  return definitions
+    .filter((definition) => definition.test(text))
+    .map((definition) => ({
+      code: definition.id,
+      label: definition.label,
+      weight: definition.weight,
+      decisive: Boolean(definition.decisive),
+      polarity,
+      frame,
+    }));
+}
+
+function summarizeFrame(evidence) {
+  return {
+    detected: evidence.length > 0,
+    score: evidence.reduce((maximum, item) => Math.max(maximum, Number(item.weight) || 0), 0),
+    evidence: evidence.map(({ code, label, decisive }) => ({ code, label, decisive })),
+  };
+}
+
 function localDomainRelevance(unit) {
   const text = String(unit?.text || '').trim();
-  const domainEvidence = [];
-  const nonDomainEvidence = [];
-  let domainScore = 0;
-  let nonDomainScore = 0;
+  const participantEvidence = collectFrameEvidence(
+    HUMAN_PARTICIPANT_FRAMES, text, 'domain', 'participant',
+  );
+  const outcomeEvidence = collectFrameEvidence(
+    RELATIONAL_OUTCOME_FRAMES, text, 'domain', 'outcome',
+  );
+  const mechanismEvidence = collectFrameEvidence(
+    SOCIAL_MECHANISM_FRAMES, text, 'domain', 'mechanism',
+  );
+  const nonDomainEvidence = collectFrameEvidence(
+    NON_DOMAIN_FRAME_DEFINITIONS, text, 'non-domain', 'non-domain',
+  );
+  const frames = {
+    participant: summarizeFrame(participantEvidence),
+    outcome: summarizeFrame(outcomeEvidence),
+    mechanism: summarizeFrame(mechanismEvidence),
+    nonDomain: summarizeFrame(nonDomainEvidence),
+  };
 
-  DOMAIN_RELEVANCE_RULES.forEach((rule) => {
-    if (!rule.test(text)) return;
-    domainScore += rule.weight;
-    domainEvidence.push({
-      code: rule.id,
-      label: rule.label,
-      weight: rule.weight,
-      polarity: 'domain',
-    });
-  });
-  NON_DOMAIN_SENSE_RULES.forEach((rule) => {
-    if (!rule.test(text)) return;
-    nonDomainScore += rule.weight;
-    nonDomainEvidence.push({
-      code: rule.id,
-      label: rule.label,
-      weight: rule.weight,
-      polarity: 'non-domain',
-    });
-  });
+  const decisiveOutcome = outcomeEvidence.some((evidence) => evidence.decisive);
+  const decisiveMechanism = mechanismEvidence.some((evidence) => evidence.decisive);
+  const humanGroundedOutcome = frames.participant.detected && frames.outcome.detected;
+  const humanSocialMechanism = frames.participant.detected && frames.mechanism.detected;
+  const plausibleRelationalAnchor = frames.outcome.detected && !frames.nonDomain.detected;
+  const plausibleSocialStructure = frames.mechanism.score >= 3 && !frames.nonDomain.detected;
+  const score = round(Math.max(
+    frames.outcome.score,
+    frames.mechanism.score,
+    humanGroundedOutcome || humanSocialMechanism ? DOMAIN_UNCERTAIN_SCORE : 0,
+  ), 2);
+  // Non-domain categories are capped at their strongest family. Correlated
+  // tokens such as stock/market/finance never become independent veto votes.
+  const nonDomainScore = round(frames.nonDomain.score, 2);
 
-  const score = round(domainScore, 2);
-  const negativeScore = round(nonDomainScore, 2);
   let status;
   let reasonCode;
-  if (negativeScore >= NON_DOMAIN_DECISIVE_SCORE && negativeScore >= score) {
+  if (decisiveOutcome) {
+    status = 'relevant';
+    reasonCode = frames.nonDomain.detected
+      ? 'relational-outcome-overrides-incidental-input'
+      : 'explicit-relational-outcome';
+  } else if (decisiveMechanism) {
+    status = 'relevant';
+    reasonCode = 'explicit-relational-mechanism';
+  } else if (
+    humanGroundedOutcome
+    || humanSocialMechanism
+    || plausibleRelationalAnchor
+    || plausibleSocialStructure
+  ) {
+    status = 'uncertain';
+    reasonCode = 'plausible-human-relational-frame';
+  } else if (frames.nonDomain.detected) {
     status = 'irrelevant';
     reasonCode = 'affirmative-non-domain-evidence';
-  } else if (score >= DOMAIN_RELEVANT_SCORE) {
-    status = 'relevant';
-    reasonCode = 'strong-domain-evidence';
-  } else if (score >= DOMAIN_UNCERTAIN_SCORE) {
-    status = 'uncertain';
-    reasonCode = 'plausible-domain-evidence';
-  } else if (unit?.isClaimLike) {
-    status = 'uncertain';
-    reasonCode = 'unresolved-claim-retained';
-    domainEvidence.push({
-      code: reasonCode,
-      label: 'Claim-like passage retained because absence of known LE vocabulary is not evidence of irrelevance',
-      weight: 0,
-      polarity: 'retention',
-    });
   } else {
     status = 'irrelevant';
-    reasonCode = 'non-claim-without-domain-evidence';
-    nonDomainEvidence.push({
+    reasonCode = 'no-human-relational-frame';
+  }
+
+  const evidence = [
+    ...participantEvidence,
+    ...outcomeEvidence,
+    ...mechanismEvidence,
+    ...nonDomainEvidence,
+  ];
+  if (!evidence.length) {
+    evidence.push({
       code: reasonCode,
-      label: 'No claim-like or relationship-domain evidence',
+      label: 'No participant, relationship outcome, or human-social mechanism was detected',
       weight: 0,
       polarity: 'non-domain',
+      frame: 'decision',
     });
   }
 
@@ -856,27 +954,30 @@ function localDomainRelevance(unit) {
     status,
     localStatus: status,
     score,
-    nonDomainScore: negativeScore,
+    nonDomainScore,
     reasonCode,
-    evidence: [...domainEvidence, ...nonDomainEvidence],
+    decisiveReason: reasonCode,
+    frames,
+    evidence,
     contextHelp: null,
   };
 }
 
 function contextContinuityEvidence(unit, previous) {
-  if (unit.domainRelevance.nonDomainScore >= NON_DOMAIN_DECISIVE_SCORE) return null;
+  if (unit.domainRelevance.frames?.nonDomain?.detected) return null;
   const currentText = normalizeText(unit.text);
   const previousText = normalizeText(previous.text);
   const previousTokens = new Set(tokenize(previousText, { keepGeneric: false })
     .filter((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
   const sharedConcepts = tokenize(currentText, { keepGeneric: false })
     .filter((token) => previousTokens.has(token) && !LOW_INFORMATION_MATCH_TERMS.has(token));
-  const consequenceLanguage = /\b(?:makes?|means?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?)\b.{0,65}\b(?:photographs?|photos?|profiles?|messages?|swipes?|matches?|meeting|meet|opportunities|choices?|attraction|compatibility|commitment|relationships?|partners?|important|harder|easier|likely|unlikely)\b/i.test(unit.text);
-  const localDomainContinuity = unit.domainRelevance.score >= DOMAIN_UNCERTAIN_SCORE;
-  if (!localDomainContinuity && !consequenceLanguage && !sharedConcepts.length) return null;
+  const consequenceLanguage = /\b(?:makes?|puts?|means?|leaves?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?)\b.{0,70}\b(?:photographs?|photos?|profiles?|messages?|swipes?|matches?|meeting|meet|opportunities|choices?|contact|exposure|familiarity|attraction|compatibility|commitment|relationships?|partners?|important|first|harder|easier|likely|unlikely)\b/i.test(unit.text);
+  const localFrameContinuity = unit.domainRelevance.frames?.outcome?.detected
+    || unit.domainRelevance.frames?.mechanism?.detected;
+  if (!localFrameContinuity && !consequenceLanguage && !sharedConcepts.length) return null;
   return {
-    code: localDomainContinuity
-      ? 'compatible-local-domain-evidence'
+    code: localFrameContinuity
+      ? 'compatible-local-relational-frame'
       : consequenceLanguage
         ? 'approved-consequence-language'
         : 'shared-relationship-concept',
@@ -897,9 +998,8 @@ export function classifyDomainRelevance(units) {
     if (unit.domainRelevance.status === 'relevant' || !bridge) continue;
     if (unit.parentSegmentId !== previous.parentSegmentId) continue;
     if (bridge.sourceUnitId !== previous.id) continue;
-    // Only a locally relevant predecessor can lend domain context. A passage
-    // retained through context cannot become the source of another inheritance.
-    if (previous.domainRelevance.localStatus !== 'relevant') continue;
+    if (!['relevant', 'uncertain'].includes(previous.domainRelevance.localStatus)) continue;
+    // A context-promoted passage never becomes the source of another hop.
     if (previous.domainRelevance.contextHelp) continue;
 
     const continuity = contextContinuityEvidence(unit, previous);
@@ -908,13 +1008,16 @@ export function classifyDomainRelevance(units) {
       ...unit.domainRelevance,
       status: 'relevant',
       score: Math.max(DOMAIN_RELEVANT_SCORE, unit.domainRelevance.score),
+      reasonCode: 'bounded-previous-domain-context',
+      decisiveReason: 'bounded-previous-domain-context',
       evidence: [
         ...unit.domainRelevance.evidence,
         {
           code: 'bounded-previous-domain-context',
-          label: 'Referential continuation of an immediately previous relevant passage',
+          label: 'Anaphoric continuation with semantic continuity to the immediately previous retained passage',
           weight: 'context',
           polarity: 'domain',
+          frame: 'context',
           continuity: continuity.code,
         },
       ],
@@ -1565,7 +1668,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       unmappedClaimSegments: unmappedClaims.length,
     },
     domainRelevance: {
-      policy: 'deterministic-lexical-v2',
+      policy: 'deterministic-relational-frames-v2',
       relevantSegments: relevantUnits.length,
       uncertainRetainedSegments: uncertainUnits.length,
       ignoredSegments: ignoredUnits.length,
@@ -1614,7 +1717,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     ],
     limitations: [
       'Matches are deterministic lexical inferences, not judgments from a language model.',
-      'The deterministic relevance gate requires affirmative non-domain evidence before discarding claim-like material; plausible and unresolved claims are retained for review.',
+      'The deterministic relevance gate requires a relationship outcome or a participant-and-mechanism frame; claim grammar alone never establishes domain relevance.',
       'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
       'Alignment labels are cue-based and should be reviewed when language is ironic, quoted, highly implicit, or dependent on distant context.',
