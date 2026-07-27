@@ -1080,3 +1080,37 @@ test('frame diagnostics expose each decision dimension without a claim-like fall
     assert.notEqual(unit.domainRelevance.reasonCode, 'unresolved-claim-retained');
   });
 });
+
+test('abbreviation periods and open parentheticals never shard sentence segmentation', () => {
+  // The exact parenthetical-stats regression from Doctrine Harvest #1 (C1):
+  // "vs." inside a parenthesis produced truncated parents plus orphan shards.
+  const document = normalizeInput({
+    text: 'Men are somewhat more likely than women to have tried online dating (34% vs. 27%). '
+      + 'Adults who have never been married are much more likely than married adults to report having used them (52% vs. 16%).',
+    source: { title: 'Parenthetical stats fixture' },
+    createdAt: '2026-07-27T12:00:00.000Z',
+  });
+  const units = detectClaimUnits(document);
+  assert.equal(units.length, 2, 'expected exactly two whole claim units');
+  assert.match(units[0].text, /\(34% vs\. 27%\)\.$/, 'first claim must keep its full parenthetical');
+  assert.match(units[1].text, /\(52% vs\. 16%\)\.$/, 'second claim must keep its full parenthetical');
+  units.forEach((unit) => {
+    assert.doesNotMatch(unit.text, /^\d+%\)\.?$/, 'no orphan percentage shards');
+    assert.doesNotMatch(unit.text, /vs\.$/, 'no claim truncated at the abbreviation');
+  });
+
+  // Always-merge abbreviations rejoin even before a capital.
+  const abbrevUnits = detectClaimUnits(normalizeInput({
+    text: 'Paid features raise visibility, e.g. Boost placements double impressions. Approx. 41% of men have paid for reach.',
+  }));
+  assert.equal(abbrevUnits.length, 2);
+  assert.match(abbrevUnits[0].text, /e\.g\. Boost placements/);
+
+  // Sentence-final "U.S." before a fresh capitalized sentence must STILL split —
+  // the continuation guard only rejoins lowercase/digit starts like "No. 5".
+  const boundaryUnits = detectClaimUnits(normalizeInput({
+    text: 'Online dating is common in the U.S. Many adults have tried at least one app. The top profile was ranked No. 1 overall.',
+  }));
+  assert.equal(boundaryUnits.length, 3);
+  assert.match(boundaryUnits[2].text, /No\. 1 overall\.$/);
+});

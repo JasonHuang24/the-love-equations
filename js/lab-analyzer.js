@@ -781,18 +781,59 @@ function fallbackSentenceSplit(text) {
   return pieces.length ? pieces : [String(text || '').trim()].filter(Boolean);
 }
 
+// Abbreviations that never end a sentence: any break after them is a splitter
+// artifact, so the next piece is always rejoined.
+const MERGE_ALWAYS_ABBREVIATION = /(?:\bvs\.|\be\.g\.|\bi\.e\.|\bapprox\.)$/i;
+// Abbreviations that CAN legitimately end a sentence ("...in the U.S."): rejoin
+// only when the next piece starts like a continuation (lowercase, digit, or a
+// numeric/currency glyph), never when it opens a fresh capitalized sentence.
+// Case-sensitive so the word "no." at a sentence boundary is not mistaken for
+// the "No. 5" numbering abbreviation.
+const MERGE_CONTINUATION_ABBREVIATION = /(?:\bU\.S\.|\betc\.|\bNo\.|\ba\.m\.|\bp\.m\.)$/;
+const CONTINUATION_START = /^[a-z0-9(%$€£&]/;
+
+function hasUnclosedParenthesis(text) {
+  let depth = 0;
+  for (const character of text) {
+    if (character === '(') depth += 1;
+    else if (character === ')') depth = Math.max(0, depth - 1);
+  }
+  return depth > 0;
+}
+
+// Both split paths (Intl.Segmenter and the regex fallback) break after
+// abbreviation periods like "(34% vs." → "27%).", truncating the parent claim
+// and orphaning fragments. Rejoining is a fold so a repaired sentence can keep
+// absorbing further artifacts (e.g. nested parentheticals).
+function mergeSentenceSplitArtifacts(pieces) {
+  const merged = [];
+  pieces.forEach((piece) => {
+    const previous = merged[merged.length - 1];
+    if (previous && (
+      MERGE_ALWAYS_ABBREVIATION.test(previous)
+      || (MERGE_CONTINUATION_ABBREVIATION.test(previous) && CONTINUATION_START.test(piece))
+      || hasUnclosedParenthesis(previous)
+    )) {
+      merged[merged.length - 1] = `${previous} ${piece}`;
+    } else {
+      merged.push(piece);
+    }
+  });
+  return merged;
+}
+
 function splitSentences(text) {
   if (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function') {
     try {
       const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
-      return [...segmenter.segment(String(text || ''))]
+      return mergeSentenceSplitArtifacts([...segmenter.segment(String(text || ''))]
         .map((item) => item.segment.trim())
-        .filter(Boolean);
+        .filter(Boolean));
     } catch {
-      return fallbackSentenceSplit(text);
+      return mergeSentenceSplitArtifacts(fallbackSentenceSplit(text));
     }
   }
-  return fallbackSentenceSplit(text);
+  return mergeSentenceSplitArtifacts(fallbackSentenceSplit(text));
 }
 
 function claimLikelihood(text) {

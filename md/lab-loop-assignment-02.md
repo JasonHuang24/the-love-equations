@@ -1,6 +1,6 @@
 # Loop Assignment 2 — intake segmentation: abbreviation-safe sentence splitting
 
-**Status:** drafted 2026-07-26, HELD until loop assignment 1 (intake cleanup: hero button removal + "Demo Test" rename) merges. Jason pastes the block below to the ChatGPT orchestrator verbatim at that point. Origin: Doctrine Backlog Harvest #1, finding C1 (`md/doctrine-backlog-harvest-01.md`).
+**Status:** SUPERSEDED — implemented directly by Claude 2026-07-27 (the ChatGPT loop never delivered assignment 1, so both assignments were executed in the main session). The split point turned out to be `splitSentences` in `js/lab-analyzer.js` (Intl.Segmenter + regex fallback), fixed by a post-split artifact merge (`mergeSentenceSplitArtifacts`: always-rejoin for vs./e.g./i.e./approx., continuation-gated rejoin for U.S./etc./No./a.m./p.m., unclosed-parenthesis rejoin); regression test uses the exact fixture below; benchmark files untouched; token bumped to v=2.0; suite green. The block below is retained for the record only — do NOT paste it to the loop. Origin: Doctrine Backlog Harvest #1, finding C1 (`md/doctrine-backlog-harvest-01.md`).
 
 ```
 ASSIGNMENT 2 OF THE QoL ROADMAP — intake segmentation: abbreviation-safe sentence splitting (small, single-purpose PR)
