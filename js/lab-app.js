@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.1.1';
+} from './lab-intake.js?v=2.1.2';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,25 +15,25 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.1.1';
-import { createDemoDocument } from './lab-demo.js?v=2.1.1';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.1.1';
+} from './lab-extractors.js?v=2.1.2';
+import { createDemoDocument } from './lab-demo.js?v=2.1.2';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.1.2';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.1.1';
+} from './lab-export.js?v=2.1.2';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
   ledgerFilterIsActive,
   ledgerRowMatchesFilter,
   nextLedgerFilter,
-} from './lab-ledger.js?v=2.1.1';
+} from './lab-ledger.js?v=2.1.2';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.1.1';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.1.2';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;

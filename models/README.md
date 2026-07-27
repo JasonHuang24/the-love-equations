@@ -12,7 +12,7 @@ runs on the transparent geometry heuristic, and the geometry stays the breakdown
 | `url`        | `models/face-beauty.onnx` | where the page fetches the model |
 | `inputSize`  | `224`                  | square RGB input, **NCHW** `[1,3,224,224]` |
 | `mean`/`std` | ImageNet               | `[0.485,0.456,0.406]` / `[0.229,0.224,0.225]` |
-| `outMin/outMax` | `1.5` / `4.5`       | conservative interim raw range (real SCUT predictions rarely hit 1 or 5); mapped to `[0,1]`, then through each lens's curve. Replace with holdout prediction quantiles once you have a calibration set. |
+| `outMin/outMax` | `1.797` / `4.379`   | current anchors — p2/p98 from 400 SCUT-FBP5500 faces run through the shipped browser crop/model pipeline on 2026-07-06. See `md/face-calibration-report.md`; `face.html` `MODEL_CONFIG` is the source of truth. |
 | `inputName`/`outputName` | `null`     | `null` = use the graph's first input/output |
 
 If your model differs (e.g. 0–100 output, different normalization, 112×112 input), edit those

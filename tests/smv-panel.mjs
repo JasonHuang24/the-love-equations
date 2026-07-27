@@ -332,7 +332,7 @@ const ctx = vm.createContext({
   Math, JSON, Date, Number, String, Object, Array, parseInt, parseFloat, isFinite, isNaN,
   localStorage: { getItem: () => null, setItem: () => {}, removeItem: () => {} },
   document: undefined,
-  window: undefined,
+  window: { addEventListener: () => {} },
   navigator: undefined
 });
 

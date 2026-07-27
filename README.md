@@ -4,7 +4,7 @@ A static site presenting a personal framework for attraction, selection, and com
 a market read, not a moral verdict; neither rage nor cope. Every claim on the site carries an
 evidence grade, and the big popular claims get put on trial with sourced rulings.
 
-**Live site:** <https://jasonhuang24.github.io/the-love-equations/>
+**Live site:** <https://jasonhchronicles.com/the-love-equations/>
 
 ## The site, in reading order
 
@@ -77,7 +77,8 @@ No build step, no framework — plain HTML/CSS/JS served statically.
 No npm packages or build step are required. Lab tests use Node and the repository Python tooling:
 
 ```bash
-npm run test:lab                         # intake + analyzer + canon + HTML/ARIA/link audits
+npm run test:lab                         # Lab intake + analyzer + canon + HTML/ARIA/link audits
+npm run test:all                         # Lab + SMV bands + Matchmaker invariants
 node scripts/build-canon-index.mjs       # regenerate after canonical source changes
 node scripts/validate-canon-index.mjs    # validate committed runtime index
 python tools/lab_ui_audit.py             # Lab DOM/ARIA/link/CSS contract

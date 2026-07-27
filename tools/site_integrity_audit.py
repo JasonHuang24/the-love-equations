@@ -25,9 +25,12 @@ class SiteParser(HTMLParser):
         self.ids = []
         self.references = []
         self.targets = []
+        self.h1_count = 0
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
+        if tag == "h1":
+            self.h1_count += 1
         if values.get("id"):
             self.ids.append(values["id"])
         for name in ("aria-controls", "aria-labelledby", "aria-describedby", "aria-owns"):
@@ -66,6 +69,9 @@ for source in HTML_FILES:
     duplicate_ids = sorted(value for value, count in Counter(document.ids).items() if count > 1)
     if duplicate_ids:
         errors.append(f"{source.name}: duplicate IDs: {', '.join(duplicate_ids)}")
+    if source.parent == ROOT and document.h1_count != 1:
+        errors.append(
+            f"{source.name}: expected exactly one h1, found {document.h1_count}")
 
     source_ids = set(document.ids)
     for kind, reference in document.references:

@@ -505,6 +505,7 @@ body {
 .hero-title,
 .page-title {
   font-family: "Playfair Display", Georgia, serif;
+  font-weight: 400;
   letter-spacing: -0.045em;
 }
 
