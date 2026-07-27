@@ -94,6 +94,7 @@ if 'id="lab-app"' not in html_text or 'id="lab-workspace"' not in html_text:
     errors.append("Lab root/workspace hooks missing")
 for required_id in (
     "lab-domain-note",
+    "lab-coverage-readout",
     "lab-research-empty-title",
     "lab-research-empty-copy",
 ):
@@ -106,11 +107,16 @@ if without_comments.count("{") != without_comments.count("}"):
     errors.append("css/lab.css has unbalanced braces")
 if ".lab-domain-note" not in css_text:
     errors.append("Lab relevance aggregate has no page-specific styling")
+if ".lab-coverage-readout.is-unavailable" not in css_text:
+    errors.append("Lab coverage readout has no unavailable-state styling")
 
 app_text = (ROOT / "js" / "lab-app.js").read_text(encoding="utf-8")
 for phrase in (
     "No relationship-domain claims were detected in this source.",
     "Original source text remains intact in Source.",
+    "Coverage is unavailable because no relationship-domain claims were detected.",
+    "coverage not applicable",
+    "Analysis 2.0 · Queue 2.0",
 ):
     if phrase not in app_text:
         errors.append(f"Lab relevance result copy missing: {phrase}")

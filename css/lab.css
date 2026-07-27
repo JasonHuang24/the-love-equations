@@ -1072,6 +1072,7 @@
 #lab-app[data-lab-state="success"] [data-state-message="success"],
 #lab-app[data-lab-state="partial"] [data-state-message="partial"],
 #lab-app[data-lab-state="no-match"] [data-state-message="no-match"],
+#lab-app[data-lab-state="no-domain"] [data-state-message="no-domain"],
 #lab-app[data-lab-state="failure"] [data-state-message="failure"] {
   display: block;
 }
@@ -1115,11 +1116,14 @@
 #lab-app[data-lab-state="success"] .lab-state-orbit::before { background: var(--lab-green); }
 
 #lab-app[data-lab-state="partial"] .lab-state-strip,
-#lab-app[data-lab-state="no-match"] .lab-state-strip { background: var(--lab-amber-pale); }
+#lab-app[data-lab-state="no-match"] .lab-state-strip,
+#lab-app[data-lab-state="no-domain"] .lab-state-strip { background: var(--lab-amber-pale); }
 #lab-app[data-lab-state="partial"] .lab-state-orbit,
-#lab-app[data-lab-state="no-match"] .lab-state-orbit { color: var(--lab-amber); border-color: rgba(154, 101, 20, 0.3); }
+#lab-app[data-lab-state="no-match"] .lab-state-orbit,
+#lab-app[data-lab-state="no-domain"] .lab-state-orbit { color: var(--lab-amber); border-color: rgba(154, 101, 20, 0.3); }
 #lab-app[data-lab-state="partial"] .lab-state-orbit::before,
-#lab-app[data-lab-state="no-match"] .lab-state-orbit::before { background: var(--lab-amber); }
+#lab-app[data-lab-state="no-match"] .lab-state-orbit::before,
+#lab-app[data-lab-state="no-domain"] .lab-state-orbit::before { background: var(--lab-amber); }
 
 #lab-app[data-lab-state="failure"] .lab-state-strip { background: var(--scarlet-pale); }
 #lab-app[data-lab-state="failure"] .lab-state-orbit { color: var(--scarlet-deep); border-color: rgba(103, 16, 29, 0.32); }
@@ -1480,7 +1484,8 @@
 
 @keyframes lab-route { to { background-position: -200% 0; } }
 
-#lab-app[data-lab-state="no-match"] .lab-assay-stage.is-canon .lab-stage-vessel {
+#lab-app[data-lab-state="no-match"] .lab-assay-stage.is-canon .lab-stage-vessel,
+#lab-app[data-lab-state="no-domain"] .lab-assay-stage.is-canon .lab-stage-vessel {
   border-style: dashed;
   border-color: rgba(154, 101, 20, 0.48);
   background:
@@ -1599,6 +1604,18 @@
   opacity: 0;
   transform: translateX(-1px);
   transition: left 380ms ease, opacity 160ms ease;
+}
+
+.lab-coverage-readout.is-unavailable .lab-coverage-track {
+  border-style: dashed;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 7px, rgba(116, 79, 61, 0.08) 7px 8px),
+    rgba(116, 79, 61, 0.04);
+}
+
+.lab-coverage-readout.is-unavailable .lab-coverage-axis span:first-child,
+.lab-coverage-readout.is-unavailable .lab-coverage-axis span:last-child {
+  visibility: hidden;
 }
 
 .lab-coverage-axis {

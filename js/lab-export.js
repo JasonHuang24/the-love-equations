@@ -1,4 +1,5 @@
-import { validSourceProvenanceUrl } from './lab-intake.js?v=1.4';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=1.5';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=1.5';
 
 /*
  * LE Lab export adapters.
@@ -26,6 +27,7 @@ function markdownLink(label, href) {
 }
 
 function percent(value) {
+  if (value == null) return 'Not applicable';
   return `${Number(value || 0).toFixed(1).replace(/\.0$/, '')}%`;
 }
 
@@ -80,7 +82,7 @@ export function analysisToMarkdown(result) {
     `- **Canon index:** ${markdownText(result.canonIndex?.version)} · ${result.canonIndex?.conceptCount || 0} concepts across ${result.canonIndex?.sourceCount || 0} LE sources`,
     `- **Schema:** \`${markdownText(result.schemaVersion)}\``,
     '',
-    '> Coverage is the share of retained relationship-domain claim-like segments that mapped to a credible LE connection. It describes this document, not a population or whether a claim is true.',
+    '> Coverage is the share of retained relationship-domain claim-like segments that mapped to a credible LE connection. When no retained claims exist, coverage is not applicable. It describes this document, not a population or whether a claim is true.',
     '',
     '## Coverage',
     '',
@@ -233,7 +235,7 @@ export function analysisToJson(result, { pretty = true } = {}) {
 export function researchQueueToJson(result, { pretty = true } = {}) {
   if (!result) throw new Error('There is no research queue to export.');
   const payload = {
-    schemaVersion: 'le-lab.research-queue/1.0',
+    schemaVersion: result.researchQueue?.schemaVersion || RESEARCH_QUEUE_SCHEMA_VERSION,
     analysisId: result.id,
     generatedAt: result.generatedAt,
     source: sourceForExport(result.source),

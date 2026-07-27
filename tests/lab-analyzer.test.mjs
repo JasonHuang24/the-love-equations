@@ -338,8 +338,10 @@ test('the generated canon index routes the demo through core LE rules without co
   assert.ok(matchedIds.has('smv:overview'));
   assert.ok(matchedIds.has('lexicon:term-awalt-all-women-are-like-that'));
   assert.ok(matchedIds.has('frameworks:readiness-gate'));
-  assert.ok(result.coverage.mappedClaimSegmentSharePct > 50);
-  assert.ok(result.coverage.mappedClaimSegmentSharePct < 95);
+  assert.equal(result.metrics.claimLikeSegments, 17);
+  assert.equal(result.metrics.mappedClaimSegments, 7);
+  assert.equal(result.metrics.unmappedClaimSegments, 10);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, 41.2);
   assert.ok(result.researchQueue.items.some((item) => /82 percent/.test(item.excerpt)));
   const awalt = result.segments.flatMap((segment) => segment.matches)
     .find((match) => match.canonId === 'lexicon:term-awalt-all-women-are-like-that');
@@ -399,7 +401,7 @@ test('clearly non-domain assertions are ignored before mapping and residue const
   assert.equal(result.metrics.claimLikeSegments, 0);
   assert.equal(result.metrics.mappedClaimSegments, 0);
   assert.equal(result.metrics.unmappedClaimSegments, 0);
-  assert.equal(result.coverage.mappedClaimSegmentSharePct, 0);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, null);
   assert.deepEqual(result.segments, []);
   assert.deepEqual(result.strongestMatches, []);
   assert.deepEqual(result.pressureTests, []);
@@ -551,4 +553,217 @@ test('no-domain exports omit ignored lines while preserving aggregate metrics an
   assert.equal(queueJson.domainRelevance.ignoredSegments, 2);
   assert.deepEqual(queueJson.queue.items, []);
   assert.equal(document.text, sourceText);
+});
+
+test('the full novel relationship matrix remains analyzable without sentence allowlisting', async () => {
+  const claims = [
+    'Remote work reduces chance encounters between unattached adults.',
+    'Shared custody of a pet can prolong conflict after separation.',
+    'A person may optimize for emotional safety rather than maximum desirability.',
+    'Moving frequently can make stable pair formation harder.',
+    'Economic uncertainty changes when people combine households.',
+    'The decline of recurring community spaces reduces opportunities for repeated exposure.',
+    'People with strong support networks may tolerate relationship loss differently.',
+    'A reputation can affect access to future partners even when appearance remains unchanged.',
+    'A demanding schedule can narrow someone’s realistic pool.',
+    'Repeated familiarity may matter more than immediate attraction in some environments.',
+    'Living with roommates can affect privacy during early courtship.',
+    'Long commutes may reduce the time available to sustain a relationship.',
+    'Shared financial obligations can increase the cost of leaving.',
+    'A person can prefer predictability without preferring commitment.',
+    'Communities with high turnover may produce weaker romantic networks.',
+  ];
+  const document = normalizeInput({
+    text: claims.join(' '),
+    source: { title: 'Cold-review novel matrix' },
+  });
+  const result = await analyzeDocument(document, REAL_CANON);
+  const analysisJson = JSON.parse(analysisToJson(result));
+  const queueMarkdown = researchQueueToMarkdown(result);
+  const mappedClaims = result.segments
+    .filter((segment) => segment.mapped)
+    .map((segment) => segment.unit.text);
+
+  assert.deepEqual(result.segments.map((segment) => segment.unit.text), claims);
+  assert.ok(result.segments.every((segment) =>
+    ['relevant', 'uncertain'].includes(segment.unit.domainRelevance.status)));
+  assert.ok(result.segments.every((segment) => segment.unit.isClaimLike));
+  assert.equal(result.metrics.claimLikeSegments, claims.length);
+  assert.equal(result.metrics.ignoredDomainSegments, 0);
+  assert.deepEqual(mappedClaims, [
+    'The decline of recurring community spaces reduces opportunities for repeated exposure.',
+  ]);
+  assert.equal(
+    result.segments.find((segment) => segment.unit.text === mappedClaims[0]).matches[0].title,
+    'Exposure',
+  );
+  result.segments.filter((segment) => !segment.mapped).forEach((segment) => {
+    assert.ok(result.researchQueue.items.some((item) => item.segmentId === segment.unit.id));
+    assert.match(queueMarkdown, new RegExp(segment.unit.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  });
+  assert.deepEqual(analysisJson.segments.map((segment) => segment.unit.text), claims);
+});
+
+test('the complete non-romantic sense matrix is affirmatively ignored', async () => {
+  const claims = [
+    'The stock market is competitive.',
+    'This material has high tensile strength.',
+    'The database relationship is one-to-many.',
+    'The actor was attractive at the box office.',
+    'The chemical bond is stable.',
+    'The company is seeking committed capital.',
+    'The selection algorithm chose the fastest route.',
+    'The family of functions is continuous.',
+    'The model has high confidence.',
+    'The value of the property increased.',
+    'The operating system terminated the process.',
+    'The network connection is unreliable.',
+    'The pair of electrons share an orbital.',
+    'The application rejected the invalid request.',
+    'The parent process created a child process.',
+    'The body of the document contains five sections.',
+    'The engagement rate increased after the advertisement.',
+    'The profile of the mountain is visible.',
+    'The match ended in a draw.',
+    'The divorce between the two companies was completed.',
+  ];
+  const document = normalizeInput({
+    text: claims.join(' '),
+    source: { title: 'Cold-review polysemy matrix' },
+  });
+  const decisions = classifyDomainRelevance(detectClaimUnits(document));
+  const result = await analyzeDocument(document, REAL_CANON);
+
+  assert.equal(decisions.length, claims.length);
+  decisions.forEach((unit) => {
+    assert.equal(unit.domainRelevance.status, 'irrelevant', unit.text);
+    assert.equal(unit.domainRelevance.reasonCode, 'affirmative-non-domain-evidence', unit.text);
+    assert.ok(unit.domainRelevance.nonDomainScore >= 4, unit.text);
+  });
+  assert.equal(result.metrics.ignoredDomainSegments, claims.length);
+  assert.equal(result.metrics.claimLikeSegments, 0);
+  assert.equal(result.metrics.mappedClaimSegments, 0);
+  assert.equal(result.metrics.unmappedClaimSegments, 0);
+  assert.deepEqual(result.segments, []);
+  assert.deepEqual(result.strongestMatches, []);
+  assert.deepEqual(result.pressureTests, []);
+  assert.deepEqual(result.researchQueue.items, []);
+  assert.equal(result.coverage.mappedClaimSegmentSharePct, null);
+  assert.equal(result.coverage.mappedClaimWordSharePct, null);
+});
+
+test('domain context requires bounded anaphora plus semantic continuity', () => {
+  const legitimate = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps encourage rapid visual judgments. This makes photographs unusually important.',
+  })));
+  assert.equal(legitimate[1].domainRelevance.status, 'relevant');
+  assert.equal(legitimate[1].domainRelevance.localStatus, 'uncertain');
+  assert.equal(legitimate[1].domainRelevance.contextHelp?.sourceUnitId, legitimate[0].id);
+  assert.equal(legitimate[1].domainRelevance.contextHelp?.continuity, 'approved-consequence-language');
+
+  const validIt = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps can reduce offline encounters. It can reduce opportunities to meet.',
+  })));
+  assert.equal(validIt[1].domainRelevance.status, 'relevant');
+  assert.equal(validIt[1].domainRelevance.contextHelp?.sourceUnitId, validIt[0].id);
+
+  [
+    'Dating apps encourage rapid visual judgments. This server is running Linux today.',
+    'Dating apps encourage rapid visual judgments. This database relationship is one-to-many.',
+    'Dating apps encourage rapid visual judgments. This chemical bond is stable.',
+    'Dating apps encourage rapid visual judgments. It runs on Linux today.',
+  ].forEach((text) => {
+    const units = classifyDomainRelevance(detectClaimUnits(normalizeInput({ text })));
+    assert.equal(units[1].domainRelevance.status, 'irrelevant', text);
+    assert.equal(units[1].domainRelevance.contextHelp, null, text);
+  });
+
+  const exactIt = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps encourage rapid visual judgments. It reduces opportunities to meet partners.',
+  })));
+  assert.equal(exactIt[1].domainRelevance.status, 'relevant');
+  assert.equal(exactIt[1].boundedContext?.sourceUnitId, exactIt[0].id);
+
+  const nonCascade = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Dating apps encourage rapid visual judgments. This makes photographs important. This changes everything. It is obvious.',
+  })));
+  assert.equal(nonCascade[1].domainRelevance.contextHelp?.sourceUnitId, nonCascade[0].id);
+  assert.equal(nonCascade[2].domainRelevance.contextHelp, null);
+  assert.equal(nonCascade[3].domainRelevance.contextHelp, null);
+
+  const segmentBoundaries = classifyDomainRelevance(detectClaimUnits({
+    segments: [
+      { id: 'speaker-a', speaker: 'Ana', text: 'Dating apps encourage rapid visual judgments.' },
+      { id: 'speaker-b', speaker: 'Bo', text: 'This makes photographs important.' },
+    ],
+  }));
+  assert.equal(segmentBoundaries[1].boundedContext, null);
+  assert.equal(segmentBoundaries[1].domainRelevance.contextHelp, null);
+
+  const uncertainPredecessor = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'Attachment can change slowly over time. This makes photographs important.',
+  })));
+  assert.equal(uncertainPredecessor[0].domainRelevance.localStatus, 'uncertain');
+  assert.equal(uncertainPredecessor[1].domainRelevance.contextHelp, null);
+
+  const irrelevantPredecessor = classifyDomainRelevance(detectClaimUnits(normalizeInput({
+    text: 'The sky is blue. This makes photographs important.',
+  })));
+  assert.equal(irrelevantPredecessor[0].domainRelevance.localStatus, 'irrelevant');
+  assert.equal(irrelevantPredecessor[1].domainRelevance.contextHelp, null);
+});
+
+test('credible mappings require score plus inspectable evidence sufficiency', async () => {
+  const weakGenericClaim = 'Long commutes may reduce the time available to sustain a relationship.';
+  const weakResult = await analyzeDocument(normalizeInput({ text: weakGenericClaim }), REAL_CANON);
+  const weakPassage = weakResult.segments[0];
+  assert.equal(weakPassage.mapped, false);
+  assert.equal(weakPassage.weakMatches[0].title, 'Common interests');
+  assert.equal(weakPassage.weakMatches[0].score, 0.436);
+  assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
+    reason.startsWith('Admission guard:')));
+  assert.deepEqual(weakResult.researchQueue.items.map((item) => item.excerpt), [weakGenericClaim]);
+
+  const phraseResult = await analyzeDocument(normalizeInput({
+    text: 'Attraction is not selection.',
+  }), REAL_CANON);
+  assert.ok(phraseResult.segments[0].matches.some((match) =>
+    match.canonId === 'frameworks:conversion-ladder'));
+
+  const multipleDistinctive = await analyzeDocument(normalizeInput({
+    text: 'Mutual readiness and life plans can diverge before commitment.',
+  }), CANON);
+  const readiness = multipleDistinctive.segments[0].matches.find((match) =>
+    match.canonId === 'frameworks.readiness-gate');
+  assert.ok(readiness);
+  assert.ok(readiness.score >= 0.43);
+  assert.ok(readiness.whyMatched.some((reason) => /Distinctive overlap|Exact phrase|Concept signature/.test(reason)));
+});
+
+test('coverage distinguishes unavailable, zero, and positive denominators', async () => {
+  const noDomain = await analyzeDocument(normalizeInput({
+    text: 'The sky is blue. Water freezes at zero degrees Celsius.',
+  }), REAL_CANON);
+  assert.equal(noDomain.metrics.claimLikeSegments, 0);
+  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.0');
+  assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.0');
+  assert.equal(noDomain.coverage.mappedClaimSegmentSharePct, null);
+  assert.equal(noDomain.coverage.unmappedClaimSegmentSharePct, null);
+  assert.equal(noDomain.coverage.mappedClaimWordSharePct, null);
+  assert.match(analysisToMarkdown(noDomain), /Mapped share of claim-like segments:\*\* Not applicable/);
+  assert.doesNotMatch(analysisToMarkdown(noDomain), /Mapped share of claim-like segments:\*\* 0%/);
+
+  const noMatch = await analyzeDocument(normalizeInput({
+    text: 'Shared custody of a pet can prolong conflict after separation.',
+  }), REAL_CANON);
+  assert.equal(noMatch.metrics.claimLikeSegments, 1);
+  assert.equal(noMatch.metrics.mappedClaimSegments, 0);
+  assert.equal(noMatch.coverage.mappedClaimSegmentSharePct, 0);
+
+  const mapped = await analyzeDocument(normalizeInput({
+    text: 'Attraction is not selection.',
+  }), REAL_CANON);
+  assert.equal(mapped.metrics.claimLikeSegments, 1);
+  assert.equal(mapped.metrics.mappedClaimSegments, 1);
+  assert.equal(mapped.coverage.mappedClaimSegmentSharePct, 100);
 });

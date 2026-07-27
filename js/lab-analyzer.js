@@ -7,15 +7,16 @@
  * Contract:
  *   NormalizedDocument (le-lab.normalized-document/1.0)
  *     -> analyzeDocument(document, canonIndex)
- *     -> AnalysisResult (le-lab.analysis/1.0)
+ *     -> AnalysisResult (le-lab.analysis/2.0)
  *
  * The browser runs this module in a worker when available. Node fixture tests
  * import the same functions; there is no second test-only implementation.
  */
 
-export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/1.0';
+export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.0';
+export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.0';
 export const ANALYSIS_MODE = Object.freeze({
-  id: 'local-lexical-v1',
+  id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
   semanticModel: false,
   sourceUploaded: false,
@@ -30,8 +31,9 @@ const MAX_CONTEXT_CONTINUATION_WORDS = 18;
 const MAX_CONTEXT_SOURCE_WORDS = 60;
 const DOMAIN_RELEVANT_SCORE = 4;
 const DOMAIN_UNCERTAIN_SCORE = 1;
+const NON_DOMAIN_DECISIVE_SCORE = 4;
 
-const REFERENTIAL_CONTINUATION_CUE = /^(?:that|this|these|those|it|which|such(?:\s+(?:a|an))?|the same)\b/i;
+const ANAPHORIC_CONTINUATION_CUE = /^(?:it\b|(?:that|this|these|those|which)\b(?=\s+(?:is|are|was|were|can|could|may|might|will|would|makes?|means?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?|becomes?|suggests?|shows?|also\b))|(?:that|this)\s+(?:distinction|effect|pattern|tradeoff|constraint|change|dynamic|result|mechanism)\b|such(?:\s+(?:a|an))?\b|the same\b)/i;
 
 const STOP_WORDS = new Set([
   'a', 'about', 'after', 'again', 'against', 'all', 'also', 'am', 'an', 'and',
@@ -56,6 +58,16 @@ const GENERIC_TERMS = new Set([
   'better', 'want', 'wants', 'like', 'likes',
 ]);
 
+const LOW_INFORMATION_MATCH_TERMS = new Set([
+  ...GENERIC_TERMS,
+  'available', 'availability', 'build', 'choose', 'common', 'context', 'factor',
+  'factors', 'hard', 'harder', 'important', 'keep', 'option', 'options',
+  'increase', 'increases', 'long', 'matter', 'matters', 'outcome', 'outcomes',
+  'reduce', 'reduces', 'rule', 'same', 'selection', 'stable', 'still', 'sustain',
+  'tell', 'time', 'times', 'whether', 'different', 'effect', 'effects', 'general',
+  'make', 'makes', 'more',
+].flatMap((term) => tokenize(term)));
+
 const CLAIM_CUES = [
   /\b(?:is|are|was|were|means?|shows?|proves?|predicts?|causes?|creates?|drives?|leads?)\b/i,
   /\b(?:can|could|may|might|should|must|will|cannot|can't|won't|need to|have to|tend to|more likely|less likely)\b/i,
@@ -63,7 +75,7 @@ const CLAIM_CUES = [
   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
   /\b(?:prefer|choose|reject|attract|desire|commit|marry|divorce|retain|leave)\w*\b/i,
-  /\b(?:meet|make|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence)\w*\b/i,
+  /\b(?:meet|make|change|matter|narrow|prolong|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence|sustain|tolerate)\w*\b/i,
 ];
 
 /*
@@ -193,21 +205,101 @@ const DOMAIN_RELEVANCE_RULES = Object.freeze([
     id: 'dating-interface-adjacent',
     label: 'Possible dating-interface or social-matching context',
     weight: 1.2,
-    test: (text) => /\b(?:profile (?:photo(?:graph)?s?|bio)|match(?:es|ing)?|social venues?|third spaces?|pairing opportunities)\b/i.test(text),
+    test: (text) => /\b(?:profile (?:photo(?:graph)?s?|bio)|dating matches|social venues?|third spaces?|pairing opportunities)\b/i.test(text),
+  },
+  {
+    id: 'human-relationship-lifecycle',
+    label: 'Human relationship lifecycle or partner-access language',
+    weight: 2.6,
+    test: (text) => /\b(?:unattached adults?|after separation|relationship loss|future partners?|romantic networks?|combine households?|shared custody|shared financial obligations|early courtship|pair formation)\b/i.test(text),
+  },
+  {
+    id: 'social-opportunity-mechanism',
+    label: 'Plausible social opportunity or repeated-contact mechanism',
+    weight: 1.8,
+    test: (text) => /\b(?:remote work|commutes?|demanding schedules?|recurring community spaces?|support networks?|reputation|roommates?|community turnover|high turnover|repeated familiarity|repeated exposure|chance encounters?)\b.{0,100}\b(?:adults?|people|someone|pool|privacy|opportunities|encounters?|exposure|partners?|courtship|relationship|loss|attraction|networks?)\b/i.test(text)
+      || /\b(?:adults?|people|someone|pool|privacy|opportunities|encounters?|exposure|partners?|courtship|relationship|loss|attraction|networks?)\b.{0,100}\b(?:remote work|commutes?|demanding schedules?|recurring community spaces?|support networks?|reputation|roommates?|community turnover|high turnover|repeated familiarity|repeated exposure|chance encounters?)\b/i.test(text),
+  },
+  {
+    id: 'household-entanglement',
+    label: 'Plausible household, custody, or exit-cost mechanism',
+    weight: 2.2,
+    test: (text) => /\b(?:shared custody|combine households?|shared (?:financial )?obligations|housing arrangements?|living with roommates?|cost of leaving|conflict after separation)\b/i.test(text),
+  },
+  {
+    id: 'human-preference-mechanism',
+    label: 'Human preference or emotional decision mechanism',
+    weight: 1.4,
+    test: (text) => /\b(?:a person|people|someone|adults?)\b.{0,80}\b(?:emotional safety|predictability|desirability|commitment|relationship loss|partners?|romantic)\b/i.test(text),
   },
 ]);
 
 const NON_DOMAIN_SENSE_RULES = Object.freeze([
   {
+    id: 'computing-data-sense',
+    label: 'Computing, database, process, or model terminology',
+    weight: 6,
+    test: (text) => /\b(?:database relationships?|one-to-many|selection algorithms?|operating systems?|linux|servers?|parent processes?|child processes?|application requests?|invalid requests?|network connections?|confidence scores?|process (?:created|terminated|spawned)|algorithm (?:chose|selected|ranked))\b/i.test(text)
+      || /\bmodel\b.{0,30}\bconfidence\b/i.test(text),
+  },
+  {
+    id: 'physical-scientific-sense',
+    label: 'Physical, chemical, mathematical, or material-science terminology',
+    weight: 6,
+    test: (text) => /\b(?:tensile strength|chemical bonds?|electrons?|orbitals?|family of functions?|continuous functions?|temperature and pressure|degrees? celsius|freez(?:e|es|ing)|laboratory measurements?|physics|typography)\b/i.test(text),
+  },
+  {
+    id: 'sports-game-sense',
+    label: 'Sports, game, or competition terminology',
+    weight: 6,
+    test: (text) => /\b(?:match|game|fixture|bout)\b.{0,45}\b(?:ended|draw|score|won|lost|tournament|league|referee)\b/i.test(text)
+      || /\b(?:draw|score|tournament|league|referee)\b.{0,45}\b(?:match|game|fixture|bout)\b/i.test(text),
+  },
+  {
+    id: 'corporate-commercial-sense',
+    label: 'Corporate, commercial, finance, or media terminology',
+    weight: 7,
+    test: (text) => /\b(?:companies?|corporations?|businesses?)\b.{0,60}\b(?:divorce|merger|partner|relationship|commitment)\b/i.test(text)
+      || /\b(?:divorce|merger|partner|relationship|commitment)\b.{0,60}\b(?:companies?|corporations?|businesses?)\b/i.test(text)
+      || /\b(?:committed capital|stock market|financial markets?|property value|value of (?:the )?property|box office|advertising analytics?|engagement rate|advertisement)\b/i.test(text),
+  },
+  {
+    id: 'document-object-sense',
+    label: 'Document, object, geographic profile, or analytics terminology',
+    weight: 6,
+    test: (text) => /\b(?:body of the document|document body|mountain profile|profile of the mountain|engagement rate|advertisement|page layout|font family)\b/i.test(text),
+  },
+  {
+    id: 'environmental-physical-observation',
+    label: 'Affirmative weather, room, sky, or physical-state observation',
+    weight: 5,
+    test: (text) => /\b(?:sky|weather|room|water|temperature|afternoon)\b.{0,55}\b(?:blue|hot|cold|visible|freez(?:e|es|ing)|boil(?:s|ing)?|degrees?|celsius|fahrenheit)\b/i.test(text)
+      || /\b(?:blue|hot|cold|visible|freez(?:e|es|ing)|boil(?:s|ing)?|degrees?|celsius|fahrenheit)\b.{0,55}\b(?:sky|weather|room|water|temperature|afternoon)\b/i.test(text),
+  },
+  {
+    id: 'transport-schedule-fact',
+    label: 'Transport arrival, departure, or timetable fact',
+    weight: 5,
+    test: (text) => /\b(?:train|bus|flight|tram|subway)\b.{0,45}\b(?:arrived|departed|delayed|at noon|on time|timetable)\b/i.test(text),
+  },
+  {
+    id: 'generic-market-sense',
+    label: 'Unqualified non-dating market terminology',
+    weight: 4,
+    test: (text) => /\b(?:the |a )?(?:stock |financial )?market\b/i.test(text)
+      && !/\b(?:dating|sexual|romantic|partners?|mates?|singles?)\b/i.test(text),
+  },
+  {
     id: 'technical-relationship',
     label: 'Technical use of relationship terminology',
-    weight: -4,
-    test: (text) => /\brelationship between\b.{0,70}\b(?:variables?|measurements?|temperature|pressure|numbers?|sets?|tables?|equations?|quantities|objects?)\b/i.test(text),
+    weight: 6,
+    test: (text) => /\b(?:database )?relationship(?:s)?\b.{0,70}\b(?:variables?|measurements?|temperature|pressure|numbers?|sets?|tables?|equations?|quantities|objects?|one-to-many)\b/i.test(text)
+      || /\b(?:variables?|measurements?|temperature|pressure|numbers?|sets?|tables?|equations?|quantities|objects?|one-to-many)\b.{0,70}\brelationships?\b/i.test(text),
   },
   {
     id: 'non-romantic-partner',
     label: 'Explicit non-romantic partner sense',
-    weight: -3,
+    weight: 6,
     test: (text) => /\b(?:business|research|laboratory|training|project|trade|tennis|debate)\s+partners?\b/i.test(text),
   },
 ]);
@@ -502,7 +594,7 @@ function round(value, digits = 3) {
 }
 
 function percentage(numerator, denominator) {
-  return denominator ? round((numerator / denominator) * 100, 1) : 0;
+  return denominator ? round((numerator / denominator) * 100, 1) : null;
 }
 
 function wordCount(text) {
@@ -644,7 +736,7 @@ function boundedPreviousContext(sentences, sentenceIndex, parentSegmentId) {
   const text = String(sentences[sentenceIndex] || '').trim();
   const previousText = String(sentences[sentenceIndex - 1] || '').trim();
   if (!text || !previousText) return null;
-  if (!REFERENTIAL_CONTINUATION_CUE.test(text)) return null;
+  if (!ANAPHORIC_CONTINUATION_CUE.test(text)) return null;
   if (wordCount(text) > MAX_CONTEXT_CONTINUATION_WORDS) return null;
   if (wordCount(previousText) > MAX_CONTEXT_SOURCE_WORDS) return null;
   return {
@@ -701,31 +793,94 @@ export function detectClaimUnits(document) {
 
 function localDomainRelevance(unit) {
   const text = String(unit?.text || '').trim();
-  const evidence = [];
-  let rawScore = 0;
+  const domainEvidence = [];
+  const nonDomainEvidence = [];
+  let domainScore = 0;
+  let nonDomainScore = 0;
 
-  [...DOMAIN_RELEVANCE_RULES, ...NON_DOMAIN_SENSE_RULES].forEach((rule) => {
+  DOMAIN_RELEVANCE_RULES.forEach((rule) => {
     if (!rule.test(text)) return;
-    rawScore += rule.weight;
-    evidence.push({ code: rule.id, label: rule.label, weight: rule.weight });
+    domainScore += rule.weight;
+    domainEvidence.push({
+      code: rule.id,
+      label: rule.label,
+      weight: rule.weight,
+      polarity: 'domain',
+    });
+  });
+  NON_DOMAIN_SENSE_RULES.forEach((rule) => {
+    if (!rule.test(text)) return;
+    nonDomainScore += rule.weight;
+    nonDomainEvidence.push({
+      code: rule.id,
+      label: rule.label,
+      weight: rule.weight,
+      polarity: 'non-domain',
+    });
   });
 
-  const score = round(Math.max(0, rawScore), 2);
-  const status = score >= DOMAIN_RELEVANT_SCORE
-    ? 'relevant'
-    : score >= DOMAIN_UNCERTAIN_SCORE
-      ? 'uncertain'
-      : 'irrelevant';
-  if (!evidence.length) {
-    evidence.push({ code: 'no-domain-evidence', label: 'No relationship-domain evidence', weight: 0 });
+  const score = round(domainScore, 2);
+  const negativeScore = round(nonDomainScore, 2);
+  let status;
+  let reasonCode;
+  if (negativeScore >= NON_DOMAIN_DECISIVE_SCORE && negativeScore >= score) {
+    status = 'irrelevant';
+    reasonCode = 'affirmative-non-domain-evidence';
+  } else if (score >= DOMAIN_RELEVANT_SCORE) {
+    status = 'relevant';
+    reasonCode = 'strong-domain-evidence';
+  } else if (score >= DOMAIN_UNCERTAIN_SCORE) {
+    status = 'uncertain';
+    reasonCode = 'plausible-domain-evidence';
+  } else if (unit?.isClaimLike) {
+    status = 'uncertain';
+    reasonCode = 'unresolved-claim-retained';
+    domainEvidence.push({
+      code: reasonCode,
+      label: 'Claim-like passage retained because absence of known LE vocabulary is not evidence of irrelevance',
+      weight: 0,
+      polarity: 'retention',
+    });
+  } else {
+    status = 'irrelevant';
+    reasonCode = 'non-claim-without-domain-evidence';
+    nonDomainEvidence.push({
+      code: reasonCode,
+      label: 'No claim-like or relationship-domain evidence',
+      weight: 0,
+      polarity: 'non-domain',
+    });
   }
 
   return {
     status,
     localStatus: status,
     score,
-    evidence,
+    nonDomainScore: negativeScore,
+    reasonCode,
+    evidence: [...domainEvidence, ...nonDomainEvidence],
     contextHelp: null,
+  };
+}
+
+function contextContinuityEvidence(unit, previous) {
+  if (unit.domainRelevance.nonDomainScore >= NON_DOMAIN_DECISIVE_SCORE) return null;
+  const currentText = normalizeText(unit.text);
+  const previousText = normalizeText(previous.text);
+  const previousTokens = new Set(tokenize(previousText, { keepGeneric: false })
+    .filter((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
+  const sharedConcepts = tokenize(currentText, { keepGeneric: false })
+    .filter((token) => previousTokens.has(token) && !LOW_INFORMATION_MATCH_TERMS.has(token));
+  const consequenceLanguage = /\b(?:makes?|means?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?)\b.{0,65}\b(?:photographs?|photos?|profiles?|messages?|swipes?|matches?|meeting|meet|opportunities|choices?|attraction|compatibility|commitment|relationships?|partners?|important|harder|easier|likely|unlikely)\b/i.test(unit.text);
+  const localDomainContinuity = unit.domainRelevance.score >= DOMAIN_UNCERTAIN_SCORE;
+  if (!localDomainContinuity && !consequenceLanguage && !sharedConcepts.length) return null;
+  return {
+    code: localDomainContinuity
+      ? 'compatible-local-domain-evidence'
+      : consequenceLanguage
+        ? 'approved-consequence-language'
+        : 'shared-relationship-concept',
+    sharedConcepts: unique(sharedConcepts).slice(0, 5),
   };
 }
 
@@ -747,6 +902,8 @@ export function classifyDomainRelevance(units) {
     if (previous.domainRelevance.localStatus !== 'relevant') continue;
     if (previous.domainRelevance.contextHelp) continue;
 
+    const continuity = contextContinuityEvidence(unit, previous);
+    if (!continuity) continue;
     unit.domainRelevance = {
       ...unit.domainRelevance,
       status: 'relevant',
@@ -757,6 +914,8 @@ export function classifyDomainRelevance(units) {
           code: 'bounded-previous-domain-context',
           label: 'Referential continuation of an immediately previous relevant passage',
           weight: 'context',
+          polarity: 'domain',
+          continuity: continuity.code,
         },
       ],
       contextHelp: {
@@ -765,6 +924,8 @@ export function classifyDomainRelevance(units) {
         localStatus: unit.domainRelevance.localStatus,
         localScore: unit.domainRelevance.score,
         reason: bridge.reason,
+        continuity: continuity.code,
+        sharedConcepts: continuity.sharedConcepts,
       },
     };
   }
@@ -786,6 +947,8 @@ function scoreEntry(unit, entry, idf) {
   const entrySet = new Set(entry._tokens);
   const shared = queryTokens.filter((token) => entrySet.has(token));
   const distinctiveShared = queryDistinctive.filter((token) => entrySet.has(token));
+  const admissionDistinctiveShared = distinctiveShared
+    .filter((token) => !LOW_INFORMATION_MATCH_TERMS.has(token));
 
   const queryWeight = queryTokens.reduce((sum, token) => sum + (idf.get(token) || 1), 0) || 1;
   const entryWeight = entry._tokens.reduce((sum, token) => sum + (idf.get(token) || 1), 0) || 1;
@@ -798,6 +961,9 @@ function scoreEntry(unit, entry, idf) {
     .sort((a, b) => b.length - a.length);
   const singleAliasHits = entry._phrases
     .filter((phrase) => !phrase.includes(' ') && phrase.length >= 5 && normalized.split(/\W+/).includes(phrase));
+  const credibleSingleAliasHits = singleAliasHits
+    .filter((alias) => tokenize(alias)
+      .some((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
   const phraseStrength = phraseHits.length
     ? clamp(0.54 + Math.min(0.18, (phraseHits[0].split(' ').length - 2) * 0.035))
     : singleAliasHits.length
@@ -834,8 +1000,10 @@ function scoreEntry(unit, entry, idf) {
     canonCoverage: round(canonCoverage),
     signatureHits,
     phraseHits: phraseHits.slice(0, 3),
+    exactAliasHits: credibleSingleAliasHits.slice(0, 3),
     sharedTokens: shared.slice(0, 12),
     distinctiveShared: distinctiveShared.slice(0, 8),
+    admissionDistinctiveShared: admissionDistinctiveShared.slice(0, 8),
     misreadingOverlap: round(misreadingOverlap),
     weakGenericMatch,
   };
@@ -895,6 +1063,9 @@ function transparentWhy(rawScore, entry) {
   if (rawScore.phraseHits.length) {
     reasons.push(`Exact phrase: “${rawScore.phraseHits[0]}”`);
   }
+  if (rawScore.exactAliasHits.length) {
+    reasons.push(`Exact alias: “${rawScore.exactAliasHits[0]}”`);
+  }
   if (rawScore.distinctiveShared.length) {
     reasons.push(`Distinctive overlap: ${rawScore.distinctiveShared.slice(0, 5).join(', ')}`);
   } else if (rawScore.sharedTokens.length) {
@@ -902,6 +1073,9 @@ function transparentWhy(rawScore, entry) {
   }
   if (entry.subcategory) reasons.push(`Canon context: ${entry.category} / ${entry.subcategory}`);
   if (rawScore.weakGenericMatch) reasons.push('Penalty: only generic dating language overlaps');
+  if (!hasCredibleMatchEvidence(rawScore)) {
+    reasons.push('Admission guard: no exact phrase, signature, or two distinctive shared concepts');
+  }
   return reasons;
 }
 
@@ -941,6 +1115,20 @@ function hasLocalConceptEvidence(candidate) {
   );
 }
 
+function hasCredibleMatchEvidence(rawScore) {
+  return Boolean(
+    rawScore.signatureHits.length
+    || rawScore.phraseHits.length
+    || rawScore.exactAliasHits.length
+    || rawScore.admissionDistinctiveShared.length >= 2
+  );
+}
+
+function isCredibleCandidate(candidate) {
+  return candidate.score >= MIN_CREDIBLE_SCORE
+    && hasCredibleMatchEvidence(candidate._rawScore);
+}
+
 function applyBoundedContext(results, entriesById) {
   for (let index = 0; index < results.length; index += 1) {
     const result = results[index];
@@ -954,7 +1142,7 @@ function applyBoundedContext(results, entriesById) {
     // may help. Using the previous candidate's unboosted score prevents context
     // from cascading through a chain of elliptical sentences.
     const previousCanonIds = new Set(previous.candidates
-      .filter((candidate) => candidate._rawScore.score >= MIN_CREDIBLE_SCORE)
+      .filter((candidate) => isCredibleCandidate(candidate))
       .slice(0, MAX_MATCHES_PER_CLAIM)
       .map((candidate) => candidate.canonId));
 
@@ -1286,14 +1474,14 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
 
   const segmentResults = candidatesByUnit.map(({ unit, candidates }) => {
     const credible = candidates
-      .filter((candidate) => candidate.score >= MIN_CREDIBLE_SCORE)
+      .filter((candidate) => isCredibleCandidate(candidate))
       .slice(0, MAX_MATCHES_PER_CLAIM);
     credible.forEach((match) => {
       match.alignment = stanceFor(unit, match);
       match.why = match.alignment.rationale;
     });
     const weak = candidates
-      .filter((candidate) => candidate.score >= MIN_WEAK_SCORE && candidate.score < MIN_CREDIBLE_SCORE)
+      .filter((candidate) => candidate.score >= MIN_WEAK_SCORE && !isCredibleCandidate(candidate))
       .slice(0, 3);
     const ambiguity = credible.length > 1 && (credible[0].score - credible[1].score) < 0.07
       ? `Two canon entries are separated by only ${round(credible[0].score - credible[1].score, 2)} confidence points.`
@@ -1329,6 +1517,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
 
   const researchItems = unmappedClaims.map(researchItemFor);
   const researchQueue = {
+    schemaVersion: RESEARCH_QUEUE_SCHEMA_VERSION,
     status: 'Research candidates — not LE doctrine',
     itemCount: researchItems.length,
     groups: groupResearchItems(researchItems),
@@ -1376,7 +1565,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       unmappedClaimSegments: unmappedClaims.length,
     },
     domainRelevance: {
-      policy: 'deterministic-lexical-v1',
+      policy: 'deterministic-lexical-v2',
       relevantSegments: relevantUnits.length,
       uncertainRetainedSegments: uncertainUnits.length,
       ignoredSegments: ignoredUnits.length,
@@ -1425,7 +1614,8 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     ],
     limitations: [
       'Matches are deterministic lexical inferences, not judgments from a language model.',
-      'A separate deterministic relevance gate excludes only clearly non-relationship passages; uncertain domain passages are retained for review.',
+      'The deterministic relevance gate requires affirmative non-domain evidence before discarding claim-like material; plausible and unresolved claims are retained for review.',
+      'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
       'Alignment labels are cue-based and should be reviewed when language is ironic, quoted, highly implicit, or dependent on distant context.',
       'External sources listed by LE are carried through as citations; this analysis does not re-fetch or re-verify them.',
@@ -1444,7 +1634,9 @@ export const analyzerInternals = Object.freeze({
   localDomainRelevance,
   DOMAIN_RELEVANT_SCORE,
   DOMAIN_UNCERTAIN_SCORE,
+  NON_DOMAIN_DECISIVE_SCORE,
   scoreEntry,
+  hasCredibleMatchEvidence,
   classifyRiskFlags,
   MIN_CREDIBLE_SCORE,
   MIN_WEAK_SCORE,

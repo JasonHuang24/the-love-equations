@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=1.4';
+} from './lab-intake.js?v=1.5';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,18 +15,18 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=1.4';
-import { createDemoDocument } from './lab-demo.js?v=1.4';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.4';
+} from './lab-extractors.js?v=1.5';
+import { createDemoDocument } from './lab-demo.js?v=1.5';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.5';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=1.4';
+} from './lab-export.js?v=1.5';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.4';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.5';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -101,6 +101,7 @@ const ui = {
   flowSourceLabel: byId('lab-flow-source-label'),
   categorySpectrum: byId('lab-category-spectrum'),
   dominantCategory: byId('lab-dominant-category'),
+  coverageReadout: byId('lab-coverage-readout'),
   coverageLabel: byId('lab-coverage-label'),
   coverageTrack: byId('lab-coverage-track'),
   coverageFill: byId('lab-coverage-fill'),
@@ -918,6 +919,7 @@ function renderNormalizedDocument(documentValue) {
 function renderResult(result, documentValue) {
   state.analysis = result;
   const coverage = result.coverage.mappedClaimSegmentSharePct;
+  const coverageAvailable = Number.isFinite(coverage);
   const ignored = Number(result.metrics.ignoredDomainSegments || 0);
   const ignoredWords = Number(result.metrics.ignoredDomainWords || 0);
   ui.domainNote.hidden = ignored === 0;
@@ -927,7 +929,7 @@ function renderResult(result, documentValue) {
   setText(ui.metricWords, formatNumber(result.metrics.totalWords));
   setText(ui.metricSegments, formatNumber(result.metrics.sourceSegments));
   setText(ui.metricClaims, formatNumber(result.metrics.claimLikeSegments));
-  setText(ui.metricCoverage, `${coverage}%`);
+  setText(ui.metricCoverage, coverageAvailable ? `${coverage}%` : 'N/A');
   setText(ui.flowSource, formatNumber(result.metrics.sourceSegments));
   setText(ui.flowClaims, formatNumber(result.metrics.claimLikeSegments));
   setText(ui.flowCanon, formatNumber(result.strongestMatches.length));
@@ -936,14 +938,24 @@ function renderResult(result, documentValue) {
   ui.flowSourceLabel.textContent = `${formatNumber(result.metrics.totalWords)} normalized words`;
 
   renderCategorySpectrum(result.categoryDistribution);
-  ui.coverageLabel.textContent = `${coverage}% of claim-like segments`;
-  ui.coverageFill.style.width = `${coverage}%`;
-  ui.coverageMarker.style.left = `${coverage}%`;
-  ui.coverageMarker.style.opacity = '1';
-  ui.coverageTrack.setAttribute(
-    'aria-label',
-    `${coverage}% of ${result.metrics.claimLikeSegments} detected claim-like segments mapped to credible canon connections. This is document coverage, not proof.`,
-  );
+  ui.coverageReadout.classList.toggle('is-unavailable', !coverageAvailable);
+  ui.coverageLabel.textContent = coverageAvailable
+    ? `${coverage}% of claim-like segments`
+    : 'Not applicable';
+  ui.coverageFill.style.width = coverageAvailable ? `${coverage}%` : '0';
+  ui.coverageMarker.style.left = coverageAvailable ? `${coverage}%` : '0';
+  ui.coverageMarker.style.opacity = coverageAvailable ? '1' : '0';
+  if (coverageAvailable) {
+    ui.coverageTrack.setAttribute(
+      'aria-label',
+      `${coverage}% of ${result.metrics.claimLikeSegments} detected claim-like segments mapped to credible canon connections. This is document coverage, not proof.`,
+    );
+  } else {
+    ui.coverageTrack.setAttribute(
+      'aria-label',
+      'Coverage is unavailable because no relationship-domain claims were detected.',
+    );
+  }
 
   renderLedger(result);
   renderDistribution(ui.alignmentDistribution, alignmentDistribution(result));
@@ -961,8 +973,10 @@ function renderResult(result, documentValue) {
 
   const mapped = result.metrics.mappedClaimSegments;
   const noDomainClaims = result.metrics.claimLikeSegments === 0 && ignored > 0;
-  const nextState = !mapped
-    ? 'no-match'
+  const nextState = noDomainClaims
+    ? 'no-domain'
+    : !mapped
+      ? 'no-match'
     : extractionWarnings.some((warning) => warning.severity === 'warning' || warning.severity === 'error')
       ? 'partial'
       : 'success';
@@ -972,7 +986,9 @@ function renderResult(result, documentValue) {
     ? `No claim-like passage cleared the credible threshold; ${formatNumber(result.researchQueue.itemCount)} research candidate(s) remain visible.`
     : `${formatNumber(mapped)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped; ${formatNumber(result.pressureTests.length)} prioritized tension(s).`;
   setLabState(nextState, detail);
-  ui.workspaceSubtitle.textContent = `${result.source.title} · ${coverage}% claim-like-segment coverage · ${result.analysisMode.label}.`;
+  ui.workspaceSubtitle.textContent = coverageAvailable
+    ? `${result.source.title} · ${coverage}% claim-like-segment coverage · ${result.analysisMode.label}.`
+    : `${result.source.title} · coverage not applicable · ${result.analysisMode.label}.`;
   ui.intakeStatus.textContent = nextState === 'partial'
     ? 'Analysis complete with extraction warnings.'
     : 'Analysis complete on this device.';
@@ -1094,6 +1110,7 @@ function resetVisualResults() {
   }));
   ui.dominantCategory.textContent = 'Waiting for results';
   ui.coverageLabel.textContent = '—';
+  ui.coverageReadout.classList.remove('is-unavailable');
   ui.coverageFill.style.width = '0';
   ui.coverageMarker.style.left = '0';
   ui.coverageMarker.style.opacity = '0';
@@ -1208,7 +1225,7 @@ async function loadCanonIndex() {
     const sources = canonIndex.stats?.sourceCount
       ?? new Set(canonIndex.entries.map((entry) => entry.page)).size;
     ui.indexMeta.textContent = `Indexed ${formatNumber(concepts)} concepts across ${formatNumber(sources)} LE sources · ${canonIndex.indexVersion}`;
-    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 1.0';
+    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 2.0 · Queue 2.0';
     ui.analysisMode.textContent = 'On-device lexical · no semantic model';
     refreshReadyState();
   } catch (error) {

@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="css/styles.css?v=2.2" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=1.4" />
+  <link rel="stylesheet" href="css/lab.css?v=1.5" />
   <script src="js/include.js" defer></script>
-  <script type="module" src="js/lab-app.js?v=1.4"></script>
+  <script type="module" src="js/lab-app.js?v=1.5"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
@@ -53,7 +53,7 @@
                 </div>
                 <div>
                   <dt>Contracts</dt>
-                  <dd id="lab-schema-meta">Input v1 &middot; Analysis v1</dd>
+                  <dd id="lab-schema-meta">Input 1.0.0 &middot; Analysis 2.0 &middot; Queue 2.0</dd>
                 </div>
                 <div>
                   <dt>Mode</dt>
@@ -268,6 +268,7 @@
             <strong class="lab-state-message" data-state-message="success">Assay complete</strong>
             <strong class="lab-state-message" data-state-message="partial">Assay complete with extraction warnings</strong>
             <strong class="lab-state-message" data-state-message="no-match">No credible canon match found</strong>
+            <strong class="lab-state-message" data-state-message="no-domain">No relationship-domain claims detected</strong>
             <strong class="lab-state-message" data-state-message="failure">The assay stopped</strong>
             <span id="lab-analysis-status-detail">No source is loaded. Nothing has been analyzed.</span>
           </div>
@@ -403,7 +404,7 @@
                   <p>Matched categories will form a concentration profile here.</p>
                 </div>
               </section>
-              <section class="lab-coverage-readout" aria-labelledby="lab-coverage-title">
+              <section class="lab-coverage-readout" id="lab-coverage-readout" aria-labelledby="lab-coverage-title">
                 <div class="lab-readout-head">
                   <h4 id="lab-coverage-title">Claim-like segments mapped</h4>
                   <output id="lab-coverage-label">&mdash;</output>
@@ -413,7 +414,7 @@
                   <span class="lab-coverage-marker" id="lab-coverage-marker"></span>
                 </div>
                 <div class="lab-coverage-axis" aria-hidden="true"><span>0%</span><span>Mapped share of claim-like segments</span><span>100%</span></div>
-                <p>Coverage is the share of detected claim-like segments that found a credible LE connection. Context-only passages are excluded. It is not a truth score, population statistic, or claim of causation.</p>
+                <p>Coverage is the share of retained relationship-domain claim-like segments that found a credible LE connection. When none were detected, coverage is not applicable. Context-only and clearly non-domain passages are excluded. It is not a truth score, population statistic, or claim of causation.</p>
               </section>
             </div>
             <figcaption id="lab-assay-caption">The diagram summarizes routing volume and concentration. The ledger below is the accessible, excerpt-level equivalent.</figcaption>

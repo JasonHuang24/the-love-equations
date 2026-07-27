@@ -44,7 +44,7 @@ function fixture() {
     riskFlags: ['causal claim'],
   }));
   return {
-    schemaVersion: 'le-lab.analysis/1.0',
+    schemaVersion: 'le-lab.analysis/2.0',
     id: 'lea-export-fixture',
     generatedAt: '2026-07-26T12:00:00.000Z',
     analysisMode: { id: 'deterministic-local', label: 'Deterministic local' },
@@ -97,7 +97,7 @@ test('structured exports retain mapped passages and the research queue', () => {
   const queue = JSON.parse(researchQueueToJson(result));
   assert.equal(analysis.segments[0].unit.text, 'Mapped passage 1.');
   assert.equal(analysis.segments[2].unit.startTime, 3_723_045);
-  assert.equal(queue.schemaVersion, 'le-lab.research-queue/1.0');
+  assert.equal(queue.schemaVersion, 'le-lab.research-queue/2.0');
   assert.deepEqual(queue.queue.items.map((item) => item.location.startTime), TIMES_MS);
   assert.equal(queue.queue.items[2].excerpt, 'Research candidate 3.');
 });
@@ -127,4 +127,26 @@ test('valid transcript provenance remains present in Markdown and JSON exports',
     JSON.parse(researchQueueToJson(result)).source.url,
     'https://youtu.be/example'
   );
+});
+
+test('zero-denominator exports represent coverage as unavailable', () => {
+  const result = fixture();
+  result.metrics.claimLikeSegments = 0;
+  result.metrics.mappedClaimSegments = 0;
+  result.metrics.unmappedClaimSegments = 0;
+  result.metrics.ignoredDomainSegments = 3;
+  result.metrics.ignoredDomainWords = 15;
+  result.coverage.mappedClaimSegmentSharePct = null;
+  result.coverage.unmappedClaimSegmentSharePct = null;
+  result.coverage.mappedClaimWordSharePct = null;
+  result.segments = [];
+  result.researchQueue = {
+    schemaVersion: 'le-lab.research-queue/2.0',
+    itemCount: 0,
+    items: [],
+  };
+
+  assert.match(analysisToMarkdown(result), /Mapped share of claim-like segments:\*\* Not applicable/);
+  assert.equal(JSON.parse(analysisToJson(result)).coverage.mappedClaimSegmentSharePct, null);
+  assert.equal(JSON.parse(researchQueueToJson(result)).schemaVersion, 'le-lab.research-queue/2.0');
 });
