@@ -1,4 +1,4 @@
-import { analyzeDocument } from './lab-analyzer.js?v=1.6';
+import { analyzeDocument } from './lab-analyzer.js?v=1.7';
 
 function abortError() {
   try {
@@ -16,7 +16,7 @@ function abortError() {
  * deterministic analyzer contract.
  */
 export class LabAnalyzerClient {
-  constructor({ workerUrl = new URL('./lab-analyzer-worker.js?v=1.6', import.meta.url) } = {}) {
+  constructor({ workerUrl = new URL('./lab-analyzer-worker.js?v=1.7', import.meta.url) } = {}) {
     this.workerUrl = workerUrl;
     this.worker = null;
     this.jobs = new Map();
@@ -62,7 +62,7 @@ export class LabAnalyzerClient {
     }
   }
 
-  analyze(document, canonIndex, { signal, onProgress = () => {} } = {}) {
+  analyze(document, canonIndex, { signal, onProgress = () => {}, domainOverrides = null } = {}) {
     const jobId = `job-${Date.now().toString(36)}-${(++this.sequence).toString(36)}`;
     const worker = this.ensureWorker();
 
@@ -73,6 +73,7 @@ export class LabAnalyzerClient {
       return analyzeDocument(document, canonIndex, {
         isCancelled: () => cancelled,
         onProgress,
+        domainOverrides,
       }).finally(() => signal?.removeEventListener('abort', onAbort));
     }
 
@@ -98,7 +99,7 @@ export class LabAnalyzerClient {
         },
         onProgress,
       });
-      worker.postMessage({ type: 'analyze', jobId, document, canonIndex });
+      worker.postMessage({ type: 'analyze', jobId, document, canonIndex, options: { domainOverrides } });
     });
   }
 

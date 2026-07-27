@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="css/styles.css?v=2.2" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=1.6" />
+  <link rel="stylesheet" href="css/lab.css?v=1.7" />
   <script src="js/include.js" defer></script>
-  <script type="module" src="js/lab-app.js?v=1.6"></script>
+  <script type="module" src="js/lab-app.js?v=1.7"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
@@ -53,7 +53,7 @@
                 </div>
                 <div>
                   <dt>Contracts</dt>
-                  <dd id="lab-schema-meta">Input 1.0.0 &middot; Analysis 2.0 &middot; Queue 2.0</dd>
+                  <dd id="lab-schema-meta">Input 1.0.0 &middot; Analysis 2.1 &middot; Queue 2.0</dd>
                 </div>
                 <div>
                   <dt>Mode</dt>
@@ -297,9 +297,22 @@
           </div>
         </div>
 
-        <p class="lab-domain-note" id="lab-domain-note" hidden>
-          Clearly non-relationship passages are excluded from the assay but remain intact in the normalized Source view.
-        </p>
+        <details class="lab-triage" id="lab-triage" hidden>
+          <summary class="lab-triage-summary">
+            <span id="lab-triage-headline">No passages were set aside by the relevance gate.</span>
+            <span class="lab-triage-hint" aria-hidden="true">Review the calls</span>
+          </summary>
+          <div class="lab-triage-body">
+            <p class="lab-triage-explainer">
+              The relevance gate is deterministic lexical triage, not ground truth. Every passage it set
+              aside is listed here with the frames that decided it. If a real relationship claim was
+              binned, include it back — the assay re-runs on this device with your decision locked.
+              Retained passages can be excluded the same way from the ledger. Overrides last for this
+              session and are disclosed in every export.
+            </p>
+            <ul class="lab-triage-list" id="lab-triage-list" aria-label="Passages set aside by the relevance gate"></ul>
+          </div>
+        </details>
 
         <div class="lab-tab-list" id="lab-result-tabs" role="tablist" aria-label="Lab result views">
           <button class="lab-tab is-active" id="lab-tab-map" type="button" role="tab"
@@ -438,11 +451,12 @@
                     <th scope="col">Alignment</th>
                     <th scope="col">LE connection</th>
                     <th scope="col">Confidence</th>
+                    <th scope="col">Triage</th>
                   </tr>
                 </thead>
                 <tbody id="lab-map-table-body">
                   <tr id="lab-map-table-empty">
-                    <td colspan="5">Run an analysis to populate the segment-by-segment map.</td>
+                    <td colspan="6">Run an analysis to populate the segment-by-segment map.</td>
                   </tr>
                 </tbody>
               </table>

@@ -81,7 +81,7 @@ existing LE source links, and pressure questions where the source supplies
 them. `scripts/validate-canon-index.mjs` rejects broken pages/fragments,
 duplicate IDs, malformed evidence types, and invalid relations.
 
-## Analysis result — `le-lab.analysis/2.0`
+## Analysis result — `le-lab.analysis/2.1`
 
 The deterministic local adapter returns:
 
@@ -91,6 +91,13 @@ The deterministic local adapter returns:
 - a deterministic domain-relevance summary with relevant, uncertain-retained,
   ignored-passage, and ignored-word counts; clearly non-domain passages remain
   in the normalized source but are absent from analysis mappings and residue;
+- an inspectable `domainRelevance.ignoredPassages` list: every set-aside
+  passage with its location, excerpt, word count, machine status, decisive
+  reason code and label, and capped frame evidence — the gate is triage, not a
+  verdict, so its exclusions are always visible, never silent;
+- a `domainRelevance.overrides` echo of visitor triage decisions: `applied`
+  (`{segmentId, action}` for each honored include/exclude) and `unmatchedIds`
+  (override keys that matched no passage; also surfaced as a warning);
 - mapped claim-segment and claim-word coverage, explicitly labeled as document
   coverage rather than population evidence; the three coverage values are
   `null` when no retained relationship-domain claims exist, because that
@@ -108,6 +115,24 @@ Analysis v2 changes the analytical population: claim, mapping, coverage,
 distribution, pressure-test, and Research Queue fields include only retained
 relationship-domain passages. Those v2 metric meanings are not backward
 compatible with analysis v1, even though several new diagnostic fields are additive.
+
+Analysis v2.1 is additive over v2.0: it lists ignored passages individually and
+accepts per-passage visitor overrides. `analyzeDocument(document, canonIndex,
+{ domainOverrides })` takes a `{unitId: "include" | "exclude"}` map of locked
+visitor decisions applied after local classification and before any analytical
+population is built. An include joins analysis with `status: "relevant"`,
+`reasonCode: "user-override-include"`, and the machine's original verdict
+preserved in `localStatus`; an exclude moves a passage to the ignored list with
+`overridden: true`. Overrides are session-scoped user decisions keyed to
+content-derived unit IDs — they are disclosed in the result and every export,
+never presented as classifier verdicts, and an overridden passage neither
+receives nor provides context inheritance beyond its locked status.
+
+The relevance gate itself is held to a frozen, append-only benchmark
+(`tests/fixtures/domain-relevance-benchmark.json`): hard floors on domain
+recall and ignore precision, a ratchet floor on junk recall, and the standing
+safety property that every benchmark miss on non-domain text fails open —
+retained and visibly triage-labeled — never as silent data loss.
 
 Each retained `segments[].unit` includes a `domainRelevance` decision with its
 local status, decisive reason, participant frame, outcome frame, mechanism
@@ -143,6 +168,6 @@ be interpreted as a v1 queue with merely additive metadata.
 ## Adapter boundary
 
 A future analyzer may consume `le-lab.normalized-document/1.0.0` and return
-`le-lab.analysis/2.0` without changing intake or the interface. It must identify
+`le-lab.analysis/2.1` without changing intake or the interface. It must identify
 its mode, preserve segment references and canon IDs, report uncertainty, and
 must not claim an upload-free or on-device mode unless that is true.

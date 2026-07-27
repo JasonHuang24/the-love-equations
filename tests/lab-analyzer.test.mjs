@@ -533,7 +533,7 @@ test('rhetorical, quoted, negated, and uncertain relationship claims remain anal
   assert.ok(result.researchQueue.items.length >= 1);
 });
 
-test('no-domain exports omit ignored lines while preserving aggregate metrics and normalized fidelity', async () => {
+test('no-domain exports disclose set-aside passages as triage, never as analysis rows', async () => {
   const sourceText = 'The sky is blue. Water freezes at zero degrees Celsius.';
   const document = normalizeInput({ text: sourceText, source: { title: 'No-domain export fixture' } });
   const result = await analyzeDocument(document, REAL_CANON);
@@ -542,14 +542,21 @@ test('no-domain exports omit ignored lines while preserving aggregate metrics an
   const json = JSON.parse(analysisToJson(result));
   const queueJson = JSON.parse(researchQueueToJson(result));
 
-  [markdown, queueMarkdown].forEach((output) => {
-    assert.doesNotMatch(output, /The sky is blue/);
-    assert.doesNotMatch(output, /Water freezes/);
-    assert.match(output, /2 clearly non-domain passages ignored/);
-  });
+  // Set-aside passages appear in the labeled triage disclosure with the gate's
+  // reason, but never as passage-map rows, research candidates, or metrics.
+  assert.match(markdown, /## Relevance triage/);
+  assert.match(markdown, /Affirmative non-relationship frame[^\n]*The sky is blue/);
+  assert.match(markdown, /2 clearly non-domain passages ignored/);
+  assert.doesNotMatch(markdown, /## Passage map[\s\S]*The sky is blue/);
+  assert.doesNotMatch(queueMarkdown, /The sky is blue/);
+  assert.match(queueMarkdown, /2 clearly non-domain passages ignored/);
   assert.deepEqual(json.segments, []);
   assert.deepEqual(json.researchQueue.items, []);
   assert.equal(json.metrics.ignoredDomainSegments, 2);
+  assert.equal(json.domainRelevance.ignoredPassages.length, 2);
+  assert.ok(json.domainRelevance.ignoredPassages.every((passage) =>
+    passage.reasonCode && passage.reasonLabel && passage.excerpt && passage.segmentId));
+  assert.deepEqual(json.domainRelevance.overrides, { applied: [], unmatchedIds: [] });
   assert.equal(queueJson.domainRelevance.ignoredSegments, 2);
   assert.deepEqual(queueJson.queue.items, []);
   assert.equal(document.text, sourceText);
@@ -747,7 +754,7 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
     text: 'The sky is blue. Water freezes at zero degrees Celsius.',
   }), REAL_CANON);
   assert.equal(noDomain.metrics.claimLikeSegments, 0);
-  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.0');
+  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.1');
   assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.0');
   assert.equal(noDomain.coverage.mappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.unmappedClaimSegmentSharePct, null);
@@ -768,6 +775,61 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
   assert.equal(mapped.metrics.claimLikeSegments, 1);
   assert.equal(mapped.metrics.mappedClaimSegments, 1);
   assert.equal(mapped.coverage.mappedClaimSegmentSharePct, 100);
+});
+
+test('visitor overrides lock domain decisions and are disclosed end to end', async () => {
+  const document = normalizeInput({
+    text: 'The sky is blue. Couples who meet through friends stay together longer than couples who meet on apps.',
+    source: { title: 'Override fixture' },
+  });
+  const baseline = await analyzeDocument(document, REAL_CANON);
+  const ignoredId = baseline.domainRelevance.ignoredPassages[0].segmentId;
+  const retainedId = baseline.segments[0].unit.id;
+  assert.equal(baseline.metrics.claimLikeSegments, 1);
+  assert.equal(baseline.metrics.ignoredDomainSegments, 1);
+
+  // Include: the machine's verdict stays visible; the passage joins analysis.
+  const included = await analyzeDocument(document, REAL_CANON, {
+    domainOverrides: { [ignoredId]: 'include' },
+  });
+  assert.equal(included.metrics.ignoredDomainSegments, 0);
+  assert.equal(included.metrics.claimLikeSegments, 2);
+  const includedUnit = included.segments
+    .find((segment) => segment.unit.id === ignoredId).unit;
+  assert.equal(includedUnit.domainRelevance.status, 'relevant');
+  assert.equal(includedUnit.domainRelevance.localStatus, 'irrelevant');
+  assert.equal(includedUnit.domainRelevance.override, 'include');
+  assert.equal(includedUnit.domainRelevance.reasonCode, 'user-override-include');
+  assert.deepEqual(included.domainRelevance.overrides.applied,
+    [{ segmentId: ignoredId, action: 'include' }]);
+
+  // Exclude: the retained claim leaves every analytical population but is
+  // disclosed as a set-aside with the override reason, and coverage loses its
+  // denominator honestly.
+  const excluded = await analyzeDocument(document, REAL_CANON, {
+    domainOverrides: { [retainedId]: 'exclude' },
+  });
+  assert.equal(excluded.metrics.claimLikeSegments, 0);
+  assert.equal(excluded.metrics.ignoredDomainSegments, 2);
+  assert.equal(excluded.coverage.mappedClaimSegmentSharePct, null);
+  assert.deepEqual(excluded.researchQueue.items, []);
+  const excludedRecord = excluded.domainRelevance.ignoredPassages
+    .find((passage) => passage.segmentId === retainedId);
+  assert.equal(excludedRecord.reasonCode, 'user-override-exclude');
+  assert.equal(excludedRecord.overridden, true);
+  const excludedMarkdown = analysisToMarkdown(excluded);
+  assert.match(excludedMarkdown, /1 passage excluded by the visitor/);
+  assert.match(excludedMarkdown, /Excluded by the visitor for this session[^\n]*Couples who meet through friends/);
+  assert.match(researchQueueToMarkdown(excluded), /excluded by the visitor/);
+
+  // Stale overrides are echoed, warned about, and never applied.
+  const stale = await analyzeDocument(document, REAL_CANON, {
+    domainOverrides: { 'seg-gone.claim-99': 'include', [ignoredId]: 'invalid-action' },
+  });
+  assert.deepEqual(stale.domainRelevance.overrides.applied, []);
+  assert.deepEqual(stale.domainRelevance.overrides.unmatchedIds, ['seg-gone.claim-99']);
+  assert.ok(stale.warnings.some((warning) => /override/.test(warning.message)));
+  assert.equal(stale.metrics.ignoredDomainSegments, 1);
 });
 
 test('held-out non-domain frames are ignored before canon retrieval', async () => {

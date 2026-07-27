@@ -1141,9 +1141,8 @@
   background: rgba(255, 253, 249, 0.42);
 }
 
-.lab-domain-note {
+.lab-triage {
   margin: 0;
-  padding: 0.58rem clamp(1.2rem, 3vw, 1.8rem);
   border-bottom: 0.5px solid var(--border-light);
   background: rgba(126, 35, 45, 0.035);
   color: var(--text-dim);
@@ -1151,9 +1150,151 @@
   line-height: 1.5;
 }
 
-.lab-domain-note::before {
+.lab-triage-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.58rem clamp(1.2rem, 3vw, 1.8rem);
+  cursor: pointer;
+  list-style: none;
+}
+
+.lab-triage-summary::-webkit-details-marker {
+  display: none;
+}
+
+.lab-triage-summary::before {
   content: "\21B3  ";
   color: var(--scarlet);
+}
+
+.lab-triage-summary:focus-visible {
+  outline: 2px solid var(--scarlet);
+  outline-offset: -2px;
+}
+
+.lab-triage-hint {
+  flex-shrink: 0;
+  color: var(--scarlet);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lab-triage[open] .lab-triage-hint {
+  opacity: 0.55;
+}
+
+.lab-triage-body {
+  padding: 0 clamp(1.2rem, 3vw, 1.8rem) 0.9rem;
+}
+
+.lab-triage-explainer {
+  margin: 0 0 0.7rem;
+  max-width: 72ch;
+}
+
+.lab-triage-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.lab-triage-item {
+  padding: 0.6rem 0.75rem;
+  border: 0.5px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--lab-paper);
+}
+
+.lab-triage-item-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.lab-triage-ref {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  word-break: break-all;
+}
+
+.lab-triage-excerpt {
+  margin: 0.4rem 0;
+  color: var(--text);
+  font-style: italic;
+}
+
+.lab-triage-evidence {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+}
+
+.lab-triage-chip {
+  display: inline-block;
+  padding: 0.12rem 0.5rem;
+  border: 0.5px solid var(--border-light);
+  border-radius: 999px;
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lab-triage-chip.is-machine {
+  color: var(--text-dim);
+}
+
+.lab-triage-chip.is-uncertain {
+  color: var(--lab-amber);
+  border-color: rgba(154, 101, 20, 0.4);
+  background: var(--lab-amber-pale);
+}
+
+.lab-triage-chip.is-override {
+  color: var(--scarlet);
+  border-color: rgba(126, 35, 45, 0.4);
+  background: rgba(126, 35, 45, 0.06);
+}
+
+.lab-triage-button {
+  padding: 0.28rem 0.7rem;
+  border: 0.5px solid rgba(126, 35, 45, 0.45);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--scarlet);
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.lab-triage-button:hover,
+.lab-triage-button:focus-visible {
+  background: var(--scarlet);
+  color: #fff;
+}
+
+.lab-triage-button:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+.lab-triage-cell {
+  white-space: nowrap;
+}
+
+.lab-triage-cell .lab-triage-chip {
+  display: block;
+  width: fit-content;
+  margin-bottom: 0.3rem;
 }
 
 .lab-metric {
