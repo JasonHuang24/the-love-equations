@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=1.8';
+} from './lab-intake.js?v=1.9';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,18 +15,18 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=1.8';
-import { createDemoDocument } from './lab-demo.js?v=1.8';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.8';
+} from './lab-extractors.js?v=1.9';
+import { createDemoDocument } from './lab-demo.js?v=1.9';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=1.9';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=1.8';
+} from './lab-export.js?v=1.9';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.8';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=1.9';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -111,6 +111,7 @@ const ui = {
   coverageMarker: byId('lab-coverage-marker'),
   mapSummary: byId('lab-map-summary'),
   mapTableBody: byId('lab-map-table-body'),
+  ledgerFilterNote: byId('lab-ledger-filter-note'),
   alignmentDistribution: byId('lab-alignment-distribution'),
   evidenceDistribution: byId('lab-evidence-distribution'),
   citationsEmpty: byId('lab-citations-empty'),
@@ -153,6 +154,12 @@ const state = {
   resetSequence: 0,
   domainOverrides: new Map(),
   lastAnalyzedDocumentId: null,
+  ledgerView: {
+    rows: [],
+    filter: 'all',
+    sort: { key: 'order', dir: 'asc' },
+    hadIgnoredDomainSegments: false,
+  },
 };
 
 const analyzer = new LabAnalyzerClient();
@@ -779,73 +786,228 @@ function truncateLabel(value, limit) {
   return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
 }
 
-function renderLedger(result) {
+const LEDGER_FILTER_LABELS = {
+  all: 'every claim-like segment',
+  mapped: 'mapped segments only',
+  unmapped: 'unmapped segments only',
+};
+
+function ledgerRowMatchesFilter(segment, filter) {
+  if (filter === 'mapped') return Boolean(segment.mapped);
+  if (filter === 'unmapped') return !segment.mapped;
+  return true;
+}
+
+function ledgerSortValue(entry, key) {
+  const segment = entry.segment;
+  const primary = segment.mapped ? segment.matches[0] : null;
+  switch (key) {
+    case 'excerpt':
+      return String(segment.unit.text || '').toLowerCase();
+    case 'alignment':
+      // Group label A-Z; the unmapped group sorts after every named alignment.
+      return primary ? `0${primary.alignment.label.toLowerCase()}` : '1unmapped';
+    case 'connection':
+      return primary
+        ? `0${primary.title.toLowerCase()}`
+        : (segment.weakMatches?.[0] ? `1${segment.weakMatches[0].title.toLowerCase()}` : '2');
+    case 'confidence':
+      return primary
+        ? Number(primary.score || primary.bestScore || 0)
+        : (segment.weakMatches?.[0] ? Number(segment.weakMatches[0].score || 0) - 1 : -2);
+    case 'triage': {
+      const relevance = segment.unit.domainRelevance || {};
+      if (relevance.override === 'include') return 0;
+      if (relevance.status === 'uncertain') return 1;
+      return 2;
+    }
+    case 'order':
+    default:
+      return entry.order;
+  }
+}
+
+function compareLedgerEntries(a, b, sort) {
+  const left = ledgerSortValue(a, sort.key);
+  const right = ledgerSortValue(b, sort.key);
+  let delta;
+  if (typeof left === 'number' && typeof right === 'number') delta = left - right;
+  else delta = String(left).localeCompare(String(right));
+  if (delta === 0) delta = a.order - b.order;
+  return sort.dir === 'desc' ? -delta : delta;
+}
+
+function buildLedgerRow(segment) {
+  const row = document.createElement('tr');
+  const refCell = document.createElement('td');
+  const excerptCell = document.createElement('td');
+  const alignmentCell = document.createElement('td');
+  const connectionCell = document.createElement('td');
+  const confidenceCell = document.createElement('td');
+  const triageCell = document.createElement('td');
+  triageCell.className = 'lab-triage-cell';
+  refCell.textContent = segmentReference(segment.unit);
+  excerptCell.textContent = segment.unit.text;
+  const relevance = segment.unit.domainRelevance || {};
+  const shortExcerpt = truncateLabel(segment.unit.text, 60);
+  if (relevance.override === 'include') {
+    triageCell.appendChild(triageChip('Included by you', 'override'));
+    triageCell.appendChild(triageButton('Undo', `Undo your inclusion of “${shortExcerpt}”`, () => setDomainOverride(segment.unit.id, null)));
+  } else {
+    if (relevance.status === 'uncertain') {
+      triageCell.appendChild(triageChip('Uncertain · retained', 'uncertain'));
+    }
+    triageCell.appendChild(triageButton('Exclude', `Exclude “${shortExcerpt}” from the analysis`, () => setDomainOverride(segment.unit.id, 'exclude')));
+  }
+  if (segment.mapped) {
+    const primary = segment.matches[0];
+    alignmentCell.textContent = primary.alignment.label;
+    const link = document.createElement('a');
+    link.href = primary.href;
+    link.textContent = primary.title;
+    connectionCell.appendChild(link);
+    if (segment.matches.length > 1) {
+      const extra = segment.matches.slice(1);
+      const details = document.createElement('details');
+      details.className = 'lab-adjacent-more';
+      const summary = document.createElement('summary');
+      summary.textContent = `+ ${extra.length} adjacent`;
+      details.appendChild(summary);
+      const list = document.createElement('ul');
+      extra.forEach((match) => {
+        const item = document.createElement('li');
+        const extraLink = document.createElement('a');
+        extraLink.href = match.href;
+        extraLink.textContent = match.title;
+        item.appendChild(extraLink);
+        item.appendChild(document.createTextNode(` — ${match.alignment.label} · ${confidenceLabel(match)}`));
+        list.appendChild(item);
+      });
+      details.appendChild(list);
+      connectionCell.appendChild(details);
+    }
+    confidenceCell.textContent = confidenceLabel(primary);
+  } else {
+    alignmentCell.textContent = 'Unmapped';
+    connectionCell.textContent = segment.weakMatches?.[0]
+      ? `Nearest: ${segment.weakMatches[0].title}`
+      : 'No credible match';
+    confidenceCell.textContent = segment.weakMatches?.[0]
+      ? `Below threshold · ${Math.round(segment.weakMatches[0].score * 100)}/100`
+      : '—';
+  }
+  row.append(refCell, excerptCell, alignmentCell, connectionCell, confidenceCell, triageCell);
+  return row;
+}
+
+function syncLedgerControls() {
+  const { filter, sort } = state.ledgerView;
+  document.querySelectorAll('[data-ledger-filter]').forEach((tile) => {
+    tile.setAttribute('aria-pressed', String(tile.dataset.ledgerFilter === filter && filter !== 'all'));
+  });
+  document.querySelectorAll('.lab-sort-button').forEach((button) => {
+    const th = button.closest('th');
+    if (!th) return;
+    if (button.dataset.sortKey === sort.key) {
+      th.setAttribute('aria-sort', sort.dir === 'desc' ? 'descending' : 'ascending');
+      th.classList.add('is-sorted');
+    } else {
+      th.removeAttribute('aria-sort');
+      th.classList.remove('is-sorted');
+    }
+  });
+  if (filter === 'all') {
+    ui.ledgerFilterNote.hidden = true;
+    clearNode(ui.ledgerFilterNote);
+  } else {
+    ui.ledgerFilterNote.hidden = false;
+    clearNode(ui.ledgerFilterNote);
+    const label = document.createElement('span');
+    label.textContent = `Ledger filtered to ${LEDGER_FILTER_LABELS[filter]}.`;
+    const clear = document.createElement('button');
+    clear.type = 'button';
+    clear.className = 'lab-triage-button';
+    clear.textContent = 'Show all rows';
+    clear.addEventListener('click', () => setLedgerFilter('all'));
+    ui.ledgerFilterNote.append(label, clear);
+  }
+}
+
+function paintLedger() {
   clearNode(ui.mapTableBody);
+  const view = state.ledgerView;
+  const claims = view.rows;
+  const noDomainClaims = claims.length === 0 && view.hadIgnoredDomainSegments;
+  const visible = claims
+    .filter((entry) => ledgerRowMatchesFilter(entry.segment, view.filter))
+    .sort((a, b) => compareLedgerEntries(a, b, view.sort));
+  visible.slice(0, MAX_RENDERED_LEDGER_ROWS).forEach((entry) => {
+    ui.mapTableBody.appendChild(buildLedgerRow(entry.segment));
+  });
+  if (visible.length > MAX_RENDERED_LEDGER_ROWS) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 6;
+    cell.textContent = `${formatNumber(visible.length - MAX_RENDERED_LEDGER_ROWS)} additional rows are preserved in the Markdown and JSON exports.`;
+    row.appendChild(cell);
+    ui.mapTableBody.appendChild(row);
+  }
+  if (!visible.length) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 6;
+    if (claims.length) {
+      cell.textContent = `No rows match the active filter (${LEDGER_FILTER_LABELS[view.filter]}).`;
+    } else {
+      cell.textContent = noDomainClaims
+        ? 'No relationship-domain claims were detected in this source.'
+        : 'No claim-like passages were detected.';
+    }
+    row.appendChild(cell);
+    ui.mapTableBody.appendChild(row);
+  }
+  syncLedgerControls();
+}
+
+function setLedgerFilter(filter) {
+  const next = state.ledgerView.filter === filter ? 'all' : filter;
+  state.ledgerView.filter = next;
+  paintLedger();
+}
+
+function setLedgerSort(key) {
+  const sort = state.ledgerView.sort;
+  if (sort.key === key) {
+    sort.dir = sort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sort.key = key;
+    // Confidence reads as importance: strongest matches surface first.
+    sort.dir = key === 'confidence' ? 'desc' : 'asc';
+  }
+  paintLedger();
+}
+
+function resetLedgerView() {
+  state.ledgerView = {
+    rows: [],
+    filter: 'all',
+    sort: { key: 'order', dir: 'asc' },
+    hadIgnoredDomainSegments: false,
+  };
+}
+
+function renderLedger(result) {
   const claims = result.segments.filter((segment) => segment.unit.isClaimLike);
   const noDomainClaims = claims.length === 0 && result.metrics.ignoredDomainSegments > 0;
-  claims.slice(0, MAX_RENDERED_LEDGER_ROWS).forEach((segment) => {
-    const row = document.createElement('tr');
-    const refCell = document.createElement('td');
-    const excerptCell = document.createElement('td');
-    const alignmentCell = document.createElement('td');
-    const connectionCell = document.createElement('td');
-    const confidenceCell = document.createElement('td');
-    const triageCell = document.createElement('td');
-    triageCell.className = 'lab-triage-cell';
-    refCell.textContent = segmentReference(segment.unit);
-    excerptCell.textContent = segment.unit.text;
-    const relevance = segment.unit.domainRelevance || {};
-    const shortExcerpt = truncateLabel(segment.unit.text, 60);
-    if (relevance.override === 'include') {
-      triageCell.appendChild(triageChip('Included by you', 'override'));
-      triageCell.appendChild(triageButton('Undo', `Undo your inclusion of “${shortExcerpt}”`, () => setDomainOverride(segment.unit.id, null)));
-    } else {
-      if (relevance.status === 'uncertain') {
-        triageCell.appendChild(triageChip('Uncertain · retained', 'uncertain'));
-      }
-      triageCell.appendChild(triageButton('Exclude', `Exclude “${shortExcerpt}” from the analysis`, () => setDomainOverride(segment.unit.id, 'exclude')));
-    }
-    if (segment.mapped) {
-      const primary = segment.matches[0];
-      alignmentCell.textContent = primary.alignment.label;
-      const link = document.createElement('a');
-      link.href = primary.href;
-      link.textContent = primary.title;
-      connectionCell.appendChild(link);
-      if (segment.matches.length > 1) {
-        connectionCell.appendChild(document.createTextNode(` + ${segment.matches.length - 1} adjacent`));
-      }
-      confidenceCell.textContent = confidenceLabel(primary);
-    } else {
-      alignmentCell.textContent = 'Unmapped';
-      connectionCell.textContent = segment.weakMatches?.[0]
-        ? `Nearest: ${segment.weakMatches[0].title}`
-        : 'No credible match';
-      confidenceCell.textContent = segment.weakMatches?.[0]
-        ? `Below threshold · ${Math.round(segment.weakMatches[0].score * 100)}/100`
-        : '—';
-    }
-    row.append(refCell, excerptCell, alignmentCell, connectionCell, confidenceCell, triageCell);
-    ui.mapTableBody.appendChild(row);
-  });
-  if (claims.length > MAX_RENDERED_LEDGER_ROWS) {
-    const row = document.createElement('tr');
-    const cell = document.createElement('td');
-    cell.colSpan = 6;
-    cell.textContent = `${formatNumber(claims.length - MAX_RENDERED_LEDGER_ROWS)} additional rows are preserved in the Markdown and JSON exports.`;
-    row.appendChild(cell);
-    ui.mapTableBody.appendChild(row);
-  }
-  if (!claims.length) {
-    const row = document.createElement('tr');
-    const cell = document.createElement('td');
-    cell.colSpan = 6;
-    cell.textContent = noDomainClaims
-      ? 'No relationship-domain claims were detected in this source.'
-      : 'No claim-like passages were detected.';
-    row.appendChild(cell);
-    ui.mapTableBody.appendChild(row);
-  }
+  const previous = state.ledgerView || {};
+  state.ledgerView = {
+    rows: claims.map((segment, order) => ({ segment, order })),
+    // Filter and sort survive an override re-run; a fresh document starts clean upstream.
+    filter: previous.filter || 'all',
+    sort: previous.sort || { key: 'order', dir: 'asc' },
+    hadIgnoredDomainSegments: noDomainClaims,
+  };
+  paintLedger();
   ui.mapSummary.textContent = noDomainClaims
     ? 'No relationship-domain claims were detected in this source.'
     : `${formatNumber(result.metrics.mappedClaimSegments)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped credibly.`;
@@ -1153,6 +1315,8 @@ async function runAnalysis(event) {
     if (state.lastAnalyzedDocumentId !== documentValue.id) {
       state.domainOverrides.clear();
       state.lastAnalyzedDocumentId = documentValue.id;
+      // A different source also invalidates the ledger's view state.
+      resetLedgerView();
     }
     setLabState('analyzing', 'Tracing exact terms, weighted overlap, and canon relationships.');
     setBusy(true, 'analyzing');
@@ -1211,6 +1375,23 @@ function wireTabs() {
       event.preventDefault();
       activateTab(tabs[target].dataset.labTab, { focus: true });
     });
+  });
+}
+
+function wireLedgerControls() {
+  document.querySelectorAll('[data-ledger-filter]').forEach((tile) => {
+    tile.addEventListener('click', () => {
+      setLedgerFilter(tile.dataset.ledgerFilter);
+      activateTab('map');
+      document.getElementById('lab-map-table')?.closest('.lab-ledger')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  document.querySelectorAll('[data-lab-goto]').forEach((button) => {
+    button.addEventListener('click', () => activateTab(button.dataset.labGoto, { focus: true }));
+  });
+  document.querySelectorAll('.lab-sort-button').forEach((button) => {
+    button.addEventListener('click', () => setLedgerSort(button.dataset.sortKey));
   });
 }
 
@@ -1308,6 +1489,8 @@ async function resetLab({ preserveInputs = false } = {}) {
   state.media = null;
   state.domainOverrides.clear();
   state.lastAnalyzedDocumentId = null;
+  resetLedgerView();
+  syncLedgerControls();
   if (!preserveInputs) {
     ui.form.reset();
     clearFileSummary();
@@ -1331,7 +1514,7 @@ async function resetLab({ preserveInputs = false } = {}) {
   setBusy(false);
   setLabState('empty', 'No source is loaded. Nothing has been analyzed.');
   ui.intakeStatus.textContent = 'Ready for a source.';
-  ui.workspaceSubtitle.textContent = 'The empty instrument shows the route. Run the demonstration or bring a source to populate every chamber with real, source-derived results.';
+  ui.workspaceSubtitle.textContent = 'The empty instrument shows the route. Run the Demo Test or bring a source to populate every chamber with real, source-derived results.';
   refreshReadyState();
 }
 
@@ -1478,6 +1661,7 @@ ui.exportResearch.addEventListener('click', () => {
 });
 
 wireTabs();
+wireLedgerControls();
 wireDropZone();
 window.addEventListener('beforeunload', () => {
   state.workController?.abort();

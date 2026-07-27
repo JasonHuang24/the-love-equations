@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="css/styles.css?v=2.2" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=1.8" />
+  <link rel="stylesheet" href="css/lab.css?v=1.9" />
   <script src="js/include.js" defer></script>
-  <script type="module" src="js/lab-app.js?v=1.8"></script>
+  <script type="module" src="js/lab-app.js?v=1.9"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
@@ -26,9 +26,8 @@
           <p class="lab-product-line">Bring a claim. See where it fits, where it strains, and what the map is missing.</p>
           <p class="lab-hero-sub">Paste a transcript, drop a file, or keep a URL as provenance. The Lab returns a cited claim map, pressure tests, and a research queue for what does not fit.</p>
           <div class="lab-hero-actions">
-            <a class="btn btn-scarlet" href="#lab-workbench">Bring a source <i class="ti ti-arrow-down" aria-hidden="true"></i></a>
             <button class="btn lab-demo-button" id="lab-load-demo" type="button">
-              <i class="ti ti-player-play" aria-hidden="true"></i> Run the demonstration
+              <i class="ti ti-player-play" aria-hidden="true"></i> Demo Test
             </button>
           </div>
         </div>
@@ -244,7 +243,7 @@
           <div>
             <div class="lab-section-kicker">02 &middot; Analysis bench</div>
             <h2 id="lab-workspace-title">Source assay</h2>
-            <p id="lab-workspace-subtitle">The empty instrument shows the route. Run the demonstration or bring a source to populate every chamber with real, source-derived results.</p>
+            <p id="lab-workspace-subtitle">The empty instrument shows the route. Run the Demo Test or bring a source to populate every chamber with real, source-derived results.</p>
           </div>
           <div class="lab-export-controls" aria-label="Analysis exports">
             <button class="btn lab-export-button" id="lab-copy-markdown" type="button" disabled>
@@ -286,15 +285,15 @@
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-section"></i></span>
             <div><output id="lab-metric-segments">&mdash;</output><span>Segments</span></div>
           </div>
-          <div class="lab-metric">
+          <button type="button" class="lab-metric lab-metric-button" id="lab-metric-claims-tile" data-ledger-filter="all" aria-pressed="false" aria-controls="lab-map-table" aria-label="Show every claim-like segment in the connection ledger">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-message-question"></i></span>
             <div><output id="lab-metric-claims">&mdash;</output><span>Claim-like segments</span></div>
-          </div>
-          <div class="lab-metric lab-metric-coverage">
+          </button>
+          <button type="button" class="lab-metric lab-metric-coverage lab-metric-button" id="lab-metric-coverage-tile" data-ledger-filter="mapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="Filter the connection ledger to mapped segments">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-route"></i></span>
             <div><output id="lab-metric-coverage">&mdash;</output><span>Claim-like segments mapped</span></div>
             <small>Share of claim-like segments, not proof</small>
-          </div>
+          </button>
         </div>
 
         <details class="lab-triage" id="lab-triage" hidden>
@@ -356,7 +355,7 @@
             </div>
 
             <div class="lab-assay-flow" id="lab-map-visual">
-              <section class="lab-assay-stage is-source" data-flow-stage="source" aria-label="Source stage">
+              <button type="button" class="lab-assay-stage is-source" data-flow-stage="source" data-lab-goto="source" aria-label="Source stage — open the Source view">
                 <span class="lab-stage-number">01</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-file-text" aria-hidden="true"></i>
@@ -364,9 +363,9 @@
                 </div>
                 <strong>Source</strong>
                 <small id="lab-flow-source-label">No normalized document</small>
-              </section>
+              </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
-              <section class="lab-assay-stage is-claims" data-flow-stage="claims" aria-label="Claims stage">
+              <button type="button" class="lab-assay-stage is-claims" data-flow-stage="claims" data-ledger-filter="all" aria-pressed="false" aria-controls="lab-map-table" aria-label="Claims stage — show every claim-like segment in the connection ledger">
                 <span class="lab-stage-number">02</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-message-circle-question" aria-hidden="true"></i>
@@ -374,9 +373,9 @@
                 </div>
                 <strong>Claims</strong>
                 <small id="lab-flow-claims-label">Claim-like segments</small>
-              </section>
+              </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
-              <section class="lab-assay-stage is-canon" data-flow-stage="canon" aria-label="LE connections stage">
+              <button type="button" class="lab-assay-stage is-canon" data-flow-stage="canon" data-ledger-filter="mapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="LE connections stage — filter the connection ledger to mapped segments">
                 <span class="lab-stage-number">03</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-binary-tree" aria-hidden="true"></i>
@@ -384,9 +383,9 @@
                 </div>
                 <strong>LE connections</strong>
                 <small id="lab-flow-canon-label">Credible canon matches</small>
-              </section>
+              </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
-              <section class="lab-assay-stage is-tensions" data-flow-stage="tensions" aria-label="Tensions stage">
+              <button type="button" class="lab-assay-stage is-tensions" data-flow-stage="tensions" data-lab-goto="pressure" aria-label="Tensions stage — open the Pressure Test view">
                 <span class="lab-stage-number">04</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-activity-heartbeat" aria-hidden="true"></i>
@@ -394,9 +393,9 @@
                 </div>
                 <strong>Tensions</strong>
                 <small id="lab-flow-tension-label">Prioritized reasoning strains</small>
-              </section>
+              </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
-              <section class="lab-assay-stage is-unmapped" data-flow-stage="unmapped" aria-label="Unmapped residue stage">
+              <button type="button" class="lab-assay-stage is-unmapped" data-flow-stage="unmapped" data-ledger-filter="unmapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="Unmapped residue stage — filter the connection ledger to unmapped segments">
                 <span class="lab-stage-number">05</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-grain" aria-hidden="true"></i>
@@ -404,7 +403,7 @@
                 </div>
                 <strong>Unmapped residue</strong>
                 <small id="lab-flow-unmapped-label">Research candidates, not doctrine</small>
-              </section>
+              </button>
             </div>
 
             <div class="lab-assay-readouts">
@@ -441,17 +440,18 @@
               </div>
               <p id="lab-map-summary">No source has been mapped.</p>
             </div>
+            <div class="lab-ledger-filter-note" id="lab-ledger-filter-note" role="status" aria-live="polite" hidden></div>
             <div class="lab-table-scroll" tabindex="0" aria-label="Scrollable connection ledger">
               <table class="lab-map-table" id="lab-map-table">
-                <caption>Detected claim-like segments mapped to The Love Equations canon</caption>
+                <caption>Detected claim-like segments mapped to The Love Equations canon. Column headers sort; stat tiles filter.</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Segment</th>
-                    <th scope="col">Source excerpt</th>
-                    <th scope="col">Alignment</th>
-                    <th scope="col">LE connection</th>
-                    <th scope="col">Confidence</th>
-                    <th scope="col">Triage</th>
+                    <th scope="col" aria-sort="ascending"><button type="button" class="lab-sort-button" data-sort-key="order" aria-label="Sort by segment order">Segment <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="excerpt" aria-label="Sort source excerpts alphabetically">Source excerpt <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="alignment" aria-label="Sort and group by alignment">Alignment <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="connection" aria-label="Sort LE connections alphabetically">LE connection <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="confidence" aria-label="Sort by confidence">Confidence <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="triage" aria-label="Sort and group by triage state">Triage <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                   </tr>
                 </thead>
                 <tbody id="lab-map-table-body">

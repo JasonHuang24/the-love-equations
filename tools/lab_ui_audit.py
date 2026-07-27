@@ -99,17 +99,29 @@ for required_id in (
     "lab-coverage-readout",
     "lab-research-empty-title",
     "lab-research-empty-copy",
+    "lab-ledger-filter-note",
 ):
     if required_id not in id_set:
         errors.append(f"Lab relevance UI hook missing: #{required_id}")
+if "Demo Test" not in html_text:
+    errors.append("hero demo button must be labeled Demo Test")
+if "Bring a source <" in html_text:
+    errors.append("the redundant hero Bring-a-source button must stay removed")
+for hook, minimum in (("data-ledger-filter=", 3), ("data-sort-key=", 6), ("data-lab-goto=", 2)):
+    if html_text.count(hook) < minimum:
+        errors.append(f"ledger QoL hook underrepresented: {hook} (need >= {minimum})")
 
 css_text = (ROOT / "css" / "lab.css").read_text(encoding="utf-8")
 without_comments = re.sub(r"/\*.*?\*/", "", css_text, flags=re.S)
 if without_comments.count("{") != without_comments.count("}"):
     errors.append("css/lab.css has unbalanced braces")
-for selector in (".lab-triage", ".lab-triage-button", ".lab-triage-chip", ".lab-triage-cell"):
+for selector in (
+    ".lab-triage", ".lab-triage-button", ".lab-triage-chip", ".lab-triage-cell",
+    ".lab-sort-button", ".lab-ledger-filter-note", ".lab-adjacent-more",
+    "button.lab-metric", "button.lab-assay-stage",
+):
     if selector not in css_text:
-        errors.append(f"Lab relevance triage has no page-specific styling: {selector}")
+        errors.append(f"Lab QoL control has no page-specific styling: {selector}")
 if ".lab-coverage-readout.is-unavailable" not in css_text:
     errors.append("Lab coverage readout has no unavailable-state styling")
 
