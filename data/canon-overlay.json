@@ -615,6 +615,17 @@
       ]
     },
     "statistics:stat-attention": {
+      "aliases": [
+        "inbox asymmetry",
+        "message asymmetry",
+        "attention asymmetry"
+      ],
+      "phrases": [
+        "overwhelmed by the number of messages",
+        "insecure because of the lack of messages",
+        "flooded with messages",
+        "lack of messages received"
+      ],
       "related": [
         "frameworks:attention-market",
         "frameworks:conversion-ladder"

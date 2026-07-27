@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.0",
-  "indexVersion": "1.0.0+6dc9bff7b0fe",
-  "generatedAt": "2026-07-26T17:07:50.303Z",
+  "indexVersion": "1.0.0+3c6a6f107990",
+  "generatedAt": "2026-07-27T05:29:37.646Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -5603,10 +5603,17 @@
       "evidenceType": "Tier 1",
       "contentType": "Statistical chart",
       "aliases": [
-        "same market floods one side and starves the other"
+        "same market floods one side and starves the other",
+        "inbox asymmetry",
+        "message asymmetry",
+        "attention asymmetry"
       ],
       "phrases": [
-        "Recent dating-app users who said their experience left them feeling…"
+        "Recent dating-app users who said their experience left them feeling…",
+        "overwhelmed by the number of messages",
+        "insecure because of the lack of messages",
+        "flooded with messages",
+        "lack of messages received"
       ],
       "dependencies": [],
       "related": [
