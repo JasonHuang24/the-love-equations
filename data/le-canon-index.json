@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.0",
-  "indexVersion": "1.0.0+3c6a6f107990",
-  "generatedAt": "2026-07-27T05:29:37.646Z",
+  "indexVersion": "1.0.0+db8e6170a088",
+  "generatedAt": "2026-07-27T05:34:52.516Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -55,8 +55,8 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "9f5f19428475d53a20a9a84f8c2faeb46dddc83e015f0f67fe1d2eadb39c1fc6",
-      "conceptCount": 30
+      "sha256": "179f8ecdb366eb57e6aaa3755b21cd9e9223e56571d02d1552020770b3bf4c50",
+      "conceptCount": 31
     },
     {
       "page": "mythbuster.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 446,
+    "conceptCount": 447,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -227,7 +227,7 @@
       "Mythbuster": 64,
       "Pill Dossiers": 12,
       "Rules & Frameworks": 21,
-      "Statistics": 30
+      "Statistics": 31
     },
     "byEvidenceType": {
       "Definitional": 1,
@@ -245,14 +245,14 @@
       "Record + framework": 13,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 27,
+      "Tier 1": 28,
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 355,
+    "anchoredConceptCount": 356,
     "conceptsWithExternalSources": 69,
     "dependencyCount": 217,
-    "relatedCount": 282
+    "relatedCount": 286
   },
   "entries": [
     {
@@ -5599,7 +5599,7 @@
       "anchor": "stat-attention",
       "category": "Statistics",
       "subcategory": "What the deal actually pays",
-      "synopsis": "This is the demand asymmetry made personal, and it cuts both ways. Women are far more likely to feel buried in attention; men are far more likely to feel invisible for the lack of it. Same market, opposite complaints — which is also why \"she feels like a body, he feels like a wallet\" has a quieter cousin: she feels swarmed, he feels ignored.",
+      "synopsis": "This is the demand asymmetry made personal, and it cuts both ways. Women are far more likely to feel buried in attention; men are far more likely to feel invisible for the lack of it. Same market, opposite complaints — which is also why \"she feels like a body, he feels like a wallet\" has a quieter cousin: she feels swarmed, he feels ignored. The market's response is one chart down: pay-to-play →",
       "evidenceType": "Tier 1",
       "contentType": "Statistical chart",
       "aliases": [
@@ -5617,6 +5617,7 @@
       ],
       "dependencies": [],
       "related": [
+        "statistics:stat-pay-to-play",
         "frameworks:attention-market",
         "frameworks:conversion-ladder"
       ],
@@ -5654,6 +5655,45 @@
       "commonMisreadings": [],
       "sourceLinks": [],
       "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-pay-to-play",
+      "title": "Pay-to-play: who buys reach, and what it buys",
+      "page": "statistics.html",
+      "anchor": "stat-pay-to-play",
+      "category": "Statistics",
+      "subcategory": "What the deal actually pays",
+      "synopsis": "The market's answer to the attention asymmetry one chart up: men are the buying side — 41% of male users have paid versus 29% of women — and the gradient runs exactly where you'd predict: with income (45% upper / 36% middle / 28% lower) and with age (41% of users 30+ vs 22% under 30). Paid users also report better experiences, 58% vs 50%.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "aliases": [
+        "pay to play",
+        "paying for reach",
+        "paid dating apps"
+      ],
+      "phrases": [
+        "Online-dating users who have ever paid to use a dating site or app — including for extra features — and how reported experience splits by paying:",
+        "paid to use a dating site or app",
+        "paying for boosts",
+        "paying for visibility"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-attention",
+        "smv:overview",
+        "smv:exposure"
+      ],
+      "boundaryConditions": [
+        "Method Same Pew ATP probability panel, weighted. Base: ever used online dating (the 3,128 base). “Paid” includes one-off purchases and extra features, not just subscriptions; the income and age gradients quoted in the note come from Pew's published breakdowns of the same item. Bar widths are the percentages themselves.",
+        "The paid-versus-never-paid experience gap is a selection effect until proven otherwise: payers skew richer, older, and more intent, and the survey cannot separate the boost from the buyer."
+      ],
+      "commonMisreadings": [
+        "That paid users report better experiences is not evidence that paying causes better outcomes."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Does the experience gap survive holding income, age, and stated dating intent constant?"
+      ]
     },
     {
       "id": "statistics:stat-looks-matching",

@@ -614,6 +614,31 @@
         "Is uncertainty coming from low interest, low safety, incomplete information, or a genuine readiness constraint?"
       ]
     },
+    "statistics:stat-pay-to-play": {
+      "aliases": [
+        "pay to play",
+        "paying for reach",
+        "paid dating apps"
+      ],
+      "phrases": [
+        "paid to use a dating site or app",
+        "paying for boosts",
+        "paying for visibility"
+      ],
+      "related": [
+        "statistics:stat-attention",
+        "smv:exposure"
+      ],
+      "boundaryConditions": [
+        "The paid-versus-never-paid experience gap is a selection effect until proven otherwise: payers skew richer, older, and more intent, and the survey cannot separate the boost from the buyer."
+      ],
+      "commonMisreadings": [
+        "That paid users report better experiences is not evidence that paying causes better outcomes."
+      ],
+      "pressureTests": [
+        "Does the experience gap survive holding income, age, and stated dating intent constant?"
+      ]
+    },
     "statistics:stat-attention": {
       "aliases": [
         "inbox asymmetry",
