@@ -1,5 +1,12 @@
 # RESEARCH PACKET — BATCH 1
 
+**Revision 2, post-review.** Revision 1 went to a cold reviewer (Opus 5, xhigh, packet-only channel)
+which returned ACCEPT 21 · REWORD 10 · CONTEST 5 · zero INTEGRITY findings. Every correction it
+carried has been applied or explicitly answered, and each is marked inline where it lands
+("CORRECTED at review", "added at review", "withdrawn"). The adjudication of all 36 dispositions —
+including the one CONTEST charge that was rejected — is `review-dispositions.md` in this directory.
+Four contested points were settled by re-reading the archived source text rather than by argument.
+
 Three claim clusters plus one site-internal item. Every claim is stated with its source, its
 evidence tier as assigned, and the figures as recorded. Gaps are listed with the barrier that
 produced them. Nothing in this packet has been adjudicated.
@@ -68,6 +75,10 @@ https://bpl.studentorg.berkeley.edu/docs/41-Marital%20Processes92.pdf
 "Seventy-three married couples were studied in 1983 and 1987." Outcome is a cascade, not divorce
 alone: "36 of 73 couples (49.3%) reported considering dissolving their marriage"; "Eighteen of the
 73 couples (24.7%) actually separated"; "Nine of the 73 couples actually divorced (12.5%)."
+**Arithmetic note added at review:** 9/73 = 12.3%, not the printed 12.5%, so that parenthetical does
+not follow from its own denominator. Quoted as printed; whether this is the paper's typo or an
+upstream transcription slip is **UNVERIFIED** — this source is not in the archived corpus, so it
+cannot be re-checked here. Compare the preserved source defect recorded in ITEM 11.
 Regulated versus nonregulated couples: considered dissolution 33.0% vs 71.0% (F 3.18); separation
 16.7% vs 36.8% (F 1.84); divorce 7.1% vs 19.0% (F 1.57) — the divorce contrast is the weakest of
 the three. Time-1 satisfaction by divorce r = −.23, p < .05, which the paper itself calls
@@ -91,7 +102,9 @@ Family Psychology* 14(1):42–58.
 https://www.johngottman.net/wp-content/uploads/2011/05/Predicting-Marital-Stability-and-Divorce-in-Newlywed-Couples.pdf
 95 newlywed couples; discriminant function analysis "predicted, with 87.4% accuracy" at Time 2 and
 "81% accuracy" at Time 3. The instrument is the **Oral History Interview**, not SPAFF and not the
-four horsemen. This paper is nonetheless commonly absorbed into "Gottman predicts at 90%+" summaries.
+four horsemen — so any "Gottman predicts at 90%+" summary resting on this paper is citing a different
+instrument from the one the cluster claim names. **No source is recorded here for how often such
+summaries do so**; an earlier draft asserted that absorption as fact without a citation.
 TIER 2.
 
 **ITEM 7. The pivotal paper was never read in full.**
@@ -121,9 +134,11 @@ fetch tool rather than delivered verbatim**: 124 newlywed couples, SPAFF, five 3
   (same 21). Sameness is established by near-identical recruitment prose across 1992/2000/2002 —
   same city, year, advertisement method, $5 payment, and the same 85-invited/79-usable funnel — not
   by inference.
-- **Cohort B — Puget Sound newlyweds, 1989–92.** Papers: Gottman et al. 1998 (130; n = 60 in
-  prediction), Carrère & Gottman 1999 (124), Carrère et al. 2000 (95). Shared design confirmed in
-  Carrère et al. 2000's own text: "a report of the procedures can be found in Gottman et al. (1998)."
+- **Cohort B — Puget Sound newlyweds, 1989–92.** Papers: Gottman et al. 1998 (n = 60 in the
+  prediction analyses per Heyman & Slep; **the commonly cited total of 130 couples remains UNVERIFIED
+  — see ITEM 7**, which marks it search-engine-only, and an earlier draft of this item used it as an
+  established figure), Carrère & Gottman 1999 (124), Carrère et al. 2000 (95). Shared design confirmed
+  in Carrère et al. 2000's own text: "a report of the procedures can be found in Gottman et al. (1998)."
 - **Author overlap:** Gottman is an author on every primary paper; Levenson on all four Cohort A
   papers; Carrère on 1998/1999/2000; Coan on 1998/2000. No primary paper in this corpus lacks
   Gottman.
@@ -158,6 +173,15 @@ divorced and 176 married each. Backward stepwise logistic regression; ROC cut-po
   sensitivity: 45.95%; specificity: 74.55%; PVpos: 28.81%; PVneg: 86.01%."
 - **Re-weighted to a 16% base rate** (Clarke 1995): "PVpos: 20.99%." Summary sentence: "An equation
   with an initial overall accuracy of 90% ended up with a positive predictive value of 21%."
+- **PRESERVED SOURCE DISCREPANCY, added at review.** The design description above is quoted faithfully
+  from the archived source, which states the split verbatim: "We randomly split the 176 divorced
+  participants and the 352 married or cohabiting participants into two subsamples, each with 88
+  divorced and 176 married or living together participants." But the paper's own confusion matrices
+  classify 37 divorced cases per subsample (34+3 development; 17+20 crossvalidation), not 88, against
+  167 and 165 married rather than 176. All ten derived statistics reproduce exactly from the matrices,
+  so the matrices are internally sound; the unexplained reduction — most plausibly listwise deletion on
+  the regression's predictors, which the text does not state — is **the source's**, not this packet's.
+  Recorded here rather than reconciled, alongside the sensitivity/specificity defect below.
 - Applied to Gottman et al. 1998, assuming 80% sensitivity and 80% specificity at 16% prevalence:
   "The positive predictive value for Gottman et al.'s equation would be 43%... one would be wrong
   more than half of the time when one told couples 'you are likely to get divorced.'"
@@ -168,12 +192,16 @@ A textual defect is preserved in the archived source: "sensitivity dropped 45% a
 dropped 15%" — the second instance evidently should read *specificity*.
 TIER 2.
 
-**ITEM 12. The critique side is NOT concentrated — four mutually independent lineages.**
-No shared authors, none Gottman-affiliated: Stony Brook (Heyman & Slep, statistical); Oregon Social
-Learning Center (Kim/Capaldi/Crosby, empirical replication); Carnegie Mellon Heinz School (DeKay,
-Greeno & Houck 2002, *Family Process* 41(1):97–103, DOI
-10.1111/j.1545-5300.2002.40102000097.x, PMID 11924094 — methodological); plus Denver/UCLA (Stanley,
-Bradbury & Markman 2000, *JMF* 62:256–264) which was **not reached, paywalled**.
+**ITEM 12. The critique side is institutionally dispersed rather than concentrated — but only two of
+the four groups contributed usable text.**
+Four non-overlapping author groups, none Gottman-affiliated: Stony Brook (Heyman & Slep, **read in
+full**, statistical); Oregon Social Learning Center (Kim/Capaldi/Crosby, **read in full**, empirical
+replication — though conducted on the Gottman lab's own SPAFF instrument); Carnegie Mellon Heinz
+School (DeKay, Greeno & Houck 2002, *Family Process* 41(1):97–103, DOI
+10.1111/j.1545-5300.2002.40102000097.x, PMID 11924094 — **tool-paraphrased abstract only**); plus
+Denver/UCLA (Stanley, Bradbury & Markman 2000, *JMF* 62:256–264) which was **not reached, paywalled —
+so its content, and therefore its placement on the critique side at all, is UNVERIFIED**. An earlier
+draft counted four lineages without recording that one was never read.
 DeKay et al. was reached as a **tool-paraphrased abstract only** — post hoc OLS inadequate for
 divorce timing, duration models preferable, flawed distributional assumptions, omitted variables, 15
 cases, findings lack replicability. It is corroborated from the reply side, full text read
@@ -220,8 +248,11 @@ b = 0.43, r = .35; frequency b = 0.83, r = .18) make the decline decelerating ra
 **What it cannot do:** no security or familiarity construct is in the model, so it cannot speak to
 *why*. The paper's own discussion flags that findings "may not apply to other samples, i.e., more
 established relationships."
-TIER 1-adjacent (genuinely prospective, multi-wave, attrition-controlled; not independently
-replicated within the paper; newlyweds only).
+**TIER 2** — single paper, no independent replication, newlyweds only; but genuinely prospective,
+multi-wave and attrition-controlled across two same-lab samples (N = 207 couples), which makes it the
+strongest design in this cluster even at TIER 2. An earlier draft labelled this "TIER 1-adjacent,"
+which is not a rung in this packet's own scheme and claimed better-than-TIER-2 standing without
+meeting the stated TIER 1 bar.
 
 **ITEM 15. (a) A large cross-sectional association, with the authors' own causal disclaimer.**
 van Lankveld, J., Dewitte, M., Verboon, P., & van Hooren, S. (2021). "Associations of Intimacy,
@@ -252,10 +283,15 @@ whether attachment moderates the intimacy–desire link.
 **The moderation hypothesis was rejected**, verbatim: "The hypotheses that the link between intimacy
 and sexual desire would be moderated by attachment-related relational needs were rejected."
 Anxious attachment-related needs correlated *positively* with desire (r = 0.07, p < .001, weak);
-avoidant needs negatively (r = −0.05, p < .001, weak, significant only in the heterosexual-women
-subsample). Perceived intimacy and perceived partner responsiveness — the closest available proxies
-for felt security — each correlated *positively* with desire at medium effect size (both r = 0.25,
-p < .001), and each independently predicted desire in the final SEM (paths 0.15 and 0.13).
+avoidant needs negatively (r = −0.05, p < .001, weak). Both are full-sample estimates.
+**CORRECTED at review** — an earlier draft of this item attached a subsample caveat to the avoidant
+correlation and located it in heterosexual women. Re-checked against the archived source text, the
+caveat belongs to the *anxious* correlation and runs the other way: it "was positive and significant
+in the full sample and all subsamples, but not significant in the subsample of non-heterosexual men."
+Perceived intimacy and perceived partner responsiveness — the closest available proxies for felt
+security — each "correlated positively and significantly with sexual desire (both r = 0.25,
+p < .001)," and each independently predicted desire in the final SEM (paths 0.15 and 0.13). The
+source assigns these coefficients no magnitude adjective; none is supplied here.
 **Caveat recorded:** a between-person correlation is not automatically the within-person trajectory;
 this cross-sectional design cannot adjudicate either way.
 TIER 2 for the concurrent association; explicitly not a test of decay over time.
@@ -274,7 +310,10 @@ both sexes; women's desire declined regardless of attachment style.
 **No exact statistics were retrievable.** Note also that it tests attachment anxiety — conceptually
 closer to insecurity than to *felt security* as the claim's mechanism names it — and is silent on
 familiarity/habituation as a distinct mechanism.
-TIER 2 if the secondhand description holds.
+**TIER 3 as sourced** — reached only through a press summary and a citation inside another paper, with
+no statistics and an unverified author list. An earlier draft graded this "TIER 2 if the secondhand
+description holds," which grades a hypothetical; tier tracks how a source was actually reached. Were
+the primary read and the description confirmed, it would rate TIER 2.
 
 **ITEM 19. (b) One longitudinal finding runs the causal arrow backwards.**
 Quoted byte-verbatim from the verified van Lankveld text (Item 15), which is citing Mizrahi et al.
@@ -306,10 +345,13 @@ TIER 3.
   (12049023) gives citation only. This is the load-bearing citation for the male-stable/female-
   declining sex difference and it is **UNVERIFIED against primary text.** Its wave structure could
   not be confirmed, so whether it shares the cross-sectional confound is itself unverified.
-- **An unnamed 2011 replication**, *Journal of Sex & Marital Therapy* 38(1), PMID 22268980, N = 170
+- **An unnamed replication**, *Journal of Sex & Marital Therapy* 38(1), PMID 22268980, N = 170
   undergraduates. Reported: women's desire negatively predicted by duration controlling for age and
   satisfaction; men's not. **GAP — author names UNVERIFIED; do not cite an author name for this
-  study.** TIER 2 as described.
+  study.** **TIER 3 as sourced** (never read; authors unknown; findings from a search record) — an
+  earlier draft assigned TIER 2. **Year corrected to UNVERIFIED:** the draft said 2011, but this packet
+  pins JSMT vol 36 to 2010 at ITEM 20, which places vol 38 in 2012. Every other venue-year pair in this
+  packet is internally consistent, so this one is treated as unresolved rather than asserted either way.
 - **Twenge, J. M., Sherman, R. A., & Wells, B. E. (2017).** "Declines in Sexual Frequency among
   American Adults, 1989–2014." *Archives of Sexual Behavior* 46(8):2389–2401. Reported from GSS
   data, N = 26,620: roughly 9 fewer times per year in the early 2010s than the late 1990s,
@@ -324,10 +366,16 @@ No study was found that manipulates attachment-system activation and measures a 
 in a desire-system marker within one design. What exists is theoretical: Diamond (2003),
 *Psychological Review* 110:173, proposing attachment/romantic-love and sexual desire as partially
 *dissociable* — not necessarily opposed — neurobehavioral systems (cited inside the verified McNulty
-reference list, not fetched); and Mikulincer & Shaver's attachment-and-sexuality work, which frames
-attachment styles as shaping *how* people approach sex rather than as a decay mechanism.
-The measured associations that could be verified run weakly *positive* between security proxies and
-desire, at both between-person (Item 17) and within-day levels. The within-day source is van
+reference list, not fetched).
+An earlier draft also characterised "Mikulincer & Shaver's attachment-and-sexuality work" as framing
+attachment styles as shaping *how* people approach sex rather than as a decay mechanism. **That
+characterisation carried no year, venue, or locator and is withdrawn** rather than repaired: the names
+appear only as background citations inside the archived van Lankveld text, and no work of theirs was
+reached in this batch.
+The measured associations that could be verified run *positive* between security proxies and desire, at
+both between-person (ITEM 17) and within-day levels. **Consistency note:** an earlier draft called the
+same coefficients "weakly positive" here and "medium effect size" at ITEM 17; the source supplies no
+magnitude adjective, so both are withdrawn and the coefficients stand as r = 0.25, p < .001. The within-day source is van
 Lankveld, Jacobs, Thewissen, Dewitte & Verboon (2018), *Journal of Social and Personal
 Relationships* 35(4), experience sampling, N = 134, 10 beeps/day for 7 days, mean duration 14.6
 years: "Daily intimacy significantly predicted sexual desire (B=.239, SE=.065, p<.01)."
@@ -350,7 +398,13 @@ frequency, not about desire decay within established pairs. It was not used as a
 Stage: post-pairing. Qualifier: conditional on alternatives visibility. Split into **(a)** the main
 effect and **(b)** the conditional.
 
-**ITEM 24. (a) The main effect on satisfaction.**
+**ITEM 24. (a) A main effect on satisfaction — but for a pool-comparison construct, not for
+self-versus-partner mate value discrepancy.**
+**SCOPE CORRECTED at review.** The cluster claim is about being higher mate value than *one's own
+partner*. The construct headlined in this item is a *pool* comparison, built almost identically to the
+"availability of better alternatives" term whose construct mismatch is flagged at ITEM 27. It does not
+test the cluster claim's main effect; **ITEM 25 is the item that does.** An earlier draft presented
+this as "the main effect on satisfaction" without that distinction.
 Conroy-Beam, D., Goetz, C. D., & Buss, D. M. (2016). "What predicts romantic relationship
 satisfaction and mate retention intensity: mate preference fulfillment or mate value discrepancies?"
 *Evolution and Human Behavior* 37(6):440–448. DOI 10.1016/j.evolhumbehav.2016.04.003.
@@ -392,9 +446,14 @@ value stay satisfied regardless of alternatives.
   satisfaction to *increased* mate-retention behaviour (indirect path p = .01) and through trust to
   *decreased* mate-retention behaviour (indirect path p = .001).
 - Study 3, N = 301 (same-scale replication addressing a measurement-scale confound in Studies 1–2):
-  interaction β = −.20, p < .001. The sign differs from Studies 1–2 because of differing model-coding
-  conventions between forced-entry and stepwise specifications; the plotted pattern is directionally
-  the same.
+  interaction β = −.20, p < .001. The sign is opposite to Studies 1–2. **ATTRIBUTION CORRECTED at
+  review:** the reconciliation offered for that reversal — differing coding conventions between the
+  forced-entry and stepwise specifications, with the plotted interaction directionally identical — is
+  the **research scout's inference, not the paper's argument**. Re-checked against the archived source,
+  the paper says only that "Study 3 replicated the relationship between mate value discrepancies and
+  relationship satisfaction found in Studies 1 and 2" and never addresses a sign reversal. The paper
+  does separately volunteer that a *different* Study 3 result "could indicate that Study 3's result was
+  a type I error," which concerns preference fulfilment rather than the interaction.
 - **No study in this set measured infidelity or infidelity intent.** The dependent variables are
   relationship satisfaction (QMI) and mate-retention effort.
 **CRITICAL CONSTRUCT MISMATCH:** the "alternatives" term is not a measure of subjective visibility
@@ -433,19 +492,27 @@ strongly, most of all under high threat — when personally evaluating an extrem
 salient alternative in a live computer-dating paradigm. That is an inverse-direction conditional:
 commitment causes people to perceptually neutralise visible alternatives, a self-protective loop
 working against the claim rather than for it.
-**GAP** — not fetched primary; reached via WebSearch synthesis and Miller's secondhand citations.
-Sample sizes and statistics for its three sub-studies are **UNVERIFIED**. Rusbult was at the
-University of Kentucky at the time, making this the one clearly independent data point in this
-tradition.
-TIER 3 as sourced.
+**GAP — and this item fails the citation floor, flagged at review.** The citation carries authors and a
+year only: **no journal, volume, pages, DOI, or URL**. Its retrieval basis was a WebSearch synthesis
+plus Miller's secondhand citations — a synthesis is not a named source. Sample sizes and statistics for
+its three sub-studies are **UNVERIFIED**, and so, less obviously, are the paradigm description and the
+moderation pattern above, which an earlier draft presented without a flag.
+The claim that "Rusbult was at the University of Kentucky at the time, making this the one clearly
+independent data point in this tradition" is **withdrawn as an uncited biographical assertion**. It was
+carrying the item's entire independence conclusion, and lineage independence is evidenced explicitly
+everywhere else in this packet (ITEMs 9, 12, 28) rather than asserted.
+TIER 3 as sourced. Retained despite the citation failure because it is a *disconfirming* finding, and
+dropping it would bias the cluster; it must be re-cited before any use.
 
 **ITEM 31. (b) The only source combining both predictors with an infidelity outcome was not reached.**
 "Pathways to online infidelity: the roles of perceived online dating success, perceived availability
-of alternative partners, and mate value discrepancy" (ResearchGate ID 374848897). Reported: serial
-mediation, N = 338, cross-sectional dating-app sample.
-**GAP — HTTP 403.** Authors, journal, and year unconfirmed, and critically it could **not** be
-confirmed whether the two paths were tested as a multiplicative interaction or as parallel mediators.
-From the search paraphrase it reads as parallel mediation.
+of alternative partners, and mate value discrepancy" (ResearchGate ID 374848897). Reported: a mediation
+model, N = 338, cross-sectional dating-app sample.
+**GAP — HTTP 403.** Authors, journal, and year unconfirmed. Critically, whether the two predictors
+enter as serial mediators, parallel mediators, or a multiplicative interaction could **not** be
+confirmed; the search paraphrase reads as parallel mediation. **Corrected at review:** an earlier draft
+asserted "serial mediation" and "parallel mediation" about the same paper four lines apart — different
+models, only one of which can be what the paraphrase said.
 TIER 3 as sourced.
 
 **ITEM 32. (a) An infidelity claim with no recoverable citation.**
@@ -485,10 +552,12 @@ perceived quality but does not frame the moderator in terms of the chooser's own
 For scale on the investment-model main effect: Tran, P., Judge, M., & Kashima, Y. (2019),
 "Commitment in relationships: An updated meta-analysis of the Investment Model," *Personal
 Relationships* — reported 202 independent samples, 50,427 participants, 1980–2016, aggregate
-r = −.43 between quality of alternatives and commitment. **GAP — Wiley HTTP 402; figures are as
-reported by search engines summarising the abstract, not independently verified.** This is broad
-multi-lab support for an unmoderated main effect on commitment, not for any interaction with relative
-mate value.
+r = −.43 between quality of alternatives and commitment. **GAP — Wiley HTTP 402; volume, pages and DOI
+not recorded; figures are as reported by search engines summarising the abstract, not independently
+verified. TIER 3 as sourced** — an earlier draft described it in evidential terms ("broad multi-lab
+support") while carrying no tier at all. Were the primary read, the underlying meta-analysis would rate
+TIER 1. *If confirmed*, it would be broad multi-lab support for an unmoderated main effect on
+commitment, not for any interaction with relative mate value.
 
 ---
 
@@ -527,6 +596,9 @@ right: only 21% of Americans think a matching algorithm can tell whether two peo
 (Pew 2023) — and this tool doesn't claim to either. It structures your own judgment; it doesn't
 replace it."
 
+**Noted at review:** that site copy attributes 21% to "(Pew 2023)" with no report title or URL — a
+citation-floor weakness in the site's own text, quoted here as it stands rather than repaired.
+
 ---
 
 ## LAB MEASUREMENT — the six sources archived for this batch
@@ -555,8 +627,14 @@ retrieval miss.
 
 ## PROVENANCE OF THE ARCHIVED TEXT
 
-Every source above was independently re-fetched and re-extracted rather than taken from a research
-scout's capture, because a model-mediated transcription is not reproducible byte-for-byte.
+**Scope of this section, clarified at review:** it covers the **six archived sources only**. Other
+papers this packet cites were read by scouts but never archived and therefore carry **no extraction
+chain and no hash** — most notably Buss et al. 2017 at ITEM 28, which a scout read in full from PDF but
+did not save, and every full-text URL in Cluster 1 other than sources 05 and 06. Claims traced only to
+those readings are provenance-weaker than claims traced to the archive below.
+
+Each of the six archived sources was independently re-fetched and re-extracted rather than taken from a
+research scout's capture, because a model-mediated transcription is not reproducible byte-for-byte.
 
 - **Grade A** (archived HTML → committed repository extractor → SHA-256): Kim 2007, Heyman & Slep
   2001, van Lankveld 2021, McNulty 2016.
