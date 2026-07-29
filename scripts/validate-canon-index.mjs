@@ -220,7 +220,12 @@ async function main() {
     );
   }
 
-  const rebuilt = await buildCanonIndex({ generatedAt: index.generatedAt });
+  // `generatedAt` is no longer pinned from the committed file. It was, because
+  // it was a wall-clock stamp and pinning it was the only way to compare the
+  // rest; from v2.6.0 it is derived from the git state of the build's inputs,
+  // so leaving it out of the rebuild is what makes this check cover the WHOLE
+  // artifact — including the one field that used to be exempt from it.
+  const rebuilt = await buildCanonIndex();
   assert.deepEqual(index, rebuilt, 'Generated index is stale; run node scripts/build-canon-index.mjs');
 
   process.stdout.write(

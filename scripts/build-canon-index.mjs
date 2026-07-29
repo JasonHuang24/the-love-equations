@@ -15,6 +15,7 @@
  */
 
 import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
@@ -1342,12 +1343,58 @@ export async function buildCanonIndex(options = {}) {
   const index = {
     schemaVersion: INDEX_SCHEMA_VERSION,
     indexVersion: `1.0.0+${contentHash.slice(0, 12)}`,
-    generatedAt: options.generatedAt || process.env.CANON_GENERATED_AT || new Date().toISOString(),
+    generatedAt: options.generatedAt
+      || process.env.CANON_GENERATED_AT
+      || sourceStateTimestamp([...new Set(sourcePages.flatMap((page) => page.inputs))]),
     sourcePages,
     stats,
     entries,
   };
   return index;
+}
+
+/**
+ * When the doctrine this artifact was built from last changed.
+ *
+ * It used to be `new Date()`, which made the built file's SHA-256 different on
+ * every run even when its CONTENT was byte-identical — v2.5.0 §6 had to note
+ * that `md/RERUN.md` treats SHA-256 as the reproducibility anchor and that for
+ * this one file that was not quite true, and v2.5.0 §7.6 left it open. It is
+ * the last commit that touched any input to this build: every source page, plus
+ * the builder itself, because a change to the extraction logic changes the
+ * artifact as surely as a change to a page does.
+ *
+ * It THROWS rather than falling back to a wall clock. A silent fallback is the
+ * exact defect being fixed — it would restore an irreproducible hash while the
+ * file went on looking reproducible. Callers outside a git checkout pass
+ * `generatedAt` or set `CANON_GENERATED_AT`, which is also how a re-run
+ * reproduces an archived artifact exactly.
+ */
+function sourceStateTimestamp(inputs) {
+  const paths = [...inputs, path.relative(ROOT_DIR, fileURLToPath(import.meta.url)).replace(/\\/g, '/')];
+  let stamp;
+  try {
+    stamp = execFileSync(
+      'git',
+      ['log', '-1', '--format=%cI', '--', ...paths],
+      { cwd: ROOT_DIR, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+    ).trim();
+  } catch (error) {
+    throw new Error(
+      'Could not read the canon sources\' git state, and this build will not invent a timestamp: '
+      + 'a wall-clock stamp makes the artifact\'s SHA-256 differ between byte-identical builds. '
+      + 'Pass generatedAt or set CANON_GENERATED_AT.',
+    );
+  }
+  if (!stamp) {
+    throw new Error(
+      'No commit touches the canon sources, so there is no source state to date this build from. '
+      + 'Pass generatedAt or set CANON_GENERATED_AT.',
+    );
+  }
+  // Normalized to the same shape the wall-clock stamp had, so nothing reading
+  // this field has to learn a second format.
+  return new Date(stamp).toISOString();
 }
 
 export async function knownAnchors() {

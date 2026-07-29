@@ -99,11 +99,26 @@ npm run test:lab
 Then confirm the canon index regenerates byte-identically (guards against a stale artifact):
 
 ```bash
-node -e "import('./scripts/build-canon-index.mjs').then(async m => { const fs = await import('node:fs/promises'); const cur = JSON.parse(await fs.readFile('data/le-canon-index.json','utf8')); const re = await m.buildCanonIndex({ generatedAt: cur.generatedAt }); console.log('identical:', JSON.stringify(cur,null,2)+'\n' === JSON.stringify(re,null,2)+'\n', cur.indexVersion); })"
+node scripts/build-canon-index.mjs && git diff --stat data/le-canon-index.json
+```
+
+An empty diff is the check. **From v2.6.0 the built file's SHA-256 is itself reproducible**, so this
+is a plain rebuild rather than the pinned-timestamp incantation it used to need: `generatedAt` is now
+derived from the git state of the build's inputs — every canon source page plus the builder — instead
+of from the wall clock. Two builds of the same tree produce the same bytes, and the archive doctrine
+below, which treats SHA-256 as the reproducibility anchor, is now true of this file too. It was not
+before; v2.5.0 §6 and §7.6 recorded the exception and this closes it.
+
+Outside a git checkout the build **throws** rather than inventing a stamp. Pass `generatedAt` or set
+`CANON_GENERATED_AT` — which is also how you reproduce an archived artifact exactly:
+
+```bash
+CANON_GENERATED_AT="$(node -p "require('./data/le-canon-index.json').generatedAt")" node scripts/build-canon-index.mjs
 ```
 
 Record the printed `indexVersion` — it goes in the manifest as the canon snapshot for this re-run
-epoch.
+epoch. `indexVersion` remains the file's content identity; SHA-256 is now a second, equally valid
+one rather than a stand-in that drifted.
 
 ---
 
