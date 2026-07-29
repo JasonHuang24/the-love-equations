@@ -28,16 +28,132 @@ export const ANALYSIS_MODE = Object.freeze({
   sourceUploaded: false,
 });
 
-const MAX_ANALYSIS_CHARACTERS = 500_000;
-const MAX_CLAIM_UNITS = 2_500;
-const MIN_CREDIBLE_SCORE = 0.43;
-const MIN_WEAK_SCORE = 0.25;
-const MAX_MATCHES_PER_CLAIM = 4;
-const MAX_CONTEXT_CONTINUATION_WORDS = 18;
-const MAX_CONTEXT_SOURCE_WORDS = 60;
-const DOMAIN_RELEVANT_SCORE = 4;
-const DOMAIN_UNCERTAIN_SCORE = 1;
-const NON_DOMAIN_DECISIVE_SCORE = 4;
+/**
+ * Every scoring, gating, and truncation constant the analyzer applies, in one
+ * frozen object so a calibration pass moves numbers here and nowhere else.
+ *
+ * These values are carried over from v2.1.2 UNCHANGED. This object is an
+ * externalization, not a retune: the thresholds have never been calibrated
+ * against a labelled corpus, which is why every export carries
+ * coverage.provisional. SCORING_CONFIG_HASH fingerprints the value set so any
+ * export can be traced back to the exact scoring behavior that produced it.
+ */
+export const SCORING_CONFIG = Object.freeze({
+  // Document and passage limits.
+  maxAnalysisCharacters: 500_000,
+  maxClaimUnits: 2_500,
+  maxContextContinuationWords: 18,
+  maxContextSourceWords: 60,
+
+  // Claim detection (claimLikelihood, isClaimLike).
+  minClaimWords: 4,
+  claimLongWordCount: 9,
+  claimBaseScoreLong: 0.32,
+  claimBaseScoreShort: 0.16,
+  claimCueBonus: 0.14,
+  claimQuestionWordCount: 8,
+  claimQuestionBonus: 0.08,
+  claimVerboseWordCount: 80,
+  claimVerbosePenalty: 0.06,
+  claimLikeThreshold: 0.30,
+
+  // Domain relevance gate.
+  domainRelevantScore: 4,
+  domainUncertainScore: 1,
+  // Carried over from v2.1.2 and still surfaced through analyzerInternals, but
+  // no decision in this file reads it. Kept at its original value because this
+  // pass changes no values; flagged for the next calibration pass.
+  nonDomainDecisiveScore: 4,
+  plausibleSocialStructureScore: 3,
+
+  // Lexical retrieval.
+  minPhraseLength: 4,
+  minSingleAliasLength: 5,
+  phraseBase: 0.54,
+  phraseLengthBonus: 0.035,
+  phraseLengthBonusCap: 0.18,
+  phraseLengthBonusBaseWords: 2,
+  singleAliasStrength: 0.30,
+  distinctiveBoostPerToken: 0.045,
+  distinctiveBoostCap: 0.16,
+  titleBoostCap: 0.12,
+  queryCoverageWeight: 0.56,
+  canonCoverageWeight: 0.24,
+
+  // Score penalties.
+  weakGenericDistinctiveMax: 2,
+  weakGenericPenalty: 0.38,
+  sparseSharedMin: 2,
+  sparseSharePenalty: 0.52,
+  shortUnitWordCount: 6,
+  shortUnitPenalty: 0.72,
+
+  // Candidate admission.
+  candidateScoreFloor: 0.08,
+  maxCandidatesPerUnit: 8,
+  minCredibleScore: 0.43,
+  minWeakScore: 0.25,
+  minAdmissionDistinctiveShared: 2,
+  minLocalSharedTokens: 2,
+  maxMatchesPerClaim: 4,
+  maxWeakMatches: 3,
+
+  // Bounded-context help.
+  contextBoostSameConcept: 0.045,
+  contextBoostDependency: 0.035,
+  contextBoostRelated: 0.025,
+
+  // Confidence, stance, and ambiguity.
+  confidenceHigh: 0.72,
+  confidenceHighWithPhrase: 0.64,
+  confidenceMedium: 0.52,
+  misreadingContradictionShare: 0.36,
+  contradictionScoreFloor: 0.58,
+  ambiguityScoreGap: 0.07,
+
+  // Pressure tests.
+  weakMapScore: 0.52,
+  pressurePriorityScoreFloor: 0.65,
+  maxPressureTests: 18,
+
+  // Research-queue routing.
+  lexiconDestinationMaxWords: 35,
+  deepDiveDestinationMinWords: 45,
+  researchQuestionExcerptChars: 110,
+
+  // Output truncation.
+  maxStrongestMatches: 20,
+  maxStrongestMatchExcerpts: 3,
+  maxAdjacentDoctrine: 20,
+  maxNearestConcepts: 3,
+  maxResearchSearchTerms: 7,
+  maxSharedTokensReported: 12,
+  maxDistinctiveSharedReported: 8,
+  maxPhraseHitsReported: 3,
+  maxAliasHitsReported: 3,
+  maxWhyMatchedTokens: 5,
+  maxIgnoredFrameEvidence: 6,
+  maxContinuitySharedConcepts: 5,
+
+  // Numeric precision.
+  scorePrecision: 3,
+  domainScorePrecision: 2,
+  ambiguityGapPrecision: 2,
+  percentPrecision: 1,
+});
+
+/**
+ * Short, stable fingerprint of the value set above. Sorted-key JSON so source
+ * ordering cannot move the hash; fnv1a because the analyzer already ships it
+ * and must stay dependency-free.
+ */
+export function scoringConfigHash(config = SCORING_CONFIG) {
+  const sorted = Object.keys(config).sort()
+    .reduce((accumulator, key) => Object.assign(accumulator, { [key]: config[key] }), {});
+  return fnv1a(JSON.stringify(sorted));
+}
+
+export const SCORING_CONFIG_HASH = scoringConfigHash();
 
 const ANAPHORIC_CONTINUATION_CUE = /^(?:it\b|(?:that|this|these|those|which)\b(?=\s+(?:is|are|was|were|can|could|may|might|will|would|makes?|means?|puts?|leaves?|leads?|reduces?|increases?|changes?|shapes?|affects?|limits?|narrows?|becomes?|suggests?|shows?|also\b))|(?:that|this)\s+(?:distinction|effect|pattern|tradeoff|constraint|change|dynamic|result|mechanism)\b|such(?:\s+(?:a|an))?\b|the same\b)/i;
 
@@ -665,13 +781,15 @@ function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
 }
 
-function round(value, digits = 3) {
+function round(value, digits = SCORING_CONFIG.scorePrecision) {
   const scale = 10 ** digits;
   return Math.round((Number(value) + Number.EPSILON) * scale) / scale;
 }
 
 function percentage(numerator, denominator) {
-  return denominator ? round((numerator / denominator) * 100, 1) : null;
+  return denominator
+    ? round((numerator / denominator) * 100, SCORING_CONFIG.percentPrecision)
+    : null;
 }
 
 function wordCount(text) {
@@ -736,7 +854,7 @@ function normalizeEntry(raw, index) {
   entry._distinctiveTokens = unique(tokenize(lexicalText, { keepGeneric: false }));
   entry._phrases = unique(aliases
     .map(normalizeText)
-    .filter((phrase) => phrase.length >= 4));
+    .filter((phrase) => phrase.length >= SCORING_CONFIG.minPhraseLength));
   entry._misreadingTokens = unique(tokenize(entry.commonMisreadings.join(' ')));
   return entry;
 }
@@ -838,14 +956,20 @@ function splitSentences(text) {
 
 function claimLikelihood(text) {
   const words = wordCount(text);
-  if (words < 4) return 0;
-  let score = words >= 9 ? 0.32 : 0.16;
+  if (words < SCORING_CONFIG.minClaimWords) return 0;
+  let score = words >= SCORING_CONFIG.claimLongWordCount
+    ? SCORING_CONFIG.claimBaseScoreLong
+    : SCORING_CONFIG.claimBaseScoreShort;
   CLAIM_CUES.forEach((pattern) => {
-    if (pattern.test(text)) score += 0.14;
+    if (pattern.test(text)) score += SCORING_CONFIG.claimCueBonus;
   });
   if (/^\s*(?:hi|hello|thanks?|okay|right|yeah|um|uh)\b[!.]?\s*$/i.test(text)) score = 0;
-  if (/\?$/.test(text)) score += words >= 8 ? 0.08 : -0.08;
-  if (words > 80) score -= 0.06;
+  if (/\?$/.test(text)) {
+    score += words >= SCORING_CONFIG.claimQuestionWordCount
+      ? SCORING_CONFIG.claimQuestionBonus
+      : -SCORING_CONFIG.claimQuestionBonus;
+  }
+  if (words > SCORING_CONFIG.claimVerboseWordCount) score -= SCORING_CONFIG.claimVerbosePenalty;
   return clamp(score);
 }
 
@@ -855,8 +979,8 @@ function boundedPreviousContext(sentences, sentenceIndex, parentSegmentId) {
   const previousText = String(sentences[sentenceIndex - 1] || '').trim();
   if (!text || !previousText) return null;
   if (!ANAPHORIC_CONTINUATION_CUE.test(text)) return null;
-  if (wordCount(text) > MAX_CONTEXT_CONTINUATION_WORDS) return null;
-  if (wordCount(previousText) > MAX_CONTEXT_SOURCE_WORDS) return null;
+  if (wordCount(text) > SCORING_CONFIG.maxContextContinuationWords) return null;
+  if (wordCount(previousText) > SCORING_CONFIG.maxContextSourceWords) return null;
   return {
     kind: 'previous-sentence',
     sourceUnitId: `${parentSegmentId}.claim-${String(sentenceIndex).padStart(2, '0')}`,
@@ -902,11 +1026,11 @@ export function detectClaimUnits(document) {
         },
         wordCount: wordCount(sentence),
         claimLikelihood: round(likelihood),
-        isClaimLike: likelihood >= 0.30,
+        isClaimLike: likelihood >= SCORING_CONFIG.claimLikeThreshold,
       });
     });
   });
-  return units.slice(0, MAX_CLAIM_UNITS);
+  return units.slice(0, SCORING_CONFIG.maxClaimUnits);
 }
 
 function frameHas(text, entityPattern, predicatePattern) {
@@ -964,7 +1088,7 @@ function ignoredPassageRecord(unit) {
     reasonLabel: DOMAIN_REASON_LABELS[relevance.reasonCode] || relevance.reasonCode,
     frameEvidence: relevance.evidence
       .filter((item) => item.frame !== 'decision')
-      .slice(0, 6)
+      .slice(0, SCORING_CONFIG.maxIgnoredFrameEvidence)
       .map(({ code, label, polarity, frame }) => ({ code, label, polarity, frame })),
     overridden: relevance.override === 'exclude',
   };
@@ -996,15 +1120,16 @@ function localDomainRelevance(unit) {
   const humanGroundedOutcome = frames.participant.detected && frames.outcome.detected;
   const humanSocialMechanism = frames.participant.detected && frames.mechanism.detected;
   const plausibleRelationalAnchor = frames.outcome.detected && !frames.nonDomain.detected;
-  const plausibleSocialStructure = frames.mechanism.score >= 3 && !frames.nonDomain.detected;
+  const plausibleSocialStructure = frames.mechanism.score >= SCORING_CONFIG.plausibleSocialStructureScore
+    && !frames.nonDomain.detected;
   const score = round(Math.max(
     frames.outcome.score,
     frames.mechanism.score,
-    humanGroundedOutcome || humanSocialMechanism ? DOMAIN_UNCERTAIN_SCORE : 0,
-  ), 2);
+    humanGroundedOutcome || humanSocialMechanism ? SCORING_CONFIG.domainUncertainScore : 0,
+  ), SCORING_CONFIG.domainScorePrecision);
   // Non-domain categories are capped at their strongest family. Correlated
   // tokens such as stock/market/finance never become independent veto votes.
-  const nonDomainScore = round(frames.nonDomain.score, 2);
+  const nonDomainScore = round(frames.nonDomain.score, SCORING_CONFIG.domainScorePrecision);
 
   let status;
   let reasonCode;
@@ -1079,7 +1204,7 @@ function contextContinuityEvidence(unit, previous) {
       : consequenceLanguage
         ? 'approved-consequence-language'
         : 'shared-relationship-concept',
-    sharedConcepts: unique(sharedConcepts).slice(0, 5),
+    sharedConcepts: unique(sharedConcepts).slice(0, SCORING_CONFIG.maxContinuitySharedConcepts),
   };
 }
 
@@ -1158,7 +1283,7 @@ export function classifyDomainRelevance(units, overrides = new Map()) {
     unit.domainRelevance = {
       ...unit.domainRelevance,
       status: 'relevant',
-      score: Math.max(DOMAIN_RELEVANT_SCORE, unit.domainRelevance.score),
+      score: Math.max(SCORING_CONFIG.domainRelevantScore, unit.domainRelevance.score),
       reasonCode: 'bounded-previous-domain-context',
       decisiveReason: 'bounded-previous-domain-context',
       evidence: [
@@ -1214,35 +1339,54 @@ function scoreEntry(unit, entry, idf) {
     .filter((phrase) => phrase.includes(' ') && normalized.includes(phrase))
     .sort((a, b) => b.length - a.length);
   const singleAliasHits = entry._phrases
-    .filter((phrase) => !phrase.includes(' ') && phrase.length >= 5 && normalized.split(/\W+/).includes(phrase));
+    .filter((phrase) => !phrase.includes(' ')
+      && phrase.length >= SCORING_CONFIG.minSingleAliasLength
+      && normalized.split(/\W+/).includes(phrase));
   const credibleSingleAliasHits = singleAliasHits
     .filter((alias) => tokenize(alias)
       .some((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
   const phraseStrength = phraseHits.length
-    ? clamp(0.54 + Math.min(0.18, (phraseHits[0].split(' ').length - 2) * 0.035))
+    ? clamp(SCORING_CONFIG.phraseBase + Math.min(
+      SCORING_CONFIG.phraseLengthBonusCap,
+      (phraseHits[0].split(' ').length - SCORING_CONFIG.phraseLengthBonusBaseWords)
+        * SCORING_CONFIG.phraseLengthBonus,
+    ))
     : singleAliasHits.length
-      ? 0.30
+      ? SCORING_CONFIG.singleAliasStrength
       : 0;
 
-  const distinctiveBoost = Math.min(0.16, distinctiveShared.length * 0.045);
+  const distinctiveBoost = Math.min(
+    SCORING_CONFIG.distinctiveBoostCap,
+    distinctiveShared.length * SCORING_CONFIG.distinctiveBoostPerToken,
+  );
   const titleTokens = tokenize(entry.title);
   const titleHits = titleTokens.filter((token) => querySet.has(token));
   const titleBoost = titleTokens.length
-    ? Math.min(0.12, (titleHits.length / titleTokens.length) * 0.12)
+    ? Math.min(
+      SCORING_CONFIG.titleBoostCap,
+      (titleHits.length / titleTokens.length) * SCORING_CONFIG.titleBoostCap,
+    )
     : 0;
 
   let score = Math.max(
     phraseStrength,
     ...signatureHits.map((signature) => signature.score),
-    (queryCoverage * 0.56) + (canonCoverage * 0.24) + distinctiveBoost + titleBoost,
+    (queryCoverage * SCORING_CONFIG.queryCoverageWeight)
+      + (canonCoverage * SCORING_CONFIG.canonCoverageWeight)
+      + distinctiveBoost
+      + titleBoost,
   );
 
   const weakGenericMatch = !phraseHits.length
-    && distinctiveShared.length < 2
+    && distinctiveShared.length < SCORING_CONFIG.weakGenericDistinctiveMax
     && shared.every((token) => GENERIC_TERMS.has(token));
-  if (weakGenericMatch && !signatureHits.length) score *= 0.38;
-  if (!phraseHits.length && !signatureHits.length && shared.length < 2) score *= 0.52;
-  if (unit.wordCount < 6 && !phraseHits.length && !signatureHits.length) score *= 0.72;
+  if (weakGenericMatch && !signatureHits.length) score *= SCORING_CONFIG.weakGenericPenalty;
+  if (!phraseHits.length && !signatureHits.length && shared.length < SCORING_CONFIG.sparseSharedMin) {
+    score *= SCORING_CONFIG.sparseSharePenalty;
+  }
+  if (unit.wordCount < SCORING_CONFIG.shortUnitWordCount && !phraseHits.length && !signatureHits.length) {
+    score *= SCORING_CONFIG.shortUnitPenalty;
+  }
 
   const misreadingOverlap = entry._misreadingTokens.length
     ? entry._misreadingTokens.filter((token) => querySet.has(token)).length / entry._misreadingTokens.length
@@ -1253,25 +1397,26 @@ function scoreEntry(unit, entry, idf) {
     queryCoverage: round(queryCoverage),
     canonCoverage: round(canonCoverage),
     signatureHits,
-    phraseHits: phraseHits.slice(0, 3),
-    exactAliasHits: credibleSingleAliasHits.slice(0, 3),
-    sharedTokens: shared.slice(0, 12),
-    distinctiveShared: distinctiveShared.slice(0, 8),
-    admissionDistinctiveShared: admissionDistinctiveShared.slice(0, 8),
+    phraseHits: phraseHits.slice(0, SCORING_CONFIG.maxPhraseHitsReported),
+    exactAliasHits: credibleSingleAliasHits.slice(0, SCORING_CONFIG.maxAliasHitsReported),
+    sharedTokens: shared.slice(0, SCORING_CONFIG.maxSharedTokensReported),
+    distinctiveShared: distinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
+    admissionDistinctiveShared: admissionDistinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     misreadingOverlap: round(misreadingOverlap),
     weakGenericMatch,
   };
 }
 
 function confidenceFor(score, phraseHits) {
-  if (score >= 0.72 || (score >= 0.64 && phraseHits.length)) return 'High';
-  if (score >= 0.52) return 'Medium';
+  if (score >= SCORING_CONFIG.confidenceHigh
+    || (score >= SCORING_CONFIG.confidenceHighWithPhrase && phraseHits.length)) return 'High';
+  if (score >= SCORING_CONFIG.confidenceMedium) return 'Medium';
   return 'Low';
 }
 
 function stanceFor(unit, match) {
   const text = unit.text;
-  const commonMisreading = match._rawScore.misreadingOverlap >= 0.36;
+  const commonMisreading = match._rawScore.misreadingOverlap >= SCORING_CONFIG.misreadingContradictionShare;
   let label = 'Resembles';
   let rationale = 'The source and canon entry share a distinctive concept pattern, but the local engine cannot infer full agreement from wording alone.';
 
@@ -1290,7 +1435,8 @@ function stanceFor(unit, match) {
     && /\b(?:not|does not|doesn't|is not|isn't)\b.*\b(?:moral worth|human worth|entitlement|consent)\b/i.test(text)) {
     label = 'Supports';
     rationale = 'The source affirms the LE boundary between descriptive dating-market leverage and moral worth, entitlement, or consent.';
-  } else if (CONTRADICTION_CUES.test(text) && (commonMisreading || match.score >= 0.58)) {
+  } else if (CONTRADICTION_CUES.test(text)
+    && (commonMisreading || match.score >= SCORING_CONFIG.contradictionScoreFloor)) {
     label = commonMisreading ? 'Contradicts' : 'Challenges';
     rationale = commonMisreading
       ? 'The source overlaps a misreading that the canon entry explicitly limits or rejects.'
@@ -1321,9 +1467,9 @@ function transparentWhy(rawScore, entry) {
     reasons.push(`Exact alias: “${rawScore.exactAliasHits[0]}”`);
   }
   if (rawScore.distinctiveShared.length) {
-    reasons.push(`Distinctive overlap: ${rawScore.distinctiveShared.slice(0, 5).join(', ')}`);
+    reasons.push(`Distinctive overlap: ${rawScore.distinctiveShared.slice(0, SCORING_CONFIG.maxWhyMatchedTokens).join(', ')}`);
   } else if (rawScore.sharedTokens.length) {
-    reasons.push(`Keyword overlap: ${rawScore.sharedTokens.slice(0, 5).join(', ')}`);
+    reasons.push(`Keyword overlap: ${rawScore.sharedTokens.slice(0, SCORING_CONFIG.maxWhyMatchedTokens).join(', ')}`);
   }
   if (entry.subcategory) reasons.push(`Canon context: ${entry.category} / ${entry.subcategory}`);
   if (rawScore.weakGenericMatch) reasons.push('Penalty: only generic dating language overlaps');
@@ -1365,7 +1511,7 @@ function hasLocalConceptEvidence(candidate) {
     raw.signatureHits.length
     || raw.phraseHits.length
     || raw.distinctiveShared.length
-    || raw.sharedTokens.length >= 2
+    || raw.sharedTokens.length >= SCORING_CONFIG.minLocalSharedTokens
   );
 }
 
@@ -1374,12 +1520,12 @@ function hasCredibleMatchEvidence(rawScore) {
     rawScore.signatureHits.length
     || rawScore.phraseHits.length
     || rawScore.exactAliasHits.length
-    || rawScore.admissionDistinctiveShared.length >= 2
+    || rawScore.admissionDistinctiveShared.length >= SCORING_CONFIG.minAdmissionDistinctiveShared
   );
 }
 
 function isCredibleCandidate(candidate) {
-  return candidate.score >= MIN_CREDIBLE_SCORE
+  return candidate.score >= SCORING_CONFIG.minCredibleScore
     && hasCredibleMatchEvidence(candidate._rawScore);
 }
 
@@ -1397,25 +1543,25 @@ function applyBoundedContext(results, entriesById) {
     // from cascading through a chain of elliptical sentences.
     const previousCanonIds = new Set(previous.candidates
       .filter((candidate) => isCredibleCandidate(candidate))
-      .slice(0, MAX_MATCHES_PER_CLAIM)
+      .slice(0, SCORING_CONFIG.maxMatchesPerClaim)
       .map((candidate) => candidate.canonId));
 
     result.candidates.forEach((candidate) => {
       const entry = entriesById.get(candidate.canonId);
       if (!entry) return;
       const localScore = candidate._rawScore.score;
-      if (localScore < MIN_WEAK_SCORE || !hasLocalConceptEvidence(candidate)) return;
+      if (localScore < SCORING_CONFIG.minWeakScore || !hasLocalConceptEvidence(candidate)) return;
 
       let boost = 0;
       let relation = '';
       if (previousCanonIds.has(candidate.canonId)) {
-        boost = 0.045;
+        boost = SCORING_CONFIG.contextBoostSameConcept;
         relation = 'same canon concept';
       } else if (entry.dependencies.some((dependency) => previousCanonIds.has(dependency))) {
-        boost = 0.035;
+        boost = SCORING_CONFIG.contextBoostDependency;
         relation = 'declared dependency';
       } else if (entry.related.some((related) => previousCanonIds.has(related))) {
-        boost = 0.025;
+        boost = SCORING_CONFIG.contextBoostRelated;
         relation = 'declared related concept';
       }
       if (!boost) return;
@@ -1456,12 +1602,13 @@ function chooseDestination(unit, nearest) {
     if (nearestCategory.includes(category)) return destination;
   }
   const text = normalizeText(unit.text);
-  if (/\b(?:define|called|term|means)\b/.test(text) && unit.wordCount < 35) return 'Lexicon';
+  if (/\b(?:define|called|term|means)\b/.test(text)
+    && unit.wordCount < SCORING_CONFIG.lexiconDestinationMaxWords) return 'Lexicon';
   if (/\b(?:percent|study|data|rate|survey|sample)\b/.test(text)) return 'Statistics';
   if (/\b(?:myth|is it true|claim|false|fact)\b/.test(text)) return 'Mythbuster';
   if (/\b(?:men|women|male|female|gender|sex difference)\b/.test(text)) return 'Gender Dynamics';
   if (/\b(?:looks|money|status|charm|exposure|smv)\b/.test(text)) return 'Five Levers';
-  if (unit.wordCount > 45) return 'Deep Dive';
+  if (unit.wordCount > SCORING_CONFIG.deepDiveDestinationMinWords) return 'Deep Dive';
   return 'possible new page';
 }
 
@@ -1478,17 +1625,18 @@ function makeResearchQuestion(unit, risks, destination) {
   if (destination === 'Lexicon') {
     return 'Can this term be defined with a stable boundary that distinguishes it from adjacent LE concepts?';
   }
-  return `Under what population, stage, and market conditions does “${truncate(unit.text, 110)}” hold, and how large is the effect?`;
+  return `Under what population, stage, and market conditions does “${truncate(unit.text, SCORING_CONFIG.researchQuestionExcerptChars)}” hold, and how large is the effect?`;
 }
 
 function researchItemFor(result) {
   const nearest = result.candidates[0] || null;
   const risks = classifyRiskFlags(result.unit.text);
   const destination = chooseDestination(result.unit, nearest);
-  const distinctiveTerms = unique(tokenize(result.unit.text, { keepGeneric: false })).slice(0, 7);
+  const distinctiveTerms = unique(tokenize(result.unit.text, { keepGeneric: false }))
+    .slice(0, SCORING_CONFIG.maxResearchSearchTerms);
   const reason = !nearest
     ? 'No canon entry shared enough distinctive language for a defensible match.'
-    : nearest.score < MIN_WEAK_SCORE
+    : nearest.score < SCORING_CONFIG.minWeakScore
       ? 'The nearest canon concept shares only weak or generic wording.'
       : 'A nearby concept exists, but confidence stayed below the credible-match threshold.';
   const searchTerms = unique([
@@ -1509,7 +1657,7 @@ function researchItemFor(result) {
     },
     excerpt: result.unit.text,
     whyUnmapped: reason,
-    nearestConcepts: result.candidates.slice(0, 3).map((candidate) => ({
+    nearestConcepts: result.candidates.slice(0, SCORING_CONFIG.maxNearestConcepts).map((candidate) => ({
       canonId: candidate.canonId,
       title: candidate.title,
       href: candidate.href,
@@ -1573,7 +1721,7 @@ function pressureForResult(result) {
 
   return patterns.map((pattern) => {
     const hasBoundary = primary.boundaryConditions.length > 0;
-    const weakMap = primary.score < 0.52;
+    const weakMap = primary.score < SCORING_CONFIG.weakMapScore;
     const tensionType = weakMap
       ? 'Genuinely unmapped territory'
       : triggered.length
@@ -1583,7 +1731,7 @@ function pressureForResult(result) {
       id: `pt-${fnv1a(`${result.unit.id}|${primary.canonId}|${pattern.id}`)}`,
       segmentId: result.unit.id,
       canonId: primary.canonId,
-      priority: pattern.severity + (primary.score >= 0.65 ? 1 : 0),
+      priority: pattern.severity + (primary.score >= SCORING_CONFIG.pressurePriorityScoreFloor ? 1 : 0),
       failureMode: pattern.title,
       riskFlag: pattern.risk,
       sourceExcerpt: result.unit.text,
@@ -1646,7 +1794,9 @@ function strongestMatches(mappedResults) {
       summary.bestScore = Math.max(summary.bestScore, match.score);
       summary.confidence = confidenceFor(summary.bestScore, match._rawScore?.phraseHits || []);
       summary.matchedSegmentIds.push(result.unit.id);
-      if (summary.excerpts.length < 3) summary.excerpts.push(result.unit.text);
+      if (summary.excerpts.length < SCORING_CONFIG.maxStrongestMatchExcerpts) {
+        summary.excerpts.push(result.unit.text);
+      }
       if (rank === 0) summary.primaryCount += 1;
     });
   });
@@ -1659,7 +1809,7 @@ function strongestMatches(mappedResults) {
     }))
     .sort((a, b) =>
       b.primaryCount - a.primaryCount || b.bestScore - a.bestScore || a.title.localeCompare(b.title))
-    .slice(0, 20);
+    .slice(0, SCORING_CONFIG.maxStrongestMatches);
 }
 
 function indexMetadata(prepared, original) {
@@ -1678,8 +1828,8 @@ function indexMetadata(prepared, original) {
 function validateDocumentSize(document) {
   const characters = document.segments.reduce((sum, segment) => sum + String(segment.text || '').length, 0);
   if (!characters) throw new Error('There is no analyzable text in this source.');
-  if (characters > MAX_ANALYSIS_CHARACTERS) {
-    throw new Error(`This transcript contains ${characters.toLocaleString()} characters; the on-device limit is ${MAX_ANALYSIS_CHARACTERS.toLocaleString()}. Split it into parts and try again.`);
+  if (characters > SCORING_CONFIG.maxAnalysisCharacters) {
+    throw new Error(`This transcript contains ${characters.toLocaleString()} characters; the on-device limit is ${SCORING_CONFIG.maxAnalysisCharacters.toLocaleString()}. Split it into parts and try again.`);
   }
   return characters;
 }
@@ -1712,9 +1862,9 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     const unit = units[unitIndex];
     const candidates = prepared.entries
       .map((entry) => publicMatch(entry, scoreEntry(unit, entry, prepared.idf)))
-      .filter((match) => match.score >= 0.08)
+      .filter((match) => match.score >= SCORING_CONFIG.candidateScoreFloor)
       .sort((a, b) => b.score - a.score || a.canonId.localeCompare(b.canonId))
-      .slice(0, 8);
+      .slice(0, SCORING_CONFIG.maxCandidatesPerUnit);
     candidatesByUnit.push({ unit, candidates });
     if (unitIndex % 20 === 0) {
       onProgress({
@@ -1736,16 +1886,17 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   const segmentResults = candidatesByUnit.map(({ unit, candidates }) => {
     const credible = candidates
       .filter((candidate) => isCredibleCandidate(candidate))
-      .slice(0, MAX_MATCHES_PER_CLAIM);
+      .slice(0, SCORING_CONFIG.maxMatchesPerClaim);
     credible.forEach((match) => {
       match.alignment = stanceFor(unit, match);
       match.why = match.alignment.rationale;
     });
     const weak = candidates
-      .filter((candidate) => candidate.score >= MIN_WEAK_SCORE && !isCredibleCandidate(candidate))
-      .slice(0, 3);
-    const ambiguity = credible.length > 1 && (credible[0].score - credible[1].score) < 0.07
-      ? `Two canon entries are separated by only ${round(credible[0].score - credible[1].score, 2)} confidence points.`
+      .filter((candidate) => candidate.score >= SCORING_CONFIG.minWeakScore && !isCredibleCandidate(candidate))
+      .slice(0, SCORING_CONFIG.maxWeakMatches);
+    const ambiguity = credible.length > 1
+      && (credible[0].score - credible[1].score) < SCORING_CONFIG.ambiguityScoreGap
+      ? `Two canon entries are separated by only ${round(credible[0].score - credible[1].score, SCORING_CONFIG.ambiguityGapPrecision)} confidence points.`
       : credible[0]?.confidence === 'Low'
         ? 'The strongest credible match is low confidence; inspect the overlap before relying on it.'
         : null;
@@ -1774,7 +1925,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     .sort((a, b) => b.priority - a.priority || a.segmentId.localeCompare(b.segmentId))
     .filter((item, index, all) => all.findIndex((candidate) =>
       candidate.segmentId === item.segmentId && candidate.failureMode === item.failureMode) === index)
-    .slice(0, 18);
+    .slice(0, SCORING_CONFIG.maxPressureTests);
 
   const researchItems = unmappedClaims.map(researchItemFor);
   const researchQueue = {
@@ -1854,7 +2005,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     adjacentDoctrine: unique(mappedClaims.flatMap((mapped) =>
       mapped.matches.flatMap((match) => [...match.dependencies, ...match.related])))
       .filter((id) => !primaryMatches.some((match) => match.canonId === id))
-      .slice(0, 20)
+      .slice(0, SCORING_CONFIG.maxAdjacentDoctrine)
       .map((id) => {
         const entry = entriesById.get(id);
         return entry ? {
@@ -1872,8 +2023,8 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       ...(unmatchedOverrideIds.length
         ? [{ segmentId: null, message: `${unmatchedOverrideIds.length} domain override(s) referenced passages that no longer exist in this source and were not applied.` }]
         : []),
-      ...(detectedUnits.length >= MAX_CLAIM_UNITS
-        ? [{ segmentId: null, message: `Only the first ${MAX_CLAIM_UNITS.toLocaleString()} passages were analyzed.` }]
+      ...(detectedUnits.length >= SCORING_CONFIG.maxClaimUnits
+        ? [{ segmentId: null, message: `Only the first ${SCORING_CONFIG.maxClaimUnits.toLocaleString()} passages were analyzed.` }]
         : []),
       ...(claimResults.length === 0
         ? [{ segmentId: null, message: 'No relationship-domain claims were detected in this source.' }]
@@ -1902,12 +2053,14 @@ export const analyzerInternals = Object.freeze({
   wordCount,
   claimLikelihood,
   localDomainRelevance,
-  DOMAIN_RELEVANT_SCORE,
-  DOMAIN_UNCERTAIN_SCORE,
-  NON_DOMAIN_DECISIVE_SCORE,
   scoreEntry,
   hasCredibleMatchEvidence,
   classifyRiskFlags,
-  MIN_CREDIBLE_SCORE,
-  MIN_WEAK_SCORE,
+  // Threshold names kept for callers written against v2.1.2; every value now
+  // comes from SCORING_CONFIG, which is the single place to change them.
+  DOMAIN_RELEVANT_SCORE: SCORING_CONFIG.domainRelevantScore,
+  DOMAIN_UNCERTAIN_SCORE: SCORING_CONFIG.domainUncertainScore,
+  NON_DOMAIN_DECISIVE_SCORE: SCORING_CONFIG.nonDomainDecisiveScore,
+  MIN_CREDIBLE_SCORE: SCORING_CONFIG.minCredibleScore,
+  MIN_WEAK_SCORE: SCORING_CONFIG.minWeakScore,
 });
