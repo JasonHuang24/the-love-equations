@@ -26,8 +26,13 @@ export const ROOT_DIR = path.resolve(SCRIPT_DIR, '..');
 export const INDEX_PATH = path.join(ROOT_DIR, 'data', 'le-canon-index.json');
 export const OVERLAY_PATH = path.join(ROOT_DIR, 'data', 'canon-overlay.json');
 
-export const INDEX_SCHEMA_VERSION = 'le-canon-index/1.0';
-export const OVERLAY_SCHEMA_VERSION = 'le-canon-overlay/1.0';
+// 1.1 adds standaloneAliases / contextualAliases to every entry. Additive, but
+// not cosmetic: it is a new statement about what the match surface MEANS, so a
+// consumer must be able to tell a typed index from an untyped one without
+// inspecting entries.
+export const INDEX_SCHEMA_VERSION = 'le-canon-index/1.1';
+// 1.1 accepts the same two fields from a curator.
+export const OVERLAY_SCHEMA_VERSION = 'le-canon-overlay/1.1';
 
 export const EVIDENCE_TYPES = new Set([
   'Framework',
@@ -374,6 +379,25 @@ function aliasesForTitle(title) {
   return uniqueStrings(aliases);
 }
 
+/**
+ * A contextual alias entry: the word, plus the modifiers that disqualify it.
+ * `notAfter` lists words which, when they immediately precede the alias, mean
+ * the passage is using the other sense of it — "cloud provider" is not the LE
+ * concept of a provider no matter how relational the surrounding sentence is.
+ */
+function normalizeContextualAliases(values) {
+  const seen = new Set();
+  const result = [];
+  for (const value of values || []) {
+    const item = typeof value === 'string' ? { alias: value } : value;
+    const alias = cleanMarkupText(item?.alias || '');
+    if (!alias || seen.has(alias)) continue;
+    seen.add(alias);
+    result.push({ alias, notAfter: uniqueStrings((item.notAfter || []).map(cleanMarkupText)) });
+  }
+  return result;
+}
+
 function linkData(node) {
   const external = [];
   const internal = [];
@@ -401,6 +425,8 @@ function createEntry({
   contentType,
   verdict = '',
   aliases = [],
+  standaloneAliases = [],
+  contextualAliases = [],
   phrases = [],
   dependencies = [],
   related = [],
@@ -426,6 +452,15 @@ function createEntry({
     // concept, so it must not reach the analyzer's alias/phrase match surface.
     verdict: cleanMarkupText(verdict),
     aliases: uniqueStrings([...aliasesForTitle(title), ...aliases]),
+    // Alias TYPING. A single word is insufficient evidence by default; these
+    // two lists are the curated exceptions and nothing else changes because of
+    // them. `standaloneAliases` are high-specificity terms that mean the
+    // concept wherever they appear. `contextualAliases` are ordinary words the
+    // concept borrows, and they carry their own conditions - which is why they
+    // are objects and standalone aliases are plain strings: being unconditional
+    // is what makes an alias standalone.
+    standaloneAliases: uniqueStrings(standaloneAliases.map(cleanMarkupText)),
+    contextualAliases: normalizeContextualAliases(contextualAliases),
     phrases: uniqueStrings(phrases.map((phrase) => summarize(cleanMarkupText(phrase), 280))),
     dependencies: uniqueStrings(dependencies),
     related: uniqueStrings(related),
@@ -1127,6 +1162,8 @@ async function readOverlay() {
 
 const OVERLAY_ARRAY_FIELDS = new Set([
   'aliases',
+  'standaloneAliases',
+  'contextualAliases',
   'phrases',
   'dependencies',
   'related',
@@ -1147,6 +1184,8 @@ function applyOverlay(entries, overlay) {
       }
       if (field === 'sourceLinks') {
         entry[field] = uniqueLinks([...entry[field], ...values]);
+      } else if (field === 'contextualAliases') {
+        entry[field] = normalizeContextualAliases([...entry[field], ...values]);
       } else {
         entry[field] = uniqueStrings([...entry[field], ...values]);
       }
@@ -1169,12 +1208,35 @@ function countBy(entries, field) {
   return Object.fromEntries(Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)));
 }
 
+/**
+ * Typing is a statement ABOUT the match surface, so it can only name strings
+ * that are on it. A typed alias that is not an alias is a curation slip that
+ * would otherwise do nothing at all, silently — the worst kind.
+ */
+function assertAliasTyping(entry) {
+  const aliases = new Set(entry.aliases);
+  const typed = new Set();
+  for (const alias of entry.standaloneAliases) {
+    if (!aliases.has(alias)) throw new Error(`${entry.id} types "${alias}" standalone but it is not one of its aliases`);
+    typed.add(alias);
+  }
+  for (const { alias, notAfter } of entry.contextualAliases) {
+    if (!aliases.has(alias)) throw new Error(`${entry.id} types "${alias}" contextual but it is not one of its aliases`);
+    if (typed.has(alias)) throw new Error(`${entry.id} types "${alias}" both standalone and contextual`);
+    typed.add(alias);
+    for (const modifier of notAfter) {
+      if (!modifier.trim()) throw new Error(`${entry.id} gives "${alias}" a blank notAfter modifier`);
+    }
+  }
+}
+
 function assertRelations(entries) {
   const ids = new Set(entries.map((entry) => entry.id));
   for (const entry of entries) {
     if (!EVIDENCE_TYPES.has(entry.evidenceType)) {
       throw new Error(`Unsupported evidenceType "${entry.evidenceType}" on ${entry.id}`);
     }
+    assertAliasTyping(entry);
     for (const relation of [...entry.dependencies, ...entry.related]) {
       if (!ids.has(relation)) throw new Error(`Invalid relation ${entry.id} -> ${relation}`);
     }

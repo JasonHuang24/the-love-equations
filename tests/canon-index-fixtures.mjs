@@ -14,7 +14,7 @@ function required(id) {
   return entry;
 }
 
-assert.equal(index.schemaVersion, 'le-canon-index/1.0');
+assert.equal(index.schemaVersion, 'le-canon-index/1.1');
 assert.equal(index.stats.conceptCount, 450);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
@@ -75,7 +75,34 @@ for (const entry of index.entries) {
   }
 }
 
+// Alias typing (schema 1.1). Typing is a statement ABOUT the match surface, so
+// it can only name strings that are on it; a typed alias that is not an alias
+// would silently do nothing, which is the failure mode worth a fixture.
+const typedEntries = index.entries.filter(
+  (entry) => entry.standaloneAliases.length || entry.contextualAliases.length,
+);
+assert.equal(typedEntries.length, 2, 'Unexpected number of entries carrying alias typing');
+assert.deepEqual(required('frameworks:smv-matching').standaloneAliases, ['hypergamy']);
+assert.deepEqual(
+  required('smv:money:provisioning-signal').contextualAliases.map((item) => item.alias),
+  ['provider', 'breadwinner'],
+);
+assert(
+  required('smv:money:provisioning-signal').contextualAliases[0].notAfter.includes('cloud'),
+  'The `provider` alias keeps its disqualifying modifiers',
+);
+for (const entry of index.entries) {
+  const aliases = new Set(entry.aliases);
+  const typed = [...entry.standaloneAliases, ...entry.contextualAliases.map((item) => item.alias)];
+  assert.equal(new Set(typed).size, typed.length, `${entry.id} types an alias twice`);
+  for (const alias of typed) {
+    assert(aliases.has(alias), `${entry.id} types "${alias}" but it is not one of its aliases`);
+    assert(!badges.has(alias), `${entry.id} types verdict badge "${alias}" as an alias`);
+  }
+}
+
 process.stdout.write(
   `Canon extraction fixtures passed for ${index.stats.conceptCount} concepts across `
-  + `${index.stats.sourceCount} sources (${mythbuster.length} verdicts off the match surface).\n`,
+  + `${index.stats.sourceCount} sources (${mythbuster.length} verdicts off the match surface, `
+  + `${typedEntries.length} entries with typed aliases).\n`,
 );

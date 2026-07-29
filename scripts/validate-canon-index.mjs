@@ -32,6 +32,7 @@ const REQUIRED_ENTRY_STRINGS = [
 
 const REQUIRED_ENTRY_ARRAYS = [
   'aliases',
+  'standaloneAliases',
   'phrases',
   'dependencies',
   'related',
@@ -121,6 +122,28 @@ async function main() {
     for (const field of REQUIRED_ENTRY_ARRAYS.filter((field) => field !== 'sourceLinks')) {
       assertUniqueStrings(entry[field], `${entry.id}.${field}`);
     }
+
+    // Alias typing must name strings that are actually on the match surface,
+    // and must name each of them once. Both failure modes are silent otherwise:
+    // the typing simply never fires and nobody finds out.
+    assert(Array.isArray(entry.contextualAliases), `${entry.id}.contextualAliases must be an array`);
+    const aliasSet = new Set(entry.aliases);
+    const typedAliases = [];
+    for (const alias of entry.standaloneAliases) {
+      assert(aliasSet.has(alias), `${entry.id} types "${alias}" standalone but it is not one of its aliases`);
+      typedAliases.push(alias);
+    }
+    for (const contextual of entry.contextualAliases) {
+      assert(contextual && typeof contextual === 'object' && !Array.isArray(contextual),
+        `${entry.id}.contextualAliases must contain objects`);
+      assert.equal(typeof contextual.alias, 'string', `${entry.id} has a contextual alias without a name`);
+      assert(aliasSet.has(contextual.alias),
+        `${entry.id} types "${contextual.alias}" contextual but it is not one of its aliases`);
+      assertUniqueStrings(contextual.notAfter, `${entry.id}.contextualAliases["${contextual.alias}"].notAfter`);
+      typedAliases.push(contextual.alias);
+    }
+    assert.equal(new Set(typedAliases).size, typedAliases.length,
+      `${entry.id} types the same alias in more than one class`);
     for (const source of entry.sourceLinks) {
       assert(source && typeof source === 'object', `${entry.id}.sourceLinks must contain objects`);
       assert.equal(typeof source.label, 'string', `${entry.id} has a source link without a label`);

@@ -119,6 +119,12 @@ export const SCORING_CONFIG = Object.freeze({
   minWeakScore: 0.25,
   minAdmissionDistinctiveShared: 2,
   minLocalSharedTokens: 2,
+  // NEW at v2.4.0, and the only new value in this object. How many distinctive
+  // concepts a contextual alias needs beside itself before its passage counts
+  // as relational evidence. One, because the participant and outcome frames
+  // are the other two ways to satisfy the same condition and this is the
+  // narrowest of the three.
+  minContextualAliasCoFire: 1,
   maxMatchesPerClaim: 4,
   maxWeakMatches: 3,
 
@@ -1008,6 +1014,31 @@ function normalizeEntry(raw, index) {
     .map(normalizeText)
     .filter((phrase) => phrase.length >= SCORING_CONFIG.minPhraseLength));
   entry._misreadingTokens = unique(tokenize(entry.commonMisreadings.join(' ')));
+  /*
+   * Alias typing. A single word is insufficient evidence by default, which is
+   * why the untyped path below still applies minSingleAliasLength and the
+   * low-information filter. These two sets are the curated exceptions:
+   *   standalone — a term specific enough that its presence in an already
+   *                retained relationship-domain passage IS the concept.
+   *   contextual — an ordinary word the concept borrows. It needs independent
+   *                relational evidence in the same passage, and it can be
+   *                disqualified outright by the modifier in front of it.
+   * Typed aliases deliberately skip minSingleAliasLength: curation is the
+   * stronger signal, and a length floor exists only because curation was
+   * absent.
+   */
+  entry._singleTokenAliases = unique(aliases
+    .map(normalizeText)
+    .filter((alias) => alias && !alias.includes(' ')));
+  entry._standaloneAliases = new Set(asArray(raw.standaloneAliases)
+    .map((alias) => normalizeText(alias)).filter(Boolean));
+  entry._contextualAliases = new Map(asArray(raw.contextualAliases)
+    .map((item) => (typeof item === 'string' ? { alias: item } : item))
+    .filter((item) => item && item.alias)
+    .map((item) => [
+      normalizeText(item.alias),
+      asArray(item.notAfter).map((modifier) => normalizeText(modifier)).filter(Boolean),
+    ]));
   return entry;
 }
 
@@ -1463,6 +1494,62 @@ export function classifyDomainRelevance(units, overrides = new Map()) {
 
   return classified;
 }
+/**
+ * Independent relational evidence in the same passage, for a contextual alias.
+ *
+ * "Independent" is the load-bearing word: the alias token cannot vouch for
+ * itself. The domain gate has already computed participant and
+ * relationship-outcome frames from the passage as a whole, and those frames are
+ * derived from vocabulary the alias does not contribute, so they are usable
+ * here as-is. A second distinctive concept shared with the same canon entry
+ * counts too — with the alias's own tokens removed first.
+ *
+ * An affirmative non-domain frame vetoes the lot. If the passage has already
+ * told the gate it is about sport or software, a borrowed word inside it is not
+ * suddenly about dating.
+ */
+function relationalCoFire(unit, aliasTokens, admissionDistinctiveShared) {
+  const frames = unit?.domainRelevance?.frames;
+  if (frames?.nonDomain?.detected) return null;
+  const independent = admissionDistinctiveShared.filter((token) => !aliasTokens.has(token));
+  if (independent.length >= SCORING_CONFIG.minContextualAliasCoFire) {
+    return `independent canon concept “${independent[0]}”`;
+  }
+  if (frames?.outcome?.detected) return 'relationship-outcome frame in the same passage';
+  if (frames?.participant?.detected) return 'participant frame in the same passage';
+  return null;
+}
+
+/**
+ * Single-token aliases the canon has typed, and which this passage earns.
+ *
+ * Standalone aliases pass on presence. Contextual aliases must clear a
+ * disqualifying modifier and then find independent relational evidence — the
+ * word "provider" in "cloud provider" is not this concept however relational
+ * the rest of the sentence is, which is the single case that decides whether
+ * typing an ordinary word is safe at all.
+ */
+function promotedAliases(unit, entry, normalized, admissionDistinctiveShared) {
+  if (!entry._standaloneAliases.size && !entry._contextualAliases.size) return [];
+  const words = normalized.split(/\W+/).filter(Boolean);
+  const present = new Set(words);
+  const hits = [];
+  for (const alias of entry._singleTokenAliases) {
+    if (!present.has(alias)) continue;
+    if (entry._standaloneAliases.has(alias)) {
+      hits.push({ alias, aliasClass: 'standalone', because: 'curated high-specificity alias' });
+      continue;
+    }
+    if (!entry._contextualAliases.has(alias)) continue;
+    const disqualifier = entry._contextualAliases.get(alias)
+      .find((modifier) => normalized.includes(`${modifier} ${alias}`));
+    if (disqualifier) continue;
+    const because = relationalCoFire(unit, new Set(tokenize(alias)), admissionDistinctiveShared);
+    if (because) hits.push({ alias, aliasClass: 'contextual', because });
+  }
+  return hits;
+}
+
 function scoreEntry(unit, entry, idf) {
   const normalized = normalizeText(unit.text);
   // Signatures are sentence-local. A parent paragraph or speaker turn may
@@ -1497,15 +1584,21 @@ function scoreEntry(unit, entry, idf) {
   const credibleSingleAliasHits = singleAliasHits
     .filter((alias) => tokenize(alias)
       .some((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
+  const promotedAliasHits = promotedAliases(unit, entry, normalized, admissionDistinctiveShared);
   const phraseStrength = phraseHits.length
     ? clamp(SCORING_CONFIG.phraseBase + Math.min(
       SCORING_CONFIG.phraseLengthBonusCap,
       (phraseHits[0].split(' ').length - SCORING_CONFIG.phraseLengthBonusBaseWords)
         * SCORING_CONFIG.phraseLengthBonus,
     ))
-    : singleAliasHits.length
-      ? SCORING_CONFIG.singleAliasStrength
-      : 0;
+    // Phrase-class treatment, at the phrase BASE and no length bonus: the bonus
+    // rewards multi-word specificity, which a single token does not have. What
+    // curation buys is admission, not extra weight.
+    : promotedAliasHits.length
+      ? SCORING_CONFIG.phraseBase
+      : singleAliasHits.length
+        ? SCORING_CONFIG.singleAliasStrength
+        : 0;
 
   const distinctiveBoost = Math.min(
     SCORING_CONFIG.distinctiveBoostCap,
@@ -1529,14 +1622,19 @@ function scoreEntry(unit, entry, idf) {
       + titleBoost,
   );
 
-  const weakGenericMatch = !phraseHits.length
+  // The three penalties all ask the same question — "is there anything here
+  // beyond loose overlap?" — so a promoted alias answers it exactly as an exact
+  // phrase does. Without this, phrase-class treatment would be granted and then
+  // immediately taken back by the sparse-token penalty.
+  const exactLexicalHit = phraseHits.length || promotedAliasHits.length;
+  const weakGenericMatch = !exactLexicalHit
     && distinctiveShared.length < SCORING_CONFIG.weakGenericDistinctiveMax
     && shared.every((token) => GENERIC_TERMS.has(token));
   if (weakGenericMatch && !signatureHits.length) score *= SCORING_CONFIG.weakGenericPenalty;
-  if (!phraseHits.length && !signatureHits.length && shared.length < SCORING_CONFIG.sparseSharedMin) {
+  if (!exactLexicalHit && !signatureHits.length && shared.length < SCORING_CONFIG.sparseSharedMin) {
     score *= SCORING_CONFIG.sparseSharePenalty;
   }
-  if (unit.wordCount < SCORING_CONFIG.shortUnitWordCount && !phraseHits.length && !signatureHits.length) {
+  if (unit.wordCount < SCORING_CONFIG.shortUnitWordCount && !exactLexicalHit && !signatureHits.length) {
     score *= SCORING_CONFIG.shortUnitPenalty;
   }
 
@@ -1560,7 +1658,11 @@ function scoreEntry(unit, entry, idf) {
     canonCoverage: round(canonCoverage),
     signatureHits,
     phraseHits: phraseHits.slice(0, SCORING_CONFIG.maxPhraseHitsReported),
-    exactAliasHits: credibleSingleAliasHits.slice(0, SCORING_CONFIG.maxAliasHitsReported),
+    exactAliasHits: unique([
+      ...promotedAliasHits.map((hit) => hit.alias),
+      ...credibleSingleAliasHits,
+    ]).slice(0, SCORING_CONFIG.maxAliasHitsReported),
+    promotedAliasHits,
     sharedTokens: shared.slice(0, SCORING_CONFIG.maxSharedTokensReported),
     distinctiveShared: distinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     admissionDistinctiveShared: admissionDistinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
@@ -1680,6 +1782,9 @@ function transparentWhy(rawScore, entry) {
   if (rawScore.exactAliasHits.length) {
     reasons.push(`Exact alias: “${rawScore.exactAliasHits[0]}”`);
   }
+  (rawScore.promotedAliasHits || []).forEach((hit) => {
+    reasons.push(`Typed alias “${hit.alias}” (${hit.aliasClass}): ${hit.because}`);
+  });
   if (rawScore.distinctiveShared.length) {
     reasons.push(`Distinctive overlap: ${rawScore.distinctiveShared.slice(0, SCORING_CONFIG.maxWhyMatchedTokens).join(', ')}`);
   } else if (rawScore.sharedTokens.length) {

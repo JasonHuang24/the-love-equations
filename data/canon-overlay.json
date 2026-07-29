@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "le-canon-overlay/1.0",
+  "schemaVersion": "le-canon-overlay/1.1",
   "entries": {
     "hierarchy:overview": {
       "aliases": [
@@ -115,6 +115,33 @@
         "provider",
         "breadwinner",
         "provider frame"
+      ],
+      "contextualAliases": [
+        {
+          "alias": "provider",
+          "notAfter": [
+            "cloud",
+            "healthcare",
+            "health care",
+            "service",
+            "internet",
+            "insurance",
+            "medical",
+            "hosting",
+            "software",
+            "payment",
+            "energy",
+            "utility",
+            "network",
+            "care",
+            "childcare",
+            "child care"
+          ]
+        },
+        {
+          "alias": "breadwinner",
+          "notAfter": []
+        }
       ]
     },
     "smv:status": {
@@ -478,6 +505,9 @@
         "dating up",
         "marrying up",
         "women date across or up"
+      ],
+      "standaloneAliases": [
+        "hypergamy"
       ],
       "phrases": [
         "out of your league",
