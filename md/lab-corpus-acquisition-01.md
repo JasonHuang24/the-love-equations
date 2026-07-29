@@ -1,6 +1,21 @@
 # LE Lab corpus — acquisition worksheet 01
 
-**Status: PENDING GO. Nothing has been fetched.** This worksheet exists so Jason can approve
+> **STATUS: EXECUTED 2026-07-29.** Jason gave GO for **01, 04, 02**; **03 (Gottman) is EXCLUDED** —
+> it stays a v2.1.2 artifact flagged within-version-only, and no Gottman revision was fetched.
+> All three approved sources are acquired and hashed in `lab-corpus.manifest.json`. Outcome summary:
+>
+> | # | Method | Verification | Words (run-01 record) |
+> |---|---|---|---|
+> | 01 Pew | live page | **VERIFIED** — title, date `2023-02-02`, n=6,034, fielded Jul 5–17 2022 all match | 2,283 (n/r) |
+> | 02 Fem-Centrism | Wayback `2025-10-23` | VERIFIED identity; permalink is **2011-12-21**, not the 2011-09-13 first guess; 9-month drift window noted | 1,210 (1,214) |
+> | 04 Heteropessimism | live + Wayback `2026-07-16` | **VERIFIED** — the two extractions are **byte-identical**, ruling out source drift 11 days before the original run | 2,891 (2,938) |
+>
+> Extraction is by the committed `tools/extract-source-text.mjs`, not by a model reading the page, so
+> the archived-HTML → text → SHA-256 chain is reproducible. Question 2 below (intake format) was
+> answered `.txt` per the worksheet's own assumption; question 3 was answered by the recommendation
+> (Wayback for 02, live for 01 and 04, with 04 additionally corroborated against an archive capture).
+
+**Original status: PENDING GO. Nothing has been fetched.** This worksheet exists so Jason can approve
 acquisition per source rather than approving "re-acquire the corpus" as one undifferentiated act.
 
 Scaffolding is in place: `lab-corpus/sources/` and `lab-corpus/exports/` exist, `lab-corpus/` is

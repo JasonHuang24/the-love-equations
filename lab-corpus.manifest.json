@@ -1,15 +1,21 @@
 {
   "schemaVersion": "le-lab.corpus-manifest/1.0",
-  "updatedAt": "2026-07-29T08:40:34.642Z",
+  "updatedAt": "2026-07-29T09:10:00.000Z",
   "archive": {
     "root": "lab-corpus/",
     "published": false,
     "rationale": "Third-party copyrighted texts. The archive lives in the working tree but is gitignored; this manifest is committed so presence, identity, and integrity are verifiable without publishing the content. Per md/RERUN.md section 1, the SHA-256 is what makes a future run verifiable, not the location.",
     "layout": {
-      "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar",
+      "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar and <NN>-<slug>.raw.html",
       "exports": "lab-corpus/exports/<NN>-<slug>-<analyzer-version>.json"
     },
-    "state": "scaffolded-empty"
+    "state": "populated: 3 of 4 sources acquired (01, 02, 04); 03 excluded by decision"
+  },
+  "reproducibility": {
+    "chain": "archived raw HTML -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
+    "extractor": "tools/extract-source-text.mjs",
+    "extractorSha256": "6f3373b0c12145f9b57af26c9eb6d3bf5ee69a0a34d600e61c1c229c1321aa43",
+    "note": "The extractor is committed (it is our code, not third-party text) so anyone holding the archived HTML can regenerate the exact analyzed text and check it against these hashes. Extraction was deliberately NOT done by a model reading the page: a model-mediated transcription is not reproducible byte-for-byte and would break the chain. Each source's sidecar records its exact command line, plus the SHA-256 of the raw HTML it was run against."
   },
   "epoch": {
     "analyzerVersion": "2.2.0",
@@ -18,25 +24,30 @@
     "scoringConfigHash": "195c1ld",
     "canonIndexVersion": "1.0.0+62c5cb511433",
     "canonGeneratedAt": "2026-07-29T08:40:34.642Z",
-    "note": "Read from fixtures/demo-v2.2.0-canon-62c5cb511433.json provenance, not from memory. This is the post-alias-pass canon, not the 1.0.0+8c38a2f1d015 the run-01 corpus was analyzed against."
+    "note": "Read from fixtures/demo-v2.2.0-canon-62c5cb511433.json provenance, not from memory. This is the post-alias-pass canon, not the 1.0.0+8c38a2f1d015 the run-01 corpus was analyzed against. This epoch describes the instrument at acquisition time; the re-run epoch is set when exports land."
   },
   "acquisition": {
-    "status": "pending-go",
+    "status": "acquired",
+    "date": "2026-07-29",
     "worksheet": "md/lab-corpus-acquisition-01.md",
-    "note": "No source has been fetched. Nothing in this manifest is acquired until Jason gives GO on the worksheet."
+    "authorization": "Jason GO for sources 01, 04, 02. Source 03 (Gottman, The Four Horsemen) EXCLUDED from re-acquisition by explicit decision: it remains a v2.1.2 artifact, flagged within-version-only, and no Gottman revision is to be fetched.",
+    "note": "All three acquired sources are capturedBy 'reacquired'. Nothing acquired now can be byte-verified against what was analyzed in July 2026 — the staging was deleted — so every re-run supersedes its predecessor rather than reproducing it. The prospective payoff is that from this commit forward, every future re-run is a true reproduction."
   },
   "sources": [
     {
       "id": "01-pew-online-dating",
       "title": "Key findings about online dating in the U.S.",
-      "author": "Pew Research Center",
+      "author": "Emily A. Vogels and Colleen McClain",
       "publication": "Pew Research Center (Short Reads)",
       "year": 2023,
       "url": "https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/",
       "urlProvenance": "inferred",
-      "sourceFile": null,
-      "sourceSha256": null,
-      "capturedBy": null,
+      "sourceFile": "lab-corpus/sources/01-pew-online-dating.txt",
+      "sourceSha256": "5f0fe0790ace3c856b410cd351770b2ecbbb280292245cab1c0ae39a3583e5b3",
+      "rawHtmlSha256": "85e59e718b275b081c6dde9fa98f7a16c866213c7b92f2507f48384856fcf7fd",
+      "capturedBy": "reacquired",
+      "capturedAt": "2026-07-29T09:03:00.000Z",
+      "words": 2283,
       "current": null,
       "superseded": [],
       "priorExport": null,
@@ -54,10 +65,12 @@
       "result": { "claimLike": null, "mapped": null, "coveragePct": null },
       "delta": null,
       "acquisition": {
+        "method": "live page, curl, deterministic script extraction",
+        "verification": "VERIFIED — title, publication date (2023-02-02), sample size (n=6,034) and field dates (July 5-17 2022) all match the dossier's recorded metadata. Full check record in the sidecar.",
         "reacquirable": "yes",
         "confidence": "high",
         "overrides": "lab-corpus/sources/01-pew.overrides.json — Harvest #1 used 4 visitor includes; unit IDs are content-derived and will not survive re-acquisition. Re-derive from the new run.",
-        "notes": "Only source whose URL survives anywhere in the repo, recovered by exact title+date match from md/mythbuster-grading-review.md:394 — recorded as inferred, not as capture-time provenance. Dated short-read with a fixed slug; Pew does not silently rewrite these. Re-run moves TWO variables (analyzer 1.7 to 2.2.0 AND canon 6dc9bff7b0fe to 62c5cb511433), so its delta is not attributable to either alone."
+        "notes": "Only source whose URL survives anywhere in the repo, recovered by exact title+date match from md/mythbuster-grading-review.md:394 — urlProvenance stays 'inferred' because that records how the URL was recovered, not how well it verifies. Re-run moves TWO variables (analyzer 1.7 to 2.3.0 AND canon 6dc9bff7b0fe to 62c5cb511433), so its delta is not attributable to either alone."
       }
     },
     {
@@ -66,11 +79,15 @@
       "author": "Rollo Tomassi",
       "publication": "The Rational Male",
       "year": 2011,
-      "url": null,
-      "urlProvenance": "none-survives",
-      "sourceFile": null,
-      "sourceSha256": null,
-      "capturedBy": null,
+      "url": "https://therationalmale.com/2011/12/21/fem-centrism/",
+      "urlProvenance": "recovered-by-search",
+      "archiveUrl": "https://web.archive.org/web/20251023192059id_/https://therationalmale.com/2011/12/21/fem-centrism/",
+      "sourceFile": "lab-corpus/sources/02-fem-centrism.txt",
+      "sourceSha256": "027043a51799e3365224a43c7f6567b1b7541e56c2bf5acad03baf3292f38621",
+      "rawHtmlSha256": "dec95aec0204f8fd7005dc97690a263d69bf96589371f1e973486ca6a44de166",
+      "capturedBy": "reacquired",
+      "capturedAt": "2026-07-29T09:02:00.000Z",
+      "words": 1210,
       "current": null,
       "superseded": [],
       "priorExport": null,
@@ -88,9 +105,11 @@
       "result": { "claimLike": null, "mapped": null, "coveragePct": null },
       "delta": null,
       "acquisition": {
+        "method": "Wayback capture 2025-10-23 (id_ original bytes), deterministic script extraction",
+        "verification": "VERIFIED (identity) — title, author site, and 2011 permalink all match; extracted word count 1,210 vs the run-01 record of 1,214, a 0.3% gap. DRIFT WINDOW NOTED: the latest capture on or before the 2026-07-27 run is nine months earlier, so an edit inside that window would be invisible.",
         "reacquirable": "likely",
         "confidence": "medium",
-        "notes": "Self-hosted WordPress blog post, live since 2011 and widely mirrored. Availability is not the risk; drift is — a self-hosted post can be silently edited and there is no archival dated slug to pin against. Prefer a Wayback capture dated on or before 2026-07-27 so the text is at least pinned to a date near the original run. 73% of this source's words were set aside as non-domain in run 01, so the re-run population is small and sensitive to any text drift."
+        "notes": "The worksheet recorded no URL. The permalink was recovered by Wayback CDX domain search and is 2011-12-21, not the 2011-09-13 first guess. Wayback rather than live, per the worksheet: a self-hosted post can be silently edited and has no dated archival slug. 73% of this source's words were set aside as non-domain in run 01, so the re-run population is small and sensitive to any text drift."
       }
     },
     {
@@ -120,10 +139,13 @@
       },
       "result": { "claimLike": null, "mapped": null, "coveragePct": null },
       "delta": null,
+      "status": "EXCLUDED — within-version-only artifact",
       "acquisition": {
+        "decision": "EXCLUDED from re-acquisition, 2026-07-29, by explicit instruction. No Gottman revision is to be fetched.",
         "reacquirable": "uncertain",
         "confidence": "low",
-        "notes": "Highest drift risk of the four and the weakest surviving provenance: no year, no URL, and 'The Four Horsemen' names a commercial content-marketing article that Gottman has published in several revised versions across more than one URL. Identifying WHICH page was analyzed is guesswork. This is the run that produced the dossier's single most diagnostic result (885 words, 17 claim-like, 0 mapped), so a re-run against a different revision would silently replace that evidence rather than reproduce it. Recommend re-run only against a Wayback capture dated on or before 2026-07-27; if no such capture can be identified with confidence, keep the v2.1.2 artifact and flag it within-version-only."
+        "consequence": "The v2.1.2 result (885 words, 17 claim-like, 0 mapped) stands as a v2.1.2 artifact and may be cited ONLY within that version. It must not be compared against v2.3.0 results for the other three sources, and the corpus is therefore NOT single-version in the sense of md/RERUN.md section 6.",
+        "notes": "Highest drift risk of the four and the weakest surviving provenance: no year, no URL, and 'The Four Horsemen' names a commercial content-marketing article Gottman has published in several revised versions across more than one URL. This run produced the dossier's single most diagnostic result, so a re-run against a different revision would silently replace that evidence rather than reproduce it. Exclusion is the conservative call and preserves the finding intact."
       }
     },
     {
@@ -132,11 +154,14 @@
       "author": "Asa Seresin",
       "publication": "The New Inquiry",
       "year": 2019,
-      "url": null,
-      "urlProvenance": "none-survives",
-      "sourceFile": null,
-      "sourceSha256": null,
-      "capturedBy": null,
+      "url": "https://thenewinquiry.com/on-heteropessimism/",
+      "urlProvenance": "recovered-by-search",
+      "sourceFile": "lab-corpus/sources/04-heteropessimism.txt",
+      "sourceSha256": "f8d168c53f8ce88b3a3d82dbe1f61aca53cfdf403176bea7c42557d9c835f6cd",
+      "rawHtmlSha256": "457f206815b408b0e3f91cddc18a93511d0aad4d40ff3114a4d6092eaf9dbd81",
+      "capturedBy": "reacquired",
+      "capturedAt": "2026-07-29T09:01:00.000Z",
+      "words": 2891,
       "current": null,
       "superseded": [],
       "priorExport": null,
@@ -154,9 +179,11 @@
       "result": { "claimLike": null, "mapped": null, "coveragePct": null },
       "delta": null,
       "acquisition": {
+        "method": "live page, curl, deterministic script extraction; corroborated against a 2026-07-16 Wayback capture",
+        "verification": "VERIFIED — title and publication match; extracted word count 2,891 vs the run-01 record of 2,938, a 1.6% gap. The live extraction is BYTE-IDENTICAL to the extraction from the 2026-07-16 capture, eleven days before the original run, so source drift is ruled out as an explanation for any delta this re-run shows.",
         "reacquirable": "yes",
         "confidence": "high",
-        "notes": "Dated magazine essay in a stable archive; a published 2019 essay is not silently revised the way a blog post or a marketing page is. Carried the only credible canon match in the whole run-01 corpus (1 of 55 claim-like segments, to 'The Market', Medium confidence), which makes it the most informative single re-run: it is the only source where a coverage change could show up as anything other than 0 to non-zero."
+        "notes": "Dated magazine essay in a stable archive. Carried the only credible canon match in the whole run-01 corpus (1 of 55 claim-like segments, to 'The Market', Medium confidence), which makes it the most informative single re-run: the only source where a coverage change could show up as anything other than 0 to non-zero."
       }
     }
   ]
