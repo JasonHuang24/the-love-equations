@@ -1,0 +1,329 @@
+{
+  "schema": "le-lab.short-utterance-matrix/1.0",
+  "frozenAt": "2026-07-29",
+  "frozenAgainst": {
+    "labRelease": "2.4.1",
+    "analyzer": "2.4.0",
+    "analysisSchema": "le-lab.analysis/2.4",
+    "canonIndex": "1.0.0+949aef381d5f",
+    "scoringConfigHash": "1ntbwch"
+  },
+  "purpose": "Freeze what the shipped analyzer does with compact utterances — the four-to-nine-word assertions that carry a whole indexed concept, the equally short passages that carry nothing, and the short polysemous traps that look like both. Nothing here proposes a change. Every expectation is the CURRENT outcome, so the matrix is green the day it lands and goes red the moment a structural change moves any of these. That is the point: a future path through short utterances arrives to find a baseline already written down, and has to decide about each row on purpose rather than discovering the movement afterwards.",
+  "contract": "FREEZE ONLY. No detector was changed to produce this file, no threshold was touched, and `minClaimWords` is exactly what it was (4). Append-only thereafter, on the same terms as the domain-relevance and match-behavior benchmarks: cases are never edited or removed, and a case that changes behavior is re-adjudicated rather than rewritten. `assertedOutcome` is what the analyzer did on 2026-07-29 and is enforced. `humanReading` is what a careful reader would say the passage is, is RECORDED AND NEVER ASSERTED, and exists so the gap between the two is legible without being smuggled in as a requirement.",
+  "outcomes": {
+    "ignored": "The relevance gate set the passage aside. It never reached the matcher, and its only representation in an analysis is the triage list.",
+    "retained-not-claim-like": "The gate kept it, but claim grammar did not: it is analyzed as context, is excluded from the coverage denominator, and cannot map.",
+    "retained-unmapped": "Retained and claim-like, but no candidate cleared the credible threshold. This is the Research Queue population.",
+    "mapped": "At least one candidate cleared admission and appears as a credible match."
+  },
+  "outcomeNote": "The brief named three outcomes; there are four, because `retained-unmapped` and `retained-not-claim-like` fail for unrelated reasons and are fixed in unrelated places. Collapsing them would hide exactly the distinction this matrix was built to expose.",
+  "constraints": {
+    "domain-gate": "The passage was refused a relationship domain before any canon entry was scored. Word count is irrelevant to this decision.",
+    "claim-word-floor": "The gate retained it; `minClaimWords` (4) or `claimLikeThreshold` (0.30) refused it claim status.",
+    "admission-threshold": "Retained and claim-like; no candidate reached `minCredibleScore` (0.43).",
+    "none": "The analyzer handled the passage the way a careful reader would. Recorded so the matrix is not only a list of misses."
+  },
+  "thresholdsAtFreeze": {
+    "minClaimWords": 4,
+    "claimLikeThreshold": 0.3,
+    "domainRelevantScore": 4,
+    "domainUncertainScore": 1,
+    "minCredibleScore": 0.43,
+    "minWeakScore": 0.25,
+    "shortUnitWordCount": 6,
+    "shortUnitPenalty": 0.72,
+    "note": "Recorded, not asserted by this fixture — tests/lab-analyzer.test.mjs owns SCORING_CONFIG. They are here so a reader of a future red row can see which number was in force when the row was frozen."
+  },
+  "findings": [
+    "THE HEADLINE: for three of the four compact canon claims the binding constraint is the DOMAIN GATE, not the claim-word floor. `Hypergamy is real.`, `The wall is real.` and `Provider men win.` are all set aside as `no-human-relational-frame` before length is ever consulted.",
+    "Expanding those same claims to nine and twelve words does NOT change the outcome. `Hypergamy is real and it shapes who women pursue.` is still ignored. Length is not what is wrong with them, and a structural path that only lowers `minClaimWords` would move exactly one of the four rows in block A.",
+    "`Men prefer youth.` is the one case where the word floor genuinely binds: the gate retains it as `explicit-relational-outcome`, and three words then deny it claim status. It carries three weak matches it is not permitted to be judged on.",
+    "`The wall is real.` clears claim grammar at four words and is killed by the gate anyway — the two rules are independent, and this row is the proof.",
+    "`Provider men win because resources still signal commitment.` maps at 0.54 to `smv:money:provisioning-signal` via the v2.4.0 contextual `provider` alias, while its three-word twin is refused a domain. The typed alias works; the gate never lets the compact form reach it.",
+    "All twelve non-claims and traps are correctly ignored. The adversarial half of this matrix is green, which is the only reason the miss rows above mean anything.",
+    "`Ranked matches were unfair.` is ignored, while ds-13's longer `The studio patched the game so ranked players get fewer unfair matches.` is retained fail-open. The compact form does not reach the `dating-app-interaction` frame that the longer one trips. Shortening a trap can make the gate MORE accurate, not less."
+  ],
+  "assertionScope": "Each case asserts its outcome, gate status, decisive reason code, claim-likeness, and the exact set of credible matches. Weak matches and scores are recorded in `observed` but NOT asserted: they move by third decimals on any canon edit, and a fixture that goes red on alias curation would produce noise where this one is meant to produce signal.",
+  "blocks": {
+    "compactCanonClaims": {
+      "question": "What happens to a whole indexed LE concept asserted in three or four words?",
+      "cases": [
+        {
+          "id": "su-01",
+          "text": "Hypergamy is real.",
+          "wordCount": 3,
+          "humanReading": "A flat assertion of an indexed LE concept. A reader would map it to hypergamy without hesitation.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": {
+            "status": "irrelevant",
+            "reasonCode": "no-human-relational-frame",
+            "claimLikelihood": 0,
+            "isClaimLike": false,
+            "credibleMatches": [],
+            "weakMatches": []
+          },
+          "note": "`hypergamy` is a standalone typed alias on `frameworks:smv-matching` as of v2.4.0 and would map on sight — but the gate sets the passage aside before retrieval runs, so the typing never gets a chance. The alias fix and the gate miss are independent, and this row separates them."
+        },
+        {
+          "id": "su-02",
+          "text": "The wall is real.",
+          "wordCount": 4,
+          "humanReading": "An assertion about the Wall, the site's own term, with a whole deep-dive essay behind it.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": {
+            "status": "irrelevant",
+            "reasonCode": "no-human-relational-frame",
+            "claimLikelihood": 0.3,
+            "isClaimLike": true,
+            "credibleMatches": [],
+            "weakMatches": []
+          },
+          "note": "The load-bearing row. At four words this CLEARS claim grammar — isClaimLike is true — and the gate kills it anyway. Claim detection and domain relevance are separate rules, and no amount of movement on `minClaimWords` would rescue this passage."
+        },
+        {
+          "id": "su-03",
+          "text": "Provider men win.",
+          "wordCount": 3,
+          "humanReading": "A compact statement of provisioning as dating-market leverage.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": {
+            "status": "irrelevant",
+            "reasonCode": "no-human-relational-frame",
+            "claimLikelihood": 0,
+            "isClaimLike": false,
+            "credibleMatches": [],
+            "weakMatches": []
+          },
+          "note": "Compare su-07, which is the same claim in eight words and maps credibly. `win` alone is not a relationship outcome to the gate."
+        },
+        {
+          "id": "su-04",
+          "text": "Men prefer youth.",
+          "wordCount": 3,
+          "humanReading": "An age-preference claim; the site charts it and the Mythbuster rules on it.",
+          "assertedOutcome": "retained-not-claim-like",
+          "bindingConstraint": "claim-word-floor",
+          "observed": {
+            "status": "relevant",
+            "reasonCode": "explicit-relational-outcome",
+            "claimLikelihood": 0,
+            "isClaimLike": false,
+            "credibleMatches": [],
+            "weakMatches": [
+              "gender-dynamics:male:the-female-approval-engine-mixed-signals:cosmetic-surgery-and-the-female-approval-engine",
+              "M-TBD-26",
+              "M-TBD-59"
+            ]
+          },
+          "note": "The ONLY row in this matrix where `minClaimWords` is the binding constraint. `prefer` is an explicit relational outcome, so the gate scores it 5 and retains it as relevant — and then three words deny it claim status, which excludes it from coverage and from the Research Queue alike. It carries three weak matches it is never permitted to be judged on."
+        }
+      ]
+    },
+    "expandedTwins": {
+      "question": "Is compactness the problem? Each case is block A's claim rewritten past every length floor, with nothing else changed.",
+      "cases": [
+        {
+          "id": "su-05",
+          "text": "Hypergamy is real and it shapes who women pursue.",
+          "wordCount": 9,
+          "humanReading": "su-01 with a participant and an outcome spelled out.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": {
+            "status": "irrelevant",
+            "reasonCode": "no-human-relational-frame",
+            "claimLikelihood": 0.6,
+            "isClaimLike": true,
+            "credibleMatches": [],
+            "weakMatches": []
+          },
+          "note": "Nine words, claim-likelihood doubled to 0.60, `women` present as a participant — and still ignored. This is the row that proves length is not what is wrong with su-01."
+        },
+        {
+          "id": "su-06",
+          "text": "The wall is real and it lands hardest on looks-dependent women.",
+          "wordCount": 12,
+          "humanReading": "su-02 with the affected population named.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": {
+            "status": "irrelevant",
+            "reasonCode": "no-human-relational-frame",
+            "claimLikelihood": 0.46,
+            "isClaimLike": true,
+            "credibleMatches": [],
+            "weakMatches": []
+          },
+          "note": "Twelve words and still no relational frame the gate recognizes. Three times su-02's length changes nothing."
+        },
+        {
+          "id": "su-07",
+          "text": "Provider men win because resources still signal commitment.",
+          "wordCount": 8,
+          "humanReading": "su-03 with the mechanism stated.",
+          "assertedOutcome": "mapped",
+          "bindingConstraint": "none",
+          "observed": {
+            "status": "uncertain",
+            "reasonCode": "plausible-human-relational-frame",
+            "claimLikelihood": 0.44,
+            "isClaimLike": true,
+            "credibleMatches": ["smv:money:provisioning-signal"],
+            "weakMatches": ["smv:money", "frameworks:conversion-ladder", "gender-dynamics:male:the-cost-of-staying-true:make-peace-with-it-or-let-resentment-win"]
+          },
+          "note": "The working case, and the contrast that makes block A legible. `commitment` gives the gate a relationship outcome, retrieval then finds the v2.4.0 contextual `provider` alias with independent relational evidence, and the passage maps at 0.54. Everything downstream of the gate works; su-03 simply never reaches it."
+        },
+        {
+          "id": "su-08",
+          "text": "Men prefer youth when they are selecting for fertility.",
+          "wordCount": 9,
+          "humanReading": "su-04 with the selection context stated.",
+          "assertedOutcome": "retained-unmapped",
+          "bindingConstraint": "admission-threshold",
+          "observed": {
+            "status": "relevant",
+            "reasonCode": "explicit-relational-outcome",
+            "claimLikelihood": 0.6,
+            "isClaimLike": true,
+            "credibleMatches": [],
+            "weakMatches": ["M-TBD-17", "statistics:stat-first-message", "gender-dynamics:male:the-female-approval-engine-mixed-signals:cosmetic-surgery-and-the-female-approval-engine"]
+          },
+          "note": "Past the gate, past claim grammar, and still unmapped: the best candidate sits at 0.275 against a 0.43 floor. This row belongs to the coverage-is-a-threshold-problem finding from the gate append, not to anything about short utterances."
+        }
+      ]
+    },
+    "shortNonClaims": {
+      "question": "Do equally short passages that assert nothing stay out?",
+      "cases": [
+        {
+          "id": "su-09",
+          "text": "Right.",
+          "wordCount": 1,
+          "humanReading": "Backchannel. Carries no proposition at all.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "Present in the shipped demo transcript, so this row is not hypothetical."
+        },
+        {
+          "id": "su-10",
+          "text": "Anyway, moving on.",
+          "wordCount": 3,
+          "humanReading": "A discourse marker. Same length as su-01 and su-03.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "The control for su-01: identical word count, correctly binned. Whatever a future structural path does about three-word claims, it has to keep this row where it is."
+        },
+        {
+          "id": "su-11",
+          "text": "That makes sense.",
+          "wordCount": 3,
+          "humanReading": "Agreement, not a claim.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "Contains a verb and a subject and still asserts nothing about the world."
+        },
+        {
+          "id": "su-12",
+          "text": "Good point.",
+          "wordCount": 2,
+          "humanReading": "Assessment of a previous turn.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "—"
+        },
+        {
+          "id": "su-13",
+          "text": "Let me check that.",
+          "wordCount": 4,
+          "humanReading": "An intention. Same word count as su-02.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0.16, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "The control for su-02 on length: four words, claim-likelihood 0.16 rather than 0.30, correctly denied claim status by grammar alone."
+        }
+      ]
+    },
+    "polysemousTraps": {
+      "question": "Do the short forms of the site's borrowed words pull in their everyday senses?",
+      "cases": [
+        {
+          "id": "su-14",
+          "text": "Game respects game.",
+          "wordCount": 3,
+          "humanReading": "Seduction-register idiom. A human reads it as an LE-adjacent claim about social skill; it is also exactly the shape a canon match would have to earn.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "Named in the brief as a trap, and it is a genuinely two-sided one: this is dating-register language, but nothing in the sentence names a participant or an outcome, and `game` is deliberately untyped pending the ds-13 gate fix. Ignoring it is the conservative outcome, not obviously the correct one — which is why it is frozen here rather than argued about."
+        },
+        {
+          "id": "su-15",
+          "text": "Providers vary.",
+          "wordCount": 2,
+          "humanReading": "Ambiguous on its face: healthcare, hosting, or the LE sense. No context to choose from.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "The contextual `provider` alias requires independent relational evidence in the same passage. Two words supply none, so the typing correctly declines to fire even if the gate had let it through."
+        },
+        {
+          "id": "su-16",
+          "text": "The game was rigged.",
+          "wordCount": 4,
+          "humanReading": "Sports or gaming. Not a relationship claim.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0.3, "isClaimLike": true, "credibleMatches": [], "weakMatches": [] },
+          "note": "Clears claim grammar and is correctly binned by the gate. The adversarial twin of su-02."
+        },
+        {
+          "id": "su-17",
+          "text": "Our provider went down.",
+          "wordCount": 4,
+          "humanReading": "Infrastructure. The `notAfter` guard's whole reason for existing, in miniature.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0.16, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "Refused twice over: the gate bins it, and no relational co-fire exists for the contextual alias even if it had not."
+        },
+        {
+          "id": "su-18",
+          "text": "He has rizz.",
+          "wordCount": 3,
+          "humanReading": "Praise in the seduction register. Arguably `smv:charm`.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0, "isClaimLike": false, "credibleMatches": [], "weakMatches": [] },
+          "note": "`rizz` is four characters and inert under `minSingleAliasLength` regardless; ta-13 in the match-behavior benchmark covers the alias side. This row covers the gate side of the same word."
+        },
+        {
+          "id": "su-19",
+          "text": "The wall is load-bearing.",
+          "wordCount": 5,
+          "humanReading": "Masonry. The literal sense of the site's own term.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0.3, "isClaimLike": true, "credibleMatches": [], "weakMatches": [] },
+          "note": "The adversarial twin of su-02, and the reason su-02 cannot be fixed by matching `the wall is` as a phrase."
+        },
+        {
+          "id": "su-20",
+          "text": "Ranked matches were unfair.",
+          "wordCount": 4,
+          "humanReading": "Competitive gaming. The compact form of ds-13.",
+          "assertedOutcome": "ignored",
+          "bindingConstraint": "domain-gate",
+          "observed": { "status": "irrelevant", "reasonCode": "no-human-relational-frame", "claimLikelihood": 0.3, "isClaimLike": true, "credibleMatches": [], "weakMatches": [] },
+          "note": "Correctly ignored, while ds-13's longer form is retained fail-open on the `dating-app-interaction` frame that `fewer ... matches` trips. Shortening this trap makes the gate MORE accurate, which is worth knowing before anyone assumes short text is uniformly harder."
+        }
+      ]
+    }
+  }
+}
