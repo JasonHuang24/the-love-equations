@@ -7,6 +7,7 @@ import { createDemoDocument } from '../js/lab-demo.js';
 import {
   ANALYSIS_SCHEMA_VERSION,
   ANALYZER_VERSION,
+  DIAGNOSTICS_SCHEMA_VERSION,
   SCORING_CONFIG,
   SCORING_CONFIG_HASH,
   analyzeDocument,
@@ -769,7 +770,7 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
     text: 'The sky is blue. Water freezes at zero degrees Celsius.',
   }), REAL_CANON);
   assert.equal(noDomain.metrics.claimLikeSegments, 0);
-  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.3');
+  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.4');
   assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.1');
   assert.equal(noDomain.coverage.mappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.unmappedClaimSegmentSharePct, null);
@@ -1152,6 +1153,57 @@ test('every export is self-describing: provenance stamp and provisional marker',
   assert.equal(result.coverage.provisional.provisional, true);
   assert.equal(result.coverage.provisional.reason, 'thresholds uncalibrated');
   assert.ok(result.limitations.some((line) => /thresholds are provisional/i.test(line)));
+});
+
+test('no analyzer working field escapes into an export', async () => {
+  // Retrieval hangs bookkeeping on the candidate objects it passes downstream.
+  // Those fields are stripped by PREFIX rather than by name, because stripping
+  // them by name is how `_retrieval` reached an export the first time.
+  const result = await analyzeDocument(createDemoDocument(), REAL_CANON, { diagnostics: true });
+  const leaked = new Set();
+  const walk = (node) => {
+    if (Array.isArray(node)) { node.forEach(walk); return; }
+    if (!node || typeof node !== 'object') return;
+    Object.entries(node).forEach(([key, value]) => {
+      if (key.startsWith('_')) leaked.add(key);
+      walk(value);
+    });
+  };
+  walk(result);
+  assert.deepEqual([...leaked], [], 'Internal working fields reached the analysis output.');
+});
+
+test('the diagnostic trace is opt-in, derived, and changes no analysis', async () => {
+  const plain = await analyzeDocument(createDemoDocument(), REAL_CANON);
+  const traced = await analyzeDocument(createDemoDocument(), REAL_CANON, { diagnostics: true });
+
+  // Off by default, and absent rather than empty — a normal export stays
+  // exactly as compact as it was.
+  assert.equal('diagnostics' in plain, false);
+  assert.equal(traced.diagnostics.schemaVersion, DIAGNOSTICS_SCHEMA_VERSION);
+
+  // Derived only. Same document, same everything, whether or not anyone asked
+  // to watch — so turning the trace on can never be the reason a result moved.
+  const strip = (result) => JSON.stringify({ ...result, diagnostics: undefined, generatedAt: null });
+  assert.equal(strip(plain), strip(traced));
+
+  // It reports the FULL working set, not the displayed subset: that is the
+  // point of it, and the reason a feedback exporter needs it at all.
+  const unit = traced.diagnostics.claimUnits.find((row) => row.mapped);
+  assert.ok(unit, 'The demo yields at least one mapped claim unit.');
+  assert.ok(unit.candidates.length >= plain.segments
+    .find((segment) => segment.unit.id === unit.segmentId).matches.length);
+
+  const candidate = unit.candidates[0];
+  ['rank', 'rankAtRetrieval', 'truncationFate', 'components', 'penalties', 'admission']
+    .forEach((field) => assert.ok(candidate[field] !== undefined, `The trace carries ${field}.`));
+  assert.ok(['top-ranked', 'exact-evidence', 'context-eligible']
+    .includes(candidate.truncationFate.retainedBecause));
+  assert.ok(['match', 'weak-match', 'not-displayed'].includes(candidate.display));
+  assert.equal(candidate.admission.credible, candidate.display === 'match');
+
+  // Every candidate the trace shows was scored by the config it names.
+  assert.equal(traced.diagnostics.scoringConfigHash, SCORING_CONFIG_HASH);
 });
 
 test('the scoring config is frozen, complete, and hashes stably', () => {

@@ -19,14 +19,14 @@
  * data loss.
  */
 
-// Bumped to 2.3 at v2.3.0 because that release changes what the analyzer
-// DECIDES, not only what it reports: the domain-relevance gate learned the
-// dating-commentary/seduction register (benchmark append #2), so the same
-// document can now yield a different analyzed population. v2.2.0 was a
-// provenance-only bump and deliberately did not move this number; this one is
-// behavioral, and a consumer must be able to tell the two apart from the
-// schema string alone.
-export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.3';
+// Bumped to 2.4 at v2.4.0, again because the analyzer DECIDES differently, in
+// three separate ways: retrieval keeps every exact hit instead of ranking it
+// away, stance reads which canon surface an overlap came from (so asserting an
+// indexed misreading no longer reads as resembling the concept), and curated
+// aliases can be typed. Matches carry a new alignment.evidence trace and the
+// analysis may carry an opt-in diagnostics block. v2.2.0 was provenance-only
+// and deliberately did not move this number; 2.3 and 2.4 both did.
+export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.4';
 // Bumped to 2.1 because the queue object itself now carries a provenance
 // block, so a queue lifted out of an analysis is self-describing on its own.
 // Held at 2.1 through v2.3.0: the gate change alters how many items reach the
@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.3';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.3.0';
+export const ANALYZER_VERSION = '2.4.0';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1613,14 +1613,19 @@ function scoreEntry(unit, entry, idf) {
     )
     : 0;
 
-  let score = Math.max(
-    phraseStrength,
-    ...signatureHits.map((signature) => signature.score),
-    (queryCoverage * SCORING_CONFIG.queryCoverageWeight)
-      + (canonCoverage * SCORING_CONFIG.canonCoverageWeight)
-      + distinctiveBoost
-      + titleBoost,
+  const signatureStrength = signatureHits.reduce(
+    (strongest, signature) => Math.max(strongest, signature.score), 0,
   );
+  const overlapStrength = (queryCoverage * SCORING_CONFIG.queryCoverageWeight)
+    + (canonCoverage * SCORING_CONFIG.canonCoverageWeight)
+    + distinctiveBoost
+    + titleBoost;
+  const preScore = Math.max(phraseStrength, signatureStrength, overlapStrength);
+  let score = preScore;
+  // Recorded, never read by a decision: the diagnostic trace has to be able to
+  // say WHY a number is what it is, and reconstructing it after the fact from
+  // the final score is guesswork.
+  const penaltiesApplied = [];
 
   // The three penalties all ask the same question — "is there anything here
   // beyond loose overlap?" — so a promoted alias answers it exactly as an exact
@@ -1630,12 +1635,17 @@ function scoreEntry(unit, entry, idf) {
   const weakGenericMatch = !exactLexicalHit
     && distinctiveShared.length < SCORING_CONFIG.weakGenericDistinctiveMax
     && shared.every((token) => GENERIC_TERMS.has(token));
-  if (weakGenericMatch && !signatureHits.length) score *= SCORING_CONFIG.weakGenericPenalty;
+  if (weakGenericMatch && !signatureHits.length) {
+    score *= SCORING_CONFIG.weakGenericPenalty;
+    penaltiesApplied.push({ code: 'weak-generic', factor: SCORING_CONFIG.weakGenericPenalty });
+  }
   if (!exactLexicalHit && !signatureHits.length && shared.length < SCORING_CONFIG.sparseSharedMin) {
     score *= SCORING_CONFIG.sparseSharePenalty;
+    penaltiesApplied.push({ code: 'sparse-shared-tokens', factor: SCORING_CONFIG.sparseSharePenalty });
   }
   if (unit.wordCount < SCORING_CONFIG.shortUnitWordCount && !exactLexicalHit && !signatureHits.length) {
     score *= SCORING_CONFIG.shortUnitPenalty;
+    penaltiesApplied.push({ code: 'short-unit', factor: SCORING_CONFIG.shortUnitPenalty });
   }
 
   const misreadingOverlap = entry._misreadingTokens.length
@@ -1667,6 +1677,17 @@ function scoreEntry(unit, entry, idf) {
     distinctiveShared: distinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     admissionDistinctiveShared: admissionDistinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     misreadingOverlap: round(misreadingOverlap),
+    components: {
+      phraseStrength: round(phraseStrength),
+      signatureStrength: round(signatureStrength),
+      overlapStrength: round(overlapStrength),
+      queryCoverageContribution: round(queryCoverage * SCORING_CONFIG.queryCoverageWeight),
+      canonCoverageContribution: round(canonCoverage * SCORING_CONFIG.canonCoverageWeight),
+      distinctiveBoost: round(distinctiveBoost),
+      titleBoost: round(titleBoost),
+      beforePenalties: round(clamp(preScore)),
+    },
+    penalties: penaltiesApplied,
     matchSurfaces: {
       hit: surfacesHit,
       tokens: surfaceTokens,
@@ -1828,6 +1849,15 @@ function publicMatch(entry, rawScore) {
   };
 }
 
+/**
+ * A match as the outside world sees it: every working field the analyzer hung
+ * on the object during retrieval is stripped by prefix, not by name. Naming
+ * them one at a time is how `_retrieval` reached an export the first time.
+ */
+function publicShape(match) {
+  return Object.fromEntries(Object.entries(match).filter(([key]) => !key.startsWith('_')));
+}
+
 function hasLocalConceptEvidence(candidate) {
   const raw = candidate._rawScore;
   return Boolean(
@@ -1917,21 +1947,35 @@ function buildCandidateSet(unit, prepared, context = null) {
     .filter((match) => match.score >= SCORING_CONFIG.candidateScoreFloor)
     .sort(byScoreThenId);
 
-  const working = ranked.slice(0, SCORING_CONFIG.maxCandidatesPerUnit);
-  const retained = new Set(working.map((match) => match.canonId));
+  const cap = SCORING_CONFIG.maxCandidatesPerUnit;
   const bridged = context?.bridgedCanonIds || null;
+  const working = [];
 
-  ranked.forEach((match) => {
-    if (retained.has(match.canonId)) return;
+  ranked.forEach((match, index) => {
+    // Recorded on every candidate so a diagnostic trace can say what happened
+    // to the ones that used to disappear here, and why this one did not.
+    const retrieval = {
+      rankAtRetrieval: index + 1,
+      candidatesAboveFloor: ranked.length,
+      truncationCap: cap,
+    };
+    if (index < cap) {
+      working.push(Object.assign(match, { _retrieval: { ...retrieval, retainedBecause: 'top-ranked' } }));
+      return;
+    }
+    if (carriesExactEvidence(match._rawScore)) {
+      working.push(Object.assign(match, { _retrieval: { ...retrieval, retainedBecause: 'exact-evidence' } }));
+      return;
+    }
     const entry = context?.entriesById?.get(match.canonId);
     const contextEligible = Boolean(bridged && entry && (
       bridged.has(match.canonId)
       || entry.dependencies.some((dependency) => bridged.has(dependency))
       || entry.related.some((related) => bridged.has(related))
     ));
-    if (!carriesExactEvidence(match._rawScore) && !contextEligible) return;
-    retained.add(match.canonId);
-    working.push(match);
+    if (contextEligible) {
+      working.push(Object.assign(match, { _retrieval: { ...retrieval, retainedBecause: 'context-eligible' } }));
+    }
   });
 
   return working.sort(byScoreThenId);
@@ -2217,6 +2261,106 @@ function strongestMatches(mappedResults) {
  * and the canon snapshot it was run against (index version + generation time),
  * so an export can be reproduced without reference to the session that made it.
  */
+/*
+ * ---------------------------------------------------------------------------
+ * Diagnostic trace — the Pass B adapter boundary.
+ * ---------------------------------------------------------------------------
+ * Opt-in, off by default, and deliberately NOT part of the analysis contract:
+ * a normal export stays exactly as compact as it was, and nothing in the Lab UI
+ * reads this. It exists so a feedback exporter can see what the analyzer saw
+ * BEFORE display caps — the whole working candidate set per claim unit, with
+ * the score decomposed, the penalties named, the evidence surfaces attributed,
+ * the admission outcome, any context assistance, and each candidate's rank and
+ * truncation fate.
+ *
+ * Contract, so a consumer can depend on it:
+ *   analyzeDocument(doc, canon, { diagnostics: true }) -> result.diagnostics
+ *   omit the option and the key is absent, not empty.
+ *   diagnostics.schemaVersion is versioned independently of the analysis
+ *   schema, because the trace is an internal view and is expected to churn
+ *   faster than the published one.
+ * Everything under diagnostics is derived. It never feeds a decision, so
+ * turning it on cannot change an analysis — the same document analyzed with
+ * and without it produces the same matches, scores, and stances.
+ */
+export const DIAGNOSTICS_SCHEMA_VERSION = 'le-lab.diagnostics/1.0';
+
+function diagnosticCandidate(candidate, displayedIds, weakIds, rank) {
+  const raw = candidate._rawScore;
+  const retrieval = candidate._retrieval || {};
+  return {
+    canonId: candidate.canonId,
+    title: candidate.title,
+    rank,
+    rankAtRetrieval: retrieval.rankAtRetrieval ?? null,
+    candidatesAboveFloor: retrieval.candidatesAboveFloor ?? null,
+    truncationFate: {
+      cap: retrieval.truncationCap ?? SCORING_CONFIG.maxCandidatesPerUnit,
+      retainedBecause: retrieval.retainedBecause || 'top-ranked',
+      // True where the pre-union analyzer would have discarded this candidate
+      // before anything could look at it.
+      survivedTruncationOnEvidence: (retrieval.rankAtRetrieval || 0)
+        > (retrieval.truncationCap ?? SCORING_CONFIG.maxCandidatesPerUnit),
+    },
+    score: candidate.score,
+    localScore: raw.score,
+    components: raw.components,
+    penalties: raw.penalties,
+    evidence: {
+      signatureHits: raw.signatureHits,
+      phraseHits: raw.phraseHits,
+      exactAliasHits: raw.exactAliasHits,
+      promotedAliasHits: raw.promotedAliasHits,
+      distinctiveShared: raw.distinctiveShared,
+      admissionDistinctiveShared: raw.admissionDistinctiveShared,
+      misreadingOverlap: raw.misreadingOverlap,
+    },
+    matchSurfaces: raw.matchSurfaces,
+    admission: {
+      credible: isCredibleCandidate(candidate),
+      hasCredibleEvidence: hasCredibleMatchEvidence(raw),
+      clearsCredibleScore: candidate.score >= SCORING_CONFIG.minCredibleScore,
+      clearsWeakScore: candidate.score >= SCORING_CONFIG.minWeakScore,
+    },
+    contextAssistance: candidate.contextHelp,
+    display: displayedIds.has(candidate.canonId)
+      ? 'match'
+      : weakIds.has(candidate.canonId) ? 'weak-match' : 'not-displayed',
+    confidence: candidate.confidence,
+    alignment: candidate.alignment || null,
+  };
+}
+
+function buildDiagnostics(segmentResults) {
+  return {
+    schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
+    note: 'Internal analyzer trace, opt-in. Shows the working candidate set before display caps, so a reviewer can see evidence the analysis did not surface. Derived only: enabling it does not change any analysis output.',
+    scoringConfigHash: SCORING_CONFIG_HASH,
+    claimUnits: segmentResults.map((result) => {
+      const displayedIds = new Set(result.matches.map((match) => match.canonId));
+      const weakIds = new Set(result.weakMatches.map((match) => match.canonId));
+      return {
+        segmentId: result.unit.id,
+        parentSegmentId: result.unit.parentSegmentId,
+        excerpt: result.unit.text,
+        wordCount: result.unit.wordCount,
+        isClaimLike: result.unit.isClaimLike,
+        mapped: result.mapped,
+        domainRelevance: {
+          status: result.unit.domainRelevance.status,
+          reasonCode: result.unit.domainRelevance.reasonCode,
+          score: result.unit.domainRelevance.score,
+          frames: Object.fromEntries(Object.entries(result.unit.domainRelevance.frames || {})
+            .map(([frame, summary]) => [frame, { detected: summary.detected, score: summary.score }])),
+        },
+        boundedContext: result.unit.boundedContext,
+        candidates: result.candidates.map((candidate, index) =>
+          diagnosticCandidate(candidate, displayedIds, weakIds, index + 1)),
+      };
+    }),
+  };
+}
+
 function buildProvenance(prepared) {
   return {
     analyzer: {
@@ -2329,10 +2473,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       unit,
       mapped: credible.length > 0,
       matches: credible,
-      weakMatches: weak.map((match) => {
-        const { _rawScore, ...safe } = match;
-        return safe;
-      }),
+      weakMatches: weak.map(publicShape),
       candidates,
       ambiguity,
     };
@@ -2374,7 +2515,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   const safeSegments = segmentResults.map((result) => ({
     ...result,
     candidates: undefined,
-    matches: result.matches.map(({ _rawScore, ...match }) => match),
+    matches: result.matches.map(publicShape),
   }));
 
   const result = {
@@ -2475,6 +2616,9 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       'No source text or media was uploaded by this analyzer.',
     ],
   };
+
+  // Opt-in only. Omitting the option leaves the key absent, not empty.
+  if (options.diagnostics) result.diagnostics = buildDiagnostics(segmentResults);
 
   onProgress({ phase: 'complete', value: 1, message: 'Analysis complete' });
   return result;

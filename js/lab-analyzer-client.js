@@ -1,4 +1,4 @@
-import { analyzeDocument } from './lab-analyzer.js?v=2.3.0';
+import { analyzeDocument } from './lab-analyzer.js?v=2.4.0';
 
 function abortError() {
   try {
@@ -16,7 +16,7 @@ function abortError() {
  * deterministic analyzer contract.
  */
 export class LabAnalyzerClient {
-  constructor({ workerUrl = new URL('./lab-analyzer-worker.js?v=2.3.0', import.meta.url) } = {}) {
+  constructor({ workerUrl = new URL('./lab-analyzer-worker.js?v=2.4.0', import.meta.url) } = {}) {
     this.workerUrl = workerUrl;
     this.worker = null;
     this.jobs = new Map();
@@ -62,7 +62,14 @@ export class LabAnalyzerClient {
     }
   }
 
-  analyze(document, canonIndex, { signal, onProgress = () => {}, domainOverrides = null } = {}) {
+  /**
+   * `diagnostics` is the opt-in Pass B trace. It is forwarded on BOTH routes so
+   * the worker and the main-thread fallback stay the same analyzer with the
+   * same options, not two engines that happen to agree on the default path.
+   */
+  analyze(document, canonIndex, {
+    signal, onProgress = () => {}, domainOverrides = null, diagnostics = false,
+  } = {}) {
     const jobId = `job-${Date.now().toString(36)}-${(++this.sequence).toString(36)}`;
     const worker = this.ensureWorker();
 
@@ -74,6 +81,7 @@ export class LabAnalyzerClient {
         isCancelled: () => cancelled,
         onProgress,
         domainOverrides,
+        diagnostics,
       }).finally(() => signal?.removeEventListener('abort', onAbort));
     }
 
@@ -99,7 +107,7 @@ export class LabAnalyzerClient {
         },
         onProgress,
       });
-      worker.postMessage({ type: 'analyze', jobId, document, canonIndex, options: { domainOverrides } });
+      worker.postMessage({ type: 'analyze', jobId, document, canonIndex, options: { domainOverrides, diagnostics } });
     });
   }
 

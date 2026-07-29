@@ -30,6 +30,12 @@
  *   --raw                 Keep volatile fields (wall-clock generatedAt) instead
  *                         of stabilizing them. Off by default so output is
  *                         byte-comparable between runs.
+ *   --diagnostics         Emit the opt-in analyzer trace (the Pass B adapter
+ *                         boundary): the whole working candidate set per claim
+ *                         unit, before display caps, with score components,
+ *                         penalties, evidence surfaces, admission outcome,
+ *                         context assistance, rank, and truncation fate. Off by
+ *                         default; a normal capture stays compact.
  *   --created-at <iso>    Pin the normalized document's createdAt
  *                         (default: 1970-01-01T00:00:00.000Z).
  *   --quiet               Suppress the stderr summary line.
@@ -68,6 +74,7 @@ function parseArgs(argv) {
     overrides: null,
     out: null,
     raw: false,
+    diagnostics: false,
     createdAt: FIXED_CREATED_AT,
     quiet: false,
   };
@@ -82,6 +89,7 @@ function parseArgs(argv) {
       case '--out': options.out = path.resolve(value); index += 1; break;
       case '--created-at': options.createdAt = value; index += 1; break;
       case '--raw': options.raw = true; break;
+      case '--diagnostics': options.diagnostics = true; break;
       case '--quiet': options.quiet = true; break;
       case '--help': case '-h': options.help = true; break;
       default:
@@ -147,7 +155,10 @@ export async function runAnalysis(options = {}) {
   const domainOverrides = options.overrides
     ? JSON.parse(await fs.readFile(options.overrides, 'utf8'))
     : undefined;
-  const result = await analyzeDocument(document, canonIndex, { domainOverrides });
+  const result = await analyzeDocument(document, canonIndex, {
+    domainOverrides,
+    diagnostics: Boolean(options.diagnostics),
+  });
   return options.raw ? result : stabilize(result);
 }
 

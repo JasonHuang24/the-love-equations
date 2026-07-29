@@ -70,7 +70,7 @@ Original boundaries explicitly name their coordinate space because PDF, HTML,
 RTF, and OCR cannot point back into source bytes in the same way decoded text
 can.
 
-## Canon index — `le-canon-index/1.0`
+## Canon index — `le-canon-index/1.1`
 
 `data/le-canon-index.json` is generated from canonical HTML plus a small
 semantic overlay. It contains version metadata, indexed source pages, coverage
@@ -89,10 +89,26 @@ off the analyzer's alias/phrase match surface. Through v2.2.0 these badges were
 emitted as aliases, which both invented matches on verdict-shaped prose and
 crowded correct concepts out of the ranked slots. The field is additive and
 backward compatible — `prepareCanonIndex` reads named fields and ignores unknown
-ones — so the schema stays `le-canon-index/1.0`. `validate-canon-index.mjs`
+ones — so it did not on its own move the schema. `validate-canon-index.mjs`
 type-checks it and rejects any entry that repeats its verdict as an alias.
 
-## Analysis result — `le-lab.analysis/2.1`
+`standaloneAliases` and `contextualAliases` (added at `1.1`, v2.4.0) type the
+single-word aliases. A single word is insufficient evidence by default; these
+two lists are the curated exceptions and everything untyped keeps the
+conservative behavior. `standaloneAliases` is a plain string array —
+high-specificity terms that mean the concept wherever they appear.
+`contextualAliases` is an array of `{ alias, notAfter }` — ordinary words the
+concept borrows, which need independent relational evidence in the same passage
+and are disqualified outright by any `notAfter` modifier immediately preceding
+them (`cloud provider` is not the LE concept of a provider). The asymmetry is
+the semantics: being unconditional is what makes an alias standalone. The
+version moved because typing is a new statement about what the match surface
+MEANS, and a consumer must be able to tell a typed index from an untyped one
+without inspecting entries. Both fields are validated as statements about the
+match surface — a typed alias that is not one of the entry's aliases is rejected
+at build time, because it would otherwise do nothing at all, silently.
+
+## Analysis result — `le-lab.analysis/2.4`
 
 The deterministic local adapter returns:
 
@@ -170,6 +186,57 @@ exact phrase or alias, a concept signature, or at least two distinctive shared
 concepts. Generic relationship terms cannot satisfy that evidence gate alone.
 The alignment vocabulary is `Supports`, `Resembles`,
 `Extends`, `Challenges`, `Contradicts`, and `Context only`.
+
+Analysis v2.4 changes three decisions and adds one trace.
+
+1. **Retention.** The working candidate set is the union of the top-ranked
+   candidates, every entry carrying exact evidence (phrase hit, alias hit, or
+   concept signature), and the entries the previous sentence established plus
+   their declared relations. Ranking and display caps apply after that union,
+   not before it, so an exact hit can no longer be discarded before admission,
+   context, or stance can consider it. Retention is not credibility: admission
+   is unchanged.
+2. **Stance.** Token overlap now records which canon surface supplied it —
+   `title`, `alias`, `synopsis`, `boundaryCondition`, `commonMisreading` — and
+   each `segments[].matches[].alignment` carries an additive `evidence` object
+   with the surfaces hit, the misreading overlap, whether the overlap was
+   misreading-only or boundary-only, and whether reported speech or a denial
+   cue fired. Strong overlap with an entry's `commonMisreadings` is
+   `Contradicts` when asserted, `Supports` when denied, and `Context only` when
+   reported — the passage relaying a claim is not charged with making it. An
+   overlap drawn from nothing but an entry's `boundaryConditions` is
+   `Challenges`, never a silent `Resembles`. Retrieval is unaffected; only the
+   label and its trace change. The alignment vocabulary is unchanged.
+3. **Alias typing.** See `le-canon-index/1.1` above. A typed alias hit appears
+   in `whyMatched` as `Typed alias "x" (standalone|contextual): <reason>`.
+
+`match-behavior` is the frozen, append-only fixture for all three
+(`tests/fixtures/match-behavior-benchmark.json`), and, like the domain
+benchmark, every case records what the shipped analyzer did when the case was
+written down.
+
+## Diagnostic trace — `le-lab.diagnostics/1.0`
+
+Opt-in and off by default: `analyzeDocument(document, canonIndex,
+{ diagnostics: true })` adds a `diagnostics` key, and omitting the option leaves
+the key absent rather than empty. `LabAnalyzerClient.analyze` forwards the flag
+on both the worker and the main-thread fallback route.
+
+The trace is the Pass B adapter boundary. Per claim unit it reports the domain
+decision with its frame summary, the bounded-context bridge, and the **whole
+working candidate set before display caps** — each candidate with its rank, its
+rank at retrieval, the number of candidates above the floor, its truncation
+fate (`top-ranked`, `exact-evidence`, `context-eligible`), the decomposed score
+components, the penalties applied by name, the evidence surfaces hit with their
+provenance types, the admission outcome, any context assistance, and whether it
+was displayed as a match, a weak match, or not at all.
+
+Everything under `diagnostics` is derived. It never feeds a decision, so the
+same document analyzed with and without it produces the same matches, scores,
+and stances — asserted as a test, not merely intended. It is versioned
+independently of the analysis schema because it is an internal view and is
+expected to churn faster than the published contract; nothing in the Lab
+interface reads it.
 
 ## Research queue — `le-lab.research-queue/2.0`
 
