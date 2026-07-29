@@ -127,10 +127,19 @@ test('the trace includes the candidates the display caps hid, with their fate na
   });
   const hidden = feedback.candidateTrace.candidates.filter((candidate) => candidate.display === 'not-displayed');
   assert.ok(hidden.length > 0);
-  assert.equal(feedback.candidateTrace.hiddenByDisplayCaps, hidden.length);
+  // "Not displayed" and "hidden by a cap" are different facts, and the summary
+  // reports them separately: a candidate that never cleared the weak threshold
+  // was never a cap's problem, and telling an adjudicator otherwise sends them
+  // to the wrong layer.
+  assert.equal(feedback.candidateTrace.notDisplayedCount, hidden.length);
+  assert.equal(
+    feedback.candidateTrace.hiddenByDisplayCaps + feedback.candidateTrace.hiddenBelowWeakThreshold,
+    hidden.length,
+  );
   hidden.forEach((candidate) => {
     assert.ok(Number.isFinite(candidate.rank));
     assert.ok(candidate.truncationFate.retainedBecause);
+    assert.ok(candidate.fate);
     assert.ok(candidate.components && Array.isArray(candidate.penalties));
     assert.ok(candidate.matchSurfaces && candidate.admission);
   });

@@ -359,6 +359,71 @@ test('RED D5: the trace summary adds up, on every row', () => {
   });
 });
 
+/* ===========================================================================
+ * Per-unit traces. Scoping changes coverage and nothing else.
+ * ===========================================================================
+ * The flag flow asks for the flagged passage's trace, not the document's. That
+ * is only safe if a scoped trace is the same trace: if the analyzer produced
+ * even slightly different candidates when asked for one unit, every flag file
+ * would describe a run nobody else could reproduce.
+ */
+
+test('a scoped trace covers the requested unit only, and says so', async () => {
+  const scoped = await analyzeDocument(documentValue, canonIndex, {
+    diagnostics: { segmentIds: [mappedSegment.unit.id] },
+  });
+  assert.equal(scoped.diagnostics.scope, 'claim-units');
+  assert.deepEqual(scoped.diagnostics.requestedSegmentIds, [mappedSegment.unit.id]);
+  assert.equal(scoped.diagnostics.claimUnits.length, 1);
+  assert.equal(scoped.diagnostics.claimUnits[0].segmentId, mappedSegment.unit.id);
+  // The count of what was analyzed is still reported, so a reader can tell a
+  // one-unit trace of an eleven-passage document from a one-passage document.
+  assert.equal(scoped.diagnostics.analyzedClaimUnitCount, analysis.segments.length);
+  assert.equal(diagnostics.scope, 'document');
+  assert.equal(diagnostics.claimUnits.length, analysis.segments.length);
+});
+
+test('a scoped trace is byte-identical to the same unit in the whole-document trace', async () => {
+  const scoped = await analyzeDocument(documentValue, canonIndex, {
+    diagnostics: { segmentIds: [mappedSegment.unit.id] },
+  });
+  assert.equal(scoped.diagnostics.analysisId, diagnostics.analysisId);
+  assert.equal(scoped.diagnostics.canonSnapshotHash, diagnostics.canonSnapshotHash);
+  assert.equal(scoped.diagnostics.inputDigest, diagnostics.inputDigest);
+  assert.equal(
+    JSON.stringify(scoped.diagnostics.claimUnits[0]),
+    JSON.stringify(diagnostics.claimUnits.find((unit) => unit.segmentId === mappedSegment.unit.id)),
+  );
+});
+
+test('a flag built from a scoped trace is the flag built from the whole one', async () => {
+  const scoped = await analyzeDocument(documentValue, canonIndex, {
+    diagnostics: { segmentIds: [mappedSegment.unit.id] },
+  });
+  const fromScoped = flag({ diagnostics: scoped.diagnostics });
+  const fromWhole = flag();
+  assert.equal(
+    JSON.stringify({ ...fromScoped, candidateTrace: { ...fromScoped.candidateTrace, scope: null } }),
+    JSON.stringify({ ...fromWhole, candidateTrace: { ...fromWhole.candidateTrace, scope: null } }),
+  );
+  assert.equal(fromScoped.candidateTrace.scope, 'claim-units');
+  assert.equal(fromWhole.candidateTrace.scope, 'document');
+});
+
+test('flagging one unit does not build the document trace', async () => {
+  // Measured rather than asserted in the abstract: the point of scoping is a
+  // number, and a test that only checks the array length would still pass if a
+  // future change made each entry enormous.
+  const scoped = await analyzeDocument(documentValue, canonIndex, {
+    diagnostics: { segmentIds: [mappedSegment.unit.id] },
+  });
+  const size = (value) => JSON.stringify(value).length;
+  assert.ok(size(scoped.diagnostics) < size(diagnostics) / 2,
+    'one passage costs a fraction of the document');
+  assert.ok(size(scoped.diagnostics) < 64 * 1024,
+    'a single passage trace stays in tens of kilobytes, not megabytes');
+});
+
 test('RED D6: retainedOnEvidenceAfterCap counts evidence retention and nothing else', () => {
   analysis.segments.forEach((segment) => {
     const traced = diagnostics.claimUnits.find((unit) => unit.segmentId === segment.unit.id);

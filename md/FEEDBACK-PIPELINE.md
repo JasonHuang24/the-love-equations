@@ -93,6 +93,35 @@ one ID and one filename, and `--out` kept whichever ran last.
 decided before any canon entry was scored, so there is no candidate set in existence. The file says
 `retrieval-not-run` and names the fields the analysis does not publish for ignored passages.
 
+### The trace is fetched for the flagged passage, not the document
+
+Flagging re-runs the analyzer on the **stored document and stored overrides**, asking for the trace of
+that one claim unit. The analysis still runs whole — it always did, and bounded context makes each
+passage's result depend on its predecessor — but the trace assembly is scoped, and the trace is where
+the size is: measured at ~10 KB per claim unit against 117 KB for the demo document, 638 KB for a
+64-passage corpus article, and **5.21 MB for a 406-passage alias-dense source**, whose worst single
+passage costs 21.5 KB. A trace's `scope` field says which it is, so a reader who finds one unit in a
+file can tell "that is all there was" from "that is all that was asked for".
+
+A scoped trace is byte-identical to the same unit in a whole-document trace, and a test asserts it,
+because a flag file describing a run nobody else can reproduce would be worth nothing. Whole-document
+mode stays available for the CLI, the fixtures, and `fixtures/run-analyzer.mjs --diagnostics`.
+
+### What the candidate fate fields mean
+
+Each candidate carries one `fate`, naming the first thing that decided its visibility:
+`retained-after-prefix-cut` · `below-weak-threshold` · `credible-cap` · `weak-cap` ·
+`failed-admission` · `displayed`. Retention is reported separately and always —
+`truncationFate.retainedAfterPrefixCut` with `retainedBecause` naming which rule kept it
+(`top-ranked`, `exact-evidence`, `context-eligible`) — so a candidate that is both cap-hidden and
+union-retained reports both facts rather than losing one to the other.
+
+The summary counts follow the same discipline. `hiddenByDisplayCaps` counts candidates a **cap**
+pushed off the ledger and `hiddenBelowWeakThreshold` counts the ones that never cleared the score
+floor, because those route to different fixes: a cap is a display decision, a threshold is a scoring
+one. Through `1.0` the first number counted both, and `retainedOnEvidenceAfterCap` counted every
+candidate the union kept, including the ones it kept on context.
+
 ### `reviewDisposition`, never `verdict`
 
 **Verdict** is the Mythbuster term for what the site concluded about a claim's truth. A disposition is

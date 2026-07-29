@@ -475,6 +475,22 @@ function candidateTrace(diagnostics, segmentId, expectedExcerpt, rowKind, segmen
   assertTraceReproducesRow(traced, segment, segmentId);
 
   const candidates = traced.candidates || [];
+  const notDisplayed = candidates.filter((candidate) => candidate.display === 'not-displayed');
+  /*
+   * Each count is taken from the thing it names.
+   *
+   * `hiddenByDisplayCaps` used to be "every candidate that is not displayed",
+   * which is a different question with a different answer: on the worked example
+   * in the v2.4.1 report all five "hidden by display caps" candidates were
+   * sub-threshold hits at 0.119 and below, and nothing on that row was capped at
+   * all. An adjudicator reading that number went looking at a cap when the
+   * answer was a score.
+   *
+   * The counts come from each candidate's fate and its retention flag rather
+   * than from the fate enum alone: a candidate can be both cap-hidden and
+   * union-retained, the enum names only the first of those, and a total taken
+   * from it would quietly undershoot.
+   */
   return {
     available: true,
     schemaVersion: diagnostics.schemaVersion,
@@ -483,11 +499,22 @@ function candidateTrace(diagnostics, segmentId, expectedExcerpt, rowKind, segmen
     canonSnapshotHash: diagnostics.canonSnapshotHash || null,
     inputDigest: diagnostics.inputDigest || null,
     unitDigest: traced.unitDigest || null,
+    // Whether this trace covered the document or only the flagged passages. A
+    // reader who finds one unit here should be able to tell "that is all there
+    // was" from "that is all that was asked for".
+    scope: diagnostics.scope || null,
     candidateCount: candidates.length,
-    displayedCount: candidates.filter((candidate) => candidate.display !== 'not-displayed').length,
-    hiddenByDisplayCaps: candidates.filter((candidate) => candidate.display === 'not-displayed').length,
+    displayedCount: candidates.length - notDisplayed.length,
+    notDisplayedCount: notDisplayed.length,
+    hiddenByDisplayCaps: notDisplayed
+      .filter((candidate) => candidate.fate === 'credible-cap' || candidate.fate === 'weak-cap').length,
+    hiddenBelowWeakThreshold: notDisplayed
+      .filter((candidate) => candidate.fate === 'below-weak-threshold').length,
+    retainedAfterPrefixCut: candidates
+      .filter((candidate) => candidate.truncationFate?.retainedAfterPrefixCut).length,
     retainedOnEvidenceAfterCap: candidates
-      .filter((candidate) => candidate.truncationFate?.survivedTruncationOnEvidence).length,
+      .filter((candidate) => candidate.truncationFate?.retainedAfterPrefixCut
+        && candidate.truncationFate?.retainedBecause === 'exact-evidence').length,
     candidates,
   };
 }

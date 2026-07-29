@@ -2275,6 +2275,8 @@ function strongestMatches(mappedResults) {
  *
  * Contract, so a consumer can depend on it:
  *   analyzeDocument(doc, canon, { diagnostics: true }) -> result.diagnostics
+ *   analyzeDocument(doc, canon, { diagnostics: { segmentIds: [id] } })
+ *     -> the same trace covering those claim units only, with scope saying so.
  *   omit the option and the key is absent, not empty.
  *   diagnostics.schemaVersion is versioned independently of the analysis
  *   schema, because the trace is an internal view and is expected to churn
@@ -2360,21 +2362,61 @@ function inputDigest(document, domainOverrides) {
   return wideHash(`${document.id || ''}|${overrides}|${text}`);
 }
 
+/**
+ * What happened to this candidate on the way to the ledger. One value.
+ *
+ * It replaces a boolean that was computed from rank alone and therefore said
+ * "survived truncation ON EVIDENCE" about candidates the union had kept on
+ * CONTEXT — two different retrieval rules, reported as one, on rows where the
+ * whole point of reading a trace is to tell them apart.
+ *
+ * The order below IS the definition: each test is reached only when the ones
+ * above it did not apply, so the value names the FIRST thing that decided this
+ * candidate's visibility. Retention comes first because it is the fact that
+ * surprises: a candidate past the prefix cut would not have existed at all
+ * before v2.4.0's union, so how it got onto the ledger is more informative than
+ * which list it landed in.
+ *
+ * The other axis is not thrown away for that. `retainedAfterPrefixCut` and
+ * `retainedBecause` stay on every candidate, so a row that is both cap-hidden
+ * and union-retained still reports both, and no count has to be taken from this
+ * enum to be complete.
+ */
+function candidateFate(candidate, display) {
+  const retrieval = candidate._retrieval || {};
+  const cap = retrieval.truncationCap ?? SCORING_CONFIG.maxCandidatesPerUnit;
+  const displayed = display !== 'not-displayed';
+  if ((retrieval.rankAtRetrieval || 0) > cap && displayed) return 'retained-after-prefix-cut';
+  if (candidate.score < SCORING_CONFIG.minWeakScore) return 'below-weak-threshold';
+  const credible = isCredibleCandidate(candidate);
+  if (!displayed) return credible ? 'credible-cap' : 'weak-cap';
+  // Above the weak floor, displayed, and not credible: the admission guard is
+  // what kept it out of the match list, not a cap and not a threshold.
+  if (!credible) return 'failed-admission';
+  return 'displayed';
+}
+
 function diagnosticCandidate(candidate, displayedIds, weakIds, rank) {
   const raw = candidate._rawScore;
   const retrieval = candidate._retrieval || {};
+  const display = displayedIds.has(candidate.canonId)
+    ? 'match'
+    : weakIds.has(candidate.canonId) ? 'weak-match' : 'not-displayed';
   return {
     canonId: candidate.canonId,
     title: candidate.title,
     rank,
     rankAtRetrieval: retrieval.rankAtRetrieval ?? null,
     candidatesAboveFloor: retrieval.candidatesAboveFloor ?? null,
+    fate: candidateFate(candidate, display),
     truncationFate: {
       cap: retrieval.truncationCap ?? SCORING_CONFIG.maxCandidatesPerUnit,
       retainedBecause: retrieval.retainedBecause || 'top-ranked',
-      // True where the pre-union analyzer would have discarded this candidate
-      // before anything could look at it.
-      survivedTruncationOnEvidence: (retrieval.rankAtRetrieval || 0)
+      // The pre-union analyzer would have discarded this candidate before
+      // anything could look at it. WHY it was kept is retainedBecause's job:
+      // exact-evidence and context-eligible are different rules and this field
+      // deliberately does not guess between them.
+      retainedAfterPrefixCut: (retrieval.rankAtRetrieval || 0)
         > (retrieval.truncationCap ?? SCORING_CONFIG.maxCandidatesPerUnit),
     },
     score: candidate.score,
@@ -2398,15 +2440,40 @@ function diagnosticCandidate(candidate, displayedIds, weakIds, rank) {
       clearsWeakScore: candidate.score >= SCORING_CONFIG.minWeakScore,
     },
     contextAssistance: candidate.contextHelp,
-    display: displayedIds.has(candidate.canonId)
-      ? 'match'
-      : weakIds.has(candidate.canonId) ? 'weak-match' : 'not-displayed',
+    display,
     confidence: candidate.confidence,
     alignment: candidate.alignment || null,
   };
 }
 
-function buildDiagnostics(segmentResults, identity) {
+/*
+ * SCOPE. The trace is the entire pre-display candidate set for a passage, and
+ * on a long alias-dense source that is megabytes for the document — built,
+ * structured-cloned out of the worker, and held, for a session that in most
+ * cases flags nothing at all. Analysis itself is unscoped and always was: every
+ * passage is scored regardless, because bounded context makes each passage's
+ * result depend on its predecessor. What is scoped is the trace ASSEMBLY, which
+ * is where the megabytes are.
+ *
+ *   diagnostics: true                      the whole document — CLI, fixtures, tests
+ *   diagnostics: { segmentIds: [...] }     those claim units only — the flag flow
+ *
+ * The scope travels in the payload, so a consumer that finds one unit in a
+ * trace can tell "this is all there is" from "this is all that was asked for".
+ */
+function diagnosticScope(option) {
+  const requested = Array.isArray(option?.segmentIds)
+    ? [...new Set(option.segmentIds.filter((id) => typeof id === 'string' && id))]
+    : null;
+  return requested?.length ? { scope: 'claim-units', requested } : { scope: 'document', requested: null };
+}
+
+function buildDiagnostics(segmentResults, identity, option) {
+  const { scope, requested } = diagnosticScope(option);
+  const wanted = requested ? new Set(requested) : null;
+  const traced = wanted
+    ? segmentResults.filter((result) => wanted.has(result.unit.id))
+    : segmentResults;
   return {
     schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
     note: 'Internal analyzer trace, opt-in. Shows the working candidate set before display caps, so a reviewer can see evidence the analysis did not surface. Derived only: enabling it does not change any analysis output.',
@@ -2414,7 +2481,10 @@ function buildDiagnostics(segmentResults, identity) {
     analysisId: identity.analysisId,
     canonSnapshotHash: identity.canonSnapshotHash,
     inputDigest: identity.inputDigest,
-    claimUnits: segmentResults.map((result) => {
+    scope,
+    requestedSegmentIds: requested,
+    analyzedClaimUnitCount: segmentResults.length,
+    claimUnits: traced.map((result) => {
       const displayedIds = new Set(result.matches.map((match) => match.canonId));
       const weakIds = new Set(result.weakMatches.map((match) => match.canonId));
       return {
@@ -2705,7 +2775,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       analysisId: resultId,
       canonSnapshotHash: canonSnapshotHash(prepared),
       inputDigest: inputDigest(document, domainOverrides),
-    });
+    }, options.diagnostics);
   }
 
   onProgress({ phase: 'complete', value: 1, message: 'Analysis complete' });

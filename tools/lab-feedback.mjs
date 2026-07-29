@@ -203,7 +203,9 @@ function traceHighlights(feedback) {
     rankAtRetrieval: candidate.rankAtRetrieval,
     score: candidate.score,
     display: candidate.display,
+    fate: candidate.fate ?? null,
     retainedBecause: candidate.truncationFate?.retainedBecause,
+    retainedAfterPrefixCut: candidate.truncationFate?.retainedAfterPrefixCut ?? null,
     penalties: (candidate.penalties || []).map((penalty) => penalty.code),
     surfaces: candidate.matchSurfaces?.hit || [],
     credible: candidate.admission?.credible,
@@ -255,7 +257,11 @@ function mappingStub(feedback) {
       .filter(Boolean),
     weakMatches: (feedback.display?.weak || []).map((match) => match.canonId),
     candidateCount: feedback.candidateTrace?.candidateCount ?? null,
+    // Two numbers, because they route to two different fixes: a cap is a
+    // display decision and a threshold is a scoring one.
     hiddenByDisplayCaps: feedback.candidateTrace?.hiddenByDisplayCaps ?? null,
+    hiddenBelowWeakThreshold: feedback.candidateTrace?.hiddenBelowWeakThreshold ?? null,
+    retainedOnEvidenceAfterCap: feedback.candidateTrace?.retainedOnEvidenceAfterCap ?? null,
   };
 
   return {
@@ -316,7 +322,7 @@ function reportLines(feedback, validation, route, existing) {
     `row ............. ${feedback.row}`,
     `build ........... Lab ${feedback.build.labRelease} · analyzer ${feedback.build.analyzer.version} · canon ${feedback.build.canonIndex.version} · scoring ${feedback.build.analyzer.scoringConfigHash}`,
     `trace ........... ${feedback.candidateTrace?.available
-      ? `${feedback.candidateTrace.candidateCount} candidates, ${feedback.candidateTrace.hiddenByDisplayCaps} hidden by display caps`
+      ? `${feedback.candidateTrace.candidateCount} candidates · ${feedback.candidateTrace.displayedCount} displayed · ${feedback.candidateTrace.hiddenByDisplayCaps ?? '?'} hidden by display caps · ${feedback.candidateTrace.hiddenBelowWeakThreshold ?? '?'} below the weak threshold`
       : `unavailable (${feedback.candidateTrace?.reason})`}`,
     `excerpt ......... "${normalize(feedback.claimUnit.excerpt).slice(0, 100)}"`,
     '',

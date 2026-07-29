@@ -145,6 +145,14 @@ hold, for a session that in most cases never flags anything. So the first flag r
 with `diagnostics: true` on the **stored document and stored overrides**, and every later flag in the
 session reads the cache.
 
+> **CORRECTED IN v2.4.2 (2026-07-29).** The paragraph above gives one number where the range is what
+> matters, and it describes a design that no longer ships. Measured: ~10 KB per claim unit holds
+> (median 9.4–12.6 KB, max 21 KB), but the whole-document figure is 117 KB for the demo, 638 KB for a
+> 64-passage corpus article, and 5.21 MB for a 406-passage alias-dense source — with the 2,500-unit
+> ceiling around 31 MB. "Tens of megabytes" is the ceiling, not the typical case. More to the point,
+> **v2.4.2 stopped building it**: a flag now requests the trace for the flagged passage only, so the
+> worst case measured above costs 21.5 KB instead of 5.21 MB. See `md/lab-v2.4.2-release.md` §2.
+
 Determinism is what makes that sound, and it is checked rather than assumed. The re-run must agree
 with the analysis on screen on analysis ID, schema, analyzer version, scoring hash, canon version,
 claim-like count and mapped count; if it does not, the export refuses. The cache is dropped on every

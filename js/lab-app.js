@@ -188,7 +188,10 @@ const state = {
   // so a trace can never describe a document the visitor has since edited.
   analyzedDocument: null,
   analyzedOverrides: {},
-  diagnostics: null,
+  // Traces are cached per flagged passage, not per analysis: one flag pays for
+  // one passage's candidate set, and a session that flags three rows holds
+  // three of them rather than the whole document's.
+  diagnosticsBySegment: new Map(),
   diagnosticsFor: null,
   flagTarget: null,
   workController: null,
@@ -1089,8 +1092,23 @@ function assertTraceMatchesAnalysis(traced, analysis) {
   }
 }
 
-async function ensureDiagnostics() {
-  if (state.diagnostics && state.diagnosticsFor === state.analysis?.id) return state.diagnostics;
+/**
+ * The trace for ONE passage, fetched when that passage is flagged.
+ *
+ * Not the whole document. The document-wide trace is the entire pre-display
+ * candidate set for every passage, which is fine for a fixture capture and
+ * wrong for an interaction: a reviewer flagging one row does not need — and
+ * should not have to wait for, clone across the worker boundary, or hold in
+ * memory — the candidate sets of every row they did not flag.
+ *
+ * The analysis still runs whole, because it always did and because bounded
+ * context makes each passage's result depend on its predecessor. What is scoped
+ * is the trace assembly, which is where the size is.
+ */
+async function ensureDiagnostics(segmentId) {
+  if (state.diagnosticsFor === state.analysis?.id && state.diagnosticsBySegment.has(segmentId)) {
+    return state.diagnosticsBySegment.get(segmentId);
+  }
   if (!state.analysis) throw new Error('There is no analysis to trace.');
   if (!state.analyzedDocument || !state.canonIndex) {
     throw new Error('The analyzed source is no longer loaded in this session. Re-run the analysis before flagging.');
@@ -1106,12 +1124,15 @@ async function ensureDiagnostics() {
       signal: controller.signal,
       onProgress: handleAnalysisProgress,
       domainOverrides: state.analyzedOverrides,
-      diagnostics: true,
+      diagnostics: { segmentIds: [segmentId] },
     });
     assertTraceMatchesAnalysis(traced, state.analysis);
-    state.diagnostics = traced.diagnostics;
-    state.diagnosticsFor = state.analysis.id;
-    return state.diagnostics;
+    if (state.diagnosticsFor !== state.analysis.id) {
+      state.diagnosticsBySegment.clear();
+      state.diagnosticsFor = state.analysis.id;
+    }
+    state.diagnosticsBySegment.set(segmentId, traced.diagnostics);
+    return traced.diagnostics;
   } finally {
     state.workController = null;
     setBusy(false);
@@ -1121,7 +1142,7 @@ async function ensureDiagnostics() {
 }
 
 function clearDiagnosticsCache() {
-  state.diagnostics = null;
+  state.diagnosticsBySegment.clear();
   state.diagnosticsFor = null;
 }
 
@@ -1246,7 +1267,7 @@ async function submitFlag(event) {
   try {
     // A set-aside passage was never scored against the canon, so there is no
     // trace to fetch and no reason to make the reviewer wait for one.
-    const diagnostics = target.kind === 'set-aside' ? null : await ensureDiagnostics();
+    const diagnostics = target.kind === 'set-aside' ? null : await ensureDiagnostics(target.segmentId);
     const feedback = buildMappingFeedback({
       analysis: state.analysis,
       diagnostics,

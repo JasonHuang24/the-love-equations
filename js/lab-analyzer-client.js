@@ -63,9 +63,12 @@ export class LabAnalyzerClient {
   }
 
   /**
-   * `diagnostics` is the opt-in Pass B trace. It is forwarded on BOTH routes so
-   * the worker and the main-thread fallback stay the same analyzer with the
-   * same options, not two engines that happen to agree on the default path.
+   * `diagnostics` is the opt-in Pass B trace: `true` for the whole document, or
+   * `{ segmentIds: [...] }` for those claim units only. It is forwarded verbatim
+   * on BOTH routes so the worker and the main-thread fallback stay the same
+   * analyzer with the same options, not two engines that happen to agree on the
+   * default path. The scoped form is what keeps a single flag from cloning a
+   * document-sized trace back across the worker boundary.
    */
   analyze(document, canonIndex, {
     signal, onProgress = () => {}, domainOverrides = null, diagnostics = false,
