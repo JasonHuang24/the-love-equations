@@ -95,7 +95,7 @@ test('match-behavior fixture is structurally sound', () => {
   assert.equal(benchmark.schema, 'le-lab.match-behavior/1.0');
   const ids = new Set();
   const blocks = Object.entries(benchmark.blocks);
-  assert.equal(blocks.length, 3, 'The fixture holds the three adjudicated blocks.');
+  assert.equal(blocks.length, 5, 'The fixture holds the five adjudicated blocks.');
   blocks.forEach(([name, block]) => {
     assert.ok(block.question && block.ruling, `${name} states its question and its ruling.`);
     assert.ok(Array.isArray(block.cases) && block.cases.length, `${name} holds cases.`);
@@ -110,7 +110,27 @@ test('match-behavior fixture is structurally sound', () => {
     assert.ok(STANCE_LABELS.has(entry.expected.stance), `${entry.id} expects a real stance label.`);
     assert.ok(['assert', 'negated', 'attributed'].includes(entry.wrapper), `${entry.id} declares its wrapper.`);
   });
+  benchmark.blocks.stanceComposition.cases.forEach((entry) => {
+    assert.ok(STANCE_LABELS.has(entry.expected.stance), `${entry.id} expects a real stance label.`);
+    assert.ok(entry.wrapper, `${entry.id} declares its wrapper.`);
+    // Every case in the block varies the wrapper and nothing else, so the
+    // indexed misreading has to be literally present in each one. A case that
+    // quietly reworded the proposition would be measuring two things at once.
+    assert.ok(
+      normalizeForCompare(entry.text).includes(normalizeForCompare(benchmark.blocks.stanceComposition.misreading)),
+      `${entry.id} carries the block's misreading verbatim.`,
+    );
+  });
+  benchmark.blocks.contextualCoFire.cases.forEach((entry) => {
+    assert.ok(entry.alias && entry.canonId, `${entry.id} names its alias and target.`);
+    assert.ok(['positive', 'negative'].includes(entry.polarity), `${entry.id} declares its polarity.`);
+  });
 });
+
+/** Punctuation-insensitive containment, so a quoted or hyphenated wrapper still matches. */
+function normalizeForCompare(value) {
+  return String(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
 
 test('misreading-surface overlap is labelled by who is asserting it', async () => {
   const failures = [];
@@ -248,4 +268,88 @@ test('a curated single word is sufficient only under its declared conditions', a
     'The adversarial negatives at least match the positives one for one.');
   assert.equal(failures.length, 0,
     `${failures.length} typed-alias case(s) disagree with the ruling:\n${failures.join('\n')}`);
+});
+
+/**
+ * The per-occurrence ledger for a contextual alias, as the analyzer publishes
+ * it. Absent until the occurrence-local rewrite lands, which is why the caller
+ * treats a missing ledger as a failure rather than a crash.
+ */
+function contextualAliasTrace(unit, canonId) {
+  const entry = prepared.entries.find((row) => row.id === canonId);
+  assert.ok(entry, `Fixture names a canon entry that does not exist: ${canonId}`);
+  return analyzerInternals.scoreEntry(unit, entry, prepared.idf).contextualAliasTrace || null;
+}
+
+test('a contextual alias is promoted by evidence beside that occurrence, not somewhere in the passage', async () => {
+  const failures = [];
+  for (const entry of benchmark.blocks.contextualCoFire.cases) {
+    const { matches, gatedOut, reasonCode } = await analyzeCase(entry.text);
+    const credible = matches.some((row) => row.canonId === entry.canonId);
+    if (credible !== entry.expected.credibleMatch) {
+      failures.push(
+        `  [${entry.id}] ${entry.polarity} (${entry.trap}): expected credibleMatch=`
+        + `${entry.expected.credibleMatch}, got ${credible} for ${entry.canonId}`
+        + `${gatedOut ? ` (gated out: ${reasonCode})` : ''} — ${entry.text}`,
+      );
+    }
+
+    // Where a case adjudicates occurrence independence, the score object has to
+    // account for every occurrence separately. A passage-wide verdict cannot
+    // satisfy this even when it happens to produce the right match.
+    if (!entry.expected.occurrences) continue;
+    const trace = contextualAliasTrace(unitFor(entry.text), entry.canonId);
+    if (!trace) {
+      failures.push(
+        `  [${entry.id}] expects per-occurrence accounting `
+        + `(${JSON.stringify(entry.expected.occurrences)}) and the score object publishes none`,
+      );
+      continue;
+    }
+    const forAlias = trace.filter((row) => row.alias === entry.alias);
+    const observed = {
+      total: forAlias.length,
+      promoted: forAlias.filter((row) => row.promoted).length,
+      disqualified: forAlias.filter((row) => !row.promoted).length,
+    };
+    assert.deepEqual(observed, entry.expected.occurrences,
+      `[${entry.id}] occurrence accounting for “${entry.alias}” — ${entry.text}`);
+  }
+  assert.equal(failures.length, 0,
+    `${failures.length} contextual co-fire case(s) disagree with the ruling:\n${failures.join('\n')}`);
+});
+
+test('stance survives negation scope, quotation, attribution, and their compositions', async () => {
+  const failures = [];
+  for (const entry of benchmark.blocks.stanceComposition.cases) {
+    const { matches, gatedOut } = await analyzeCase(entry.text);
+    const match = matches.find((row) => row.canonId === entry.canonId);
+    if (entry.expected.mapped && !match) {
+      failures.push(`  [${entry.id}] ${entry.canonId} did not map at all (gatedOut=${gatedOut}) — ${entry.text}`);
+      continue;
+    }
+    const stance = match?.alignment?.label;
+    if (stance !== entry.expected.stance) {
+      failures.push(
+        `  [${entry.id}] ${entry.wrapper}: expected ${entry.expected.stance}, got ${stance} `
+        + `(score ${match?.score}) — ${entry.text}`,
+      );
+    }
+  }
+  assert.equal(failures.length, 0,
+    `${failures.length} stance-composition case(s) mislabel who is claiming what:\n${failures.join('\n')}`);
+});
+
+test('the irony limit is stated as a limit and not quietly counted as a pass', () => {
+  const documented = benchmark.blocks.stanceComposition.cases.filter((entry) => entry.limitDocumented);
+  assert.equal(documented.length, 1, 'Exactly one case in this block is a stated instrument limit.');
+  const [limit] = documented;
+  // A limit case freezes what the analyzer DOES, so expected and observed have
+  // to agree. If a later pass makes them disagree, the case has stopped being a
+  // limit and become a defect, and it should be re-adjudicated rather than left
+  // sitting in the block asserting something nobody decided.
+  assert.equal(limit.expected.stance, limit.observedAtFreeze.stance,
+    'A documented limit asserts current behavior; expected and observedAtFreeze must agree.');
+  assert.match(limit.note, /LIMIT/,
+    'The limit case says so in its own note, not only in the block ruling.');
 });

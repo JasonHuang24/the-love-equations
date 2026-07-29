@@ -286,6 +286,198 @@
           "note": "Benchmark case ds-15 verbatim."
         }
       ]
+    },
+    "contextualCoFire": {
+      "question": "When a contextual alias fires, is the relational evidence that promotes it near THAT occurrence, or merely somewhere in the passage?",
+      "ruling": "Contextual promotion is occurrence-local. Each occurrence of a contextual alias earns or fails promotion on evidence inside a bounded window around itself, clipped to its own clause; relational vocabulary elsewhere in the passage does not reach it, and one disqualified occurrence does not suppress a legitimate one. The technical-modifier denylist is a secondary defense and is token-bounded, so hyphens and compounds cannot slip past it. Vendor names are not enumerated: they fail because the window test finds no relational evidence, which is the rule that generalizes.",
+      "frozenAgainst": { "analyzer": "2.4.0", "analysisSchema": "le-lab.analysis/2.4", "canonIndex": "1.0.0+949aef381d5f", "scoringConfigHash": "1ntbwch" },
+      "provenance": "Sol verification review of v2.4.0 + v2.4.1, section 1 CONTEST. cf-01 and cf-02 are Sol's repro table verbatim and reproduce to the decimal (0.540 credible, both). cf-03 through cf-06 are adversarial extensions written for this pass.",
+      "cases": [
+        {
+          "id": "cf-01",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "unlisted vendor name, relational noun far from the occurrence",
+          "text": "My girlfriend and I spent the whole weekend arguing about which AWS provider our startup should use.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "gatedOut": false },
+          "note": "Sol's repro, verbatim. `AWS` is not on the notAfter denylist and never will be — enumerating vendors is not a rule. The promotion is carried by the outcome frame firing on `arguing`, which belongs to a different clause than the alias. `girlfriend` sits eleven tokens away and is about the arguing, not the provider."
+        },
+        {
+          "id": "cf-02",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "hyphenated compound defeats the literal denylist string",
+          "text": "My girlfriend and I spent the whole weekend arguing about which cloud-based provider our startup should use.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "gatedOut": false },
+          "note": "Sol's repro, verbatim. `cloud` IS on the denylist; the check is `normalized.includes('cloud provider')`, so the hyphen in `cloud-based` defeats it. Same sentence as ta-09, which passes only because it says `cloud provider` with a literal space. This is the case that proves the denylist must be token-bounded rather than a substring test."
+        },
+        {
+          "id": "cf-03",
+          "polarity": "positive",
+          "alias": "provider",
+          "trap": "one technical occurrence and one legitimate occurrence in the same passage",
+          "text": "We switched to a different cloud provider last quarter, and throughout their marriage he was still the only provider for his wife and children.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true, "occurrences": { "total": 2, "promoted": 1, "disqualified": 1 } },
+          "observedAtFreeze": { "credibleMatch": false, "gatedOut": false, "gate": "relevant", "topWeak": "deep-dive:relationships-throughout-history:great-unbundling 0.401", "targetAbsent": true },
+          "note": "The occurrence-independence case. The passage clears the domain gate (`explicit-relational-outcome`), and the second `provider` is as relational as ta-03's. It maps to nothing, because `promotedAliases` finds the literal string `cloud provider` anywhere in the passage and `continue`s past the alias entirely — one disqualified occurrence suppresses every occurrence. The expected occurrence accounting requires per-occurrence fields the analyzer does not yet publish, so that half of the assertion is RED by construction."
+        },
+        {
+          "id": "cf-04",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "two vendor occurrences, neither relational, no relational noun anywhere",
+          "text": "The team argued for hours about whether the Azure provider or the Oracle provider had better uptime.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "gatedOut": false, "gate": "uncertain" },
+          "note": "Adversarial extension. Strips cf-01's `girlfriend` so the only thing carrying promotion is the outcome frame on `argued`. The passage contains no relational vocabulary at all and still promotes, which shows the defect is the passage-global frame test rather than any particular noun."
+        },
+        {
+          "id": "cf-05",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "decisive relational outcome in a different clause from the occurrence",
+          "text": "Marriage rates came up briefly at dinner, but the argument was really about which billing provider our startup should integrate.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "gatedOut": false, "gate": "relevant" },
+          "note": "Adversarial extension, and the cleanest statement of the window rule. `Marriage` is a decisive relational outcome, so the passage is correctly gated relevant — but it is in the first clause and the alias is in the second, and `billing` is not on the denylist. Passage-global co-fire cannot tell this apart from a real provisioning claim; a clause-clipped window can."
+        },
+        {
+          "id": "cf-06",
+          "polarity": "positive",
+          "alias": "provider",
+          "trap": "legitimate occurrence whose relational evidence must survive the tightening",
+          "text": "For most of that marriage he was the provider and she managed everything else at home.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "gatedOut": false },
+          "note": "Adversarial extension, GREEN at freeze and included as a guard rather than a repro. Its relational evidence (`marriage`) sits four tokens from the alias in the same clause, so it must survive occurrence-local scoping. Paired with cf-05, which has the same word in the same sentence but out of reach: the two differ only in where the evidence sits, which is exactly the discrimination this block is about."
+        }
+      ]
+    },
+    "stanceComposition": {
+      "question": "When a passage overlaps an indexed commonMisreading, does the stance label survive negation scope, quotation, attribution, endorsement, rejection, and qualification — including when they compose?",
+      "ruling": "Stance is clause-scoped. A negator binds the clause it sits in and the complement it governs, not the whole sentence, and negators compose by parity rather than by presence. A quoted span reports the misreading only when the span carries the assertion itself; a quote around a bare noun phrase inside the speaker's own sentence does not make the speaker a reporter. Attribution hands the claim to someone else, but a following clause that endorses it hands it back, and one that rejects it makes the speaker a denier. A following clause that qualifies the claim breaks the asserted/denied binary and reads Challenges. Irony is not detected and is not claimed to be — see sc-07.",
+      "frozenAgainst": { "analyzer": "2.4.0", "analysisSchema": "le-lab.analysis/2.4", "canonIndex": "1.0.0+949aef381d5f", "scoringConfigHash": "1ntbwch" },
+      "provenance": "Sol verification review of v2.4.0 + v2.4.1, section 2 CONTEST. sc-01 through sc-07 are Sol's table verbatim and reproduce to the decimal. sc-08 through sc-12 are composition variants written for this pass. Every case in this block uses the same indexed misreading, so the only variable is the wrapper.",
+      "misreading": "a large inbox is a large pool of relationship candidates",
+      "cases": [
+        {
+          "id": "sc-01",
+          "wrapper": "negation-parity",
+          "text": "It is not false that a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.739, "misreadingOverlap": 0.625, "reportedSpeech": false, "denial": true },
+          "note": "Sol's table, verbatim. `MISREADING_DENIAL_CUES` is a presence test, so two negators read the same as one: `not` and `false` each match, the sentence is called a denial, and a double negative that asserts the misreading is filed as agreeing with the canon. Parity, not presence."
+        },
+        {
+          "id": "sc-02",
+          "wrapper": "quoted-assertion",
+          "text": "The editor printed 'a large inbox is a large pool of relationship candidates' in scare quotes.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.681, "misreadingOverlap": 0.625, "reportedSpeech": false, "denial": false },
+          "note": "Sol's table, verbatim. The v2.4.0 ruling covers 'quotation or attribution', but quotation marks are never actually detected — `REPORTED_SPEECH_CUES` is a verb list, and `printed` is not on it. The whole misreading sits inside quotes and the analyzer charges it to the editor's newspaper as if the passage asserted it."
+        },
+        {
+          "id": "sc-03",
+          "wrapper": "partial",
+          "text": "A large inbox is a large pool of relationship candidates, but that equivalence is overstated.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Challenges" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.786, "misreadingOverlap": 0.625, "reportedSpeech": false, "denial": false },
+          "note": "Sol's table, verbatim. The source asserts the equivalence and then withdraws part of it. Forced through an asserted/denied binary this can only come out as full assertion, which overstates the disagreement. Qualification is a third thing and the label for it already exists."
+        },
+        {
+          "id": "sc-04",
+          "wrapper": "attribution-endorsed",
+          "text": "The podcast says a large inbox is a large pool of relationship candidates, and that is exactly right.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.629, "misreadingOverlap": 0.625, "reportedSpeech": true, "denial": false },
+          "note": "Sol's table, verbatim. Attribution is detected and stops there. The speaker relays the misreading and then adopts it in the next clause, which makes it the speaker's own claim; filing it as Context only records no disagreement where there plainly is one."
+        },
+        {
+          "id": "sc-05",
+          "wrapper": "attribution-rejected",
+          "text": "He says a large inbox is a large pool of relationship candidates, but he is wrong.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.673, "misreadingOverlap": 0.625, "reportedSpeech": true, "denial": true },
+          "note": "Sol's table, verbatim. The mirror of sc-04. The speaker relays the misreading and rejects it, which is the canon's own correction stated out loud, and the analyzer records nothing. Note `denial: true` at freeze — the sentence-global cue did fire on `wrong`, and was simply outranked by the reported-speech branch."
+        },
+        {
+          "id": "sc-06",
+          "wrapper": "negation-scope",
+          "text": "A large inbox is a large pool of relationship candidates, not a guarantee of marriage.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.676, "misreadingOverlap": 0.625, "reportedSpeech": false, "denial": true },
+          "note": "Sol's table, verbatim. The `not` negates `a guarantee of marriage` in a trailing clause; the pool equivalence in front of the comma is asserted flatly. A sentence-global cue cannot see the comma, so the passage is credited with stating the canon's limit when it is stating the misreading and then narrowing a different thing."
+        },
+        {
+          "id": "sc-07",
+          "wrapper": "irony",
+          "limitDocumented": true,
+          "text": "Sure, a large inbox is a 'large pool of relationship candidates'—and every spam message is a soulmate.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.602, "misreadingOverlap": 0.625, "reportedSpeech": false, "denial": false },
+          "note": "STATED INSTRUMENT LIMIT, not a defect, and the one case in Sol's table this pass does not fix. The speaker is sarcastically rejecting the misreading, so the humanly correct label is Supports; the analyzer says Contradicts and will continue to. Detecting irony needs world knowledge the local deterministic stack does not have and cannot fake. Frozen asserting CURRENT behavior so that the clause-scoped rewrite is held to preserving it: the quoted span here covers a bare noun phrase inside the speaker's own sentence, and must NOT be read as reported speech the way sc-02's full quoted clause is. Published in the lab.html instrument-limits section."
+        },
+        {
+          "id": "sc-08",
+          "wrapper": "negation-plus-attribution",
+          "text": "He says it is not true that a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.684, "misreadingOverlap": 0.625, "reportedSpeech": true, "denial": true },
+          "note": "Composition variant, GREEN at freeze and included as a guard. The speaker reports someone else denying the misreading and takes no position of their own, so the standing doctrine applies unchanged: a reported claim carries no stance to record, whichever way the reported claim points. It is here because the rewrite makes negation and attribution interact, and this is the composition that must NOT change."
+        },
+        {
+          "id": "sc-09",
+          "wrapper": "attribution-plus-partial",
+          "text": "The podcast says a large inbox is a large pool of relationship candidates, though that equivalence is overstated.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Challenges" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.639, "misreadingOverlap": 0.625, "reportedSpeech": true, "denial": false },
+          "note": "Composition variant. sc-03's qualification applied to sc-04's attribution. The speaker relays the claim and then qualifies it, which is a stance of the speaker's own — a partial rejection — so attribution does not get to end the analysis."
+        },
+        {
+          "id": "sc-10",
+          "wrapper": "nested-quotes",
+          "text": "She wrote, \"the article said 'a large inbox is a large pool of relationship candidates' outright.\"",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.582, "misreadingOverlap": 0.625, "reportedSpeech": true, "denial": false },
+          "note": "Composition variant, GREEN at freeze and included as a guard. Two levels of reporting and no endorsement or rejection at either level, so it stays Context only. It is here because quoted-span detection is new in this pass and must not double-count nesting into some other label."
+        },
+        {
+          "id": "sc-11",
+          "wrapper": "attribution-plus-rejection",
+          "text": "He says a large inbox is a large pool of relationship candidates, but that is false.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.676, "misreadingOverlap": 0.625, "reportedSpeech": true, "denial": true },
+          "note": "Composition variant, and sc-05 with the rejection worded impersonally rather than as `he is wrong`. Included so the fix cannot be a special case for one phrasing."
+        },
+        {
+          "id": "sc-12",
+          "wrapper": "bare-rejection",
+          "text": "A large inbox is a large pool of relationship candidates, but that is false.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.739, "misreadingOverlap": 0.625, "reportedSpeech": false, "denial": true },
+          "note": "Composition variant, GREEN at freeze — for the wrong reason, which is why it is frozen. The sentence-global denial cue happens to fire on `false` and lands on the right label by accident. After the rewrite the same label must be reached deliberately: the assertion clause has parity zero, and the following clause rejects it. A guard against fixing sc-06 by simply deleting trailing-clause sensitivity."
+        }
+      ]
     }
   }
 }
