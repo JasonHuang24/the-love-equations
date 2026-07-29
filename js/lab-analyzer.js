@@ -1620,9 +1620,94 @@ function hasCredibleMatchEvidence(rawScore) {
   );
 }
 
+/**
+ * Evidence a reader could verify by eye: the source used this entry's exact
+ * words, or tripped one of its hand-written concept signatures. Distinct from
+ * hasCredibleMatchEvidence, which also accepts accumulated distinctive overlap
+ * — that is an inference, and inferences are allowed to lose a ranking contest.
+ * An exact hit is not; losing one is losing a fact.
+ */
+function carriesExactEvidence(rawScore) {
+  return Boolean(
+    rawScore.signatureHits.length
+    || rawScore.phraseHits.length
+    || rawScore.exactAliasHits.length
+  );
+}
+
 function isCredibleCandidate(candidate) {
   return candidate.score >= SCORING_CONFIG.minCredibleScore
     && hasCredibleMatchEvidence(candidate._rawScore);
+}
+
+function byScoreThenId(a, b) {
+  return b.score - a.score || a.canonId.localeCompare(b.canonId);
+}
+
+/**
+ * The canon entries the immediately preceding passage established on its own,
+ * or null when no bounded-context bridge connects the two. Shared by retrieval
+ * (so a context-eligible entry is retained) and by applyBoundedContext (so the
+ * boost is granted on exactly the same footing).
+ */
+function bridgedCanonIds(result, previous) {
+  const bridge = result?.unit?.boundedContext;
+  if (!bridge || !previous) return null;
+  if (result.unit.parentSegmentId !== previous.unit.parentSegmentId) return null;
+  if (bridge.sourceUnitId !== previous.unit.id) return null;
+  // Only locally credible evidence from the immediately preceding sentence may
+  // help. Using the previous candidate's unboosted score prevents context from
+  // cascading through a chain of elliptical sentences.
+  return new Set(previous.candidates
+    .filter((candidate) => isCredibleCandidate(candidate))
+    .slice(0, SCORING_CONFIG.maxMatchesPerClaim)
+    .map((candidate) => candidate.canonId));
+}
+
+/**
+ * The working candidate set for one passage.
+ *
+ * Ranking answers "which entries most resemble this passage". It does not
+ * answer "which entries did this passage actually name", and truncating the
+ * ranked list conflates the two: an exact alias hit sitting at rank nine is not
+ * a weak match, it is an invisible one, and nothing downstream — admission,
+ * bounded context, stance, or a diagnostic trace — can reason about evidence
+ * that was discarded before it arrived.
+ *
+ * So the working set is a union rather than a prefix: the top-ranked
+ * candidates, plus every entry carrying exact evidence, plus the entries the
+ * previous sentence already established and their declared relations, which are
+ * the only ones bounded context can help.
+ *
+ * Retention is not credibility. Admission still runs on score plus evidence,
+ * unchanged; the display caps still apply after this point. Widening this set
+ * lets a decision be made about evidence that used to vanish silently — it does
+ * not make that decision come out differently.
+ */
+function buildCandidateSet(unit, prepared, context = null) {
+  const ranked = prepared.entries
+    .map((entry) => publicMatch(entry, scoreEntry(unit, entry, prepared.idf)))
+    .filter((match) => match.score >= SCORING_CONFIG.candidateScoreFloor)
+    .sort(byScoreThenId);
+
+  const working = ranked.slice(0, SCORING_CONFIG.maxCandidatesPerUnit);
+  const retained = new Set(working.map((match) => match.canonId));
+  const bridged = context?.bridgedCanonIds || null;
+
+  ranked.forEach((match) => {
+    if (retained.has(match.canonId)) return;
+    const entry = context?.entriesById?.get(match.canonId);
+    const contextEligible = Boolean(bridged && entry && (
+      bridged.has(match.canonId)
+      || entry.dependencies.some((dependency) => bridged.has(dependency))
+      || entry.related.some((related) => bridged.has(related))
+    ));
+    if (!carriesExactEvidence(match._rawScore) && !contextEligible) return;
+    retained.add(match.canonId);
+    working.push(match);
+  });
+
+  return working.sort(byScoreThenId);
 }
 
 function applyBoundedContext(results, entriesById) {
@@ -1630,17 +1715,8 @@ function applyBoundedContext(results, entriesById) {
     const result = results[index];
     const bridge = result.unit.boundedContext;
     const previous = results[index - 1];
-    if (!bridge || !previous) continue;
-    if (result.unit.parentSegmentId !== previous.unit.parentSegmentId) continue;
-    if (bridge.sourceUnitId !== previous.unit.id) continue;
-
-    // Only locally credible evidence from the immediately preceding sentence
-    // may help. Using the previous candidate's unboosted score prevents context
-    // from cascading through a chain of elliptical sentences.
-    const previousCanonIds = new Set(previous.candidates
-      .filter((candidate) => isCredibleCandidate(candidate))
-      .slice(0, SCORING_CONFIG.maxMatchesPerClaim)
-      .map((candidate) => candidate.canonId));
+    const previousCanonIds = bridgedCanonIds(result, previous);
+    if (!previousCanonIds) continue;
 
     result.candidates.forEach((candidate) => {
       const entry = entriesById.get(candidate.canonId);
@@ -1976,14 +2052,18 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   const ignoredWords = ignoredUnits.reduce((sum, unit) => sum + unit.wordCount, 0);
   if (isCancelled()) throw new DOMException('Analysis cancelled', 'AbortError');
 
+  const entriesById = new Map(prepared.entries.map((entry) => [entry.id, entry]));
   const candidatesByUnit = [];
   for (let unitIndex = 0; unitIndex < units.length; unitIndex += 1) {
     const unit = units[unitIndex];
-    const candidates = prepared.entries
-      .map((entry) => publicMatch(entry, scoreEntry(unit, entry, prepared.idf)))
-      .filter((match) => match.score >= SCORING_CONFIG.candidateScoreFloor)
-      .sort((a, b) => b.score - a.score || a.canonId.localeCompare(b.canonId))
-      .slice(0, SCORING_CONFIG.maxCandidatesPerUnit);
+    // Retrieval is sequential, so the previous passage's own conclusions are
+    // already available and the entries bounded context could reach are known
+    // before the set is cut rather than after.
+    const previous = candidatesByUnit[candidatesByUnit.length - 1];
+    const candidates = buildCandidateSet(unit, prepared, {
+      entriesById,
+      bridgedCanonIds: bridgedCanonIds({ unit }, previous),
+    });
     candidatesByUnit.push({ unit, candidates });
     if (unitIndex % 20 === 0) {
       onProgress({
@@ -1998,7 +2078,6 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     }
   }
 
-  const entriesById = new Map(prepared.entries.map((entry) => [entry.id, entry]));
   applyBoundedContext(candidatesByUnit, entriesById);
   onProgress({ phase: 'evaluating', value: 0.66, message: 'Evaluating stance and confidence' });
 
@@ -2181,6 +2260,11 @@ export const analyzerInternals = Object.freeze({
   localDomainRelevance,
   scoreEntry,
   hasCredibleMatchEvidence,
+  carriesExactEvidence,
+  // The working candidate set for one passage, exposed so a fixture can assert
+  // what survives retrieval rather than inferring it from what happens to be
+  // displayed. Callers outside analyzeDocument pass no bounded context.
+  candidateSetFor: (unit, prepared, context = null) => buildCandidateSet(unit, prepared, context),
   classifyRiskFlags,
   // Threshold names kept for callers written against v2.1.2; every value now
   // comes from SCORING_CONFIG, which is the single place to change them.

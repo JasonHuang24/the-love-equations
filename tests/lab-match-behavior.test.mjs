@@ -74,19 +74,9 @@ async function analyzeCase(text) {
 /**
  * The working candidate set for a unit: what survives retrieval and is
  * available to admission, bounded context, and stance.
- *
- * SHIM: v2.3.0 has no such concept — retrieval is an inline expression inside
- * analyzeDocument. The fallback below reproduces that expression exactly so
- * this fixture is RED against shipped behavior instead of erroring on a
- * missing export. It is deleted the moment the analyzer names the set itself.
  */
 function candidateSet(unit) {
-  if (typeof analyzerInternals.candidateSetFor === 'function') {
-    return analyzerInternals.candidateSetFor(unit, prepared);
-  }
-  return rankedCandidates(unit)
-    .slice(0, SCORING_CONFIG.maxCandidatesPerUnit)
-    .map((row) => ({ canonId: row.entry.id, score: row.rawScore.score, _rawScore: row.rawScore }));
+  return analyzerInternals.candidateSetFor(unit, prepared);
 }
 
 /** Every entry above the candidate floor, ranked — the pre-truncation truth. */
