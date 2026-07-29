@@ -90,6 +90,23 @@ export const SCORING_CONFIG = Object.freeze({
   nonDomainDecisiveScore: 4,
   plausibleSocialStructureScore: 3,
 
+  // Tokenization. Both NEW at v2.6.0; the first surfaces a number that was
+  // already hard-coded, the second is the fix.
+  //
+  // The stripper only runs on tokens at least this long — carried over
+  // unchanged from the literal it replaces.
+  minStemmableLength: 5,
+  // The shortest result the stripper may LEAVE BEHIND. Until v2.6.0 there was
+  // no floor at all: `tokenize` filtered `length > 1` before stemming and never
+  // re-checked, so `really` reached the index as `re`, `national` as `n`, and
+  // `fable` as `f` at IDF 6.013 — nineteen raw canon words collapsing to
+  // sixteen fragments across 108 of 450 entries. Three rather than four,
+  // because four destroys `dat`, `fix`, `sex` and `pay`, which work. A token
+  // the stripper would shorten past this keeps its original surface form
+  // instead of being dropped, because `stable`, `viable` and `visible` are
+  // concepts and a dropped token cannot match anything.
+  minDerivedStemLength: 3,
+
   // Lexical retrieval.
   minPhraseLength: 4,
   minSingleAliasLength: 5,
@@ -136,14 +153,19 @@ export const SCORING_CONFIG = Object.freeze({
   // second half of a compound cannot hide the modifier: in "cloud-based
   // provider" the disqualifying token is two positions back, not one.
   contextualAliasModifierLookback: 3,
-  // NEW at v2.5.0. The shortest stem that may stand as the "independent canon
-  // concept" promoting a contextual alias. The stemmer strips suffixes without
-  // re-checking length, so "really" becomes "re" and a two-character fragment
-  // was found vouching for a provisioning claim about a billing vendor. Four,
+  // NEW at v2.5.0, SECONDARY from v2.6.0. The shortest stem that may stand as
+  // the "independent canon concept" promoting a contextual alias. Four,
   // matching minPhraseLength, which is this file's existing answer to how short
-  // a lexical unit can be and still count as evidence. Local to co-fire on
-  // purpose: filtering degenerate stems out of the shared-token set itself
-  // would move scores across the whole corpus, which this pass does not do.
+  // a lexical unit can be and still count as evidence.
+  //
+  // It was introduced as the local answer to a stemmer that produced "re" from
+  // "really" and was found vouching for a provisioning claim about a billing
+  // vendor. minDerivedStemLength now stops that fragment ever being produced,
+  // so this guard no longer has that job. It is KEPT because it answers a
+  // different question from a different direction: the tokenizer floor asks how
+  // short a token may be, and this asks how short a token may be and still
+  // carry a concept — a three-character stem is a legitimate token and still
+  // thin evidence for promoting a borrowed word. Defense in depth, and cheap.
   minCoFireConceptLength: 4,
   maxMatchesPerClaim: 4,
   maxWeakMatches: 3,
@@ -225,7 +247,15 @@ const STOP_WORDS = new Set([
   'having', 'he', 'her', 'here', 'hers', 'herself', 'him', 'himself', 'his',
   'how', 'i', 'if', 'in', 'into', 'is', 'it', 'its', 'itself', 'just', 'me',
   'more', 'most', 'my', 'myself', 'no', 'nor', 'not', 'now', 'of', 'off', 'on',
-  'once', 'only', 'or', 'other', 'our', 'ours', 'out', 'over', 'own', 'same',
+  'once', 'only', 'or', 'other', 'our', 'ours', 'out', 'over', 'own',
+  // NEW at v2.6.0, and it belongs here on its own merits: an intensifier, in
+  // the company of `just`, `only`, `too` and `very`, which were already on this
+  // list. It is also the word the v2.6.0 fallback would otherwise restore — the
+  // fragment `re` was found in v2.5.0 §1.4 vouching for a provisioning claim
+  // about a billing vendor, and falling back from `re` to `really` would put a
+  // full-length non-concept where a two-character one used to be.
+  'really',
+  'same',
   'she', 'should', 'so', 'some', 'such', 'than', 'that', 'the', 'their', 'theirs',
   'them', 'themselves', 'then', 'there', 'these', 'they', 'this', 'those',
   'through', 'to', 'too', 'under', 'until', 'up', 'very', 'was', 'we', 'were',
@@ -941,15 +971,61 @@ function normalizeText(value) {
     .toLowerCase();
 }
 
+/**
+ * The suffix stripper, with a floor on what it is allowed to leave behind.
+ *
+ * The floor is the v2.6.0 fix. Until then this stripped suffixes without ever
+ * re-checking length — `tokenize` filtered `length > 1` BEFORE stemming and
+ * never again — so `really` entered the index as `re`, `national` as `n`, and
+ * `fable` as `f` carrying IDF 6.013. Nineteen raw canon words, sixteen distinct
+ * fragments, 108 of 450 entries holding at least one.
+ *
+ * Three, and a FALLBACK rather than a drop. Both halves are load-bearing:
+ *
+ *   - Three, not four. Four would destroy `dating/dates/daters → dat`,
+ *     `fixed/fixes → fix`, `sexes → sex` and `paying/payers → pay` — four
+ *     working families, to fix nineteen broken tokens.
+ *   - The floor applies only to a token stemming SHORTENED. `men`, `age`, `AI`
+ *     and `SMV` arrive short and are untouched; an original-length floor would
+ *     catch none of the real cases, all of which enter long.
+ *   - Fall back, do not drop. Discarding the token would erase `stable`,
+ *     `viable` and `visible`, which are real concepts in this canon.
+ *
+ * The cost, accepted and recorded: `moment`/`moments` and `peer`/`peers` stop
+ * unifying, because they only ever unified by collapsing onto a fragment that
+ * also swallowed everything else ending the same way.
+ */
 function stemToken(token) {
-  if (token.length < 5) return token;
-  return token
+  if (token.length < SCORING_CONFIG.minStemmableLength) return token;
+  const stem = token
     .replace(/(?:ization|ational|fulness|iveness|ously)$/u, '')
     .replace(/(?:ments|ment|ness|able|ible|ally|edly|ingly)$/u, '')
     .replace(/(?:ies)$/u, 'y')
     .replace(/(?:ing|ers|ed|es|s)$/u, '');
+  // A stem that survived unchanged is at least minStemmableLength long, so this
+  // rejects only results the stripper actually shortened past the floor.
+  return stem.length >= SCORING_CONFIG.minDerivedStemLength ? stem : token;
 }
 
+/**
+ * Text to the tokens every part of retrieval reasons about.
+ *
+ * The stopword filter runs BEFORE stemming, and from v2.6.0 that placement is
+ * deliberate rather than incidental. Sol's rule asks that filtering be re-run
+ * against the accepted representation as well as the original, so that falling
+ * back from `re` to `really` cannot restore a word the list had excluded. On
+ * the fallback path that is already true by construction: the fallback returns
+ * the ORIGINAL, and the original is exactly what this filter has just checked.
+ * `really` therefore joins STOP_WORDS and the existing filter catches it.
+ *
+ * A second pass after stemming was measured and REMOVED. It would bite only on
+ * the normal stemming path, where it deletes `offers` (→ `off`), `owned` and
+ * `owners` (→ `own`), `shoulders` (→ `should`), and `willing`/`willingness`
+ * (→ `will`) — six content words whose stems collide with function words that
+ * this filter had already removed, so the collision is harmless today and the
+ * deletion is a loss rather than a fix. That is a real defect of its own shape
+ * and it is written up rather than smuggled in here.
+ */
 export function tokenize(value, { keepGeneric = true } = {}) {
   const normalized = normalizeText(value);
   const raw = normalized.match(/[\p{L}\p{N}]+(?:'[\p{L}]+)?/gu) || [];

@@ -28,8 +28,23 @@ import { normalizeInput } from '../js/lab-intake.js';
  * looking. Side-preservation is the property worth pinning, because crossing a
  * line is the only thing at this layer a reader ever sees.
  *
- * Regenerate with:
- *   node tools/lab-threshold-sweep.mjs --neighbors tests/fixtures/threshold-neighbors.json --excerpt-chars 0
+ * `rulings` is the record of every pair that has ever crossed, including the
+ * ones that crossed from OUTSIDE the band — a pair falling 0.363 → 0.231 clears
+ * `minWeakScore` without ever being near it, so the band alone would miss it.
+ * While `adjudicationOpen` is true, a PENDING ruling is reported rather than
+ * failed, so the release it belongs to can be built in parallel with the human
+ * verdict it is waiting for. Closing the adjudication is the release's job.
+ *
+ * Regenerate the band alone with:
+ *   node tools/lab-threshold-sweep.mjs --neighbors tests/fixtures/threshold-neighbors.json
+ *
+ * Or with a baseline, which also records every crossing it finds as PENDING:
+ *   node tools/lab-threshold-sweep.mjs --baseline <dump.json> \
+ *       --neighbors tests/fixtures/threshold-neighbors.json \
+ *       --md md/lab-v2.6.0-threshold-adjudication.md
+ *
+ * The fixture never stores source text either way; `--excerpt-chars` reaches
+ * only the Markdown sheet.
  *
  * SKIPS when the corpus archive is absent. `lab-corpus/` is gitignored and the
  * texts are third-party (md/RERUN.md §1), so a clone without the archive must
@@ -78,6 +93,8 @@ function currentScores() {
 
 const THRESHOLDS = ['candidateScoreFloor', 'minWeakScore', 'minCredibleScore'];
 
+const RULINGS = new Set(['ACCEPT', 'REJECT', 'PENDING']);
+
 test('the frozen band is internally consistent', () => {
   assert.equal(fixture.schema, 'le-lab.threshold-sweep/1.0');
   assert.equal(fixture.population, 'retained');
@@ -89,6 +106,41 @@ test('the frozen band is internally consistent', () => {
       .filter((score) => Math.abs(score - SCORING_CONFIG[name]) <= fixture.band).length;
     assert.equal(inBand, fixture.counts[name], `${name} membership disagrees with the recorded count.`);
   });
+  Object.entries(fixture.rulings).forEach(([key, row]) => {
+    assert.ok(RULINGS.has(row.ruling), `${key} carries an unrecognised ruling: ${row.ruling}`);
+    assert.ok(THRESHOLDS.includes(row.threshold), `${key} names an unknown threshold: ${row.threshold}`);
+    assert.ok(['gain', 'loss'].includes(row.direction), `${key} names an unknown direction.`);
+    assert.ok(key.endsWith(`|${row.threshold}`),
+      `${key} is keyed by a different threshold than it records — a pair can cross two lines at `
+      + 'once, so the threshold is part of the key.');
+    // A recorded crossing has to BE one, or the record is decoration.
+    const line = SCORING_CONFIG[row.threshold];
+    assert.notEqual(row.before >= line, row.after >= line,
+      `${key} is recorded as crossing ${row.threshold} but ${row.before} and ${row.after} sit on the same side.`);
+    assert.equal(row.direction, row.after >= line ? 'gain' : 'loss',
+      `${key} records a direction its own scores contradict.`);
+  });
+  assert.equal(Object.keys(fixture.rulings).length, fixture.counts.rulings);
+  assert.equal(
+    Object.values(fixture.rulings).filter((row) => row.ruling === 'PENDING').length,
+    fixture.counts.pending,
+  );
+});
+
+test('every threshold crossing carries a human verdict', () => {
+  const pending = Object.entries(fixture.rulings).filter(([, row]) => row.ruling === 'PENDING');
+  if (fixture.adjudicationOpen) {
+    // Reported, not failed. The verdicts are outstanding by design while the
+    // release that produced them is still being built; what must not happen is
+    // that they go outstanding QUIETLY.
+    console.log(`      ${pending.length} threshold crossing(s) awaiting adjudication `
+      + '(adjudicationOpen: true — md/lab-v2.6.0-threshold-adjudication.md)');
+    return;
+  }
+  assert.equal(pending.length, 0,
+    `${pending.length} threshold crossing(s) are still PENDING with the adjudication closed. `
+    + 'Either record the verdicts in tests/fixtures/threshold-neighbors.json, or set '
+    + `adjudicationOpen back to true:\n  ${pending.map(([key]) => key).slice(0, 20).join('\n  ')}`);
 });
 
 test('no corpus pair crosses an admission line without a ruling', { skip: corpusPresent ? false : 'lab-corpus/sources is absent (gitignored third-party archive; see md/RERUN.md §1)' }, () => {
@@ -98,22 +150,24 @@ test('no corpus pair crosses an admission line without a ruling', { skip: corpus
     `${missing.length} frozen pair(s) no longer exist. The corpus text or the canon index has `
     + `moved under this fixture:\n  ${missing.slice(0, 8).join('\n  ')}`);
 
-  const unadjudicated = [];
+  const unrecorded = [];
   for (const [key, before] of Object.entries(fixture.scores)) {
     const after = current.get(key);
     for (const name of THRESHOLDS) {
       const line = SCORING_CONFIG[name];
-      const wasAbove = before >= line;
       const isAbove = after >= line;
-      if (wasAbove === isAbove) continue;
-      if (fixture.rulings[key]) continue;
-      unadjudicated.push(
-        `  ${key}\n    ${name} ${line}: ${before} -> ${after} (${isAbove ? 'gain' : 'loss'})`,
-      );
+      if ((before >= line) === isAbove) continue;
+      // A crossing already in `rulings` has been seen by a human, whatever the
+      // verdict. One that is not has moved since the band was frozen, which is
+      // the thing this file exists to refuse.
+      if (fixture.rulings[`${key}|${name}`]) continue;
+      unrecorded.push(`  ${key}\n    ${name} ${line}: ${before} -> ${after} (${isAbove ? 'gain' : 'loss'})`);
     }
   }
-  assert.equal(unadjudicated.length, 0,
-    `${unadjudicated.length} threshold crossing(s) have no human ruling. Regenerate the sheet with\n`
-    + `  node tools/lab-threshold-sweep.mjs --baseline <dump> --md md/lab-v2.6.0-threshold-adjudication.md\n`
-    + `and record each verdict in the fixture's "rulings" map:\n${unadjudicated.slice(0, 20).join('\n')}`);
+  assert.equal(unrecorded.length, 0,
+    `${unrecorded.length} threshold crossing(s) are in nobody's record. Regenerate the band and the\n`
+    + 'sheet together, so the crossing is written down before it is absorbed:\n'
+    + '  node tools/lab-threshold-sweep.mjs --baseline <dump> \\\n'
+    + '      --neighbors tests/fixtures/threshold-neighbors.json --excerpt-chars 0 \\\n'
+    + `      --md md/lab-v2.6.0-threshold-adjudication.md\n${unrecorded.slice(0, 20).join('\n')}`);
 });

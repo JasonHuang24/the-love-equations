@@ -199,6 +199,15 @@ function main() {
     process.stderr.write(`dump: ${options.dump}\n`);
   }
 
+  /*
+   * The baseline comparison runs FIRST when both are asked for, so the band it
+   * writes can carry the crossing record the comparison found. A band alone
+   * cannot: it holds only pairs that started near a line, and a pair falling
+   * from 0.363 to 0.231 crosses `minWeakScore` from well outside it. The band
+   * is the tripwire for subtle drift; the crossing record is the complete list.
+   */
+  const comparison = options.baseline ? compare(options, identity, pairs, byUnit) : null;
+
   if (options.neighbors) {
     /*
      * The band is stored as a flat score map, not as decorated rows. Everything
@@ -223,61 +232,115 @@ function main() {
     const existing = fs.existsSync(options.neighbors)
       ? JSON.parse(fs.readFileSync(options.neighbors, 'utf8'))
       : null;
+    /*
+     * Rulings are MERGED, never replaced. A verdict a human wrote is the one
+     * artifact in this file a regeneration must not be able to destroy; a
+     * crossing this run found and nobody has ruled on is recorded as PENDING so
+     * it is visibly unanswered rather than silently absent.
+     */
+    const rulings = { ...(existing?.rulings ?? {}) };
+    for (const crossing of comparison?.crossings ?? []) {
+      // Keyed by threshold as well as by pair: a single pair can clear two
+      // lines in one move, and a ruling that recorded only the first would be
+      // a verdict on half of what happened.
+      const key = `${crossing.unitId}|${crossing.canonId}|${crossing.threshold}`;
+      if (rulings[key]) continue;
+      rulings[key] = {
+        ruling: 'PENDING',
+        threshold: crossing.threshold,
+        direction: crossing.direction,
+        before: crossing.before,
+        after: crossing.after,
+      };
+    }
+    const pending = Object.values(rulings).filter((row) => row.ruling === 'PENDING').length;
     fs.writeFileSync(options.neighbors, `${JSON.stringify({
       ...identity,
       band: options.band,
+      // While true, the suite REPORTS outstanding verdicts instead of failing
+      // on them, so a release can be built in parallel with the adjudication it
+      // is waiting for — and closing it is the release's job. An outstanding
+      // verdict forces it open, because "adjudication closed, 121 unanswered"
+      // is not a state this file is allowed to be in.
+      adjudicationOpen: pending > 0 ? true : (existing?.adjudicationOpen ?? false),
       note: 'Frozen threshold-neighbour band: every corpus pair within ±band of an'
         + ' admission line, which is the population an implementation detail can move'
-        + ' across one. A pair here that changes SIDE has to be adjudicated, not'
-        + ' absorbed — see rulings.',
-      counts: { ...perThreshold, pairs: Object.keys(scores).length },
-      // Human rulings on crossings, keyed the same way as `scores`. Empty until
-      // a calibration pass produces crossings and someone adjudicates them.
-      rulings: existing?.rulings ?? {},
+        + ' across one. `scores` pins which SIDE of each line a pair sits on; `rulings`'
+        + ' is the human record for every pair that has ever crossed one, including'
+        + ' crossings that began outside the band.',
+      counts: {
+        ...perThreshold,
+        pairs: Object.keys(scores).length,
+        rulings: Object.keys(rulings).length,
+        pending,
+      },
+      rulings,
       scores,
     }, null, 2)}\n`);
     process.stderr.write(
       `neighbors: ${options.neighbors} (${Object.keys(scores).length} pairs, band ±${options.band}, `
-      + `${THRESHOLDS.map((row) => `${row.name}=${perThreshold[row.name]}`).join(' ')})\n`,
+      + `${THRESHOLDS.map((row) => `${row.name}=${perThreshold[row.name]}`).join(' ')}, `
+      + `${Object.keys(rulings).length} rulings)\n`,
     );
   }
 
-  if (options.baseline) {
-    const base = JSON.parse(fs.readFileSync(options.baseline, 'utf8'));
-    const basePairs = new Map(Object.entries(base.pairs));
-    const keys = new Set([...basePairs.keys(), ...pairs.keys()]);
-    const changes = [];
-    const crossings = [];
-    for (const key of keys) {
-      const before = basePairs.has(key) ? basePairs.get(key) : 0;
-      const after = pairs.has(key) ? pairs.get(key) : 0;
-      if (before === after) continue;
-      const [unitId, canonId] = key.split('|');
-      const passage = byUnit.get(unitId);
-      const change = {
-        unitId,
-        canonId,
-        source: passage?.source ?? null,
-        passageIndex: passage?.index ?? null,
-        excerpt: passage?.excerpt ?? null,
-        before,
-        after,
-        delta: Number((after - before).toFixed(3)),
-      };
-      changes.push(change);
-      for (const threshold of THRESHOLDS) {
-        const wasAbove = above(before, threshold.value);
-        const isAbove = above(after, threshold.value);
-        if (wasAbove === isAbove) continue;
-        crossings.push({ ...change, threshold: threshold.name, direction: isAbove ? 'gain' : 'loss' });
-      }
+  if (comparison) {
+    process.stdout.write(`${JSON.stringify({
+      census: comparison.census,
+      crossings: comparison.crossings,
+      changes: comparison.changes.slice(0, 40),
+    }, null, 2)}\n`);
+    if (options.md) {
+      fs.writeFileSync(options.md, renderMarkdown(identity, comparison.census, comparison.crossings));
+      process.stderr.write(`md: ${options.md}\n`);
     }
-    changes.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
-    crossings.sort((a, b) => a.threshold.localeCompare(b.threshold)
-      || a.direction.localeCompare(b.direction)
-      || b.after - a.after);
+  }
+}
 
-    const census = {
+/** Current scores against a captured baseline: what moved, and what crossed. */
+function compare(options, identity, pairs, byUnit) {
+  const base = JSON.parse(fs.readFileSync(options.baseline, 'utf8'));
+  const basePairs = new Map(Object.entries(base.pairs));
+  const keys = new Set([...basePairs.keys(), ...pairs.keys()]);
+  const changes = [];
+  const crossings = [];
+  for (const key of keys) {
+    // A pair absent from a dump scored below its floor, which for a threshold
+    // comparison is indistinguishable from zero: both are below every line.
+    const before = basePairs.has(key) ? basePairs.get(key) : 0;
+    const after = pairs.has(key) ? pairs.get(key) : 0;
+    if (before === after) continue;
+    const [unitId, canonId] = key.split('|');
+    const passage = byUnit.get(unitId);
+    const change = {
+      unitId,
+      canonId,
+      source: passage?.source ?? null,
+      passageIndex: passage?.index ?? null,
+      excerpt: passage?.excerpt ?? null,
+      before,
+      after,
+      delta: Number((after - before).toFixed(3)),
+    };
+    changes.push(change);
+    for (const threshold of THRESHOLDS) {
+      if (above(before, threshold.value) === above(after, threshold.value)) continue;
+      crossings.push({
+        ...change,
+        threshold: threshold.name,
+        direction: above(after, threshold.value) ? 'gain' : 'loss',
+      });
+    }
+  }
+  changes.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+  crossings.sort((a, b) => a.threshold.localeCompare(b.threshold)
+    || a.direction.localeCompare(b.direction)
+    || b.after - a.after);
+
+  return {
+    changes,
+    crossings,
+    census: {
       baselineAnalyzer: base.analyzer,
       baselineScoringConfigHash: base.scoringConfigHash,
       currentAnalyzer: identity.analyzer,
@@ -293,47 +356,80 @@ function main() {
           losses: crossings.filter((row) => row.threshold === threshold.name && row.direction === 'loss').length,
         },
       ])),
-    };
-    process.stdout.write(`${JSON.stringify({ census, crossings, changes: changes.slice(0, 40) }, null, 2)}\n`);
-
-    if (options.md) {
-      fs.writeFileSync(options.md, renderMarkdown(identity, census, crossings));
-      process.stderr.write(`md: ${options.md}\n`);
-    }
-  }
+    },
+  };
 }
 
+/**
+ * The human-facing half of the adjudication record.
+ *
+ * The machine-readable half lives in tests/fixtures/threshold-neighbors.json
+ * and carries no source text, because the corpus is third-party and
+ * unpublished. This file carries short excerpts, because a verdict on whether a
+ * pair *should* have crossed cannot be reached from an ID and two numbers.
+ *
+ * Most consequential threshold first. A credible crossing changes what a reader
+ * is shown; a candidate-floor crossing changes only which entries were
+ * considered, and 97 of those are a census, not 97 decisions.
+ */
 function renderMarkdown(identity, census, crossings) {
   const lines = [];
   const table = (rows) => {
-    lines.push('', '| Pair | Source · passage | Before | After | Δ | ACCEPT / REJECT |');
+    lines.push('', '| Canon entry | Passage | Before | After | Δ | ACCEPT / REJECT |');
     lines.push('|---|---|---|---|---|---|');
     rows.forEach((row) => {
-      lines.push(`| \`${row.canonId}\`<br>${row.excerpt ? `“${row.excerpt}…”` : row.unitId} `
-        + `| ${row.source} · ${row.passageIndex} | ${row.before.toFixed(3)} | ${row.after.toFixed(3)} `
-        + `| ${row.delta > 0 ? '+' : ''}${row.delta.toFixed(3)} |  |`);
+      const passage = row.excerpt
+        ? `${row.source} · ${row.passageIndex}<br>“${row.excerpt}…”`
+        : `${row.source} · ${row.passageIndex}<br>\`${row.unitId}\``;
+      lines.push(`| \`${row.canonId}\` | ${passage} | ${row.before.toFixed(3)} `
+        + `| ${row.after.toFixed(3)} | ${row.delta > 0 ? '+' : ''}${row.delta.toFixed(3)} |  |`);
     });
+    lines.push('');
   };
-  lines.push('# Threshold adjudication sheet', '');
-  lines.push('Generated by `tools/lab-threshold-sweep.mjs`. One row per pair that crossed an admission');
-  lines.push('threshold. The rightmost column is empty on purpose: it is the human ruling.', '');
+
+  lines.push('# LE Lab v2.6.0 — threshold adjudication sheet', '');
+  lines.push('Generated by `tools/lab-threshold-sweep.mjs`. One row per corpus pair that crossed an');
+  lines.push('admission threshold when the tokenizer fix landed. **The rightmost column is empty on');
+  lines.push('purpose: it is the ruling, and it is not mine to write.**', '');
   lines.push('```');
-  lines.push(`analyzer  ${census.baselineAnalyzer} -> ${census.currentAnalyzer}`);
-  lines.push(`config    ${census.baselineScoringConfigHash} -> ${census.currentScoringConfigHash}`);
-  lines.push(`canon     ${identity.canonIndexVersion}`);
-  lines.push(`pairs     ${census.scoredPairs}  (${identity.passages} passages x ${identity.entries} entries)`);
-  lines.push(`changed   ${census.changed}   ${census.decreased} down / ${census.increased} up`);
+  lines.push(`analyzer   ${census.baselineAnalyzer} -> ${census.currentAnalyzer}`);
+  lines.push(`config     ${census.baselineScoringConfigHash} -> ${census.currentScoringConfigHash}`);
+  lines.push(`canon      ${identity.canonIndexVersion}  (unchanged — no doctrine moved)`);
+  lines.push(`population ${identity.passages} retained passages x ${identity.entries} entries = ${census.scoredPairs} pairs`);
+  lines.push(`changed    ${census.changed}   ${census.decreased} down / ${census.increased} up`);
+  THRESHOLDS.forEach((threshold) => {
+    const row = census.crossings[threshold.name];
+    lines.push(`${threshold.name.padEnd(20)} ${String(threshold.value).padEnd(5)} `
+      + `${row.gains} gain / ${row.losses} loss`);
+  });
   lines.push('```', '');
-  for (const threshold of THRESHOLDS) {
+  lines.push('**How to rule.** ACCEPT means the new side is the right side — the pair crossed because');
+  lines.push('the old score was resting on a fragment that was never a concept. REJECT means the pair');
+  lines.push('belonged where it was, and the fix has cost something real. A REJECT does **not** become a');
+  lines.push('threshold change: thresholds are not retuned to un-cross a pair, because that trades one');
+  lines.push('adjudicated case for every un-adjudicated one. It becomes a targeted fixture pinning the');
+  lines.push('pre-fix outcome and an entry in the release report saying what the fix cost.', '');
+  lines.push('Record each verdict in `tests/fixtures/threshold-neighbors.json` under `rulings`, keyed');
+  lines.push('`<unitId>|<canonId>|<threshold>`, and set `adjudicationOpen: false` when none are left');
+  lines.push('PENDING. The suite enforces that pairing.', '');
+
+  const ordered = [...THRESHOLDS].reverse();
+  for (const threshold of ordered) {
     const rows = crossings.filter((row) => row.threshold === threshold.name);
-    lines.push(`## ${threshold.name} (${threshold.value})`, '');
     const gains = rows.filter((row) => row.direction === 'gain');
     const losses = rows.filter((row) => row.direction === 'loss');
-    lines.push(`${gains.length} gain(s), ${losses.length} loss(es).`);
-    if (gains.length) { lines.push('', '### Gains'); table(gains); }
-    if (losses.length) { lines.push('', '### Losses'); table(losses); }
-    lines.push('');
+    lines.push(`## ${threshold.name} — ${threshold.value}`, '');
+    lines.push(`${gains.length} gain(s), ${losses.length} loss(es).`, '');
+    if (gains.length) { lines.push('### Gains — pairs that now clear the line'); table(gains); }
+    if (losses.length) { lines.push('### Losses — pairs that no longer clear it'); table(losses); }
+    if (!rows.length) lines.push('Nothing crossed.', '');
   }
+  lines.push('---', '');
+  lines.push('**On the excerpts.** `lab-corpus/` is gitignored third-party text (md/RERUN.md §1) and');
+  lines.push('this file is committed. The excerpts are capped at a fragment each and appear only');
+  lines.push('because a ruling cannot be reached without seeing the sentence. The machine-readable');
+  lines.push('record in `tests/fixtures/threshold-neighbors.json` carries none — it is IDs and scores.');
+  lines.push('Regenerate with `--excerpt-chars 0` to produce this sheet without source text.', '');
   return `${lines.join('\n')}\n`;
 }
 
