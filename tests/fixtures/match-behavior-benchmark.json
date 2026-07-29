@@ -478,6 +478,189 @@
           "note": "Composition variant, GREEN at freeze — for the wrong reason, which is why it is frozen. The sentence-global denial cue happens to fire on `false` and lands on the right label by accident. After the rewrite the same label must be reached deliberately: the assertion clause has parity zero, and the following clause rejects it. A guard against fixing sc-06 by simply deleting trailing-clause sensitivity."
         }
       ]
+    },
+
+    "clauseMechanics": {
+      "question": "Which of Sol's v2.5.0 stance and co-fire failures are implementation bugs rather than gaps in what a punctuation-based clause model can represent at all?",
+      "ruling": "Five, and only five. Each of these is a rule the release already claimed to have, applied to a case the code does not actually reach: a dash the normalizer disguised as a hyphen, a denylist that only looks backwards, a one-follow-up rule that scans every following clause, a reported-speech branch that can only see a comment if punctuation created a clause to hold it, and an interrogative inversion counted as a denial. Everything else in the review is a limit of the model, is frozen as one in the block below this, and is NOT attempted here — a cue list grown to cover cases nobody adjudicated is how cue lists rot.",
+      "misreading": "a large inbox is a large pool of relationship candidates",
+      "cases": [
+        {
+          "id": "cm-01",
+          "defect": "a",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "no-space em dash reads as an intra-word hyphen",
+          "text": "We discussed our marriage—the AWS provider failed again.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "clauseCount": 1, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "note": "Sol's repro, verbatim. `normalizeText` folds an em dash to an ASCII hyphen, which is right for matching and wrong for splitting: `marriage—the` becomes `marriage-the`, and the splitter's own rule — a hyphen ends a clause only when it is not joining two word characters — then keeps two independent claims inside one clause. The occurrence-local window works exactly as designed on a clause that should not exist."
+        },
+        {
+          "id": "cm-02",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "technical sense established AFTER the alias",
+          "text": "During our marriage the provider for cloud hosting handled our archive.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "note": "Sol's repro, verbatim. `cloud` and `hosting` are both on this alias's denylist and both sit AFTER the occurrence, where `disqualifyingModifier` never looks. English puts a noun's complement after it at least as often as its modifier before it, so a backwards-only denylist can be defeated by word order alone."
+        },
+        {
+          "id": "cm-03",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "post-nominal complement, plural denylist term",
+          "text": "During our marriage the provider of payroll services handled our archive.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54 },
+          "note": "Sol's second illustration of the same defect. `service` is on the denylist and `services` is the word actually written, so this case also fixes the singular-only matching the lookback has always had. `payroll` is on no list and never needs to be — the complement is disqualifying because a listed term is inside it."
+        },
+        {
+          "id": "cm-04",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "trap": "post-nominal complement that is RELATIONAL",
+          "text": "During our marriage the provider for the household was always him.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54 },
+          "note": "GUARD, green at freeze. The same shape as cm-02 with a relational complement instead of a technical one. Post-nominal detection that disqualified on the shape rather than on the denylist would break this, and `provider for the household` is the most ordinary phrasing this entry has."
+        },
+        {
+          "id": "cm-05",
+          "defect": "a",
+          "surface": "stance",
+          "wrapper": "attribution + rejection across a no-space em dash",
+          "text": "He says a large inbox is a large pool of relationship candidates—but he is wrong.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.671, "clauseCount": 1, "negationCount": 1 },
+          "note": "Sol's repro, verbatim, and the same root cause as cm-01 on the other feature — which is the argument for fixing it in the splitter both of them share. `wrong` is counted as a negator inside the assertion clause and then discarded by the reported branch, so the sentence reads as a bare relay. cm-06 is the identical sentence with a semicolon and it is already right."
+        },
+        {
+          "id": "cm-06",
+          "defect": "a",
+          "surface": "stance",
+          "wrapper": "semicolon control for cm-05",
+          "text": "He says a large inbox is a large pool of relationship candidates; but he is wrong.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.671, "clauseCount": 2 },
+          "note": "GUARD, green at freeze. The pair cm-05/cm-06 is what makes the diagnosis a diagnosis: same words, same claim, same verdict owed, and the only difference is which mark the writer typed."
+        },
+        {
+          "id": "cm-07",
+          "defect": "c",
+          "surface": "stance",
+          "wrapper": "attribution + endorsement two clauses away, about something else",
+          "text": "He says a large inbox is a large pool of relationship candidates; the episode then discusses the weather; the forecast is exactly right.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.601, "followUpClause": 2 },
+          "note": "Sol's repro, verbatim. What is endorsed is the forecast. The v2.5.0 release states the rule as “exactly one follow-up, from clauses after the assertion”; the code scans every later clause until a cue fires, which is a different rule that happens to agree on the fixtures that were written."
+        },
+        {
+          "id": "cm-08",
+          "defect": "c",
+          "surface": "stance",
+          "wrapper": "attribution + rejection two clauses away, about something else",
+          "text": "He says a large inbox is a large pool of relationship candidates; the episode then discusses the weather; the forecast is wrong.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.629, "followUpClause": 2 },
+          "note": "Sol's repro, verbatim. The mirror of cm-07, and the pair matters: a fix that only stopped endorsements from reaching across would leave the analyzer crediting the speaker with a correction they made about the weather."
+        },
+        {
+          "id": "cm-09",
+          "defect": "c",
+          "surface": "stance",
+          "wrapper": "attribution + rejection three clauses away, with an inert clause between",
+          "text": "He says a large inbox is a large pool of relationship candidates; the study, however, is wrong.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.585, "followUpClause": 3 },
+          "acceptedCost": true,
+          "note": "ACCEPTED COST, not a repro. The rejection here is genuinely about the reported claim, and the one-clause window loses it because a parenthetical `however` created two clause breaks between the assertion and the verdict. Recorded rather than discovered later: enforcing the stated rule costs this case, and the failure is to Context only, which under-claims rather than over-claims. Frozen as a documented limit in the block below."
+        },
+        {
+          "id": "cm-10",
+          "defect": "d",
+          "surface": "stance",
+          "wrapper": "attribution + coordinated endorsement, no punctuation",
+          "text": "He says a large inbox is a large pool of relationship candidates and he is exactly right.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.637, "clauseCount": 1 },
+          "note": "Sol's repro, verbatim. The speaker adopts the reported reading in the same breath. Follow-up handling can only see a comment that punctuation put in a later clause, so a coordinated one is invisible — and the whole point of the reported branch is that adopting a relayed claim makes it yours."
+        },
+        {
+          "id": "cm-11",
+          "defect": "d",
+          "surface": "stance",
+          "wrapper": "attribution + coordinated rejection, no punctuation",
+          "text": "He says a large inbox is a large pool of relationship candidates and that is false.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.674, "clauseCount": 1 },
+          "note": "The mirror of cm-10, and the reason the fix is written as “a comment after the misreading's own span” rather than as an endorsement rule. Both directions or neither."
+        },
+        {
+          "id": "cm-12",
+          "defect": "d",
+          "surface": "stance",
+          "wrapper": "matrix denial BEFORE the misreading, one clause",
+          "text": "It is false that the following claim holds: a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.601 },
+          "limitDocumented": true,
+          "note": "GUARD AND LIMIT. Sol's colon-governed denial: the humanly correct answer is Supports and the analyzer says Contradicts, because the colon severs the matrix `false` from the claim it governs. It is in THIS block, asserting current behavior, because the cm-10/cm-11 fix scans the assertion clause AFTER the misreading span, and a fix that scanned the whole clause instead would flip this case by accident — moving a limit while appearing to leave it alone."
+        },
+        {
+          "id": "cm-13",
+          "defect": "e",
+          "surface": "stance",
+          "wrapper": "rhetorical interrogative inversion",
+          "text": "Is it not obvious that a large inbox is a large pool of relationship candidates?",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.726, "negationCount": 1 },
+          "note": "Sol's repro, verbatim. `Is it not X?` asserts X. The negator belongs to the inversion, not to the proposition, and counting it flips a plain assertion of the misreading into a denial of it. No irony inference is required and none is being attempted — this is one fixed syntactic frame."
+        },
+        {
+          "id": "cm-14",
+          "defect": "e",
+          "surface": "stance",
+          "wrapper": "rhetorical interrogative inversion, contracted",
+          "text": "Isn't it obvious that a large inbox is a large pool of relationship candidates?",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.683, "negationCount": 1 },
+          "note": "The contracted form of cm-13, in the block so the fix cannot be a literal match on one spelling."
+        },
+        {
+          "id": "cm-15",
+          "defect": "e",
+          "surface": "stance",
+          "wrapper": "declarative control carrying the same negator",
+          "text": "It is not obvious that a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.726 },
+          "note": "GUARD, green at freeze, and the one that keeps the fix narrow. Same words as cm-13 minus the inversion and the question mark, and here the negator really does deny the claim. If this case moves, the fix has become a rule about the word `not` instead of a rule about one interrogative frame."
+        }
+      ]
     }
   }
 }

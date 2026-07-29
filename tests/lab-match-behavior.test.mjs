@@ -95,7 +95,7 @@ test('match-behavior fixture is structurally sound', () => {
   assert.equal(benchmark.schema, 'le-lab.match-behavior/1.0');
   const ids = new Set();
   const blocks = Object.entries(benchmark.blocks);
-  assert.equal(blocks.length, 5, 'The fixture holds the five adjudicated blocks.');
+  assert.equal(blocks.length, 6, 'The fixture holds the six adjudicated blocks.');
   blocks.forEach(([name, block]) => {
     assert.ok(block.question && block.ruling, `${name} states its question and its ruling.`);
     assert.ok(Array.isArray(block.cases) && block.cases.length, `${name} holds cases.`);
@@ -124,6 +124,30 @@ test('match-behavior fixture is structurally sound', () => {
   benchmark.blocks.contextualCoFire.cases.forEach((entry) => {
     assert.ok(entry.alias && entry.canonId, `${entry.id} names its alias and target.`);
     assert.ok(['positive', 'negative'].includes(entry.polarity), `${entry.id} declares its polarity.`);
+  });
+  benchmark.blocks.clauseMechanics.cases.forEach((entry) => {
+    assert.ok(['a', 'b', 'c', 'd', 'e'].includes(entry.defect),
+      `${entry.id} names which of the five adjudicated defects it belongs to.`);
+    assert.ok(['co-fire', 'stance'].includes(entry.surface), `${entry.id} declares its surface.`);
+    // Every stance case in this block varies the wrapper around one indexed
+    // misreading, exactly as stanceComposition does, so a case cannot quietly
+    // reword the proposition and measure two things at once.
+    if (entry.surface === 'stance') {
+      assert.ok(STANCE_LABELS.has(entry.expected.stance), `${entry.id} expects a real stance label.`);
+      assert.ok(
+        normalizeForCompare(entry.text).includes(normalizeForCompare(benchmark.blocks.clauseMechanics.misreading)),
+        `${entry.id} carries the block's misreading verbatim.`,
+      );
+    } else {
+      assert.ok(entry.alias, `${entry.id} names its alias.`);
+      assert.ok(['positive', 'negative'].includes(entry.polarity), `${entry.id} declares its polarity.`);
+    }
+  });
+  // Every one of the five has at least one case, so a defect cannot be declared
+  // fixed by a commit that never wrote a case for it.
+  ['a', 'b', 'c', 'd', 'e'].forEach((defect) => {
+    assert.ok(benchmark.blocks.clauseMechanics.cases.some((entry) => entry.defect === defect),
+      `Defect ${defect} has no case in clauseMechanics.`);
   });
 });
 
@@ -338,6 +362,39 @@ test('stance survives negation scope, quotation, attribution, and their composit
   }
   assert.equal(failures.length, 0,
     `${failures.length} stance-composition case(s) mislabel who is claiming what:\n${failures.join('\n')}`);
+});
+
+test('a clause boundary is where the writer put one, and a comment attaches to what it is about', async () => {
+  const failures = [];
+  for (const entry of benchmark.blocks.clauseMechanics.cases) {
+    const { matches, gatedOut, reasonCode } = await analyzeCase(entry.text);
+
+    if (entry.surface === 'co-fire') {
+      const credible = matches.some((row) => row.canonId === entry.canonId);
+      if (credible !== entry.expected.credibleMatch) {
+        failures.push(
+          `  [${entry.id}] defect ${entry.defect} (${entry.trap}): expected credibleMatch=`
+          + `${entry.expected.credibleMatch}, got ${credible}`
+          + `${gatedOut ? ` (gated out: ${reasonCode})` : ''} — ${entry.text}`,
+        );
+      }
+      continue;
+    }
+
+    const match = matches.find((row) => row.canonId === entry.canonId);
+    if (entry.expected.mapped && !match) {
+      failures.push(`  [${entry.id}] ${entry.canonId} did not map at all (gatedOut=${gatedOut}) — ${entry.text}`);
+      continue;
+    }
+    if (match?.alignment?.label !== entry.expected.stance) {
+      failures.push(
+        `  [${entry.id}] defect ${entry.defect} (${entry.wrapper}): expected ${entry.expected.stance}, `
+        + `got ${match?.alignment?.label} (score ${match?.score}) — ${entry.text}`,
+      );
+    }
+  }
+  assert.equal(failures.length, 0,
+    `${failures.length} clause-mechanics case(s) disagree with the ruling:\n${failures.join('\n')}`);
 });
 
 test('the irony limit is stated as a limit and not quietly counted as a pass', () => {

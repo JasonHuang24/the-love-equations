@@ -153,6 +153,12 @@ export const SCORING_CONFIG = Object.freeze({
   // second half of a compound cannot hide the modifier: in "cloud-based
   // provider" the disqualifying token is two positions back, not one.
   contextualAliasModifierLookback: 3,
+  // NEW at v2.6.0. How far past a contextual-alias occurrence the denylist
+  // scans, once the token immediately after it is a complementizer. Four covers
+  // "for cloud hosting" and "of payroll services" — a determiner, an adjective
+  // and a head noun — and stops well before the verb, so the complement is what
+  // is being read and not the rest of the clause.
+  contextualAliasComplementLookahead: 4,
   // NEW at v2.5.0, SECONDARY from v2.6.0. The shortest stem that may stand as
   // the "independent canon concept" promoting a contextual alias. Four,
   // matching minPhraseLength, which is this file's existing answer to how short
@@ -1681,8 +1687,11 @@ export function classifyDomainRelevance(units, overrides = new Map()) {
  * no grammar is parsed, which keeps this deterministic and cheap.
  *
  * A hyphen ends a clause only when it is NOT joining two word characters. That
- * one rule keeps "cloud-based" inside a single clause while still breaking on
- * an em dash between clauses, which normalizeText has already folded to "-".
+ * one rule keeps "cloud-based" inside a single clause while still breaking on a
+ * spaced dash. Callers pass `normalizeForClauses` output rather than plain
+ * normalized text, which is what makes the rule safe for an UNSPACED em dash
+ * too — see that function for why the distinction has to be made before this
+ * point rather than inside it.
  */
 function clauseSegments(normalized) {
   const words = [];
@@ -1717,6 +1726,25 @@ function clauseSegments(normalized) {
   }
   flushClause();
   return { words, clauses };
+}
+
+/**
+ * The passage as the clause splitter needs to see it.
+ *
+ * `normalizeText` folds em and en dashes to an ASCII hyphen. That is right for
+ * matching — a reader who types "the 7-7 rule" should find the entry titled
+ * "The 7–7 Rule" — and wrong for splitting, because it makes an unspaced
+ * "marriage—the" indistinguishable from an intra-word "cloud-based". v2.5.0's
+ * splitter rule is correct and was simply being handed text that had already
+ * thrown the answer away.
+ *
+ * Spacing the dash BEFORE that fold keeps both. The splitter sees a hyphen that
+ * is not joining two word characters and ends the clause; every token stream is
+ * unchanged, because a dash already terminated a token whichever form it took;
+ * and nothing downstream of matching sees this text at all.
+ */
+function normalizeForClauses(value) {
+  return normalizeText(String(value ?? '').replace(/[–—]/gu, ' - '));
 }
 
 /**
@@ -1801,6 +1829,14 @@ function relationalCoFire(unit, occurrence, segments, aliasTokens, admissionDist
 }
 
 /**
+ * The two prepositions that introduce a complement of the noun rather than a
+ * new adjunct: "provider FOR cloud hosting", "provider OF payroll services".
+ * Deliberately not `in`, `on`, `with` or `to`, which far more often start a
+ * phrase about the sentence than about the noun that precedes them.
+ */
+const COMPLEMENT_PREPOSITIONS = new Set(['for', 'of']);
+
+/**
  * The technical modifier disqualifying ONE occurrence, if there is one.
  *
  * Secondary defense, and second for a reason. The window test above is what
@@ -1816,16 +1852,46 @@ function relationalCoFire(unit, occurrence, segments, aliasTokens, admissionDist
  */
 function disqualifyingModifier(occurrence, segments, modifiers) {
   if (!modifiers.length) return null;
-  const lookback = SCORING_CONFIG.contextualAliasModifierLookback;
-  const preceding = segments.words
-    .filter((word) => word.index < occurrence.index && word.index >= occurrence.index - lookback)
+
+  // A denylist term matches its own plural. `service` is on the list and
+  // `services` is what people write; a list that could be defeated by an `s`
+  // would be a list about spelling rather than about sense.
+  const carries = (tokens) => {
+    const run = tokens.join(' ');
+    return modifiers.find((modifier) => tokens.includes(modifier)
+      || tokens.includes(`${modifier}s`)
+      || (modifier.includes(' ') && (run.includes(modifier) || run.includes(`${modifier}s`)))) || null;
+  };
+  const tokensIn = (from, to) => segments.words
+    .filter((word) => word.index >= from && word.index <= to && word.clause === occurrence.clause)
     .map((word) => word.token);
-  if (!preceding.length) return null;
-  const window = preceding.join(' ');
-  // Multiword modifiers ("health care") are matched as a contiguous token run,
-  // so the same boundary rule covers one-word and two-word entries alike.
-  return modifiers.find((modifier) => preceding.includes(modifier)
-    || (modifier.includes(' ') && window.includes(modifier))) || null;
+
+  // Backwards: the modifier in front of the noun. Multiword entries ("health
+  // care") are matched as a contiguous run, so one rule covers both shapes.
+  const lookback = SCORING_CONFIG.contextualAliasModifierLookback;
+  const before = carries(tokensIn(occurrence.index - lookback, occurrence.index - 1));
+  if (before) return before;
+
+  /*
+   * Forwards: the complement AFTER the noun, new at v2.6.0.
+   *
+   * English puts a noun's complement after it at least as often as its modifier
+   * before it — "the provider for cloud hosting" says exactly what "the cloud
+   * provider" says — so a backwards-only denylist can be walked past by word
+   * order alone, with no vocabulary the list is missing.
+   *
+   * Narrow on purpose. It fires only on a complement the alias actually takes,
+   * introduced by `for` or `of` immediately after it, and only when a listed
+   * term sits inside that complement. "a provider for the household" is the
+   * same shape with a relational complement and must stay promoted, so the
+   * denylist and not the shape is what disqualifies.
+   */
+  const [complementizer] = tokensIn(occurrence.index + 1, occurrence.index + 1);
+  if (!COMPLEMENT_PREPOSITIONS.has(complementizer)) return null;
+  return carries(tokensIn(
+    occurrence.index + 2,
+    occurrence.index + 1 + SCORING_CONFIG.contextualAliasComplementLookahead,
+  ));
 }
 
 /**
@@ -1859,8 +1925,11 @@ function promotedAliases(unit, entry, normalized, admissionDistinctiveShared) {
     }
     if (!entry._contextualAliases.has(alias)) continue;
 
-    // Only pay for the split when a contextual alias is actually present.
-    if (!segments) segments = clauseSegments(normalized);
+    // Only pay for the split when a contextual alias is actually present. The
+    // splitter gets its own normalization of the ORIGINAL text: an unspaced em
+    // dash separates two claims and `normalized` has already folded it to
+    // something indistinguishable from an intra-word hyphen.
+    if (!segments) segments = clauseSegments(normalizeForClauses(unit.text));
     const modifiers = entry._contextualAliases.get(alias);
     const aliasTokens = new Set(tokenize(alias));
     const occurrences = segments.words.filter((word) => word.token === alias);
@@ -2075,6 +2144,43 @@ function quotedSpans(normalized) {
 }
 
 /**
+ * The interrogative inversion that asserts rather than asks.
+ *
+ * "Is it not obvious that X?", "Isn't it true that X?" — the negator belongs to
+ * the frame, not to X. Anchored to the start of the clause and paired with a
+ * question mark by its only caller, because the same words mid-sentence
+ * ("she asked whether it is not obvious") are doing something else entirely.
+ * One frame, matched literally. It is not the beginning of question semantics.
+ */
+const RHETORICAL_INVERSION_CUE = new RegExp(
+  '^(?:'
+  + '(?:is|are|was|were|does|do|did)\\s+(?:it|that|this|there)\\s+not'
+  + "|(?:isn't|aren't|wasn't|weren't|doesn't|don't|didn't)\\s+(?:it|that|this|there)"
+  + ')\\b',
+);
+
+/**
+ * The part of the assertion clause that comes AFTER the misreading it carries.
+ *
+ * "He says [misreading] and he is exactly right" — the endorsement is in the
+ * same clause as the claim, and the only thing separating them is where the
+ * claim stops. Located by the last word the clause shares with the entry's own
+ * misreading surface, so a cue sitting BEFORE the claim — the matrix `false` in
+ * "It is false that …: [misreading]" — is never mistaken for a comment on it.
+ *
+ * Returns '' when the clause ends with the misreading, which is the ordinary
+ * case and means there is no in-clause comment to find.
+ */
+function afterMisreading(clauseText, wanted) {
+  const words = String(clauseText || '').split(/\s+/).filter(Boolean);
+  let last = -1;
+  words.forEach((word, index) => {
+    if (tokenize(word).some((token) => wanted.has(token))) last = index;
+  });
+  return last === -1 ? '' : words.slice(last + 1).join(' ');
+}
+
+/**
  * Where the misreading sits in the passage, and what the passage does around it.
  *
  * This is the whole of the v2.5.0 stance change. The old model asked two
@@ -2092,7 +2198,7 @@ function quotedSpans(normalized) {
  */
 function misreadingScope(text, misreadingTokens) {
   const normalized = normalizeText(text);
-  const segments = clauseSegments(normalized);
+  const segments = clauseSegments(normalizeForClauses(text));
   const clauses = segments.clauses.filter((clause) => clause.text);
   const wanted = new Set(misreadingTokens || []);
 
@@ -2116,7 +2222,24 @@ function misreadingScope(text, misreadingTokens) {
   // assertion; a negator in a trailing clause is negating that clause and has
   // nothing to do with this one.
   const negationCues = assertion.text.match(NEGATION_PARITY_CUES) || [];
-  const negationParity = negationCues.length % 2 === 1 ? 'odd' : 'even';
+  /*
+   * One negator is discounted when it belongs to a rhetorical inversion rather
+   * than to the proposition: "Is it not obvious that X?" asserts X, and
+   * counting its `not` turns a plain assertion of a misreading into a denial of
+   * it. New at v2.6.0.
+   *
+   * As narrow as the case: it needs BOTH the interrogative frame at the start
+   * of the assertion clause AND a question mark on the passage. The declarative
+   * "It is not obvious that X" keeps its negator and keeps denying, which is
+   * the guard that stops this from becoming a rule about the word `not`. No
+   * general question semantics are implied and none should be read in.
+   */
+  const rhetoricalInversion = /\?\s*$/.test(String(text || '').trim())
+    && RHETORICAL_INVERSION_CUE.test(assertion.text);
+  const negationCount = rhetoricalInversion
+    ? Math.max(0, negationCues.length - 1)
+    : negationCues.length;
+  const negationParity = negationCount % 2 === 1 ? 'odd' : 'even';
 
   // Attribution governs forward, so it counts in the assertion clause or any
   // clause before it — never one after, which would be commentary instead.
@@ -2134,17 +2257,43 @@ function misreadingScope(text, misreadingTokens) {
     return shared >= SCORING_CONFIG.minQuotedAssertionTokens && QUOTED_ASSERTION_VERBS.test(span);
   }) || null;
 
-  // Exactly one follow-up, and qualification outranks the other two: a speaker
-  // who half-withdraws a claim has taken a position that is neither of them.
-  let followUp = { kind: 'none', cue: null, clause: null };
-  for (const clause of following) {
-    const qualification = clause.text.match(QUALIFICATION_CUES);
-    if (qualification) { followUp = { kind: 'qualification', cue: qualification[0], clause: clause.index }; break; }
-    const rejection = clause.text.match(REJECTION_CUES);
-    if (rejection) { followUp = { kind: 'rejection', cue: rejection[0], clause: clause.index }; break; }
-    const endorsement = clause.text.match(ENDORSEMENT_CUES);
-    if (endorsement) { followUp = { kind: 'endorsement', cue: endorsement[0], clause: clause.index }; break; }
-  }
+  /*
+   * The follow-up: what the passage does with the claim once it has stated it.
+   *
+   * Qualification outranks the other two, because a speaker who half-withdraws
+   * a claim has taken a position that is neither an endorsement nor a denial.
+   *
+   * Two things changed at v2.6.0, both of them making the code do what the
+   * v2.5.0 release said it already did:
+   *
+   *   - EXACTLY ONE CLAUSE is examined, the one immediately after the
+   *     assertion. The old loop scanned every later clause until some cue
+   *     fired, so "…; the episode then discusses the weather; the forecast is
+   *     exactly right" credited the speaker with endorsing the misreading on
+   *     the strength of a remark about the forecast. The cost is a rejection
+   *     separated from its claim by an inert clause, which now reads as no
+   *     follow-up — an under-claim, and frozen as a limit.
+   *   - The assertion clause's OWN TAIL is read when no later clause exists to
+   *     carry the comment: "He says X and he is exactly right" has no
+   *     punctuation, so there was nothing for the old rule to look at. Scanned
+   *     strictly AFTER the misreading's own span, so a cue that is part of the
+   *     claim cannot be read as a verdict on it — which is also what keeps the
+   *     colon-governed "It is false that …: X" from flipping by accident.
+   */
+  const cueIn = (source, clauseIndex) => {
+    const qualification = source.match(QUALIFICATION_CUES);
+    if (qualification) return { kind: 'qualification', cue: qualification[0], clause: clauseIndex };
+    const rejection = source.match(REJECTION_CUES);
+    if (rejection) return { kind: 'rejection', cue: rejection[0], clause: clauseIndex };
+    const endorsement = source.match(ENDORSEMENT_CUES);
+    if (endorsement) return { kind: 'endorsement', cue: endorsement[0], clause: clauseIndex };
+    return null;
+  };
+
+  const [nextClause] = following;
+  const followUp = (nextClause && cueIn(nextClause.text, nextClause.index))
+    || cueIn(afterMisreading(assertion.text, wanted), assertion.index)
+    || { kind: 'none', cue: null, clause: null };
 
   const excerpt = (value) => String(value || '').slice(0, SCORING_CONFIG.stanceScopeExcerptChars);
   return {
@@ -2154,7 +2303,14 @@ function misreadingScope(text, misreadingTokens) {
     trace: {
       clauseCount: clauses.length,
       assertionClause: { index: assertion.index, excerpt: excerpt(assertion.text) },
-      negation: { count: negationCues.length, parity: negationParity, cues: negationCues.slice(0, 4) },
+      negation: {
+        count: negationCount,
+        parity: negationParity,
+        cues: negationCues.slice(0, 4),
+        // Published because it is the only way to tell a discounted inversion
+        // from a sentence that simply had one fewer negator in it.
+        rhetoricalInversion,
+      },
       quotation: {
         spanCount: spans.length,
         assertionBearing: Boolean(quotedAssertion),
