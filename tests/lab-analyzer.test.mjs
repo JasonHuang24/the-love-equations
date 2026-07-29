@@ -769,7 +769,7 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
     text: 'The sky is blue. Water freezes at zero degrees Celsius.',
   }), REAL_CANON);
   assert.equal(noDomain.metrics.claimLikeSegments, 0);
-  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.2');
+  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.3');
   assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.1');
   assert.equal(noDomain.coverage.mappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.unmappedClaimSegmentSharePct, null);

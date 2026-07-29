@@ -7,7 +7,7 @@
  * Contract:
  *   NormalizedDocument (le-lab.normalized-document/1.0)
  *     -> analyzeDocument(document, canonIndex, { domainOverrides })
- *     -> AnalysisResult (le-lab.analysis/2.2)
+ *     -> AnalysisResult (le-lab.analysis/2.3)
  *
  * The browser runs this module in a worker when available. Node fixture tests
  * import the same functions; there is no second test-only implementation.
@@ -19,13 +19,22 @@
  * data loss.
  */
 
-export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.2';
+// Bumped to 2.3 at v2.3.0 because that release changes what the analyzer
+// DECIDES, not only what it reports: the domain-relevance gate learned the
+// dating-commentary/seduction register (benchmark append #2), so the same
+// document can now yield a different analyzed population. v2.2.0 was a
+// provenance-only bump and deliberately did not move this number; this one is
+// behavioral, and a consumer must be able to tell the two apart from the
+// schema string alone.
+export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.3';
 // Bumped to 2.1 because the queue object itself now carries a provenance
 // block, so a queue lifted out of an analysis is self-describing on its own.
+// Held at 2.1 through v2.3.0: the gate change alters how many items reach the
+// queue, but not the shape of a queue item.
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.2.0';
+export const ANALYZER_VERSION = '2.3.0';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -357,6 +366,78 @@ const RELATIONAL_OUTCOME_FRAMES = Object.freeze([
     decisive: false,
     test: (text) => /\b(?:he|she|they|this (?:man|woman|person)|that (?:man|woman|person)|someone)\b.{0,24}\b(?:is|seems?|looks?)\s+(?:so |very )?(?:hot|beautiful|handsome|sexy)\b/i.test(text)
       || /\b(?:hot|beautiful|handsome|sexy)\b.{0,24}\b(?:to|for)\s+(?:him|her|them|someone|people)\b/i.test(text),
+  },
+  /*
+   * Dating-commentary / seduction register (append #2, 2026-07-29).
+   *
+   * The canon alias pass added vocabulary the gate then refused to let reach
+   * the matcher: "He spent two years learning game and it changed how women
+   * responded to him" was rejected `no-human-relational-frame`, which is the
+   * exact sentence the `game` alias was added to catch. The blocker was never
+   * the alias; it was that this register names relationship dynamics through
+   * craft, idiom, and screening vocabulary rather than through the outcome
+   * nouns the outcome frames were built from.
+   *
+   * All four are deliberately NON-DECISIVE. A decisive frame would bypass the
+   * affirmative non-domain veto, and every term here is polysemous — game,
+   * league, filtered out, provider all have loud non-relationship senses. Left
+   * non-decisive they retain through `plausibleRelationalAnchor`, which still
+   * defers to sports/computing/corporate evidence. That is why this append
+   * moves no SCORING_CONFIG value.
+   */
+  {
+    id: 'seduction-craft-register',
+    label: 'Courtship craft, pickup, or approach-skill register',
+    weight: 2.5,
+    decisive: false,
+    test(text) {
+      // Vocabulary that has no non-relationship sense: it fires alone.
+      const unambiguous = /\b(?:pick-?up artists?|pua\b|pick-?up (?:game|community|industry|scene|artistry)|day ?game\b|night ?game\b|cold approach\w*|approach anxiety|social calibration|inner game|outer game|negging|peacocking|(?:running|runs?|ran|spitting|spits?|learning|learn(?:ed|s)?|studying|studied|tighten(?:ed|ing|s)?) (?:his |her |their |my |your |up )*game\b)/i;
+      // "game"/"rizz" alone mean nothing; paired with a relational object they do.
+      const ambiguousMarker = /\b(?:games?|rizz|charisma)\b/i;
+      const relationalObject = /\b(?:women|woman|men|man|girls?|guys?|dating|dates?|attract\w*|seduc\w*|flirt\w*|romantic|relationships?|mixed signals|instead of saying|what (?:she|he) (?:actually |really )?wants|hard to get|leading (?:him|her) on)\b/i;
+      return unambiguous.test(text) || frameHas(text, ambiguousMarker, relationalObject);
+    },
+  },
+  {
+    id: 'mate-value-mismatch',
+    label: 'Mate-value mismatch idiom (league, weight class, settling)',
+    weight: 2.5,
+    decisive: false,
+    test: (text) => frameHas(
+      text,
+      /\b(?:out of (?:his|her|their|my|your) league|in (?:his|her|their|my) league|punch(?:ing|es|ed)? (?:above|below) (?:his|her|their|my|your) weight|settl(?:e|es|ed|ing) for\b|dat(?:e|es|ing) (?:across|up|down)\b|marry(?:ing)? (?:up|down)\b)/i,
+      /\b(?:women|woman|men|man|girls?|guys?|dating|dates?|marri\w*|attract\w*|boyfriends?|girlfriends?|partners?|hotter|taller|shorter|richer)\b/i,
+    ),
+  },
+  {
+    id: 'partner-screening-filter',
+    label: 'Screening or filtering criteria applied to candidate partners',
+    weight: 2.5,
+    decisive: false,
+    test(text) {
+      const population = /\b(?:men|women|man|woman|guys?|girls?|profiles?|matches|daters?|dating|swipe\w*)\b/i;
+      const filtering = /\b(?:filter\w*|screen\w*|weed\w*|sort\w*|rule\w*)\s+(?:out|through)\b/i;
+      const criterion = /\b(?:height (?:filter|requirement|cutoff|minimum)|under (?:six|6) feet|over (?:six|6) feet|six feet tall|minimum height|deal ?breakers?)\b/i;
+      // Both branches require the criterion or the filtering act to land near a
+      // partner population, so recruiting and spam filtering stay out.
+      return (filtering.test(text) || criterion.test(text)) && population.test(text);
+    },
+  },
+  {
+    id: 'provisioning-role',
+    label: 'Provider or breadwinner role expectation',
+    weight: 2.5,
+    decisive: false,
+    test(text) {
+      // "provider" is overwhelmingly a vendor word outside this register.
+      if (/\b(?:insurance|health(?:care)?|medical|cloud|internet|broadband|hosting|utilit(?:y|ies)|energy|service|payment|wireless|cellular|software|api|vendor|subscriptions?|plans?)\b/i.test(text)) return false;
+      return frameHas(
+        text,
+        /\b(?:a provider|male provider|provider role|provider expectations?|breadwinner\w*|provisioning)\b/i,
+        /\b(?:household|famil(?:y|ies)|children|kids|wife|wives|husbands?|marriage|marry\w*|stay-at-home|rais(?:e|es|ed|ing)\b)\b/i,
+      );
+    },
   },
   {
     id: 'named-le-framework',
