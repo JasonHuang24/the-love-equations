@@ -135,6 +135,29 @@ reason code and frame evidence, which *are* published. If a future pass wants cl
 ignored passages, that is an additive change to `le-lab.analysis` and belongs to a release that is
 allowed to move the analysis contract.
 
+> **CORRECTION, v2.5.0 (2026-07-29).** The "impact: none" claim above does not stand, and Sol's
+> verification review was right to contest it. Two things were wrong with it.
+>
+> First, the framing. This was written as an *adapter* limitation — as though the values did not
+> exist and recomputing them was the only alternative. They existed. `detectClaimUnits` computes
+> `claimLikelihood`, `isClaimLike`, `sourceBoundary` and `boundedContext` for every unit *before* the
+> gate rules on it, and `ignoredPassageRecord` then discarded them. Nothing needed inventing; the
+> analyzer had them in hand and threw them away. The correct fix was upstream, and refusing to
+> recompute downstream was right for a reason that turned out not to be the operative one.
+>
+> Second, the routing claim. `segmentation-error` is precisely a dispute about where a passage's
+> boundaries fell, and `sourceBoundary` is the field that settles it. Telling a reviewer filing that
+> disposition that the boundary data was unpublished was the one case where the omission bit hardest.
+> Claim grammar matters for the same reason: a passage can be set aside as off-domain and still be
+> perfectly claim-like, and without `claimLikelihood` a reviewer cannot tell which of the two verdicts
+> they are arguing with.
+>
+> Fixed in v2.5.0. `ignoredPassages[]` now publishes every pre-retrieval field, plus `decisiveReason`,
+> the domain and non-domain scores, and per-frame scores; the exporter reads them across and
+> `unpublishedFields.fields` is empty. **The candidate trace remains unavailable** with reason
+> `retrieval-not-run` — that part of the section above was correct and is unchanged. See
+> `md/lab-v2.5.0-release.md` §4.
+
 ### 1.5 How the trace is collected
 
 On demand, cached per analysis, not kept for every run.

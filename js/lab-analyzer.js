@@ -1315,22 +1315,61 @@ export const DOMAIN_REASON_LABELS = Object.freeze({
   'user-override-exclude': 'Excluded by the visitor for this session',
 });
 
+/**
+ * What the analyzer knows about a passage it set aside.
+ *
+ * A set-aside passage is decided before any canon entry is scored, so nothing
+ * about retrieval belongs here — no candidates, no scores, no trace. That
+ * absence is real and is reported as such downstream.
+ *
+ * Everything BELOW retrieval is a different matter, and until v2.5.0 this
+ * record threw most of it away. Claim likelihood, the claim-grammar verdict,
+ * the source offsets, the anaphoric bridge and the per-frame scores were all
+ * computed for this unit before the gate ruled on it, and then dropped — so a
+ * reviewer disputing a `segmentation-error` was told the boundary data was
+ * unpublished when the analyzer had it in hand. Published now, unchanged, with
+ * no recomputation: these are the same values the retained rows carry.
+ */
 function ignoredPassageRecord(unit) {
   const relevance = unit.domainRelevance;
+  const frames = relevance.frames || {};
   return {
     segmentId: unit.id,
     parentSegmentId: unit.parentSegmentId,
     location: {
       segmentIndex: unit.segmentIndex,
+      sentenceIndex: unit.sentenceIndex ?? null,
       speaker: unit.speaker,
       startTime: unit.startTime,
       endTime: unit.endTime,
     },
     excerpt: unit.text,
     wordCount: unit.wordCount,
+    // Claim grammar, decided independently of the domain gate. A passage can be
+    // set aside as off-domain and still be perfectly claim-like, and a reviewer
+    // arguing the gate was wrong needs to see which of the two is which.
+    claimLikelihood: unit.claimLikelihood ?? null,
+    isClaimLike: unit.isClaimLike ?? null,
+    machineClaimLike: unit.machineClaimLike ?? null,
+    // Where the passage came from in the source text. This is the field a
+    // segmentation-error report is actually about.
+    sourceBoundary: unit.sourceBoundary || null,
+    boundedContext: unit.boundedContext || null,
     localStatus: relevance.localStatus,
     reasonCode: relevance.reasonCode,
     reasonLabel: DOMAIN_REASON_LABELS[relevance.reasonCode] || relevance.reasonCode,
+    decisiveReason: relevance.decisiveReason ?? null,
+    // The full score summary, not just the reason code. "No relational frame"
+    // and "a relational frame that scored 2.5 against a threshold of 4" are
+    // different complaints and were previously indistinguishable.
+    domainScore: relevance.score ?? null,
+    nonDomainScore: relevance.nonDomainScore ?? null,
+    frameScores: {
+      participant: { detected: Boolean(frames.participant?.detected), score: frames.participant?.score ?? 0 },
+      outcome: { detected: Boolean(frames.outcome?.detected), score: frames.outcome?.score ?? 0 },
+      mechanism: { detected: Boolean(frames.mechanism?.detected), score: frames.mechanism?.score ?? 0 },
+      nonDomain: { detected: Boolean(frames.nonDomain?.detected), score: frames.nonDomain?.score ?? 0 },
+    },
     frameEvidence: relevance.evidence
       .filter((item) => item.frame !== 'decision')
       .slice(0, SCORING_CONFIG.maxIgnoredFrameEvidence)

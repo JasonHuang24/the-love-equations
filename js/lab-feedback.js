@@ -278,29 +278,39 @@ function claimUnitFromSegment(segment, analysis) {
 }
 
 /*
- * A set-aside passage never entered retrieval, so several unit fields the
- * analysis publishes for retained passages are simply not published for it.
- * They are reported as null with a stated reason rather than recomputed here —
- * a number this module invented would be indistinguishable from one the
+ * A set-aside passage never entered retrieval, and this module still invents
+ * nothing: a number produced here would be indistinguishable from one the
  * analyzer produced, and only one of those is evidence.
+ *
+ * What changed at le-lab.analysis/2.5 is which fields the analyzer publishes.
+ * Claim likelihood, the claim-grammar verdict, the source offsets and the
+ * anaphoric bridge were always computed before the gate ruled, and are now
+ * carried on the ignored-passage record — so they are read across rather than
+ * reported as unpublished. `predecessor` follows from boundedContext and is
+ * therefore resolvable too.
+ *
+ * Nothing about retrieval is recoverable and none is claimed. The candidate
+ * trace stays unavailable with reason `retrieval-not-run`, which is a statement
+ * about the world and not about this adapter.
  */
-function claimUnitFromPassage(passage) {
+function claimUnitFromPassage(passage, analysis) {
+  const boundedContext = passage.boundedContext || null;
   return {
     segmentId: passage.segmentId,
     parentSegmentId: passage.parentSegmentId ?? null,
     excerpt: passage.excerpt,
     wordCount: passage.wordCount,
-    claimLikelihood: null,
-    isClaimLike: null,
+    claimLikelihood: passage.claimLikelihood ?? null,
+    isClaimLike: passage.isClaimLike ?? null,
     speaker: passage.location?.speaker ?? null,
     startTime: passage.location?.startTime ?? null,
     endTime: passage.location?.endTime ?? null,
-    sourceBoundary: null,
-    boundedContext: null,
-    predecessor: null,
+    sourceBoundary: passage.sourceBoundary || null,
+    boundedContext,
+    predecessor: boundedContext ? predecessorFor(analysis, boundedContext) : null,
     unpublishedFields: {
-      fields: ['claimLikelihood', 'isClaimLike', 'sourceBoundary', 'boundedContext', 'predecessor'],
-      reason: 'The analysis publishes these for retained passages only; a set-aside passage is represented by its gate decision (le-lab.analysis/2.4 domainRelevance.ignoredPassages).',
+      fields: [],
+      reason: 'The analyzer publishes every pre-retrieval field for set-aside passages from le-lab.analysis/2.5 onward. Retrieval-stage evidence remains unavailable and is reported separately as retrieval-not-run.',
     },
   };
 }
@@ -333,20 +343,27 @@ function domainDecisionFromSegment(segment) {
   };
 }
 
+/*
+ * The gate decision for a set-aside passage, at the same depth as a retained
+ * one. `score`, `nonDomainScore` and `frames` used to be flat nulls, which made
+ * "no relational frame was detected" and "a relational frame scored 2.5 against
+ * a threshold of 4" the same export — two different complaints, one of which is
+ * about the gate's vocabulary and one about its threshold.
+ */
 function domainDecisionFromPassage(passage) {
   return {
     status: 'irrelevant',
     localStatus: passage.localStatus ?? null,
     reasonCode: passage.reasonCode ?? null,
     reasonLabel: passage.reasonLabel ?? null,
-    decisiveReason: passage.reasonCode ?? null,
-    score: null,
-    nonDomainScore: null,
-    frames: null,
+    decisiveReason: passage.decisiveReason ?? passage.reasonCode ?? null,
+    score: passage.domainScore ?? null,
+    nonDomainScore: passage.nonDomainScore ?? null,
+    frames: passage.frameScores || null,
     frameEvidence: passage.frameEvidence || null,
     contextHelp: null,
     override: passage.overridden ? 'exclude' : null,
-    machineClaimLike: null,
+    machineClaimLike: passage.machineClaimLike ?? null,
   };
 }
 
@@ -570,7 +587,7 @@ export function buildMappingFeedback({
 
   const claimUnit = located.segment
     ? claimUnitFromSegment(located.segment, analysis)
-    : claimUnitFromPassage(located.passage);
+    : claimUnitFromPassage(located.passage, analysis);
   const domainDecision = located.segment
     ? domainDecisionFromSegment(located.segment)
     : domainDecisionFromPassage(located.passage);

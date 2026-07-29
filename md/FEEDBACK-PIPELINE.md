@@ -56,6 +56,14 @@ The file carries:
 Nothing in the file is re-derived. If a value is not published by one of those two analyzer outputs,
 it is reported as unavailable with the reason, never reconstructed.
 
+**Set-aside rows, from `le-lab.analysis/2.5`.** A passage the domain gate set aside carries the same
+`claimUnit` and `domainDecision` depth as a retained one: claim likelihood, the claim-grammar verdict,
+source offsets, the bounded-context bridge and its predecessor, the domain and non-domain scores, and
+per-frame scores. Those values were always computed before the gate ruled; earlier releases discarded
+them at the analyzer and then reported them as unpublished at the exporter, which read as a limit of
+the pipeline when it was a limit of one record. `candidateTrace` stays unavailable for these rows
+with reason `retrieval-not-run`, and that one is not a gap to close — retrieval genuinely did not run.
+
 ### The trace has to reproduce the row, or there is no file
 
 Before anything is written, the exporter rebuilds the ledger row out of the trace's own candidates —

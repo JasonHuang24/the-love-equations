@@ -148,16 +148,62 @@ test('the trace includes the candidates the display caps hid, with their fate na
 test('a set-aside passage reports retrieval-not-run rather than an empty trace', () => {
   const feedback = flag(setAside.segmentId, { review: { disposition: 'domain-gate-error' } });
   assert.equal(feedback.row, 'set-aside');
-  assert.equal(feedback.candidateTrace.available, false);
-  assert.equal(feedback.candidateTrace.reason, 'retrieval-not-run');
   assert.equal(feedback.domainDecision.status, 'irrelevant');
   assert.equal(feedback.domainDecision.reasonCode, setAside.reasonCode);
   assert.equal(feedback.domainDecision.reasonLabel, setAside.reasonLabel);
   assert.equal(feedback.claimUnit.excerpt, setAside.excerpt);
-  // Unavailable, and it says which fields and why, rather than inventing them.
-  assert.equal(feedback.claimUnit.claimLikelihood, null);
-  assert.ok(feedback.claimUnit.unpublishedFields.fields.includes('claimLikelihood'));
-  assert.ok(feedback.claimUnit.unpublishedFields.reason.includes('ignoredPassages'));
+
+  // Retrieval genuinely did not run for this row. That absence is real, is
+  // stated, and is the one thing this pass did NOT change.
+  assert.equal(feedback.candidateTrace.available, false);
+  assert.equal(feedback.candidateTrace.reason, 'retrieval-not-run');
+});
+
+test('a set-aside passage carries every field the analyzer computed before the gate ruled', () => {
+  const feedback = flag(setAside.segmentId, { review: { disposition: 'segmentation-error' } });
+
+  // Claim grammar is decided independently of the domain gate, so a passage can
+  // be set aside as off-domain and still be perfectly claim-like. Until 2.5
+  // these were exported as null and a reviewer could not tell which verdict
+  // they were disputing.
+  assert.equal(feedback.claimUnit.claimLikelihood, setAside.claimLikelihood);
+  assert.ok(Number.isFinite(feedback.claimUnit.claimLikelihood));
+  assert.equal(feedback.claimUnit.isClaimLike, setAside.isClaimLike);
+  assert.equal(typeof feedback.claimUnit.isClaimLike, 'boolean');
+
+  // The field a segmentation-error report is actually about.
+  assert.ok(feedback.claimUnit.sourceBoundary, 'source offsets are published');
+  assert.equal(feedback.claimUnit.sourceBoundary.parentSegmentId, setAside.parentSegmentId);
+  assert.ok(Number.isFinite(feedback.claimUnit.sourceBoundary.start));
+  assert.ok(Number.isFinite(feedback.claimUnit.sourceBoundary.end));
+
+  // The gate's arithmetic, not just its verdict: "no relational frame" and "a
+  // relational frame that scored under the threshold" are different complaints.
+  assert.equal(feedback.domainDecision.score, setAside.domainScore);
+  assert.ok(Number.isFinite(feedback.domainDecision.score));
+  assert.equal(feedback.domainDecision.nonDomainScore, setAside.nonDomainScore);
+  assert.ok(feedback.domainDecision.frames, 'per-frame scores are published');
+  ['participant', 'outcome', 'mechanism', 'nonDomain'].forEach((frame) => {
+    assert.equal(typeof feedback.domainDecision.frames[frame].detected, 'boolean');
+    assert.ok(Number.isFinite(feedback.domainDecision.frames[frame].score));
+  });
+
+  // Nothing pre-retrieval is withheld any more, and the reason says so.
+  assert.deepEqual(feedback.claimUnit.unpublishedFields.fields, []);
+  assert.match(feedback.claimUnit.unpublishedFields.reason, /retrieval-not-run/);
+});
+
+test('a set-aside passage never has a value invented for it', () => {
+  const feedback = flag(setAside.segmentId, { review: { disposition: 'domain-gate-error' } });
+  // Every published pre-retrieval field equals the analyzer's own record for
+  // the same passage. The exporter reads across; it does not recompute, and a
+  // number it produced would be indistinguishable from one the analyzer did.
+  assert.equal(feedback.claimUnit.wordCount, setAside.wordCount);
+  assert.equal(feedback.claimUnit.boundedContext, setAside.boundedContext || null);
+  assert.deepEqual(feedback.domainDecision.frames, setAside.frameScores);
+  assert.equal(feedback.domainDecision.decisiveReason, setAside.decisiveReason);
+  // An anaphoric bridge resolves only when the analyzer recorded one.
+  if (!setAside.boundedContext) assert.equal(feedback.claimUnit.predecessor, null);
 });
 
 test('an unmapped row keeps its weak matches and maps to the Research Queue case', () => {

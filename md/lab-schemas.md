@@ -121,7 +121,12 @@ The deterministic local adapter returns:
 - an inspectable `domainRelevance.ignoredPassages` list: every set-aside
   passage with its location, excerpt, word count, machine status, decisive
   reason code and label, and capped frame evidence — the gate is triage, not a
-  verdict, so its exclusions are always visible, never silent;
+  verdict, so its exclusions are always visible, never silent. From
+  `le-lab.analysis/2.5` each record also carries everything the analyzer
+  computed *before* the gate ruled: `claimLikelihood`, `isClaimLike`,
+  `machineClaimLike`, `sourceBoundary`, `boundedContext`, `decisiveReason`,
+  `domainScore`, `nonDomainScore`, and per-frame `frameScores`. Retrieval-stage
+  evidence is still absent, because retrieval never ran for these rows;
 - a `domainRelevance.overrides` echo of visitor triage decisions: `applied`
   (`{segmentId, action}` for each honored include/exclude) and `unmatchedIds`
   (override keys that matched no passage; also surfaced as a warning);
