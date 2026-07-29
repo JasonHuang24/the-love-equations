@@ -2573,7 +2573,7 @@ button.lab-metric > small { text-align: right; }
   white-space: nowrap;
 }
 
-/* ── Mapping feedback (v=2.4.1)
+/* ── Mapping feedback (v=2.4.2)
    Review column beside Triage, and the flag dialog it opens. The dialog is a
    native <dialog> in the top layer; custom properties still inherit from
    .lab-page through the DOM, so it needs no palette of its own. ── */
