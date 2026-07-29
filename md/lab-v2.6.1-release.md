@@ -146,14 +146,41 @@ matched words are:
 
 | From | Newly reached |
 |---|---|
-| `hosting` → `host` | host, hosts, hosted |
-| `network` | networked, networking |
-| `cloud` | clouded |
-| `payment` → `pay` | pay, pays, paying, payers |
+| `hosting` → `host` | host, hosts, hosted, hosters |
+| `network` | networked, networking, networkers |
+| `cloud` | clouded, clouding |
+| `service` | serviceable |
+| `care` | careers |
+| `payment` → `pay` | pay, paying, payers, payable, payed |
 
-All but the last family are the technical sense the denylist exists to reject, and are improvements —
+> **CORRECTION, 2026-07-29.** The table above is the enumeration re-run against the shipped stemmer.
+> The version this section first published listed **`pays`, which does not match**, and omitted six
+> surfaces that do: `hosters`, `networkers`, `clouding`, `payable`, `payed`, and — the two that were
+> not a matter of one suffix — **`serviceable` and `careers`**, two entries the original table did not
+> reach at all.
+>
+> **`pays` is excluded by the derived-stem floor, by design.** It is four characters, below
+> `minStemmableLength: 5`, so `stemToken` returns it unstemmed and it never meets `payment`'s stem.
+> Neither does the literal test, which asks for `payment` and `payments`. The word this section named
+> as the clearest instance of the cost is the one word in the family the fix cannot see. `paid` is out
+> for a different reason and worth naming beside it: it is irregular, so no suffix rule reaches it
+> either.
+>
+> **The two omitted entries are the part that matters**, because they are not `pay` variants and the
+> original enumeration therefore missed a kind rather than a member. `serviceable` reaches `service`
+> through the `able` rule, and `careers` reaches `care` through `ers`. `careers` is the widest of the
+> lot — a common word, no technical sense, and adjacent to the relational register this alias exists
+> to catch. Its asymmetry is arbitrary rather than principled: `carers` and `caregivers` stem to `car`
+> and `caregiv` and do **not** match, so which care-words the denylist sees is decided by the
+> stripper's suffix table and not by meaning.
+>
+> **Nothing here moves a verdict.** The stem test was already shipped and these surfaces were already
+> reached; what was wrong was the census of them, which is what §3 exists to be. A cost stated as
+> smaller than it is is not a cost that was accepted.
+
+All but the `pay` family are the technical sense the denylist exists to reject, and are improvements —
 `the provider of hosted email` and `the provider for networked storage` are both now correctly
-disqualified.
+disqualified. `careers` and `serviceable` are the two where that reading is weakest.
 
 The `pay` family is the cost, and **`bl-16` records it as a limit this release created rather than
 found**:
