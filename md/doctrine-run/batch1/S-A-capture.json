@@ -1,0 +1,26 @@
+[
+  {
+    "file": "raw-01.txt",
+    "title": "Generalizability of Gottman and Colleagues' Affective Process Models of Couples' Relationship Outcomes",
+    "author": "Hyoun K. Kim; Deborah M. Capaldi; Lynn Crosby (Oregon Social Learning Center, Eugene)",
+    "publication": "Journal of Marriage and Family, 69(1), 55-72",
+    "year": 2007,
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1828692/",
+    "accessedVia": "curl GET of the PMC article page, then local HTML-to-text extraction (tags stripped, paragraph order preserved). The WebFetch summarizing model declined verbatim reproduction, so text was extracted locally instead.",
+    "wordCount": 10498,
+    "isOpenAccess": true,
+    "notes": "THE HIGHEST-VALUE ARTIFACT IN THIS CAPTURE: an independent (non-Gottman-affiliated) attempted replication that FAILED. PMCID PMC1828692, PMID 17372624, NIHMSID NIHMS13632, DOI 10.1111/j.1741-3737.2006.00343.x. Free-to-read NIH-funded AUTHOR MANUSCRIPT deposited in PMC; the publisher's final edited version is paywalled. This is NOT a CC-BY license - treat as free-to-read, not freely redistributable. Body text captured from 'Abstract' through the end of the Discussion; the trailing Acknowledgments (grant boilerplate) and author contact/fax lines were stripped, as were PMC UI artifacts ('Open in a new tab'). Author sentences are byte-verbatim and in original order. In-text reference markers appear as plain author-year text because the source HTML wrapped them in links. Statistical tables appear inline where the source placed them. NOTE ON SCOPE (load-bearing): this paper tests Gottman et al. (1998)'s affective PROCESS models, and the authors state explicitly that they did NOT test the discriminant function models, the contingent positive affect path model, or the physiological soothing model. It is therefore a generalizability/replication failure of the process models, not a head-on test of the four-horsemen divorce-prediction equation."
+  },
+  {
+    "file": "raw-02.txt",
+    "title": "The Hazards of Predicting Divorce Without Crossvalidation",
+    "author": "Richard E. Heyman; Amy M. Smith Slep (State University of New York at Stony Brook)",
+    "publication": "Journal of Marriage and Family, 63(2), 473-479",
+    "year": 2001,
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1622921/",
+    "accessedVia": "curl GET of the PMC article page, then local HTML-to-text extraction (tags stripped, paragraph order preserved). The WebFetch summarizing model declined verbatim reproduction, so text was extracted locally instead.",
+    "wordCount": 3640,
+    "isOpenAccess": true,
+    "notes": "DISTINCT LINEAGE from raw-01: different lab (Stony Brook vs Oregon Social Learning Center), different authors, different data, critique-side. PMCID PMC1622921, PMID 17066126, NIHMSID NIHMS7200, DOI 10.1111/j.1741-3737.2001.00473.x. Free-to-read NIH-funded AUTHOR MANUSCRIPT deposited in PMC; publisher's final version paywalled; not CC-BY. Captured from 'Abstract' through the end of Results and Discussion; the trailing Footnotes (grant boilerplate) and PMC UI artifacts were stripped. The three classification tables are retained inline, including their Note lines, because the sensitivity/specificity/predictive-value figures are the paper's entire argument. VERBATIM DEFECT PRESERVED: the sentence 'The equation's sensitivity dropped 45% and its sensitivity dropped 15%' contains an apparent typo in the author manuscript - the second instance evidently should read 'specificity' (sensitivity fell 91.89% to 45.95%; specificity fell 89.22% to 74.55%). Left byte-verbatim rather than silently corrected."
+  }
+]

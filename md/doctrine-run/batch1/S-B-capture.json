@@ -1,0 +1,26 @@
+[
+  {
+    "file": "raw-01.txt",
+    "title": "Associations of Intimacy, Partner Responsiveness, and Attachment-Related Emotional Needs With Sexual Desire",
+    "author": "Jacques J. D. M. van Lankveld, Marieke Dewitte, Peter Verboon, Susan A. H. van Hooren",
+    "publication": "Frontiers in Psychology, vol. 12, article 665967",
+    "year": 2021,
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8255964/",
+    "accessedVia": "direct HTML fetch (curl) of the PMC full-text page, then a custom HTML-to-text extraction script (Python html.parser) that dropped <table>, <fig>, <script>, <style>, <sup> subtrees and converted headings/paragraphs to plain text. Verified against a Read of the resulting file; UTF-8 special characters (e.g. Stulhofer, Agmo) render correctly.",
+    "wordCount": 5161,
+    "isOpenAccess": true,
+    "notes": "Full text is genuinely open access on PMC (HHS-hosted). Text is byte-verbatim author prose in original order; only removed content is tables (data), figure captions, superscript citation markers, and end-of-article administrative sections (Data Availability, Ethics, Author Contributions, Conflict of Interest, References). Design: ONLINE CROSS-SECTIONAL SURVEY, N=10,202 (7,701 women, 2,501 men), Dutch/Flemish community sample recruited via a popular magazine website (Quest.nl), not a probability sample. This is the single richest open primary source found that reports both a duration-desire association AND an attachment-desire association in the same model, with the paper's own discussion explicitly flagging the cross-sectional-design limitation for causal/mechanism claims."
+  },
+  {
+    "file": "raw-02.txt",
+    "title": "Longitudinal Associations among Relationship Satisfaction, Sexual Satisfaction, and Frequency of Sex in Early Marriage",
+    "author": "James K. McNulty, Carolyn A. Wenner, Terri D. Fisher",
+    "publication": "Archives of Sexual Behavior, vol. 45, issue 1, pp. 85-97 (NIH/HHS Public Access author manuscript; final version doi:10.1007/s10508-014-0444-6)",
+    "year": 2016,
+    "url": "https://repository.lib.fsu.edu/islandora/object/fsu%3A620247/datastream/PDF/download",
+    "accessedVia": "Direct PDF download via a datastream link discovered by fetching the FSU Digital Repository landing page (https://repository.lib.fsu.edu/islandora/object/fsu:620247) with curl and grepping its HTML for datastream/PDF hrefs; the PDF itself is the NIH-required open-access author manuscript (HHS Public Access banner, 'Author manuscript; available in PMC 2017 January 01.'). Read directly as a PDF; text transcribed by hand from the returned page content into a single continuous document, in original paragraph order, with repeated per-page boilerplate ('Author Manuscript' watermark, running header 'McNulty et al. Page N', and the PMC-availability footer line) stripped, and Tables 1-5 / References omitted.",
+    "wordCount": 8359,
+    "isOpenAccess": true,
+    "notes": "Two of three instances of a bracketed equation (Equation 1: Y_ij regressed on Time, Time x Time, prior-wave marital/sexual satisfaction, frequency of sex) could not be transcribed as literal text/math notation from the PDF; the three sentences referencing it were lightly reworded (e.g. 'This hypothesis was evaluated by estimating a first-level equation of a 3-level model in which the Time x Time interaction estimates the curvilinear nature of the change in marital satisfaction' / 'by substituting subsequent sexual satisfaction for subsequent marital satisfaction in the equation above' / 'This analysis substituted subsequent reports of the frequency of sex for subsequent marital satisfaction in the equation above') rather than presented as exact original wording -- flagged here per the integrity fence rather than silently smoothed. All other sentences are verbatim and in original order. Design: TWO PROSPECTIVE LONGITUDINAL STUDIES of newlywed couples (Study 1: 72 couples, north-central Ohio; Study 2: 135 couples, eastern Tennessee; N=207 couples total), 8 waves of marital/sexual satisfaction and 7 waves of sexual frequency at 6-8 month intervals over ~4-4.5 years. Convenience samples, not representative of the general population."
+  }
+]

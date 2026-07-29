@@ -1,34 +1,70 @@
 {
   "schemaVersion": "le-lab.corpus-manifest/1.0",
-  "updatedAt": "2026-07-29T00:00:00.000Z",
+  "updatedAt": "2026-07-29T23:20:00.000Z",
   "archive": {
     "root": "lab-corpus/",
     "published": false,
     "rationale": "Third-party copyrighted texts. The archive lives in the working tree but is gitignored; this manifest is committed so presence, identity, and integrity are verifiable without publishing the content. Per md/RERUN.md section 1, the SHA-256 is what makes a future run verifiable, not the location.",
     "layout": {
-      "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar and <NN>-<slug>.raw.html",
+      "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar and the raw capture it was extracted from (<NN>-<slug>.raw.html, or <NN>-<slug>.raw.pdf where the publisher ships no HTML full text)",
       "exports": "lab-corpus/exports/<NN>-<slug>-<analyzer-version>.json"
     },
-    "state": "populated and re-run: 3 of 4 sources acquired and analyzed at v2.5.0 (01, 02, 04); 03 excluded by decision"
+    "state": "populated: 9 of 10 sources acquired and analyzed (01, 02, 04 at v2.6.0; 05, 06, 07, 08, 09, 10 at v2.6.1); 03 excluded by decision"
   },
   "singleVersionStatus": {
     "isSingleVersion": false,
-    "reason": "Source 03 is excluded from re-acquisition and remains a v2.1.2 artifact. md/RERUN.md section 6 defines completion as every source in manifest.sources carrying a current export at the epoch version; 03 carries none and will not. The three acquired sources ARE single-version at 2.5.0, and cross-source comparison among those three rests on one instrument, one threshold set, and one canon snapshot. Any comparison that includes 03 does not."
+    "reason": "Two distinct exclusions, neither of them drift. (1) Source 03 is excluded from re-acquisition by explicit decision and carries no export at any version; it remains a v2.1.2 artifact and any comparison including it is within-version only. (2) Sources 01, 02 and 04 sit at analyzer 2.6.0 while the six sources added by the doctrine combo run sit at 2.6.1, because the v2.6.1 patch was proven unable to move those three sources and re-running them was declined. md/RERUN.md section 6 defines completion as every source carrying a current export at the epoch version, so by that literal test the corpus is not single-version. What matters for the distillation lane is weaker and is satisfied: all nine analyzed sources share one analysis schema, one scoring configuration, and one canon snapshot, so their claim surfaces are directly comparable.",
+    "comparabilityBasis": {
+      "analysisSchemaVersion": "le-lab.analysis/2.6",
+      "scoringConfigHash": "bt0a7p",
+      "canonIndexVersion": "1.0.0+949aef381d5f",
+      "analyzerVersionsPresent": [
+        "2.6.0",
+        "2.6.1"
+      ],
+      "behavioralEquivalenceEvidence": "md/lab-v2.6.1-release.md and md/lab-v2.6.1-sol-handover.md: threshold sweep 0 changed of 46,350 pairs, 0 crossings; demo capture byte-identical at the pre-bump commit."
+    }
   },
   "reproducibility": {
-    "chain": "archived raw HTML -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
-    "extractor": "tools/extract-source-text.mjs",
-    "extractorSha256": "6f3373b0c12145f9b57af26c9eb6d3bf5ee69a0a34d600e61c1c229c1321aa43",
-    "note": "The extractor is committed (it is our code, not third-party text) so anyone holding the archived HTML can regenerate the exact analyzed text and check it against these hashes. Extraction was deliberately NOT done by a model reading the page: a model-mediated transcription is not reproducible byte-for-byte and would break the chain. Each source's sidecar records its exact command line, plus the SHA-256 of the raw HTML it was run against."
+    "chains": [
+      {
+        "grade": "A",
+        "applies": [
+          "01-pew-online-dating",
+          "02-fem-centrism",
+          "04-heteropessimism",
+          "05-kim-generalizability",
+          "06-heyman-crossvalidation",
+          "07-van-lankveld-desire",
+          "08-mcnulty-early-marriage"
+        ],
+        "chain": "archived raw HTML -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
+        "extractor": "tools/extract-source-text.mjs",
+        "extractorSha256": "6f3373b0c12145f9b57af26c9eb6d3bf5ee69a0a34d600e61c1c229c1321aa43",
+        "note": "The extractor is committed (it is our code, not third-party text) so anyone holding the archived HTML can regenerate the exact analyzed text and check it against these hashes. Extraction was deliberately NOT done by a model reading the page: a model-mediated transcription is not reproducible byte-for-byte and would break the chain. Each source sidecar records its exact command line plus the SHA-256 of the raw capture it ran against."
+      },
+      {
+        "grade": "B",
+        "applies": [
+          "09-conroy-beam-discrepancies",
+          "10-miller-alternatives"
+        ],
+        "chain": "archived raw PDF -> pdftotext 4.00 with recorded flags -> recorded awk anchor truncation -> the .txt whose SHA-256 is recorded here",
+        "extractor": "pdftotext (poppler / Glyph & Cog) version 4.00, external binary",
+        "extractorSha256": null,
+        "note": "STRICTLY WEAKER THAN GRADE A and used only where the publisher ships no HTML full text. The chain is reproducible — same PDF bytes, same tool version, same recorded command, same output — but it depends on an external tool version rather than on a hashed file in this repository, so it cannot be verified from the repo alone. Each sidecar records the full command including the -nopgbrk flag (without it pdftotext injects page-break form feeds that defeat the line anchors) and the start/stop anchors used. No committed repo script reads PDFs; adding one was out of scope for this run."
+      }
+    ],
+    "scoutCaptureRule": "Research scouts are model-mediated and their captures are therefore NEVER the archived artifact. Every source above was independently re-fetched and re-extracted by the orchestrator. Each entry records acquisition.scoutCrossCheck: 8-word shingle overlap between the scout capture and the deterministic extraction, which detects a scout that paraphrased, truncated, or invented prose. Overlap is corroboration of the scout, not provenance for the text."
   },
   "epoch": {
-    "analyzerVersion": "2.6.0",
+    "analyzerVersion": "2.6.1",
     "analysisSchemaVersion": "le-lab.analysis/2.6",
     "researchQueueSchemaVersion": "le-lab.research-queue/2.1",
     "scoringConfigHash": "bt0a7p",
     "canonIndexVersion": "1.0.0+949aef381d5f",
     "canonGeneratedAt": "2026-07-27T11:38:21.000Z",
-    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. All three exports agree on every field. The canon index is UNCHANGED from the v2.4.0 epoch (1.0.0+949aef381d5f): no doctrine moved in this release either. canonGeneratedAt moved WITHOUT the canon moving, because v2.6.0 derives it from the last commit touching a canon source page instead of from the wall clock — which is what makes this artifact SHA-256-reproducible for the first time (c7c41836...). The scoringConfigHash moved because v2.6.0 ADDS three keys (minStemmableLength, minDerivedStemLength, contextualAliasComplementLookahead) and changes no existing value. This is the first epoch whose exports differ BEHAVIORALLY from the previous one: the central tokenizer fix moved 2,168 of 46,350 scored pairs and produced 123 threshold crossings, every one adjudicated ACCEPT by Jason and recorded in tests/fixtures/threshold-neighbors.json and md/lab-v2.6.0-threshold-adjudication.md. Net effect on the mapped surface: 3 credible matches gained, 0 lost, 0 stance labels moved.",
+    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. THE CORPUS SPANS TWO ANALYZER VERSIONS AND THAT IS DELIBERATE. Sources 05-kim-generalizability, 06-heyman-crossvalidation, 07-van-lankveld-desire, 08-mcnulty-early-marriage, 09-conroy-beam-discrepancies, 10-miller-alternatives were added by the doctrine combo run and analyzed at 2.6.1. Sources 01, 02 and 04 retain their v2.6.0 exports: md/lab-v2.6.1-sol-handover.md records the standing ruling that v2.6.1 provably cannot move this corpus — 'provider' and 'breadwinner' occur zero times across all three archived sources and 'provider' holds the only non-empty denylist in the canon, so the threshold sweep returned 0 changed of 46,350 pairs and the demo capture was byte-identical before the version bump. Re-running them would produce a provenance-only delta and was declined rather than performed. Every other epoch field is IDENTICAL across the two versions — analysis schema le-lab.analysis/2.6, queue schema le-lab.research-queue/2.1, scoringConfigHash bt0a7p, canon 1.0.0+949aef381d5f — which is what makes cross-source comparison across the 2.6.0/2.6.1 boundary sound rather than merely convenient. The prior epoch note is preserved below as epochHistory.",
     "canonIndexSchemaVersion": "le-canon-index/1.1"
   },
   "labelingSheets": {
@@ -41,7 +77,23 @@
     "date": "2026-07-29",
     "worksheet": "md/lab-corpus-acquisition-01.md",
     "authorization": "Jason GO for sources 01, 04, 02. Source 03 (Gottman, The Four Horsemen) EXCLUDED from re-acquisition by explicit decision: it remains a v2.1.2 artifact, flagged within-version-only, and no Gottman revision is to be fetched.",
-    "note": "All three acquired sources are capturedBy 'reacquired'. Nothing acquired now can be byte-verified against what was analyzed in July 2026 — the staging was deleted — so every re-run supersedes its predecessor rather than reproducing it. The prospective payoff is that from this commit forward, every future re-run is a true reproduction."
+    "note": "All three acquired sources are capturedBy 'reacquired'. Nothing acquired now can be byte-verified against what was analyzed in July 2026 — the staging was deleted — so every re-run supersedes its predecessor rather than reproducing it. The prospective payoff is that from this commit forward, every future re-run is a true reproduction.",
+    "batches": [
+      {
+        "batch": "doctrine combo run, batch 1",
+        "date": "2026-07-29",
+        "added": [
+          "05-kim-generalizability",
+          "06-heyman-crossvalidation",
+          "07-van-lankveld-desire",
+          "08-mcnulty-early-marriage",
+          "09-conroy-beam-discrepancies",
+          "10-miller-alternatives"
+        ],
+        "authorization": "Jason's single front-loaded GO for the full three-batch scout plan.",
+        "note": "Sources returned by research scouts S-A (Gottman primary and critique), S-B (desire-decay empirical leg), and S-C (mate-value discrepancy x alternatives). All URLs were scout-returned; all captures were independently re-fetched and re-extracted by the orchestrator before archiving. Source 08 is a SUBSTITUTED rendition: the scout read an FSU repository PDF that returned HTTP 403 on independent re-fetch, so the PMC author manuscript of the same paper was archived instead and the cross-check measures agreement between the two renditions."
+      }
+    ]
   },
   "sources": [
     {
@@ -454,6 +506,461 @@
         "confidence": "high",
         "notes": "Dated magazine essay in a stable archive. Carried the only credible canon match in the whole run-01 corpus (1 of 55 claim-like segments, to 'The Market', Medium confidence), which makes it the most informative single re-run: the only source where a coverage change could show up as anything other than 0 to non-zero."
       }
+    },
+    {
+      "id": "05-kim-generalizability",
+      "title": "Generalizability of Gottman and Colleagues' Affective Process Models of Couples' Relationship Outcomes",
+      "author": "Hyoun K. Kim, Deborah M. Capaldi, Lynn Crosby",
+      "publication": "Journal of Marriage and Family 69(1):55-72",
+      "year": 2007,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1828692/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/05-kim-generalizability.txt",
+      "sourceSha256": "b3e6cbf536e307bc9693e8eb32bb9977c00b201da0358c9b2109e25ec8c48f59",
+      "rawArchive": {
+        "file": "lab-corpus/sources/05-kim-generalizability.raw.html",
+        "kind": "html",
+        "sha256": "d489da22446bab091c8f0aa3812bc053c9e8d9d9dadb384fc7b597fc126ab4bf"
+      },
+      "rawHtmlSha256": "d489da22446bab091c8f0aa3812bc053c9e8d9d9dadb384fc7b597fc126ab4bf",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-29T23:18:00.000Z",
+      "words": 9249,
+      "current": "lab-corpus/exports/05-kim-generalizability-v2.6.1.json",
+      "currentSha256": "215ecba49e8a46244dd9e11450a89132e915b1cf12585d7aee8255f5cc7d00b3",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/05-kim-generalizability-v2.6.1.queue.json",
+          "sha256": "a6cccbf32368e90f4815d318bec12f5890ceba6eaa6c9bb2eb16b51e16e3cbca"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/05-kim-generalizability-v2.6.1.md",
+          "sha256": "181001add456d44afc42a6184a380fb43f45a3ef639d3b22af161070d563b2d2"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/05-kim-generalizability-v2.6.1.labeling.csv",
+          "sha256": "01f4efa42d3f0d4211e8443f6a1c7d6296fc7d0df630f0e7f32a7ee3964009e3"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 161,
+        "claimLike": 159,
+        "mapped": 6,
+        "coveragePct": 3.8,
+        "tensions": 0,
+        "queue": 153,
+        "setAside": 187,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live PMC page, curl, committed deterministic extractor",
+        "scout": "S-A",
+        "scoutAssignment": "C1a/C1b — Gottman primary literature and the accuracy-claim critique",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-A",
+          "scoutWords": 10498,
+          "extractedWords": 9249,
+          "scoutShingles": 11042,
+          "matchedShingles": 9324,
+          "overlapPct": 84.4,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "NIH/HHS author manuscript, free to read on PMC, NOT CC-BY. Publisher version paywalled. Archived unpublished in a gitignored corpus, consistent with the standing not-published ruling.",
+        "notes": "THE INDEPENDENT REPLICATION, and it failed. Oregon Social Learning Center, zero author overlap with the Gottman lab, separate sample and funders, but the SAME instrument (SPAFF). Abstract states verbatim: 'The major findings of Gottman et al. failed to replicate.' Scope limit recorded by the scout and confirmed in the text: this tests the affective PROCESS models, not the four-horsemen divorce-prediction equation head-on."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "06-heyman-crossvalidation",
+      "title": "The Hazards of Predicting Divorce Without Crossvalidation",
+      "author": "Richard E. Heyman, Amy M. Smith Slep",
+      "publication": "Journal of Marriage and Family 63(2):473-479",
+      "year": 2001,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1622921/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/06-heyman-crossvalidation.txt",
+      "sourceSha256": "32b2ce2237aae63311fd7b94fa548f11c3b9046740376b803c33120f5eecb650",
+      "rawArchive": {
+        "file": "lab-corpus/sources/06-heyman-crossvalidation.raw.html",
+        "kind": "html",
+        "sha256": "3604d0d5ff11fedfd5470cee5def0bc1897d2667957ba7209e218bf877563681"
+      },
+      "rawHtmlSha256": "3604d0d5ff11fedfd5470cee5def0bc1897d2667957ba7209e218bf877563681",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-29T23:18:00.000Z",
+      "words": 3484,
+      "current": "lab-corpus/exports/06-heyman-crossvalidation-v2.6.1.json",
+      "currentSha256": "3146f803c31a8561ef22a21f044fb635244e9ac07076ae94ec6d40d0e3495490",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/06-heyman-crossvalidation-v2.6.1.queue.json",
+          "sha256": "165d8f6ac4ec1b6de4df4b4e5bf52882197306488b2acb85191afd0152366634"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/06-heyman-crossvalidation-v2.6.1.md",
+          "sha256": "2496832e76facd02b22ed920cc7e4f6d3e40e858e16a0de1ebaa79f3a5ffff31"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/06-heyman-crossvalidation-v2.6.1.labeling.csv",
+          "sha256": "07efe1b4a1b6a523e03178021ec95103df066ef7ae787c8e22186d41aecbbe5a"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 46,
+        "claimLike": 46,
+        "mapped": 0,
+        "coveragePct": 0,
+        "tensions": 0,
+        "queue": 46,
+        "setAside": 96,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live PMC page, curl, committed deterministic extractor",
+        "scout": "S-A",
+        "scoutAssignment": "C1a/C1b — Gottman primary literature and the accuracy-claim critique",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-02.txt",
+          "scout": "S-A",
+          "scoutWords": 3640,
+          "extractedWords": 3484,
+          "scoutShingles": 3674,
+          "matchedShingles": 3494,
+          "overlapPct": 95.1,
+          "verdict": "CORROBORATED — the scout reasoned over the text the Lab will analyze"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "NIH/HHS author manuscript, free to read on PMC, NOT CC-BY. Archived unpublished in a gitignored corpus.",
+        "notes": "The methodological critique lineage — Stony Brook, no Gottman affiliation. Supplies the prediction-versus-postdiction distinction and the worked demonstration that a 90%-accurate in-sample equation falls to 69% accuracy and ~21% positive predictive value at a realistic base rate. Note this is a METHODS paper: expect the Lab's domain gate to set aside most of it as non-domain, which is correct behavior, not a miss."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "07-van-lankveld-desire",
+      "title": "Associations of Intimacy, Partner Responsiveness, and Attachment-Related Emotional Needs With Sexual Desire",
+      "author": "Jacques van Lankveld, Marieke Dewitte, Peter Verboon, Susan van Hooren",
+      "publication": "Frontiers in Psychology 12",
+      "year": 2021,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8255964/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/07-van-lankveld-desire.txt",
+      "sourceSha256": "6eb2b89ded514d94413e2c1403eee1ea92da527601c711412526000789b4f810",
+      "rawArchive": {
+        "file": "lab-corpus/sources/07-van-lankveld-desire.raw.html",
+        "kind": "html",
+        "sha256": "68bc00b639250d404b819132d29bb47355bd35f6f25b76c96a06abaa455a548b"
+      },
+      "rawHtmlSha256": "68bc00b639250d404b819132d29bb47355bd35f6f25b76c96a06abaa455a548b",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-29T23:18:00.000Z",
+      "words": 6642,
+      "current": "lab-corpus/exports/07-van-lankveld-desire-v2.6.1.json",
+      "currentSha256": "cad9d613fa9dc00f1f2902d54aef879488d6dbf227657db7c065f55f39653118",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/07-van-lankveld-desire-v2.6.1.queue.json",
+          "sha256": "70777e18c569892ab3ae5736141f140223f3b13a91d2078b34f7e781b6fdda0c"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/07-van-lankveld-desire-v2.6.1.md",
+          "sha256": "d3f736bd0bff820099e0afb9b8b355b85831fec5edf34764284b480625f98e87"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/07-van-lankveld-desire-v2.6.1.labeling.csv",
+          "sha256": "1e6d85b7cdbeabfceecb1c4e27917e01ff9f7946e07cde6d61468ee06568e070"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 174,
+        "claimLike": 170,
+        "mapped": 12,
+        "coveragePct": 7.1,
+        "tensions": 0,
+        "queue": 158,
+        "setAside": 136,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live PMC page, curl, committed deterministic extractor",
+        "scout": "S-B",
+        "scoutAssignment": "C1c — the empirical leg of the desire-decay claim, independent of Perel",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-B",
+          "scoutWords": 5161,
+          "extractedWords": 6642,
+          "scoutShingles": 5210,
+          "matchedShingles": 5159,
+          "overlapPct": 99,
+          "verdict": "CORROBORATED — the scout reasoned over the text the Lab will analyze"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Frontiers is open access (CC-BY). The most redistributable source in this batch.",
+        "notes": "Carries the batch's COUNTER-finding: intimacy and partner responsiveness correlate POSITIVELY with sexual desire (r=.25 each), and attachment did not moderate the intimacy-desire link. Cross-sectional, N=10,202, so it cannot separate duration from cohort or age — the authors say so themselves. Cuts against a strong reading of desire and attachment as opposed systems."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "08-mcnulty-early-marriage",
+      "title": "Longitudinal Associations Among Relationship Satisfaction, Sexual Satisfaction, and Frequency of Sex in Early Marriage",
+      "author": "James K. McNulty, Carolyn A. Wenner, Terri D. Fisher",
+      "publication": "Archives of Sexual Behavior 45(1):85-97",
+      "year": 2016,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4472635/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/08-mcnulty-early-marriage.txt",
+      "sourceSha256": "d2393cd2669e4bc9b6d537cb81c10faf564d902eeb78df76497bdaac8f89a597",
+      "rawArchive": {
+        "file": "lab-corpus/sources/08-mcnulty-early-marriage.raw.html",
+        "kind": "html",
+        "sha256": "b9122bd525e0e659c5dd1f396bf5585100eb397622907bd85e2b37362acac1f1"
+      },
+      "rawHtmlSha256": "b9122bd525e0e659c5dd1f396bf5585100eb397622907bd85e2b37362acac1f1",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-29T23:18:00.000Z",
+      "words": 8332,
+      "current": "lab-corpus/exports/08-mcnulty-early-marriage-v2.6.1.json",
+      "currentSha256": "64f9d48577d811d67ef3525fc85614910a655f68229fdffd623e2139a455cdbb",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/08-mcnulty-early-marriage-v2.6.1.queue.json",
+          "sha256": "f7416258661581504f70005ba8f97fb877bc5e7445f9b851b2f890bed871caed"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/08-mcnulty-early-marriage-v2.6.1.md",
+          "sha256": "d2e2c628ff82abbe0c0ae472c3465d2b2069ca9aab678fd23033fd71c5ecba6f"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/08-mcnulty-early-marriage-v2.6.1.labeling.csv",
+          "sha256": "de8df119f7d34ccf3e13513912707f59e1507c06995495e5b3bb34cfdf5cb8cc"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 141,
+        "claimLike": 141,
+        "mapped": 20,
+        "coveragePct": 14.2,
+        "tensions": 0,
+        "queue": 121,
+        "setAside": 143,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live PMC page, curl, committed deterministic extractor",
+        "scout": "S-B",
+        "scoutAssignment": "C1c — the empirical leg of the desire-decay claim, independent of Perel",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-02.txt",
+          "scout": "S-B",
+          "scoutWords": 8359,
+          "extractedWords": 8332,
+          "scoutShingles": 8201,
+          "matchedShingles": 8124,
+          "overlapPct": 99.1,
+          "verdict": "CORROBORATED — the scout reasoned over the text the Lab will analyze"
+        },
+        "reacquirable": "yes",
+        "confidence": "high for the paper's identity; the scout's own capture is a different rendition of it, so treat any quote traced only to the scout's file as provenance-weaker than one traced to this archive.",
+        "licensing": "NIH/HHS author manuscript, free to read on PMC, NOT CC-BY.",
+        "notes": "The strongest design in the batch for sub-claim (a): prospective, N=207 newlywed couples, eight waves. Relationship satisfaction, sexual satisfaction, and frequency of sex all declined significantly and deceleratingly. Newlyweds only, first 4-5 years, so it cannot speak to decades-long decay. The scout flagged that three sentences referencing a regression equation were lightly reworded in ITS capture because the notation would not transcribe — a further reason the deterministic PMC extraction, not the scout capture, is the archived artifact."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "09-conroy-beam-discrepancies",
+      "title": "What predicts romantic relationship satisfaction and mate retention intensity: mate preference fulfillment or mate value discrepancies?",
+      "author": "Daniel Conroy-Beam, Cari D. Goetz, David M. Buss",
+      "publication": "Evolution and Human Behavior 37(6):440-448",
+      "year": 2016,
+      "url": "https://labs.la.utexas.edu/buss/files/2013/02/What-Predicts-Romantic-Relationship-Satisfaction-EHB-in-press-Conroy-Beam-Goetz-Buss-in-press.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/09-conroy-beam-discrepancies.txt",
+      "sourceSha256": "449bbaa016354febf4ddf185453d0938664ab5eaaa1cac24ed3b0a7b7062d3d3",
+      "rawArchive": {
+        "file": "lab-corpus/sources/09-conroy-beam-discrepancies.raw.pdf",
+        "kind": "pdf",
+        "sha256": "683affe3f4c1ca7f46a4f9de63d12236c02bdeedc8ff54e34cb0b3c84c310775"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-29T23:18:00.000Z",
+      "words": 7376,
+      "current": "lab-corpus/exports/09-conroy-beam-discrepancies-v2.6.1.json",
+      "currentSha256": "ee8cbab04b0e196aafbb7851f383fca29f117d85c684f0ff55605b41f97617a1",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/09-conroy-beam-discrepancies-v2.6.1.queue.json",
+          "sha256": "1b56ee052f2d6b6fa7f1a0849155e66ebdedc1cc69238a5e8a719016e37850e5"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/09-conroy-beam-discrepancies-v2.6.1.md",
+          "sha256": "c7fbf4f69fafead9c0cff5ad0343a67a95b352925bed5723f1ef39aa96afc163"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/09-conroy-beam-discrepancies-v2.6.1.labeling.csv",
+          "sha256": "97c246ccc0914899bcab95da7b76f1bbc2dae1874493f5501315a9816d9da7ba"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 277,
+        "claimLike": 262,
+        "mapped": 32,
+        "coveragePct": 12.2,
+        "tensions": 0,
+        "queue": 230,
+        "setAside": 210,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "author-posted PDF, curl, external pdftotext with recorded flags and anchor truncation",
+        "scout": "S-C",
+        "scoutAssignment": "C6 — mate-value discrepancy x alternatives visibility",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-C",
+          "scoutWords": 6571,
+          "extractedWords": 7376,
+          "scoutShingles": 6685,
+          "matchedShingles": 5235,
+          "overlapPct": 78.3,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Author-posted accepted manuscript ('in press' galley) of an Elsevier article, DOI 10.1016/j.evolhumbehav.2016.04.003. The published version may differ from this galley — any page-level citation should come from the published version, not this file.",
+        "notes": "THE INTERACTION TEST the checkpoint doubted existed: Studies 1-3 (N=259/300/301) test and find the mate-value-discrepancy x alternatives interaction on relationship satisfaction. Critical construct caveat recorded by the scout and visible in the paper's own limitations: their 'alternatives' variable is an objectively computed pool statistic built from OTHER respondents' partners, whom the focal participant never saw. That is not subjective visibility, so it does not straightforwardly support a claim worded 'visibly available'."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "10-miller-alternatives",
+      "title": "Attending to Temptation: The Operation (and Perils) of Attention to Alternatives in Close Relationships",
+      "author": "Rowland S. Miller",
+      "publication": "10th Sydney Symposium of Social Psychology (chapter draft, marked DRAFT ONLY)",
+      "year": 2007,
+      "url": "https://sydneysymposium.unsw.edu.au/2007/Chapters/MillerSSSP07.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/10-miller-alternatives.txt",
+      "sourceSha256": "2d37a536d01c0997196b994947181c3119a65dd5a693df3cb6fa890ebca3cab0",
+      "rawArchive": {
+        "file": "lab-corpus/sources/10-miller-alternatives.raw.pdf",
+        "kind": "pdf",
+        "sha256": "84539de5ce09af818f262fa50b1164a961320889eb377ee8d9b43cffda05d2b4"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-29T23:18:00.000Z",
+      "words": 5763,
+      "current": "lab-corpus/exports/10-miller-alternatives-v2.6.1.json",
+      "currentSha256": "a6458b0c30d6adeb233138555ca02bcbfdf0b4aa8176a45fd5118450fc6845d7",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/10-miller-alternatives-v2.6.1.queue.json",
+          "sha256": "9afc011770cd366f8f1f152bebd66bc6278064d97dd502b9eeb996f55bfa8844"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/10-miller-alternatives-v2.6.1.md",
+          "sha256": "22292ccafb259cfdc50c559a62fc676c84c904a814c281c178f0700d2de07a9a"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/10-miller-alternatives-v2.6.1.labeling.csv",
+          "sha256": "3adeaec38c186e757614b6bc450556b9b0cd12036419921d52629208f9c33960"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 111,
+        "claimLike": 108,
+        "mapped": 7,
+        "coveragePct": 6.5,
+        "tensions": 0,
+        "queue": 101,
+        "setAside": 185,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "public conference-archive PDF, curl, external pdftotext with recorded flags and anchor truncation",
+        "scout": "S-C",
+        "scoutAssignment": "C6 — mate-value discrepancy x alternatives visibility",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-02.txt",
+          "scout": "S-C",
+          "scoutWords": 5442,
+          "extractedWords": 5763,
+          "scoutShingles": 5482,
+          "matchedShingles": 5256,
+          "overlapPct": 95.9,
+          "verdict": "CORROBORATED — the scout reasoned over the text the Lab will analyze"
+        },
+        "reacquirable": "yes",
+        "confidence": "medium — the DOCUMENT is an unpublished draft chapter, even though the central study it narrates (Miller 1997, JPSP 73(4):758-766) is peer-reviewed. Any figure taken from here should be traced to the published article before use.",
+        "licensing": "Author's draft chapter posted on a public conference archive. Unpublished draft; not a citable version of record.",
+        "notes": "The DISTINCT lineage for C6 — Thibaut & Kelley CLalt / Rusbult investment-model tradition, no Buss-lab authorship, different vocabulary ('attention to alternatives', 'CLalt') for adjacent constructs. Its value to the run is precisely that no paper unifies this vocabulary with the evolutionary-psychology 'mate value discrepancy' vocabulary, which is itself a finding about the literature."
+      },
+      "analyzerVersion": "2.6.1"
+    }
+  ],
+  "epochHistory": [
+    {
+      "analyzerVersion": "2.6.0",
+      "retiredAt": "2026-07-29T23:20:00.000Z",
+      "note": "See git history for the v2.6.0 epoch note this replaces."
     }
   ]
 }
