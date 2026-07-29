@@ -123,14 +123,22 @@ async function main() {
       assertUniqueStrings(entry[field], `${entry.id}.${field}`);
     }
 
-    // Alias typing must name strings that are actually on the match surface,
-    // and must name each of them once. Both failure modes are silent otherwise:
-    // the typing simply never fires and nobody finds out.
+    // Alias typing must name strings that are actually on the match surface, it
+    // must name each of them once, and each must be a SINGLE TOKEN. All three
+    // failure modes are silent otherwise: the typing never fires and nobody
+    // finds out. The single-token rule is the analyzer's, not a style
+    // preference — promotion iterates the alias list filtered to entries with
+    // no space in them, so a multiword typed alias is never consulted at all.
+    // Multiword aliases are fine; they already earn phrase treatment on their
+    // own length. Claiming to type one is what does nothing.
     assert(Array.isArray(entry.contextualAliases), `${entry.id}.contextualAliases must be an array`);
     const aliasSet = new Set(entry.aliases);
     const typedAliases = [];
+    const assertSingleToken = (alias, kind) => assert(!/\s/.test(String(alias).trim()),
+      `${entry.id} types "${alias}" ${kind}, but typing only reaches single-token aliases — the analyzer's promotion pass never sees a multiword one, so this rule is inert`);
     for (const alias of entry.standaloneAliases) {
       assert(aliasSet.has(alias), `${entry.id} types "${alias}" standalone but it is not one of its aliases`);
+      assertSingleToken(alias, 'standalone');
       typedAliases.push(alias);
     }
     for (const contextual of entry.contextualAliases) {
@@ -139,6 +147,7 @@ async function main() {
       assert.equal(typeof contextual.alias, 'string', `${entry.id} has a contextual alias without a name`);
       assert(aliasSet.has(contextual.alias),
         `${entry.id} types "${contextual.alias}" contextual but it is not one of its aliases`);
+      assertSingleToken(contextual.alias, 'contextual');
       assertUniqueStrings(contextual.notAfter, `${entry.id}.contextualAliases["${contextual.alias}"].notAfter`);
       typedAliases.push(contextual.alias);
     }

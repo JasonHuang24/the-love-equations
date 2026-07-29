@@ -1850,12 +1850,38 @@ function publicMatch(entry, rawScore) {
 }
 
 /**
- * A match as the outside world sees it: every working field the analyzer hung
- * on the object during retrieval is stripped by prefix, not by name. Naming
- * them one at a time is how `_retrieval` reached an export the first time.
+ * Every field a match publishes, in the order it publishes them.
+ *
+ * `alignment` and `why` are stance output, hung on credible matches only, which
+ * is why a weak match legitimately carries nineteen of these twenty-one.
+ */
+export const PUBLIC_MATCH_FIELDS = Object.freeze([
+  'canonId', 'title', 'page', 'anchor', 'href', 'category', 'subcategory', 'synopsis',
+  'evidenceType', 'confidence', 'score', 'whyMatched', 'boundaryConditions',
+  'commonMisreadings', 'dependencies', 'related', 'sourceLinks', 'pressureTests',
+  'contextHelp', 'alignment', 'why',
+]);
+
+/**
+ * A match as the outside world sees it, built from an ALLOWLIST.
+ *
+ * It used to be a denylist: drop anything whose name starts with an underscore.
+ * That is a convention, not a boundary. It holds only for as long as every
+ * working field anyone ever hangs on a candidate happens to be named for it,
+ * and the export surface is exactly the wrong place to depend on a habit —
+ * `_retrieval` reached an export once already, back when the strip was by name.
+ *
+ * Naming what goes out inverts the failure: a new field is invisible until
+ * someone adds it here, which is a missing feature and gets noticed, instead of
+ * shipping by default, which is a leak and does not. The recursive
+ * no-underscore test stays as a backstop for the rest of the document.
  */
 function publicShape(match) {
-  return Object.fromEntries(Object.entries(match).filter(([key]) => !key.startsWith('_')));
+  const shaped = {};
+  for (const field of PUBLIC_MATCH_FIELDS) {
+    if (field in match) shaped[field] = match[field];
+  }
+  return shaped;
 }
 
 function hasLocalConceptEvidence(candidate) {
@@ -2794,6 +2820,10 @@ export const analyzerInternals = Object.freeze({
   // what survives retrieval rather than inferring it from what happens to be
   // displayed. Callers outside analyzeDocument pass no bounded context.
   candidateSetFor: (unit, prepared, context = null) => buildCandidateSet(unit, prepared, context),
+  // Exposed so the export boundary can be tested directly rather than only
+  // through a whole analysis, where a leak with an ordinary name would have to
+  // reach a fixture before anyone saw it.
+  publicShape,
   stanceFor,
   classifyRiskFlags,
   // Threshold names kept for callers written against v2.1.2; every value now

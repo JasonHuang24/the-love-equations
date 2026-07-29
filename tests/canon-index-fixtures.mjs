@@ -98,6 +98,13 @@ for (const entry of index.entries) {
   for (const alias of typed) {
     assert(aliases.has(alias), `${entry.id} types "${alias}" but it is not one of its aliases`);
     assert(!badges.has(alias), `${entry.id} types verdict badge "${alias}" as an alias`);
+    // Typing only reaches single-token aliases: the analyzer's promotion pass
+    // iterates the alias list filtered to entries with no space in them, so a
+    // multiword typed alias is never consulted. It is not wrong in the way a
+    // bad rule is wrong — it is inert, which is worse, because it reads as a
+    // rule that works. Multiword aliases already match as phrases.
+    assert(!/\s/.test(alias.trim()),
+      `${entry.id} types multiword alias "${alias}", which the promotion pass never sees`);
   }
 }
 

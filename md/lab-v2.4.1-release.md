@@ -80,7 +80,7 @@ that disclosure goes missing — the same treatment the provisional-coverage tag
 |---|---|
 | `claimUnit` — normalized excerpt, stable ID, parent-segment boundary, speaker, timestamps, claim likelihood, bounded-context bridge and its immediate predecessor | `le-lab.analysis/2.4` |
 | `domainDecision` — status, decisive reason code, per-frame scores, cue evidence | `le-lab.analysis/2.4` |
-| `display` — primary, secondary, weak matches with score, confidence, alignment, match trace | `le-lab.analysis/2.4` |
+| `display` — primary and secondary with score, confidence, alignment, match trace; weak with rank/ID/title/score/confidence only *(row corrected in v2.4.2: weak matches carry no alignment or match trace, because stance runs on credible candidates — those live in `candidateTrace`)* | `le-lab.analysis/2.4` |
 | `candidateTrace` — the whole working candidate set before display caps | `le-lab.diagnostics/1.0` |
 | `build` — Lab release, analyzer version and mode, scoring hash, canon schema and version, analysis schema, diagnostics schema | both |
 | `review` — disposition, failure layer, expected/forbidden concepts, expected alignment, note | the reviewer |

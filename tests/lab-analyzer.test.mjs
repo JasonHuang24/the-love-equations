@@ -8,9 +8,11 @@ import {
   ANALYSIS_SCHEMA_VERSION,
   ANALYZER_VERSION,
   DIAGNOSTICS_SCHEMA_VERSION,
+  PUBLIC_MATCH_FIELDS,
   SCORING_CONFIG,
   SCORING_CONFIG_HASH,
   analyzeDocument,
+  analyzerInternals,
   classifyDomainRelevance,
   detectClaimUnits,
   prepareCanonIndex,
@@ -1155,10 +1157,57 @@ test('every export is self-describing: provenance stamp and provisional marker',
   assert.ok(result.limitations.some((line) => /thresholds are provisional/i.test(line)));
 });
 
+test('the published match surface is exactly the allowlist, and nothing else gets out', async () => {
+  // The export surface is built by naming what goes OUT, not by naming what
+  // stays in. A denylist is a convention — it holds only while every working
+  // field anyone hangs on a candidate happens to be named for it — and this is
+  // the one place in the analyzer where a convention is not good enough.
+  const result = await analyzeDocument(createDemoDocument(), REAL_CANON);
+  const allowed = new Set(PUBLIC_MATCH_FIELDS);
+
+  const matches = result.segments.flatMap((segment) => segment.matches);
+  const weak = result.segments.flatMap((segment) => segment.weakMatches);
+  assert.ok(matches.length && weak.length, 'the demo publishes both kinds');
+
+  [...matches, ...weak].forEach((match) => {
+    Object.keys(match).forEach((key) => {
+      assert.ok(allowed.has(key), `${key} is published but not on the allowlist`);
+    });
+    // Order is part of the contract: the frozen fixture is compared byte for
+    // byte, so a reordered allowlist is a fixture break, not a cosmetic change.
+    assert.deepEqual(Object.keys(match), PUBLIC_MATCH_FIELDS.filter((field) => field in match));
+  });
+
+  // Every allowlisted field is real. A name here that nothing produces is dead
+  // vocabulary that would quietly authorize a future leak under that name.
+  const produced = new Set([...matches, ...weak].flatMap((match) => Object.keys(match)));
+  assert.deepEqual(PUBLIC_MATCH_FIELDS.filter((field) => !produced.has(field)), []);
+
+  // Weak matches carry the same surface minus stance, which only runs on
+  // credible candidates.
+  const weakKeys = new Set(weak.flatMap((match) => Object.keys(match)));
+  assert.equal(weakKeys.has('alignment'), false);
+  assert.equal(weakKeys.has('why'), false);
+});
+
+test('a working field with an ordinary name is stripped too', async () => {
+  // The failure the allowlist exists for. `_retrieval` was caught by the
+  // underscore rule; a field called `internalNotes` would not have been.
+  const { publicShape } = analyzerInternals;
+  const shaped = publicShape({
+    canonId: 'smv:looks',
+    title: 'Looks',
+    score: 0.5,
+    _rawScore: { secrets: true },
+    internalNotes: 'never meant to ship',
+    scratchpad: [1, 2, 3],
+  });
+  assert.deepEqual(Object.keys(shaped), ['canonId', 'title', 'score']);
+});
+
 test('no analyzer working field escapes into an export', async () => {
-  // Retrieval hangs bookkeeping on the candidate objects it passes downstream.
-  // Those fields are stripped by PREFIX rather than by name, because stripping
-  // them by name is how `_retrieval` reached an export the first time.
+  // The backstop for everywhere the allowlist does not reach: retrieval hangs
+  // bookkeeping on objects the whole document carries, and this walks all of it.
   const result = await analyzeDocument(createDemoDocument(), REAL_CANON, { diagnostics: true });
   const leaked = new Set();
   const walk = (node) => {

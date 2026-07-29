@@ -48,7 +48,7 @@ The file carries:
 | `review` | `reviewDisposition`, failure layer, expected/forbidden canon IDs, expected alignment, note | the reviewer |
 | `claimUnit` | normalized excerpt, stable ID, parent segment boundary, speaker, timestamps, claim likelihood, bounded-context bridge and its immediate predecessor when one was eligible | `le-lab.analysis/2.4` |
 | `domainDecision` | status, decisive reason code, per-frame scores, cue evidence | `le-lab.analysis/2.4` |
-| `display` | primary, secondary, and weak matches with scores, confidence, alignment, and match trace | `le-lab.analysis/2.4` |
+| `display` | primary and secondary matches with score, confidence, alignment, `whyMatched` and `contextHelp`; weak matches with **rank, ID, title, score and confidence only** — stance runs on credible candidates, so a weak match has no alignment, and its reasons live in `candidateTrace` | `le-lab.analysis/2.4` |
 | `candidateTrace` | **the whole working candidate set before display caps** — score components, penalties by name, evidence surfaces with provenance types, admission outcome, context assistance, rank, rank at retrieval, truncation fate, and the hits the caps hid | `le-lab.diagnostics/1.1` |
 | `build` | Lab release, analyzer version and mode, scoring-config hash, canon index schema and version, analysis schema, diagnostics schema | both |
 | `source` | title, type, URL, extraction method — **only if the reviewer ticked the box** | `le-lab.analysis/2.4` |

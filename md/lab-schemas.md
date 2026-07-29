@@ -246,21 +246,44 @@ its binding constraint — `domain-gate`, `claim-word-floor`,
 rather than trusting the label. `humanReading` records what a careful reader
 would say the passage is and is never asserted.
 
-## Diagnostic trace — `le-lab.diagnostics/1.0`
+## Diagnostic trace — `le-lab.diagnostics/1.1`
 
 Opt-in and off by default: `analyzeDocument(document, canonIndex,
-{ diagnostics: true })` adds a `diagnostics` key, and omitting the option leaves
-the key absent rather than empty. `LabAnalyzerClient.analyze` forwards the flag
-on both the worker and the main-thread fallback route.
+{ diagnostics: true })` adds a `diagnostics` key covering the whole document,
+`{ diagnostics: { segmentIds: [id] } }` covers those claim units only, and
+omitting the option leaves the key absent rather than empty. `scope` reports
+which of the two it is, alongside `requestedSegmentIds` and
+`analyzedClaimUnitCount`, so a reader who finds one unit in a trace can tell
+"that is all there was" from "that is all that was asked for". A scoped trace is
+byte-identical to the same unit in a whole-document trace, and a test asserts it.
+`LabAnalyzerClient.analyze` forwards the option verbatim on both the worker and
+the main-thread fallback route.
 
 The trace is the Pass B adapter boundary. Per claim unit it reports the domain
-decision with its frame summary, the bounded-context bridge, and the **whole
-working candidate set before display caps** — each candidate with its rank, its
-rank at retrieval, the number of candidates above the floor, its truncation
-fate (`top-ranked`, `exact-evidence`, `context-eligible`), the decomposed score
-components, the penalties applied by name, the evidence surfaces hit with their
-provenance types, the admission outcome, any context assistance, and whether it
-was displayed as a match, a weak match, or not at all.
+decision with its frame summary, the bounded-context bridge, a `unitDigest`
+binding the entry to the row the analysis published, and the **whole working
+candidate set before display caps** — each candidate with its rank, its rank at
+retrieval, the number of candidates above the floor, its `fate`, its truncation
+fate, the decomposed score components, the penalties applied by name, the
+evidence surfaces hit with their provenance types, the admission outcome, any
+context assistance, and whether it was displayed as a match, a weak match, or
+not at all.
+
+`fate` names the first thing that decided a candidate's visibility, in this
+order: `retained-after-prefix-cut` · `below-weak-threshold` · `credible-cap` ·
+`weak-cap` · `failed-admission` · `displayed`. Retention is reported separately
+and always — `truncationFate.retainedAfterPrefixCut` with `retainedBecause`
+naming which rule kept it (`top-ranked`, `exact-evidence`, `context-eligible`) —
+because the two axes are independent: a candidate can be both cap-hidden and
+union-retained, and `1.0`'s single boolean reported every past-the-cut candidate
+as evidence-retained including the ones kept on context.
+
+The trace also carries what it is a trace **of**, not just what produced it:
+`analysisId` (which the analysis publishes too, so a consumer can verify it), a
+`canonSnapshotHash` over the canon's actual lexical surface rather than the
+version string it claims, and an `inputDigest` over the analyzed text and its
+overrides. Analyzer version, schema version and scoring hash are properties of
+the build and hold for a trace of any other document on the same build.
 
 Everything under `diagnostics` is derived. It never feeds a decision, so the
 same document analyzed with and without it produces the same matches, scores,
@@ -269,7 +292,7 @@ independently of the analysis schema because it is an internal view and is
 expected to churn faster than the published contract; nothing in the Lab
 interface reads it.
 
-## Mapping feedback — `le-lab.mapping-feedback/1.0`
+## Mapping feedback — `le-lab.mapping-feedback/1.1`
 
 One reviewer disagreement about one claim unit, written by
 `js/lab-feedback.js` and downloaded to the visitor's own disk. **The download
@@ -280,14 +303,30 @@ human, and `md/FEEDBACK-PIPELINE.md` is where that human picks it up.
 The payload is assembled from two analyzer outputs and re-derives nothing. The
 claim unit, its domain decision with per-frame evidence, claim likelihood,
 speaker, timestamps, parent-segment boundary, bounded-context bridge with its
-immediate predecessor, and the displayed primary/secondary/weak matches come
-from `le-lab.analysis/2.4`. The **whole working candidate set before display
-caps** — score components, penalties by name, evidence surfaces with their
-provenance types, admission outcome, context assistance, rank, rank at
-retrieval, truncation fate, and the hits the caps hid — comes from
-`le-lab.diagnostics/1.0`. A value not published by one of those two is reported
-as unavailable with the reason, never reconstructed: a feedback file that
-quietly disagreed with the analyzer would be worse than one that admits a gap.
+immediate predecessor, and the displayed matches come from
+`le-lab.analysis/2.4`. The **whole working candidate set before display caps** —
+score components, penalties by name, evidence surfaces with their provenance
+types, admission outcome, context assistance, rank, rank at retrieval, fate, and
+the hits the caps hid — comes from `le-lab.diagnostics/1.1`. A value not
+published by one of those two is reported as unavailable with the reason, never
+reconstructed: a feedback file that quietly disagreed with the analyzer would be
+worse than one that admits a gap.
+
+**The two displayed lists carry different fields, because the analyzer produces
+different fields for them.** `display.primary` and each `display.secondary`
+carry rank, canon ID, title, href, category, subcategory, evidence type, score,
+confidence, alignment (label, rationale, evidence), `whyMatched`, and
+`contextHelp`. Each `display.weak` carries **rank, canon ID, title, score, and
+confidence — and nothing else**: stance runs on credible candidates only, so a
+weak match has no alignment to report, and its `whyMatched` and `contextHelp`
+are read from `candidateTrace` where the full candidate record lives.
+
+`candidateTrace` summarizes itself with counts taken from the thing each one
+names: `displayedCount`, `notDisplayedCount`, `hiddenByDisplayCaps` (a cap
+pushed it off the ledger), `hiddenBelowWeakThreshold` (it never cleared the
+score floor), `retainedAfterPrefixCut`, and `retainedOnEvidenceAfterCap` (exact
+evidence only, not context). The first two of those partition
+`notDisplayedCount` exactly, and a test asserts it on every row.
 
 `review.reviewDisposition` is `wrong-primary`, `false-positive`,
 `missing-expected-concept`, `should-remain-unmapped`, `wrong-stance`,
@@ -315,9 +354,23 @@ A **set-aside passage carries no candidate trace**, and that is the analyzer's
 behavior rather than a gap in it: the relevance gate decided before any canon
 entry was scored, so no candidate set exists. The file reports
 `retrieval-not-run` and names the unit fields the analysis does not publish for
-ignored passages. The three refusals — an unknown disposition, a trace whose
-excerpt disagrees with the flagged row, and a retained row missing from the
-trace — all throw rather than exporting a flag that looks filed but is unusable.
+ignored passages.
+
+Refusals throw rather than exporting a flag that looks filed but is unusable: an
+unknown disposition, a trace whose excerpt disagrees with the flagged row, a
+retained row missing from the trace, a trace with no analysis identity or the
+wrong one, and — the check `1.1` was cut for — **a trace that does not
+reproduce the flagged row**. The exporter rebuilds the ledger row from the
+trace's own candidates (`display: 'match'` are the displayed matches, in order;
+`display: 'weak-match'` are the weak list) and requires mapped status, every
+canon ID, every score, every alignment and every confidence to come back
+identical. Each refusal names what disagreed.
+
+`flagId` is a content hash of the whole review — disposition, both concept ID
+lists in the order given, expected alignment, note, provenance choice, unit, and
+analysis. Two reviewers who disagree about one mapping get two files; a revised
+opinion is a new file beside the old one, superseded by a human's adjudication
+and never automatically.
 
 `tools/lab-feedback.mjs` validates a file against this schema, routes it by
 failure layer, checks both frozen benchmarks for the same passage, and drafts

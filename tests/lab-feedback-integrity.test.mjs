@@ -360,6 +360,48 @@ test('RED D5: the trace summary adds up, on every row', () => {
 });
 
 /* ===========================================================================
+ * The weak-match surface, pinned to what the analyzer actually produces.
+ * ===========================================================================
+ * The v2.4.1 documents described weak matches as carrying alignment and a match
+ * trace. They never have: stance runs on credible candidates only, so a weak
+ * match has no alignment to report, and its reasons are in candidateTrace. A
+ * doc that overstates the payload sends an adjudicator looking for a field and
+ * then leaves them wondering which of the two artifacts is broken.
+ */
+
+test('a weak match exports rank, ID, title, score and confidence — and no more', () => {
+  const rowWithWeak = analysis.segments.find((segment) => (segment.weakMatches || []).length);
+  assert.ok(rowWithWeak, 'the demo publishes a weak match');
+  const feedback = flag({
+    segmentId: rowWithWeak.unit.id,
+    review: { disposition: rowWithWeak.mapped ? 'wrong-primary' : 'missing-expected-concept' },
+  });
+
+  feedback.display.weak.forEach((match, index) => {
+    assert.deepEqual(Object.keys(match), ['rank', 'canonId', 'title', 'score', 'confidence']);
+    assert.equal(match.rank, index + 1);
+    assert.equal(match.canonId, rowWithWeak.weakMatches[index].canonId);
+    assert.equal(match.score, rowWithWeak.weakMatches[index].score);
+  });
+
+  // What the docs promised is real, and it is in the trace, one lookup away.
+  feedback.display.weak.forEach((weak) => {
+    const traced = feedback.candidateTrace.candidates.find((c) => c.canonId === weak.canonId);
+    assert.ok(traced, `${weak.canonId} is in the trace`);
+    assert.equal(traced.display, 'weak-match');
+    assert.equal(traced.alignment, null, 'stance never ran on it');
+    assert.ok(Array.isArray(traced.penalties) && traced.components);
+  });
+});
+
+test('a displayed credible match carries the fields a weak one does not', () => {
+  const feedback = flag();
+  assert.ok(feedback.display.primary.alignment?.label);
+  assert.ok(Array.isArray(feedback.display.primary.whyMatched));
+  assert.ok('contextHelp' in feedback.display.primary);
+});
+
+/* ===========================================================================
  * Per-unit traces. Scoping changes coverage and nothing else.
  * ===========================================================================
  * The flag flow asks for the flagged passage's trace, not the document's. That

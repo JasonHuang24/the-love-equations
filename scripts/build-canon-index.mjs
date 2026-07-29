@@ -1213,15 +1213,36 @@ function countBy(entries, field) {
  * that are on it. A typed alias that is not an alias is a curation slip that
  * would otherwise do nothing at all, silently — the worst kind.
  */
+/*
+ * Typing only reaches SINGLE-TOKEN aliases. The analyzer's promotion loop
+ * iterates `_singleTokenAliases`, which is the alias list filtered to entries
+ * with no space in them, so a multiword alias typed standalone or contextual is
+ * never consulted — it does nothing, forever, and looks in the source exactly
+ * like a rule that works.
+ *
+ * That is the same failure the existence check above catches, one level in:
+ * a typed alias that is not an alias, and a typed alias the typing cannot
+ * reach, are both curation that silently does nothing. Multiword aliases are
+ * not a problem; they already earn phrase treatment on their own length. The
+ * error is claiming to type one.
+ */
+function assertSingleToken(entry, alias, kind) {
+  if (/\s/.test(alias.trim())) {
+    throw new Error(`${entry.id} types "${alias}" ${kind}, but typing only applies to single-token aliases — the analyzer's promotion pass never sees a multiword one, so this rule would be inert. Multiword aliases already match as phrases; drop the typing.`);
+  }
+}
+
 function assertAliasTyping(entry) {
   const aliases = new Set(entry.aliases);
   const typed = new Set();
   for (const alias of entry.standaloneAliases) {
     if (!aliases.has(alias)) throw new Error(`${entry.id} types "${alias}" standalone but it is not one of its aliases`);
+    assertSingleToken(entry, alias, 'standalone');
     typed.add(alias);
   }
   for (const { alias, notAfter } of entry.contextualAliases) {
     if (!aliases.has(alias)) throw new Error(`${entry.id} types "${alias}" contextual but it is not one of its aliases`);
+    assertSingleToken(entry, alias, 'contextual');
     if (typed.has(alias)) throw new Error(`${entry.id} types "${alias}" both standalone and contextual`);
     typed.add(alias);
     for (const modifier of notAfter) {
