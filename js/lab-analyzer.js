@@ -153,6 +153,16 @@ export const SCORING_CONFIG = Object.freeze({
   contextBoostDependency: 0.035,
   contextBoostRelated: 0.025,
 
+  // NEW at v2.5.0. How many of the entry's misreading tokens a quoted span must
+  // contain before it counts as carrying the assertion rather than decorating
+  // part of one. Two, because one shared word is a coincidence and the span
+  // still has to carry a finite verb on top of this.
+  minQuotedAssertionTokens: 2,
+  // NEW at v2.5.0. Excerpt length in the stance scope trace. The trace exists
+  // so a reader can check the label against the clause it came from; it is not
+  // a second copy of the passage, which the row already carries.
+  stanceScopeExcerptChars: 120,
+
   // Confidence, stance, and ambiguity.
   confidenceHigh: 0.72,
   confidenceHighWithPhrase: 0.64,
@@ -656,6 +666,38 @@ const REPORTED_SPEECH_CUES = new RegExp([
   /\b(?:some|many|most|a lot of|plenty of|these|those)\s+(?:men|women|people|guys|girls|users|commentators|critics|posters)\b[^.]{0,40}?\b(?:claims?|says?|said|argues?|argued|insists?|insisted|believes?|thinks?|maintains?|reckons?)\b/.source,
   /\b(?:he|she|they|critics|commentators|the podcast|the host|the video|the article|the thread|the book)\s+(?:\w+\s+){0,3}?(?:claims?|claiming|says?|said|argues?|arguing|insists?|insisting|believes?|thinks?|maintains?|wrote|posted|tweeted)\b/.source,
 ].join('|'), 'i');
+
+/*
+ * The same negators as MISREADING_DENIAL_CUES, compiled to be COUNTED rather
+ * than tested. That difference is the whole of the sc-01 fix: "it is not false
+ * that X" contains two negators and asserts X, and a presence test cannot tell
+ * it from "it is false that X". Derived from the one source so the two can
+ * never drift into disagreeing about what a negator is.
+ */
+const NEGATION_PARITY_CUES = new RegExp(MISREADING_DENIAL_CUES.source, 'gi');
+
+/*
+ * What a speaker does to a claim AFTER handing it to someone else, or after
+ * stating it. Each is matched only in clauses that FOLLOW the assertion,
+ * because all three are anaphoric — "that is false" points backwards, and a
+ * "wrong" in front of the claim is talking about something else.
+ */
+const ENDORSEMENT_CUES = /\b(?:exactly right|precisely right|quite right|dead right|spot on|is right|are right|is correct|is true|rightly so)\b/i;
+const REJECTION_CUES = /\b(?:is wrong|are wrong|was wrong|were wrong|is false|are false|is untrue|is nonsense|is a myth|is mistaken|is incorrect|not true|not the case|got that wrong|got it wrong|backwards)\b/i;
+/*
+ * Qualification is the third thing, and the reason Challenges exists. A claim
+ * that is explicitly half-withdrawn is neither asserted nor denied, and forcing
+ * it through that binary overstates whichever side it lands on. Kept disjoint
+ * from REJECTION_CUES on purpose: "overstated" is not "wrong".
+ */
+const QUALIFICATION_CUES = /\b(?:overstated|overstates|overstating|oversimplif\w*|too simple|too simplistic|an exaggeration|exaggerated|only partly|partly true|up to a point|not the whole story|more complicated than|overblown)\b/i;
+/*
+ * A quoted span carries an assertion only if it contains a finite verb. That
+ * one test separates sc-02, where the whole proposition sits inside the quotes
+ * and belongs to the editor, from sc-07, where the quotes decorate a bare noun
+ * phrase inside the speaker's own sentence and the speaker still owns the claim.
+ */
+const QUOTED_ASSERTION_VERBS = /\b(?:is|are|was|were|isn't|aren't|wasn't|weren't|means|equals|proves|creates|makes|shows|becomes|remains)\b/i;
 
 const SUPPORT_CUES = /\b(?:supports?|confirms?|consistent with|backs? up|holds up|evidence for|exactly right|true that)\b/i;
 const CHALLENGE_CUES = /\b(?:challenges?|questions?|overstates?|too simple|not always|depends on|exception|fails? when|weakens?)\b/i;
@@ -1899,6 +1941,121 @@ function confidenceFor(score, phraseHits) {
 }
 
 /**
+ * Spans the passage has put inside quotation marks.
+ *
+ * Double quotes are unambiguous. Straight single quotes are only treated as
+ * delimiters when neither end sits inside a word, so "doesn't" is a contraction
+ * and not the start of a quotation. The closing lookahead admits a dash because
+ * normalizeText folds em dashes to "-", and a quote that ends against one is
+ * still a quote.
+ */
+function quotedSpans(normalized) {
+  const spans = [];
+  let match;
+  const double = /"([^"]+)"/g;
+  while ((match = double.exec(normalized)) !== null) spans.push(match[1]);
+  const single = /(?:^|[\s([])'([^']+)'(?=[\s.,;:!?)\]-]|$)/g;
+  while ((match = single.exec(normalized)) !== null) spans.push(match[1]);
+  return spans;
+}
+
+/**
+ * Where the misreading sits in the passage, and what the passage does around it.
+ *
+ * This is the whole of the v2.5.0 stance change. The old model asked two
+ * sentence-wide yes/no questions — is there a negator anywhere, is there an
+ * attribution verb anywhere — and could therefore not count negators, tell
+ * which clause one belonged to, see quotation marks at all, or read what came
+ * after an attribution. This locates the clause that carries the misreading and
+ * then reads the rest of the sentence relative to it.
+ *
+ * No grammar is parsed and no part of speech is inferred. Clauses come from
+ * punctuation, negators are counted, and the three follow-up cue sets are
+ * matched only in clauses that come after the assertion. Every finding is
+ * returned rather than consumed, so the label can be audited against the exact
+ * span and cue that produced it.
+ */
+function misreadingScope(text, misreadingTokens) {
+  const normalized = normalizeText(text);
+  const segments = clauseSegments(normalized);
+  const clauses = segments.clauses.filter((clause) => clause.text);
+  const wanted = new Set(misreadingTokens || []);
+
+  // The clause that carries the misreading is the one that shares the most
+  // tokens with it. Ties go to the earliest, which is the one a reader meets
+  // first and the one later clauses are commenting on.
+  let assertion = clauses[0] || { index: 0, text: normalized };
+  let best = -1;
+  clauses.forEach((clause) => {
+    const overlap = unique(tokenize(clause.text)).filter((token) => wanted.has(token)).length;
+    if (overlap > best) {
+      best = overlap;
+      assertion = clause;
+    }
+  });
+  const assertionAt = clauses.indexOf(assertion);
+  const following = assertionAt === -1 ? [] : clauses.slice(assertionAt + 1);
+  const preceding = assertionAt === -1 ? [] : clauses.slice(0, assertionAt);
+
+  // Negation is COUNTED inside the assertion clause. Two negators restore the
+  // assertion; a negator in a trailing clause is negating that clause and has
+  // nothing to do with this one.
+  const negationCues = assertion.text.match(NEGATION_PARITY_CUES) || [];
+  const negationParity = negationCues.length % 2 === 1 ? 'odd' : 'even';
+
+  // Attribution governs forward, so it counts in the assertion clause or any
+  // clause before it — never one after, which would be commentary instead.
+  const attributionClause = [...preceding, assertion]
+    .find((clause) => REPORTED_SPEECH_CUES.test(clause.text)) || null;
+  const attributionCue = attributionClause
+    ? (attributionClause.text.match(REPORTED_SPEECH_CUES) || [])[0] || null
+    : null;
+
+  // A quoted span reports the claim only when the span carries the claim: it
+  // has to hold enough of the misreading AND a finite verb.
+  const spans = quotedSpans(normalized);
+  const quotedAssertion = spans.find((span) => {
+    const shared = unique(tokenize(span)).filter((token) => wanted.has(token)).length;
+    return shared >= SCORING_CONFIG.minQuotedAssertionTokens && QUOTED_ASSERTION_VERBS.test(span);
+  }) || null;
+
+  // Exactly one follow-up, and qualification outranks the other two: a speaker
+  // who half-withdraws a claim has taken a position that is neither of them.
+  let followUp = { kind: 'none', cue: null, clause: null };
+  for (const clause of following) {
+    const qualification = clause.text.match(QUALIFICATION_CUES);
+    if (qualification) { followUp = { kind: 'qualification', cue: qualification[0], clause: clause.index }; break; }
+    const rejection = clause.text.match(REJECTION_CUES);
+    if (rejection) { followUp = { kind: 'rejection', cue: rejection[0], clause: clause.index }; break; }
+    const endorsement = clause.text.match(ENDORSEMENT_CUES);
+    if (endorsement) { followUp = { kind: 'endorsement', cue: endorsement[0], clause: clause.index }; break; }
+  }
+
+  const excerpt = (value) => String(value || '').slice(0, SCORING_CONFIG.stanceScopeExcerptChars);
+  return {
+    reported: Boolean(attributionClause || quotedAssertion),
+    denialParity: negationParity === 'odd',
+    followUp,
+    trace: {
+      clauseCount: clauses.length,
+      assertionClause: { index: assertion.index, excerpt: excerpt(assertion.text) },
+      negation: { count: negationCues.length, parity: negationParity, cues: negationCues.slice(0, 4) },
+      quotation: {
+        spanCount: spans.length,
+        assertionBearing: Boolean(quotedAssertion),
+        excerpt: quotedAssertion ? excerpt(quotedAssertion) : null,
+      },
+      attribution: {
+        detected: Boolean(attributionClause),
+        cue: attributionCue,
+        clause: attributionClause ? attributionClause.index : null,
+      },
+      followUp,
+    },
+  };
+}
+
+/**
  * What the source is doing with the matched concept.
  *
  * The ordering below is the whole design. Entry-specific rulings come first
@@ -1914,8 +2071,14 @@ function stanceFor(unit, match) {
   const rawScore = match._rawScore;
   const surfaces = rawScore.matchSurfaces || { hit: [], tokens: {}, misreadingOnly: false, boundaryOnly: false };
   const commonMisreading = rawScore.misreadingOverlap >= SCORING_CONFIG.misreadingContradictionShare;
-  const reported = REPORTED_SPEECH_CUES.test(text);
-  const denied = MISREADING_DENIAL_CUES.test(text);
+  // Clause-scoped from v2.5.0, and computed only when the misreading branch can
+  // actually run. The two sentence-wide booleans are still derived and still
+  // published, because they are what every previous export recorded and a
+  // reader comparing two analyses needs to see the same fields — but no
+  // decision reads them any more.
+  const scope = commonMisreading ? misreadingScope(text, surfaces.tokens?.commonMisreading) : null;
+  const reported = scope ? scope.reported : REPORTED_SPEECH_CUES.test(text);
+  const denied = scope ? scope.denialParity : MISREADING_DENIAL_CUES.test(text);
   let label = 'Resembles';
   let rationale = 'The source and canon entry share a distinctive concept pattern, but the local engine cannot infer full agreement from wording alone.';
 
@@ -1935,10 +2098,25 @@ function stanceFor(unit, match) {
     label = 'Supports';
     rationale = 'The source affirms the LE boundary between descriptive dating-market leverage and moral worth, entitlement, or consent.';
   } else if (commonMisreading) {
-    if (reported) {
-      label = 'Context only';
-      rationale = 'The passage relays someone else\'s version of this concept rather than asserting one. The reading it reports is one the canon entry explicitly rejects, but that reading belongs to the person being quoted, not to this passage.';
-    } else if (denied) {
+    const { kind, cue } = scope.followUp;
+    if (kind === 'qualification') {
+      // Checked before everything else, including attribution: a speaker who
+      // qualifies a claim has taken a position of their own on it, whoever
+      // originally made it.
+      label = 'Challenges';
+      rationale = `The source states a reading this entry rejects and then withdraws part of it (“${cue}”), which is a scope limit rather than a claim or a denial.`;
+    } else if (reported) {
+      if (kind === 'endorsement') {
+        label = 'Contradicts';
+        rationale = `The passage relays someone else's version of this concept and then adopts it (“${cue}”). Endorsing a reported reading makes it the passage's own claim, and this entry explicitly rejects that reading.`;
+      } else if (kind === 'rejection') {
+        label = 'Supports';
+        rationale = `The passage relays a reading this entry rejects and then rejects it too (“${cue}”), which is the correction the entry itself states.`;
+      } else {
+        label = 'Context only';
+        rationale = 'The passage relays someone else\'s version of this concept rather than asserting one. The reading it reports is one the canon entry explicitly rejects, but that reading belongs to the person being quoted, not to this passage.';
+      }
+    } else if (kind === 'rejection' || (denied && kind !== 'endorsement')) {
       label = 'Supports';
       rationale = 'The source states the limit the canon entry states: it denies a reading this entry explicitly rejects.';
     } else {
@@ -1979,6 +2157,11 @@ function stanceFor(unit, match) {
       boundaryConditionOnly: surfaces.boundaryOnly,
       reportedSpeech: reported,
       denial: denied,
+      // Which spans, cues, and scopes produced the label. Present only when the
+      // misreading branch ran, because it is the only branch that scopes; the
+      // generic cue ladder below is still sentence-wide and says so by having
+      // nothing to show here.
+      scope: scope ? scope.trace : null,
     },
   };
 }
