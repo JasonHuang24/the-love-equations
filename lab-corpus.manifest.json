@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-lab.corpus-manifest/1.0",
-  "updatedAt": "2026-07-29T09:10:00.000Z",
+  "updatedAt": "2026-07-29T09:35:00.000Z",
   "archive": {
     "root": "lab-corpus/",
     "published": false,
@@ -9,7 +9,11 @@
       "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar and <NN>-<slug>.raw.html",
       "exports": "lab-corpus/exports/<NN>-<slug>-<analyzer-version>.json"
     },
-    "state": "populated: 3 of 4 sources acquired (01, 02, 04); 03 excluded by decision"
+    "state": "populated and re-run: 3 of 4 sources acquired and analyzed at v2.3.0 (01, 02, 04); 03 excluded by decision"
+  },
+  "singleVersionStatus": {
+    "isSingleVersion": false,
+    "reason": "Source 03 is excluded from re-acquisition and remains a v2.1.2 artifact. md/RERUN.md section 6 defines completion as every source in manifest.sources carrying a current export at the epoch version; 03 carries none and will not. The three acquired sources ARE single-version at 2.3.0, and cross-source comparison among those three rests on one instrument, one threshold set, and one canon snapshot. Any comparison that includes 03 does not."
   },
   "reproducibility": {
     "chain": "archived raw HTML -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
@@ -18,13 +22,18 @@
     "note": "The extractor is committed (it is our code, not third-party text) so anyone holding the archived HTML can regenerate the exact analyzed text and check it against these hashes. Extraction was deliberately NOT done by a model reading the page: a model-mediated transcription is not reproducible byte-for-byte and would break the chain. Each source's sidecar records its exact command line, plus the SHA-256 of the raw HTML it was run against."
   },
   "epoch": {
-    "analyzerVersion": "2.2.0",
-    "analysisSchemaVersion": "le-lab.analysis/2.2",
+    "analyzerVersion": "2.3.0",
+    "analysisSchemaVersion": "le-lab.analysis/2.3",
     "researchQueueSchemaVersion": "le-lab.research-queue/2.1",
     "scoringConfigHash": "195c1ld",
     "canonIndexVersion": "1.0.0+62c5cb511433",
     "canonGeneratedAt": "2026-07-29T08:40:34.642Z",
-    "note": "Read from fixtures/demo-v2.2.0-canon-62c5cb511433.json provenance, not from memory. This is the post-alias-pass canon, not the 1.0.0+8c38a2f1d015 the run-01 corpus was analyzed against. This epoch describes the instrument at acquisition time; the re-run epoch is set when exports land."
+    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. All three exports agree on every field. This is the post-alias-pass canon, not the 1.0.0+8c38a2f1d015 the run-01 corpus was analyzed against."
+  },
+  "labelingSheets": {
+    "generator": "tools/lab-labeling-sheet.mjs",
+    "generatorSha256": "2d195b7a03d1cedb8be79a8462345acfd32ed2384f905c84a6727ddf1f2fa2c2",
+    "purpose": "Peer-review artifacts with an empty VERDICT column, one per source. Section A grades every mapping (CORRECT/FALSE-POSITIVE), section B every unmapped claim-like passage (OK-NO-CANON/MISS), section C every passage the domain gate set aside (OK/SHOULD-HAVE-BEEN-RETAINED). A graded set becomes the fixture the threshold-calibration pass needs — today's thresholds were authored by judgment and never fitted to labelled data, which is what coverage.provisional records."
   },
   "acquisition": {
     "status": "acquired",
@@ -48,7 +57,13 @@
       "capturedBy": "reacquired",
       "capturedAt": "2026-07-29T09:03:00.000Z",
       "words": 2283,
-      "current": null,
+      "current": "lab-corpus/exports/01-pew-online-dating-v2.3.0.json",
+      "currentSha256": "9d196ec1020159b58a3d3464d0340df54ddcc3a275ed25f7ed82d608b5320962",
+      "companions": {
+        "queue": { "file": "lab-corpus/exports/01-pew-online-dating-v2.3.0.queue.json", "sha256": "b096ef98f1ab21c77555a70c05553d187b0d1781f98afe91682338bebb04338a" },
+        "markdown": { "file": "lab-corpus/exports/01-pew-online-dating-v2.3.0.md", "sha256": "db8dccbf7f7f6026fd8c79ce0ebc02abbc59763392c279a5e651da4b6620f6c4" },
+        "labelingSheet": { "file": "lab-corpus/exports/01-pew-online-dating-v2.3.0.labeling.csv", "sha256": "3da6528cb0becf1d2a484de4883be4612ff801d7a432c31772f371ce767ccfd0" }
+      },
       "superseded": [],
       "priorExport": null,
       "priorRun": {
@@ -62,8 +77,8 @@
         "queue": 17,
         "pressureTests": 4
       },
-      "result": { "claimLike": null, "mapped": null, "coveragePct": null },
-      "delta": null,
+      "result": { "analyzedPassages": 64, "claimLike": 62, "mapped": 27, "coveragePct": 43.5, "tensions": 9, "queue": 35, "setAside": 41, "provisional": true },
+      "delta": "NOT COMPARABLE as a like-for-like re-run. 34 claim-like / 50% mapped / 17 queue becomes 62 claim-like / 43.5% mapped / 35 queue, but three variables moved at once and a fourth is the text itself: analyzer 1.7 to 2.3.0, canon 6dc9bff7b0fe to 62c5cb511433, the four Harvest #1 visitor includes are gone (content-derived unit IDs cannot survive re-acquisition), and this extraction takes a wider article boundary than whatever Harvest #1 captured — it keeps the 'How we did this' methodology box, the Terminology list, and the Asian-sample note. The near-doubling of claim-like segments is mostly that boundary, not the analyzer. CAUSE: mixed, not attributable.",
       "acquisition": {
         "method": "live page, curl, deterministic script extraction",
         "verification": "VERIFIED — title, publication date (2023-02-02), sample size (n=6,034) and field dates (July 5-17 2022) all match the dossier's recorded metadata. Full check record in the sidecar.",
@@ -88,7 +103,13 @@
       "capturedBy": "reacquired",
       "capturedAt": "2026-07-29T09:02:00.000Z",
       "words": 1210,
-      "current": null,
+      "current": "lab-corpus/exports/02-fem-centrism-v2.3.0.json",
+      "currentSha256": "71855078e5b1e0783a373e27988d5847e4f0a7b27fba578b11a0b3fb32771f59",
+      "companions": {
+        "queue": { "file": "lab-corpus/exports/02-fem-centrism-v2.3.0.queue.json", "sha256": "9de58f6bda2764a254790a1c4375a26f867197a7ae604e959ba92b7257b7ba1b" },
+        "markdown": { "file": "lab-corpus/exports/02-fem-centrism-v2.3.0.md", "sha256": "9cfe919a6ae8b39f6e7bdcdc80866fb349649640d446c2bf66724707d38f0d44" },
+        "labelingSheet": { "file": "lab-corpus/exports/02-fem-centrism-v2.3.0.labeling.csv", "sha256": "089ee7d34a60908cdf19d8af7c9da31c878801f92c7d49e34a2087ce0edf020c" }
+      },
       "superseded": [],
       "priorExport": null,
       "priorRun": {
@@ -102,8 +123,8 @@
         "coveragePct": 0,
         "queue": 10
       },
-      "result": { "claimLike": null, "mapped": null, "coveragePct": null },
-      "delta": null,
+      "result": { "analyzedPassages": 10, "claimLike": 10, "mapped": 0, "coveragePct": 0, "tensions": 0, "queue": 10, "setAside": 41, "provisional": true },
+      "delta": "IDENTICAL to the v2.1.2 run on every recorded figure: 10 claim-like, 0 mapped, 0%, 10 queued. Two releases, a verdict-badge fix, 38 new aliases and four new gate frames later, this source produces exactly the number it produced before. CAUSE: attributable — none of the three candidate causes touched it. The verdict fix could not (no verdict-shaped prose), the aliases could not (no passage reached a credible score), and the gate change provably did not: re-running the identical text on the v2.2.0 build gives byte-equal behavioral output, and none of the four new frames fired on any passage.",
       "acquisition": {
         "method": "Wayback capture 2025-10-23 (id_ original bytes), deterministic script extraction",
         "verification": "VERIFIED (identity) — title, author site, and 2011 permalink all match; extracted word count 1,210 vs the run-01 record of 1,214, a 0.3% gap. DRIFT WINDOW NOTED: the latest capture on or before the 2026-07-27 run is nine months earlier, so an edit inside that window would be invisible.",
@@ -162,7 +183,13 @@
       "capturedBy": "reacquired",
       "capturedAt": "2026-07-29T09:01:00.000Z",
       "words": 2891,
-      "current": null,
+      "current": "lab-corpus/exports/04-heteropessimism-v2.3.0.json",
+      "currentSha256": "df1215bc5c8fecacb613461a5289f1c28c66ecca145a4dcbfff1252a8e006d01",
+      "companions": {
+        "queue": { "file": "lab-corpus/exports/04-heteropessimism-v2.3.0.queue.json", "sha256": "427d44e3d729cbf61a4038b302da29b32bdc7840ff25b896abc62b6a8f197422" },
+        "markdown": { "file": "lab-corpus/exports/04-heteropessimism-v2.3.0.md", "sha256": "a3b68ea11e1a5245471fcfe048cdaf9df2cc1fd261e1a93143b29d9b35fdae96" },
+        "labelingSheet": { "file": "lab-corpus/exports/04-heteropessimism-v2.3.0.labeling.csv", "sha256": "d98c3abeb65043877b76ce7910c4feb2bb8de4f627f2e04c7044d131186d35b5" }
+      },
       "superseded": [],
       "priorExport": null,
       "priorRun": {
@@ -176,8 +203,8 @@
         "coveragePct": 3.6,
         "queue": 27
       },
-      "result": { "claimLike": null, "mapped": null, "coveragePct": null },
-      "delta": null,
+      "result": { "analyzedPassages": 29, "claimLike": 28, "mapped": 1, "coveragePct": 3.6, "tensions": 0, "queue": 27, "setAside": 91, "provisional": true },
+      "delta": "IDENTICAL to the v2.1.2 run on every recorded figure: 28 claim-like, 1 mapped, 3.6%, 27 queued — and the single mapping is still the same one, smv:multiplier:market ('The Market') at Medium confidence, score 0.54. CAUSE: attributable — as with 02, the gate change provably did not move it (byte-equal behavioral output on the v2.2.0 build, zero firings of the four new frames) and no alias reached a credible score. This is the strongest reproduction in the set, because its extracted text is byte-identical to a Wayback capture taken eleven days before the original run, so text drift is ruled out too.",
       "acquisition": {
         "method": "live page, curl, deterministic script extraction; corroborated against a 2026-07-16 Wayback capture",
         "verification": "VERIFIED — title and publication match; extracted word count 2,891 vs the run-01 record of 2,938, a 1.6% gap. The live extraction is BYTE-IDENTICAL to the extraction from the 2026-07-16 capture, eleven days before the original run, so source drift is ruled out as an explanation for any delta this re-run shows.",
