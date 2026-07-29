@@ -399,6 +399,7 @@ function createEntry({
   synopsis,
   evidenceType,
   contentType,
+  verdict = '',
   aliases = [],
   phrases = [],
   dependencies = [],
@@ -420,6 +421,10 @@ function createEntry({
     synopsis: summarize(cleanMarkupText(synopsis)),
     evidenceType: cleanText(evidenceType),
     contentType: cleanText(contentType),
+    // The page's own ruling label (Mythbuster badges). Recorded, never matched:
+    // a verdict describes what the canon concluded, not what a source calls the
+    // concept, so it must not reach the analyzer's alias/phrase match surface.
+    verdict: cleanMarkupText(verdict),
     aliases: uniqueStrings([...aliasesForTitle(title), ...aliases]),
     phrases: uniqueStrings(phrases.map((phrase) => summarize(cleanMarkupText(phrase), 280))),
     dependencies: uniqueStrings(dependencies),
@@ -767,7 +772,7 @@ function extractMythbuster(context) {
       synopsis: item.ruling?.text,
       evidenceType: tierMap[item.ruling?.tier] || 'Evidence-based',
       contentType: 'Mythbuster ruling',
-      aliases: [item.ruling?.badge],
+      verdict: item.ruling?.badge,
       phrases: (item.claims || []).map((claim) => claim.text),
       boundaryConditions: item.ruling?.researchNotes ? [item.ruling.researchNotes] : [],
       commonMisreadings: misreadings,

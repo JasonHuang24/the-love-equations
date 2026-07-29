@@ -105,6 +105,11 @@ async function main() {
       assert(entry[field].trim(), `${entry.id || '?'} .${field} must not be blank`);
     }
     assert.equal(typeof entry.anchor, 'string', `${entry.id}.anchor must be a string`);
+    assert.equal(typeof entry.verdict, 'string', `${entry.id}.verdict must be a string`);
+    assert(
+      !entry.verdict || !entry.aliases.some((alias) => alias === entry.verdict),
+      `${entry.id} repeats its verdict "${entry.verdict}" as a match alias`,
+    );
     assert(!ids.has(entry.id), `Duplicate canon ID ${entry.id}`);
     ids.add(entry.id);
     assert(pages.has(entry.page), `${entry.id} points to unindexed page ${entry.page}`);

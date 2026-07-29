@@ -601,12 +601,23 @@ test('the full novel relationship matrix remains analyzable without sentence all
   assert.ok(result.segments.every((segment) => segment.unit.isClaimLike));
   assert.equal(result.metrics.claimLikeSegments, claims.length);
   assert.equal(result.metrics.ignoredDomainSegments, 0);
+  // The commitment claim is a recall gain from the verdict-field fix, not a
+  // loosened expectation. M-TBD-63's ruling badge ("Signal-preferred, not
+  // signal-required") used to sit in the canon's alias set, so "preferring" pulled
+  // that ruling into the top slot at 0.416 and crowded out Commitment — which had
+  // an exact alias hit at 0.412 — leaving the claim below the mapping gate. With
+  // verdicts off the match surface, Commitment ranks first at 0.463 and it maps.
   assert.deepEqual(mappedClaims, [
     'The decline of recurring community spaces reduces opportunities for repeated exposure.',
+    'A person can prefer predictability without preferring commitment.',
   ]);
   assert.equal(
     result.segments.find((segment) => segment.unit.text === mappedClaims[0]).matches[0].title,
     'Exposure',
+  );
+  assert.equal(
+    result.segments.find((segment) => segment.unit.text === mappedClaims[1]).matches[0].title,
+    'Commitment',
   );
   result.segments.filter((segment) => !segment.mapped).forEach((segment) => {
     assert.ok(result.researchQueue.items.some((item) => item.segmentId === segment.unit.id));

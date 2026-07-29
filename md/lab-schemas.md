@@ -81,6 +81,17 @@ existing LE source links, and pressure questions where the source supplies
 them. `scripts/validate-canon-index.mjs` rejects broken pages/fragments,
 duplicate IDs, malformed evidence types, and invalid relations.
 
+`verdict` is an additive string field, non-empty only on Mythbuster entries,
+carrying that docket entry's ruling badge ("Holds up", "Common, not dominant").
+It is **recorded, never matched**: a verdict is what the canon concluded about a
+claim, not a name a source would use for the concept, so it is deliberately kept
+off the analyzer's alias/phrase match surface. Through v2.2.0 these badges were
+emitted as aliases, which both invented matches on verdict-shaped prose and
+crowded correct concepts out of the ranked slots. The field is additive and
+backward compatible — `prepareCanonIndex` reads named fields and ignores unknown
+ones — so the schema stays `le-canon-index/1.0`. `validate-canon-index.mjs`
+type-checks it and rejects any entry that repeats its verdict as an alias.
+
 ## Analysis result — `le-lab.analysis/2.1`
 
 The deterministic local adapter returns:
