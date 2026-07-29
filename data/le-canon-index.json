@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.0",
-  "indexVersion": "1.0.0+bac731fc9e56",
-  "generatedAt": "2026-07-29T08:36:04.076Z",
+  "indexVersion": "1.0.0+62c5cb511433",
+  "generatedAt": "2026-07-29T08:40:34.642Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -1278,7 +1278,10 @@
         "Five Levers of SMV",
         "SMV",
         "sexual market value",
-        "dating-market desirability"
+        "dating-market desirability",
+        "dating market value",
+        "market value",
+        "your league"
       ],
       "phrases": [
         "Looks + Money + Status + Charm + Exposure × Clock × Market × Context",
@@ -1400,8 +1403,15 @@
       "evidenceType": "Model",
       "contentType": "SMV subvariable",
       "verdict": "",
-      "aliases": [],
-      "phrases": [],
+      "aliases": [
+        "height requirement",
+        "height filter"
+      ],
+      "phrases": [
+        "six feet tall",
+        "under six feet",
+        "short king"
+      ],
       "dependencies": [
         "smv:looks"
       ],
@@ -1592,7 +1602,11 @@
       "evidenceType": "Model",
       "contentType": "SMV subvariable",
       "verdict": "",
-      "aliases": [],
+      "aliases": [
+        "provider",
+        "breadwinner",
+        "provider frame"
+      ],
       "phrases": [],
       "dependencies": [
         "smv:money"
@@ -1742,7 +1756,10 @@
       "contentType": "SMV subvariable",
       "verdict": "",
       "aliases": [],
-      "phrases": [],
+      "phrases": [
+        "taken men seem more attractive",
+        "wedding ring effect"
+      ],
       "dependencies": [
         "smv:status"
       ],
@@ -1787,7 +1804,10 @@
       "verdict": "",
       "aliases": [
         "social skill",
-        "charisma"
+        "charisma",
+        "game",
+        "rizz",
+        "social calibration"
       ],
       "phrases": [
         "What you do with the attention once you have it.",
@@ -2018,9 +2038,15 @@
       "contentType": "SMV subvariable",
       "verdict": "",
       "aliases": [
-        "online funnel"
+        "online funnel",
+        "swiping",
+        "dating app funnel"
       ],
-      "phrases": [],
+      "phrases": [
+        "matches on the apps",
+        "likes on Hinge",
+        "swipe right"
+      ],
       "dependencies": [
         "smv:exposure"
       ],
@@ -2200,7 +2226,9 @@
       "phrases": [
         "attention is not desire",
         "desire is not commitment",
-        "choice is not retention"
+        "choice is not retention",
+        "stuck in the friend zone",
+        "friendzoned"
       ],
       "dependencies": [
         "smv:exposure"
@@ -2548,9 +2576,17 @@
       "verdict": "",
       "aliases": [
         "SMV Matching",
-        "five-layer matching model"
+        "five-layer matching model",
+        "hypergamy",
+        "dating up",
+        "marrying up",
+        "women date across or up"
       ],
-      "phrases": [],
+      "phrases": [
+        "out of your league",
+        "out of his league",
+        "settle for less"
+      ],
       "dependencies": [
         "smv:overview",
         "frameworks:conversion-ladder"
@@ -2917,9 +2953,14 @@
       "aliases": [
         "Wall",
         "The Wall",
-        "age-related attention slope"
+        "age-related attention slope",
+        "hitting the wall",
+        "hit the wall"
       ],
-      "phrases": [],
+      "phrases": [
+        "attention drops off with age",
+        "invisible after thirty"
+      ],
       "dependencies": [
         "smv:multiplier:clock"
       ],
@@ -2954,9 +2995,14 @@
       "verdict": "",
       "aliases": [
         "Body Count",
-        "prior sexual partners"
+        "prior sexual partners",
+        "number of partners",
+        "past partners",
+        "notch count"
       ],
-      "phrases": [],
+      "phrases": [
+        "how many people she's slept with"
+      ],
       "dependencies": [],
       "related": [
         "lexicon:term-body-count"

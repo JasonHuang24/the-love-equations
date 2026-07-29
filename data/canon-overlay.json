@@ -29,7 +29,10 @@
       "aliases": [
         "SMV",
         "sexual market value",
-        "dating-market desirability"
+        "dating-market desirability",
+        "dating market value",
+        "market value",
+        "your league"
       ],
       "phrases": [
         "Looks Money Status Charm Exposure",
@@ -75,6 +78,17 @@
         "Is the claimed effect still present after separating initial attention from being chosen and kept?"
       ]
     },
+    "smv:looks:height": {
+      "aliases": [
+        "height requirement",
+        "height filter"
+      ],
+      "phrases": [
+        "six feet tall",
+        "under six feet",
+        "short king"
+      ]
+    },
     "smv:money": {
       "aliases": [
         "resources",
@@ -94,6 +108,13 @@
       ],
       "pressureTests": [
         "Would the same result hold when income is visible but status, generosity, debt, and lifestyle fit differ?"
+      ]
+    },
+    "smv:money:provisioning-signal": {
+      "aliases": [
+        "provider",
+        "breadwinner",
+        "provider frame"
       ]
     },
     "smv:status": {
@@ -118,10 +139,19 @@
         "Does the claimed status advantage persist outside the network that recognizes it?"
       ]
     },
+    "smv:status:preselection": {
+      "phrases": [
+        "taken men seem more attractive",
+        "wedding ring effect"
+      ]
+    },
     "smv:charm": {
       "aliases": [
         "social skill",
-        "charisma"
+        "charisma",
+        "game",
+        "rizz",
+        "social calibration"
       ],
       "dependencies": [
         "smv:overview"
@@ -160,6 +190,17 @@
       ],
       "pressureTests": [
         "How many relevant people could actually encounter and evaluate the person under study?"
+      ]
+    },
+    "smv:exposure:the-online-funnel": {
+      "aliases": [
+        "swiping",
+        "dating app funnel"
+      ],
+      "phrases": [
+        "matches on the apps",
+        "likes on Hinge",
+        "swipe right"
       ]
     },
     "smv:multiplier:clock": {
@@ -226,7 +267,9 @@
       "phrases": [
         "attention is not desire",
         "desire is not commitment",
-        "choice is not retention"
+        "choice is not retention",
+        "stuck in the friend zone",
+        "friendzoned"
       ],
       "dependencies": [
         "smv:exposure"
@@ -430,7 +473,16 @@
     "frameworks:smv-matching": {
       "aliases": [
         "SMV Matching",
-        "five-layer matching model"
+        "five-layer matching model",
+        "hypergamy",
+        "dating up",
+        "marrying up",
+        "women date across or up"
+      ],
+      "phrases": [
+        "out of your league",
+        "out of his league",
+        "settle for less"
       ],
       "dependencies": [
         "smv:overview",
@@ -559,7 +611,13 @@
     "frameworks:the-wall": {
       "aliases": [
         "The Wall",
-        "age-related attention slope"
+        "age-related attention slope",
+        "hitting the wall",
+        "hit the wall"
+      ],
+      "phrases": [
+        "attention drops off with age",
+        "invisible after thirty"
       ],
       "dependencies": [
         "smv:multiplier:clock"
@@ -581,7 +639,13 @@
     "frameworks:body-count": {
       "aliases": [
         "Body Count",
-        "prior sexual partners"
+        "prior sexual partners",
+        "number of partners",
+        "past partners",
+        "notch count"
+      ],
+      "phrases": [
+        "how many people she's slept with"
       ],
       "related": [
         "lexicon:term-body-count"
