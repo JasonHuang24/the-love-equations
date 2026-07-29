@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.0';
+export const ANALYZER_VERSION = '2.6.1';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1869,11 +1869,11 @@ function disqualifyingModifier(occurrence, segments, modifiers) {
    * union is the whole of the correctness argument. This stemmer is not a
    * plural normalizer and was never built to be one: it unifies `utility` with
    * `utilities`, and it separates `service` from `services`, which strips to
-   * `servic`. Eight of this denylist's sixteen entries fall on the separating
-   * side — healthcare, health care, service, insurance, software, care,
-   * childcare, child care — so a swap would fix two entries by breaking eight.
-   * Either test alone leaks. Together they do not, and a test that only ever
-   * adds disqualifications cannot promote something that used to be rejected.
+   * `servic`. NINE of this denylist's sixteen entries fall on the separating
+   * side — healthcare, health care, service, insurance, hosting, software,
+   * care, childcare, child care — so a swap would fix two entries by breaking
+   * nine. Either test alone leaks. Together they do not, and a test that only
+   * ever adds disqualifications cannot promote something already rejected.
    *
    * Multiword entries match as a contiguous run of stems rather than by
    * substring, so `health care` still finds those two words in sequence and

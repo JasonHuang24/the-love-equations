@@ -710,7 +710,7 @@
           "canonId": "smv:money:provisioning-signal",
           "expected": { "credibleMatch": false },
           "observedAtFreeze": { "credibleMatch": false, "score": null, "disqualifiedBy": "technical-modifier", "promotedBy": "technical modifier “service” within 3 tokens" },
-          "note": "GUARD, green at freeze, and the one that says what the fix is NOT. Stemming is not a superset of the literal-plus-s test it is replacing: `utility` and `utilities` both stem to `utility`, but `service` stems to itself while `services` stems to `servic`, and the same is true of healthcare, insurance, software, care and childcare — eight of the sixteen entries. A fix that swaps literal matching out for stemming rather than adding it turns this case, and cm-03, RED."
+          "note": "GUARD, green at freeze, and the one that says what the fix is NOT. Stemming is not a superset of the literal-plus-s test it is replacing: `utility` and `utilities` both stem to `utility`, but `service` stems to itself while `services` stems to `servic`, and the same is true of healthcare, health care, insurance, hosting, software, care, childcare and child care — nine of the sixteen entries, against two the stemmer repairs. A fix that swaps literal matching out for stemming rather than adding it turns this case, and cm-03, RED."
         },
         {
           "id": "cm-20",
