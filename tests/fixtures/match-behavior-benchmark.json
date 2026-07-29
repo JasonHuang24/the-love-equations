@@ -659,6 +659,71 @@
           "expected": { "mapped": true, "stance": "Supports" },
           "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.726 },
           "note": "GUARD, green at freeze, and the one that keeps the fix narrow. Same words as cm-13 minus the inversion and the question mark, and here the negator really does deny the claim. If this case moves, the fix has become a rule about the word `not` instead of a rule about one interrogative frame."
+        },
+        {
+          "id": "cm-16",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "denylist term whose plural is not the literal term plus an s",
+          "text": "During our marriage the provider of utilities handled our archive.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "disqualifiedBy": null, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "note": "Sol's v2.6.1 repro, verbatim, and defect b again rather than a new one: the same complement branch cm-02 and cm-03 bought, defeated by morphology instead of by word order. `utility` is on the denylist and the comparison tests the literal term and a naive `${modifier}s`, so it asks whether the complement contains `utilitys` and never whether it contains `utilities`. The two sides of the comparison are not in the same representation, which is the actual defect; the missing word is only how it surfaced."
+        },
+        {
+          "id": "cm-17",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "the same derived plural in the BACKWARD lookback rather than the complement",
+          "text": "During our marriage the utilities provider handled our archive.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "disqualifiedBy": null, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "note": "The same word in the oldest half of the rule. Both directions call one comparison helper, so a fix written only into the v2.6.0 complement branch would leave this RED — which is what this case exists to catch. `the utilities provider` is also the more ordinary English of the two."
+        },
+        {
+          "id": "cm-18",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "the second denylist entry with the same morphology, so the fix cannot be one word",
+          "text": "During our marriage the provider of renewable energies handled our archive.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "disqualifiedBy": null, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "note": "The denylist was enumerated rather than guessed at: of its sixteen entries, exactly two have a real plural the literal-plus-s test cannot produce, and they are `utility` and `energy`. This is the other one. A patch that special-cases the word in Sol's repro passes cm-16 and fails here."
+        },
+        {
+          "id": "cm-19",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "trap": "a plural the stemmer SEPARATES from its singular",
+          "text": "During our marriage the financial services provider handled our archive.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": null, "disqualifiedBy": "technical-modifier", "promotedBy": "technical modifier “service” within 3 tokens" },
+          "note": "GUARD, green at freeze, and the one that says what the fix is NOT. Stemming is not a superset of the literal-plus-s test it is replacing: `utility` and `utilities` both stem to `utility`, but `service` stems to itself while `services` stems to `servic`, and the same is true of healthcare, insurance, software, care and childcare — eight of the sixteen entries. A fix that swaps literal matching out for stemming rather than adding it turns this case, and cm-03, RED."
+        },
+        {
+          "id": "cm-20",
+          "defect": "b",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "trap": "a word with the disqualifying MORPHOLOGY and none of the disqualifying sense",
+          "text": "During our marriage the provider for our families was always him.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "disqualifiedBy": null, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "note": "GUARD, green at freeze. `families` is a y-to-ies plural sitting in exactly the complement slot cm-16's `utilities` sits in, and it is on no list, so it must not disqualify anything. This is the case a fix reaching for a spelling rule — treat any `ies` word as its `y` singular and compare loosely — would break. The denylist, and not the shape of the word, is still what disqualifies."
         }
       ]
     },
