@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.1.2';
+} from './lab-intake.js?v=2.2.0';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,25 +15,25 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.1.2';
-import { createDemoDocument } from './lab-demo.js?v=2.1.2';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.1.2';
+} from './lab-extractors.js?v=2.2.0';
+import { createDemoDocument } from './lab-demo.js?v=2.2.0';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.2.0';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.1.2';
+} from './lab-export.js?v=2.2.0';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
   ledgerFilterIsActive,
   ledgerRowMatchesFilter,
   nextLedgerFilter,
-} from './lab-ledger.js?v=2.1.2';
+} from './lab-ledger.js?v=2.2.0';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.1.2';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.2.0';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -113,6 +113,7 @@ const ui = {
   dominantCategory: byId('lab-dominant-category'),
   coverageReadout: byId('lab-coverage-readout'),
   coverageLabel: byId('lab-coverage-label'),
+  coverageProvisional: byId('lab-coverage-provisional'),
   coverageTrack: byId('lab-coverage-track'),
   coverageFill: byId('lab-coverage-fill'),
   coverageMarker: byId('lab-coverage-marker'),
@@ -1198,6 +1199,25 @@ function renderNormalizedDocument(documentValue) {
   }
 }
 
+/*
+ * The mapped share is produced by thresholds nobody has calibrated yet. The
+ * tag says so next to the number rather than burying it in the export, and it
+ * is driven by the result's own coverage.provisional block so the UI cannot
+ * claim a calibration the analyzer has not made.
+ */
+function renderProvisionalTag(result, coverageAvailable) {
+  if (!ui.coverageProvisional) return;
+  const provisional = result?.coverage?.provisional;
+  const show = Boolean(provisional?.provisional) && coverageAvailable;
+  ui.coverageProvisional.hidden = !show;
+  if (!show) return;
+  const version = result?.provenance?.analyzer?.version;
+  ui.coverageProvisional.textContent = [
+    version ? `v${version} provisional` : 'Provisional',
+    provisional.reason,
+  ].filter(Boolean).join(' · ');
+}
+
 function renderResult(result, documentValue) {
   state.analysis = result;
   const coverage = result.coverage.mappedClaimSegmentSharePct;
@@ -1220,6 +1240,7 @@ function renderResult(result, documentValue) {
   ui.coverageLabel.textContent = coverageAvailable
     ? `${coverage}% of claim-like segments`
     : 'Not applicable';
+  renderProvisionalTag(result, coverageAvailable);
   ui.coverageFill.style.width = coverageAvailable ? `${coverage}%` : '0';
   ui.coverageMarker.style.left = coverageAvailable ? `${coverage}%` : '0';
   ui.coverageMarker.style.opacity = coverageAvailable ? '1' : '0';
@@ -1416,6 +1437,7 @@ function resetVisualResults() {
   }));
   ui.dominantCategory.textContent = 'Waiting for results';
   ui.coverageLabel.textContent = '—';
+  if (ui.coverageProvisional) ui.coverageProvisional.hidden = true;
   ui.coverageReadout.classList.remove('is-unavailable');
   ui.coverageFill.style.width = '0';
   ui.coverageMarker.style.left = '0';
@@ -1538,7 +1560,7 @@ async function loadCanonIndex() {
     const sources = canonIndex.stats?.sourceCount
       ?? new Set(canonIndex.entries.map((entry) => entry.page)).size;
     ui.indexMeta.textContent = `Indexed ${formatNumber(concepts)} concepts across ${formatNumber(sources)} LE sources · ${canonIndex.indexVersion}`;
-    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 2.1 · Queue 2.0';
+    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 2.2 · Queue 2.1';
     ui.analysisMode.textContent = 'On-device lexical · no semantic model';
     refreshReadyState();
   } catch (error) {

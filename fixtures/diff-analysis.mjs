@@ -49,9 +49,14 @@ const PROVENANCE_PATTERNS = [
   /^scoringConfig(\.|$)/,
 ];
 
-/** Paths that are pure prose and never a scoring decision. */
+/**
+ * Paths that are pure prose and never a scoring decision. `limitations` is a
+ * static disclosure list with no dependence on the analysis outcome, so the
+ * whole subtree (including its length) is narrative. `warnings` is NOT here:
+ * warnings are emitted conditionally on the result and are behavioral.
+ */
 const NARRATIVE_PATTERNS = [
-  /^limitations\[\]$/,
+  /^limitations(\.|\[|$)/,
   /^coverage\.(denominator|interpretation)$/,
   /^domainRelevance\.note$/,
 ];

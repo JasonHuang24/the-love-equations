@@ -1,4 +1,4 @@
-import { analyzeDocument } from './lab-analyzer.js?v=2.1.2';
+import { analyzeDocument } from './lab-analyzer.js?v=2.2.0';
 
 const cancelledJobs = new Set();
 

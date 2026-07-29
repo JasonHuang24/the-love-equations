@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.1.2';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=2.1.2';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.2.0';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=2.2.0';
 
 /*
  * LE Lab export adapters.
@@ -60,6 +60,40 @@ function resultForExport(result) {
   return { ...result, source: sourceForExport(result.source) };
 }
 
+/*
+ * Every export names the build that produced it and the canon snapshot it ran
+ * against. Written from result.provenance so the Markdown cannot drift from
+ * the JSON; older results without the block simply omit these lines.
+ */
+function provenanceLines(result) {
+  const provenance = result?.provenance;
+  if (!provenance) return [];
+  const analyzer = provenance.analyzer || {};
+  const canon = provenance.canonIndex || {};
+  const lines = [];
+  if (analyzer.version) {
+    lines.push(`- **Analyzer:** v${markdownText(analyzer.version)}`
+      + (analyzer.mode ? ` · ${markdownText(analyzer.mode)}` : '')
+      + (analyzer.scoringConfigHash ? ` · scoring config \`${markdownText(analyzer.scoringConfigHash)}\`` : ''));
+  }
+  if (canon.indexVersion) {
+    lines.push(`- **Canon snapshot:** \`${markdownText(canon.indexVersion)}\``
+      + (canon.generatedAt ? ` generated ${markdownText(canon.generatedAt)}` : ''));
+  }
+  return lines;
+}
+
+function provisionalLines(result) {
+  const provisional = result?.coverage?.provisional;
+  if (!provisional?.provisional) return [];
+  return [
+    `> **Provisional (v${markdownText(result?.provenance?.analyzer?.version || 'unknown')}):** `
+    + `coverage figures below are provisional — ${markdownText(provisional.reason)}. `
+    + 'They describe where this analyzer\'s current thresholds landed, not a calibrated measurement.',
+    '',
+  ];
+}
+
 function sourceLine(result) {
   const source = sourceForExport(result.source);
   const parts = [markdownText(source.title || 'Untitled source')];
@@ -81,11 +115,13 @@ export function analysisToMarkdown(result) {
     `- **Mode:** ${markdownText(result.analysisMode?.label || result.analysisMode?.id)}`,
     `- **Canon index:** ${markdownText(result.canonIndex?.version)} · ${result.canonIndex?.conceptCount || 0} concepts across ${result.canonIndex?.sourceCount || 0} LE sources`,
     `- **Schema:** \`${markdownText(result.schemaVersion)}\``,
+    ...provenanceLines(result),
     '',
     '> Coverage is the share of retained relationship-domain claim-like segments that mapped to a credible LE connection. When no retained claims exist, coverage is not applicable. It describes this document, not a population or whether a claim is true.',
     '',
     '## Coverage',
     '',
+    ...provisionalLines(result),
     `- ${Number(metrics.totalWords || 0).toLocaleString()} source words`,
     `- ${Number(metrics.sourceSegments || 0).toLocaleString()} normalized source segments`,
     `- ${Number(metrics.claimLikeSegments || 0).toLocaleString()} detected relationship-domain claim-like segments`,
@@ -230,6 +266,10 @@ export function researchQueueToMarkdown(result, { includeHeading = true } = {}) 
   if (queue?.schemaVersion) {
     lines.push(`**Schema:** \`${markdownText(queue.schemaVersion)}\``, '');
   }
+  // The queue carries its own provenance so a standalone queue export still
+  // names the analyzer build and canon snapshot behind it.
+  const queueProvenance = provenanceLines(queue?.provenance ? queue : result);
+  if (queueProvenance.length) lines.push(...queueProvenance, '');
 
   if (ignored > 0) {
     lines.push(
@@ -282,6 +322,7 @@ export function researchQueueToJson(result, { pretty = true } = {}) {
     schemaVersion: result.researchQueue?.schemaVersion || RESEARCH_QUEUE_SCHEMA_VERSION,
     analysisId: result.id,
     generatedAt: result.generatedAt,
+    provenance: result.researchQueue?.provenance || result.provenance,
     source: sourceForExport(result.source),
     canonIndex: result.canonIndex,
     analysisMode: result.analysisMode,

@@ -7,7 +7,7 @@
  * Contract:
  *   NormalizedDocument (le-lab.normalized-document/1.0)
  *     -> analyzeDocument(document, canonIndex, { domainOverrides })
- *     -> AnalysisResult (le-lab.analysis/2.1)
+ *     -> AnalysisResult (le-lab.analysis/2.2)
  *
  * The browser runs this module in a worker when available. Node fixture tests
  * import the same functions; there is no second test-only implementation.
@@ -19,13 +19,28 @@
  * data loss.
  */
 
-export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.1';
-export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.0';
+export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.2';
+// Bumped to 2.1 because the queue object itself now carries a provenance
+// block, so a queue lifted out of an analysis is self-describing on its own.
+export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
+// Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
+// on every Lab module so an export names the build that produced it.
+export const ANALYZER_VERSION = '2.2.0';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
   semanticModel: false,
   sourceUploaded: false,
+});
+
+/*
+ * Thresholds in SCORING_CONFIG were authored by judgment, not fitted to a
+ * labelled corpus. Every export says so in-band rather than relying on a
+ * reader to remember it.
+ */
+export const COVERAGE_PROVISIONAL = Object.freeze({
+  provisional: true,
+  reason: 'thresholds uncalibrated',
 });
 
 /**
@@ -1812,6 +1827,29 @@ function strongestMatches(mappedResults) {
     .slice(0, SCORING_CONFIG.maxStrongestMatches);
 }
 
+/**
+ * The self-describing stamp carried by every export. It names the code that
+ * produced the analysis (analyzer release, schema, mode, scoring-config hash)
+ * and the canon snapshot it was run against (index version + generation time),
+ * so an export can be reproduced without reference to the session that made it.
+ */
+function buildProvenance(prepared) {
+  return {
+    analyzer: {
+      version: ANALYZER_VERSION,
+      schemaVersion: ANALYSIS_SCHEMA_VERSION,
+      researchQueueSchemaVersion: RESEARCH_QUEUE_SCHEMA_VERSION,
+      mode: ANALYSIS_MODE.id,
+      scoringConfigHash: SCORING_CONFIG_HASH,
+    },
+    canonIndex: {
+      schemaVersion: prepared.schemaVersion,
+      indexVersion: prepared.indexVersion,
+      generatedAt: prepared.generatedAt,
+    },
+  };
+}
+
 function indexMetadata(prepared, original) {
   const pages = prepared.sourcePages;
   const sourceCount = original?.stats?.sourceCount
@@ -1927,10 +1965,14 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       candidate.segmentId === item.segmentId && candidate.failureMode === item.failureMode) === index)
     .slice(0, SCORING_CONFIG.maxPressureTests);
 
+  const provenance = buildProvenance(prepared);
   const researchItems = unmappedClaims.map(researchItemFor);
   const researchQueue = {
     schemaVersion: RESEARCH_QUEUE_SCHEMA_VERSION,
     status: 'Research candidates — not LE doctrine',
+    // Duplicated from the analysis root on purpose: the queue is exported on
+    // its own, and an export with no provenance is an export nobody can trust.
+    provenance,
     itemCount: researchItems.length,
     groups: groupResearchItems(researchItems),
     items: researchItems,
@@ -1953,6 +1995,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     id: resultId,
     generatedAt: new Date().toISOString(),
     analysisMode: ANALYSIS_MODE,
+    provenance,
     source: {
       documentId: document.id || null,
       title: document.source?.title || document.title || 'Untitled source',
@@ -1995,6 +2038,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       mappedClaimWordSharePct: percentage(mappedWords, claimWords),
       denominator: 'Detected claim-like relationship-domain segments only; clearly non-domain and context passages are excluded.',
       interpretation: 'Document coverage, not population statistics, factual accuracy, or proof that a claim is true.',
+      provisional: COVERAGE_PROVISIONAL,
     },
     categoryDistribution: summarizeDistribution(primaryMatches, 'category'),
     evidenceTierDistribution: summarizeDistribution(primaryMatches, 'evidenceType'),
@@ -2034,6 +2078,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     ],
     limitations: [
       'Matches are deterministic lexical inferences, not judgments from a language model.',
+      'Scoring thresholds are provisional: they were set by judgment and have never been calibrated against a labelled corpus, so the mapped share is a provisional figure, not a measured one.',
       'The deterministic relevance gate requires a relationship outcome or a participant-and-mechanism frame; claim grammar alone never establishes domain relevance.',
       'The relevance gate is lexical triage and can misclassify unseen phrasings in either direction; every ignored passage is listed with its decision evidence and any passage can be re-triaged with a per-passage visitor override.',
       'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',

@@ -6,10 +6,14 @@ import { normalizeInput } from '../js/lab-intake.js';
 import { createDemoDocument } from '../js/lab-demo.js';
 import {
   ANALYSIS_SCHEMA_VERSION,
+  ANALYZER_VERSION,
+  SCORING_CONFIG,
+  SCORING_CONFIG_HASH,
   analyzeDocument,
   classifyDomainRelevance,
   detectClaimUnits,
   prepareCanonIndex,
+  scoringConfigHash,
 } from '../js/lab-analyzer.js';
 import {
   analysisToJson,
@@ -754,8 +758,8 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
     text: 'The sky is blue. Water freezes at zero degrees Celsius.',
   }), REAL_CANON);
   assert.equal(noDomain.metrics.claimLikeSegments, 0);
-  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.1');
-  assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.0');
+  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.2');
+  assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.1');
   assert.equal(noDomain.coverage.mappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.unmappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.mappedClaimWordSharePct, null);
@@ -1113,4 +1117,49 @@ test('abbreviation periods and open parentheticals never shard sentence segmenta
   }));
   assert.equal(boundaryUnits.length, 3);
   assert.match(boundaryUnits[2].text, /No\. 1 overall\.$/);
+});
+
+test('every export is self-describing: provenance stamp and provisional marker', async () => {
+  const result = await analyzeDocument(createDemoDocument(), REAL_CANON);
+
+  // The analysis names the build that produced it.
+  assert.equal(result.provenance.analyzer.version, ANALYZER_VERSION);
+  assert.equal(result.provenance.analyzer.schemaVersion, ANALYSIS_SCHEMA_VERSION);
+  assert.equal(result.provenance.analyzer.mode, result.analysisMode.id);
+  assert.equal(result.provenance.analyzer.scoringConfigHash, SCORING_CONFIG_HASH);
+  assert.match(result.provenance.analyzer.scoringConfigHash, /^[a-z0-9]+$/);
+
+  // ...and the canon snapshot it ran against.
+  assert.equal(result.provenance.canonIndex.indexVersion, REAL_CANON.indexVersion);
+  assert.equal(result.provenance.canonIndex.generatedAt, REAL_CANON.generatedAt);
+  assert.equal(result.provenance.canonIndex.schemaVersion, REAL_CANON.schemaVersion);
+
+  // A queue lifted out of the analysis carries the same stamp on its own.
+  assert.deepEqual(result.researchQueue.provenance, result.provenance);
+
+  // Coverage is flagged provisional until the thresholds are calibrated.
+  assert.equal(result.coverage.provisional.provisional, true);
+  assert.equal(result.coverage.provisional.reason, 'thresholds uncalibrated');
+  assert.ok(result.limitations.some((line) => /thresholds are provisional/i.test(line)));
+});
+
+test('the scoring config is frozen, complete, and hashes stably', () => {
+  assert.ok(Object.isFrozen(SCORING_CONFIG));
+  // Guards the refactor contract: these values must not drift without an
+  // explicit calibration pass and a config-hash change in every export.
+  assert.equal(SCORING_CONFIG.minCredibleScore, 0.43);
+  assert.equal(SCORING_CONFIG.minWeakScore, 0.25);
+  assert.equal(SCORING_CONFIG.queryCoverageWeight, 0.56);
+  assert.equal(SCORING_CONFIG.canonCoverageWeight, 0.24);
+  assert.equal(SCORING_CONFIG.confidenceHigh, 0.72);
+  assert.equal(SCORING_CONFIG.maxMatchesPerClaim, 4);
+
+  // Sorted-key JSON: declaration order in source cannot move the hash.
+  const shuffled = Object.fromEntries(Object.entries(SCORING_CONFIG).reverse());
+  assert.equal(scoringConfigHash(shuffled), SCORING_CONFIG_HASH);
+  // ...but a value change must.
+  assert.notEqual(
+    scoringConfigHash({ ...SCORING_CONFIG, minCredibleScore: 0.44 }),
+    SCORING_CONFIG_HASH,
+  );
 });

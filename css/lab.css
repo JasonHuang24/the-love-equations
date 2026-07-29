@@ -1672,6 +1672,19 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Sits directly under the mapped-share readout: the number is provisional and
+   the label travels with it. */
+.lab-provisional-tag {
+  margin: 0.35rem 0 0;
+  color: var(--text-dim);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lab-provisional-tag[hidden] { display: none; }
+
 .lab-category-spectrum {
   min-height: 77px;
   margin-top: 0.8rem;

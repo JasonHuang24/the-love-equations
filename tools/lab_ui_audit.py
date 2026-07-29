@@ -125,13 +125,19 @@ for selector in (
 if ".lab-coverage-readout.is-unavailable" not in css_text:
     errors.append("Lab coverage readout has no unavailable-state styling")
 
+# The mapped share is produced by uncalibrated thresholds; the tag saying so
+# must stay next to the number, not only in the export.
+if ".lab-provisional-tag" not in css_text:
+    errors.append("Lab provisional coverage tag has no styling")
+
 app_text = (ROOT / "js" / "lab-app.js").read_text(encoding="utf-8")
 for phrase in (
     "No relationship-domain claims were detected in this source.",
     "Original text remains intact in Source.",
     "Coverage is unavailable because no relationship-domain claims were detected.",
     "coverage not applicable",
-    "Analysis 2.1 · Queue 2.0",
+    "Analysis 2.2 · Queue 2.1",
+    "provisional",
     "Include in analysis",
     "Exclude",
     "Included by you",
