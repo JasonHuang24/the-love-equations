@@ -1,7 +1,7 @@
 {
   "schema": "le-lab.threshold-sweep/1.0",
-  "analyzer": "2.5.0",
-  "scoringConfigHash": "nzluv0",
+  "analyzer": "2.6.0",
+  "scoringConfigHash": "bt0a7p",
   "canonIndexVersion": "1.0.0+949aef381d5f",
   "entries": 450,
   "passages": 103,
@@ -14,7 +14,7 @@
     "minCredibleScore": 0.43
   },
   "band": 0.03,
-  "adjudicationOpen": true,
+  "adjudicationOpen": false,
   "note": "Frozen threshold-neighbour band: every corpus pair within ±band of an admission line, which is the population an implementation detail can move across one. `scores` pins which SIDE of each line a pair sits on; `rulings` is the human record for every pair that has ever crossed one, including crossings that began outside the band.",
   "counts": {
     "candidateScoreFloor": 3186,
@@ -22,869 +22,1115 @@
     "minCredibleScore": 66,
     "pairs": 4058,
     "rulings": 123,
-    "pending": 123
+    "pending": 0
   },
   "rulings": {
     "seg-00024-0ha18nw.claim-03|statistics:stat-couples-meet|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.08,
-      "after": 0.079
+      "after": 0.079,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-honest-answer-is-i-dont-know-sit-in-it-without-coping|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.08,
-      "after": 0.079
+      "after": 0.079,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|instrument:matchmaker|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.081,
-      "after": 0.079
+      "after": 0.079,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|deep-dive:what-the-wall-actually-is:band-38-49|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.08,
-      "after": 0.079
+      "after": 0.079,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|M-TBD-2|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.08,
-      "after": 0.078
+      "after": 0.078,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-03|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.263,
-      "after": 0.07
+      "after": 0.07,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-04|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.248,
-      "after": 0.07
+      "after": 0.07,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.261,
-      "after": 0.07
+      "after": 0.07,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-02|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.246,
-      "after": 0.067
+      "after": 0.067,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-04|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.232,
-      "after": 0.064
+      "after": 0.064,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-05|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.227,
-      "after": 0.063
+      "after": 0.063,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00027-1sknk9b.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.222,
-      "after": 0.062
+      "after": 0.062,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00012-1tdc2fk.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.202,
-      "after": 0.058
+      "after": 0.058,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00013-13mahyu.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.201,
-      "after": 0.058
+      "after": 0.058,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00012-1tdc2fk.claim-01|statistics:stat-fertility-age|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.199,
-      "after": 0.057
+      "after": 0.057,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-02|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.189,
-      "after": 0.056
+      "after": 0.056,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-04|M-TBD-35|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.217,
-      "after": 0.056
+      "after": 0.056,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00023-1cpukdv.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.184,
-      "after": 0.055
+      "after": 0.055,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.18,
-      "after": 0.054
+      "after": 0.054,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00043-13vam4d.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.181,
-      "after": 0.054
+      "after": 0.054,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00044-1p8obbe.claim-04|statistics:stat-fertility-age|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.191,
-      "after": 0.053
+      "after": 0.053,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.17,
-      "after": 0.052
+      "after": 0.052,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00045-1ewsaqm.claim-01|M-TBD-41|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.169,
-      "after": 0.052
+      "after": 0.052,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00013-13mahyu.claim-01|M-TBD-27|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.187,
-      "after": 0.051
+      "after": 0.051,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.226,
-      "after": 0.05
+      "after": 0.05,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.227,
-      "after": 0.05
+      "after": 0.05,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00007-1jirrr9.claim-03|M-TBD-2|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.169,
-      "after": 0.049
+      "after": 0.049,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00013-13mahyu.claim-01|gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.186,
-      "after": 0.049
+      "after": 0.049,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00017-08pfeue.claim-06|gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.179,
-      "after": 0.049
+      "after": 0.049,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.224,
-      "after": 0.049
+      "after": 0.049,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.225,
-      "after": 0.049
+      "after": 0.049,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00001-0ii7eqx.claim-04|gender-dynamics:male:game-the-mask-reading-signals:dating-has-no-margin-for-error|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.19,
-      "after": 0.047
+      "after": 0.047,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00034-0qwm7t2.claim-01|statistics:stat-fertility-age|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.168,
-      "after": 0.047
+      "after": 0.047,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|statistics:stat-fertility-age|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.159,
-      "after": 0.046
+      "after": 0.046,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-02|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.209,
-      "after": 0.046
+      "after": 0.046,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00044-1p8obbe.claim-04|pills:page-blk|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.177,
-      "after": 0.045
+      "after": 0.045,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-04|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.195,
-      "after": 0.044
+      "after": 0.044,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-04|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.196,
-      "after": 0.044
+      "after": 0.044,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00007-1jirrr9.claim-03|M-TBD-48|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.157,
-      "after": 0.043
+      "after": 0.043,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00017-08pfeue.claim-06|M-TBD-35|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.167,
-      "after": 0.043
+      "after": 0.043,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-05|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.191,
-      "after": 0.043
+      "after": 0.043,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00017-08pfeue.claim-06|M-TBD-27|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.164,
-      "after": 0.042
+      "after": 0.042,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00027-1sknk9b.claim-01|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.185,
-      "after": 0.042
+      "after": 0.042,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00027-1sknk9b.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.186,
-      "after": 0.042
+      "after": 0.042,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-02|M-TBD-35|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.159,
-      "after": 0.042
+      "after": 0.042,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-02|pills:page-blk|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.159,
-      "after": 0.042
+      "after": 0.042,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00023-1cpukdv.claim-01|M-TBD-35|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.159,
-      "after": 0.041
+      "after": 0.041,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-01|pills:page-blk|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.155,
-      "after": 0.041
+      "after": 0.041,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.147,
-      "after": 0.039
+      "after": 0.039,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00012-1tdc2fk.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.166,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00013-13mahyu.claim-01|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.164,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00013-13mahyu.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.165,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00023-1cpukdv.claim-01|M-TBD-24|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.152,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-02|M-TBD-27|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.153,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|pills:page-blk|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.142,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-02|M-TBD-27|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.149,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00030-0kv9wpp.claim-02|M-TBD-35|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.157,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00034-0qwm7t2.claim-01|pills:page-blk|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.151,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00044-1p8obbe.claim-04|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.165,
-      "after": 0.038
+      "after": 0.038,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00028-1ckfvwu.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.159,
-      "after": 0.037
+      "after": 0.037,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00007-1jirrr9.claim-03|M-TBD-36|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.144,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00017-08pfeue.claim-06|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.155,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-02|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.152,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.153,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|M-TBD-35|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.141,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00030-0kv9wpp.claim-02|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.155,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00030-0kv9wpp.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.156,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00045-1ewsaqm.claim-01|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.142,
-      "after": 0.036
+      "after": 0.036,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00023-1cpukdv.claim-01|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.147,
-      "after": 0.035
+      "after": 0.035,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00023-1cpukdv.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.148,
-      "after": 0.035
+      "after": 0.035,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.147,
-      "after": 0.035
+      "after": 0.035,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-02|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.146,
-      "after": 0.034
+      "after": 0.034,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00031-0gcwxe4.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.142,
-      "after": 0.034
+      "after": 0.034,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00034-0qwm7t2.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.146,
-      "after": 0.034
+      "after": 0.034,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00043-13vam4d.claim-01|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.144,
-      "after": 0.034
+      "after": 0.034,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00043-13vam4d.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.145,
-      "after": 0.034
+      "after": 0.034,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-01|gender-dynamics:gd-male-window|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.144,
-      "after": 0.033
+      "after": 0.033,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.133,
-      "after": 0.032
+      "after": 0.032,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.134,
-      "after": 0.032
+      "after": 0.032,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-01|gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.139,
-      "after": 0.032
+      "after": 0.032,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-01|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.14,
-      "after": 0.032
+      "after": 0.032,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00045-1ewsaqm.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.133,
-      "after": 0.032
+      "after": 0.032,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00045-1ewsaqm.claim-01|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.132,
-      "after": 0.031
+      "after": 0.031,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00001-0ii7eqx.claim-04|M-TBD-20|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.16,
-      "after": 0.024
+      "after": 0.024,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00001-0ii7eqx.claim-04|gender-dynamics:female:timing-honesty-the-mirror:there-are-no-good-men-left-turn-the-question-inward|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.152,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00001-0ii7eqx.claim-04|gender-dynamics:male:directness-delivery-the-indirect-game:women-train-men-to-hide-their-intentions|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.156,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00001-0ii7eqx.claim-04|M-TBD-15|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.129,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00001-0ii7eqx.claim-04|M-TBD-42|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.149,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00001-0ii7eqx.claim-04|smv:charm|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.125,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00014-0brr9zu.claim-03|gender-dynamics:gd-social-approval|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.132,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00014-0brr9zu.claim-03|gender-dynamics:male:game-the-mask-reading-signals:treat-it-as-practice-without-leading-anyone-on|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.132,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00014-0brr9zu.claim-03|gender-dynamics:male:logic-feelings-the-cycle:the-low-investment-middle-path|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.133,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00014-0brr9zu.claim-03|M-TBD-12|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.13,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00028-1ckfvwu.claim-02|gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.113,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00028-1ckfvwu.claim-02|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.111,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00031-0gcwxe4.claim-02|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.094,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00044-1p8obbe.claim-04|gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings|candidateScoreFloor": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "candidateScoreFloor",
       "direction": "loss",
       "before": 0.118,
-      "after": 0
+      "after": 0,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-02|statistics:stat-attention|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.427,
-      "after": 0.435
+      "after": 0.435,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-02|statistics:stat-pay-to-play|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.424,
-      "after": 0.432
+      "after": 0.432,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00031-0gcwxe4.claim-02|statistics:stat-app-reasons|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.426,
-      "after": 0.43
+      "after": 0.43,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-02|M-TBD-24|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "gain",
       "before": 0.249,
-      "after": 0.259
+      "after": 0.259,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|M-TBD-24|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "gain",
       "before": 0.243,
-      "after": 0.255
+      "after": 0.255,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00028-1ckfvwu.claim-02|M-TBD-50|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.25,
-      "after": 0.249
+      "after": 0.249,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-02|M-TBD-59|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.25,
-      "after": 0.249
+      "after": 0.249,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00043-13vam4d.claim-01|M-TBD-32|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.25,
-      "after": 0.249
+      "after": 0.249,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00027-1sknk9b.claim-01|smv:exposure:the-online-funnel|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.25,
-      "after": 0.248
+      "after": 0.248,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-01|statistics:stat-fertility-age|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.299,
-      "after": 0.242
+      "after": 0.242,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.363,
-      "after": 0.231
+      "after": 0.231,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00031-0gcwxe4.claim-02|M-TBD-27|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.303,
-      "after": 0.228
+      "after": 0.228,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00023-1cpukdv.claim-01|statistics:stat-first-message|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.282,
-      "after": 0.222
+      "after": 0.222,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.328,
-      "after": 0.207
+      "after": 0.207,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00017-08pfeue.claim-06|M-TBD-41|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.279,
-      "after": 0.196
+      "after": 0.196,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00014-0brr9zu.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.323,
-      "after": 0.193
+      "after": 0.193,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00029-186g33t.claim-02|M-TBD-41|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.27,
-      "after": 0.191
+      "after": 0.191,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-05|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.297,
-      "after": 0.189
+      "after": 0.189,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00030-0kv9wpp.claim-02|M-TBD-41|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.271,
-      "after": 0.187
+      "after": 0.187,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00034-0qwm7t2.claim-01|M-TBD-35|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.264,
-      "after": 0.185
+      "after": 0.185,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00044-1p8obbe.claim-04|M-TBD-27|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.27,
-      "after": 0.181
+      "after": 0.181,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00013-13mahyu.claim-01|M-TBD-35|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.263,
-      "after": 0.172
+      "after": 0.172,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00012-1tdc2fk.claim-01|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.258,
-      "after": 0.166
+      "after": 0.166,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00044-1p8obbe.claim-04|M-TBD-41|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.25,
-      "after": 0.16
+      "after": 0.16,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-03|M-TBD-41|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.263,
-      "after": 0.07
+      "after": 0.07,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     },
     "seg-00024-0ha18nw.claim-06|M-TBD-41|minWeakScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minWeakScore",
       "direction": "loss",
       "before": 0.261,
-      "after": 0.07
+      "after": 0.07,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-29"
     }
   },
   "scores": {

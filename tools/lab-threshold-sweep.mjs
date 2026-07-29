@@ -82,6 +82,9 @@ function parseArgs(argv) {
     dumpFloor: 0.02,
     excerptChars: 96,
     includeSetAside: false,
+    rule: null,
+    ruledBy: null,
+    ruledAt: null,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
@@ -90,6 +93,9 @@ function parseArgs(argv) {
     else if (flag === '--baseline') options.baseline = next();
     else if (flag === '--neighbors') options.neighbors = next();
     else if (flag === '--md') options.md = next();
+    else if (flag === '--rule') options.rule = next();
+    else if (flag === '--ruled-by') options.ruledBy = next();
+    else if (flag === '--ruled-at') options.ruledAt = next();
     else if (flag === '--include-set-aside') options.includeSetAside = true;
     else if (flag === '--band') options.band = Number(next());
     else if (flag === '--dump-floor') options.dumpFloor = Number(next());
@@ -253,16 +259,39 @@ function main() {
         after: crossing.after,
       };
     }
+    /*
+     * Transcribing a human's verdict, not making one.
+     *
+     * `--rule` stamps every OUTSTANDING crossing with one decision, which is
+     * the shape a real adjudication usually takes ("accept all", "reject these
+     * three and accept the rest" after the three are recorded by hand). It
+     * touches nothing already answered, and it demands `--ruled-by`, because a
+     * verdict with no name on it is indistinguishable from a default.
+     */
+    if (options.rule) {
+      if (!['ACCEPT', 'REJECT'].includes(options.rule)) {
+        throw new Error(`--rule must be ACCEPT or REJECT, not ${options.rule}`);
+      }
+      if (!options.ruledBy) throw new Error('--rule requires --ruled-by: a verdict needs an author.');
+      Object.values(rulings).forEach((row) => {
+        if (row.ruling !== 'PENDING') return;
+        row.ruling = options.rule;
+        row.ruledBy = options.ruledBy;
+        if (options.ruledAt) row.ruledAt = options.ruledAt;
+      });
+    }
     const pending = Object.values(rulings).filter((row) => row.ruling === 'PENDING').length;
     fs.writeFileSync(options.neighbors, `${JSON.stringify({
       ...identity,
       band: options.band,
-      // While true, the suite REPORTS outstanding verdicts instead of failing
-      // on them, so a release can be built in parallel with the adjudication it
-      // is waiting for — and closing it is the release's job. An outstanding
-      // verdict forces it open, because "adjudication closed, 121 unanswered"
-      // is not a state this file is allowed to be in.
-      adjudicationOpen: pending > 0 ? true : (existing?.adjudicationOpen ?? false),
+      // Open exactly when a verdict is outstanding. While open the suite
+      // REPORTS the outstanding ones instead of failing on them, so a release
+      // can be built in parallel with the adjudication it is waiting for. It is
+      // derived rather than set, because "closed, 123 unanswered" and "open,
+      // nothing outstanding" are both states this file should not be able to
+      // reach — and a hand-edited fixture that reaches either still fails the
+      // suite.
+      adjudicationOpen: pending > 0,
       note: 'Frozen threshold-neighbour band: every corpus pair within ±band of an'
         + ' admission line, which is the population an implementation detail can move'
         + ' across one. `scores` pins which SIDE of each line a pair sits on; `rulings`'
@@ -291,7 +320,14 @@ function main() {
       changes: comparison.changes.slice(0, 40),
     }, null, 2)}\n`);
     if (options.md) {
-      fs.writeFileSync(options.md, renderMarkdown(identity, comparison.census, comparison.crossings));
+      // The sheet renders whatever verdicts exist. Empty column before
+      // adjudication, the recorded ruling and its author after — same file,
+      // same generator, so the human-readable record cannot drift from the
+      // machine-readable one it was rendered from.
+      const rulings = fs.existsSync(options.neighbors ?? '')
+        ? JSON.parse(fs.readFileSync(options.neighbors, 'utf8')).rulings
+        : {};
+      fs.writeFileSync(options.md, renderMarkdown(identity, comparison.census, comparison.crossings, rulings));
       process.stderr.write(`md: ${options.md}\n`);
     }
   }
@@ -372,8 +408,13 @@ function compare(options, identity, pairs, byUnit) {
  * is shown; a candidate-floor crossing changes only which entries were
  * considered, and 97 of those are a census, not 97 decisions.
  */
-function renderMarkdown(identity, census, crossings) {
+function renderMarkdown(identity, census, crossings, rulings = {}) {
   const lines = [];
+  const verdictOf = (row) => {
+    const ruled = rulings[`${row.unitId}|${row.canonId}|${row.threshold}`];
+    if (!ruled || ruled.ruling === 'PENDING') return '';
+    return `**${ruled.ruling}**${ruled.ruledBy ? ` · ${ruled.ruledBy}` : ''}`;
+  };
   const table = (rows) => {
     lines.push('', '| Canon entry | Passage | Before | After | Δ | ACCEPT / REJECT |');
     lines.push('|---|---|---|---|---|---|');
@@ -382,15 +423,23 @@ function renderMarkdown(identity, census, crossings) {
         ? `${row.source} · ${row.passageIndex}<br>“${row.excerpt}…”`
         : `${row.source} · ${row.passageIndex}<br>\`${row.unitId}\``;
       lines.push(`| \`${row.canonId}\` | ${passage} | ${row.before.toFixed(3)} `
-        + `| ${row.after.toFixed(3)} | ${row.delta > 0 ? '+' : ''}${row.delta.toFixed(3)} |  |`);
+        + `| ${row.after.toFixed(3)} | ${row.delta > 0 ? '+' : ''}${row.delta.toFixed(3)} | ${verdictOf(row)} |`);
     });
     lines.push('');
   };
 
   lines.push('# LE Lab v2.6.0 — threshold adjudication sheet', '');
   lines.push('Generated by `tools/lab-threshold-sweep.mjs`. One row per corpus pair that crossed an');
-  lines.push('admission threshold when the tokenizer fix landed. **The rightmost column is empty on');
-  lines.push('purpose: it is the ruling, and it is not mine to write.**', '');
+  lines.push('admission threshold when the tokenizer fix landed. The rightmost column is the ruling,');
+  lines.push('rendered from `tests/fixtures/threshold-neighbors.json` so this sheet and the fixture the');
+  lines.push('suite enforces cannot disagree. It was empty when the sheet was first produced.', '');
+  const answered = crossings.filter((row) => {
+    const ruled = rulings[`${row.unitId}|${row.canonId}|${row.threshold}`];
+    return ruled && ruled.ruling !== 'PENDING';
+  }).length;
+  lines.push(answered === crossings.length && crossings.length
+    ? `**Adjudication closed — all ${crossings.length} crossings ruled.**`
+    : `**Adjudication open — ${crossings.length - answered} of ${crossings.length} crossings outstanding.**`, '');
   lines.push('```');
   lines.push(`analyzer   ${census.baselineAnalyzer} -> ${census.currentAnalyzer}`);
   lines.push(`config     ${census.baselineScoringConfigHash} -> ${census.currentScoringConfigHash}`);

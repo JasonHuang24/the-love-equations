@@ -1360,9 +1360,16 @@ export async function buildCanonIndex(options = {}) {
  * every run even when its CONTENT was byte-identical — v2.5.0 §6 had to note
  * that `md/RERUN.md` treats SHA-256 as the reproducibility anchor and that for
  * this one file that was not quite true, and v2.5.0 §7.6 left it open. It is
- * the last commit that touched any input to this build: every source page, plus
- * the builder itself, because a change to the extraction logic changes the
- * artifact as surely as a change to a page does.
+ * now the last commit that touched a canon SOURCE PAGE.
+ *
+ * The source pages and nothing else, deliberately. Including this builder reads
+ * as more complete — a change to the extraction logic does change the artifact
+ * — and it is self-invalidating: committing a builder change moves the answer,
+ * so the index built in that same commit is stale the moment it lands, and the
+ * staleness check fails on a tree nobody touched. `indexVersion` is a hash of
+ * the built content and already moves when extraction changes, which is the
+ * right instrument for that question. This field answers a narrower one: when
+ * did the doctrine this index reflects last change.
  *
  * It THROWS rather than falling back to a wall clock. A silent fallback is the
  * exact defect being fixed — it would restore an irreproducible hash while the
@@ -1370,8 +1377,7 @@ export async function buildCanonIndex(options = {}) {
  * `generatedAt` or set `CANON_GENERATED_AT`, which is also how a re-run
  * reproduces an archived artifact exactly.
  */
-function sourceStateTimestamp(inputs) {
-  const paths = [...inputs, path.relative(ROOT_DIR, fileURLToPath(import.meta.url)).replace(/\\/g, '/')];
+function sourceStateTimestamp(paths) {
   let stamp;
   try {
     stamp = execFileSync(

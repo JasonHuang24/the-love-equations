@@ -7,7 +7,7 @@
  * Contract:
  *   NormalizedDocument (le-lab.normalized-document/1.0)
  *     -> analyzeDocument(document, canonIndex, { domainOverrides })
- *     -> AnalysisResult (le-lab.analysis/2.5)
+ *     -> AnalysisResult (le-lab.analysis/2.6)
  *
  * The browser runs this module in a worker when available. Node fixture tests
  * import the same functions; there is no second test-only implementation.
@@ -26,7 +26,7 @@
 // aliases can be typed. Matches carry a new alignment.evidence trace and the
 // analysis may carry an opt-in diagnostics block. v2.2.0 was provenance-only
 // and deliberately did not move this number; 2.3 and 2.4 both did.
-export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.5';
+export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 // Bumped to 2.1 because the queue object itself now carries a provenance
 // block, so a queue lifted out of an analysis is self-describing on its own.
 // Held at 2.1 through v2.3.0: the gate change alters how many items reach the
@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.5';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.5.0';
+export const ANALYZER_VERSION = '2.6.0';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',

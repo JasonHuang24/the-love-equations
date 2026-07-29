@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-lab.corpus-manifest/1.0",
-  "updatedAt": "2026-07-29T15:10:00.000Z",
+  "updatedAt": "2026-07-29T00:00:00.000Z",
   "archive": {
     "root": "lab-corpus/",
     "published": false,
@@ -22,13 +22,13 @@
     "note": "The extractor is committed (it is our code, not third-party text) so anyone holding the archived HTML can regenerate the exact analyzed text and check it against these hashes. Extraction was deliberately NOT done by a model reading the page: a model-mediated transcription is not reproducible byte-for-byte and would break the chain. Each source's sidecar records its exact command line, plus the SHA-256 of the raw HTML it was run against."
   },
   "epoch": {
-    "analyzerVersion": "2.5.0",
-    "analysisSchemaVersion": "le-lab.analysis/2.5",
+    "analyzerVersion": "2.6.0",
+    "analysisSchemaVersion": "le-lab.analysis/2.6",
     "researchQueueSchemaVersion": "le-lab.research-queue/2.1",
-    "scoringConfigHash": "1qt8p4u",
+    "scoringConfigHash": "bt0a7p",
     "canonIndexVersion": "1.0.0+949aef381d5f",
-    "canonGeneratedAt": "2026-07-29T10:52:56.245Z",
-    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. All three exports agree on every field. The canon index is UNCHANGED from the v2.4.0 epoch (1.0.0+949aef381d5f): no doctrine moved in this release, and a regeneration reproduces the file content byte-for-byte. The scoringConfigHash moved because v2.5.0 ADDS five keys (contextualAliasWindowTokens, contextualAliasModifierLookback, minCoFireConceptLength, minQuotedAssertionTokens, stanceScopeExcerptChars) and changes no existing value.",
+    "canonGeneratedAt": "2026-07-27T11:38:21.000Z",
+    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. All three exports agree on every field. The canon index is UNCHANGED from the v2.4.0 epoch (1.0.0+949aef381d5f): no doctrine moved in this release either. canonGeneratedAt moved WITHOUT the canon moving, because v2.6.0 derives it from the last commit touching a canon source page instead of from the wall clock — which is what makes this artifact SHA-256-reproducible for the first time (c7c41836...). The scoringConfigHash moved because v2.6.0 ADDS three keys (minStemmableLength, minDerivedStemLength, contextualAliasComplementLookahead) and changes no existing value. This is the first epoch whose exports differ BEHAVIORALLY from the previous one: the central tokenizer fix moved 2,168 of 46,350 scored pairs and produced 123 threshold crossings, every one adjudicated ACCEPT by Jason and recorded in tests/fixtures/threshold-neighbors.json and md/lab-v2.6.0-threshold-adjudication.md. Net effect on the mapped surface: 3 credible matches gained, 0 lost, 0 stance labels moved.",
     "canonIndexSchemaVersion": "le-canon-index/1.1"
   },
   "labelingSheets": {
@@ -58,20 +58,20 @@
       "capturedBy": "reacquired",
       "capturedAt": "2026-07-29T09:03:00.000Z",
       "words": 2283,
-      "current": "lab-corpus/exports/01-pew-online-dating-v2.5.0.json",
-      "currentSha256": "021735953e861d3aa007f195d2964242421e3dcc550aadff3b35c99b2911ce85",
+      "current": "lab-corpus/exports/01-pew-online-dating-v2.6.0.json",
+      "currentSha256": "64df85d3e56013e63c8296ea0acbfd23b80101b8f3b8f26539f1a197d3cbc5ed",
       "companions": {
         "queue": {
-          "file": "lab-corpus/exports/01-pew-online-dating-v2.5.0.queue.json",
-          "sha256": "8f8166272a7439d056ed027517f5a7f95457c57dd6c9f748bba1627565faaebd"
+          "file": "lab-corpus/exports/01-pew-online-dating-v2.6.0.queue.json",
+          "sha256": "257f0014551167eeee1587f15f911bc5d2c10522b7a9be6a9fcf1266560d231c"
         },
         "markdown": {
-          "file": "lab-corpus/exports/01-pew-online-dating-v2.5.0.md",
-          "sha256": "cf801867301d5b435896779e12cf35b80101fa09ad4489b435911b51b248c9cb"
+          "file": "lab-corpus/exports/01-pew-online-dating-v2.6.0.md",
+          "sha256": "ecd36a4a5eea8184fe5b4093c8c50bfb24be62f1b4f99349696f2dd1c5f28ea3"
         },
         "labelingSheet": {
-          "file": "lab-corpus/exports/01-pew-online-dating-v2.5.0.labeling.csv",
-          "sha256": "cabb91981185a2985227127251bcea45e278223928f3922085aaf7b09047a917"
+          "file": "lab-corpus/exports/01-pew-online-dating-v2.6.0.labeling.csv",
+          "sha256": "a59bad41c5af6bad133fab716ea2d39ac28d0c62a8a14ca7cb722afd53a8f4f9"
         }
       },
       "superseded": [
@@ -114,6 +114,25 @@
             }
           },
           "reason": "Superseded by the v2.4.0 re-run. Retained: it is the before side of the v2.4.0 delta."
+        },
+        {
+          "file": "lab-corpus/exports/01-pew-online-dating-v2.5.0.json",
+          "sha256": "021735953e861d3aa007f195d2964242421e3dcc550aadff3b35c99b2911ce85",
+          "companions": {
+            "queue": {
+              "file": "lab-corpus/exports/01-pew-online-dating-v2.5.0.queue.json",
+              "sha256": "8f8166272a7439d056ed027517f5a7f95457c57dd6c9f748bba1627565faaebd"
+            },
+            "markdown": {
+              "file": "lab-corpus/exports/01-pew-online-dating-v2.5.0.md",
+              "sha256": "cf801867301d5b435896779e12cf35b80101fa09ad4489b435911b51b248c9cb"
+            },
+            "labelingSheet": {
+              "file": "lab-corpus/exports/01-pew-online-dating-v2.5.0.labeling.csv",
+              "sha256": "cabb91981185a2985227127251bcea45e278223928f3922085aaf7b09047a917"
+            }
+          },
+          "epoch": "2.5.0"
         }
       ],
       "priorExport": "lab-corpus/exports/01-pew-online-dating-v2.4.0.json",
@@ -164,20 +183,20 @@
       "capturedBy": "reacquired",
       "capturedAt": "2026-07-29T09:02:00.000Z",
       "words": 1210,
-      "current": "lab-corpus/exports/02-fem-centrism-v2.5.0.json",
-      "currentSha256": "3ba58583a9b7d003842c428276c490c2875498e1e59bb1adcdf03186212e98b5",
+      "current": "lab-corpus/exports/02-fem-centrism-v2.6.0.json",
+      "currentSha256": "e87b6546b8b6279eb806d51f563d056cb5fbad3ecc87857d99f78eebd140f267",
       "companions": {
         "queue": {
-          "file": "lab-corpus/exports/02-fem-centrism-v2.5.0.queue.json",
-          "sha256": "9b1661a49b579da7427aa419209c34b2171f8a7a9531bad1e1179f5fea5b6e5b"
+          "file": "lab-corpus/exports/02-fem-centrism-v2.6.0.queue.json",
+          "sha256": "f2a0d68a5ba843f65fb52ea3d79b372fd23f82292b778ee76306d26b62742a7b"
         },
         "markdown": {
-          "file": "lab-corpus/exports/02-fem-centrism-v2.5.0.md",
-          "sha256": "d2cfd0ba3f679f59c597f746fed7ea98d11115c52c1225174680239031284340"
+          "file": "lab-corpus/exports/02-fem-centrism-v2.6.0.md",
+          "sha256": "cc06ae5f9a5208bc74701d83f675c59664391938097c7d0ed15fd560aa30b67a"
         },
         "labelingSheet": {
-          "file": "lab-corpus/exports/02-fem-centrism-v2.5.0.labeling.csv",
-          "sha256": "7a81f2af61e27d3d116b8923a08e4b9594b5ec738ba7a49496c121ffa32677ee"
+          "file": "lab-corpus/exports/02-fem-centrism-v2.6.0.labeling.csv",
+          "sha256": "7ea6195057221d71430b8a7a1872ba349cdafc9945ff14b4db607eb4a299756c"
         }
       },
       "superseded": [
@@ -220,6 +239,25 @@
             }
           },
           "reason": "Superseded by the v2.4.0 re-run. Retained: it is the before side of the v2.4.0 delta."
+        },
+        {
+          "file": "lab-corpus/exports/02-fem-centrism-v2.5.0.json",
+          "sha256": "3ba58583a9b7d003842c428276c490c2875498e1e59bb1adcdf03186212e98b5",
+          "companions": {
+            "queue": {
+              "file": "lab-corpus/exports/02-fem-centrism-v2.5.0.queue.json",
+              "sha256": "9b1661a49b579da7427aa419209c34b2171f8a7a9531bad1e1179f5fea5b6e5b"
+            },
+            "markdown": {
+              "file": "lab-corpus/exports/02-fem-centrism-v2.5.0.md",
+              "sha256": "d2cfd0ba3f679f59c597f746fed7ea98d11115c52c1225174680239031284340"
+            },
+            "labelingSheet": {
+              "file": "lab-corpus/exports/02-fem-centrism-v2.5.0.labeling.csv",
+              "sha256": "7a81f2af61e27d3d116b8923a08e4b9594b5ec738ba7a49496c121ffa32677ee"
+            }
+          },
+          "epoch": "2.5.0"
         }
       ],
       "priorExport": "lab-corpus/exports/02-fem-centrism-v2.4.0.json",
@@ -308,20 +346,20 @@
       "capturedBy": "reacquired",
       "capturedAt": "2026-07-29T09:01:00.000Z",
       "words": 2891,
-      "current": "lab-corpus/exports/04-heteropessimism-v2.5.0.json",
-      "currentSha256": "9267cb51690de5c687ab3ad105ca60bfb0aa35a5aff56580c676dfba72dc1796",
+      "current": "lab-corpus/exports/04-heteropessimism-v2.6.0.json",
+      "currentSha256": "c98cb6943151410e6d2c2db34e470796b3e346016b3eee5fedfc8e626a5efe8c",
       "companions": {
         "queue": {
-          "file": "lab-corpus/exports/04-heteropessimism-v2.5.0.queue.json",
-          "sha256": "25c838f64c6d9ecc19a9fc64137a4eb035ca3a68285ca0bf2c9e3d6bacdfe491"
+          "file": "lab-corpus/exports/04-heteropessimism-v2.6.0.queue.json",
+          "sha256": "c61719194541c7fcd5960a4f0bd6fc6851ddf2cfc1bfb80454146ec8a316d3b2"
         },
         "markdown": {
-          "file": "lab-corpus/exports/04-heteropessimism-v2.5.0.md",
-          "sha256": "2e9fd7c10d98bcd6d200a2fdc032e0d9b48c6659e64d17b4b9aa01b9473f7326"
+          "file": "lab-corpus/exports/04-heteropessimism-v2.6.0.md",
+          "sha256": "52eb6a722378d70ba592e5cbee7a52741e71d2a0a274c530b0cbde4816b293b1"
         },
         "labelingSheet": {
-          "file": "lab-corpus/exports/04-heteropessimism-v2.5.0.labeling.csv",
-          "sha256": "392402cc6be1f4d3fe88eaff6dc393471fc8f6d16f290a07ae3127442a4f9097"
+          "file": "lab-corpus/exports/04-heteropessimism-v2.6.0.labeling.csv",
+          "sha256": "c2975fcdc8bbf5743af102d0ad3f406beb4b4c910aa418460b5aea6059ef9ccd"
         }
       },
       "superseded": [
@@ -364,6 +402,25 @@
             }
           },
           "reason": "Superseded by the v2.4.0 re-run. Retained: it is the before side of the v2.4.0 delta."
+        },
+        {
+          "file": "lab-corpus/exports/04-heteropessimism-v2.5.0.json",
+          "sha256": "9267cb51690de5c687ab3ad105ca60bfb0aa35a5aff56580c676dfba72dc1796",
+          "companions": {
+            "queue": {
+              "file": "lab-corpus/exports/04-heteropessimism-v2.5.0.queue.json",
+              "sha256": "25c838f64c6d9ecc19a9fc64137a4eb035ca3a68285ca0bf2c9e3d6bacdfe491"
+            },
+            "markdown": {
+              "file": "lab-corpus/exports/04-heteropessimism-v2.5.0.md",
+              "sha256": "2e9fd7c10d98bcd6d200a2fdc032e0d9b48c6659e64d17b4b9aa01b9473f7326"
+            },
+            "labelingSheet": {
+              "file": "lab-corpus/exports/04-heteropessimism-v2.5.0.labeling.csv",
+              "sha256": "392402cc6be1f4d3fe88eaff6dc393471fc8f6d16f290a07ae3127442a4f9097"
+            }
+          },
+          "epoch": "2.5.0"
         }
       ],
       "priorExport": "lab-corpus/exports/04-heteropessimism-v2.4.0.json",

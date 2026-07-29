@@ -108,7 +108,7 @@ without inspecting entries. Both fields are validated as statements about the
 match surface — a typed alias that is not one of the entry's aliases is rejected
 at build time, because it would otherwise do nothing at all, silently.
 
-## Analysis result — `le-lab.analysis/2.4`
+## Analysis result — `le-lab.analysis/2.6`
 
 The deterministic local adapter returns:
 
@@ -309,7 +309,7 @@ The payload is assembled from two analyzer outputs and re-derives nothing. The
 claim unit, its domain decision with per-frame evidence, claim likelihood,
 speaker, timestamps, parent-segment boundary, bounded-context bridge with its
 immediate predecessor, and the displayed matches come from
-`le-lab.analysis/2.4`. The **whole working candidate set before display caps** —
+`le-lab.analysis/2.6`. The **whole working candidate set before display caps** —
 score components, penalties by name, evidence surfaces with their provenance
 types, admission outcome, context assistance, rank, rank at retrieval, fate, and
 the hits the caps hid — comes from `le-lab.diagnostics/1.1`. A value not
