@@ -1,0 +1,28 @@
+{
+  "schema": "le-canon-mapping-benchmark/1.0",
+  "createdAt": "2026-07-29",
+  "frozenAgainst": {
+    "labRelease": "2.4.1",
+    "analyzer": "2.4.0",
+    "analysisSchema": "le-lab.analysis/2.4",
+    "canonIndex": "1.0.0+949aef381d5f",
+    "scoringConfigHash": "1ntbwch"
+  },
+  "contract": "Append-only, and the same contract as the domain-relevance and match-behavior benchmarks. A case is added only by a human commit after adjudication; existing cases are never edited or removed. `expected` is the adjudicated target behavior. `observedAtFreeze` is what the shipped analyzer actually did when the case was written down, so a later reader can tell a fixed defect from a moved goalpost — a case whose two halves disagree is RED on purpose, and that is a legitimate state to commit. Every case names its origin: which flag, which reviewDisposition, who adjudicated it, and on what date. A case with no origin is unreviewable and is rejected at load.",
+  "scope": "The retrieval, ranking, admission, and alignment layers — everything that happens AFTER the relevance gate has retained a passage. Gate decisions belong to tests/fixtures/domain-relevance-benchmark.json; passage boundaries belong to the intake fixtures; a defect isolated to one score component belongs in a focused unit regression in tests/lab-analyzer.test.mjs. md/FEEDBACK-PIPELINE.md is the routing table.",
+  "labels": {
+    "mapped": "Whether the passage must produce at least one credible match.",
+    "primaryCanonId": "The concept that must rank first among credible matches.",
+    "presentCanonIds": "Concepts that must appear somewhere in the credible matches. Weaker than primaryCanonId and usable alongside it.",
+    "absentCanonIds": "Concepts that must NOT appear in the credible matches. This is how a false positive is frozen without asserting what should have won instead.",
+    "alignment": "{ canonId, label } — the stance a named match must carry. The label must come from the analyzer's own vocabulary.",
+    "weakPresentCanonIds": "Concepts that must be retained and visible as weak matches — below the credible threshold but not thrown away."
+  },
+  "usage": "Any subset of the labels may be asserted; a case states only what the adjudication actually decided. A case that asserts nothing is rejected, because it would pass forever without testing anything.",
+  "achievedAtCreation": {
+    "cases": 0,
+    "note": "Created empty, deliberately. The first case enters through md/FEEDBACK-PIPELINE.md, from a flag a human adjudicated — not from an author inventing sentences to fill a fixture. An empty benchmark that is structurally validated and wired into the suite is a functioning receptacle; a pre-populated one would be a set of guesses wearing evidence's clothes.",
+    "firstInboxCase": "ds-13 (domain-gate-error) routed on 2026-07-29 to the domain benchmark, where it already exists. It is recorded in md/FEEDBACK-PIPELINE.md as the worked example and produced no case here, which is the correct outcome for a gate defect."
+  },
+  "cases": []
+}

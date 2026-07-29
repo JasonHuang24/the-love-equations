@@ -28,3 +28,7 @@ images/calibration-scut/
 # LE Lab source corpus (third-party texts; deliberately NOT published)
 # Presence and integrity are verifiable via the committed lab-corpus.manifest.json
 lab-corpus/
+
+# LE Lab reviewer feedback inbox (flag files carry source excerpts; local triage
+# only, like lab-corpus/). Adjudicated cases reach the repo as fixture commits.
+lab-feedback/

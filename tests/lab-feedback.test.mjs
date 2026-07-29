@@ -281,3 +281,110 @@ test('the payload is JSON-serializable with no undefined leaks in required block
     assert.ok(key in round, `${key} survives serialization`);
   });
 });
+
+/*
+ * The router (tools/lab-feedback.mjs) is tested here rather than in its own file
+ * because every case it routes is a payload this module built. The two are one
+ * contract: a flag the exporter can write and the router cannot read would be a
+ * dead letter.
+ */
+const { validateFeedback, routeFeedback, findExistingCase } = await import('../tools/lab-feedback.mjs');
+
+test('the router accepts what the exporter writes, on every row kind', () => {
+  [
+    [mappedSegment.unit.id, 'wrong-primary'],
+    [unmappedSegment.unit.id, 'missing-expected-concept'],
+    [setAside.segmentId, 'domain-gate-error'],
+  ].forEach(([segmentId, disposition]) => {
+    const validation = validateFeedback(flag(segmentId, { review: { disposition } }));
+    assert.deepEqual(validation.errors, [], `${disposition} validates`);
+    assert.equal(validation.valid, true);
+  });
+});
+
+test('the router rejects a file that is not mapping feedback, listing every reason', () => {
+  const validation = validateFeedback({ schema: 'le-lab.analysis', schemaVersion: '2.4' });
+  assert.equal(validation.valid, false);
+  assert.ok(validation.errors.some((error) => error.includes('le-lab.mapping-feedback')));
+  assert.ok(validation.errors.some((error) => error.includes('flagId')));
+  assert.ok(validation.errors.some((error) => error.includes('reviewDisposition')));
+});
+
+test('a tampered failure layer is caught rather than routed to the wrong fixture', () => {
+  const feedback = flag(mappedSegment.unit.id);
+  feedback.review.failureLayer = 'domain-gate';
+  const validation = validateFeedback(feedback);
+  assert.equal(validation.valid, false);
+  assert.ok(validation.errors.some((error) => error.includes('belongs to retrieval-ranking')));
+});
+
+test('a flag that smuggled a whole transcript in is refused', () => {
+  const feedback = flag(mappedSegment.unit.id);
+  feedback.privacy.fullTranscriptIncluded = true;
+  const validation = validateFeedback(feedback);
+  assert.equal(validation.valid, false);
+  assert.ok(validation.errors.some((error) => error.includes('never carry a whole source')));
+});
+
+test('every disposition routes to exactly one destination, and the table covers all of them', () => {
+  const routed = REVIEW_DISPOSITIONS.map((disposition) => {
+    const segmentId = disposition.id === 'domain-gate-error' ? setAside.segmentId : mappedSegment.unit.id;
+    const feedback = flag(segmentId, { review: { disposition: disposition.id } });
+    return { id: disposition.id, route: routeFeedback(feedback) };
+  });
+  const destinations = Object.fromEntries(routed.map(({ id, route }) => [id, route.destination]));
+  assert.deepEqual(destinations, {
+    'wrong-primary': 'tests/fixtures/canon-mapping-benchmark.json',
+    'false-positive': 'tests/fixtures/canon-mapping-benchmark.json',
+    'missing-expected-concept': 'tests/fixtures/canon-mapping-benchmark.json',
+    'should-remain-unmapped': 'tests/fixtures/canon-mapping-benchmark.json',
+    'wrong-stance': 'tests/fixtures/canon-mapping-benchmark.json',
+    'domain-gate-error': 'tests/fixtures/domain-relevance-benchmark.json',
+    'segmentation-error': 'tests/lab-intake.test.mjs (intake fixtures)',
+  });
+  routed.forEach(({ id, route }) => {
+    assert.ok(route.stub, `${id} drafts a stub`);
+    assert.ok(route.why, `${id} says why it routes there`);
+  });
+});
+
+test('the drafted stub asserts what the disposition actually claims, and nothing more', () => {
+  const falsePositive = routeFeedback(flag(mappedSegment.unit.id, {
+    review: { disposition: 'false-positive', forbiddenCanonIds: [mappedSegment.matches[0].canonId] },
+  })).stub;
+  assert.deepEqual(falsePositive.expected, { absentCanonIds: [mappedSegment.matches[0].canonId] });
+  assert.equal(falsePositive.expected.primaryCanonId, undefined,
+    'a false positive says what must not match, not what should have won instead');
+
+  const unmapped = routeFeedback(flag(mappedSegment.unit.id, {
+    review: { disposition: 'should-remain-unmapped' },
+  })).stub;
+  assert.deepEqual(unmapped.expected, { mapped: false });
+
+  const stance = routeFeedback(flag(mappedSegment.unit.id, {
+    review: { disposition: 'wrong-stance', expectedAlignment: 'Contradicts' },
+  })).stub;
+  assert.equal(stance.expected.alignment.label, 'Contradicts');
+  assert.equal(stance.expected.alignment.canonId, mappedSegment.matches[0].canonId);
+
+  // Whatever the disposition, the observed half records the shipped behavior.
+  assert.equal(falsePositive.observedAtFreeze.primaryCanonId, mappedSegment.matches[0].canonId);
+  assert.equal(falsePositive.observedAtFreeze.candidateCount,
+    diagnostics.claimUnits.find((unit) => unit.segmentId === mappedSegment.unit.id).candidates.length);
+  assert.ok(falsePositive.origin.adjudicatedBy.startsWith('TBD'),
+    'the human fields stay unfilled — the tool drafts, it does not adjudicate');
+});
+
+test('a passage already frozen in a benchmark is found rather than duplicated', async () => {
+  const known = 'The studio patched the game so ranked players get fewer unfair matches.';
+  const existing = await findExistingCase(known);
+  assert.ok(existing, 'ds-13 is found by its text');
+  assert.equal(existing.case.id, 'ds-13');
+  assert.equal(existing.benchmark, 'domain-relevance-benchmark');
+
+  // Whitespace and case are not identity.
+  const sloppy = await findExistingCase(`  ${known.toUpperCase()}  `);
+  assert.equal(sloppy?.case.id, 'ds-13');
+
+  assert.equal(await findExistingCase('A sentence no benchmark has ever seen, about nothing in particular.'), null);
+});
