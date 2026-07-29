@@ -954,6 +954,47 @@
           "humanlyCorrect": { "credibleMatch": true },
           "limitDocumented": true,
           "note": "LIMIT, and one v2.6.1 CREATED rather than found, written down here because a fix that quietly buys a new false positive is how a guard rots. Comparing denylist entries and candidate words as stems is what lets `utility` see `utilities`; the same comparison lets `payment` see `paying`, because this stemmer takes `payment` down to `pay`. The sentence is the provisioning sense in plain English and the analyzer now rejects it. The exact widening was enumerated, not estimated: over the sixteen entries the stem comparison newly reaches `host`/`hosts`/`hosted` (from `hosting`), `networked`/`networking` (from `network`), `clouded` (from `cloud`), and `pay`/`pays`/`paying`/`payers` (from `payment`). All but the `pay` family are the technical sense the denylist exists to reject and are improvements. This one is the cost, and it is accepted on the same ground v2.6.0 accepted `moment`/`moments`: the alternative is a private idea of morphology sitting beside the analyzer's real one, which is the class of defect v2.4.2 was a whole release about. The narrower fix — stem only where the literal test fails — is available if a production flag ever lands here."
+        },
+        {
+          "id": "bl-17",
+          "family": "morphology",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "During our marriage the provider for health caregivers was always him.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "technical-modifier", "promotedBy": "technical modifier “health care” within 3 tokens" },
+          "humanlyCorrect": { "credibleMatch": true },
+          "limitDocumented": true,
+          "note": "LIMIT. A multiword denylist entry satisfied by a longer word that merely spans it: `caregivers` contains `care`, so the complement reads as `health care` and the provisioning sense is thrown away. Sol's repro, and the case that retracts v2.6.1 §2 — which claimed multiword entries had moved FROM substring matching TO a contiguous run of stems, so that exactly this could no longer happen. The substring test was retained and runs first, and for this canon the stem run is never the decisive test at all: any surface whose stem is `care` is `care` or `care` plus a stripped suffix, so it always carries `care` as a prefix and `run.includes('health care')` always fires before the stem run is reached. Frozen ASSERTING CURRENT BEHAVIOR because the fix is score-moving and queued — see the release report §7.2, and bl-19 for the guard that fix must not break."
+        },
+        {
+          "id": "bl-18",
+          "family": "morphology",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "During our marriage the provider for child caregivers was always him.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "technical-modifier", "promotedBy": "technical modifier “child care” within 3 tokens" },
+          "humanlyCorrect": { "credibleMatch": true },
+          "limitDocumented": true,
+          "note": "LIMIT, and the sibling that makes bl-17 a shape rather than an anecdote. `child care` is the canon's other multiword entry and it fails identically on `caregivers`, which is the whole point: the defect belongs to the substring test, not to one entry's spelling. Both are frozen because a fix written against `health care` alone would pass bl-17 and leave this one broken — the same reason cm-17 exists beside cm-16."
+        },
+        {
+          "id": "bl-19",
+          "family": "morphology",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "text": "During our marriage the provider for health care services handled our archive.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "technical-modifier", "promotedBy": "technical modifier “health care” within 3 tokens" },
+          "humanlyCorrect": { "credibleMatch": false },
+          "note": "GUARD, and the measurement that makes the bl-17/bl-18 fix safe to attempt. This is the case a reader assumes the substring test is protecting, and it is not: with the substring test gone, the contiguous stem run still matches `health care` here directly, and `care` and `service` both still match literally. Any fix that drops the substring test must keep this green, and if it does not, the fix disqualified nothing it was supposed to keep."
         }
       ]
     }

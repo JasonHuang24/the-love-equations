@@ -109,6 +109,34 @@ Multiword entries additionally moved from substring matching to a contiguous run
 that merely spans them. No denylist entry's behavior changes as a result; it removes a latent
 false-positive shape rather than fixing an observed one.
 
+> **CORRECTION, 2026-07-29.** The paragraph above describes behavior this release did not ship, and
+> Sol's verification review was right to reproduce it. Multiword entries did not move *from* substring
+> matching. The substring test is still there and still runs first. `carries()` tries three tests in
+> order: the literal surfaces, then `run.includes(modifier)` for any entry containing a space, and
+> only then the contiguous run of stems. A multiword entry satisfied by a longer word that merely
+> spans it is caught by the second test, which returns before the third is reached. Nothing about that
+> shape changed. The run of stems was **added**, not substituted.
+>
+> **And for this canon the added test is never the decisive one.** Any surface whose stem is `care` is
+> either `care` itself or `care` plus a suffix the stripper removes, so it always carries `care` as a
+> prefix — which means `health ` + that surface always contains the substring `health care`, and the
+> substring test always fires first. The same argument covers `child care`. Those are the canon's only
+> two multiword entries, so the stem-run branch changed no verdict at v2.6.1 and could not have. That
+> is a stronger statement than the paragraph above makes and it points the opposite way.
+>
+> One half of the original claim survives, for a better reason than it gave. No denylist entry's
+> behavior changes — not because a shape was removed, but because a third test that only ever adds
+> disqualifications cannot subtract one. It is a union, exactly like §1's. What does not survive is
+> "removes a latent false-positive shape." **Nothing was removed, and the shape is live.** `bl-17` and
+> `bl-18` now hold it: `the provider for health caregivers` is disqualified by `health care` matched
+> inside `caregivers`, and the humanly correct reading is the provisioning sense.
+>
+> **This correction is documentation-only, and one copy of the error is deliberately left standing.**
+> The same claim is a comment on `carries()` at `js/lab-analyzer.js:1878`. Correcting a comment would
+> move the analyzer's hash, which this pass is not permitted to do — decided explicitly rather than
+> overlooked. It is queued with the §7 generalization that rewrites the comment anyway. Until then the
+> comment is wrong, and this block is the record that it is known to be wrong.
+
 ---
 
 ## 3. What it widens, stated as a cost
@@ -187,8 +215,25 @@ instrument moved for that corpus, and §4 shows all 46,350 pairs unchanged. Ever
 ## 7. Open, and deliberately not done here
 
 1. **`bl-16`, the `paying` false positive.** Fix available (§3), not applied without a case.
-2. **The other fifteen documented limits** from v2.6.0 are untouched and `md/limit-hit-ledger.md`
+2. **The contiguous-stem generalization — `bl-17`/`bl-18`, and the comment at
+   `js/lab-analyzer.js:1878`.** Dropping the substring test and letting the stem run be the only
+   multiword rule is what §2 originally claimed had shipped. It would fix both cases, and it is
+   **score-moving**, so it is not a record correction and does not belong in this pass.
+
+   Its safety is already measured rather than assumed. `health care services` — the case that would
+   break if the substring test were load-bearing — stays disqualified without it: the stem run matches
+   `health care` there directly, and `care` and `service` both match literally. It is frozen as the
+   GREEN guard `bl-19` so the generalization cannot land without proving that.
+
+   **Queued behind `GENERIC_TERMS`** (v2.6.0 §13.2 — matched against the stemmed token but written
+   unstemmed, and deferred there for being score-moving), because both are the same defect: a
+   hand-written list compared against a representation it was not written in. Fixing the smaller one
+   first would mean touching `carries()` twice. **Unblocked by a production flag on `bl-17`/`bl-18`
+   territory** — a real source that loses a provisioning claim to a spanned multiword entry is the
+   evidence that moves this ahead of the queue, and it accumulates in `md/limit-hit-ledger.md` under
+   `morphology` like any other limit hit.
+3. **The fourteen documented limits from v2.6.0** are untouched and `md/limit-hit-ledger.md`
    remains empty.
-3. **The denylist is still a denylist.** Everything in §1 makes a hand-written list of sixteen
+4. **The denylist is still a denylist.** Everything in §1 makes a hand-written list of sixteen
    technical words compare correctly. It does not make the list complete, and it never will — that is
    why the list is the *secondary* defense and the occurrence-local window is the primary one.
