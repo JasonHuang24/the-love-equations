@@ -1,4 +1,8 @@
-export const LEDGER_COLUMN_COUNT = 7;
+// Segment · excerpt · alignment · connection · section · confidence · triage · review.
+// Triage is what the gate decided about the passage; Review is what the reader
+// says about the mapping. They are separate columns because they are separate
+// judgements with separate destinations.
+export const LEDGER_COLUMN_COUNT = 8;
 
 export function ledgerFilterIsActive(controlFilter, activeFilter) {
   return controlFilter === activeFilter;

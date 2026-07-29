@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="css/styles.css?v=2.4" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=2.4.0" />
+  <link rel="stylesheet" href="css/lab.css?v=2.4.1" />
   <script src="js/include.js" defer></script>
-  <script type="module" src="js/lab-app.js?v=2.4.0"></script>
+  <script type="module" src="js/lab-app.js?v=2.4.1"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
@@ -215,6 +215,7 @@
               <li><i class="ti ti-check" aria-hidden="true"></i> Reset cancels work, revokes local previews, and clears the session.</li>
               <li><i class="ti ti-check" aria-hidden="true"></i> PDF/OCR dependencies contact pinned download hosts; they do not upload your source.</li>
               <li><i class="ti ti-check" aria-hidden="true"></i> Mapping a fetchable URL explicitly contacts that publisher. Blocked requests fail without converting the URL into analyzable text.</li>
+              <li><i class="ti ti-check" aria-hidden="true"></i> Flagging a mapping writes a JSON file to your own disk and nothing else: nothing is sent anywhere, nothing is stored in this browser, and no fixture changes. The file carries the flagged passage and the analyzer's trace for it &mdash; never the full transcript, and source title and URL only if you tick the box.</li>
             </ul>
           </div>
 
@@ -454,11 +455,12 @@
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="section" aria-label="Sort and group by canon section">Section <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="confidence" aria-label="Sort by confidence">Confidence <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="triage" aria-label="Sort and group by triage state">Triage <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col">Review</th>
                   </tr>
                 </thead>
                 <tbody id="lab-map-table-body">
                   <tr id="lab-map-table-empty">
-                    <td colspan="7">Run an analysis to populate the segment-by-segment map.</td>
+                    <td colspan="8">Run an analysis to populate the segment-by-segment map.</td>
                   </tr>
                 </tbody>
               </table>
@@ -674,6 +676,80 @@
     <template id="lab-warning-template">
       <li><i class="ti ti-alert-circle" aria-hidden="true"></i><span data-field="message"></span></li>
     </template>
+
+    <dialog class="lab-flag-dialog" id="lab-flag-dialog" aria-labelledby="lab-flag-title">
+      <form class="lab-flag-form" id="lab-flag-form">
+        <div class="lab-flag-head">
+          <div>
+            <div class="lab-section-kicker">Mapping feedback</div>
+            <h2 id="lab-flag-title">Flag this mapping</h2>
+          </div>
+          <span class="lab-flag-row-kind" id="lab-flag-row-kind"></span>
+        </div>
+
+        <p class="lab-flag-excerpt" id="lab-flag-excerpt"></p>
+        <p class="lab-flag-current" id="lab-flag-current"></p>
+
+        <fieldset class="lab-flag-field">
+          <legend id="lab-flag-disposition-legend">What did the analyzer get wrong?</legend>
+          <div class="lab-flag-dispositions" id="lab-flag-dispositions" role="radiogroup"
+               aria-labelledby="lab-flag-disposition-legend"></div>
+        </fieldset>
+
+        <div class="lab-flag-grid">
+          <div class="lab-flag-field">
+            <label for="lab-flag-expected">Concepts it should have matched</label>
+            <input type="text" id="lab-flag-expected" list="lab-flag-canon-ids" autocomplete="off"
+                   placeholder="canon IDs, comma separated &mdash; optional" />
+            <small>e.g. <code>smv:money:provisioning-signal</code>. Leave empty if you only know it is wrong.</small>
+          </div>
+          <div class="lab-flag-field">
+            <label for="lab-flag-forbidden">Concepts it should not have matched</label>
+            <input type="text" id="lab-flag-forbidden" list="lab-flag-canon-ids" autocomplete="off"
+                   placeholder="canon IDs, comma separated &mdash; optional" />
+            <small>Pre-filled with the current primary when you flag a wrong match.</small>
+          </div>
+          <div class="lab-flag-field">
+            <label for="lab-flag-alignment">Alignment it should have carried</label>
+            <select id="lab-flag-alignment">
+              <option value="">Not applicable</option>
+              <option value="Supports">Supports</option>
+              <option value="Resembles">Resembles</option>
+              <option value="Extends">Extends</option>
+              <option value="Challenges">Challenges</option>
+              <option value="Contradicts">Contradicts</option>
+              <option value="Context only">Context only</option>
+            </select>
+          </div>
+          <div class="lab-flag-field">
+            <label for="lab-flag-note">Note for the adjudicator</label>
+            <textarea id="lab-flag-note" rows="2" placeholder="Optional. One sentence is plenty."></textarea>
+          </div>
+        </div>
+        <datalist id="lab-flag-canon-ids"></datalist>
+
+        <label class="lab-flag-check" for="lab-flag-provenance">
+          <input type="checkbox" id="lab-flag-provenance" />
+          <span>Include this source's title and URL in the file</span>
+        </label>
+
+        <p class="lab-flag-privacy">
+          <i class="ti ti-shield-lock" aria-hidden="true"></i>
+          Downloads to this device only. Nothing is uploaded, nothing is stored in this browser, and no
+          fixture changes. The file carries the flagged passage, the analyzer's decision trace for it,
+          and the build that produced them &mdash; never the full transcript.
+        </p>
+
+        <p class="lab-flag-error" id="lab-flag-error" role="alert" hidden></p>
+
+        <div class="lab-flag-actions">
+          <button class="btn" type="button" id="lab-flag-cancel">Cancel</button>
+          <button class="btn btn-scarlet" type="submit" id="lab-flag-submit">
+            <i class="ti ti-download" aria-hidden="true"></i> Download flag file
+          </button>
+        </div>
+      </form>
+    </dialog>
   </main>
 
   <div data-include="footer"></div>

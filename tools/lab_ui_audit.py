@@ -100,9 +100,24 @@ for required_id in (
     "lab-research-empty-title",
     "lab-research-empty-copy",
     "lab-ledger-filter-note",
+    "lab-flag-dialog",
+    "lab-flag-form",
+    "lab-flag-dispositions",
+    "lab-flag-error",
+    "lab-flag-provenance",
 ):
     if required_id not in id_set:
         errors.append(f"Lab relevance UI hook missing: #{required_id}")
+
+# The flag export is a local download and nothing else. The page must keep
+# saying so where a visitor decides whether to use it, not only in the report.
+for disclosure in (
+    "Flagging a mapping writes a JSON file to your own disk",
+    "Downloads to this device only.",
+    "never the full transcript",
+):
+    if disclosure not in html_text:
+        errors.append(f"Lab flag-export privacy disclosure missing: {disclosure}")
 if "Demo Test" not in html_text:
     errors.append("hero demo button must be labeled Demo Test")
 if "Bring a source <" in html_text:
@@ -119,6 +134,8 @@ for selector in (
     ".lab-triage", ".lab-triage-button", ".lab-triage-chip", ".lab-triage-cell",
     ".lab-sort-button", ".lab-ledger-filter-note", ".lab-adjacent-more",
     ".lab-section-cell", "button.lab-metric", "button.lab-assay-stage",
+    ".lab-flag-dialog", ".lab-flag-disposition", ".lab-flag-privacy",
+    ".lab-review-cell", ".lab-triage-button.is-flag",
 ):
     if selector not in css_text:
         errors.append(f"Lab QoL control has no page-specific styling: {selector}")
@@ -141,9 +158,28 @@ for phrase in (
     "Include in analysis",
     "Exclude",
     "Included by you",
+    "Nothing was sent anywhere.",
 ):
     if phrase not in app_text:
         errors.append(f"Lab relevance result copy missing: {phrase}")
+
+# The ledger's message rows span the table by a constant in js/lab-ledger.js
+# while the static empty row spans it by hand. They drift silently unless
+# something says they must agree.
+ledger_text = (ROOT / "js" / "lab-ledger.js").read_text(encoding="utf-8")
+column_match = re.search(r"LEDGER_COLUMN_COUNT\s*=\s*(\d+)", ledger_text)
+header_count = html_text.count('<th scope="col"', html_text.find('id="lab-map-table"'),
+                               html_text.find("</thead>", html_text.find('id="lab-map-table"')))
+if not column_match:
+    errors.append("js/lab-ledger.js no longer exports a readable LEDGER_COLUMN_COUNT")
+else:
+    columns = int(column_match.group(1))
+    if header_count != columns:
+        errors.append(
+            f"ledger table has {header_count} column headers but LEDGER_COLUMN_COUNT is {columns}"
+        )
+    if f'colspan="{columns}"' not in html_text:
+        errors.append(f"the static empty ledger row does not span {columns} columns")
 
 nav_text = (ROOT / "partials" / "navigation-bar.html").read_text(encoding="utf-8")
 footer_text = (ROOT / "partials" / "footer.html").read_text(encoding="utf-8")

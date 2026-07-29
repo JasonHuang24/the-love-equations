@@ -2572,3 +2572,231 @@ button.lab-metric > small { text-align: right; }
   letter-spacing: 0.03em;
   white-space: nowrap;
 }
+
+/* ── Mapping feedback (v=2.4.1)
+   Review column beside Triage, and the flag dialog it opens. The dialog is a
+   native <dialog> in the top layer; custom properties still inherit from
+   .lab-page through the DOM, so it needs no palette of its own. ── */
+.lab-review-cell {
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.lab-triage-button.is-flag {
+  border-color: rgba(154, 101, 20, 0.45);
+  color: var(--lab-amber);
+}
+
+.lab-triage-button.is-flag:hover,
+.lab-triage-button.is-flag:focus-visible {
+  background: var(--lab-amber);
+  color: #fff;
+}
+
+.lab-triage-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.lab-flag-dialog {
+  width: min(680px, calc(100vw - 2rem));
+  max-height: min(88vh, 900px);
+  padding: 0;
+  border: 0.5px solid var(--border-light);
+  border-radius: 16px;
+  background: var(--lab-paper);
+  color: var(--lab-ink);
+  box-shadow: 0 24px 60px rgba(40, 23, 23, 0.28);
+}
+
+.lab-flag-dialog::backdrop {
+  background: rgba(40, 23, 23, 0.42);
+}
+
+.lab-flag-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem 1.4rem 1.1rem;
+}
+
+.lab-flag-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.lab-flag-head h2 {
+  margin: 0.1rem 0 0;
+  font-size: 1.25rem;
+}
+
+.lab-flag-row-kind {
+  padding: 0.16rem 0.6rem;
+  border: 0.5px solid var(--border-light);
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lab-flag-excerpt {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-left: 2px solid var(--scarlet);
+  background: var(--lab-paper-soft);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.lab-flag-current {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+}
+
+.lab-flag-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lab-flag-field legend,
+.lab-flag-field label {
+  padding: 0;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lab-flag-field small {
+  color: var(--text-dim);
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.lab-flag-field input[type="text"],
+.lab-flag-field select,
+.lab-flag-field textarea {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 0.5px solid var(--border-light);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--lab-ink);
+  font-size: 13px;
+}
+
+.lab-flag-field textarea {
+  resize: vertical;
+}
+
+.lab-flag-dispositions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.15rem;
+}
+
+.lab-flag-disposition {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border: 0.5px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--lab-paper-soft);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.lab-flag-disposition:has(input:checked) {
+  border-color: var(--scarlet);
+  background: var(--scarlet-pale);
+}
+
+.lab-flag-disposition input {
+  margin-top: 0.2rem;
+  accent-color: var(--scarlet);
+}
+
+.lab-flag-disposition span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.lab-flag-disposition strong {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.lab-flag-disposition small {
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.lab-flag-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.lab-flag-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.lab-flag-check input {
+  accent-color: var(--scarlet);
+}
+
+.lab-flag-privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.55rem 0.7rem;
+  border: 0.5px solid rgba(23, 106, 84, 0.28);
+  border-radius: 11px;
+  background: var(--lab-green-pale);
+  color: var(--lab-green);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.lab-flag-error {
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border: 0.5px solid rgba(126, 35, 45, 0.4);
+  border-radius: 11px;
+  background: var(--scarlet-pale);
+  color: var(--scarlet-deep);
+  font-size: 12px;
+}
+
+.lab-flag-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}

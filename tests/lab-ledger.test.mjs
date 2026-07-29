@@ -103,6 +103,8 @@ test('section sorting groups mapped and weak-match display sections with missing
   assert.equal(displayedLedgerSection(entries[4].segment), '');
 });
 
-test('ledger message rows use the full seven-column table width', () => {
-  assert.equal(LEDGER_COLUMN_COUNT, 7);
+test('ledger message rows use the full eight-column table width', () => {
+  // Bumped at v2.4.1 when the Review column joined Triage. A message row that
+  // spans the wrong number of columns is the visible symptom of the two drifting.
+  assert.equal(LEDGER_COLUMN_COUNT, 8);
 });

@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.4.0';
+} from './lab-intake.js?v=2.4.1';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,25 +15,35 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.4.0';
-import { createDemoDocument } from './lab-demo.js?v=2.4.0';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.4.0';
+} from './lab-extractors.js?v=2.4.1';
+import { createDemoDocument } from './lab-demo.js?v=2.4.1';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.4.1';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.4.0';
+} from './lab-export.js?v=2.4.1';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
   ledgerFilterIsActive,
   ledgerRowMatchesFilter,
   nextLedgerFilter,
-} from './lab-ledger.js?v=2.4.0';
+} from './lab-ledger.js?v=2.4.1';
+import {
+  REVIEW_DISPOSITIONS,
+  buildMappingFeedback,
+  mappingFeedbackFileName,
+  mappingFeedbackToJson,
+} from './lab-feedback.js?v=2.4.1';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.4.0';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.4.1';
+// The Lab build that rendered a flagged row. Deliberately distinct from
+// provenance.analyzer.version, which names the engine that produced the numbers:
+// a UI-only patch moves this and not that, and triage needs to tell them apart.
+const LAB_RELEASE = '2.4.1';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -96,6 +106,21 @@ const ui = {
   triage: byId('lab-triage'),
   triageHeadline: byId('lab-triage-headline'),
   triageList: byId('lab-triage-list'),
+  flagDialog: byId('lab-flag-dialog'),
+  flagForm: byId('lab-flag-form'),
+  flagRowKind: byId('lab-flag-row-kind'),
+  flagExcerpt: byId('lab-flag-excerpt'),
+  flagCurrent: byId('lab-flag-current'),
+  flagDispositions: byId('lab-flag-dispositions'),
+  flagExpected: byId('lab-flag-expected'),
+  flagForbidden: byId('lab-flag-forbidden'),
+  flagAlignment: byId('lab-flag-alignment'),
+  flagNote: byId('lab-flag-note'),
+  flagProvenance: byId('lab-flag-provenance'),
+  flagCanonIds: byId('lab-flag-canon-ids'),
+  flagError: byId('lab-flag-error'),
+  flagCancel: byId('lab-flag-cancel'),
+  flagSubmit: byId('lab-flag-submit'),
   copyMarkdown: byId('lab-copy-markdown'),
   downloadMarkdown: byId('lab-download-markdown'),
   downloadJson: byId('lab-download-json'),
@@ -157,6 +182,14 @@ const state = {
   companionFile: null,
   media: null,
   analysis: null,
+  // The exact inputs behind state.analysis. The diagnostic trace is collected by
+  // re-running the analyzer on THESE, not on whatever the intake fields say now,
+  // so a trace can never describe a document the visitor has since edited.
+  analyzedDocument: null,
+  analyzedOverrides: {},
+  diagnostics: null,
+  diagnosticsFor: null,
+  flagTarget: null,
   workController: null,
   busy: false,
   resetSequence: 0,
@@ -674,10 +707,10 @@ function triageChip(label, variant = '') {
   return chip;
 }
 
-function triageButton(label, ariaLabel, onClick) {
+function triageButton(label, ariaLabel, onClick, variant = '') {
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'lab-triage-button';
+  button.className = `lab-triage-button${variant ? ` is-${variant}` : ''}`;
   button.textContent = label;
   button.setAttribute('aria-label', ariaLabel);
   button.addEventListener('click', onClick);
@@ -774,9 +807,15 @@ function renderTriage(result) {
     }
 
     const shortExcerpt = truncateLabel(passage.excerpt, 60);
-    item.appendChild(passage.overridden
+    const actions = document.createElement('div');
+    actions.className = 'lab-triage-actions';
+    actions.appendChild(passage.overridden
       ? triageButton('Undo exclude', `Undo your exclusion of “${shortExcerpt}”`, () => setDomainOverride(passage.segmentId, null))
       : triageButton('Include in analysis', `Include “${shortExcerpt}” in the analysis`, () => setDomainOverride(passage.segmentId, 'include')));
+    // Including a passage fixes this session; flagging it is how the gate itself
+    // gets fixed. A set-aside row has no ledger row, so this is its only flag.
+    actions.appendChild(flagButton(passage.segmentId, shortExcerpt));
+    item.appendChild(actions);
     ui.triageList.appendChild(item);
   });
   if (ignored.length > MAX_RENDERED_TRIAGE_ROWS) {
@@ -815,6 +854,8 @@ function buildLedgerRow(segment) {
   const confidenceCell = document.createElement('td');
   const triageCell = document.createElement('td');
   triageCell.className = 'lab-triage-cell';
+  const reviewCell = document.createElement('td');
+  reviewCell.className = 'lab-review-cell';
   refCell.textContent = segmentReference(segment.unit);
   excerptCell.textContent = segment.unit.text;
   const relevance = segment.unit.domainRelevance || {};
@@ -828,6 +869,7 @@ function buildLedgerRow(segment) {
     }
     triageCell.appendChild(triageButton('Exclude', `Exclude “${shortExcerpt}” from the analysis`, () => setDomainOverride(segment.unit.id, 'exclude')));
   }
+  reviewCell.appendChild(flagButton(segment.unit.id, shortExcerpt));
   if (segment.mapped) {
     const primary = segment.matches[0];
     alignmentCell.textContent = primary.alignment.label;
@@ -872,7 +914,8 @@ function buildLedgerRow(segment) {
       ? `Below threshold · ${Math.round(segment.weakMatches[0].score * 100)}/100`
       : '—';
   }
-  row.append(refCell, excerptCell, alignmentCell, connectionCell, sectionCell, confidenceCell, triageCell);
+  row.append(refCell, excerptCell, alignmentCell, connectionCell, sectionCell, confidenceCell,
+    triageCell, reviewCell);
   return row;
 }
 
@@ -987,6 +1030,237 @@ function renderLedger(result) {
   ui.mapSummary.textContent = noDomainClaims
     ? 'No relationship-domain claims were detected in this source.'
     : `${formatNumber(result.metrics.mappedClaimSegments)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped credibly.`;
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * Mapping feedback — flag a row, download a file, and that is the whole of it.
+ * ---------------------------------------------------------------------------
+ * No upload, no persistence, no fixture mutation. The payload is built by
+ * js/lab-feedback.js from two analyzer outputs — the published analysis and the
+ * opt-in diagnostic trace — and written straight to the visitor's disk.
+ *
+ * The trace is collected ON DEMAND rather than kept for every analysis: it is
+ * the whole pre-display candidate set for every passage, which is large, and
+ * most sessions never flag anything. The first flag pays for it once; the rest
+ * of the session reads the cache. Because the analyzer is deterministic and the
+ * re-run uses the stored document and stored overrides, the trace describes the
+ * run on screen — and that is checked rather than assumed.
+ */
+function assertTraceMatchesAnalysis(traced, analysis) {
+  const agrees = traced.id === analysis.id
+    && traced.schemaVersion === analysis.schemaVersion
+    && traced.provenance?.analyzer?.version === analysis.provenance?.analyzer?.version
+    && traced.provenance?.analyzer?.scoringConfigHash === analysis.provenance?.analyzer?.scoringConfigHash
+    && traced.canonIndex?.version === analysis.canonIndex?.version
+    && traced.metrics?.claimLikeSegments === analysis.metrics?.claimLikeSegments
+    && traced.metrics?.mappedClaimSegments === analysis.metrics?.mappedClaimSegments;
+  if (!agrees) {
+    throw new Error('The trace run did not reproduce the analysis on screen, so it cannot be used as evidence about it. Re-run the analysis and flag again.');
+  }
+  if (!traced.diagnostics) {
+    throw new Error('The analyzer returned no diagnostic trace. Re-run the analysis and flag again.');
+  }
+}
+
+async function ensureDiagnostics() {
+  if (state.diagnostics && state.diagnosticsFor === state.analysis?.id) return state.diagnostics;
+  if (!state.analysis) throw new Error('There is no analysis to trace.');
+  if (!state.analyzedDocument || !state.canonIndex) {
+    throw new Error('The analyzed source is no longer loaded in this session. Re-run the analysis before flagging.');
+  }
+  const restoreStatus = ui.analysisStatusDetail.textContent;
+  const restoreIntake = ui.intakeStatus.textContent;
+  const controller = new AbortController();
+  state.workController = controller;
+  setBusy(true, 'analyzing');
+  ui.analysisProgressWrap.hidden = false;
+  try {
+    const traced = await analyzer.analyze(state.analyzedDocument, state.canonIndex, {
+      signal: controller.signal,
+      onProgress: handleAnalysisProgress,
+      domainOverrides: state.analyzedOverrides,
+      diagnostics: true,
+    });
+    assertTraceMatchesAnalysis(traced, state.analysis);
+    state.diagnostics = traced.diagnostics;
+    state.diagnosticsFor = state.analysis.id;
+    return state.diagnostics;
+  } finally {
+    state.workController = null;
+    setBusy(false);
+    ui.analysisStatusDetail.textContent = restoreStatus;
+    ui.intakeStatus.textContent = restoreIntake;
+  }
+}
+
+function clearDiagnosticsCache() {
+  state.diagnostics = null;
+  state.diagnosticsFor = null;
+}
+
+function flagButton(segmentId, shortExcerpt) {
+  return triageButton(
+    'Flag',
+    `Flag the mapping for “${shortExcerpt}”`,
+    () => openFlagDialog(segmentId),
+    'flag',
+  );
+}
+
+/** The row as the ledger currently shows it, so the dialog can describe it. */
+function flagRowContext(segmentId) {
+  const segment = (state.analysis?.segments || []).find((row) => row.unit.id === segmentId);
+  if (segment) {
+    const primary = segment.matches?.[0];
+    return {
+      kind: segment.mapped ? 'mapped' : 'unmapped',
+      kindLabel: segment.mapped ? 'Mapped row' : 'Unmapped row',
+      excerpt: segment.unit.text,
+      reference: segmentReference(segment.unit),
+      primaryCanonId: primary?.canonId || null,
+      current: primary
+        ? `Currently: ${primary.title} · ${primary.alignment?.label} · ${confidenceLabel(primary)}`
+        : segment.weakMatches?.[0]
+          ? `Currently unmapped. Nearest below threshold: ${segment.weakMatches[0].title} (${Math.round(segment.weakMatches[0].score * 100)}/100).`
+          : 'Currently unmapped, with no candidate above the weak threshold.',
+      defaultDisposition: segment.mapped ? 'wrong-primary' : 'missing-expected-concept',
+    };
+  }
+  const passage = (state.analysis?.domainRelevance?.ignoredPassages || [])
+    .find((row) => row.segmentId === segmentId);
+  if (!passage) return null;
+  return {
+    kind: 'set-aside',
+    kindLabel: 'Set aside by the relevance gate',
+    excerpt: passage.excerpt,
+    reference: segmentReference({
+      speaker: passage.location?.speaker,
+      startTime: passage.location?.startTime,
+      id: passage.segmentId,
+    }),
+    primaryCanonId: null,
+    current: `Currently set aside: ${passage.reasonLabel}. Retrieval never ran, so there is no candidate trace to attach.`,
+    defaultDisposition: 'domain-gate-error',
+  };
+}
+
+function renderDispositionChoices(selectedId) {
+  clearNode(ui.flagDispositions);
+  REVIEW_DISPOSITIONS.forEach((disposition) => {
+    const label = document.createElement('label');
+    label.className = 'lab-flag-disposition';
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'lab-flag-disposition';
+    input.value = disposition.id;
+    input.checked = disposition.id === selectedId;
+    const body = document.createElement('span');
+    const title = document.createElement('strong');
+    title.textContent = disposition.label;
+    const hint = document.createElement('small');
+    hint.textContent = disposition.hint;
+    body.append(title, hint);
+    label.append(input, body);
+    ui.flagDispositions.appendChild(label);
+  });
+}
+
+function setFlagError(message) {
+  ui.flagError.hidden = !message;
+  ui.flagError.textContent = message || '';
+}
+
+function closeFlagDialog() {
+  state.flagTarget = null;
+  if (ui.flagDialog.open) ui.flagDialog.close();
+}
+
+function openFlagDialog(segmentId) {
+  if (state.busy) return;
+  const context = flagRowContext(segmentId);
+  if (!context) return;
+  state.flagTarget = { segmentId, kind: context.kind };
+  ui.flagRowKind.textContent = context.kindLabel;
+  ui.flagExcerpt.textContent = `“${context.excerpt}”`;
+  ui.flagCurrent.textContent = `${context.reference} — ${context.current}`;
+  renderDispositionChoices(context.defaultDisposition);
+  ui.flagExpected.value = '';
+  // Flagging a wrong primary almost always means "not this one"; pre-filling it
+  // saves the reviewer retyping an ID they can see on the row.
+  ui.flagForbidden.value = context.kind === 'mapped' ? (context.primaryCanonId || '') : '';
+  ui.flagAlignment.value = '';
+  ui.flagNote.value = '';
+  ui.flagProvenance.checked = false;
+  setFlagError('');
+  ui.flagSubmit.disabled = false;
+  if (typeof ui.flagDialog.showModal === 'function') ui.flagDialog.showModal();
+  else ui.flagDialog.setAttribute('open', 'open');
+  ui.flagDispositions.querySelector('input:checked')?.focus();
+}
+
+function splitCanonIds(value) {
+  return String(value || '')
+    .split(/[,\s]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+async function submitFlag(event) {
+  event.preventDefault();
+  const target = state.flagTarget;
+  if (!target || !state.analysis) return;
+  const disposition = ui.flagDispositions.querySelector('input:checked')?.value;
+  if (!disposition) {
+    setFlagError('Choose what the analyzer got wrong before downloading.');
+    return;
+  }
+  setFlagError('');
+  ui.flagSubmit.disabled = true;
+  try {
+    // A set-aside passage was never scored against the canon, so there is no
+    // trace to fetch and no reason to make the reviewer wait for one.
+    const diagnostics = target.kind === 'set-aside' ? null : await ensureDiagnostics();
+    const feedback = buildMappingFeedback({
+      analysis: state.analysis,
+      diagnostics,
+      segmentId: target.segmentId,
+      labRelease: LAB_RELEASE,
+      includeProvenance: ui.flagProvenance.checked,
+      review: {
+        disposition,
+        expectedCanonIds: splitCanonIds(ui.flagExpected.value),
+        forbiddenCanonIds: splitCanonIds(ui.flagForbidden.value),
+        expectedAlignment: ui.flagAlignment.value,
+        note: ui.flagNote.value,
+      },
+    });
+    downloadTextFile(
+      mappingFeedbackToJson(feedback),
+      mappingFeedbackFileName(feedback),
+      'application/json;charset=utf-8',
+    );
+    closeFlagDialog();
+    ui.intakeStatus.textContent = `Flag downloaded for ${target.segmentId}. Nothing was sent anywhere.`;
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      setFlagError('The trace run was cancelled, so no flag file was written.');
+    } else {
+      setFlagError(error?.message || 'The flag file could not be built.');
+    }
+  } finally {
+    ui.flagSubmit.disabled = false;
+  }
+}
+
+function populateCanonIdOptions() {
+  clearNode(ui.flagCanonIds);
+  [...state.canonById.values()].forEach((entry) => {
+    const option = document.createElement('option');
+    option.value = entry.id;
+    option.label = entry.title;
+    ui.flagCanonIds.appendChild(option);
+  });
 }
 
 function relatedTitle(id) {
@@ -1317,14 +1591,20 @@ async function runAnalysis(event) {
     setLabState('analyzing', 'Tracing exact terms, weighted overlap, and canon relationships.');
     setBusy(true, 'analyzing');
     ui.analysisProgressWrap.hidden = false;
+    const overrides = Object.fromEntries(state.domainOverrides);
     const result = await analyzer.analyze(documentValue, state.canonIndex, {
       signal: state.workController.signal,
       onProgress: handleAnalysisProgress,
-      domainOverrides: Object.fromEntries(state.domainOverrides),
+      domainOverrides: overrides,
     });
     if (state.workController.signal.aborted) return;
     (result.domainRelevance?.overrides?.unmatchedIds || [])
       .forEach((unitId) => state.domainOverrides.delete(unitId));
+    // A new run means any cached trace describes a run that is no longer on screen.
+    closeFlagDialog();
+    clearDiagnosticsCache();
+    state.analyzedDocument = documentValue;
+    state.analyzedOverrides = overrides;
     renderResult(result, documentValue);
   } catch (error) {
     if (error?.name === 'AbortError') {
@@ -1428,6 +1708,10 @@ async function cancelWork() {
 
 function resetVisualResults() {
   state.analysis = null;
+  state.analyzedDocument = null;
+  state.analyzedOverrides = {};
+  closeFlagDialog();
+  clearDiagnosticsCache();
   [ui.metricWords, ui.metricSegments, ui.metricClaims, ui.metricCoverage,
     ui.flowSource, ui.flowClaims, ui.flowCanon, ui.flowTension, ui.flowUnmapped]
     .forEach((node) => { node.textContent = '—'; });
@@ -1556,6 +1840,7 @@ async function loadCanonIndex() {
     }
     state.canonIndex = canonIndex;
     state.canonById = new Map(canonIndex.entries.map((entry) => [entry.id, entry]));
+    populateCanonIdOptions();
     const concepts = canonIndex.stats?.conceptCount ?? canonIndex.entries.length;
     const sources = canonIndex.stats?.sourceCount
       ?? new Set(canonIndex.entries.map((entry) => entry.page)).size;
@@ -1649,6 +1934,11 @@ ui.downloadJson.addEventListener('click', () => {
     'application/json;charset=utf-8',
   );
 });
+ui.flagForm.addEventListener('submit', submitFlag);
+ui.flagCancel.addEventListener('click', closeFlagDialog);
+// Esc closes a native dialog without a submit; keep state from pointing at a
+// row nobody is looking at any more.
+ui.flagDialog.addEventListener('close', () => { state.flagTarget = null; });
 ui.exportResearch.addEventListener('click', () => {
   if (!state.analysis) return;
   downloadTextFile(
