@@ -1,0 +1,291 @@
+{
+  "schema": "le-lab.match-behavior/1.0",
+  "frozenAt": "2026-07-29",
+  "frozenAgainst": {
+    "analyzer": "2.3.0",
+    "analysisSchema": "le-lab.analysis/2.3",
+    "canonIndex": "1.0.0+62c5cb511433",
+    "scoringConfigHash": "195c1ld"
+  },
+  "contract": "Append-only, like the domain-relevance benchmark. Every case carries the verdict observed against the analyzer named in frozenAgainst, so a later reader can tell a fixed defect from a moved goalpost. `expected` is the adjudicated target behavior; `observedAtFreeze` is what the shipped analyzer actually did when the case was written down. A case whose expected and observedAtFreeze disagree is RED on purpose.",
+  "blocks": {
+    "misreadingPolarity": {
+      "question": "When a source's wording overlaps an indexed commonMisreading, does the analyzer say the right thing about who is claiming what?",
+      "ruling": "Strong misreading-surface overlap is Contradicts by default: the canon indexes that reading as one it explicitly rejects, so a source asserting it disagrees with the canon. Local negation means the source is stating the canon's own correction and reads Supports. Quotation or attribution means the source is reporting someone else's claim, not making one, and is downgraded to report-handling rather than being credited to the speaker.",
+      "cases": [
+        {
+          "id": "mp-01",
+          "wrapper": "assert",
+          "text": "Passing every listed factor creates attraction and entitlement to a relationship.",
+          "canonId": "hierarchy:overview",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.665, "misreadingOverlap": 0.6 },
+          "note": "Confirmed case from the v2.4.0 brief. The canon's commonMisreading for hierarchy:overview is literally 'Passing a person's listed factors does not create attraction, consent, compatibility, or entitlement to a relationship.' The source asserts the thing the canon denies and the analyzer calls it a resemblance."
+        },
+        {
+          "id": "mp-02",
+          "wrapper": "assert",
+          "text": "A large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.828, "misreadingOverlap": 0.625 },
+          "note": "Confirmed case from the v2.4.0 brief. Highest-scoring of the three: the overlap is with title, alias AND commonMisreading surfaces."
+        },
+        {
+          "id": "mp-03",
+          "wrapper": "assert",
+          "text": "Message concentration proves the same minority monopolizes relationships.",
+          "canonId": "frameworks:attention-market",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.746, "misreadingOverlap": 0.714 },
+          "note": "Confirmed case from the v2.4.0 brief, and the purest of the three: EVERY shared token comes from the commonMisreading surface and nothing else. If misreading-surface provenance cannot fix this one, it cannot fix any of them."
+        },
+        {
+          "id": "mp-04",
+          "wrapper": "negated",
+          "text": "It is false that a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.739 },
+          "note": "Exactly inverted today. The source agrees with the canon and is labelled as contradicting it, because the current rule reads the word 'false' as disagreement with the MATCH rather than with the misreading."
+        },
+        {
+          "id": "mp-05",
+          "wrapper": "negated",
+          "text": "A large inbox is not a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.828 },
+          "note": "Same sentence as mp-02 plus one 'not', and today it scores identically and is labelled identically. Bare 'is not' is absent from the contradiction cue list, so the analyzer cannot currently tell mp-02 and mp-05 apart at all."
+        },
+        {
+          "id": "mp-06",
+          "wrapper": "negated",
+          "text": "Message concentration does not prove that the same minority monopolizes relationships.",
+          "canonId": "frameworks:attention-market",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.657 },
+          "note": "Inverted. This sentence is close to a verbatim restatement of the canon's own boundary."
+        },
+        {
+          "id": "mp-07",
+          "wrapper": "negated",
+          "text": "Passing every listed factor does not create attraction or entitlement to a relationship.",
+          "canonId": "hierarchy:overview",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.761 },
+          "note": "The sharpest illustration of the inversion: this is a near-verbatim paraphrase of the canon's own commonMisreading correction, and the analyzer files it as a contradiction of the canon at High confidence."
+        },
+        {
+          "id": "mp-08",
+          "wrapper": "attributed",
+          "text": "Some men claim that a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.716 },
+          "note": "The speaker is reporting a claim, not making it. Report-handling: the misreading must not be attributed to this passage's author."
+        },
+        {
+          "id": "mp-09",
+          "wrapper": "attributed",
+          "text": "According to the podcast, message concentration proves the same minority monopolizes relationships.",
+          "canonId": "frameworks:attention-market",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.631 },
+          "note": "The worst of the attribution cases: 'According to' trips the evidence cue, so the analyzer reports that the source SUPPORTS the canon while the source is in fact relaying the canon's own indexed misreading."
+        },
+        {
+          "id": "mp-10",
+          "wrapper": "attributed",
+          "text": "He kept insisting that passing every listed factor creates attraction and entitlement to a relationship.",
+          "canonId": "hierarchy:overview",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.548 },
+          "note": "Third-party attribution without a reporting cue in the contradiction or evidence lists."
+        }
+      ]
+    },
+    "candidateRetention": {
+      "question": "When an exact phrase, exact alias, or concept-signature hit is detected, does it survive to adjudication, or is it truncated out of the candidate set first?",
+      "ruling": "The working candidate set is the union of the top-scored candidates and every evidence-bearing hit. Retention is not credibility: a retained hit still has to earn admission on its own score and evidence. Ranking and display caps apply after the union, not before it.",
+      "cases": [
+        {
+          "id": "cr-01",
+          "text": "She wanted a provider who could support a household while she raised their children.",
+          "mustRetain": [{ "canonId": "smv:money:provisioning-signal", "evidence": "exactAlias" }],
+          "observedAtFreeze": {
+            "topMatch": { "canonId": "deep-dive:relationships-by-country:latin-america", "score": 0.452 },
+            "weakMatch": { "canonId": "smv:money", "score": 0.372 },
+            "target": { "canonId": "smv:money:provisioning-signal", "score": 0.156, "rank": 12, "candidatesAboveFloor": 17, "cap": 8, "retained": false }
+          },
+          "note": "The case named in the v2.4.0 brief, reproduced to the decimal (0.452 / 0.372 / vanished). Also benchmark case ds-07 verbatim, which the domain-gate append added specifically so the ratified `provider` alias could be tested. The alias fires, scores 0.30, is cut to 0.156 by the sparse-shared-token penalty, ranks 12th, and is discarded by the 8-candidate cap before anything can look at it."
+        },
+        {
+          "id": "cr-02",
+          "text": "Across Latin America the provider role is still the default expectation for men in dating, and women report that a partner's earnings and stability matter to whether the relationship lasts.",
+          "mustRetain": [{ "canonId": "smv:money:provisioning-signal", "evidence": "exactAlias" }],
+          "observedAtFreeze": {
+            "topMatch": { "canonId": "deep-dive:relationships-by-country:latin-america", "score": 0.54 },
+            "target": { "canonId": "smv:money:provisioning-signal", "score": 0.3, "rank": 10, "candidatesAboveFloor": 133, "cap": 8, "retained": false }
+          },
+          "note": "The same loss with no sparse penalty: the alias holds its full 0.30 and is still discarded, purely because eight other entries out-rank it on generic overlap. This is the retention defect isolated from the scoring one."
+        },
+        {
+          "id": "cr-03",
+          "text": "The provider role is still the default expectation for men in dating, and women across regions and income levels report that a partner's earnings and stability matter to whether the relationship lasts.",
+          "mustRetain": [{ "canonId": "smv:money:provisioning-signal", "evidence": "exactAlias" }],
+          "observedAtFreeze": {
+            "topMatch": { "canonId": "M-TBD-17", "score": 0.394 },
+            "target": { "canonId": "smv:money:provisioning-signal", "score": 0.3, "rank": 9, "candidatesAboveFloor": 141, "cap": 8, "retained": false }
+          },
+          "note": "Lost by one rank. 141 entries clear the candidate floor on this passage and the only one carrying an exact alias hit is the one that gets cut."
+        },
+        {
+          "id": "cr-04",
+          "text": "She wanted a breadwinner who could carry the household while she raised their children.",
+          "mustRetain": [{ "canonId": "smv:money:provisioning-signal", "evidence": "exactAlias" }],
+          "observedAtFreeze": {
+            "topMatch": { "canonId": "statistics:stat-single-parent-world", "score": 0.449 },
+            "target": { "canonId": "smv:money:provisioning-signal", "score": 0.156, "rank": 10, "candidatesAboveFloor": 11, "cap": 8, "retained": false }
+          },
+          "note": "Second ratified alias on the same entry, same fate. Only eleven entries clear the floor at all and the exact-alias hit still does not make the cut."
+        }
+      ],
+      "property": "Beyond the named cases, the union contract is asserted as a property over every case in this block: no entry carrying an exact phrase hit, an exact alias hit, or a concept-signature hit may be absent from the working candidate set while a lower-evidence entry is present in it."
+    },
+    "typedAlias": {
+      "question": "Can a single curated word ever be sufficient evidence, and if so which words and under what conditions?",
+      "ruling": "A single word is insufficient by default. A curated high-specificity alias, or a contextual alias with independent relational evidence, may be sufficient.",
+      "cases": [
+        {
+          "id": "ta-01",
+          "polarity": "positive",
+          "aliasClass": "standalone",
+          "alias": "hypergamy",
+          "text": "Hypergamy shapes modern dating.",
+          "canonId": "frameworks:smv-matching",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.242, "rank": 3, "exactAliasHit": true },
+          "note": "Named in the v2.4.0 brief. The passage is gated `relevant`, the alias fires exactly, and the match still fails admission because a single-word alias is worth 0.30 against a 0.43 floor. The evidence is found and then thrown away."
+        },
+        {
+          "id": "ta-02",
+          "polarity": "positive",
+          "aliasClass": "standalone",
+          "alias": "hypergamy",
+          "text": "Hypergamy is the reason she kept dating men who out-earned her.",
+          "canonId": "frameworks:smv-matching",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.3, "rank": 14, "exactAliasHit": true },
+          "note": "The same alias in a longer passage: it holds its full 0.30 and drops to 14th of 58 because generic dating vocabulary outranks the one term that actually names the concept."
+        },
+        {
+          "id": "ta-03",
+          "polarity": "positive",
+          "aliasClass": "contextual",
+          "alias": "provider",
+          "text": "She wanted a provider who could support a household while she raised their children.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "rank": 12, "exactAliasHit": true },
+          "note": "Benchmark case ds-07 verbatim. Participant and relationship-outcome frames both fire independently of the word `provider`, which is exactly the co-fire the contextual class asks for."
+        },
+        {
+          "id": "ta-04",
+          "polarity": "positive",
+          "aliasClass": "contextual",
+          "alias": "provider",
+          "text": "Across Latin America the provider role is still the default expectation for men in dating, and women report that a partner's earnings and stability matter to whether the relationship lasts.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.3, "rank": 10, "exactAliasHit": true }
+        },
+        {
+          "id": "ta-05",
+          "polarity": "positive",
+          "aliasClass": "contextual",
+          "alias": "breadwinner",
+          "text": "She wanted a breadwinner who could carry the household while she raised their children.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "rank": 10, "exactAliasHit": true }
+        },
+        {
+          "id": "ta-06",
+          "polarity": "negative",
+          "trap": "healthcare provider",
+          "text": "Her insurance changed and she had to find a new healthcare provider this year.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "gatedOut": true, "reasonCode": "no-human-relational-frame" }
+        },
+        {
+          "id": "ta-07",
+          "polarity": "negative",
+          "trap": "cloud provider",
+          "text": "We migrated the app to a different cloud provider last quarter.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "gatedOut": true, "reasonCode": "no-human-relational-frame" }
+        },
+        {
+          "id": "ta-08",
+          "polarity": "negative",
+          "trap": "internet service provider",
+          "text": "My internet service provider throttles the connection every evening.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "gatedOut": true, "reasonCode": "no-human-relational-frame" }
+        },
+        {
+          "id": "ta-09",
+          "polarity": "negative",
+          "trap": "cloud provider, surviving the domain gate",
+          "text": "My girlfriend and I spent the whole weekend arguing about which cloud provider our startup should use.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "rank": 4, "exactAliasHit": true, "gatedOut": false },
+          "note": "The hard negative, and the one that decides whether the contextual class is safe. ta-06 to ta-08 are rejected by the domain gate before the alias is ever consulted, so they prove nothing about alias typing. This one is retained `uncertain` with both a participant frame and a relationship-outcome frame firing, so the co-fire condition alone is satisfied and only the alias's own local collocation separates it from ta-03."
+        },
+        {
+          "id": "ta-10",
+          "polarity": "negative",
+          "trap": "sports game",
+          "text": "The game went into overtime and the crowd would not sit down.",
+          "canonId": "smv:charm",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "gatedOut": true, "reasonCode": "no-human-relational-frame" }
+        },
+        {
+          "id": "ta-11",
+          "polarity": "negative",
+          "trap": "video game",
+          "text": "He stayed up all night grinding the same game on his console.",
+          "canonId": "smv:charm",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "gatedOut": true, "reasonCode": "no-human-relational-frame" }
+        },
+        {
+          "id": "ta-12",
+          "polarity": "negative",
+          "trap": "video game, surviving the domain gate",
+          "text": "The studio patched the game so ranked players get fewer unfair matches.",
+          "canonId": "smv:charm",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.198, "rank": 36, "gatedOut": false },
+          "note": "Benchmark case ds-13 verbatim, already recorded there as a KNOWN MISS: the append-1 dating-app-interaction mechanism frame retains it fail-open on 'fewer ... matches'. It is repeated here because that fail-open retention is precisely what would expose smv:charm's `game` alias to a video-game passage if `game` were typed contextual."
+        },
+        {
+          "id": "ta-13",
+          "polarity": "negative",
+          "trap": "rizz as generic praise",
+          "text": "That new sneaker colorway has rizz, easily the best drop of the year.",
+          "canonId": "smv:charm",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "gatedOut": true, "reasonCode": "no-human-relational-frame" },
+          "note": "Benchmark case ds-15 verbatim."
+        }
+      ]
+    }
+  }
+}
