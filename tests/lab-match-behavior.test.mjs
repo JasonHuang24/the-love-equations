@@ -133,6 +133,38 @@ test('misreading-surface overlap is labelled by who is asserting it', async () =
     `${failures.length} polarity case(s) mislabel who is making the claim:\n${failures.join('\n')}`);
 });
 
+test('an overlap with nothing but a boundary condition never passes as resemblance', () => {
+  // No sentence in the corpus produces a boundary-only credible match today —
+  // entries' caveats share vocabulary with their own titles and synopses, and
+  // the passages that would not are methodology prose the domain gate sets
+  // aside. The rule is asserted directly rather than left untested until a
+  // source happens to trip it.
+  const surfaces = (hit) => ({
+    hit,
+    tokens: Object.fromEntries(hit.map((surface) => [surface, ['token']])),
+    misreadingOnly: hit.length === 1 && hit[0] === 'commonMisreading',
+    boundaryOnly: hit.length === 1 && hit[0] === 'boundaryCondition',
+  });
+  const matchWith = (hit) => ({
+    canonId: 'frameworks:option-pool',
+    score: 0.6,
+    _rawScore: { misreadingOverlap: 0, matchSurfaces: surfaces(hit) },
+  });
+  const unit = { text: 'Visible options in a feed are viable reciprocal available options.', isClaimLike: true };
+
+  const boundaryOnly = analyzerInternals.stanceFor(unit, matchWith(['boundaryCondition']));
+  assert.equal(boundaryOnly.label, 'Challenges');
+  assert.equal(boundaryOnly.evidence.boundaryConditionOnly, true);
+
+  const alsoSynopsis = analyzerInternals.stanceFor(unit, matchWith(['synopsis', 'boundaryCondition']));
+  assert.equal(alsoSynopsis.label, 'Resembles',
+    'Boundary overlap alongside another surface is an ordinary resemblance, not a scope challenge.');
+
+  const contextOnly = analyzerInternals.stanceFor({ ...unit, isClaimLike: false }, matchWith(['boundaryCondition']));
+  assert.equal(contextOnly.label, 'Context only',
+    'A non-claim passage stays context-only; the boundary rule never promotes it to a stance.');
+});
+
 test('every exact phrase, alias, and signature hit survives retrieval', () => {
   const failures = [];
   for (const entry of benchmark.blocks.candidateRetention.cases) {

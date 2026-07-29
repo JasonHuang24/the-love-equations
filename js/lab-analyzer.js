@@ -592,6 +592,45 @@ const NON_DOMAIN_FRAME_DEFINITIONS = Object.freeze([
       || /\b(?:business|research|laboratory|training|project|trade|tennis|debate)\s+partners?\b/i.test(text),
   },
 ]);
+/**
+ * The canon surfaces a token overlap can come from, in the order a reader
+ * would weigh them. Order is part of the contract: it fixes how the trace
+ * lists surfaces, so a diff of two analyses compares like with like.
+ */
+const MATCH_SURFACES = Object.freeze([
+  'title', 'alias', 'synopsis', 'boundaryCondition', 'commonMisreading',
+]);
+
+export const MATCH_SURFACE_LABELS = Object.freeze({
+  title: 'title',
+  alias: 'alias or phrase',
+  synopsis: 'synopsis',
+  boundaryCondition: 'boundary condition',
+  commonMisreading: 'common misreading',
+});
+
+/*
+ * Denial of the matched misreading. The question this answers is narrow: is the
+ * source ASSERTING the indexed misreading or DENYING it? It is deliberately
+ * broader than CONTRADICTION_CUES, which asks a different question (does this
+ * passage contain disagreement language at all) and was previously being used
+ * to answer this one — which is how a verbatim restatement of an LE boundary
+ * came to be filed as contradicting LE.
+ */
+const MISREADING_DENIAL_CUES = /\b(?:not|never|no|none|false|untrue|myth|mistaken|wrong|isn't|aren't|wasn't|weren't|doesn't|don't|didn't|cannot|can't|won't|nonsense|rarely|hardly)\b/i;
+
+/*
+ * Reported speech: the passage relays someone else's claim rather than making
+ * one. A reported misreading must not be charged to the speaker relaying it,
+ * and equally must not be credited to them as agreement with LE — the sentence
+ * carries no stance of its own to record.
+ */
+const REPORTED_SPEECH_CUES = new RegExp([
+  /\b(?:according to|as \w+ puts it|is said to|so-called)\b/.source,
+  /\b(?:some|many|most|a lot of|plenty of|these|those)\s+(?:men|women|people|guys|girls|users|commentators|critics|posters)\b[^.]{0,40}?\b(?:claims?|says?|said|argues?|argued|insists?|insisted|believes?|thinks?|maintains?|reckons?)\b/.source,
+  /\b(?:he|she|they|critics|commentators|the podcast|the host|the video|the article|the thread|the book)\s+(?:\w+\s+){0,3}?(?:claims?|claiming|says?|said|argues?|arguing|insists?|insisting|believes?|thinks?|maintains?|wrote|posted|tweeted)\b/.source,
+].join('|'), 'i');
+
 const SUPPORT_CUES = /\b(?:supports?|confirms?|consistent with|backs? up|holds up|evidence for|exactly right|true that)\b/i;
 const CHALLENGE_CUES = /\b(?:challenges?|questions?|overstates?|too simple|not always|depends on|exception|fails? when|weakens?)\b/i;
 const CONTRADICTION_CUES = /\b(?:contradicts?|false|wrong|myth|backwards|no evidence|does not|doesn't|isn't|aren't|cannot|can't)\b/i;
@@ -936,6 +975,23 @@ function normalizeEntry(raw, index) {
     sourceLinks,
     pressureTests: asArray(raw.pressureTests || raw.pressureQuestions).map(String),
   };
+  /*
+   * The five surfaces an entry offers to the matcher. Retrieval concatenates
+   * them — a token is a token — but WHAT a token means depends entirely on
+   * which surface supplied it. Words drawn from `commonMisreadings` are the
+   * reading the canon rejects; words drawn from `boundaryConditions` are its
+   * caveat, not its claim. Scoring is unchanged by this decomposition; only
+   * stance and its transparency trace read it.
+   */
+  const surfaces = {
+    title,
+    alias: aliases.join(' '),
+    synopsis: [synopsis, entry.category, entry.subcategory].join(' '),
+    boundaryCondition: entry.boundaryConditions.join(' '),
+    commonMisreading: entry.commonMisreadings.join(' '),
+  };
+  entry._surfaceTokens = Object.fromEntries(MATCH_SURFACES
+    .map((surface) => [surface, new Set(tokenize(surfaces[surface]))]));
   const lexicalText = [
     title,
     synopsis,
@@ -1488,6 +1544,16 @@ function scoreEntry(unit, entry, idf) {
     ? entry._misreadingTokens.filter((token) => querySet.has(token)).length / entry._misreadingTokens.length
     : 0;
 
+  // Which surface supplied each shared token. Costs one set lookup per token
+  // per surface and changes no score; the whole point is that stance can stop
+  // guessing what an overlap meant.
+  const surfaceTokens = {};
+  MATCH_SURFACES.forEach((surface) => {
+    const tokens = shared.filter((token) => entry._surfaceTokens[surface].has(token));
+    if (tokens.length) surfaceTokens[surface] = tokens.slice(0, SCORING_CONFIG.maxSharedTokensReported);
+  });
+  const surfacesHit = MATCH_SURFACES.filter((surface) => surfaceTokens[surface]);
+
   return {
     score: round(clamp(score)),
     queryCoverage: round(queryCoverage),
@@ -1499,6 +1565,14 @@ function scoreEntry(unit, entry, idf) {
     distinctiveShared: distinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     admissionDistinctiveShared: admissionDistinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     misreadingOverlap: round(misreadingOverlap),
+    matchSurfaces: {
+      hit: surfacesHit,
+      tokens: surfaceTokens,
+      // "Only" means exactly that: no other surface contributed a single
+      // shared token, so there is nothing else the overlap could be about.
+      misreadingOnly: surfacesHit.length === 1 && surfacesHit[0] === 'commonMisreading',
+      boundaryOnly: surfacesHit.length === 1 && surfacesHit[0] === 'boundaryCondition',
+    },
     weakGenericMatch,
   };
 }
@@ -1510,9 +1584,24 @@ function confidenceFor(score, phraseHits) {
   return 'Low';
 }
 
+/**
+ * What the source is doing with the matched concept.
+ *
+ * The ordering below is the whole design. Entry-specific rulings come first
+ * because they are hand-adjudicated. Misreading-surface overlap comes next,
+ * BEFORE the generic cue ladder, because when a passage overlaps a reading the
+ * canon explicitly rejects, the only remaining question is who is asserting it
+ * — and that question is not answered by scanning for disagreement words. The
+ * generic cues then handle everything else, and a boundary-only overlap is
+ * caught at the end so a caveat can never pass as a resemblance.
+ */
 function stanceFor(unit, match) {
   const text = unit.text;
-  const commonMisreading = match._rawScore.misreadingOverlap >= SCORING_CONFIG.misreadingContradictionShare;
+  const rawScore = match._rawScore;
+  const surfaces = rawScore.matchSurfaces || { hit: [], tokens: {}, misreadingOnly: false, boundaryOnly: false };
+  const commonMisreading = rawScore.misreadingOverlap >= SCORING_CONFIG.misreadingContradictionShare;
+  const reported = REPORTED_SPEECH_CUES.test(text);
+  const denied = MISREADING_DENIAL_CUES.test(text);
   let label = 'Resembles';
   let rationale = 'The source and canon entry share a distinctive concept pattern, but the local engine cannot infer full agreement from wording alone.';
 
@@ -1531,12 +1620,20 @@ function stanceFor(unit, match) {
     && /\b(?:not|does not|doesn't|is not|isn't)\b.*\b(?:moral worth|human worth|entitlement|consent)\b/i.test(text)) {
     label = 'Supports';
     rationale = 'The source affirms the LE boundary between descriptive dating-market leverage and moral worth, entitlement, or consent.';
-  } else if (CONTRADICTION_CUES.test(text)
-    && (commonMisreading || match.score >= SCORING_CONFIG.contradictionScoreFloor)) {
-    label = commonMisreading ? 'Contradicts' : 'Challenges';
-    rationale = commonMisreading
-      ? 'The source overlaps a misreading that the canon entry explicitly limits or rejects.'
-      : 'The source uses explicit disagreement language around the matched concept.';
+  } else if (commonMisreading) {
+    if (reported) {
+      label = 'Context only';
+      rationale = 'The passage relays someone else\'s version of this concept rather than asserting one. The reading it reports is one the canon entry explicitly rejects, but that reading belongs to the person being quoted, not to this passage.';
+    } else if (denied) {
+      label = 'Supports';
+      rationale = 'The source states the limit the canon entry states: it denies a reading this entry explicitly rejects.';
+    } else {
+      label = 'Contradicts';
+      rationale = 'The source asserts a reading that the canon entry explicitly limits or rejects.';
+    }
+  } else if (CONTRADICTION_CUES.test(text) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
+    label = 'Challenges';
+    rationale = 'The source uses explicit disagreement language around the matched concept.';
   } else if (CHALLENGE_CUES.test(text)) {
     label = 'Challenges';
     rationale = 'The source names an exception, dependency, or scope limit around the matched concept.';
@@ -1548,7 +1645,28 @@ function stanceFor(unit, match) {
     rationale = 'The source presents the matched concept affirmatively and includes support or evidence language.';
   }
 
-  return { label, rationale };
+  // A caveat is not the claim. If every shared token came from the entry's
+  // boundary conditions and nowhere else, the source has landed on the scope
+  // limit, which is a narrower and different thing than resembling the concept.
+  if (label === 'Resembles' && surfaces.boundaryOnly) {
+    label = 'Challenges';
+    rationale = 'The overlap is entirely with this entry\'s boundary conditions and no other part of it, so the source engages the concept\'s scope limit rather than the concept.';
+  }
+
+  return {
+    label,
+    rationale,
+    // The trace, not a second opinion: what the label was derived from, so a
+    // reader who disagrees can see exactly which evidence produced it.
+    evidence: {
+      matchSurfaces: surfaces.hit,
+      misreadingSurfaceOverlap: rawScore.misreadingOverlap,
+      misreadingSurfaceOnly: surfaces.misreadingOnly,
+      boundaryConditionOnly: surfaces.boundaryOnly,
+      reportedSpeech: reported,
+      denial: denied,
+    },
+  };
 }
 
 function transparentWhy(rawScore, entry) {
@@ -1566,6 +1684,10 @@ function transparentWhy(rawScore, entry) {
     reasons.push(`Distinctive overlap: ${rawScore.distinctiveShared.slice(0, SCORING_CONFIG.maxWhyMatchedTokens).join(', ')}`);
   } else if (rawScore.sharedTokens.length) {
     reasons.push(`Keyword overlap: ${rawScore.sharedTokens.slice(0, SCORING_CONFIG.maxWhyMatchedTokens).join(', ')}`);
+  }
+  if (rawScore.matchSurfaces?.hit.length) {
+    reasons.push(`Match surfaces: ${rawScore.matchSurfaces.hit
+      .map((surface) => MATCH_SURFACE_LABELS[surface]).join(', ')}`);
   }
   if (entry.subcategory) reasons.push(`Canon context: ${entry.category} / ${entry.subcategory}`);
   if (rawScore.weakGenericMatch) reasons.push('Penalty: only generic dating language overlaps');
@@ -2265,6 +2387,7 @@ export const analyzerInternals = Object.freeze({
   // what survives retrieval rather than inferring it from what happens to be
   // displayed. Callers outside analyzeDocument pass no bounded context.
   candidateSetFor: (unit, prepared, context = null) => buildCandidateSet(unit, prepared, context),
+  stanceFor,
   classifyRiskFlags,
   // Threshold names kept for callers written against v2.1.2; every value now
   // comes from SCORING_CONFIG, which is the single place to change them.
