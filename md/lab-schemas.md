@@ -215,6 +215,37 @@ Analysis v2.4 changes three decisions and adds one trace.
 benchmark, every case records what the shipped analyzer did when the case was
 written down.
 
+### The frozen fixtures, and which layer each one owns
+
+Four append-only fixtures, each answering a question the others cannot. A flag
+routed to the wrong one produces a case that fails for reasons unrelated to the
+defect it was written for.
+
+| Fixture | Layer | Question |
+|---|---|---|
+| `domain-relevance-benchmark.json` | the gate | Did the passage enter analysis at all? |
+| `match-behavior-benchmark.json` | retrieval, stance, alias typing | Do the three v2.4.0 rulings hold? |
+| `canon-mapping-benchmark.json` | retrieval, ranking, admission, alignment | Did the matcher map the retained passage the way an adjudicator decided it should? |
+| `short-utterance-matrix.json` | all of them, on compact text | What does the analyzer do with three-to-twelve-word utterances, and which layer decided? |
+
+`canon-mapping-benchmark` (`le-canon-mapping-benchmark/1.0`, added at v2.4.1) is
+the destination for adjudicated reviewer flags about everything downstream of the
+gate. It ships empty on purpose: its cases arrive one adjudication at a time
+through `md/FEEDBACK-PIPELINE.md`, never from an author inventing sentences to
+fill a fixture. Every case records its `origin` — flag ID, disposition, build,
+who adjudicated it and when — alongside `expected` and `observedAtFreeze`. Its
+validator runs whether or not there are cases and rejects a case with no origin,
+a duplicate text, a canon ID the index no longer has, or no assertion at all.
+
+`short-utterance-matrix` (`le-lab.short-utterance-matrix/1.0`, added at v2.4.1)
+is a **freeze, not a proposal**: every expectation is the outcome the shipped
+analyzer produced on 2026-07-29, and a test asserts `minClaimWords` is still 4 so
+the fixture cannot become the justification for having moved it. Each row names
+its binding constraint — `domain-gate`, `claim-word-floor`,
+`admission-threshold`, or `none` — and the test re-derives that from the analyzer
+rather than trusting the label. `humanReading` records what a careful reader
+would say the passage is and is never asserted.
+
 ## Diagnostic trace — `le-lab.diagnostics/1.0`
 
 Opt-in and off by default: `analyzeDocument(document, canonIndex,
@@ -237,6 +268,61 @@ and stances — asserted as a test, not merely intended. It is versioned
 independently of the analysis schema because it is an internal view and is
 expected to churn faster than the published contract; nothing in the Lab
 interface reads it.
+
+## Mapping feedback — `le-lab.mapping-feedback/1.0`
+
+One reviewer disagreement about one claim unit, written by
+`js/lab-feedback.js` and downloaded to the visitor's own disk. **The download
+is the entire transport**: there is no endpoint, no `localStorage` key, no
+fixture mutation, and no automatic promotion. A flag is a draft addressed to a
+human, and `md/FEEDBACK-PIPELINE.md` is where that human picks it up.
+
+The payload is assembled from two analyzer outputs and re-derives nothing. The
+claim unit, its domain decision with per-frame evidence, claim likelihood,
+speaker, timestamps, parent-segment boundary, bounded-context bridge with its
+immediate predecessor, and the displayed primary/secondary/weak matches come
+from `le-lab.analysis/2.4`. The **whole working candidate set before display
+caps** — score components, penalties by name, evidence surfaces with their
+provenance types, admission outcome, context assistance, rank, rank at
+retrieval, truncation fate, and the hits the caps hid — comes from
+`le-lab.diagnostics/1.0`. A value not published by one of those two is reported
+as unavailable with the reason, never reconstructed: a feedback file that
+quietly disagreed with the analyzer would be worse than one that admits a gap.
+
+`review.reviewDisposition` is `wrong-primary`, `false-positive`,
+`missing-expected-concept`, `should-remain-unmapped`, `wrong-stance`,
+`domain-gate-error`, or `segmentation-error`, and each carries a
+`failureLayer` that is the routing key. It is deliberately **not** called a
+verdict: a verdict on this site is a Mythbuster ruling about a claim's truth,
+and this is a reviewer's opinion about a mapping. Optional
+`expectedCanonIds`, `forbiddenCanonIds`, and `expectedAlignment` record what the
+reviewer thinks should have happened; `expectedAlignment` is restricted to the
+analyzer's own alignment vocabulary.
+
+`build` names the Lab release, the analyzer version and mode, the
+scoring-config hash, the canon index schema and version, the analysis schema,
+and the diagnostics schema. The Lab release and the analyzer version are
+separate fields on purpose — a UI-only patch moves the first and not the second,
+and triage needs to tell them apart.
+
+`privacy` states the transport, and the flagged excerpt is the only source text
+included by default. `source` provenance (title, type, URL, extraction method)
+appears only when the reviewer ticks the opt-in box; the full transcript is
+never included, and a test walks every other passage in the document asserting
+it did not leak.
+
+A **set-aside passage carries no candidate trace**, and that is the analyzer's
+behavior rather than a gap in it: the relevance gate decided before any canon
+entry was scored, so no candidate set exists. The file reports
+`retrieval-not-run` and names the unit fields the analysis does not publish for
+ignored passages. The three refusals — an unknown disposition, a trace whose
+excerpt disagrees with the flagged row, and a retained row missing from the
+trace — all throw rather than exporting a flag that looks filed but is unusable.
+
+`tools/lab-feedback.mjs` validates a file against this schema, routes it by
+failure layer, checks both frozen benchmarks for the same passage, and drafts
+the fixture stub a human would commit. It refuses to write into
+`tests/fixtures/`.
 
 ## Research queue — `le-lab.research-queue/2.0`
 
