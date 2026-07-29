@@ -119,12 +119,32 @@ export const SCORING_CONFIG = Object.freeze({
   minWeakScore: 0.25,
   minAdmissionDistinctiveShared: 2,
   minLocalSharedTokens: 2,
-  // NEW at v2.4.0, and the only new value in this object. How many distinctive
-  // concepts a contextual alias needs beside itself before its passage counts
-  // as relational evidence. One, because the participant and outcome frames
-  // are the other two ways to satisfy the same condition and this is the
-  // narrowest of the three.
+  // NEW at v2.4.0. How many distinctive concepts a contextual alias needs
+  // beside itself before the text around it counts as relational evidence. One,
+  // because a relational role term is the other way to satisfy the same
+  // condition and this is the narrower of the two.
   minContextualAliasCoFire: 1,
+  // NEW at v2.5.0. How far from a contextual-alias OCCURRENCE the analyzer will
+  // look for the evidence that promotes it: tokens, each side, and then clipped
+  // to that occurrence's own clause. Eight is set by the two cases it has to
+  // separate. It must reach `men` at eight tokens in ta-04, and it must not
+  // reach `girlfriend` at eleven in cf-01 — a word that is in the sentence but
+  // is about something else in it.
+  contextualAliasWindowTokens: 8,
+  // NEW at v2.5.0. How many tokens before an occurrence the technical-modifier
+  // denylist scans. Three rather than one so an intervening adjective or the
+  // second half of a compound cannot hide the modifier: in "cloud-based
+  // provider" the disqualifying token is two positions back, not one.
+  contextualAliasModifierLookback: 3,
+  // NEW at v2.5.0. The shortest stem that may stand as the "independent canon
+  // concept" promoting a contextual alias. The stemmer strips suffixes without
+  // re-checking length, so "really" becomes "re" and a two-character fragment
+  // was found vouching for a provisioning claim about a billing vendor. Four,
+  // matching minPhraseLength, which is this file's existing answer to how short
+  // a lexical unit can be and still count as evidence. Local to co-fire on
+  // purpose: filtering degenerate stems out of the shared-token set itself
+  // would move scores across the whole corpus, which this pass does not do.
+  minCoFireConceptLength: 4,
   maxMatchesPerClaim: 4,
   maxWeakMatches: 3,
 
@@ -1495,45 +1515,185 @@ export function classifyDomainRelevance(units, overrides = new Map()) {
   return classified;
 }
 /**
- * Independent relational evidence in the same passage, for a contextual alias.
+ * The passage split into clauses, with every word tagged by the clause it sits
+ * in and by its position in the passage.
  *
- * "Independent" is the load-bearing word: the alias token cannot vouch for
- * itself. The domain gate has already computed participant and
- * relationship-outcome frames from the passage as a whole, and those frames are
- * derived from vocabulary the alias does not contribute, so they are usable
- * here as-is. A second distinctive concept shared with the same canon entry
- * counts too — with the alias's own tokens removed first.
+ * Contextual co-fire and stance both need the same answer to "which clause is
+ * this token in", so they share one splitter rather than two that can drift
+ * apart. Splitting is on punctuation only — no part of speech is inferred and
+ * no grammar is parsed, which keeps this deterministic and cheap.
  *
- * An affirmative non-domain frame vetoes the lot. If the passage has already
- * told the gate it is about sport or software, a borrowed word inside it is not
- * suddenly about dating.
+ * A hyphen ends a clause only when it is NOT joining two word characters. That
+ * one rule keeps "cloud-based" inside a single clause while still breaking on
+ * an em dash between clauses, which normalizeText has already folded to "-".
  */
-function relationalCoFire(unit, aliasTokens, admissionDistinctiveShared) {
-  const frames = unit?.domainRelevance?.frames;
-  if (frames?.nonDomain?.detected) return null;
-  const independent = admissionDistinctiveShared.filter((token) => !aliasTokens.has(token));
-  if (independent.length >= SCORING_CONFIG.minContextualAliasCoFire) {
-    return `independent canon concept “${independent[0]}”`;
+function clauseSegments(normalized) {
+  const words = [];
+  const clauses = [];
+  let clause = 0;
+  let buffer = '';
+  let token = '';
+
+  const flushToken = () => {
+    if (token) words.push({ token, clause, index: words.length });
+    token = '';
+  };
+  const flushClause = () => {
+    flushToken();
+    clauses.push({ index: clause, text: buffer.trim() });
+    buffer = '';
+    clause += 1;
+  };
+
+  for (let position = 0; position < normalized.length; position += 1) {
+    const character = normalized[position];
+    const joinsWords = /[a-z0-9]/.test(normalized[position - 1] || '')
+      && /[a-z0-9]/.test(normalized[position + 1] || '');
+    if (',;:.!?'.includes(character) || (character === '-' && !joinsWords)) {
+      flushClause();
+      continue;
+    }
+    buffer += character;
+    // Apostrophes split, exactly as `normalized.split(/\W+/)` does elsewhere, so
+    // token positions here and alias presence there cannot disagree.
+    if (/[a-z0-9]/.test(character)) token += character; else flushToken();
   }
-  if (frames?.outcome?.detected) return 'relationship-outcome frame in the same passage';
-  if (frames?.participant?.detected) return 'participant frame in the same passage';
-  return null;
+  flushClause();
+  return { words, clauses };
+}
+
+/**
+ * Human relational roles, kinship, and relationship outcomes: the vocabulary
+ * that makes a borrowed word like "provider" mean the thing this canon entry
+ * means, when it appears BESIDE that word.
+ *
+ * Deliberately narrow. Terms that read as relational in a family sentence and
+ * as ordinary business vocabulary in a technical one — support, home, income,
+ * bills, rent, dates — are excluded, because this list runs inside a window
+ * that has already been chosen for being close to a commercial noun. The cost
+ * of a term that is wrong here is a false promotion; the cost of a term that is
+ * missing is that the occurrence falls through to the independent-canon-concept
+ * path, which is the same evidence measured a different way.
+ *
+ * Stemmed at load with the analyzer's own stemmer so the set speaks the same
+ * token language `tokenize` produces.
+ */
+const RELATIONAL_ROLE_TERMS = new Set([
+  'partner', 'partners', 'husband', 'husbands', 'wife', 'wives', 'spouse', 'spouses',
+  'boyfriend', 'boyfriends', 'girlfriend', 'girlfriends', 'fiance', 'fiancee',
+  'couple', 'couples', 'suitor', 'suitors',
+  'marriage', 'marriages', 'married', 'marry', 'wedding', 'weddings', 'divorce', 'divorced',
+  'family', 'families', 'household', 'households', 'homemaker', 'breadwinner', 'breadwinners',
+  'children', 'child', 'kids', 'son', 'sons', 'daughter', 'daughters',
+  'mother', 'mothers', 'father', 'fathers', 'parent', 'parents',
+  'relationship', 'relationships', 'courtship', 'romance', 'romantic',
+  'men', 'man', 'women', 'woman', 'male', 'males', 'female', 'females',
+].map(stemToken));
+
+/**
+ * Relational evidence beside ONE occurrence of a contextual alias.
+ *
+ * "Beside" is the load-bearing word, and it is what changed at v2.5.0. Evidence
+ * anywhere in the passage used to count, which meant a sentence could be about
+ * arguing with a girlfriend in one clause and about buying cloud hosting in the
+ * next, and the first clause would vouch for the second. Evidence now has to
+ * sit within a bounded window of this occurrence AND inside its clause.
+ *
+ * Two ways to earn it, both independent of the alias itself, which still cannot
+ * vouch for itself: a distinctive concept this passage shares with this same
+ * canon entry, or a human relational role term. An affirmative non-domain frame
+ * still vetoes the lot at the passage level — if the passage has told the gate
+ * it is about sport or software, a borrowed word inside it is not suddenly
+ * about dating.
+ */
+function relationalCoFire(unit, occurrence, segments, aliasTokens, admissionDistinctiveShared) {
+  if (unit?.domainRelevance?.frames?.nonDomain?.detected) {
+    return { promoted: false, reason: 'affirmative non-relationship frame in the passage' };
+  }
+
+  const radius = SCORING_CONFIG.contextualAliasWindowTokens;
+  const window = segments.words.filter((word) => word.clause === occurrence.clause
+    && Math.abs(word.index - occurrence.index) <= radius
+    && word.index !== occurrence.index);
+  const windowTokens = new Set(tokenize(window.map((word) => word.token).join(' ')));
+
+  const independent = admissionDistinctiveShared
+    .filter((token) => !aliasTokens.has(token)
+      && token.length >= SCORING_CONFIG.minCoFireConceptLength
+      && windowTokens.has(token));
+  if (independent.length >= SCORING_CONFIG.minContextualAliasCoFire) {
+    return {
+      promoted: true,
+      reason: `independent canon concept “${independent[0]}” within ${radius} tokens, same clause`,
+    };
+  }
+
+  const role = window.find((word) => !aliasTokens.has(word.token)
+    && RELATIONAL_ROLE_TERMS.has(stemToken(word.token)));
+  if (role) {
+    return {
+      promoted: true,
+      reason: `relational role term “${role.token}” within ${radius} tokens, same clause`,
+    };
+  }
+
+  return {
+    promoted: false,
+    reason: `no relational evidence within ${radius} tokens of this occurrence, same clause`,
+  };
+}
+
+/**
+ * The technical modifier disqualifying ONE occurrence, if there is one.
+ *
+ * Secondary defense, and second for a reason. The window test above is what
+ * generalizes: "AWS provider" and "Azure provider" are rejected because nothing
+ * relational sits beside them, not because anyone wrote AWS and Azure down. A
+ * denylist can only ever catch the vendors someone thought of.
+ *
+ * It earns its place on the cases the window test would pass for the wrong
+ * reason — a technical noun that happens to sit near relational vocabulary. So
+ * it is kept, and made token-bounded: it scans the tokens immediately before
+ * the occurrence rather than testing the passage for a literal "modifier alias"
+ * substring, which is how "cloud-based provider" walked past it.
+ */
+function disqualifyingModifier(occurrence, segments, modifiers) {
+  if (!modifiers.length) return null;
+  const lookback = SCORING_CONFIG.contextualAliasModifierLookback;
+  const preceding = segments.words
+    .filter((word) => word.index < occurrence.index && word.index >= occurrence.index - lookback)
+    .map((word) => word.token);
+  if (!preceding.length) return null;
+  const window = preceding.join(' ');
+  // Multiword modifiers ("health care") are matched as a contiguous token run,
+  // so the same boundary rule covers one-word and two-word entries alike.
+  return modifiers.find((modifier) => preceding.includes(modifier)
+    || (modifier.includes(' ') && window.includes(modifier))) || null;
 }
 
 /**
  * Single-token aliases the canon has typed, and which this passage earns.
  *
- * Standalone aliases pass on presence. Contextual aliases must clear a
- * disqualifying modifier and then find independent relational evidence — the
- * word "provider" in "cloud provider" is not this concept however relational
- * the rest of the sentence is, which is the single case that decides whether
- * typing an ordinary word is safe at all.
+ * Standalone aliases pass on presence. Contextual aliases are adjudicated ONE
+ * OCCURRENCE AT A TIME: each occurrence clears a disqualifying modifier of its
+ * own and finds relational evidence of its own. The word "provider" in "cloud
+ * provider" is not this concept however relational the rest of the sentence is,
+ * and — the half that was missing before v2.5.0 — it does not make a second,
+ * legitimate "provider" in the same sentence stop being this concept either.
+ *
+ * Returns the promoted hits and the full per-occurrence ledger, including the
+ * occurrences that failed and why. A verdict a reader cannot audit is not much
+ * of a verdict.
  */
 function promotedAliases(unit, entry, normalized, admissionDistinctiveShared) {
-  if (!entry._standaloneAliases.size && !entry._contextualAliases.size) return [];
-  const words = normalized.split(/\W+/).filter(Boolean);
-  const present = new Set(words);
+  if (!entry._standaloneAliases.size && !entry._contextualAliases.size) {
+    return { hits: [], trace: [] };
+  }
+  const present = new Set(normalized.split(/\W+/).filter(Boolean));
   const hits = [];
+  const trace = [];
+  let segments = null;
+
   for (const alias of entry._singleTokenAliases) {
     if (!present.has(alias)) continue;
     if (entry._standaloneAliases.has(alias)) {
@@ -1541,13 +1701,38 @@ function promotedAliases(unit, entry, normalized, admissionDistinctiveShared) {
       continue;
     }
     if (!entry._contextualAliases.has(alias)) continue;
-    const disqualifier = entry._contextualAliases.get(alias)
-      .find((modifier) => normalized.includes(`${modifier} ${alias}`));
-    if (disqualifier) continue;
-    const because = relationalCoFire(unit, new Set(tokenize(alias)), admissionDistinctiveShared);
-    if (because) hits.push({ alias, aliasClass: 'contextual', because });
+
+    // Only pay for the split when a contextual alias is actually present.
+    if (!segments) segments = clauseSegments(normalized);
+    const modifiers = entry._contextualAliases.get(alias);
+    const aliasTokens = new Set(tokenize(alias));
+    const occurrences = segments.words.filter((word) => word.token === alias);
+    let promotedHere = null;
+
+    occurrences.forEach((occurrence, ordinal) => {
+      const modifier = disqualifyingModifier(occurrence, segments, modifiers);
+      const verdict = modifier
+        ? { promoted: false, reason: `technical modifier “${modifier}” within ${SCORING_CONFIG.contextualAliasModifierLookback} tokens` }
+        : relationalCoFire(unit, occurrence, segments, aliasTokens, admissionDistinctiveShared);
+      trace.push({
+        alias,
+        occurrence: ordinal,
+        tokenIndex: occurrence.index,
+        clause: occurrence.clause,
+        promoted: verdict.promoted,
+        reason: verdict.reason,
+        // Named separately so a reader can tell the two layers apart at a
+        // glance: the denylist fired, or the window test found nothing.
+        disqualifiedBy: modifier ? 'technical-modifier' : (verdict.promoted ? null : 'no-local-evidence'),
+      });
+      if (verdict.promoted && !promotedHere) promotedHere = verdict.reason;
+    });
+
+    // One qualifying occurrence is enough to promote the alias for this entry,
+    // and no number of disqualified occurrences can take that back.
+    if (promotedHere) hits.push({ alias, aliasClass: 'contextual', because: promotedHere });
   }
-  return hits;
+  return { hits, trace };
 }
 
 function scoreEntry(unit, entry, idf) {
@@ -1584,7 +1769,9 @@ function scoreEntry(unit, entry, idf) {
   const credibleSingleAliasHits = singleAliasHits
     .filter((alias) => tokenize(alias)
       .some((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));
-  const promotedAliasHits = promotedAliases(unit, entry, normalized, admissionDistinctiveShared);
+  const { hits: promotedAliasHits, trace: contextualAliasTrace } = promotedAliases(
+    unit, entry, normalized, admissionDistinctiveShared,
+  );
   const phraseStrength = phraseHits.length
     ? clamp(SCORING_CONFIG.phraseBase + Math.min(
       SCORING_CONFIG.phraseLengthBonusCap,
@@ -1673,6 +1860,10 @@ function scoreEntry(unit, entry, idf) {
       ...credibleSingleAliasHits,
     ]).slice(0, SCORING_CONFIG.maxAliasHitsReported),
     promotedAliasHits,
+    // The per-occurrence ledger, including the occurrences that failed. Empty
+    // for the overwhelming majority of entries, which have no contextual alias
+    // at all, so it costs nothing to carry.
+    contextualAliasTrace,
     sharedTokens: shared.slice(0, SCORING_CONFIG.maxSharedTokensReported),
     distinctiveShared: distinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     admissionDistinctiveShared: admissionDistinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
