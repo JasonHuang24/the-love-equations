@@ -226,11 +226,30 @@ someone reading `components` and `penalties` on the candidate that should have w
 ### When adjudication lands on a documented limit
 
 **New at v2.6.0.** Some flags are correct and still have nowhere to go. The `documentedLimits` block
-of `tests/fixtures/match-behavior-benchmark.json` holds fifteen cases where the reviewer would be
-right and the analyzer is doing the only thing a punctuation-approximated clause model can do:
-coordination without a comma, negation inside a subordinate clause, appositive and relative clauses,
-attribution chains, quotation ownership, and the hard edge of a token window. Each freezes current
-behavior with the humanly correct answer recorded beside it.
+of `tests/fixtures/match-behavior-benchmark.json` holds seventeen cases where the reviewer would be
+right and the analyzer is doing the only thing it can do. Fourteen are the only thing a
+punctuation-approximated clause model can do: coordination without a comma, negation inside a
+subordinate clause, appositive and relative clauses, attribution chains, quotation ownership, an
+unlinked qualification cue, and the hard edge of a token window. The other three are `morphology`,
+which is not a clause problem at all — the denylist and the passage disagreeing about what a word is.
+Each freezes current behavior with the humanly correct answer recorded beside it.
+
+**Every family has a registered destination, and a test enforces that.** The eight are `coordination`,
+`subordination`, `appositive`, `attribution`, `quotation`, `qualification`, `window` and `morphology`;
+all eight route to `md/limit-hit-ledger.md`, whose family table says what repeated real-source hits on
+each would argue for. `tests/lab-feedback-integrity.test.mjs` asserts that every `family` value present
+in the fixture block appears in that table, and that the table registers no family no case carries.
+
+The test was written because `morphology` was in the fixture from v2.6.1 and in neither the table nor
+the block's ruling. It then found `qualification` missing since v2.6.0. Two families with frozen cases
+and no routing destination, neither caught by review, because the table and the ruling were each
+written from the other rather than from the cases. **The test is the structural fix here, not the rows
+it made necessary** — rows can go stale again and this cannot go unnoticed again.
+
+The two branches differ in what a hit argues *for*, which is the only reason the distinction is worth
+keeping. A clause-family hit argues for a parser. A `morphology` hit argues for a comparison whose two
+sides are written in one representation — a smaller change, already twice half-made (v2.4.2, v2.6.1),
+and the one family whose members were created by fixes rather than found in the model.
 
 A flag whose adjudication lands on one of these does **not** become a fixture. There is nothing to
 assert that the limit block does not already assert, and a red case nobody intends to fix is a case
@@ -240,7 +259,9 @@ the flag ID, the limit family, and the passage.
 That file is the evidence, and it is deliberately the only evidence that will ever be accepted for
 the decision it feeds. The honest fix for most of these is a real parser, which is a decision about
 what this instrument *is* — deterministic, local, inspectable — and not a patch anyone should make
-because a cue list looked one word short. When the ledger shows a family being hit repeatedly on real
+because a cue list looked one word short. `morphology` is the exception on cost and not on discipline:
+its fix is cheap, and it still waits for a flag, because a cheap fix that moves scores on no evidence
+is how v2.6.1 bought `bl-16`. When the ledger shows a family being hit repeatedly on real
 sources rather than on invented sentences, that is the argument. Until then it is a hypothesis, and
 the ledger's emptiness is a finding too.
 

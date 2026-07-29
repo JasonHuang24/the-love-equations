@@ -481,3 +481,62 @@ test('RED D6: retainedOnEvidenceAfterCap counts evidence retention and nothing e
       `${segment.unit.id}: context-eligible retentions are not evidence retentions`);
   });
 });
+
+/*
+ * Every documented-limit family has a routing destination.
+ *
+ * `morphology` sat in the fixture block from v2.6.1 and appeared in neither the
+ * ledger's family table nor the block's own ruling until 2026-07-29. Nothing was
+ * checking, so the gap was invisible rather than accepted: a flag adjudicated
+ * onto that family had a case to point at and no row to be recorded in, which is
+ * the one state §4 of md/FEEDBACK-PIPELINE.md exists to prevent.
+ *
+ * The tables are prose, so this reads them as prose. Parsing the markdown is the
+ * point rather than a shortcut — the document IS the routing table for limit
+ * families, exactly as tools/lab-feedback.mjs is for dispositions, and a
+ * registry duplicated into code here would be a third place to forget.
+ */
+test('every limit family in the fixture is registered in the routing table', () => {
+  const benchmark = JSON.parse(readFileSync(
+    path.join(ROOT_DIR, 'tests', 'fixtures', 'match-behavior-benchmark.json'), 'utf8'));
+  const ledger = readFileSync(path.join(ROOT_DIR, 'md', 'limit-hit-ledger.md'), 'utf8');
+  const pipeline = readFileSync(path.join(ROOT_DIR, 'md', 'FEEDBACK-PIPELINE.md'), 'utf8');
+
+  const families = [...new Set(benchmark.blocks.documentedLimits.cases
+    .map((entry) => entry.family)
+    .filter(Boolean))].sort();
+  assert.ok(families.length >= 7,
+    `Expected the documented-limit family population, found ${families.length}: ${families}`);
+
+  // Rows of the ledger's "Families, and what a hit on each would mean" table:
+  // | `family` | cases | what a hit argues for |
+  const registered = new Map();
+  for (const line of ledger.split(/\r?\n/)) {
+    const row = line.match(/^\|\s*`([a-z-]+)`\s*\|([^|]*)\|/u);
+    if (row) registered.set(row[1], row[2].trim());
+  }
+
+  const unregistered = families.filter((family) => !registered.has(family));
+  assert.equal(unregistered.length, 0,
+    `${unregistered.length} limit family/families are in the fixture and not in the routing table of `
+    + `md/limit-hit-ledger.md: ${unregistered.join(', ')}. A flag adjudicated onto one of these has a `
+    + 'frozen case to point at and nowhere to be recorded. Register it, or the fixture is documenting '
+    + 'a limit the pipeline cannot route.');
+
+  families.forEach((family) => {
+    // A row with no cases listed is a heading, not a destination.
+    assert.match(registered.get(family), /bl-\d/u,
+      `The routing row for \`${family}\` lists no fixture cases, so nothing connects the family to `
+      + 'the limits it is meant to route.');
+    assert.ok(pipeline.includes(`\`${family}\``),
+      `md/FEEDBACK-PIPELINE.md §4 does not name \`${family}\`, so the routing document and the `
+      + 'routing table disagree about which families exist.');
+  });
+
+  // And the reverse: a row for a family no fixture case carries is a destination
+  // for nothing, which is how the table drifts back out of date from the far side.
+  const orphans = [...registered.keys()].filter((family) => !families.includes(family));
+  assert.equal(orphans.length, 0,
+    `The routing table registers ${orphans.length} family/families no fixture case carries: `
+    + `${orphans.join(', ')}.`);
+});
