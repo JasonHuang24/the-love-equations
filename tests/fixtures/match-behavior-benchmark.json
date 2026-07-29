@@ -940,6 +940,20 @@
           "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "no-local-evidence" },
           "humanlyCorrect": { "credibleMatch": false },
           "note": "GUARD, and the measurement that turns bl-08 from an opinion into a finding. One comma separates a right answer from a wrong one on identical content."
+        },
+        {
+          "id": "bl-16",
+          "family": "morphology",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "During our marriage the provider for paying the mortgage was always him.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": null, "disqualifiedBy": "technical-modifier", "promotedBy": "technical modifier “payment” within 3 tokens" },
+          "humanlyCorrect": { "credibleMatch": true },
+          "limitDocumented": true,
+          "note": "LIMIT, and one v2.6.1 CREATED rather than found, written down here because a fix that quietly buys a new false positive is how a guard rots. Comparing denylist entries and candidate words as stems is what lets `utility` see `utilities`; the same comparison lets `payment` see `paying`, because this stemmer takes `payment` down to `pay`. The sentence is the provisioning sense in plain English and the analyzer now rejects it. The exact widening was enumerated, not estimated: over the sixteen entries the stem comparison newly reaches `host`/`hosts`/`hosted` (from `hosting`), `networked`/`networking` (from `network`), `clouded` (from `cloud`), and `pay`/`pays`/`paying`/`payers` (from `payment`). All but the `pay` family are the technical sense the denylist exists to reject and are improvements. This one is the cost, and it is accepted on the same ground v2.6.0 accepted `moment`/`moments`: the alternative is a private idea of morphology sitting beside the analyzer's real one, which is the class of defect v2.4.2 was a whole release about. The narrower fix — stem only where the literal test fails — is available if a production flag ever lands here."
         }
       ]
     }

@@ -1853,14 +1853,41 @@ const COMPLEMENT_PREPOSITIONS = new Set(['for', 'of']);
 function disqualifyingModifier(occurrence, segments, modifiers) {
   if (!modifiers.length) return null;
 
-  // A denylist term matches its own plural. `service` is on the list and
-  // `services` is what people write; a list that could be defeated by an `s`
-  // would be a list about spelling rather than about sense.
+  /*
+   * A denylist term matches its own plural — and from v2.6.1, its own plural
+   * rather than a guess at how the plural is spelled.
+   *
+   * The literal tests below ask whether the run contains `service` or
+   * `services`, and for `utility` they therefore ask whether it contains
+   * `utilitys`. It does not; it contains `utilities`, and the whole guard was
+   * walked past by one word's morphology. The fix is to put both sides in the
+   * same representation, and the representation this analyzer already has for
+   * "the same word" is `stemToken` — the one the derived-stem floor landed on
+   * at v2.6.0 — rather than a second, private idea of a plural.
+   *
+   * Stemming is ADDED to the literal tests, not substituted for them, and the
+   * union is the whole of the correctness argument. This stemmer is not a
+   * plural normalizer and was never built to be one: it unifies `utility` with
+   * `utilities`, and it separates `service` from `services`, which strips to
+   * `servic`. Eight of this denylist's sixteen entries fall on the separating
+   * side — healthcare, health care, service, insurance, software, care,
+   * childcare, child care — so a swap would fix two entries by breaking eight.
+   * Either test alone leaks. Together they do not, and a test that only ever
+   * adds disqualifications cannot promote something that used to be rejected.
+   *
+   * Multiword entries match as a contiguous run of stems rather than by
+   * substring, so `health care` still finds those two words in sequence and
+   * can no longer be satisfied by a longer word that merely spans them.
+   */
   const carries = (tokens) => {
     const run = tokens.join(' ');
-    return modifiers.find((modifier) => tokens.includes(modifier)
-      || tokens.includes(`${modifier}s`)
-      || (modifier.includes(' ') && (run.includes(modifier) || run.includes(`${modifier}s`)))) || null;
+    const stems = tokens.map(stemToken);
+    return modifiers.find((modifier) => {
+      if (tokens.includes(modifier) || tokens.includes(`${modifier}s`)) return true;
+      if (modifier.includes(' ') && (run.includes(modifier) || run.includes(`${modifier}s`))) return true;
+      const wanted = modifier.split(' ').map(stemToken);
+      return stems.some((_, at) => wanted.every((stem, offset) => stems[at + offset] === stem));
+    }) || null;
   };
   const tokensIn = (from, to) => segments.words
     .filter((word) => word.index >= from && word.index <= to && word.clause === occurrence.clause)
