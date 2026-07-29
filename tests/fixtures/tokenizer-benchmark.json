@@ -1,0 +1,205 @@
+{
+  "schema": "le-lab.tokenizer/1.0",
+  "frozenAt": {
+    "analyzer": "2.5.0",
+    "analysisSchemaVersion": "le-lab.analysis/2.5",
+    "scoringConfigHash": "1qt8p4u",
+    "canonIndexVersion": "1.0.0+949aef381d5f",
+    "commit": "a878753"
+  },
+  "provenance": "Sol's v2.5.0 break-it review, §3 DESIGN — repair tokenization centrally rather than patching one consumer. The rule frozen here is his: compute the stem; if stemming CHANGED the token and produced fewer than three characters, reject the stem and keep the original surface token. A four-character derived floor would destroy families that work (dat, fix, sex, pay); an original-token floor would catch nothing, because really, stable, viable, national and rational all enter long; dropping the token outright would erase real concepts. Fallback is the only rule that separates the four cases.",
+  "blocks": {
+    "degeneracy": {
+      "question": "Can stemming produce a fragment short enough to mean nothing, and does that fragment then get to act as a concept?",
+      "ruling": "No transformed result may be shorter than three characters. A content word whose stem would be degenerate keeps its original surface form instead. `really` is additionally filtered as a stopword, in the company of `just`, `very`, `too` and `only`, so falling back to the surface cannot restore the co-fire defect v2.5.0 §1.4 found.",
+      "cases": [
+        { "id": "tk-01", "word": "really", "polarity": "degenerate", "expected": [], "observedAtFreeze": ["re"], "note": "18 canon entries. The fragment that was found vouching for a provisioning claim about a billing vendor. Filtered rather than restored: it is an intensifier, and it carries no concept at either length." },
+        { "id": "tk-02", "word": "stable", "polarity": "degenerate", "expected": ["stable"], "observedAtFreeze": ["st"], "note": "8 entries. Real provisioning and readiness vocabulary; dropping it outright would erase the concept." },
+        { "id": "tk-03", "word": "viable", "polarity": "degenerate", "expected": ["viable"], "observedAtFreeze": ["vi"], "note": "3 entries. Collides with `visible` at freeze — two different concepts sharing one two-character token." },
+        { "id": "tk-04", "word": "visible", "polarity": "degenerate", "expected": ["visible"], "observedAtFreeze": ["vi"], "note": "8 entries. The other half of the `vi` collision." },
+        { "id": "tk-05", "word": "national", "polarity": "degenerate", "expected": ["national"], "observedAtFreeze": ["n"], "note": "4 entries. A single character carrying IDF 5.502." },
+        { "id": "tk-06", "word": "rational", "polarity": "degenerate", "expected": ["rational"], "observedAtFreeze": ["r"], "note": "3 entries. IDF 5.725 on one letter." },
+        { "id": "tk-07", "word": "users", "polarity": "degenerate", "expected": ["users"], "observedAtFreeze": ["us"], "note": "6 entries. Half of the collision behind the M-TBD-41 false match in retrievalGuards." },
+        { "id": "tk-08", "word": "using", "polarity": "degenerate", "expected": ["using"], "observedAtFreeze": ["us"], "note": "4 entries. The other half. `users` and `using` are not the same word and stop being treated as one." },
+        { "id": "tk-09", "word": "bring", "polarity": "degenerate", "expected": ["bring"], "observedAtFreeze": ["br"] },
+        { "id": "tk-10", "word": "fable", "polarity": "degenerate", "expected": ["fable"], "observedAtFreeze": ["f"], "note": "IDF 6.013 on a single letter — the highest-weighted fragment in the index." },
+        { "id": "tk-11", "word": "going", "polarity": "degenerate", "expected": ["going"], "observedAtFreeze": ["go"], "note": "19 entries. `go` is also a legitimate two-character original, so at freeze the two are indistinguishable once inside the index." },
+        { "id": "tk-12", "word": "lament", "polarity": "degenerate", "expected": ["lament"], "observedAtFreeze": ["la"] },
+        { "id": "tk-13", "word": "lying", "polarity": "degenerate", "expected": ["lying"], "observedAtFreeze": ["ly"] },
+        { "id": "tk-14", "word": "moment", "polarity": "degenerate", "expected": ["moment"], "observedAtFreeze": ["mo"], "note": "17 entries." },
+        { "id": "tk-15", "word": "moments", "polarity": "degenerate", "expected": ["moments"], "observedAtFreeze": ["mo"], "note": "ACCEPTED COST. moment/moments unify at freeze only by both collapsing to a fragment that also swallows anything else ending -ment. After the fix they are two tokens. The family splits; so does its collision with everything else in `mo`." },
+        { "id": "tk-16", "word": "peers", "polarity": "degenerate", "expected": ["peers"], "observedAtFreeze": ["pe"], "note": "ACCEPTED COST, same shape: peer/peers stop unifying, because `peer` is short enough to pass through unstemmed." },
+        { "id": "tk-17", "word": "table", "polarity": "degenerate", "expected": ["table"], "observedAtFreeze": ["t"] },
+        { "id": "tk-18", "word": "thing", "polarity": "degenerate", "expected": ["thing"], "observedAtFreeze": ["th"], "note": "18 entries." },
+        { "id": "tk-19", "word": "tying", "polarity": "degenerate", "expected": ["tying"], "observedAtFreeze": ["ty"] },
+
+        { "id": "tk-20", "word": "dating", "polarity": "control", "expected": ["dat"], "observedAtFreeze": ["dat"], "note": "GREEN CONTROL — a three-character derived stem is the shortest one that works, which is why the floor is three and not four." },
+        { "id": "tk-21", "word": "dates", "polarity": "control", "expected": ["dat"], "observedAtFreeze": ["dat"] },
+        { "id": "tk-22", "word": "daters", "polarity": "control", "expected": ["dat"], "observedAtFreeze": ["dat"] },
+        { "id": "tk-23", "word": "fixed", "polarity": "control", "expected": ["fix"], "observedAtFreeze": ["fix"] },
+        { "id": "tk-24", "word": "fixes", "polarity": "control", "expected": ["fix"], "observedAtFreeze": ["fix"] },
+        { "id": "tk-25", "word": "sexes", "polarity": "control", "expected": ["sex"], "observedAtFreeze": ["sex"] },
+        { "id": "tk-26", "word": "sex", "polarity": "control", "expected": ["sex"], "observedAtFreeze": ["sex"] },
+        { "id": "tk-27", "word": "paying", "polarity": "control", "expected": ["pay"], "observedAtFreeze": ["pay"] },
+        { "id": "tk-28", "word": "payers", "polarity": "control", "expected": ["pay"], "observedAtFreeze": ["pay"] },
+        { "id": "tk-29", "word": "men", "polarity": "control", "expected": ["men"], "observedAtFreeze": ["men"], "note": "GREEN CONTROL — a short ORIGINAL is untouched. The floor applies only to a token the stemmer shortened." },
+        { "id": "tk-30", "word": "age", "polarity": "control", "expected": ["age"], "observedAtFreeze": ["age"] },
+        { "id": "tk-31", "word": "AI", "polarity": "control", "expected": ["ai"], "observedAtFreeze": ["ai"], "note": "Two characters, and it stays: nothing was stemmed away." },
+        { "id": "tk-32", "word": "SMV", "polarity": "control", "expected": ["smv"], "observedAtFreeze": ["smv"] }
+      ],
+      "families": [
+        { "id": "fm-01", "stem": "dat", "members": ["dating", "dates", "daters"], "note": "One valid three-character stem must keep its whole inflection family." },
+        { "id": "fm-02", "stem": "fix", "members": ["fixed", "fixes"] },
+        { "id": "fm-03", "stem": "sex", "members": ["sexes", "sex"] },
+        { "id": "fm-04", "stem": "pay", "members": ["paying", "payers"] }
+      ]
+    },
+
+    "componentIsolation": {
+      "question": "Is `distinctiveBoost` the only thing a degenerate stem moves?",
+      "ruling": "No, and this pair is the proof. The two sentences differ by one intensifier. At freeze the `really` variant scores nearly double the `just` control, and it does so through four independent mechanisms at once: both coverage ratios, the distinctive boost, and the sparse-shared penalty it avoids by having a second shared token. A fix applied at one consumer would leave the other three.",
+      "canonId": "smv:money:provisioning-signal",
+      "cases": [
+        {
+          "id": "ci-01",
+          "wrapper": "really",
+          "text": "Marriage rates came up briefly at dinner, but the argument was really about which billing provider our startup should integrate.",
+          "observedAtFreeze": {
+            "score": 0.3,
+            "sharedTokens": ["re", "provider"],
+            "queryCoverage": 0.212,
+            "canonCoverage": 0.111,
+            "distinctiveBoost": 0.09,
+            "penalties": []
+          },
+          "note": "cf-05's sentence, unchanged. `re` is not a concept and `provider` is disqualified by the co-fire window, yet the pair scores as though two concepts matched."
+        },
+        {
+          "id": "ci-02",
+          "wrapper": "just",
+          "text": "Marriage rates came up briefly at dinner, but the argument was just about which billing provider our startup should integrate.",
+          "observedAtFreeze": {
+            "score": 0.156,
+            "sharedTokens": ["provider"],
+            "queryCoverage": 0.133,
+            "canonCoverage": 0.063,
+            "distinctiveBoost": 0.045,
+            "penalties": ["sparse-shared-tokens"]
+          },
+          "note": "`just` is already a stopword, so this is what the sentence is worth once the intensifier stops being a concept."
+        }
+      ],
+      "expected": {
+        "identicalScores": true,
+        "sharedTokens": ["provider"],
+        "sparsePenaltyOnBoth": true,
+        "noDegenerateSharedToken": true,
+        "note": "The two variants must score IDENTICALLY once `really` is filtered, because after filtering the two sentences tokenize to the same thing. The absolute value is deliberately not pinned here: it depends on the index-wide IDF, which this fix legitimately moves. What is pinned is the mechanism — the intensifier stops contributing anything, on every one of the four paths."
+      }
+    },
+
+    "indexProvenance": {
+      "question": "Do degenerate stems get into the index itself, with real IDF weight behind them?",
+      "ruling": "They do, and the rule is stated over raw tokens rather than over the finished sets: for every word the canon contains, the representation the tokenizer accepts is either the word itself or at least three characters long. Stated that way it is origin-sensitive, which matters — `go`, `ai` and `us` are legitimate two-character ORIGINALS and must stay, while `going`, `users` and `using` collapsing onto them must not.",
+      "observedAtFreeze": {
+        "entries": 450,
+        "entriesWithDegenerateStem": 108,
+        "rawTokenMappings": 19,
+        "distinctStems": 16,
+        "stems": [
+          { "original": "bring", "stem": "br", "entriesWithOriginal": 3, "documentFrequency": 3, "idf": 5.725 },
+          { "original": "fable", "stem": "f", "entriesWithOriginal": 2, "documentFrequency": 2, "idf": 6.013 },
+          { "original": "going", "stem": "go", "entriesWithOriginal": 19, "documentFrequency": 28, "idf": 3.744 },
+          { "original": "lament", "stem": "la", "entriesWithOriginal": 1, "documentFrequency": 1, "idf": 6.418 },
+          { "original": "lying", "stem": "ly", "entriesWithOriginal": 1, "documentFrequency": 1, "idf": 6.418 },
+          { "original": "moment", "stem": "mo", "entriesWithOriginal": 17, "documentFrequency": 18, "idf": 4.167 },
+          { "original": "moments", "stem": "mo", "entriesWithOriginal": 2, "documentFrequency": 18, "idf": 4.167 },
+          { "original": "national", "stem": "n", "entriesWithOriginal": 4, "documentFrequency": 4, "idf": 5.502 },
+          { "original": "peers", "stem": "pe", "entriesWithOriginal": 2, "documentFrequency": 2, "idf": 6.013 },
+          { "original": "rational", "stem": "r", "entriesWithOriginal": 3, "documentFrequency": 3, "idf": 5.725 },
+          { "original": "really", "stem": "re", "entriesWithOriginal": 18, "documentFrequency": 22, "idf": 3.976 },
+          { "original": "stable", "stem": "st", "entriesWithOriginal": 8, "documentFrequency": 8, "idf": 4.914 },
+          { "original": "table", "stem": "t", "entriesWithOriginal": 7, "documentFrequency": 7, "idf": 5.032 },
+          { "original": "thing", "stem": "th", "entriesWithOriginal": 18, "documentFrequency": 18, "idf": 4.167 },
+          { "original": "tying", "stem": "ty", "entriesWithOriginal": 1, "documentFrequency": 1, "idf": 6.418 },
+          { "original": "users", "stem": "us", "entriesWithOriginal": 6, "documentFrequency": 16, "idf": 4.278 },
+          { "original": "using", "stem": "us", "entriesWithOriginal": 4, "documentFrequency": 16, "idf": 4.278 },
+          { "original": "viable", "stem": "vi", "entriesWithOriginal": 3, "documentFrequency": 10, "idf": 4.714 },
+          { "original": "visible", "stem": "vi", "entriesWithOriginal": 8, "documentFrequency": 10, "idf": 4.714 }
+        ]
+      },
+      "expected": {
+        "violatingRawTokens": 0,
+        "note": "Zero raw tokens whose accepted representation is both shortened and shorter than three characters, across every lexical surface of all 450 entries. The three token sets the matcher reads — _tokens, _distinctiveTokens, _surfaceTokens — inherit the property, because every one of them is built by the same tokenizer."
+      }
+    },
+
+    "retrievalGuards": {
+      "question": "Does the fix remove the collisions without removing the concepts?",
+      "ruling": "Both halves are asserted, because either one alone would be easy and wrong. The false collision must die; the five legitimate words must survive as themselves and keep matching the entries that use them. The guards assert TOKEN IDENTITY rather than a score, since the fix moves scores index-wide by design and a pinned number here would be a threshold assertion in disguise.",
+      "cases": [
+        {
+          "id": "rg-01",
+          "polarity": "false-collision",
+          "text": "OkCupid, eharmony and Hinge are each used by about a fifth of online dating users.",
+          "canonId": "M-TBD-41",
+          "sourceNote": "Verbatim from lab-corpus/sources/01-pew-online-dating.txt. A sentence listing app market share, matched to a mythbuster ruling about dating for financial potential.",
+          "observedAtFreeze": { "score": 0.263, "sharedTokens": ["dat", "us"], "admitted": "weak" },
+          "expected": {
+            "sharedExcludes": "us",
+            "belowThreshold": "minWeakScore",
+            "note": "`dat` is a real overlap and stays. `us` is `users` pretending to be a concept, and it is the only reason this pair clears the weak line. Sol's counterfactual puts the survivor near 0.070."
+          }
+        },
+        {
+          "id": "rg-02",
+          "polarity": "legitimate",
+          "word": "stable",
+          "text": "A stable relationship depends on more than initial attraction between two partners.",
+          "canonId": "smv:money",
+          "observedAtFreeze": { "score": 0.377, "sharedTokens": ["st", "relationship", "attraction", "two"] },
+          "expected": { "sharedIncludes": "stable", "atOrAboveThreshold": "candidateScoreFloor" }
+        },
+        {
+          "id": "rg-03",
+          "polarity": "legitimate",
+          "word": "viable",
+          "text": "Of the men who message her, only a handful are viable partners for a long relationship.",
+          "canonId": "frameworks:option-pool",
+          "observedAtFreeze": { "score": 0.211, "sharedTokens": ["vi", "relationship"] },
+          "expected": { "sharedIncludes": "viable", "atOrAboveThreshold": "candidateScoreFloor" }
+        },
+        {
+          "id": "rg-04",
+          "polarity": "legitimate",
+          "word": "visible",
+          "text": "The options visible in her feed are not the same as the men who would ever agree to date her.",
+          "canonId": "frameworks:option-pool",
+          "observedAtFreeze": { "score": 0.325, "sharedTokens": ["option", "vi"] },
+          "expected": { "sharedIncludes": "visible", "atOrAboveThreshold": "candidateScoreFloor" },
+          "note": "Paired with rg-03 on purpose: same target entry, two words that are one token at freeze. After the fix they are two, and each still finds the entry that uses it."
+        },
+        {
+          "id": "rg-05",
+          "polarity": "legitimate",
+          "word": "users",
+          "text": "Most dating app users report that the experience leaves them frustrated rather than hopeful.",
+          "canonId": "statistics:stat-pay-to-play",
+          "observedAtFreeze": { "score": 0.443, "sharedTokens": ["dat", "app", "us", "report", "experience"] },
+          "expected": { "sharedIncludes": "users", "atOrAboveThreshold": "candidateScoreFloor" },
+          "note": "The other side of rg-01. The word `users` genuinely appears in this entry, so removing the fragment must not remove the match."
+        },
+        {
+          "id": "rg-06",
+          "polarity": "legitimate",
+          "word": "using",
+          "text": "The risk for a young man is using early rejection as proof that his value is fixed forever.",
+          "canonId": "gender-dynamics:gd-male-window",
+          "observedAtFreeze": { "score": 0.636, "sharedTokens": ["risk", "man", "us", "early", "rejection", "proof", "value"] },
+          "expected": { "sharedIncludes": "using", "atOrAboveThreshold": "candidateScoreFloor" },
+          "note": "This entry says \"the risk is using early rejection as proof of permanent value\". The overlap is real and survives on the word itself, not on the fragment it shared with `users`."
+        }
+      ]
+    }
+  }
+}
