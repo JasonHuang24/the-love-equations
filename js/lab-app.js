@@ -18,6 +18,7 @@ import {
 } from './lab-extractors.js?v=2.4.1';
 import { createDemoDocument } from './lab-demo.js?v=2.4.1';
 import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.4.1';
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.4.1';
 import {
   analysisToJson,
   analysisToMarkdown,
@@ -1047,6 +1048,20 @@ function renderLedger(result) {
  * re-run uses the stored document and stored overrides, the trace describes the
  * run on screen — and that is checked rather than assumed.
  */
+/**
+ * Did the trace run reproduce the analysis on screen?
+ *
+ * IDs, schema versions and counts are not enough, and that is not a theoretical
+ * objection: they are all properties of the build or of aggregate shape, and a
+ * run that produced entirely different mappings can satisfy every one of them
+ * while agreeing on how many rows mapped. This compares the rows themselves —
+ * every published row's digest, in order — so "reproduced" means the ledger
+ * came back the same, not that the header did.
+ */
+function rowDigests(result) {
+  return (result.segments || []).map(claimUnitRowDigest).join('|');
+}
+
 function assertTraceMatchesAnalysis(traced, analysis) {
   const agrees = traced.id === analysis.id
     && traced.schemaVersion === analysis.schemaVersion
@@ -1058,8 +1073,19 @@ function assertTraceMatchesAnalysis(traced, analysis) {
   if (!agrees) {
     throw new Error('The trace run did not reproduce the analysis on screen, so it cannot be used as evidence about it. Re-run the analysis and flag again.');
   }
+  if ((traced.segments || []).length !== (analysis.segments || []).length
+    || (traced.domainRelevance?.ignoredPassages || []).length
+      !== (analysis.domainRelevance?.ignoredPassages || []).length) {
+    throw new Error('The trace run analyzed a different set of passages than the analysis on screen. Re-run the analysis and flag again.');
+  }
+  if (rowDigests(traced) !== rowDigests(analysis)) {
+    throw new Error('The trace run produced different mappings than the analysis on screen, so it cannot be used as evidence about it. Re-run the analysis and flag again.');
+  }
   if (!traced.diagnostics) {
     throw new Error('The analyzer returned no diagnostic trace. Re-run the analysis and flag again.');
+  }
+  if (traced.diagnostics.analysisId !== analysis.id) {
+    throw new Error('The diagnostic trace does not carry the identity of the analysis on screen. Re-run the analysis and flag again.');
   }
 }
 

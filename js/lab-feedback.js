@@ -1,5 +1,5 @@
 /*
- * LE Lab mapping feedback — le-lab.mapping-feedback/1.0
+ * LE Lab mapping feedback — le-lab.mapping-feedback/1.1
  * ---------------------------------------------------------------------------
  * One reviewer disagreement about one claim unit, serialized so it can be
  * adjudicated away from the browser that produced it.
@@ -13,7 +13,7 @@
  * DERIVED, NEVER RE-DERIVED: every number, label, and trace field here is
  * copied from an analyzer output — the published analysis
  * (le-lab.analysis/2.4) and the opt-in diagnostic trace
- * (le-lab.diagnostics/1.0). This module re-implements no scoring, no
+ * (le-lab.diagnostics/1.1). This module re-implements no scoring, no
  * classification, and no stance rule. If a value is not in one of those two
  * documents, it is reported as unavailable rather than reconstructed, because a
  * feedback file that quietly disagrees with the analyzer is worse than one that
@@ -21,10 +21,23 @@
  *
  * "reviewDisposition", not "verdict": a verdict on this site is a Mythbuster
  * ruling about a claim's truth. This is a reviewer's opinion about a mapping.
+ *
+ * 1.1 ADDS INTEGRITY, AND CHANGES WHAT REFUSAL MEANS. Through 1.0 the exporter
+ * checked that the trace named the same sentence and came from the same scoring
+ * configuration. Neither is a property of an ANALYSIS: both hold for a trace of
+ * a different run on the same build, which meant a file could carry a displayed
+ * match above a candidate set that does not contain it and look entirely
+ * ordinary doing it. From 1.1 the exporter rebuilds the ledger row out of the
+ * trace's own candidates and refuses unless it comes back identical.
  */
 
+// The one thing this module borrows from the analyzer rather than restating:
+// what "the same published row" means. A second implementation of that would be
+// a second opinion, and the guard below is worthless unless there is only one.
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.4.1';
+
 export const MAPPING_FEEDBACK_SCHEMA = 'le-lab.mapping-feedback';
-export const MAPPING_FEEDBACK_SCHEMA_VERSION = '1.0';
+export const MAPPING_FEEDBACK_SCHEMA_VERSION = '1.1';
 
 /*
  * The failure layer is the routing key: it names WHERE the analyzer went wrong,
@@ -95,15 +108,49 @@ function idList(value) {
   return [...new Set(value.map(text).filter(Boolean))];
 }
 
-/* Small, stable, and deterministic — the same flag content yields the same ID. */
-function fnv1a(value) {
-  let hash = 0x811c9dc5;
+/*
+ * Stable and deterministic — the same flag content yields the same ID, and two
+ * flags that differ anywhere a reviewer could differ do not. Two fnv1a passes
+ * seeded differently, concatenated: one 32-bit hash is a cache key, and a flag
+ * ID has to survive a folder of files that are alike in everything except the
+ * opinion they carry.
+ */
+function contentHash(value) {
   const input = String(value);
+  let a = 0x811c9dc5;
+  let b = 0x9e3779b9;
   for (let index = 0; index < input.length; index += 1) {
-    hash ^= input.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193) >>> 0;
+    const code = input.charCodeAt(index);
+    a = Math.imul(a ^ code, 0x01000193);
+    b = Math.imul(b ^ (code + index), 0x85ebca6b);
   }
-  return hash.toString(36);
+  return `${(a >>> 0).toString(36)}${(b >>> 0).toString(36)}`;
+}
+
+/**
+ * The flag ID is a hash of the WHOLE REVIEW, not of the row it is about.
+ *
+ * Through 1.0 it hashed analysis + unit + disposition, so two reviewers who
+ * disagreed about one wrong mapping — or one reviewer revising an opinion —
+ * produced one ID and one filename, and the second file quietly replaced the
+ * first. Every field a reviewer can set now moves the ID.
+ *
+ * The concept lists are hashed IN ORDER, deliberately. Order is meaning here:
+ * `expectedCanonIds[0]` is what the router drafts as the expected primary, so
+ * two reviews listing the same concepts in a different order are two different
+ * claims about what should have won, and they get two different files.
+ */
+function flagIdFor(analysisId, unitId, review, includeProvenance) {
+  return `mfb-${contentHash(JSON.stringify({
+    analysisId: analysisId || null,
+    segmentId: unitId,
+    reviewDisposition: review.reviewDisposition,
+    expectedCanonIds: review.expectedCanonIds,
+    forbiddenCanonIds: review.forbiddenCanonIds,
+    expectedAlignment: review.expectedAlignment,
+    note: review.note,
+    provenanceIncluded: Boolean(includeProvenance),
+  }))}`;
 }
 
 /**
@@ -260,6 +307,16 @@ function claimUnitFromPassage(passage) {
 
 function domainDecisionFromSegment(segment) {
   const relevance = segment.unit.domainRelevance || {};
+  /*
+   * machineClaimLike lives on the UNIT, not on its domain decision.
+   * applyDomainOverride writes it there — beside isClaimLike, which it
+   * overwrites — so that "the classifier said no and a visitor said yes" stays
+   * legible. Reading it from domainRelevance, as 1.0 did, returned null on
+   * every row, silently, and on exactly the rows where an adjudicator needs it:
+   * a flag on an overridden passage is either a complaint about the gate or a
+   * complaint about the override, and this field is what tells them apart.
+   */
+  const machineClaimLike = segment.unit.machineClaimLike ?? null;
   return {
     status: relevance.status ?? null,
     localStatus: relevance.localStatus ?? null,
@@ -272,7 +329,7 @@ function domainDecisionFromSegment(segment) {
     frameEvidence: relevance.evidence || null,
     contextHelp: relevance.contextHelp || null,
     override: relevance.override ?? null,
-    machineClaimLike: relevance.machineClaimLike ?? null,
+    machineClaimLike,
   };
 }
 
@@ -294,14 +351,87 @@ function domainDecisionFromPassage(passage) {
 }
 
 /**
- * The pre-display candidate trace, lifted whole out of le-lab.diagnostics/1.0.
+ * The pre-display candidate trace, lifted whole out of le-lab.diagnostics/1.1.
  *
  * Candidates are copied verbatim: score components, named penalties, evidence
  * surfaces with their provenance types, admission outcome, context assistance,
  * rank, rank at retrieval, and truncation fate — including the hits the display
  * caps hid, which are usually the reason a mapping looks wrong from the ledger.
  */
-function candidateTrace(diagnostics, segmentId, expectedExcerpt, rowKind) {
+/**
+ * Does this trace actually describe the row being flagged?
+ *
+ * The ledger row is recoverable from the trace: the candidates marked `match`
+ * ARE the displayed matches, in order; the ones marked `weak-match` are the
+ * weak list. So the check is a reconstruction rather than a comparison of
+ * metadata — rebuild the row out of the trace's own candidates and require it
+ * to come back identical to the row the analysis published.
+ *
+ * That is the difference between 1.0 and 1.1. Excerpt, scoring hash, analyzer
+ * version, schema version and canon version are all properties of the BUILD;
+ * every one of them holds for a trace of a different document analyzed by the
+ * same engine. A trace whose candidates were emptied out satisfied all of them
+ * and exported a file claiming a primary match at 0.76 above a candidate set of
+ * zero. Rebuilding the row is the only check that could not.
+ *
+ * Every refusal names what disagreed. An adjudicator who gets one of these is
+ * being told which of two artifacts to distrust.
+ */
+function assertTraceReproducesRow(traced, segment, segmentId) {
+  const refuse = (reason) => {
+    throw new Error(`The diagnostic trace does not reproduce the flagged row ${segmentId}: ${reason} Re-run the analysis before flagging.`);
+  };
+  const candidates = traced.candidates || [];
+  const rebuiltMatches = candidates.filter((candidate) => candidate.display === 'match');
+  const rebuiltWeak = candidates.filter((candidate) => candidate.display === 'weak-match');
+  const matches = segment.matches || [];
+  const weak = segment.weakMatches || [];
+
+  if (Boolean(traced.mapped) !== Boolean(segment.mapped)) {
+    refuse(`the trace says the row is ${traced.mapped ? 'mapped' : 'unmapped'} and the analysis says it is ${segment.mapped ? 'mapped' : 'unmapped'}.`);
+  }
+  if (rebuiltMatches.length !== matches.length) {
+    refuse(`the trace carries ${rebuiltMatches.length} displayed match(es) and the analysis shows ${matches.length}.`);
+  }
+  if (rebuiltWeak.length !== weak.length) {
+    refuse(`the trace carries ${rebuiltWeak.length} weak match(es) and the analysis shows ${weak.length}.`);
+  }
+
+  matches.forEach((match, index) => {
+    const traceMatch = rebuiltMatches[index];
+    if (traceMatch.canonId !== match.canonId) {
+      refuse(`displayed match ${index + 1} is ${traceMatch.canonId} in the trace and ${match.canonId} in the analysis.`);
+    }
+    if (traceMatch.score !== match.score) {
+      refuse(`${match.canonId} scores ${traceMatch.score} in the trace and ${match.score} in the analysis.`);
+    }
+    if ((traceMatch.alignment?.label ?? null) !== (match.alignment?.label ?? null)) {
+      refuse(`${match.canonId} carries the alignment "${traceMatch.alignment?.label ?? 'none'}" in the trace and "${match.alignment?.label ?? 'none'}" in the analysis.`);
+    }
+    if ((traceMatch.confidence ?? null) !== (match.confidence ?? null)) {
+      refuse(`${match.canonId} is ${traceMatch.confidence} confidence in the trace and ${match.confidence} in the analysis.`);
+    }
+  });
+
+  weak.forEach((match, index) => {
+    const traceMatch = rebuiltWeak[index];
+    if (traceMatch.canonId !== match.canonId) {
+      refuse(`weak match ${index + 1} is ${traceMatch.canonId} in the trace and ${match.canonId} in the analysis.`);
+    }
+    if (traceMatch.score !== match.score) {
+      refuse(`${match.canonId} scores ${traceMatch.score} in the trace and ${match.score} in the analysis.`);
+    }
+  });
+
+  // Belt to the reconstruction's braces, and the one check that covers a row
+  // whose displayed surface is identical but which was produced for a different
+  // unit entirely.
+  if (traced.unitDigest && traced.unitDigest !== claimUnitRowDigest(segment)) {
+    refuse('its per-unit digest was produced for a different row.');
+  }
+}
+
+function candidateTrace(diagnostics, segmentId, expectedExcerpt, rowKind, segment, analysis) {
   // Not a gap in the trace — the analyzer's actual behavior, and the analysis
   // says so itself by listing the passage under domainRelevance.ignoredPassages.
   // A set-aside passage is decided before any canon entry is scored, so there is
@@ -322,6 +452,15 @@ function candidateTrace(diagnostics, segmentId, expectedExcerpt, rowKind) {
       candidates: [],
     };
   }
+  // A trace with no identity is a pre-1.1 trace, and the whole reason 1.1 exists
+  // is that the checks available without one do not distinguish this analysis
+  // from any other on the same build.
+  if (!diagnostics.analysisId) {
+    throw new Error('The diagnostic trace carries no analysis identity, so it cannot be shown to describe this analysis. Re-run the analysis before flagging.');
+  }
+  if (analysis.id && diagnostics.analysisId !== analysis.id) {
+    throw new Error(`The diagnostic trace was produced by a different analysis (${diagnostics.analysisId}, not ${analysis.id}). Re-run the analysis before flagging.`);
+  }
   const traced = (diagnostics.claimUnits || []).find((unit) => unit.segmentId === segmentId);
   if (!traced) {
     // Every retained unit has a trace entry. Missing means the trace and the
@@ -333,11 +472,17 @@ function candidateTrace(diagnostics, segmentId, expectedExcerpt, rowKind) {
   if (text(traced.excerpt) !== text(expectedExcerpt)) {
     throw new Error(`The diagnostic trace for ${segmentId} describes different text than the flagged row. Re-run the analysis before flagging.`);
   }
+  assertTraceReproducesRow(traced, segment, segmentId);
+
   const candidates = traced.candidates || [];
   return {
     available: true,
     schemaVersion: diagnostics.schemaVersion,
     scoringConfigHash: diagnostics.scoringConfigHash,
+    analysisId: diagnostics.analysisId,
+    canonSnapshotHash: diagnostics.canonSnapshotHash || null,
+    inputDigest: diagnostics.inputDigest || null,
+    unitDigest: traced.unitDigest || null,
     candidateCount: candidates.length,
     displayedCount: candidates.filter((candidate) => candidate.display !== 'not-displayed').length,
     hiddenByDisplayCaps: candidates.filter((candidate) => candidate.display === 'not-displayed').length,
@@ -365,10 +510,10 @@ function buildSource(analysis, includeProvenance) {
 }
 
 /**
- * Builds one `le-lab.mapping-feedback/1.0` document.
+ * Builds one `le-lab.mapping-feedback/1.1` document.
  *
  * @param {object}  input.analysis          A le-lab.analysis/2.4 result.
- * @param {object} [input.diagnostics]      Its le-lab.diagnostics/1.0 trace.
+ * @param {object} [input.diagnostics]      Its le-lab.diagnostics/1.1 trace.
  * @param {string}  input.segmentId         The flagged row's stable unit ID.
  * @param {object}  input.review            { disposition, expectedCanonIds, forbiddenCanonIds, expectedAlignment, note }
  * @param {boolean}[input.includeProvenance] Opt-in source identity. Default false.
@@ -410,7 +555,7 @@ export function buildMappingFeedback({
   return {
     schema: MAPPING_FEEDBACK_SCHEMA,
     schemaVersion: MAPPING_FEEDBACK_SCHEMA_VERSION,
-    flagId: `mfb-${fnv1a(`${analysis.id}|${unitId}|${reviewed.reviewDisposition}`)}`,
+    flagId: flagIdFor(analysis.id, unitId, reviewed, includeProvenance),
     generatedAt: stamp,
     status: 'Reviewer feedback — a draft for human adjudication, not a fixture and not LE doctrine.',
     privacy: {
@@ -456,11 +601,20 @@ export function buildMappingFeedback({
       weak: weak.map((match, index) => weakMatch(match, index + 1)),
       ambiguity: located.segment?.ambiguity || null,
     },
-    candidateTrace: candidateTrace(diagnostics, unitId, claimUnit.excerpt, located.kind),
+    candidateTrace: candidateTrace(
+      diagnostics, unitId, claimUnit.excerpt, located.kind, located.segment, analysis,
+    ),
   };
 }
 
-/** `le-lab-feedback-<disposition>-<segment>.json` — sortable, and self-describing in a folder. */
+/**
+ * `le-lab-feedback-<disposition>-<segment>-<id>.json` — sortable, and
+ * self-describing in a folder.
+ *
+ * The ID is in the name because the name is the second place a collision
+ * happens. Two reviews of one row used to land on one filename as well as one
+ * ID, so the browser's own download folder was the first thing to lose a flag.
+ */
 export function mappingFeedbackFileName(feedback) {
   const slug = (value, limit) => text(value)
     .toLowerCase()
@@ -469,7 +623,8 @@ export function mappingFeedbackFileName(feedback) {
     .slice(0, limit);
   const segment = slug(feedback?.claimUnit?.segmentId, 40) || 'passage';
   const disposition = slug(feedback?.review?.reviewDisposition, 30) || 'flag';
-  return `le-lab-feedback-${disposition}-${segment}.json`;
+  const id = slug(String(feedback?.flagId || '').replace(/^mfb-/, ''), 16);
+  return `le-lab-feedback-${disposition}-${segment}${id ? `-${id}` : ''}.json`;
 }
 
 export function mappingFeedbackToJson(feedback, { pretty = true } = {}) {

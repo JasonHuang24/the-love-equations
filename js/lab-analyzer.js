@@ -2283,7 +2283,82 @@ function strongestMatches(mappedResults) {
  * turning it on cannot change an analysis — the same document analyzed with
  * and without it produces the same matches, scores, and stances.
  */
-export const DIAGNOSTICS_SCHEMA_VERSION = 'le-lab.diagnostics/1.0';
+export const DIAGNOSTICS_SCHEMA_VERSION = 'le-lab.diagnostics/1.1';
+
+/*
+ * Two independent fnv1a passes over the same string, seeded differently and
+ * concatenated. One 32-bit hash is fine for a cache key and too narrow for an
+ * identity claim; this is not cryptographic either, and nothing here defends
+ * against a determined forger with the analyzer in hand. It defends against the
+ * accident and the mix-up: a trace pasted from the wrong run, a stale cache, a
+ * file assembled by something that did not read the same document.
+ */
+function wideHash(value) {
+  const text = String(value);
+  let a = 0x811c9dc5;
+  let b = 0x9e3779b9;
+  for (let index = 0; index < text.length; index += 1) {
+    const code = text.charCodeAt(index);
+    a = Math.imul(a ^ code, 0x01000193);
+    b = Math.imul(b ^ (code + index), 0x85ebca6b);
+  }
+  return `${(a >>> 0).toString(36)}${(b >>> 0).toString(36)}`;
+}
+
+/**
+ * The canonical signature of one published claim-unit row: what the ledger
+ * shows, and nothing else.
+ *
+ * Exported because two different modules have to agree on it byte for byte —
+ * the analyzer stamps it onto each diagnostic entry, and the feedback exporter
+ * recomputes it from the published analysis to check that the trace in hand
+ * describes the row being flagged. A second implementation of this function
+ * anywhere would be a second opinion about what "the same row" means, and the
+ * whole point is that there is only one.
+ */
+export function claimUnitRowDigest(row) {
+  const matches = (row?.matches || []).map((match) =>
+    [match.canonId, match.score, match.alignment?.label ?? '', match.confidence ?? ''].join('~'));
+  const weak = (row?.weakMatches || []).map((match) => [match.canonId, match.score].join('~'));
+  return wideHash([
+    row?.unit?.id ?? '',
+    row?.mapped ? 'mapped' : 'unmapped',
+    matches.join('|'),
+    weak.join('|'),
+  ].join('::'));
+}
+
+/*
+ * What the trace was produced FROM, as opposed to what produced it.
+ *
+ * The build fields — analyzer version, schema, scoring hash — say which engine
+ * ran. They say nothing about which document ran through it, which is why a
+ * trace of one analysis satisfied every check a consumer could make against a
+ * different analysis on the same build. These three close that:
+ *
+ *   analysisId        the analysis this trace belongs to, and the analysis
+ *                     publishes the same value, so a consumer can VERIFY it.
+ *   canonSnapshotHash the lexical surface of the canon actually loaded, not the
+ *                     version string it claims. A substituted index keeps the
+ *                     version and moves this.
+ *   inputDigest       the analyzed text and the overrides applied to it.
+ *
+ * Only analysisId is checkable against the published analysis; the other two
+ * are provenance a human or a later tool can compare across files, and the
+ * exporter does not pretend otherwise.
+ */
+function canonSnapshotHash(prepared) {
+  return wideHash(prepared.entries.map((entry) => `${entry.id}#${entry._normalized}`).join('\n'));
+}
+
+function inputDigest(document, domainOverrides) {
+  const overrides = [...domainOverrides.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([unitId, action]) => `${unitId}=${action}`)
+    .join(',');
+  const text = (document.segments || []).map((segment) => segment.text).join('\n');
+  return wideHash(`${document.id || ''}|${overrides}|${text}`);
+}
 
 function diagnosticCandidate(candidate, displayedIds, weakIds, rank) {
   const raw = candidate._rawScore;
@@ -2331,11 +2406,14 @@ function diagnosticCandidate(candidate, displayedIds, weakIds, rank) {
   };
 }
 
-function buildDiagnostics(segmentResults) {
+function buildDiagnostics(segmentResults, identity) {
   return {
     schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
     note: 'Internal analyzer trace, opt-in. Shows the working candidate set before display caps, so a reviewer can see evidence the analysis did not surface. Derived only: enabling it does not change any analysis output.',
     scoringConfigHash: SCORING_CONFIG_HASH,
+    analysisId: identity.analysisId,
+    canonSnapshotHash: identity.canonSnapshotHash,
+    inputDigest: identity.inputDigest,
     claimUnits: segmentResults.map((result) => {
       const displayedIds = new Set(result.matches.map((match) => match.canonId));
       const weakIds = new Set(result.weakMatches.map((match) => match.canonId));
@@ -2346,6 +2424,10 @@ function buildDiagnostics(segmentResults) {
         wordCount: result.unit.wordCount,
         isClaimLike: result.unit.isClaimLike,
         mapped: result.mapped,
+        // Binds this entry to the row the analysis published for the same unit.
+        // It does not certify the candidate list below it — that is checked
+        // structurally, by rebuilding the row from these candidates.
+        unitDigest: claimUnitRowDigest(result),
         domainRelevance: {
           status: result.unit.domainRelevance.status,
           reasonCode: result.unit.domainRelevance.reasonCode,
@@ -2618,7 +2700,13 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   };
 
   // Opt-in only. Omitting the option leaves the key absent, not empty.
-  if (options.diagnostics) result.diagnostics = buildDiagnostics(segmentResults);
+  if (options.diagnostics) {
+    result.diagnostics = buildDiagnostics(segmentResults, {
+      analysisId: resultId,
+      canonSnapshotHash: canonSnapshotHash(prepared),
+      inputDigest: inputDigest(document, domainOverrides),
+    });
+  }
 
   onProgress({ phase: 'complete', value: 1, message: 'Analysis complete' });
   return result;

@@ -13,7 +13,7 @@ by surviving adjudication, not by arriving.
 ## 0. The shape of the thing
 
 ```
-Lab ledger row  ──[Flag]──▶  le-lab.mapping-feedback/1.0  ──▶  lab-feedback/inbox/
+Lab ledger row  ──[Flag]──▶  le-lab.mapping-feedback/1.1  ──▶  lab-feedback/inbox/
                                   (local download)                     │
                                                                        ▼
                                                         tools/lab-feedback.mjs
@@ -49,12 +49,45 @@ The file carries:
 | `claimUnit` | normalized excerpt, stable ID, parent segment boundary, speaker, timestamps, claim likelihood, bounded-context bridge and its immediate predecessor when one was eligible | `le-lab.analysis/2.4` |
 | `domainDecision` | status, decisive reason code, per-frame scores, cue evidence | `le-lab.analysis/2.4` |
 | `display` | primary, secondary, and weak matches with scores, confidence, alignment, and match trace | `le-lab.analysis/2.4` |
-| `candidateTrace` | **the whole working candidate set before display caps** — score components, penalties by name, evidence surfaces with provenance types, admission outcome, context assistance, rank, rank at retrieval, truncation fate, and the hits the caps hid | `le-lab.diagnostics/1.0` |
+| `candidateTrace` | **the whole working candidate set before display caps** — score components, penalties by name, evidence surfaces with provenance types, admission outcome, context assistance, rank, rank at retrieval, truncation fate, and the hits the caps hid | `le-lab.diagnostics/1.1` |
 | `build` | Lab release, analyzer version and mode, scoring-config hash, canon index schema and version, analysis schema, diagnostics schema | both |
 | `source` | title, type, URL, extraction method — **only if the reviewer ticked the box** | `le-lab.analysis/2.4` |
 
 Nothing in the file is re-derived. If a value is not published by one of those two analyzer outputs,
 it is reported as unavailable with the reason, never reconstructed.
+
+### The trace has to reproduce the row, or there is no file
+
+Before anything is written, the exporter rebuilds the ledger row out of the trace's own candidates —
+the ones marked `match` are the displayed matches, in order; the ones marked `weak-match` are the weak
+list — and requires it to come back identical to the row the analysis published: mapped status, every
+canon ID, every score, every alignment, every confidence. Any disagreement refuses the export and
+names what disagreed.
+
+This is the check that has to be there, because the obvious ones are not checks at all. Analyzer
+version, schema version, scoring hash and canon version are properties of the **build**: they hold
+just as well for a trace of a different document analyzed by the same engine. Under `1.0` a trace
+whose candidates had been replaced with `[]` satisfied every one of them and produced a file claiming
+a primary match at 0.76 above a candidate set of zero — indistinguishable, to a reader, from a real
+flag. The trace also now carries the analysis ID, a canon snapshot hash, a digest of the analyzed
+input and its overrides, and a per-unit digest; of those only the analysis ID is checkable against the
+published analysis, and the file does not pretend the others are more than provenance.
+
+### Flag IDs, and what a second flag on the same row means
+
+The flag ID is a content hash of the **whole review** — disposition, expected and forbidden concept
+IDs in the order the reviewer gave them, expected alignment, note, provenance choice, the unit, and the
+analysis. Not of the row.
+
+So two reviewers who disagree about one wrong mapping produce two files, and a reviewer who revises an
+opinion produces a second file rather than replacing the first. **Nothing supersedes anything
+automatically.** Re-routing an unchanged flag rewrites the same stub with the same bytes; a changed
+review lands beside it. Which opinion won is an adjudication, recorded in the promoted case's `origin`
+block by the human who made it, and the flag that lost stays in the inbox as part of the record of how
+the case was decided.
+
+Under `1.0` the ID hashed analysis + unit + disposition only, so both of those situations collided onto
+one ID and one filename, and `--out` kept whichever ran last.
 
 **Set-aside passages carry no candidate trace**, and that is correct rather than missing: the gate
 decided before any canon entry was scored, so there is no candidate set in existence. The file says

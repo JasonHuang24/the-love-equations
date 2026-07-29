@@ -2,7 +2,7 @@
 /**
  * LE Lab feedback router.
  *
- * Reads one `le-lab.mapping-feedback/1.0` file, validates it against the shipped
+ * Reads one `le-lab.mapping-feedback/1.1` file, validates it against the shipped
  * schema, decides which frozen fixture its failure layer belongs to, checks
  * whether the case is already covered, and DRAFTS the fixture stub a human would
  * commit.
@@ -16,6 +16,13 @@
  *   node tools/lab-feedback.mjs lab-feedback/inbox/le-lab-feedback-*.json
  *   node tools/lab-feedback.mjs <file> --out lab-feedback/drafts
  *   node tools/lab-feedback.mjs <file> --json
+ *
+ * REVISIONS. A flag ID is a content hash of the whole review, so the stub name
+ * follows the opinion rather than the row: routing the same flag twice rewrites
+ * the same file with the same bytes, and a revised or contradicting review is a
+ * NEW file beside the old one. Neither is superseded automatically. Which
+ * opinion won is an adjudication, recorded by a human in the promoted case's
+ * `origin` block, and the losing flag stays in the inbox as part of the record.
  *
  * Options:
  *   --out <dir>   Write the stub to <dir>/<flagId>.stub.json instead of stdout.
