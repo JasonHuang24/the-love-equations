@@ -661,6 +661,222 @@
           "note": "GUARD, green at freeze, and the one that keeps the fix narrow. Same words as cm-13 minus the inversion and the question mark, and here the negator really does deny the claim. If this case moves, the fix has become a rule about the word `not` instead of a rule about one interrogative frame."
         }
       ]
+    },
+
+    "documentedLimits": {
+      "question": "Which of Sol's failures are the clause model being asked for something punctuation cannot tell it, and what exactly does each one cost?",
+      "ruling": "These fifteen. Every one is frozen ASSERTING CURRENT BEHAVIOR, with the humanly correct answer recorded beside it, because that is the difference between a limit and a defect nobody got to. Each names the syntax that defeats the approximation: coordination, subordination, appositives and relatives, attribution chains, quotation ownership, and a token window with a hard edge. None is fixed here and none should be fixed by widening a cue list — the honest fix for most of them is a parser, which is a decision about what this instrument is, not a patch. Until that decision is made, a production flag landing on one of these accumulates in md/limit-hit-ledger.md as the evidence for it.",
+      "misreading": "a large inbox is a large pool of relationship candidates",
+      "cases": [
+        {
+          "id": "bl-01",
+          "family": "subordination",
+          "surface": "stance",
+          "text": "A large inbox is a large pool of relationship candidates even though no guarantee of marriage follows.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.561, "clauseCount": 1, "negationCount": 1 },
+          "humanlyCorrect": { "stance": "Contradicts" },
+          "limitDocumented": true,
+          "note": "The source asserts the equivalence; `no` negates only a separate consequence inside a subordinate clause. There is no punctuation, so parity counts a negator that belongs to a different proposition. Representing this needs subordinator scope, which is grammar."
+        },
+        {
+          "id": "bl-02",
+          "family": "quotation",
+          "surface": "stance",
+          "text": "It is false that \"a large inbox\" means this: \"a large pool of relationship candidates\".",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.683, "clauseCount": 2, "assertionClause": 1, "quotedSpans": 2, "assertionBearing": false },
+          "humanlyCorrect": { "stance": "Supports" },
+          "limitDocumented": true,
+          "note": "An explicit denial of the misreading, split across a colon. The assertion clause is chosen by highest overlap and lands on the second half, which is the fragment without the governing `false`. Sibling of cm-12, which is the unquoted form of the same defeat."
+        },
+        {
+          "id": "bl-03",
+          "family": "attribution",
+          "surface": "stance",
+          "text": "The poster equated \"a large inbox\" with \"a large pool of relationship candidates\".",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.784, "quotedSpans": 2, "assertionBearing": false, "attributionDetected": false },
+          "humanlyCorrect": { "stance": "Context only" },
+          "limitDocumented": true,
+          "note": "The equivalence is attributed to the poster by the reporting verb `equated`, which joins two quoted arguments neither of which carries a finite verb. The finite-verb test is what protects sc-07 (irony) from sc-02, so relaxing it here would move a different documented limit."
+        },
+        {
+          "id": "bl-04",
+          "family": "quotation",
+          "surface": "stance",
+          "text": "The label read \"a large inbox is noisy\"; a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Context only" },
+          "observedAtFreeze": { "mapped": true, "stance": "Context only", "score": 0.677, "quotedSpans": 1, "assertionBearing": true, "quotedExcerpt": "a large inbox is noisy" },
+          "humanlyCorrect": { "stance": "Contradicts" },
+          "limitDocumented": true,
+          "note": "Ownership theft. `quotedSpans` is passage-global, so an unrelated quoted proposition — which does carry a finite verb and does share two misreading tokens — is credited with reporting a claim asserted flatly in the next clause. Fixing this means linking a span to the selected occurrence, not to the passage."
+        },
+        {
+          "id": "bl-05",
+          "family": "attribution",
+          "surface": "stance",
+          "text": "Alice says Bob claims a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.662, "attributionDetected": false },
+          "humanlyCorrect": { "stance": "Context only" },
+          "limitDocumented": true,
+          "note": "A two-level attribution chain with no speaker endorsement at either level. REPORTED_SPEECH_CUES recognises pronoun and listed-source subjects, not arbitrary named speakers, and adding a name pattern would make every capitalised subject an attribution."
+        },
+        {
+          "id": "bl-06",
+          "family": "qualification",
+          "surface": "stance",
+          "text": "A large inbox is a large pool of relationship candidates, but the dashboard is too simplistic.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Challenges" },
+          "observedAtFreeze": { "mapped": true, "stance": "Challenges", "score": 0.784, "followUp": "qualification", "followUpCue": "too simplistic" },
+          "humanlyCorrect": { "stance": "Contradicts" },
+          "limitDocumented": true,
+          "note": "The equivalence is asserted flatly; what is called simplistic is the dashboard. QUALIFICATION_CUES is not subject-linked, and linking it requires knowing what the following clause is ABOUT — the same information bl-01 needs, from the other direction."
+        },
+        {
+          "id": "bl-07",
+          "family": "subordination",
+          "surface": "stance",
+          "text": "Although that equivalence is overstated, a large inbox is a large pool of relationship candidates.",
+          "canonId": "frameworks:option-pool",
+          "expected": { "mapped": true, "stance": "Contradicts" },
+          "observedAtFreeze": { "mapped": true, "stance": "Contradicts", "score": 0.765, "assertionClause": 1, "followUp": "none" },
+          "humanlyCorrect": { "stance": "Challenges" },
+          "limitDocumented": true,
+          "note": "An explicit PRE-posed concession. Follow-up cues are matched only after the assertion, because endorsement and rejection are anaphoric — `that is false` points backwards. Named as an open limitation in v2.5.0 §7.5 before Sol found it independently, which is the useful confirmation: the release predicted its own failure and the review reproduced it."
+        },
+        {
+          "id": "bl-08",
+          "family": "coordination",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "text": "We discussed marriage and the AWS provider failed again.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "humanlyCorrect": { "credibleMatch": false },
+          "limitDocumented": true,
+          "note": "Two coordinated predicates with different subjects and no punctuation between them. bl-15 is the same sentence with a comma before `and`, and it correctly finds nothing — which is Sol's point exactly: this is a punctuation cliff, not semantic discrimination."
+        },
+        {
+          "id": "bl-09",
+          "family": "coordination",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "text": "During our marriage the AWS provider recommended by my wife handled payroll.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "promotedBy": "relational role term “marriage” within 8 tokens, same clause" },
+          "humanlyCorrect": { "credibleMatch": false },
+          "limitDocumented": true,
+          "note": "AWS and payroll establish the technical sense unmistakably, and the relational words are incidental context in a reduced relative clause. `AWS` is not on the denylist and should not be — v2.5.0 §1.2 is right that enumerating vendors is not a rule — and it sits BEFORE the alias, so the v2.6.0 post-nominal fix does not reach it either."
+        },
+        {
+          "id": "bl-10",
+          "family": "coordination",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "text": "During our marriage the provider my husband uses handles payroll.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54 },
+          "humanlyCorrect": { "credibleMatch": false },
+          "limitDocumented": true,
+          "note": "A reduced relative with no complementizer at all — `my husband uses` identifies a technical provider, and the husband is its USER rather than evidence that the word denotes his relational role. The v2.6.0 complement rule requires `for` or `of` immediately after the alias, and there is none, which is the price of keeping that rule narrow enough for cm-04."
+        },
+        {
+          "id": "bl-11",
+          "family": "window",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "Throughout their marriage he endured layoffs and setbacks before becoming the provider.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "no-local-evidence", "distanceTokens": 9 },
+          "humanlyCorrect": { "credibleMatch": true },
+          "limitDocumented": true,
+          "note": "The window's hard edge, stated as a number: `marriage` is nine tokens away. bl-11b is the SAME SENTENCE with the article removed, putting it at eight, and it promotes at 0.540. A token radius has to have an edge somewhere and this is where it is; what the pair freezes is that the edge is arithmetic, not meaning."
+        },
+        {
+          "id": "bl-11b",
+          "family": "window",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "Throughout their marriage he endured layoffs and setbacks before becoming provider.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": true },
+          "observedAtFreeze": { "credibleMatch": true, "score": 0.54, "distanceTokens": 8 },
+          "humanlyCorrect": { "credibleMatch": true },
+          "note": "GUARD, and the other half of bl-11. One word of difference, no difference in meaning, opposite verdicts."
+        },
+        {
+          "id": "bl-12",
+          "family": "window",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "He was the provider; his wife relied on his income throughout their marriage.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "no-local-evidence" },
+          "humanlyCorrect": { "credibleMatch": true },
+          "limitDocumented": true,
+          "note": "The second clause resolves exactly what `provider` means, and clause-clipping is what stops it counting. This is the cost side of the v2.5.0 cf-05/cf-06 pair, which is the benefit side: the same rule that stops a billing vendor borrowing a relational clause stops a relational clause vouching for a genuine one."
+        },
+        {
+          "id": "bl-13",
+          "family": "appositive",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "She wanted a provider, namely her husband, to support their household.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "no-local-evidence" },
+          "humanlyCorrect": { "credibleMatch": true },
+          "limitDocumented": true,
+          "note": "A comma-delimited appositive naming the provider as her husband — about as direct as this evidence gets — and the comma that makes it an appositive is the comma that puts it in another clause."
+        },
+        {
+          "id": "bl-14",
+          "family": "appositive",
+          "surface": "co-fire",
+          "polarity": "positive",
+          "alias": "provider",
+          "text": "She wanted a provider, who would support her future children.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "no-local-evidence", "gate": "uncertain" },
+          "humanlyCorrect": { "credibleMatch": true },
+          "limitDocumented": true,
+          "note": "A non-restrictive relative clause, clipped for the same reason as bl-13. An appositive and a relative modify the noun they follow; the splitter treats the comma before them as a boundary because that is what a comma usually is."
+        },
+        {
+          "id": "bl-15",
+          "family": "coordination",
+          "surface": "co-fire",
+          "polarity": "negative",
+          "alias": "provider",
+          "text": "We discussed marriage, and the AWS provider failed again.",
+          "canonId": "smv:money:provisioning-signal",
+          "expected": { "credibleMatch": false },
+          "observedAtFreeze": { "credibleMatch": false, "score": 0.156, "disqualifiedBy": "no-local-evidence" },
+          "humanlyCorrect": { "credibleMatch": false },
+          "note": "GUARD, and the measurement that turns bl-08 from an opinion into a finding. One comma separates a right answer from a wrong one on identical content."
+        }
+      ]
     }
   }
 }

@@ -3484,6 +3484,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
       'Alignment reads negation parity, quotation, attribution, endorsement, rejection, and qualification within the clause that carries the claim. It cannot detect irony, so a passage that mocks a reading by stating it is recorded as stating it; labels should also be reviewed when a claim is highly implicit or depends on context outside the passage.',
+      'Clause boundaries are approximated from punctuation, not parsed. Stance scoping and contextual-alias evidence both depend on that approximation, so coordination without a comma, negation inside a subordinate clause, appositive and relative clauses, and chains of attribution can each attach a word to the wrong claim.',
       'External sources listed by LE are carried through as citations; this analysis does not re-fetch or re-verify them.',
       'No source text or media was uploaded by this analyzer.',
     ],

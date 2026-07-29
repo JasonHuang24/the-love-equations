@@ -223,6 +223,36 @@ is right** and this file is stale.
 not a wrong `sparseSharePenalty`; that identification is made during adjudication, from the trace, by
 someone reading `components` and `penalties` on the candidate that should have won.
 
+### When adjudication lands on a documented limit
+
+**New at v2.6.0.** Some flags are correct and still have nowhere to go. The `documentedLimits` block
+of `tests/fixtures/match-behavior-benchmark.json` holds fifteen cases where the reviewer would be
+right and the analyzer is doing the only thing a punctuation-approximated clause model can do:
+coordination without a comma, negation inside a subordinate clause, appositive and relative clauses,
+attribution chains, quotation ownership, and the hard edge of a token window. Each freezes current
+behavior with the humanly correct answer recorded beside it.
+
+A flag whose adjudication lands on one of these does **not** become a fixture. There is nothing to
+assert that the limit block does not already assert, and a red case nobody intends to fix is a case
+that trains people to ignore red. It goes instead to `md/limit-hit-ledger.md`: one line per hit, with
+the flag ID, the limit family, and the passage.
+
+That file is the evidence, and it is deliberately the only evidence that will ever be accepted for
+the decision it feeds. The honest fix for most of these is a real parser, which is a decision about
+what this instrument *is* — deterministic, local, inspectable — and not a patch anyone should make
+because a cue list looked one word short. When the ledger shows a family being hit repeatedly on real
+sources rather than on invented sentences, that is the argument. Until then it is a hypothesis, and
+the ledger's emptiness is a finding too.
+
+Route it this way:
+
+1. Adjudicate normally, and satisfy yourself the reviewer is right.
+2. Check `documentedLimits` for the family. If the passage is a new *shape* rather than a new
+   instance, it belongs in the block as a new case — a limit nobody has written down is not
+   documented.
+3. Otherwise append a ledger line and move the flag to `adjudicated/`. Say in the flag's disposition
+   note which case it matched, so the ledger and the block cannot drift.
+
 ---
 
 ## 5. Promote

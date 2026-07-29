@@ -588,6 +588,7 @@
           <p><strong>Coverage is document coverage.</strong> A high mapped share means more detected claim-like segments found credible indexed connections, not that the source represents a population.</p>
           <p><strong>Unmapped is useful.</strong> It may be noise, a source error, an LE limitation, or a research lead. The queue keeps those possibilities separate.</p>
           <p><strong>Irony is read straight.</strong> Alignment reads negation, quotation, attribution, and qualification from the sentence itself. It has no way to detect sarcasm, so a passage that mocks an idea by stating it is recorded as stating it. Where a stance label looks backwards, check the tone first.</p>
+          <p><strong>Clauses are guessed from punctuation.</strong> Deciding who is claiming what, and which words a borrowed term is standing next to, both need to know where one clause ends and the next begins. That boundary is approximated from commas, semicolons and dashes rather than parsed, so coordination without a comma, a negator inside a subordinate clause, an appositive, and a chain of attributions can all put a word in the wrong place. Flagged cases route to the feedback pipeline, where they accumulate as the argument for a real parser.</p>
         </div>
       </section>
     </div>

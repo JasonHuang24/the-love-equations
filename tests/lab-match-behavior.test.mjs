@@ -95,7 +95,7 @@ test('match-behavior fixture is structurally sound', () => {
   assert.equal(benchmark.schema, 'le-lab.match-behavior/1.0');
   const ids = new Set();
   const blocks = Object.entries(benchmark.blocks);
-  assert.equal(blocks.length, 6, 'The fixture holds the six adjudicated blocks.');
+  assert.equal(blocks.length, 7, 'The fixture holds the seven adjudicated blocks.');
   blocks.forEach(([name, block]) => {
     assert.ok(block.question && block.ruling, `${name} states its question and its ruling.`);
     assert.ok(Array.isArray(block.cases) && block.cases.length, `${name} holds cases.`);
@@ -409,4 +409,65 @@ test('the irony limit is stated as a limit and not quietly counted as a pass', (
     'A documented limit asserts current behavior; expected and observedAtFreeze must agree.');
   assert.match(limit.note, /LIMIT/,
     'The limit case says so in its own note, not only in the block ruling.');
+});
+
+/**
+ * The irony rule, generalised. It was written for one case and is now the
+ * contract for every limit in the file, in whichever block it lives.
+ */
+test('a documented limit asserts current behavior, and says what it costs', () => {
+  const limits = Object.entries(benchmark.blocks).flatMap(([block, body]) => (body.cases || [])
+    .filter((entry) => entry.limitDocumented)
+    .map((entry) => ({ block, entry })));
+  assert.ok(limits.length >= 15, `Expected the documented-limit population, found ${limits.length}.`);
+
+  limits.forEach(({ block, entry }) => {
+    // Every claim `expected` makes has to be echoed by `observedAtFreeze`.
+    // observedAtFreeze carries more — scores, clause counts, trace fields — and
+    // is not required to carry less.
+    Object.keys(entry.expected).forEach((key) => {
+      assert.equal(entry.expected[key], entry.observedAtFreeze[key],
+        `[${block}/${entry.id}] expected.${key} and observedAtFreeze.${key} disagree. The case has `
+        + 'stopped being a limit and become a defect; re-adjudicate it rather than leave it here '
+        + 'asserting something nobody decided.');
+    });
+    // The cost has to be written down. A limit whose humanly correct answer is
+    // unrecorded is indistinguishable from behavior somebody meant.
+    if (block === 'documentedLimits') {
+      assert.ok(entry.humanlyCorrect,
+        `[${block}/${entry.id}] records no humanly correct answer, so nothing says what the limit costs.`);
+      assert.ok(entry.family, `[${block}/${entry.id}] does not name the syntax that defeats the model.`);
+      const [key] = Object.keys(entry.humanlyCorrect);
+      assert.notEqual(entry.humanlyCorrect[key], entry.expected[key],
+        `[${block}/${entry.id}] agrees with the analyzer, so it is a guard and not a limit — drop `
+        + 'limitDocumented from it.');
+    }
+  });
+});
+
+test('the documented limits are what the analyzer actually does today', async () => {
+  const failures = [];
+  for (const entry of benchmark.blocks.documentedLimits.cases) {
+    const { matches, gatedOut } = await analyzeCase(entry.text);
+    if (entry.surface === 'co-fire') {
+      const credible = matches.some((row) => row.canonId === entry.canonId);
+      if (credible !== entry.expected.credibleMatch) {
+        failures.push(
+          `  [${entry.id}] ${entry.family}: freeze says credibleMatch=${entry.expected.credibleMatch}, `
+          + `analyzer says ${credible}${gatedOut ? ' (gated out)' : ''} — ${entry.text}`,
+        );
+      }
+      continue;
+    }
+    const stance = matches.find((row) => row.canonId === entry.canonId)?.alignment?.label;
+    if (stance !== entry.expected.stance) {
+      failures.push(
+        `  [${entry.id}] ${entry.family}: freeze says ${entry.expected.stance}, analyzer says ${stance} `
+        + `— ${entry.text}`,
+      );
+    }
+  }
+  assert.equal(failures.length, 0,
+    `${failures.length} documented limit(s) no longer describe the analyzer. A limit that has moved `
+    + `is a limit nobody is documenting:\n${failures.join('\n')}`);
 });
