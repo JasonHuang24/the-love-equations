@@ -9,6 +9,8 @@ import {
   ANALYZER_VERSION,
   DIAGNOSTICS_SCHEMA_VERSION,
   PUBLIC_MATCH_FIELDS,
+  PUBLIC_SEGMENT_FIELDS,
+  PUBLIC_UNIT_FIELDS,
   SCORING_CONFIG,
   SCORING_CONFIG_HASH,
   analyzeDocument,
@@ -772,7 +774,10 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
     text: 'The sky is blue. Water freezes at zero degrees Celsius.',
   }), REAL_CANON);
   assert.equal(noDomain.metrics.claimLikeSegments, 0);
-  assert.equal(noDomain.schemaVersion, 'le-lab.analysis/2.4');
+  // The constant, not a literal: this asserts that the analysis stamps its own
+  // schema version, which is true at every release. A literal here made a
+  // routine version bump look like a coverage regression.
+  assert.equal(noDomain.schemaVersion, ANALYSIS_SCHEMA_VERSION);
   assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.1');
   assert.equal(noDomain.coverage.mappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.unmappedClaimSegmentSharePct, null);
@@ -1203,6 +1208,75 @@ test('a working field with an ordinary name is stripped too', async () => {
     scratchpad: [1, 2, 3],
   });
   assert.deepEqual(Object.keys(shaped), ['canonId', 'title', 'score']);
+});
+
+test('the allowlist reaches the segment and the unit, not only the match', async () => {
+  // v2.4.2 named what a MATCH publishes. Above it, `safeSegments` spread the
+  // whole segment and set `candidates` to undefined — which leaves the key
+  // present, ships whatever else retrieval hung on the segment, and publishes
+  // the unit whole. Both depths are named now.
+  const result = await analyzeDocument(createDemoDocument(), REAL_CANON, {});
+  const segment = result.segments[0];
+  assert.ok(segment, 'the demo produces at least one segment');
+
+  assert.deepEqual(Object.keys(segment).sort(), [...PUBLIC_SEGMENT_FIELDS].sort(),
+    'A segment publishes exactly the allowlisted fields, and `candidates` is not among them as a key at all.');
+  assert.equal('candidates' in segment, false,
+    'The working candidate set is absent, not present-and-undefined.');
+
+  const unitKeys = Object.keys(segment.unit);
+  unitKeys.forEach((key) => {
+    assert.ok(PUBLIC_UNIT_FIELDS.includes(key), `Unit field "${key}" is published without being allowlisted.`);
+  });
+  // The fields a consumer actually depends on are still there.
+  ['id', 'text', 'wordCount', 'claimLikelihood', 'isClaimLike', 'domainRelevance']
+    .forEach((field) => assert.ok(unitKeys.includes(field), `Unit no longer publishes ${field}.`));
+});
+
+test('an ordinary-named working field on a unit or segment is stripped too', async () => {
+  // The same failure the match allowlist exists for, one level up: a field that
+  // does not start with an underscore is invisible to the backstop.
+  const { publicSegment } = analyzerInternals;
+  const shaped = publicSegment({
+    unit: { id: 'u1', text: 'x', scratchUnitState: 'never meant to ship' },
+    mapped: false,
+    matches: [],
+    weakMatches: [],
+    ambiguity: null,
+    candidates: [{ huge: true }],
+    retrievalBookkeeping: 'never meant to ship',
+  });
+  assert.equal('retrievalBookkeeping' in shaped, false);
+  assert.equal('candidates' in shaped, false);
+  assert.equal('scratchUnitState' in shaped.unit, false);
+  assert.deepEqual(Object.keys(shaped.unit), ['id', 'text']);
+});
+
+test('the trace names the same canon and the same input as its analysis', async () => {
+  // v2.4.2 §7.4: canonSnapshotHash and inputDigest were provenance nobody could
+  // check, because the analysis published nothing to check them against. It does
+  // now, so a trace produced from a substituted canon or a different document is
+  // detectable rather than merely comparable by eye.
+  const result = await analyzeDocument(createDemoDocument(), REAL_CANON, { diagnostics: true });
+  assert.ok(result.provenance.identity, 'the analysis publishes its identity');
+  assert.match(result.provenance.identity.canonSnapshotHash, /^[a-z0-9]+$/);
+  assert.match(result.provenance.identity.inputDigest, /^[a-z0-9]+$/);
+  assert.equal(result.diagnostics.canonSnapshotHash, result.provenance.identity.canonSnapshotHash);
+  assert.equal(result.diagnostics.inputDigest, result.provenance.identity.inputDigest);
+  assert.equal(result.diagnostics.analysisId, result.id);
+
+  // The digest is a function of the input, so a different document moves it
+  // while the canon snapshot stays put.
+  const other = await analyzeDocument(
+    normalizeInput({
+      text: 'Message concentration proves the same minority monopolizes relationships.',
+      source: { title: 'identity fixture' },
+      createdAt: '2026-07-26T12:00:00.000Z',
+    }),
+    REAL_CANON, { diagnostics: true },
+  );
+  assert.notEqual(other.provenance.identity.inputDigest, result.provenance.identity.inputDigest);
+  assert.equal(other.provenance.identity.canonSnapshotHash, result.provenance.identity.canonSnapshotHash);
 });
 
 test('no analyzer working field escapes into an export', async () => {

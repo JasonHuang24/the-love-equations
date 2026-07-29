@@ -7,7 +7,7 @@
  * Contract:
  *   NormalizedDocument (le-lab.normalized-document/1.0)
  *     -> analyzeDocument(document, canonIndex, { domainOverrides })
- *     -> AnalysisResult (le-lab.analysis/2.3)
+ *     -> AnalysisResult (le-lab.analysis/2.5)
  *
  * The browser runs this module in a worker when available. Node fixture tests
  * import the same functions; there is no second test-only implementation.
@@ -26,7 +26,7 @@
 // aliases can be typed. Matches carry a new alignment.evidence trace and the
 // analysis may carry an opt-in diagnostics block. v2.2.0 was provenance-only
 // and deliberately did not move this number; 2.3 and 2.4 both did.
-export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.4';
+export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.5';
 // Bumped to 2.1 because the queue object itself now carries a provenance
 // block, so a queue lifted out of an analysis is self-describing on its own.
 // Held at 2.1 through v2.3.0: the gate change alters how many items reach the
@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.4';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.4.0';
+export const ANALYZER_VERSION = '2.5.0';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -2290,11 +2290,46 @@ export const PUBLIC_MATCH_FIELDS = Object.freeze([
  * no-underscore test stays as a backstop for the rest of the document.
  */
 function publicShape(match) {
+  return allowlisted(match, PUBLIC_MATCH_FIELDS);
+}
+
+/**
+ * Every field a claim unit publishes, and every field its segment publishes.
+ *
+ * v2.4.2 put the match surface behind an allowlist because that is where a
+ * working field had actually leaked. The depths ABOVE it stayed a denylist by
+ * convention — `safeSegments` spread the whole segment and set `candidates` to
+ * undefined, which leaves the key present, publishes whatever else retrieval
+ * hung on the segment, and publishes the unit whole. The same argument applies
+ * one level up: a boundary that depends on remembering to delete things fails
+ * silently, and a boundary that names what goes out fails loudly.
+ */
+export const PUBLIC_UNIT_FIELDS = Object.freeze([
+  'id', 'parentSegmentId', 'segmentIndex', 'sentenceIndex', 'text',
+  'boundedContext', 'speaker', 'startTime', 'endTime', 'sourceBoundary',
+  'wordCount', 'claimLikelihood', 'isClaimLike', 'machineClaimLike',
+  'domainRelevance',
+]);
+
+export const PUBLIC_SEGMENT_FIELDS = Object.freeze([
+  'unit', 'mapped', 'matches', 'weakMatches', 'ambiguity',
+]);
+
+function allowlisted(value, fields) {
   const shaped = {};
-  for (const field of PUBLIC_MATCH_FIELDS) {
-    if (field in match) shaped[field] = match[field];
+  for (const field of fields) {
+    if (field in value) shaped[field] = value[field];
   }
   return shaped;
+}
+
+/** A segment as the outside world sees it, allowlisted at both depths. */
+function publicSegment(result) {
+  return {
+    ...allowlisted(result, PUBLIC_SEGMENT_FIELDS),
+    unit: allowlisted(result.unit, PUBLIC_UNIT_FIELDS),
+    matches: result.matches.map(publicShape),
+  };
 }
 
 function hasLocalConceptEvidence(candidate) {
@@ -2952,7 +2987,7 @@ function buildDiagnostics(segmentResults, identity, option) {
   };
 }
 
-function buildProvenance(prepared) {
+function buildProvenance(prepared, identity = null) {
   return {
     analyzer: {
       version: ANALYZER_VERSION,
@@ -2966,6 +3001,20 @@ function buildProvenance(prepared) {
       indexVersion: prepared.indexVersion,
       generatedAt: prepared.generatedAt,
     },
+    /*
+     * WHICH canon and WHICH input, not just which engine. New at
+     * le-lab.analysis/2.5, and the point of adding them here is that the
+     * diagnostic trace has published the same two values since v2.4.2 with
+     * nothing to check them against — provenance a reader could compare across
+     * files by hand, but no consumer could verify. Published on the analysis,
+     * they become checkable: a trace whose canonSnapshotHash or inputDigest
+     * disagrees with its analysis was produced from a different canon or a
+     * different document, whatever version string it carries.
+     */
+    identity: identity ? {
+      canonSnapshotHash: identity.canonSnapshotHash,
+      inputDigest: identity.inputDigest,
+    } : null,
   };
 }
 
@@ -3084,7 +3133,11 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       candidate.segmentId === item.segmentId && candidate.failureMode === item.failureMode) === index)
     .slice(0, SCORING_CONFIG.maxPressureTests);
 
-  const provenance = buildProvenance(prepared);
+  const analysisIdentity = {
+    canonSnapshotHash: canonSnapshotHash(prepared),
+    inputDigest: inputDigest(document, domainOverrides),
+  };
+  const provenance = buildProvenance(prepared, analysisIdentity);
   const researchItems = unmappedClaims.map(researchItemFor);
   const researchQueue = {
     schemaVersion: RESEARCH_QUEUE_SCHEMA_VERSION,
@@ -3103,11 +3156,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
     .map((result) => ({ segmentId: result.unit.id, message: result.ambiguity }));
   const resultId = `lea-${fnv1a(`${document.id || document.source?.title || ''}|${characters}|${prepared.indexVersion}`)}`;
 
-  const safeSegments = segmentResults.map((result) => ({
-    ...result,
-    candidates: undefined,
-    matches: result.matches.map(publicShape),
-  }));
+  const safeSegments = segmentResults.map(publicSegment);
 
   const result = {
     schemaVersion: ANALYSIS_SCHEMA_VERSION,
@@ -3202,7 +3251,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       'The relevance gate is lexical triage and can misclassify unseen phrasings in either direction; every ignored passage is listed with its decision evidence and any passage can be re-triaged with a per-passage visitor override.',
       'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
-      'Alignment labels are cue-based and should be reviewed when language is ironic, quoted, highly implicit, or dependent on distant context.',
+      'Alignment reads negation parity, quotation, attribution, endorsement, rejection, and qualification within the clause that carries the claim. It cannot detect irony, so a passage that mocks a reading by stating it is recorded as stating it; labels should also be reviewed when a claim is highly implicit or depends on context outside the passage.',
       'External sources listed by LE are carried through as citations; this analysis does not re-fetch or re-verify them.',
       'No source text or media was uploaded by this analyzer.',
     ],
@@ -3212,8 +3261,10 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   if (options.diagnostics) {
     result.diagnostics = buildDiagnostics(segmentResults, {
       analysisId: resultId,
-      canonSnapshotHash: canonSnapshotHash(prepared),
-      inputDigest: inputDigest(document, domainOverrides),
+      // The same two values the analysis publishes under provenance.identity,
+      // computed once above so the trace cannot disagree with its own analysis
+      // by construction.
+      ...analysisIdentity,
     }, options.diagnostics);
   }
 
@@ -3223,6 +3274,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
 
 export const analyzerInternals = Object.freeze({
   normalizeText,
+  publicSegment,
   wordCount,
   claimLikelihood,
   localDomainRelevance,
