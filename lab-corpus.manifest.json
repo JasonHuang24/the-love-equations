@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "le-lab.corpus-manifest/1.0",
+  "updatedAt": "2026-07-29T08:40:34.642Z",
+  "archive": {
+    "root": "lab-corpus/",
+    "published": false,
+    "rationale": "Third-party copyrighted texts. The archive lives in the working tree but is gitignored; this manifest is committed so presence, identity, and integrity are verifiable without publishing the content. Per md/RERUN.md section 1, the SHA-256 is what makes a future run verifiable, not the location.",
+    "layout": {
+      "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar",
+      "exports": "lab-corpus/exports/<NN>-<slug>-<analyzer-version>.json"
+    },
+    "state": "scaffolded-empty"
+  },
+  "epoch": {
+    "analyzerVersion": "2.2.0",
+    "analysisSchemaVersion": "le-lab.analysis/2.2",
+    "researchQueueSchemaVersion": "le-lab.research-queue/2.1",
+    "scoringConfigHash": "195c1ld",
+    "canonIndexVersion": "1.0.0+62c5cb511433",
+    "canonGeneratedAt": "2026-07-29T08:40:34.642Z",
+    "note": "Read from fixtures/demo-v2.2.0-canon-62c5cb511433.json provenance, not from memory. This is the post-alias-pass canon, not the 1.0.0+8c38a2f1d015 the run-01 corpus was analyzed against."
+  },
+  "acquisition": {
+    "status": "pending-go",
+    "worksheet": "md/lab-corpus-acquisition-01.md",
+    "note": "No source has been fetched. Nothing in this manifest is acquired until Jason gives GO on the worksheet."
+  },
+  "sources": [
+    {
+      "id": "01-pew-online-dating",
+      "title": "Key findings about online dating in the U.S.",
+      "author": "Pew Research Center",
+      "publication": "Pew Research Center (Short Reads)",
+      "year": 2023,
+      "url": "https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/",
+      "urlProvenance": "inferred",
+      "sourceFile": null,
+      "sourceSha256": null,
+      "capturedBy": null,
+      "current": null,
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": {
+        "run": "Harvest #1, 2026-07-26",
+        "analyzerVersion": "1.7",
+        "canonIndexVersion": "1.0.0+6dc9bff7b0fe",
+        "recordedIn": "md/doctrine-backlog-harvest-01.md",
+        "claimLike": 34,
+        "mapped": 17,
+        "coveragePct": 50,
+        "queue": 17,
+        "pressureTests": 4
+      },
+      "result": { "claimLike": null, "mapped": null, "coveragePct": null },
+      "delta": null,
+      "acquisition": {
+        "reacquirable": "yes",
+        "confidence": "high",
+        "overrides": "lab-corpus/sources/01-pew.overrides.json — Harvest #1 used 4 visitor includes; unit IDs are content-derived and will not survive re-acquisition. Re-derive from the new run.",
+        "notes": "Only source whose URL survives anywhere in the repo, recovered by exact title+date match from md/mythbuster-grading-review.md:394 — recorded as inferred, not as capture-time provenance. Dated short-read with a fixed slug; Pew does not silently rewrite these. Re-run moves TWO variables (analyzer 1.7 to 2.2.0 AND canon 6dc9bff7b0fe to 62c5cb511433), so its delta is not attributable to either alone."
+      }
+    },
+    {
+      "id": "02-fem-centrism",
+      "title": "Fem-Centrism",
+      "author": "Rollo Tomassi",
+      "publication": "The Rational Male",
+      "year": 2011,
+      "url": null,
+      "urlProvenance": "none-survives",
+      "sourceFile": null,
+      "sourceSha256": null,
+      "capturedBy": null,
+      "current": null,
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": {
+        "run": "Distillation run 01, 2026-07-27",
+        "analyzerVersion": "2.1.2",
+        "canonIndexVersion": "1.0.0+8c38a2f1d015",
+        "recordedIn": "md/doctrine-distillation-claude-01.md",
+        "words": 1214,
+        "claimLike": 10,
+        "mapped": 0,
+        "coveragePct": 0,
+        "queue": 10
+      },
+      "result": { "claimLike": null, "mapped": null, "coveragePct": null },
+      "delta": null,
+      "acquisition": {
+        "reacquirable": "likely",
+        "confidence": "medium",
+        "notes": "Self-hosted WordPress blog post, live since 2011 and widely mirrored. Availability is not the risk; drift is — a self-hosted post can be silently edited and there is no archival dated slug to pin against. Prefer a Wayback capture dated on or before 2026-07-27 so the text is at least pinned to a date near the original run. 73% of this source's words were set aside as non-domain in run 01, so the re-run population is small and sensitive to any text drift."
+      }
+    },
+    {
+      "id": "03-four-horsemen",
+      "title": "The Four Horsemen",
+      "author": "The Gottman Institute",
+      "publication": "The Gottman Institute",
+      "year": null,
+      "url": null,
+      "urlProvenance": "none-survives",
+      "sourceFile": null,
+      "sourceSha256": null,
+      "capturedBy": null,
+      "current": null,
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": {
+        "run": "Distillation run 01, 2026-07-27",
+        "analyzerVersion": "2.1.2",
+        "canonIndexVersion": "1.0.0+8c38a2f1d015",
+        "recordedIn": "md/doctrine-distillation-claude-01.md",
+        "words": 885,
+        "claimLike": 17,
+        "mapped": 0,
+        "coveragePct": 0,
+        "queue": 17
+      },
+      "result": { "claimLike": null, "mapped": null, "coveragePct": null },
+      "delta": null,
+      "acquisition": {
+        "reacquirable": "uncertain",
+        "confidence": "low",
+        "notes": "Highest drift risk of the four and the weakest surviving provenance: no year, no URL, and 'The Four Horsemen' names a commercial content-marketing article that Gottman has published in several revised versions across more than one URL. Identifying WHICH page was analyzed is guesswork. This is the run that produced the dossier's single most diagnostic result (885 words, 17 claim-like, 0 mapped), so a re-run against a different revision would silently replace that evidence rather than reproduce it. Recommend re-run only against a Wayback capture dated on or before 2026-07-27; if no such capture can be identified with confidence, keep the v2.1.2 artifact and flag it within-version-only."
+      }
+    },
+    {
+      "id": "04-heteropessimism",
+      "title": "On Heteropessimism",
+      "author": "Asa Seresin",
+      "publication": "The New Inquiry",
+      "year": 2019,
+      "url": null,
+      "urlProvenance": "none-survives",
+      "sourceFile": null,
+      "sourceSha256": null,
+      "capturedBy": null,
+      "current": null,
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": {
+        "run": "Distillation run 01, 2026-07-27",
+        "analyzerVersion": "2.1.2",
+        "canonIndexVersion": "1.0.0+8c38a2f1d015",
+        "recordedIn": "md/doctrine-distillation-claude-01.md",
+        "words": 2938,
+        "claimLike": 28,
+        "mapped": 1,
+        "coveragePct": 3.6,
+        "queue": 27
+      },
+      "result": { "claimLike": null, "mapped": null, "coveragePct": null },
+      "delta": null,
+      "acquisition": {
+        "reacquirable": "yes",
+        "confidence": "high",
+        "notes": "Dated magazine essay in a stable archive; a published 2019 essay is not silently revised the way a blog post or a marketing page is. Carried the only credible canon match in the whole run-01 corpus (1 of 55 claim-like segments, to 'The Market', Medium confidence), which makes it the most informative single re-run: it is the only source where a coverage change could show up as anything other than 0 to non-zero."
+      }
+    }
+  ]
+}

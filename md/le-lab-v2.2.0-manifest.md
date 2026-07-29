@@ -21,12 +21,22 @@ provenance) · this manifest.
 the `ALIAS_ADDITIONS` block, which arrived as an unfilled placeholder. The canon index is therefore
 untouched at `1.0.0+8c38a2f1d015`, and verification check 2 (alias-effect) has not been run.
 
+> **CLOSED 2026-07-29 by canon alias pass 01** — `e1f9752` (verdict fix) · `ff78a8d` (38 ratified
+> additions) · `1265de6` (report + baseline), plus this commit (corpus scaffolding). The ratified `ALIAS_ADDITIONS`
+> block arrived and was applied; canon moved `1.0.0+8c38a2f1d015` → `1.0.0+62c5cb511433`. Check 2 is
+> run and recorded below. Full report: `md/lab-canon-alias-pass-01.md`. The analyzer is unchanged at
+> `2.2.0`, so this release's epoch stands except for the canon index version — a later canon does not
+> retroactively alter what v2.2.0 shipped.
+
 ---
 
 ## SHA-256 — changed files
 
-Hashes are over committed blob content. This repo pins `* text=auto eol=lf` in `.gitattributes` and
-the working tree is LF, so these verify identically on any platform:
+Hashes are over committed blob content **as shipped at v2.2.0** (`3a046ca`). They are a record of
+that release, not of the current tree: canon alias pass 01 has since changed
+`tests/lab-analyzer.test.mjs` and `md/RERUN.md`. Verify these against the release commit, not `HEAD`.
+This repo pins `* text=auto eol=lf` in `.gitattributes` and the working tree is LF, so they verify
+identically on any platform:
 
 ```bash
 sha256sum <path>                  # working tree
@@ -52,8 +62,10 @@ git show HEAD:<path> | sha256sum  # committed blob
 | `c849838f108ad287194e248aca749b252c63f22a0eff04c27b5f0bab33930f91` | `tools/lab_ui_audit.py` |
 | `975ff33ced0a83a3f43083d27fd08acc7bac78906be2ff25358b116493a2e1a4` | `md/RERUN.md` |
 
-Unchanged and deliberately so: `data/le-canon-index.json`, `data/canon-overlay.json`,
-`scripts/build-canon-index.mjs`, `js/lab-intake.js`, `js/lab-ledger.js`.
+Unchanged and deliberately so **at v2.2.0**: `data/le-canon-index.json`, `data/canon-overlay.json`,
+`scripts/build-canon-index.mjs`, `js/lab-intake.js`, `js/lab-ledger.js`. The first three were
+deliberately untouched because work item 2 was blocked; canon alias pass 01 has since changed all
+three. `js/lab-intake.js` and `js/lab-ledger.js` remain untouched.
 
 ---
 
@@ -69,7 +81,26 @@ node fixtures/diff-analysis.mjs fixtures/demo-v2.1.2.json fixtures/demo-v2.2.0.j
 decreased, 0 increased, 0 dropped, 0 gained. No change to segments, matches, scores, confidences,
 stances, tensions, metrics, or queue content.
 
-**Check 2 — alias effect.** Not run. Blocked with work item 2.
+**Check 2 — alias effect.** Run 2026-07-29 in canon alias pass 01.
+
+```bash
+node fixtures/diff-analysis.mjs fixtures/demo-v2.2.0.json fixtures/demo-v2.2.0-canon-62c5cb511433.json --mode alias
+```
+
+`RESULT: PASS` — 0 decreased, 4 increased, 0 dropped, 0 gained. The isolating diff (verdict-fix-only
+→ final, which separates the 38 additions from the verdict fix) also passes at 0 decreased / 0
+dropped.
+
+The load-bearing evidence is the index-wide match-surface diff rather than this single-document one:
+65 strings left the match surface, **all 65 exactly equal to that entry's new `verdict` field, 0 not
+attributable to the verdict fix**, and 38 were added — the ratified set verbatim. That result holds
+for any source, which a one-document diff cannot establish. Regeneration is deterministic: two pinned
+builds are byte-identical and the committed artifact equals its own rebuild.
+
+New reference baseline for the threshold calibration pass:
+`fixtures/demo-v2.2.0-canon-62c5cb511433.json`
+(`db88deadd3d6210df4bdd3a1073ae42074a0bef93fe8cb0ac21b1006f90ff85a`).
+`fixtures/demo-v2.2.0.json` is retained unchanged as the pre-pass reference.
 
 **Test suite.** `npm run test:lab` green: 28 intake · 37 analyzer · 3 domain-benchmark · 8 export · 5
 ledger · canon fixtures (450 concepts / 19 sources) · canon validator · release audit (v=2.2.0) · UI

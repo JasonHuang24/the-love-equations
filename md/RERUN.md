@@ -77,6 +77,15 @@ the archive outside it and record the absolute path plus the SHA-256 in the mani
 hash is what makes a future run verifiable, not the location. Do not silently commit long verbatim
 third-party copy without deciding that first.
 
+> **DECIDED 2026-07-29 — the corpus is not published.** `lab-corpus/` lives in the working tree and
+> is gitignored; `lab-corpus.manifest.json` is committed at the repo root and carries identity,
+> provenance, and the SHA-256 per source, so presence and integrity are verifiable without
+> publishing the text. In-tree-but-ignored was chosen over a sibling directory so the relative paths
+> in the manifest resolve for anyone who holds the files. This supersedes the §5 location
+> `lab-corpus/manifest.json`; the schema (`le-lab.corpus-manifest/1.0`) is unchanged apart from an
+> added `archive` block recording the arrangement. The acquisition worksheet is
+> `md/lab-corpus-acquisition-01.md`; the archive is scaffolded and empty pending Jason's GO.
+
 ---
 
 ## 2. Confirm the instrument before re-running

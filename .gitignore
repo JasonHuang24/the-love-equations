@@ -24,3 +24,7 @@ images/calibration/
 
 # Face Calc calibration set (SCUT-FBP5500 research dataset; local tooling, not site content)
 images/calibration-scut/
+
+# LE Lab source corpus (third-party texts; deliberately NOT published)
+# Presence and integrity are verifiable via the committed lab-corpus.manifest.json
+lab-corpus/
