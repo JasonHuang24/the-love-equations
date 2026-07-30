@@ -134,7 +134,11 @@ provisioning sense. `bl-17` and `bl-18` freeze that as a documented limit under 
 **Test 3 is reachable and can decide a case alone.** It decides whenever two stems line up and no
 earlier test fires, which for the canon's two multiword entries requires suffixing *both* words:
 
-| Complement tokens | Test 1 literal | Test 2 substring | Test 3 stem run | Decided by |
+**Every column below is computed by a replica of `carries`, not read from production** — see
+§2.2 for what is anchored and what is only modelled. The `Decided by` column is the most model-dependent
+of them, because no published field names the branch that selected a modifier.
+
+| Complement tokens | Test 1 literal | Test 2 substring | Test 3 stem run | Decided by (modelled) |
 |---|---|---|---|---|
 | `health caregivers` | — | `health care` | — | test 2 |
 | `health care` | `care` | `health care` | `health care`, `care` | test 1 |
@@ -149,9 +153,10 @@ none exists.
 
 ### 2.2 What the table is, and what it is not
 
-The table above is frozen in `tests/lab-match-behavior.test.mjs`: all three columns asserted, and the
-decisive set asserted by *identity* rather than by count, because any three rows satisfy a count while
-only these three carry the double-suffix shape.
+The table above is frozen in `tests/lab-match-behavior.test.mjs`: all three branch columns asserted
+against the replica, and the decisive set asserted by *identity* rather than by count, because any three
+rows satisfy a count while only these three carry the double-suffix shape. Frozen against the replica is
+not the same as frozen against production, which is the whole of this subsection.
 
 `carries` is **not exported**, so per-branch attribution is computed by a **replica derived from the
 analyzer's source**. Two independent anchors tie it to production, per row:
@@ -164,8 +169,11 @@ analyzer's source**. Two independent anchors tie it to production, per row:
 **What no current anchor proves is which of the three tests selected that modifier.** The trace publishes
 one modifier and not the branch that found it, so production could change the branch while preserving the
 modifier, the score, the fate and the admission result, and the replica's per-branch columns would go
-false while every anchor stayed green. **So §2.1's per-branch split is a source-derived model, not a
-production freeze** — and calling it a freeze was itself one of the four errors Appendix A records.
+false while every anchor stayed green. **So §2.1's per-branch columns and its `Decided by`
+column are a source-derived model, not a production freeze** — and calling them a freeze was itself one
+of the four errors Appendix A records. What IS frozen against production is narrower and worth stating
+positively: for all six sequences the denylist is what refused the alias, and production named the same
+modifier the replica did.
 
 Closing it means publishing the branch: `{modifier, matchedBy}` from `carries`, or a `matchedBy` field on
 `contextualAliasTrace`. Both are analyzer changes and belong to **v2.6.2**; §7.2 carries them.
