@@ -1,9 +1,11 @@
 # LE Lab v2.6.1 record-fidelity pass — Sol verification handover brief
 
 **Status:** written 2026-07-29 for Jason to paste to Sol (GPT-5.6) after the three record-fidelity
-commits were pushed. Head commit at time of writing is `845f56a`; if the head moves before pasting,
-update the SHA line inside the block. Maintainer lane for this work: **Claude Opus 5, /effort high**,
-single fresh session, three commits, all pushed to `main`.
+commits were pushed. The review target is the range `c40cd7f..845f56a` — three commits, all pushed to
+`main`. `main` has since moved past it (doctrine-run commits `cb0d654`, `ff312c3`, `bdfeb2f`, then
+`c8f6b70` adding this brief), all of which touch nothing this pass touched; the range is what matters
+and it does not move. Maintainer lane for this work: **Claude Opus 5, /effort high**, single fresh
+session.
 
 Context: Sol's verification review of the v2.6.1 hotfix (briefed in `md/lab-v2.6.1-sol-handover.md`)
 returned findings against the release *record* rather than against the code — the §2 description of
@@ -32,7 +34,10 @@ These three commits are those corrections. No production behavior changed. Verif
 claim first and the corrections second. Read-only.
 
 STATE
-- Repo: F:\Programming\The Love Equations\The Love Equations Website, branch main, head 845f56a.
+- Repo: F:\Programming\The Love Equations\The Love Equations Website, branch main.
+- REVIEW TARGET: the range c40cd7f..845f56a, three commits. main has since moved past it with
+  doctrine-run work and this brief; none of that touches anything below. Review the range,
+  not the head.
 - Maintainer lane: Claude Opus 5, /effort high.
 - js/lab-analyzer.js UNCHANGED, byte-identical before and after this pass:
     f452c2b326dc4ebf312ca794a7b102cc2554c0c39066585d1e5079b6fe59ba25
