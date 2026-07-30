@@ -369,16 +369,43 @@ reader could no longer extract current behavior from either section, which is th
 release record has to be able to do.
 
 **Nothing is retracted by the move and nothing is edited.** The reasoning is the most useful
-content in this release: four errors across three review rounds, all of one family — a claim
-about what a mechanism *cannot* do, asserted without going to look. Twice about which code path
-can be reached, once about which words the stemmer reaches, once about what a test can observe.
-In every case the honest instrument already existed and was cheaper than the paragraph claiming
-it did not. **A limitation is a claim and needs the same evidence as a capability.**
+content in this release, and the counts are worth stating precisely rather than roundly, because
+an earlier version of this paragraph said "four errors across three review rounds" for seven
+blocks correcting more claims than that:
+
+| | |
+|---|---|
+| review rounds that returned CONTEST on this record | five |
+| correction blocks below | seven |
+| distinct false claims they correct | at least nine |
+| recurring claim SHAPES | one, with four named variants |
+
+The shape is a claim about what a mechanism *cannot* do, or a universal about what a set
+contains, asserted without going to look. Its variants: which code path can be reached (twice),
+which words the stemmer reaches (three times), what a test can observe (once), and what a named
+source says (once — the fifth-pass `softwareization` error, asserted about two documents the
+maintainer had not opened, while contesting the reviewer for this very pattern). In every case
+the honest instrument already existed and was cheaper than the paragraph claiming it did not.
+**A limitation is a claim and needs the same evidence as a capability.**
 
 Git history carries the same text with its commits: `e48c9d5`, `85a930d`, `53657f0`, `1cf3bf7`,
 `596fb50`, `e44c121`, `141f6cc`.
 
+**The superseded text is included below each heading**, because the blocks say "the paragraph
+above" and "the table above" and those antecedents no longer exist in §2.1 or §3. Sol's fifth
+review found the gap: the blocks survived the move, the text they correct did not, so the appendix
+was not self-contained. Both are reproduced from `c40cd7f`, the commit before the record pass began.
+
 ### A.1 §2 — the multiword claim, corrected three times
+
+**THE SUPERSEDED PARAGRAPH**, as it stood in §2 at `c40cd7f`, and the antecedent of "the paragraph
+above" in block 1:
+
+> Multiword entries additionally moved from substring matching to a contiguous run of stems, so
+> `health care` still finds those two words in sequence and can no longer be satisfied by a longer word
+> that merely spans them. No denylist entry's behavior changes as a result; it removes a latent
+> false-positive shape rather than fixing an observed one.
+
 
 **Block 1 of 3, as it stood inline:**
 
@@ -477,6 +504,21 @@ Git history carries the same text with its commits: `e48c9d5`, `85a930d`, `53657
 > not. **A limitation is a claim and needs the same evidence as a capability.**
 
 ### A.2 §3 — the widening census, corrected four times
+
+**THE SUPERSEDED LEAD-IN AND TABLE**, as they stood in §3 at `c40cd7f`, and the antecedent of "the
+table above" in block 1. This is the enumeration that named `pays`, which never matched, and omitted
+seven surfaces that did:
+
+> Stemming both sides reaches surfaces beyond plurals. Enumerated over all sixteen entries, the newly
+> matched words are:
+> 
+> | From | Newly reached |
+> |---|---|
+> | `hosting` → `host` | host, hosts, hosted |
+> | `network` | networked, networking |
+> | `cloud` | clouded |
+> | `payment` → `pay` | pay, pays, paying, payers |
+
 
 **Block 1 of 4, as it stood inline:**
 

@@ -993,3 +993,40 @@ test('every contested attestation carries evidence a reader can check', () => {
       `attestationEvidence carries \`${word}\`, which no entry lists as attested.`);
   });
 });
+
+/*
+ * §1's 7/9 split, as an oracle rather than as prose.
+ *
+ * Sol's fifth review ACCEPTed §1's numbers after recomputing them, and noted the
+ * one thing left: the split was still a sentence. §1 is the section every later
+ * argument rests on — it is why the fix is a union and not a swap — and it was
+ * counted by the same by-eye method that produced three wrong censuses.
+ */
+test('§1 of the release report: seven entries unify with their plural, nine separate', () => {
+  /** The plural §1 claims for each entry: `ies` for a consonant-y, else `s`. */
+  const pluralOf = (entry) => {
+    const words = entry.split(' ');
+    const last = words[words.length - 1];
+    const plural = /[^aeiou]y$/u.test(last) ? `${last.slice(0, -1)}ies` : `${last}s`;
+    return [...words.slice(0, -1), plural].join(' ');
+  };
+  const stemPhrase = (phrase) => phrase.split(' ').map(stemOf).join(' ');
+
+  const unify = DENYLIST_ENTRIES.filter((entry) => stemPhrase(pluralOf(entry)) === stemPhrase(entry));
+  const separate = DENYLIST_ENTRIES.filter((entry) => stemPhrase(pluralOf(entry)) !== stemPhrase(entry));
+
+  assert.equal(unify.length, 7,
+    `§1 says seven of the sixteen entries unify with their plural under the shipped stemmer; found `
+    + `${unify.length}: ${unify.join(', ')}. If this moves, §1's union-not-swap argument moves with it.`);
+  assert.equal(separate.length, 9,
+    `§1 says nine separate; found ${separate.length}: ${separate.join(', ')}.`);
+
+  // The two the naive `entry + s` test cannot produce at all, which is the defect
+  // v2.6.1 exists to fix.
+  ['utility', 'energy'].forEach((entry) => {
+    assert.notEqual(pluralOf(entry), `${entry}s`,
+      `§1 names \`${entry}\` as a real plural the literal-plus-s form misses.`);
+    assert.equal(stemPhrase(pluralOf(entry)), stemPhrase(entry),
+      `\`${entry}\` must unify with \`${pluralOf(entry)}\` under the stemmer — that unification IS the fix.`);
+  });
+});
