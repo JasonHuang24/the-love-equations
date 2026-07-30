@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.6';
+export const ANALYZER_VERSION = '2.6.7';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -323,8 +323,19 @@ const HUMAN_PARTICIPANT_FRAMES = Object.freeze([
      * pinned as benchmark cases pv-01 through pv-03. What keeps those out is that
      * no mechanism or outcome frame fires on them, not that the words go
      * unrecognised.
+     *
+     * The kinship and age-cohort nouns (`boys` … `sisters`) came in with P3a on
+     * 2026-07-30, and the line they are on is the finding rather than the words:
+     * a participant noun must name PEOPLE, not a category of people. `mothers`
+     * and `sons` are people you could point at. `humanity`, `anyone`, `everyone`
+     * and `a generation` are abstractions, and every one of them was measured to
+     * cost a false positive of the same shape — a generic human word beside
+     * `culture` / `institutions` / `rewards` from `cultural-frame-mechanism`.
+     * That is the same rule P2 rests on, applied one step further out; it is not
+     * the shape of "exclude the one word that breaks the fixture", which this
+     * project rejected as variant 2b of the gate options the same week.
      */
-    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|men|women|man|woman|males?|females?|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
+    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|men|women|man|woman|males?|females?|boys|girls|guys|sons|daughters|mothers|fathers|brothers|sisters|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
   },
   {
     id: 'human-groups',

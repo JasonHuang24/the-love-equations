@@ -3,7 +3,7 @@
   "question": "Does the domain gate decide whether a passage is about mating, or whether it contains a keyword the gate recognises?",
   "method": "Each case states one claim twice. `keyed` contains a word inside a decisive relational-outcome frame; `plain` says the same thing without one. A gate reasoning about subject matter gives both members the same verdict.",
   "provenance": "Authored, not scraped. The gap was found over lab-corpus/sources, which is gitignored third-party text (md/RERUN.md 1) and whose excerpts the threshold sweep caps hard; these carry the structure the corpus demonstrated without reproducing it.",
-  "knownSplits": 2,
+  "knownSplits": 1,
   "ratchet": "knownSplits is a defect count and may only be LOWERED. A change that raises it has widened the register gap.",
   "cases": [
     {
@@ -82,10 +82,10 @@
       "plain": {
         "text": "Conditioning teaches a generation to prize the qualities their mothers were taught to reject.",
         "observedAtFreeze": {
-          "status": "irrelevant",
-          "reasonCode": "no-human-relational-frame",
+          "status": "uncertain",
+          "reasonCode": "plausible-human-relational-frame",
           "frames": {
-            "participant": false,
+            "participant": true,
             "outcome": false,
             "mechanism": true,
             "nonDomain": false

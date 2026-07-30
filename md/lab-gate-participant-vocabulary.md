@@ -1,7 +1,15 @@
 # The gate's participant vocabulary — a decision, not a patch
 
-**Status: awaiting a ruling.** Nothing in `js/lab-analyzer.js` moved for this
-document. The benchmark append that lands with it changes no classifier code.
+> **RULED. P2 shipped in `ca6dab2` (v2.6.5). Recommendation 4's narrower design
+> was built in v2.6.7 and DOES NOT WORK; P3a's concrete nouns shipped in its
+> place and P1b, P3b, `humanity`, `our` and `their` are all rejected as measured
+> losses.** See
+> [`lab-gate-participant-narrowing.md`](lab-gate-participant-narrowing.md) for
+> the ten variants and the two attributions that settled it.
+
+**Status when written: awaiting a ruling.** Nothing in `js/lab-analyzer.js` moved
+for this document. The benchmark append that lands with it changes no classifier
+code.
 
 This is the residual left by [`lab-gate-cultural-register.md`](lab-gate-cultural-register.md).
 Option 1 shipped as `cultural-frame-mechanism` in `ab62871` and closed five of
