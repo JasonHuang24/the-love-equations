@@ -15,7 +15,7 @@
   },
   "band": 0.03,
   "adjudicationOpen": true,
-  "note": "Frozen threshold-neighbour band: every corpus pair within ±band of an admission line, which is the population an implementation detail can move across one. `scores` pins which SIDE of each line a pair sits on; `rulings` is the human record for every pair that has ever crossed one, including crossings that began outside the band.",
+  "note": "Frozen threshold-neighbour band: every corpus pair within ±band of an admission line. `scores` pins which SIDE of each line a pair sits on, so a change that flips one fails the suite even if nobody captured a baseline — which is what this is FOR. It is the second line of defence, not the primary one: measured over every crossing ever recorded, the band alone would have caught 829 of 2,304 real drift crossings (36%), and the --baseline comparison catches those and the rest. `rulings` is the human record for every pair that has ever crossed, including the ones that crossed from outside the band.",
   "counts": {
     "candidateScoreFloor": 81465,
     "minWeakScore": 16004,

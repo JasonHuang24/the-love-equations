@@ -145,6 +145,27 @@ test('the frozen band is internally consistent', () => {
     assert.equal(row.direction, row.after >= line ? 'gain' : 'loss',
       `${key} records a direction its own scores contradict.`);
   });
+  /*
+   * The band has to fit inside what the dump remembers.
+   *
+   * A baseline dump keeps pairs at or above `dumpFloor` and a comparison treats
+   * anything absent as zero. So if `dumpFloor` ever rises above
+   * `lowest threshold − band`, the bottom of the band stops being captured: a
+   * pair sitting just under `candidateScoreFloor` would be recorded as 0.000,
+   * its side would be pinned wrong, and the tripwire would go quiet exactly
+   * where it is densest. Nothing enforced this — both constants are defaults in
+   * tools/lab-threshold-sweep.mjs and either could be changed alone.
+   *
+   * Currently 0.02 against 0.08 − 0.03 = 0.05, so there is 0.03 of headroom.
+   * Audited 2026-07-30, md/lab-calibration-audit.md.
+   */
+  const lowestLine = Math.min(...THRESHOLDS.map((name) => SCORING_CONFIG[name]));
+  assert.ok(fixture.dumpFloor <= lowestLine - fixture.band,
+    `dumpFloor ${fixture.dumpFloor} is above ${lowestLine} − ${fixture.band} = `
+    + `${(lowestLine - fixture.band).toFixed(3)}. The bottom of the band is no longer captured by a `
+    + 'baseline dump, so pairs just under the lowest threshold will compare against a false zero. '
+    + 'Lower --dump-floor or narrow --band.');
+
   assert.equal(Object.keys(fixture.rulings).length, fixture.counts.rulings);
   assert.equal(
     Object.values(fixture.rulings).filter((row) => row.ruling === 'PENDING').length,
