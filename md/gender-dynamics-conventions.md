@@ -1,10 +1,9 @@
-# Handoff brief — reorganizing the Dynamics cards
+# Conventions — the Dynamics cards
 
-This is context for an agent picking up work on `gender-dynamics.html` (the
-"Male & Female Dynamics" page). Read it before moving, adding, or editing any
-cards. To auto-load it in a fresh Claude Code session, rename this file to
-`CLAUDE.md`; otherwise just start the session with "read REORG-BRIEF.md and
-follow it."
+Card conventions and invariants for `gender-dynamics.html` (the "Male & Female
+Dynamics" page). Read this before moving, adding, or editing any cards.
+(Originally the handoff brief for the card reorg, as `REORG-BRIEF.md`; the
+reorg is done, but the conventions here remain the page's contract.)
 
 ## What this page is
 
