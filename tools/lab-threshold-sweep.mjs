@@ -311,16 +311,35 @@ function main() {
       });
     }
     const pending = Object.values(rulings).filter((row) => row.ruling === 'PENDING').length;
+    /*
+     * Outstanding verdicts, split by which line they sit on, because at this
+     * population they are three different KINDS of thing and one flag cannot
+     * say so.
+     *
+     * The record was designed when the sweep covered 117 passages and a release
+     * produced a few dozen crossings a human could read in an afternoon. It now
+     * covers 2,401, and 4,622 of the outstanding crossings are at
+     * `candidateScoreFloor` — a line that decides which entries were CONSIDERED
+     * and can never put a match in front of a reader. Left as one number they
+     * hold `adjudicationOpen` permanently true, which disarms the guard: a test
+     * that reports instead of failing, forever, is not a gate.
+     *
+     * So the counts are per-threshold and the suite reads them per-threshold.
+     * See tests/lab-threshold-neighbors.test.mjs for which are blocking.
+     */
+    const pendingByThreshold = Object.fromEntries(THRESHOLDS.map((threshold) => [
+      threshold.name,
+      Object.values(rulings)
+        .filter((row) => row.ruling === 'PENDING' && row.threshold === threshold.name).length,
+    ]));
     fs.writeFileSync(options.neighbors, `${JSON.stringify({
       ...identity,
       band: options.band,
-      // Open exactly when a verdict is outstanding. While open the suite
-      // REPORTS the outstanding ones instead of failing on them, so a release
-      // can be built in parallel with the adjudication it is waiting for. It is
-      // derived rather than set, because "closed, 123 unanswered" and "open,
-      // nothing outstanding" are both states this file should not be able to
-      // reach — and a hand-edited fixture that reaches either still fails the
-      // suite.
+      // Open exactly when a verdict is outstanding. Derived rather than set,
+      // because "closed, 123 unanswered" and "open, nothing outstanding" are
+      // both states this file should not be able to reach — and a hand-edited
+      // fixture that reaches either still fails the suite. What OPEN now means
+      // for the suite is per-threshold; this flag stays the honest summary.
       adjudicationOpen: pending > 0,
       note: 'Frozen threshold-neighbour band: every corpus pair within ±band of an'
         + ' admission line, which is the population an implementation detail can move'
@@ -332,6 +351,7 @@ function main() {
         pairs: Object.keys(scores).length,
         rulings: Object.keys(rulings).length,
         pending,
+        pendingByThreshold,
       },
       rulings,
       scores,

@@ -22,7 +22,12 @@
     "minCredibleScore": 419,
     "pairs": 97888,
     "rulings": 5296,
-    "pending": 5138
+    "pending": 5138,
+    "pendingByThreshold": {
+      "candidateScoreFloor": 4622,
+      "minWeakScore": 516,
+      "minCredibleScore": 0
+    }
   },
   "rulings": {
     "seg-00024-0ha18nw.claim-03|statistics:stat-couples-meet|candidateScoreFloor": {

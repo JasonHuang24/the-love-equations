@@ -152,20 +152,73 @@ test('the frozen band is internally consistent', () => {
   );
 });
 
-test('every threshold crossing carries a human verdict', () => {
-  const pending = Object.entries(fixture.rulings).filter(([, row]) => row.ruling === 'PENDING');
-  if (fixture.adjudicationOpen) {
-    // Reported, not failed. The verdicts are outstanding by design while the
-    // release that produced them is still being built; what must not happen is
-    // that they go outstanding QUIETLY.
-    console.log(`      ${pending.length} threshold crossing(s) awaiting adjudication `
-      + '(adjudicationOpen: true — md/lab-v2.6.0-threshold-adjudication.md)');
-    return;
-  }
-  assert.equal(pending.length, 0,
-    `${pending.length} threshold crossing(s) are still PENDING with the adjudication closed. `
-    + 'Either record the verdicts in tests/fixtures/threshold-neighbors.json, or set '
-    + `adjudicationOpen back to true:\n  ${pending.map(([key]) => key).slice(0, 20).join('\n  ')}`);
+/*
+ * WHAT AN OUTSTANDING VERDICT BLOCKS, by which line it sits on. Rewritten
+ * 2026-07-30 when the swept population reached 2,401 passages.
+ *
+ * The original rule was one flag: while `adjudicationOpen` was true the suite
+ * REPORTED outstanding crossings instead of failing, so a release could be built
+ * in parallel with the adjudication it was waiting for, and closing it was the
+ * release's job. That worked at 117 swept passages, where a change produced a
+ * few dozen crossings somebody could read in an afternoon.
+ *
+ * At 2,401 it does not. 4,622 of the outstanding crossings are at
+ * `candidateScoreFloor`, they will never be read, and while they sit there
+ * `adjudicationOpen` is permanently true — so the branch that FAILS is
+ * permanently unreachable. A guard that can only ever report is not a guard, and
+ * the honest options were to disarm it openly or to arm the part that matters.
+ *
+ * The three lines are three different kinds of event and are now treated as such:
+ *
+ *   minCredibleScore   BLOCKING, no exceptions. This decides whether a reader is
+ *                      shown a match as credible. There is no volume argument
+ *                      here: the whole archive produced 38 of these ever.
+ *
+ *   minWeakScore       RATCHET. It changes the nearby-concepts list a reader
+ *                      sees, so it is not a census — but 516 are outstanding
+ *                      from before this rule and demanding they be cleared first
+ *                      would just disarm the guard a second way. The count may
+ *                      only FALL: new weak crossings have to be answered, the
+ *                      historical backlog can be worked down in its own time.
+ *
+ *   candidateScoreFloor  CENSUS, explicitly not adjudicable at this volume. It
+ *                      decides which entries were CONSIDERED. It can never put a
+ *                      match in front of a reader — `applyBoundedContext`
+ *                      refuses to boost below `minWeakScore` and the largest
+ *                      boost is 0.045 against a 0.17 gap. It is not invisible
+ *                      (it can become `nearest` and change an unmapped claim's
+ *                      reason line, destination and search terms), which is why
+ *                      it is still RECORDED rather than dropped.
+ *
+ * Lowering WEAK_BACKLOG_CEILING is the only edit to it this file permits.
+ */
+const WEAK_BACKLOG_CEILING = 516;
+
+test('an outstanding credible-line verdict blocks, and the weak backlog may only fall', () => {
+  const pendingBy = fixture.counts.pendingByThreshold;
+  assert.ok(pendingBy, 'the fixture predates per-threshold adjudication; regenerate the band');
+  THRESHOLDS.forEach((name) => {
+    const counted = Object.values(fixture.rulings)
+      .filter((row) => row.ruling === 'PENDING' && row.threshold === name).length;
+    assert.equal(pendingBy[name], counted, `recorded PENDING count for ${name} disagrees with the rulings`);
+  });
+
+  const credible = Object.entries(fixture.rulings)
+    .filter(([, row]) => row.ruling === 'PENDING' && row.threshold === 'minCredibleScore');
+  assert.equal(credible.length, 0,
+    `${credible.length} minCredibleScore crossing(s) are unruled. This is the line that decides `
+    + 'whether a reader is shown a match as credible, and it is release-blocking with no volume '
+    + 'exception — the whole archive has produced 38 of these ever. Read the sentence and record '
+    + `a verdict:\n  ${credible.map(([key]) => key).join('\n  ')}`);
+
+  assert.ok(pendingBy.minWeakScore <= WEAK_BACKLOG_CEILING,
+    `${pendingBy.minWeakScore} minWeakScore crossings are unruled, above the ceiling of `
+    + `${WEAK_BACKLOG_CEILING}. This change added weak crossings without answering them. Rule the `
+    + 'new ones, or work the backlog down and lower the ceiling — it may only fall.');
+
+  console.log(`      adjudication: ${credible.length} credible (blocking) · `
+    + `${pendingBy.minWeakScore}/${WEAK_BACKLOG_CEILING} weak (ratchet) · `
+    + `${pendingBy.candidateScoreFloor} candidate-floor (census, not adjudicable)`);
 });
 
 test('no corpus pair crosses an admission line without a ruling', { skip: corpusPresent ? false : 'lab-corpus/sources is absent (gitignored third-party archive; see md/RERUN.md §1)' }, () => {
