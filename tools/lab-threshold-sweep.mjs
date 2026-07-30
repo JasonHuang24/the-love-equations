@@ -140,6 +140,25 @@ function loadPassages(excerptChars, includeSetAside) {
     units.forEach((unit) => {
       const status = unit.domainRelevance.status;
       if (status === 'irrelevant' && !includeSetAside) return;
+      /*
+       * A unit the claim detector rejected is never mapped: analyzeDocument
+       * builds segments for claim-like units only, so retrieval never runs on it
+       * and any score this tool prints for it is measuring nothing.
+       *
+       * Skipping it is not a filter on top of the gate, it is the same
+       * population the analyzer works on. Before this line the sweep scored two
+       * section HEADINGS as passages — "Online Dating" and "Romance & Dating",
+       * both `isClaimLike: false` with `claimLikelihood: 0` — and because a
+       * two-token passage carries almost no query weight, any shared token
+       * produced a large coverage ratio. Three of the 29 minCredibleScore
+       * rulings a human was asked to make in July 2026 existed only for that
+       * reason, and none of the three could ever have reached a reader.
+       *
+       * Unconditional, including under --include-set-aside: that flag widens the
+       * population to passages the GATE set aside, which are still claims. A
+       * heading is not.
+       */
+      if (!unit.isClaimLike) return;
       passages.push({
         source: id,
         index: index += 1,
