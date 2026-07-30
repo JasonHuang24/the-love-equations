@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.3';
+export const ANALYZER_VERSION = '2.6.4';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -569,6 +569,49 @@ const SOCIAL_MECHANISM_FRAMES = Object.freeze([
     decisive: true,
     test: (text) => /\breputation\b.{0,80}\b(?:access|future partners?|potential partners?|dating pool|romantic)\b/i.test(text)
       || /\b(?:access|future partners?|potential partners?|dating pool|romantic)\b.{0,80}\breputation\b/i.test(text),
+  },
+  {
+    /*
+     * Adopted option 1 of md/lab-gate-cultural-register.md, on Jason's ruling.
+     *
+     * The gate was reliable on claims ABOUT relationships and blind to claims
+     * about CULTURE SHAPING relationships — the register most of the archived
+     * manosphere corpus is written in, and the register the site's own Pills and
+     * Frameworks pages argue with. Measured with minimal pairs, six of eight
+     * claims flipped from analysed to discarded on a single word: "the operative
+     * frame in which men and women DATE" was relevant, and "the operative frame
+     * in which the sexes ENCOUNTER EACH OTHER" was irrelevant. The gate was
+     * checking for vocabulary it recognised, not judging subject matter.
+     *
+     * Weight 2.5 and non-decisive, and both of those are load-bearing. The
+     * decision path retains on `participant && mechanism` (uncertain), and
+     * separately on `mechanism.score >= plausibleSocialStructureScore` (3) with
+     * no participant at all. Frame scores are a MAX over matched definitions, so
+     * 2.5 can never reach 3 on its own: this frame cannot retain a passage unless
+     * a human participant is also present. That is the whole difference between
+     * the adopted option and the rejected one — culture-and-shaping with nobody
+     * in the sentence stays out, which is what keeps tax law, the bond market and
+     * machine-learning training data on the other side of the line.
+     *
+     * Paired noun/verb rather than a keyword list, for the same reason
+     * dating-app-interaction is: a bare `culture` or `norms` token admits any
+     * cultural commentary. A cultural FORCE has to be doing something TO someone.
+     */
+    id: 'cultural-frame-mechanism',
+    label: 'Culture, norms, media, or law shaping expectations between the sexes',
+    weight: 2.5,
+    decisive: false,
+    test(text) {
+      const force = /\b(?:culture|cultural|culturally|social conventions?|social norms?|norms?|normali[sz]\w*|normalcy|media|entertainment|advertising|sitcoms?|family law|the law|laws|legally|mandated|conditioning|programming|sociali[sz]ation|institutions?|institutional|narratives?|scripts?|discourse|taboos?|stigma|shame|shaming|feminization|feminisation|masculinity|femininity|patriarchal|patriarchy)\b/i;
+      const shaping = /\b(?:shape[sd]?|shaping|frame[sd]?|framing|define[sd]?|defining|dictate[sd]?|encode[sd]?|encoding|reward\w*|punish\w*|teach\w*|taught|train\w*|police[sd]?|policing|assume[sd]?|rewrit\w*|rewrote|inherit\w*|manufactur\w*|instill\w*|internali[sz]\w*|ridicul\w*|discourag\w*|encourag\w*|stop\w*|prevent\w*|changed|change[sd]?|baseline|default)\b/i;
+      /*
+       * The canon's own names for this register. Kept in the same frame rather
+       * than promoted to a decisive one, because promoting them is option 2 and
+       * Jason ruled option 1: they still need a participant to retain.
+       */
+      const named = /\b(?:feminine imperative|male imperative|operative frame|operative framework|fem-?centrism|gynocentrism|feminine primacy|feminine reality|unplugging|locus[- ]of[- ]control shift|heteropessimism)\b/i;
+      return named.test(text) || (force.test(text) && shaping.test(text));
+    },
   },
   {
     // Agreed benchmark append #1 (md/lab-benchmark-append-proposal-01.md):

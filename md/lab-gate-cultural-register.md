@@ -1,9 +1,15 @@
 # The gate's cultural-register blindness — a decision, not a patch
 
-**Status: open. Needs Jason's ruling.** Nothing in this document has been applied
-to the shipped gate. The measurement is committed
+> **RULED 2026-07-30: Jason adopted option 1.** Shipped as the
+> `cultural-frame-mechanism` frame (weight 2.5, non-decisive) in
+> `SOCIAL_MECHANISM_FRAMES`, bundle v2.6.4. The analysis below is left as written
+> at decision time; what actually happened is recorded in **[Outcome](#outcome)**
+> at the end. Options 2, 3 and 4 were not taken.
+
+**Status at the time of writing: open, needs Jason's ruling.** Nothing in this
+document had been applied to the shipped gate. The measurement was committed
 (`tests/fixtures/cultural-register-pairs.json`, `tests/lab-gate-register.test.mjs`)
-so the gap is pinned rather than remembered; the options below are prototypes
+so the gap was pinned rather than remembered; the options below were prototypes
 measured in the session scratchpad.
 
 ## What the gate actually does
@@ -161,3 +167,82 @@ decision can be made on evidence; the decision is not mine to make.
 - The labelled 24-claim set lives in `gate-options.mjs` rather than in the repo,
   because it is verbatim third-party text; `lab-corpus/` is gitignored by standing
   decision and the committed fixture is authored to carry the same structure.
+
+---
+
+## Outcome
+
+**Option 1 adopted on Jason's ruling, 2026-07-30.** Landed in two commits, because
+the benchmark's append policy requires cases to enter "in a commit that changes no
+classifier code":
+
+1. `f6261d7` — the cultural register enters the benchmark, **RED**. Ten retain
+   cases and six negatives; `domainRecall` 1.000 → 0.8929, breaching the 0.9 hard
+   floor deliberately, following the `ds-*` precedent so the record shows the gap
+   predated the fix.
+2. the fix — `cultural-frame-mechanism` in `SOCIAL_MECHANISM_FRAMES`, weight 2.5,
+   `decisive: false`, plus a paired force/shaping test rather than a keyword list.
+
+### What it cost and what it bought
+
+| metric | before | after |
+|---|---|---|
+| `domainRecall` (hard ≥ 0.9) | 1.000 | **1.000** |
+| `ignorePrecision` (hard ≥ 0.95) | 1.000 | **1.000** |
+| `junkRecall` (ratchet, may only rise) | 0.821 | **0.833** |
+| minimal pairs splitting | 6/8 | **3/8** |
+| expected-ignore cases retained *because of* the new frame | — | **0** |
+
+Both hard floors held and the ratchet went **up**. Being precise about why it went
+up: the six new negatives are all correctly binned, which raises the ratio; the
+pre-existing 78 ignore cases are unchanged, and none of the 14 fail-open retentions
+is attributable to the new frame. That attribution is now asserted as a test rather
+than measured once.
+
+### Why weight 2.5 is the whole design
+
+The decision path retains on `participant && mechanism`, and separately on
+`mechanism.score >= plausibleSocialStructureScore` (3) with no participant at all.
+Frame scores are a **max** over matched definitions, so 2.5 can never reach 3
+alone. The frame therefore cannot retain a passage unless a human participant is
+also present — which is exactly the line between the adopted option and the
+rejected option 4, and what keeps tax law, the bond market and machine-learning
+training data out. Asserted directly in `lab-gate-register.test.mjs`.
+
+### The loop it closed
+
+The corpus evidence that motivated this document was one sentence: the alias fix
+(`f101f8c`) revived `fem-centrism`, and the gate discarded the only corpus sentence
+using it. After the change, the threshold sweep's six `minCredibleScore` gains are
+**all** the doctrine added in `eb0f6cd`, on the essay it was written for, from a
+prior score of zero:
+
+| entry | passage | before | after |
+|---|---|---|---|
+| `frameworks:operative-frame` | 02-fem-centrism · 1 | 0.000 | 0.575 |
+| `lexicon:term-the-operative-frame` | 02-fem-centrism · 1 | 0.000 | 0.575 |
+| `frameworks:operative-frame` | 02-fem-centrism · 2 | 0.000 | 0.575 |
+| `lexicon:term-the-operative-frame` | 02-fem-centrism · 2 | 0.000 | 0.575 |
+| `lexicon:term-the-feminine-imperative` | 02-fem-centrism · 8 | 0.000 | 0.575 |
+| `frameworks:operative-frame` | 02-fem-centrism · 8 | 0.000 | 0.540 |
+
+Retained corpus passages 103 → 117; 2059 pairs moved, **all upward, zero losses**.
+The doctrine merge added the vocabulary, the gate was throwing away the sentences
+that used it, and the two are no longer working against each other. Crossings
+recorded PENDING in `md/lab-gate-option1-threshold-adjudication.md`.
+
+### Still open
+
+- **The residual 3 splits are a participant-vocabulary gap, not a frame gap.** The
+  new frame fires on all three; `HUMAN_PARTICIPANT_FRAMES` does not recognise
+  `anyone`, `a generation`, `mothers` or `the sexes`, so no participant is detected
+  and option 1 requires one. Widening that vocabulary is a separate and narrower
+  ruling — `anyone` in particular is generic enough to need its own precision
+  measurement. Deliberately not taken here, because it would change what option 1
+  was measured to be.
+- **Option 2 still recommended for after tranche 3**, unchanged: it is the better
+  long-term design, and the reason to wait is still that the canon lacks
+  `heteropessimism`, `masculinity`, `feminization` and `straight culture`. Note the
+  `named` branch of the new frame already carries `heteropessimism` and the LE frame
+  vocabulary, so some of option 2's value has been collected without its cost.
+- **Option 4 remains rejected** on the numbers in the table above.

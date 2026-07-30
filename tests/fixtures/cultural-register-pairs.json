@@ -3,7 +3,7 @@
   "question": "Does the domain gate decide whether a passage is about mating, or whether it contains a keyword the gate recognises?",
   "method": "Each case states one claim twice. `keyed` contains a word inside a decisive relational-outcome frame; `plain` says the same thing without one. A gate reasoning about subject matter gives both members the same verdict.",
   "provenance": "Authored, not scraped. The gap was found over lab-corpus/sources, which is gitignored third-party text (md/RERUN.md 1) and whose excerpts the threshold sweep caps hard; these carry the structure the corpus demonstrated without reproducing it.",
-  "knownSplits": 6,
+  "knownSplits": 3,
   "ratchet": "knownSplits is a defect count and may only be LOWERED. A change that raises it has widened the register gap.",
   "cases": [
     {
@@ -16,7 +16,7 @@
           "frames": {
             "participant": false,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -29,7 +29,7 @@
           "frames": {
             "participant": false,
             "outcome": false,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -45,7 +45,7 @@
           "frames": {
             "participant": true,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -58,7 +58,7 @@
           "frames": {
             "participant": true,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -74,7 +74,7 @@
           "frames": {
             "participant": true,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -87,7 +87,7 @@
           "frames": {
             "participant": false,
             "outcome": false,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -103,20 +103,20 @@
           "frames": {
             "participant": true,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
       },
       "plain": {
-        "text": "The culture treats one sex\u2019s preferences as the default setting nobody argues about.",
+        "text": "The culture treats one sex’s preferences as the default setting nobody argues about.",
         "observedAtFreeze": {
           "status": "uncertain",
           "reasonCode": "plausible-human-relational-frame",
           "frames": {
             "participant": false,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -132,7 +132,7 @@
           "frames": {
             "participant": true,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -140,12 +140,12 @@
       "plain": {
         "text": "Media that ridiculed masculinity for a generation changed how young men present themselves.",
         "observedAtFreeze": {
-          "status": "irrelevant",
-          "reasonCode": "no-human-relational-frame",
+          "status": "uncertain",
+          "reasonCode": "plausible-human-relational-frame",
           "frames": {
             "participant": true,
             "outcome": false,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -154,27 +154,27 @@
     {
       "id": "cr-law",
       "keyed": {
-        "text": "Family law encodes one sex\u2019s interests as the neutral baseline when a marriage ends.",
+        "text": "Family law encodes one sex’s interests as the neutral baseline when a marriage ends.",
         "observedAtFreeze": {
           "status": "relevant",
           "reasonCode": "explicit-relational-outcome",
           "frames": {
             "participant": true,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
       },
       "plain": {
-        "text": "Family law encodes one sex\u2019s interests as the neutral baseline when a household dissolves.",
+        "text": "Family law encodes one sex’s interests as the neutral baseline when a household dissolves.",
         "observedAtFreeze": {
-          "status": "irrelevant",
-          "reasonCode": "no-human-relational-frame",
+          "status": "uncertain",
+          "reasonCode": "plausible-human-relational-frame",
           "frames": {
             "participant": true,
             "outcome": false,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -190,7 +190,7 @@
           "frames": {
             "participant": true,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -203,7 +203,7 @@
           "frames": {
             "participant": false,
             "outcome": false,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -219,7 +219,7 @@
           "frames": {
             "participant": false,
             "outcome": true,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
@@ -227,16 +227,22 @@
       "plain": {
         "text": "The script for a good life was rewritten, and it no longer has the household at the centre.",
         "observedAtFreeze": {
-          "status": "irrelevant",
-          "reasonCode": "no-human-relational-frame",
+          "status": "uncertain",
+          "reasonCode": "plausible-human-relational-frame",
           "frames": {
             "participant": true,
             "outcome": false,
-            "mechanism": false,
+            "mechanism": true,
             "nonDomain": false
           }
         }
       }
     }
-  ]
+  ],
+  "adopted": {
+    "ruling": "Option 1 of md/lab-gate-cultural-register.md, adopted on Jason's ruling 2026-07-30.",
+    "frame": "cultural-frame-mechanism, weight 2.5, non-decisive, in SOCIAL_MECHANISM_FRAMES.",
+    "effect": "Splits 6 -> 3. Benchmark domainRecall held at 1.000, ignorePrecision 1.000, junkRecall 0.821 -> 0.833. No expected-ignore case is retained because of the new frame.",
+    "residual": "The 3 remaining splits share one cause and it is NOT the new frame: it fires at 2.5 on all three, but HUMAN_PARTICIPANT_FRAMES does not recognise `anyone`, `a generation`, `mothers` or `the sexes`, so no participant is detected and option 1 requires one. Widening the participant vocabulary is a separate, narrower ruling and was deliberately not taken here, because it would change what option 1 was measured to be."
+  }
 }

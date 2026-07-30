@@ -19,23 +19,28 @@ import { normalizeInput } from '../js/lab-intake.js';
  * most of the manosphere corpus is written in, and the register the site's own
  * doctrine pages argue with.
  *
- * Measured over the 21 archived sources: 2604 of 4805 claim-like units are
- * discarded. That total is not the finding on its own, because most of it is
- * survey methodology and academic apparatus that SHOULD be discarded. The finding
- * is what the pairs below isolate.
+ * Measured over the 21 archived sources: 2604 of 4805 claim-like units were
+ * discarded. That total was never the finding, because most of it is survey
+ * methodology and academic apparatus that SHOULD be discarded. The finding is what
+ * the pairs below isolate.
  *
  * Each case states one claim twice. `keyed` contains a word that sits inside a
  * decisive frame — courtship, romance, date, marriage, or a sex noun within 70
  * characters of a selection verb. `plain` makes the same claim without one. A gate
- * deciding whether a passage is about mating gives both the same verdict. At
- * freeze, six of eight disagree, and the sharpest is `cr-frame`, where the
- * discarded phrasing names a canon entry — frameworks:operative-frame — verbatim.
+ * deciding whether a passage is about mating gives both the same verdict.
  *
- * This test does NOT assert the gap is fixed. It pins the defect count so that
- * any change to the gate has to state what it did to this measurement, in the
- * same spirit as the benchmark's junkRecall ratchet. Options and costs are worked
- * through in md/lab-gate-cultural-register.md; choosing one is Jason's call,
- * because it changes what the Lab admits for every reader.
+ * At first freeze SIX OF EIGHT disagreed. Option 1 of
+ * md/lab-gate-cultural-register.md was then adopted on Jason's ruling — the
+ * `cultural-frame-mechanism` frame — and the count is now THREE, re-frozen with
+ * the adoption recorded in the fixture.
+ *
+ * The three that remain share one cause, and it is not the new frame: it fires on
+ * all three, but HUMAN_PARTICIPANT_FRAMES does not recognise `anyone`,
+ * `a generation`, `mothers` or `the sexes`, so no participant is detected and
+ * option 1 requires one. Widening the participant vocabulary is a separate and
+ * narrower ruling; taking it here would have changed what option 1 was measured to
+ * be. `knownSplits` stays a ratchet in the defect direction so the next attempt has
+ * to state what it moved.
  */
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -113,4 +118,68 @@ test('the register gap is measured, and the defect count may only go down', () =
   const frame = fixture.cases.find((row) => row.id === 'cr-frame');
   assert.ok(frame, 'cr-frame is the load-bearing case and must stay in the fixture');
   assert.match(frame.plain.text, /operative frame/i);
+});
+
+/*
+ * The property that makes the adopted option the adopted option.
+ *
+ * `cultural-frame-mechanism` carries weight 2.5 against a
+ * plausibleSocialStructureScore of 3, and frame scores are a MAX over matched
+ * definitions, so it can never retain a passage on its own — a human participant
+ * has to be present too. That is the entire difference between option 1 and the
+ * rejected option 4, and it is what keeps tax law, the bond market and
+ * machine-learning training data on the far side of the line.
+ *
+ * Asserted as blame attribution rather than as a metric, because a metric can be
+ * held up by unrelated movement elsewhere in the fixture. Nothing the benchmark
+ * says to discard may be retained BECAUSE of this frame.
+ */
+test('the cultural frame never retains a passage the benchmark says to discard', () => {
+  const benchmark = JSON.parse(readFileSync(
+    path.join(ROOT_DIR, 'tests', 'fixtures', 'domain-relevance-benchmark.json'), 'utf8',
+  ));
+
+  const blamed = [];
+  benchmark.cases.filter((row) => row.expected === 'ignore').forEach((row) => {
+    const [unit] = classifyDomainRelevance([{
+      id: row.id,
+      parentSegmentId: `bench-${row.id}`,
+      segmentIndex: 0,
+      text: row.text,
+      wordCount: row.text.trim().split(/\s+/).length,
+      isClaimLike: true,
+      boundedContext: null,
+    }]);
+    if (unit.domainRelevance.status === 'irrelevant') return;
+    if (unit.domainRelevance.evidence.some((item) => item.code === 'cultural-frame-mechanism')) {
+      blamed.push(`  [${row.id}] ${unit.domainRelevance.status} — ${row.text}`);
+    }
+  });
+
+  assert.equal(blamed.length, 0,
+    'A case the benchmark says to discard is being retained on the cultural frame. '
+    + 'Either the frame\'s force/shaping pairing has grown too loose, or its weight has been '
+    + `raised to or past plausibleSocialStructureScore.\n${blamed.join('\n')}`);
+});
+
+/*
+ * And the mechanism behind that guarantee, asserted directly rather than trusted:
+ * culture-and-shaping with nobody in the sentence stays out, and the same sentence
+ * with a person in it comes in.
+ */
+test('the cultural frame requires a human participant, by construction', () => {
+  const nobody = 'Advertising manufactures cultural anxiety in order to sell moisturiser.';
+  const somebody = 'Advertising manufactures cultural anxiety in women, and they internalise it.';
+
+  const withoutPerson = verdictFor(nobody);
+  assert.equal(withoutPerson.status, 'irrelevant',
+    'a cultural mechanism with no participant must not be enough to retain');
+  assert.ok(withoutPerson.frames.mechanism.detected,
+    'the frame should still FIRE — it is the participant requirement doing the work, not a miss');
+  assert.ok(withoutPerson.frames.mechanism.score < 3,
+    'the frame must stay under plausibleSocialStructureScore or it retains on its own');
+
+  const withPerson = verdictFor(somebody);
+  assert.notEqual(withPerson.status, 'irrelevant',
+    'the same claim with a participant in it is what option 1 exists to admit');
 });
