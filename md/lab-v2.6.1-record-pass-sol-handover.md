@@ -39,10 +39,11 @@ STATE
   all unchanged. No version bump anywhere in the arc except one FIXTURE schema, below.
 - suite 170 -> 178 pass / 0 fail. Every added test is doc/fixture-facing.
 
-NEW SINCE YOUR THIRD PASS — review these two closely
+NEW SINCE YOUR THIRD PASS — review these three closely
   141f6cc  test(lab): a limitation is a claim, and needs the same evidence as a capability
   2262094  test(lab): move the census schema, stop copying the lookback
-  (plus one uncommitted-at-write-time ordering fix to §2, in the same commit as this brief)
+  296620f  docs(lab): the fourth-pass handover, and §2 put back in order
+           (this brief, plus the §2 correction-block reordering described in target 4.3)
 
 THE FULL ARC, for the pattern question
   e48c9d5  §2 retraction + bl-17/bl-18/bl-19            pass 1 work
