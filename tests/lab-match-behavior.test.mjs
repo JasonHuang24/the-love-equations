@@ -1152,6 +1152,74 @@ test('a dead alias is only a defect where the token surface does not already car
 });
 
 /*
+ * Where the four Lexicon slang terms landed, and the grammar that decided it.
+ *
+ * md/lab-constants-audit.md found the length floor silencing twelve untyped
+ * single-word aliases with only four ever ruled on. Jason asked for four of the
+ * remainder — cope, simp, 4B, PSL — to be typed. Two were; two were not, and
+ * measurement decided which, on AUTHORED probes because all four words are
+ * effectively absent from the 21-source archive.
+ *
+ * The reason two were refused is grammatical rather than statistical, which is
+ * why it is worth freezing. `cope` and `PSL` are ordinary strings in the same
+ * domain the concept lives in — "couples who cope with stress", "he brought her
+ * a PSL" — so typing them manufactures a 0.540 credible match out of the wrong
+ * sense. And CONTEXTUAL TYPING IS NOT THE SAFER OPTION HERE: relationalCoFire
+ * promotes on a relational role term within eight tokens, and the survivors were
+ * promoted by "men" and "couples", the two commonest role nouns in the domain.
+ *
+ * English separates the two senses where the analyzer could not. The verb takes
+ * a complement — "cope WITH" — and the noun is a predicate or object — "is
+ * cope", "as cope". Multi-word aliases need no typing, fire as ordinary phrase
+ * hits, and cannot collide with a verb that never takes those shapes. Measured:
+ * cope 3/4 intent and 0/3 false positives, PSL 2/2 and 0/2, against 2/2 and 3/3
+ * for standalone cope, and against 1/2 and 1/2 for standalone PSL.
+ *
+ * md/lab-slang-alias-typing.md carries the full tables.
+ */
+const SLANG_SENSE_SPLIT = [
+  // The concept, reached by the phrase route.
+  { kind: 'concept', want: 'lexicon:term-cope',
+    text: 'Every reassuring theory about attraction gets written off as cope by the men who read the blackpill.' },
+  { kind: 'concept', want: 'lexicon:term-cope',
+    text: 'Any claim that personality matters is just cope, according to the forum.' },
+  { kind: 'concept', want: 'lexicon:term-psl',
+    text: 'Men on the looksmaxxing forums rate each other on PSL to the decimal and treat the number as destiny.' },
+  // The ordinary sense, which typing would have mapped and the phrase route does not.
+  { kind: 'ordinary', want: 'lexicon:term-cope',
+    text: 'Couples who cope with stress together report higher relationship satisfaction.' },
+  { kind: 'ordinary', want: 'lexicon:term-cope',
+    text: 'Men who cope badly with rejection tend to withdraw from dating for months.' },
+  { kind: 'ordinary', want: 'lexicon:term-psl',
+    text: 'He brought her a PSL on their second date and she thought it was sweet.' },
+  // And the two that WERE typed, so the gain is pinned next to the refusal.
+  { kind: 'concept', want: 'lexicon:term-simp',
+    text: 'He was written off as a simp for paying for dinner on the second date.' },
+  { kind: 'concept', want: 'lexicon:term-4b',
+    text: 'The 4B refusal is cited as proof that women have gone on strike against dating.' },
+];
+
+test('slang terms map on the concept sense and not on the ordinary one', async () => {
+  for (const probe of SLANG_SENSE_SPLIT) {
+    const result = await analyzeDocument(normalizeInput({
+      text: probe.text,
+      source: { title: 'slang sense probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }), canonIndex);
+    const matches = result.segments.flatMap((segment) => segment.matches);
+    const hit = matches.find((match) => match.canonId === probe.want);
+    if (probe.kind === 'concept') {
+      assert.ok(hit, `${probe.want} should be reached by "${probe.text}". `
+        + `Got ${matches.map((m) => m.canonId).join(', ') || '(nothing)'}`);
+    } else {
+      assert.equal(hit, undefined,
+        `"${probe.text}" uses the ordinary sense and now maps to ${probe.want} at ${hit?.score}. `
+        + 'That is the cost typing this alias would have carried, and it is why it was refused.');
+    }
+  }
+});
+
+/*
  * The false positive typing `SMV` buys, frozen rather than hidden.
  *
  * A passage about an unrelated "SMV protocol" now names the SMV concept at 0.54.

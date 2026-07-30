@@ -136,7 +136,7 @@ for (const entry of index.entries) {
 const typedEntries = index.entries.filter(
   (entry) => entry.standaloneAliases.length || entry.contextualAliases.length,
 );
-assert.equal(typedEntries.length, 6, 'Unexpected number of entries carrying alias typing');
+assert.equal(typedEntries.length, 8, 'Unexpected number of entries carrying alias typing');
 assert.deepEqual(required('frameworks:smv-matching').standaloneAliases, ['hypergamy']);
 /*
  * Four acronym-or-slang aliases typed because minPhraseLength and
@@ -152,12 +152,45 @@ assert.deepEqual(required('lexicon:term-smv-sexual-market-value').standaloneAlia
 assert.deepEqual(required('lexicon:term-lms-looks-money-status').standaloneAliases, ['LMS']);
 assert.deepEqual(required('smv:charm').standaloneAliases, ['rizz']);
 /*
- * And the four left dead on purpose. `game`, `Wall` and `Sham` are ordinary
+ * Two more, added 2026-07-30 after md/lab-constants-audit.md found that the
+ * length floor silences twelve untyped single-word aliases and only four had
+ * ever been ruled on. These are the two of the remaining eight where typing is
+ * the right instrument, each measured against authored probes because all four
+ * words are effectively absent from the 21-source archive — it is academic and
+ * journalistic prose and these are forum terms.
+ *
+ *   simp   +1 intent probe, 0 false positives. The only collision available in
+ *          English is a fabricated protocol name, which the gate discards.
+ *   4B     already credible at 0.515 through token overlap; typing makes the
+ *          bare acronym a phrase hit rather than a coincidence, at 0 cost.
+ */
+assert.deepEqual(required('lexicon:term-simp').standaloneAliases, ['simp']);
+assert.deepEqual(required('lexicon:term-4b').standaloneAliases, ['4B']);
+/*
+ * And the ones left dead on purpose. `game`, `Wall` and `Sham` are ordinary
  * English words under minSingleAliasLength, which is the shape that produced the
  * `provider` defect; each concept is reached anyway through the token surface
  * (measured in lab-match-behavior.test.mjs), so typing them would buy
  * false-positive risk for no measured recall. Pinned so reviving one is a
  * decision rather than a drift.
+ *
+ * `cope` and `PSL` join them with a measurement rather than by analogy, and the
+ * measurement is the interesting part — see md/lab-slang-alias-typing.md:
+ *
+ *   cope   standalone maps all three ordinary-English probes at 0.540,
+ *          including "Couples who cope with stress together report higher
+ *          relationship satisfaction." CONTEXTUAL IS NOT A SAFER STANDALONE
+ *          HERE: relationalCoFire promotes on a role term within eight tokens,
+ *          and the two survivors are promoted by "men" and "couples" — the two
+ *          commonest role nouns in the domain.
+ *   PSL    standalone maps a pumpkin spice latte, and buys one fewer intent hit
+ *          than the phrase route does.
+ *
+ * Both are reached instead by multi-word aliases, which need no typing and
+ * cannot collide with the ordinary sense: English separates the two
+ * grammatically, since the verb takes a complement ("cope with") and the noun is
+ * a predicate or object ("is cope", "as cope"). cope 3/4 intent and 0/3 false
+ * positives; PSL 2/2 and 0/2.
  */
 for (const [id, alias] of [
   ['smv:charm', 'game'],
@@ -169,6 +202,20 @@ for (const [id, alias] of [
   assert(entry.aliases.includes(alias), `${id} still lists "${alias}"`);
   assert(!entry.standaloneAliases.includes(alias) && !entry.contextualAliases.some((item) => item.alias === alias),
     `"${alias}" on ${id} is left untyped deliberately — it is ordinary English under the length floor`);
+}
+for (const [id, bare, phrase] of [
+  ['lexicon:term-cope', 'cope', 'is cope'],
+  ['lexicon:term-psl', 'PSL', 'on PSL'],
+]) {
+  const entry = required(id);
+  assert.equal(entry.standaloneAliases.length + entry.contextualAliases.length, 0,
+    `${id} now types an alias. "${bare}" was ruled untypeable on measurement, not on taste — `
+    + 'read the block above before reviving it.');
+  assert(!entry.aliases.includes(bare),
+    `${id} lists the bare "${bare}" as an alias. Untyped it is inert (under minSingleAliasLength), `
+    + 'so it only ever becomes live by someone typing it — which is the decision this pins against.');
+  assert(entry.aliases.includes(phrase),
+    `${id} lost "${phrase}", which is how the concept is reached instead of by typing.`);
 }
 /*
  * The cultural-register doctrine, pinned by id because it exists for a measured

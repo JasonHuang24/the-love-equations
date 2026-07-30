@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+f263ae6219b9",
+  "indexVersion": "1.0.0+6cf046c1e769",
   "generatedAt": "2026-07-30T14:14:56.000Z",
   "sourcePages": [
     {
@@ -12303,7 +12303,13 @@
       "evidenceType": "Glossary",
       "contentType": "Definition",
       "verdict": "",
-      "aliases": [],
+      "aliases": [
+        "is cope",
+        "as cope",
+        "just cope",
+        "pure cope",
+        "cope harder"
+      ],
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
@@ -12780,9 +12786,12 @@
       "verdict": "",
       "aliases": [
         "4B movement",
-        "Korean 4B movement"
+        "Korean 4B movement",
+        "4B"
       ],
-      "standaloneAliases": [],
+      "standaloneAliases": [
+        "4B"
+      ],
       "contextualAliases": [],
       "phrases": [],
       "dependencies": [
@@ -13114,7 +13123,9 @@
       "verdict": "",
       "aliases": [
         "PSL scale",
-        "PSL rating"
+        "PSL rating",
+        "PSL score",
+        "on PSL"
       ],
       "standaloneAliases": [],
       "contextualAliases": [],
@@ -13877,9 +13888,12 @@
       "verdict": "",
       "aliases": [
         "simping",
-        "simp economy"
+        "simp economy",
+        "simp"
       ],
-      "standaloneAliases": [],
+      "standaloneAliases": [
+        "simp"
+      ],
       "contextualAliases": [],
       "phrases": [],
       "dependencies": [

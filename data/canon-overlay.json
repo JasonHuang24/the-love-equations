@@ -1313,7 +1313,8 @@
     "lexicon:term-4b": {
       "aliases": [
         "4B movement",
-        "Korean 4B movement"
+        "Korean 4B movement",
+        "4B"
       ],
       "commonMisreadings": [
         "The 4B movement made Korean women refuse dating and marriage, which caused the birth-rate collapse."
@@ -1324,6 +1325,9 @@
       ],
       "pressureTests": [
         "Does the trend this is blamed for start before or after the movement did?"
+      ],
+      "standaloneAliases": [
+        "4B"
       ]
     },
     "lexicon:term-halo-effect": {
@@ -1396,7 +1400,9 @@
     "lexicon:term-psl": {
       "aliases": [
         "PSL scale",
-        "PSL rating"
+        "PSL rating",
+        "PSL score",
+        "on PSL"
       ],
       "commonMisreadings": [
         "Your PSL score to the decimal measures how much women want you and decides everything."
@@ -1508,7 +1514,8 @@
     "lexicon:term-simp": {
       "aliases": [
         "simping",
-        "simp economy"
+        "simp economy",
+        "simp"
       ],
       "commonMisreadings": [
         "Any man who spends money on a woman he is dating is simping, full stop."
@@ -1519,6 +1526,9 @@
       ],
       "pressureTests": [
         "What did the other side actually return, and would this be called simping if it had been reciprocated?"
+      ],
+      "standaloneAliases": [
+        "simp"
       ]
     },
     "lexicon:term-emotional-harem": {
@@ -1674,6 +1684,13 @@
       ],
       "pressureTests": [
         "If this belief were true, would the person still be accused of coping for holding it?"
+      ],
+      "aliases": [
+        "is cope",
+        "as cope",
+        "just cope",
+        "pure cope",
+        "cope harder"
       ]
     },
     "lexicon:term-frame": {
