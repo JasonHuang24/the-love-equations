@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+7af861cfbd75",
+  "indexVersion": "1.0.0+fb230cbc2703",
   "generatedAt": "2026-07-30T11:11:27.000Z",
   "sourcePages": [
     {
@@ -1648,8 +1648,12 @@
         "smv:looks"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A preference measured on stated rankings and a preference acted on in real pairings are separate measurements."
+      ],
+      "commonMisreadings": [
+        "Every woman rejects a man under six feet, so height alone settles who she dates."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1945,8 +1949,12 @@
         "smv:money"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Reading as stable and reading as wealthy are different judgments, and only the first is what this factor tracks."
+      ],
+      "commonMisreadings": [
+        "A woman commits to whichever man earns most, so income settles who she will marry."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -2140,8 +2148,12 @@
         "smv:status"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Copying an observed choice shifts how existing value gets read, which is a smaller effect than creating value."
+      ],
+      "commonMisreadings": [
+        "Being visibly wanted creates attraction from nothing, so a man with dates needs nothing else."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -2534,8 +2546,12 @@
         "smv:exposure"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Volume and sorting are distinct: a channel can raise how many people see you while narrowing who replies."
+      ],
+      "commonMisreadings": [
+        "Apps rank every man honestly, so a woman who rejects him there would reject him anywhere."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -2638,7 +2654,9 @@
         "Use it to respect timing, not to panic. The clock rewards starting now over starting \"when you're finally ready.\"",
         "Age effects vary by sex, goal, fertility plans, cohort, and market; they are slopes and trade-offs, not one cliff."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man's dating value peaks young and falls, on the same curve women walk after thirty."
+      ],
       "sourceLinks": [],
       "pressureTests": [
         "Is age being used as a population trend, an individual destiny, or a proxy for an unstated goal?"
@@ -2676,7 +2694,9 @@
         "A brutal local market is data, not a verdict. Sometimes the highest-return move isn't raising your score — it's changing the market you're scored in.",
         "The same profile can face different scarcity, competition, and norms in different markets."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man rated six in one city is rated six in every city he dates in."
+      ],
       "sourceLinks": [],
       "pressureTests": [
         "Would the claim reverse in a market with a different sex ratio, geography, app mix, or relationship norm?"
@@ -2714,7 +2734,9 @@
         "Know which game you're playing. Optimizing your whole self for short-term metrics, then wondering why long-term keeps failing, is a category error.",
         "Traits are weighted differently in stranger markets, social circles, apps, hookups, and long-term selection."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The five factors carry identical weight whether a woman wants a fling or wants marriage."
+      ],
       "sourceLinks": [],
       "pressureTests": [
         "Which stage and venue produced the observed response, and is the source generalizing beyond it?"
@@ -3172,8 +3194,12 @@
         "frameworks:smv-matching"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Regression toward the middle describes the average partner, and the spread around that average stays wide."
+      ],
+      "commonMisreadings": [
+        "Couples who date pair at identical looks ratings, so the curve predicts each partner's score."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3361,8 +3387,12 @@
         "statistics:stat-why-single",
         "frameworks:the-wall"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A coordinated refusal and an uncoordinated drift produce similar counts from different causes, and only the second is observed."
+      ],
+      "commonMisreadings": [
+        "Men have already coordinated a withdrawal, so women now compete for the few who date."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3389,8 +3419,12 @@
         "frameworks:spiderman-effect",
         "statistics:stat-couples-meet"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Choice overload survives replication as a conditional effect, so the conditions have to be present before it is invoked."
+      ],
+      "commonMisreadings": [
+        "More visible options make a woman choose faster, so abundance helps her find a partner."
+      ],
       "sourceLinks": [
         {
           "label": "Iyengar & Lepper (2000), JPSP",
@@ -3533,8 +3567,12 @@
         "frameworks:spiderman-effect",
         "frameworks:matching-curve"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Motive holding a pairing up and an unnamed mismatch are different diagnoses, and they call for different remedies."
+      ],
+      "commonMisreadings": [
+        "A couple who stay together without attraction or desire are simply dating badly."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3920,8 +3958,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Agreement at first glance is high and it dissolves with acquaintance, so the two measurements disagree by design."
+      ],
+      "commonMisreadings": [
+        "Bone structure settles attraction permanently, so a man's skeleton decides whether women will date him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -8793,8 +8835,12 @@
       ],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Mastery experiences and vicarious ones differ in strength, so which source of confidence is being built matters."
+      ],
+      "commonMisreadings": [
+        "A man must finish building confidence before he starts dating, or he wastes the attempt."
+      ],
       "sourceLinks": [
         {
           "label": "Bandura (1977), Psychological Review — self-efficacy theory; APA overview of the four sources",
@@ -8823,8 +8869,12 @@
       ],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Inducing jealousy and signalling availability are distinct behaviours with distinct scales, and one episode rarely separates them."
+      ],
+      "commonMisreadings": [
+        "A woman flirting with another man in front of her boyfriend wants to leave him."
+      ],
       "sourceLinks": [
         {
           "label": "Mattingly et al. (2012), Current Psychology — Romantic Jealousy-Induction Scale and motives",
@@ -9018,7 +9068,9 @@
       "boundaryConditions": [
         "The original 1989 percentages (commonly cited as ~69-75% of men vs 0% of women) could not be re-verified verbatim this session — the original article and the 2025 full text both 403'd — so the ruling uses the abstract-level magnitudes confirmed on PubMed (\"men quite likely to accept, women never did\")."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man who propositions a stranger directly gets the reception a woman would, so directness attracts equally."
+      ],
       "sourceLinks": [
         {
           "label": "Conley (2011), Journal of Personality and Social Psychology — the Clark–Hatfield gap (men quite likely to accept a stranger's casual-sex offer, women never) disappears with attractive, famous, or friend proposers; perceived sexual skill predicts acceptance for both sexes",
@@ -10034,7 +10086,9 @@
       "boundaryConditions": [
         "Fable-graded 2026-07-06. Held back on the first pass because the 52-count and signaling→approach findings were then uncited; both are now confirmed — Moore (1985) catalogued 52 solicitation behaviors and found “women who signaled often were also those who were most often approached by a man” (verified via the ScienceDirect abstract + multiple secondary…"
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Men initiate nearly every courtship, so a woman waits passively for him to choose her."
+      ],
       "sourceLinks": [
         {
           "label": "Moore (1985), Ethology and Sociobiology 6(4):237–247 — catalogued 52 female nonverbal solicitation behaviors; women who signaled more were approached more, signals eliciting a male approach within ~15s",
@@ -10117,7 +10171,9 @@
       "boundaryConditions": [
         "Ideals aren't empty: Gerlach et al. 2019 (JPSP, PMID 28921999, verified this session) found stated preferences prospectively predicted later partners' traits in a naturalistic sample — standards shape who you orbit; they bend on contact, and people also revised ideals downward to fit partners who fell short."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Stated ideals predict who a woman actually dates once a real candidate stands in front of her."
+      ],
       "sourceLinks": [
         {
           "label": "Eastwick, Finkel & Eagly (2011), Journal of Personality and Social Psychology — ideal-matching boosts romantic interest in written profiles but the effect disappears after a live interaction; people reinterpret traits to fit the actual person",
@@ -10293,7 +10349,9 @@
       "boundaryConditions": [
         "The claim's decade-by-decade wordings are loose paraphrases: the verified anchors are 1918 (husband-shortage letter), early-1900s–1930s marriage-crisis panics (Kuby via Jotwell), and 2003 (Whitehead's \"Why There Are No Good Men Left\" — Penguin Random House page fetched this session); I did not verify era primaries for the specific 1920s \"can't court\" and…"
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The shortage of good men who want to marry belongs to this decade alone."
+      ],
       "sourceLinks": [
         {
           "label": "Walker (1918), The Hospital — letter headlined 'The Shortage of Husbands', proof the complaint is at least a century old",
@@ -10384,7 +10442,9 @@
       "boundaryConditions": [
         "Kreager also found women who do initiate connect with more desirable partners, so the chooser role is partly self-reinforcing choice rather than pure imposition. Bruch & Newman (2018) independently corroborate the attention asymmetry at scale."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Men and women choose first contact at equal rates, so neither defaults to the offering side."
+      ],
       "sourceLinks": [
         {
           "label": "Kreager, Cavanagh, Yen & Yu (2014), Journal of Marriage and Family — dating-site data (8,259 men / 6,274 women): women 4x less likely to send first messages; female-initiated contacts over twice as likely to connect",
@@ -10676,7 +10736,9 @@
       "boundaryConditions": [
         "The classic MUM-effect line (Rosen & Tesser 1970 onward) converges on the same withholding bias, but no acceptable page for it could be fetch-verified this session, so it goes uncited. None of the cited evidence is sex-specific — the silence is a general human default, not a courtesy extended only to men — and the claim's 'it's mostly genetics' aside was not…"
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Friends tell a man the truth about his looks, so he already knows why women reject him."
+      ],
       "sourceLinks": [
         {
           "label": "Abi-Esber, Abel, Schroeder & Gino (2022), Journal of Personality and Social Psychology — five experiments (N=1,984): people underestimate others' desire for constructive feedback and withhold it; 2.6% field-pilot rate for appearance feedback",
@@ -11043,7 +11105,9 @@
       "boundaryConditions": [
         "Bruch/Newman and Kreager are large behavioral-trace datasets from single dating sites, not representative population surveys, and the 26/23% figures reflect messaging behavior rather than stated entitlement; self-enhancement magnitude (Epley) varies by measure."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Only women message far above their own desirability, so entitlement runs one direction in dating."
+      ],
       "sourceLinks": [
         {
           "label": "Bruch & Newman (2018), Science Advances — both sexes message partners ~25% more desirable than themselves (men 26%, women 23%).",
@@ -11216,7 +11280,9 @@
       "boundaryConditions": [
         "Hard-data grades the replicated descriptive direction, not a proven evolutionary mechanism. Galperin’s three studies and the Norwegian replication rely on retrospective self-report; the authors’ sexual-strategies interpretation is one proposed distal explanation, not an experimental result."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women who have casual sex regret it, so regret predicts which women date casually."
+      ],
       "sourceLinks": [
         {
           "label": "Galperin et al. (2013), Archives of Sexual Behavior — three descriptive studies (Ns = 200, 395, 24,230) found the casual-sex action/inaction regret pattern across methods and a diverse online sample",
@@ -11672,8 +11738,12 @@
         "pills:page-bp"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Patience and passivity produce the same visible behaviour, and only one of them keeps meeting new people."
+      ],
+      "commonMisreadings": [
+        "The right person arrives without being met, so a man who waits patiently will marry."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -11701,8 +11771,12 @@
         "smv:overview"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Pricing by a market and judging a person are separate operations, and only the first is what a score reports."
+      ],
+      "commonMisreadings": [
+        "A man's market value measures his human worth, so a low score means he deserves less."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -11762,8 +11836,12 @@
         "frameworks:the-wall"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Stranger attention and actual pairing move differently with age, so a curve drawn on one mispredicts the other."
+      ],
+      "commonMisreadings": [
+        "A woman's attractiveness collapses at thirty, so men stop wanting to date her after that."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -11916,8 +11994,12 @@
         "frameworks:interaction-gate"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A hard incompatibility and an unknown chemistry need different tests, and only the first can be screened in advance."
+      ],
+      "commonMisreadings": [
+        "Screening on a profile alone settles whether two people will actually get along dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -11942,8 +12024,12 @@
         "frameworks:readiness-gate"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Interest and present willingness are separate gates, so one can run high while the other stays closed."
+      ],
+      "commonMisreadings": [
+        "A woman who wants him but delays commitment will marry him once he waits longer."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -11968,8 +12054,12 @@
         "frameworks:good-news-rule"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Celebrating first and evaluating later are ordered steps, so practical caution can follow without displacing the moment."
+      ],
+      "commonMisreadings": [
+        "Leading with caution instead of celebration builds attraction and the relationship stability that keeps couples together."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12252,8 +12342,12 @@
         "frameworks:seven-seven-rule"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Both scores are graded independently, which is what stops a high mark on one from buying back the other."
+      ],
+      "commonMisreadings": [
+        "A woman scoring nine on looks clears the gate, so men will date her regardless of personality."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12279,8 +12373,12 @@
         "frameworks:sub-5-rule"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The floor binds only on someone who clears five themselves, and below that parity overrides it."
+      ],
+      "commonMisreadings": [
+        "One weak component disqualifies a partner outright, whatever the person doing the scoring rates himself."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12305,8 +12403,12 @@
         "frameworks:parity-rule"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A universal aspiration and an attainable target are different numbers, and this one is the second."
+      ],
+      "commonMisreadings": [
+        "Everyone should hold out for a seven on looks and seven on personality when dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12331,8 +12433,12 @@
         "frameworks:spiderman-effect"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Mutual belief works inside the band that bounds how far perception moves, so it lifts the reading rather than the rating."
+      ],
+      "commonMisreadings": [
+        "Mutual belief raises two partners' actual market ratings, so the upgrade shows up to strangers dating them."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12388,8 +12494,12 @@
         "frameworks:sham-relationship"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A hard sham held up by motive and a soft sham nobody names are separate diagnoses, and neither means the pairing is bad."
+      ],
+      "commonMisreadings": [
+        "A couple staying together for motive rather than desire have a relationship anyone would call bad."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12447,8 +12557,12 @@
         "deep-dive:relationships-throughout-history:great-unbundling"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The functions came loose one at a time across two centuries, so which one is being counted decides the date."
+      ],
+      "commonMisreadings": [
+        "Marriage still bundles sex, children, money and adult standing, so couples who marry get all four."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12644,8 +12758,12 @@
         "frameworks:abundance-trap"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Standards drifting and the market improving are different explanations for the same visible rise in what someone expects."
+      ],
+      "commonMisreadings": [
+        "Seeing more options raises a chooser's standards because the market genuinely improved around her dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12807,8 +12925,12 @@
         "pills:page-blk"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Constraints being real and outcomes being settled are separate propositions, and only the first survives the data."
+      ],
+      "commonMisreadings": [
+        "Fixed traits settle romantic outcomes completely, so a man below the looks floor stays single."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12833,8 +12955,12 @@
         "pills:height-pill"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A premium measured across a range and a threshold below which nothing works are different shapes."
+      ],
+      "commonMisreadings": [
+        "Height works as a ladder, so every added inch buys a man proportionally more dates."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -12930,8 +13056,12 @@
         "smv:overview"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Three fixed inputs mattering and two movable ones mattering are compatible, so dropping the movable pair is a choice."
+      ],
+      "commonMisreadings": [
+        "Attraction reduces to looks, money and status, so charm and exposure move nothing in dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13093,8 +13223,12 @@
         "frameworks:bone-pill"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Consensus at a glance and consensus after acquaintance are separate measurements, and they diverge as exposure grows."
+      ],
+      "commonMisreadings": [
+        "Facial bone structure settles attraction, so agreement about a man's face holds as women know him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13119,8 +13253,12 @@
         "pills:face-pill"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Four facial layers are distinguished precisely because three of them respond to effort and one does not."
+      ],
+      "commonMisreadings": [
+        "A face reduces to one score, so women reject a man on bone structure alone."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13210,8 +13348,12 @@
         "pills:page-rp"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Reading incentives accurately and holding people in contempt are separable, and the second is what curdles the first."
+      ],
+      "commonMisreadings": [
+        "Reading incentives and leverage correctly requires treating women with contempt while dating them."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13301,8 +13443,12 @@
         "frameworks:smv-matching"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A dual strategy existing and the ovulatory-shift mechanism working are separate questions, and replication bears on the second."
+      ],
+      "commonMisreadings": [
+        "Women take genes from attractive men and provision from stable ones, cycling between them predictably."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13326,8 +13472,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "An aggregate tendency and a universal rule are different strengths, and individual variation is what separates them."
+      ],
+      "commonMisreadings": [
+        "Women share one hidden nature, so knowing it predicts how any individual woman dates."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13450,8 +13600,12 @@
         "frameworks:smv-matching"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Access and value are separate gates: the ceiling moves with how much exposure a venue allows, not with how much skill exists."
+      ],
+      "commonMisreadings": [
+        "Learned social skill carries a man past his looks equally in every venue he dates in."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13507,8 +13661,12 @@
         "M-TBD-31"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "App attention and actual pairing are measured on different populations, and the skew is far stronger in the first."
+      ],
+      "commonMisreadings": [
+        "Twenty percent of men absorb every match, so the remaining men stay shut out of dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13567,8 +13725,12 @@
         "gender-dynamics:male:the-default-market:the-climb-building-smv"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A threshold being asserted and a threshold being measured are different states, and this one sits in the first."
+      ],
+      "commonMisreadings": [
+        "Above a certain rating a man stops asking, and women start pursuing him to date."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13593,8 +13755,12 @@
         "frameworks:mens-strike"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A coordinated strike and a withdrawal already underway differ in whether anybody organised it, and defection pays in the first."
+      ],
+      "commonMisreadings": [
+        "Men stopping together shifts the terms, so an organised refusal is what changes dating itself."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13653,8 +13819,12 @@
         "frameworks:status-trade"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A trade existing and a trade holding its exchange rate are separate questions, and earnings bear on the second."
+      ],
+      "commonMisreadings": [
+        "Looks swap for rank at a fixed price, so the deal holds whatever a woman earns in dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13779,8 +13949,12 @@
         "frameworks:operative-frame"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "An incentive gradient and a committee are different mechanisms, and reading every asymmetry as design is how one becomes the other."
+      ],
+      "commonMisreadings": [
+        "Women convene and coordinate a shared agenda, so laws and courtship norms follow a decision somebody made."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13805,8 +13979,12 @@
         "frameworks:operative-frame"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Both imperatives are named here because they intersect, and treating only one sex as running an agenda is the tell."
+      ],
+      "commonMisreadings": [
+        "Only women act as a bloc, so men pursuing rank and access approach dating as individuals."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13864,8 +14042,12 @@
         "frameworks:operative-frame"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Whose terms count as neutral and who holds formal power are separate questions, and this one is about the first."
+      ],
+      "commonMisreadings": [
+        "Whoever holds formal power sets the default, so courtship norms follow whichever side writes the laws."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13921,8 +14103,12 @@
         "frameworks:operative-frame"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Settled timing and measured causal weight are different standards of evidence, and only the timing is established."
+      ],
+      "commonMisreadings": [
+        "Reliable contraception explains fem-centrism completely, so its arrival settles how women and men date now."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14012,8 +14198,12 @@
         "pills:page-bp"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Warmth mattering and thresholds existing are compatible, so keeping the first does not require denying the second."
+      ],
+      "commonMisreadings": [
+        "Sincerity and warmth decide romantic outcomes, so thresholds stay irrelevant to who gets considered for dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14135,8 +14325,12 @@
         "pills:page-bp"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Patience and passivity look identical from outside, and the difference shows up in whether anyone new is met."
+      ],
+      "commonMisreadings": [
+        "One right person exists for everyone, so a man who waits will marry without ever approaching."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14194,8 +14388,12 @@
         "gender-dynamics:female:the-choosing-the-window:peak-leverage-the-filter"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Intensity and stability are separate properties, and the conditions that spike one often undermine the other."
+      ],
+      "commonMisreadings": [
+        "Intense butterflies signal a stable match, so the flutter predicts which couples last together."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -15283,7 +15481,9 @@
       "boundaryConditions": [
         "The tool can organize known information and flag mismatches; it cannot establish live chemistry or future durability."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A high compatibility score means two people will pair, so the number predicts dating outcomes."
+      ],
       "sourceLinks": [],
       "pressureTests": [
         "Which high-scoring pair fails in person, and which unmeasured factor explains the miss?"

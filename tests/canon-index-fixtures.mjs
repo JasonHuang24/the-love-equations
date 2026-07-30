@@ -31,37 +31,47 @@ assert.deepEqual(index.stats.byCategory, {
 });
 
 /*
- * Match-surface coverage, pinned because it is the thing two overlay tranches
- * were for and nothing else in the suite would notice it disappearing. Every
- * entry in these four categories carries a commonMisreading, which is the field
- * the Contradicts branch reads: before tranche 2 the branch was dark on 132 of
- * 133 Gender Dynamics cards, 36 of 41 Love Hierarchy factors, all 35 Deep Dive
- * entries and 27 of 31 charts. A harvester or overlay regression that dropped
- * them would leave the canon still valid, still 469 concepts, and unable to
- * disagree with anything.
+ * Match-surface coverage, pinned because it is the thing three overlay tranches
+ * were for and nothing else in the suite would notice it disappearing.
+ * `commonMisreadings` is the field the Contradicts branch reads: before tranche 2
+ * the branch was dark on 132 of 133 Gender Dynamics cards, 36 of 41 Love
+ * Hierarchy factors, all 35 Deep Dive entries and 27 of 31 charts. A harvester or
+ * overlay regression that dropped them would leave the canon still valid, still
+ * 469 concepts, and unable to disagree with anything.
  *
- * Stated as complete coverage per category rather than as a total, so the
- * assertion says what it means and does not quietly pass when 234 misreadings
+ * Iterated over EVERY category rather than the four tranche 2 covered — tranche 3
+ * closed the rest, so naming four would now be a weaker assertion wearing a
+ * specific one's clothes. Kept as a per-category loop rather than folded into the
+ * total below, because a failure that names the category is worth more than a
+ * failure that names a number, and a total can quietly pass when 234 misreadings
  * are replaced by 234 somewhere else.
  */
-for (const category of ['Gender Dynamics', 'Love Hierarchy', 'Deep Dives', 'Statistics']) {
+for (const category of [...new Set(index.entries.map((entry) => entry.category))].sort()) {
   const inCategory = index.entries.filter((entry) => entry.category === category);
   const dark = inCategory.filter((entry) => !entry.commonMisreadings.length);
   assert.equal(dark.length, 0,
-    `${category}: ${dark.length} entries carry no commonMisreading, so the Contradicts `
-    + `branch is dark for them (first: ${dark[0]?.id})`);
+    `${category}: ${dark.length} of ${inCategory.length} entries carry no commonMisreading, so `
+    + `the Contradicts branch is dark for them (first: ${dark[0]?.id})`);
 }
-// The remaining 56 are Lexicon (32), Mythbuster (10), Five Levers (7),
-// Rules & Frameworks (5), Pill Dossiers (1) and Instruments (1) — the tranche-3
-// backlog. Pinned so it can only ever go down deliberately.
-//
-// The count held at 56 across the cultural-register doctrine merge because all
-// six entries it added arrived WITH a misreading. That is the standing rule for
-// new doctrine: an entry authored without one enlarges this number, and the
-// assertion below is what forces the author to notice.
-assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).length, 56);
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 413);
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 419);
+/*
+ * ZERO. Tranche 3 closed the backlog on 2026-07-30: every concept in the canon
+ * carries a commonMisreading, so the Contradicts branch is live for all of them.
+ *
+ * This is now the strongest of the three assertions and the one to keep. It
+ * started at 100 of 463 before tranche 1, and the three tranches plus the
+ * cultural-register doctrine took it to 469 of 469. A new entry authored without
+ * a misreading fails here rather than quietly re-opening the gap — which is the
+ * whole reason to state it as zero rather than as a count that happens to match.
+ */
+assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).length, 0,
+  'Every canon entry must be able to disagree with a reader. An entry with no '
+  + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
+  + 'md/lab-overlay-tranche3.md.');
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 469);
+// Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
+// hand-authored boundary, and 6 entries carry a misreading alone because a second
+// boundary would only add retrieval mass to the same entry.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 463);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');

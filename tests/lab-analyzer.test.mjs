@@ -762,13 +762,16 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * IDF is computed across the canon, so this score moves whenever the index
    * gains text. 0.436 at 450 concepts; 0.437 at 463; 0.436 again after tranche 1
    * enriched 73 bare entries; 0.538 once tranche 2 gave this entry its own;
-   * 0.539 at 469, the cultural-register doctrine. The last step is drift alone —
-   * none of the six entries it added touches this passage — which is the shape
-   * to expect from a canon that grew, and the reason the assertions that carry
-   * the meaning are the three around this one rather than the number itself.
+   * 0.539 at 469, the cultural-register doctrine; 0.538 again after tranche 3.
+   *
+   * That last step went DOWN, and at an unchanged 469 concepts — tranche 3 added
+   * no entries, only 56 misreadings and 44 boundaries, so the denominators moved
+   * without the population moving. Drift in both directions on the same pin is
+   * the clearest argument that the number is not the assertion: the three around
+   * it are, and they have held through every one of these steps.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.539);
+  assert.equal(weakPassage.weakMatches[0].score, 0.538);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
