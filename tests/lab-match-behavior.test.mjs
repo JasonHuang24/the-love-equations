@@ -696,7 +696,11 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
     assert.equal(trace.disqualifiedBy, 'technical-modifier',
       `"${complement}" must be refused BY THE DENYLIST, not by the window test. Observed `
       + `${trace.disqualifiedBy}.`);
-    assert.equal(trace.reason, `technical modifier “${firstHit}” within 3 tokens`,
+    // The MODIFIER is the thing under test and stays literal. The token count is
+    // not: it comes from the config, so retuning the lookback cannot fail this test
+    // for a reason it was never asking about.
+    const window = SCORING_CONFIG.contextualAliasModifierLookback;
+    assert.equal(trace.reason, `technical modifier “${firstHit}” within ${window} tokens`,
       `"${complement}" must be refused by modifier “${firstHit}”, the first match in denylist `
       + `order. Observed: ${trace.reason}.`);
     assert.equal(credible, false,
@@ -809,7 +813,7 @@ test('the census generator uses the stemmer\'s own suffix inventory, not a copy 
 });
 
 test('the widening census is exhaustive over its own stated vocabulary', () => {
-  assert.equal(census.schema, 'le-lab.denylist-census/1.0');
+  assert.equal(census.schema, 'le-lab.denylist-census/1.1');
   assert.deepEqual(census.entries.map((row) => row.entry), DENYLIST_ENTRIES,
     'The census covers the denylist exactly, in order — a missing entry is how `service` and `care` '
     + 'were left out of the second published version.');
