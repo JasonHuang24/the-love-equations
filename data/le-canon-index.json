@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+fb230cbc2703",
+  "indexVersion": "1.0.0+f263ae6219b9",
   "generatedAt": "2026-07-30T11:11:27.000Z",
   "sourcePages": [
     {
@@ -89,8 +89,8 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "22d27fd15c3ab7ca73745f59c444f963c356e8ea8b396d12e3462621cd9063eb",
-      "conceptCount": 83
+      "sha256": "49c86de884355004b231452dd88ae107f99898e77be25ad1384c8ef635fc1a94",
+      "conceptCount": 84
     },
     {
       "page": "deep-dive.html",
@@ -215,14 +215,14 @@
     }
   ],
   "stats": {
-    "conceptCount": 469,
+    "conceptCount": 470,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
       "Five Levers": 35,
       "Gender Dynamics": 133,
       "Instruments": 5,
-      "Lexicon": 83,
+      "Lexicon": 84,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
@@ -233,7 +233,7 @@
       "Definitional": 1,
       "Evidence-based": 36,
       "Framework": 61,
-      "Glossary": 83,
+      "Glossary": 84,
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
@@ -249,7 +249,7 @@
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 378,
+    "anchoredConceptCount": 379,
     "conceptsWithExternalSources": 77,
     "dependencyCount": 233,
     "relatedCount": 308
@@ -12886,7 +12886,9 @@
         "heteropessimism",
         "straight culture",
         "straight experience",
-        "performative disaffiliation"
+        "performative disaffiliation",
+        "privatizing function",
+        "privatizing function of heterosexuality"
       ],
       "standaloneAliases": [],
       "contextualAliases": [],
@@ -12902,6 +12904,40 @@
       "sourceLinks": [],
       "pressureTests": [
         "Would this speaker's dating behaviour over the next year differ from someone who never said any of it?"
+      ]
+    },
+    {
+      "id": "lexicon:term-the-consumer-unit",
+      "title": "The consumer unit",
+      "page": "lexicon.html",
+      "anchor": "term-the-consumer-unit",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "Coupling read as an economic arrangement rather than only a romantic one. For most of the twentieth century the couple was the primary consumer unit — the household advertising was aimed at, and marital consumption was the shape the promised “good life” took. Seresin (2019) argues that dyad has been replaced by a smaller one: the individual consumer and her phone.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "consumer unit",
+        "primary consumer unit",
+        "marital consumption",
+        "individual consumer",
+        "the couple as a consumer unit"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "This describes consumption incentives around coupling, and says nothing about how much any individual wants a partner."
+      ],
+      "commonMisreadings": [
+        "Marriage is purely an economic arrangement, so romance and attraction are marketing invented to sell households."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "If the couple stopped being the unit advertisers target, which measured dating or marriage behaviour changed with it?"
       ]
     },
     {

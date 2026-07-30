@@ -15,14 +15,14 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 469);
+assert.equal(index.stats.conceptCount, 470);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 35,
   'Five Levers': 35,
   'Gender Dynamics': 133,
   Instruments: 5,
-  Lexicon: 83,
+  Lexicon: 84,
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 12,
@@ -67,11 +67,11 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 469);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 470);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 463);
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 464);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -189,6 +189,18 @@ for (const [id, title, alias] of [
   ['lexicon:term-heteropessimism', 'Heteropessimism', 'heteropessimism'],
   ['lexicon:term-the-feminine-reality', 'The feminine reality', 'feminine reality'],
   ['lexicon:term-feminization', 'Feminization', 'feminization'],
+  /*
+   * The consumer-unit concept, added 2026-07-30. It was the one reader-visible
+   * loss the cultural-register merge left: 04-heteropessimism argues about
+   * marital consumption and the couple as the unit advertising was aimed at,
+   * and the canon could only approximate that with smv:multiplier:market.
+   *
+   * Its alias is a PHRASE, not a bare word, and deliberately so — `consumer` and
+   * `unit` are both ordinary English, and only the pair names the concept. That
+   * also makes it a gate surface under option 2a, which is how the three
+   * previously unrescued claims reach a reader at all.
+   */
+  ['lexicon:term-the-consumer-unit', 'The consumer unit', 'consumer unit'],
 ]) {
   const entry = required(id);
   assert.equal(entry.title, title);
