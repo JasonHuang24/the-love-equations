@@ -112,8 +112,14 @@ Guards, green before and after:
 > They are worth reading: the errors were more instructive than the behavior. What follows is the
 > current account only.
 
-`carries()` tests three things, in this order, and returns on the first modifier that matches any of
-them:
+`carries()` iterates the **denylist in order** and tries three tests **inside each modifier**,
+returning on the first modifier any test matches. The loop order is the part that is easy to get wrong,
+and this subsection got it wrong until Sol's fifth review: the tests are not global-priority lanes, so a
+literal hit on a LATER modifier never happens — the loop has already returned on an earlier one.
+
+  for (const modifier of denylist) { if (test1) return; if (test2) return; if (test3) return; }
+
+The three tests, in the order they run within one modifier:
 
 | # | Test | Applies to |
 |---|---|---|
@@ -134,29 +140,44 @@ provisioning sense. `bl-17` and `bl-18` freeze that as a documented limit under 
 **Test 3 is reachable and can decide a case alone.** It decides whenever two stems line up and no
 earlier test fires, which for the canon's two multiword entries requires suffixing *both* words:
 
-**Every column below is computed by a replica of `carries`, not read from production** — see
-§2.2 for what is anchored and what is only modelled. The `Decided by` column is the most model-dependent
-of them, because no published field names the branch that selected a modifier.
+**Read the columns carefully, because they answer two different questions.** The three test columns
+are *independent predicates* — which modifiers each test would match if asked about every modifier.
+The last two columns are what production actually *does* under the loop order above. Conflating the two
+is the error Sol's fifth review found: it made this table wrong for `health care` and `healths care`.
 
-| Complement tokens | Test 1 literal | Test 2 substring | Test 3 stem run | Decided by (modelled) |
-|---|---|---|---|---|
-| `health caregivers` | — | `health care` | — | test 2 |
-| `health care` | `care` | `health care` | `health care`, `care` | test 1 |
-| `healths care` | `care` | — | `health care`, `care` | test 1 |
-| `healthfulness carefulness` | — | — | `health care`, `care` | **test 3 alone** |
-| `childfulness carefulness` | — | — | `care`, `child care` | **test 3 alone** |
-| `healths careers` | — | — | `health care`, `care` | **test 3 alone** |
+| Complement tokens | Test 1 matches | Test 2 matches | Test 3 matches | Modifier returned | Selected by |
+|---|---|---|---|---|---|
+| `health caregivers` | — | `health care` | — | `health care` | test 2 |
+| `health care` | `care` | `health care` | `health care`, `care` | `health care` | **test 2** |
+| `healths care` | `care` | — | `health care`, `care` | `health care` | **test 3** |
+| `healthfulness carefulness` | — | — | `health care`, `care` | `health care` | test 3 |
+| `childfulness carefulness` | — | — | `care`, `child care` | `care` | test 3 |
+| `healths careers` | — | — | `health care`, `care` | `health care` | test 3 |
 
-The decisive surfaces are inflected forms with no natural sentence behind them — `healthfulness`,
-`childfulness`, `healths careers`. That is an observation about the examples found, not a proof that
-none exists.
+`health care` and `healths care` both have a literal `care` match that **never happens**: `care` is at
+index 13 of the denylist and `health care` at index 2, so the loop returns before `care` is examined. A
+literal match on a later modifier is a counterfactual, not an earlier branch.
+
+**So production resolves FOUR of these six through the stem run, not three.** Two properties have to be
+kept apart, and both are now asserted separately:
+
+| Property | Sequences | What it establishes |
+|---|---|---|
+| the stem run **selected** the returned modifier | `healths care`, `healthfulness carefulness`, `childfulness carefulness`, `healths careers` | what production actually does |
+| the stem run is the **only** test that could match at all | `healthfulness carefulness`, `childfulness carefulness`, `healths careers` | that the branch is not inert — the counterfactual that refutes the retracted claim |
+
+The three sequences in the second row are inflected forms with no natural sentence behind them —
+`healthfulness`, `childfulness`, `healths careers`. That is an observation about the examples found, not
+a proof that none exists.
 
 ### 2.2 What the table is, and what it is not
 
-The table above is frozen in `tests/lab-match-behavior.test.mjs`: all three branch columns asserted
-against the replica, and the decisive set asserted by *identity* rather than by count, because any three
-rows satisfy a count while only these three carry the double-suffix shape. Frozen against the replica is
-not the same as frozen against production, which is the whole of this subsection.
+The table above is frozen in `tests/lab-match-behavior.test.mjs`: every column asserted against the
+replica — including `Selected by`, which was declared and never checked until Sol's fifth review, and
+was wrong for two rows when it finally was — and both stem-run properties asserted by *identity* rather
+than by count, since a count is satisfied by any three or four rows. The replica now executes the
+shipped loop order rather than treating the tests as lanes. Frozen against the replica is still not the
+same as frozen against production, which is the rest of this subsection.
 
 `carries` is **not exported**, so per-branch attribution is computed by a **replica derived from the
 analyzer's source**. Two independent anchors tie it to production, per row:
@@ -169,7 +190,7 @@ analyzer's source**. Two independent anchors tie it to production, per row:
 **What no current anchor proves is which of the three tests selected that modifier.** The trace publishes
 one modifier and not the branch that found it, so production could change the branch while preserving the
 modifier, the score, the fate and the admission result, and the replica's per-branch columns would go
-false while every anchor stayed green. **So §2.1's per-branch columns and its `Decided by`
+false while every anchor stayed green. **So §2.1's per-test columns and its `Selected by`
 column are a source-derived model, not a production freeze** — and calling them a freeze was itself one
 of the four errors Appendix A records. What IS frozen against production is narrower and worth stating
 positively: for all six sequences the denylist is what refused the alias, and production named the same

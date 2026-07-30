@@ -551,57 +551,76 @@ function branchesFor(tokens) {
     literal: fires(literal),
     substring: fires(substring),
     stemRun: fires(stemRun),
-    // What `carries` RETURNS, as opposed to which branches would fire: the first
-    // modifier in denylist order matched by any test, because the real helper is a
-    // `.find` over modifiers with the three tests inside it. This is the value the
-    // analyzer puts in its trace, so it is the value that ties this replica to the
-    // shipped code rather than merely agreeing with it about the outcome.
-    firstHit: DENYLIST_ENTRIES
-      .find((m) => literal(m) || substring(m) || stemRun(m)) || null,
+    // What `carries` RETURNS, and HOW it got there.
+    //
+    // The three arrays above are independent predicates: which modifiers each test
+    // would match if asked about every modifier. That is NOT the shipped control
+    // flow, and an earlier version of this file modelled the difference wrongly.
+    // `carries` iterates MODIFIERS in denylist order and tries the three tests
+    // INSIDE each modifier, returning on the first modifier any test matches. So a
+    // literal hit on a LATER modifier never happens: the loop has already returned.
+    //
+    // Sol's fifth review found the consequence — `health care` is selected by the
+    // substring test, not by the literal `care` entry, because `care` sits at index
+    // 13 and `health care` at index 2. Modelling the tests as global-priority lanes
+    // got two of six rows wrong.
+    ...selectLikeCarries(tokens, literal, substring, stemRun),
   };
+}
+
+/** The shipped loop order: modifier outer, the three tests inner, first match wins. */
+function selectLikeCarries(tokens, literal, substring, stemRun) {
+  for (const modifier of DENYLIST_ENTRIES) {
+    if (literal(modifier)) return { modifier, matchedBy: 'literal' };
+    if (substring(modifier)) return { modifier, matchedBy: 'substring' };
+    if (stemRun(modifier)) return { modifier, matchedBy: 'stemRun' };
+  }
+  return { modifier: null, matchedBy: null };
 }
 
 const BRANCH_TABLE = [
   {
     tokens: ['health', 'caregivers'],
-    literal: [], substring: ['health care'], stemRun: [], firstHit: 'health care',
+    literal: [], substring: ['health care'], stemRun: [], modifier: 'health care', matchedBy: 'substring',
     note: 'bl-17. The spanned-word shape §2 claimed had been removed. Only the substring test sees it.',
   },
   {
     tokens: ['health', 'care'],
-    literal: ['care'], substring: ['health care'], stemRun: ['health care', 'care'], firstHit: 'health care',
+    literal: ['care'], substring: ['health care'], stemRun: ['health care', 'care'], modifier: 'health care', matchedBy: 'substring',
     note: 'bl-19 territory. All three tests see it, which is why dropping the substring test is safe '
       + 'here — the stem run and the single-word `care` entry both still catch it.',
   },
   {
     tokens: ['healths', 'care'],
-    literal: ['care'], substring: [], stemRun: ['health care', 'care'], firstHit: 'health care',
+    literal: ['care'], substring: [], stemRun: ['health care', 'care'], modifier: 'health care', matchedBy: 'stemRun',
     note: 'Refutes the SUBSTRING lemma: `healths` strips to `health`, so `health care` never appears '
-      + 'as a substring while the stem run matches. It does NOT establish decisiveness — the '
-      + 'single-word `care` entry fires literally, so an earlier branch would have caught it anyway.',
+      + 'as a substring while the stem run matches, and the STEM RUN is what selects it in production. '
+      + 'The single-word `care` entry also matches literally, but `care` sits LATER in denylist order '
+      + 'and is never examined, so it is a counterfactual fallback rather than an earlier branch — '
+      + 'a distinction this file previously got backwards.',
   },
   {
     tokens: ['healthfulness', 'carefulness'],
-    literal: [], substring: [], stemRun: ['health care', 'care'], firstHit: 'health care',
+    literal: [], substring: [], stemRun: ['health care', 'care'], modifier: 'health care', matchedBy: 'stemRun',
     note: "Sol's counterexample, and the row that does the real work. Suffixing BOTH words is what "
       + 'takes every earlier branch out of play, which is why the double suffix was not decoration.',
   },
   {
     tokens: ['childfulness', 'carefulness'],
-    literal: [], substring: [], stemRun: ['care', 'child care'], firstHit: 'care',
+    literal: [], substring: [], stemRun: ['care', 'child care'], modifier: 'care', matchedBy: 'stemRun',
     note: 'The other multiword entry, decisive the same way, so the reachability is a property of '
       + "the branch and not of one entry's spelling.",
   },
   {
     tokens: ['healths', 'careers'],
-    literal: [], substring: [], stemRun: ['health care', 'care'], firstHit: 'health care',
+    literal: [], substring: [], stemRun: ['health care', 'care'], modifier: 'health care', matchedBy: 'stemRun',
     note: 'One ordinary plural and one ordinary noun, both stripped by the same rules. The cheapest '
       + 'decisive sequence found.',
   },
 ];
 
 test('the three branches of carries(), enumerated rather than argued', () => {
-  BRANCH_TABLE.forEach(({ tokens, literal, substring, stemRun, firstHit, note }) => {
+  BRANCH_TABLE.forEach(({ tokens, literal, substring, stemRun, modifier, matchedBy, note }) => {
     const observed = branchesFor(tokens);
     const label = tokens.join(' ');
     // All THREE branches are asserted. The first version of this test declared
@@ -611,33 +630,60 @@ test('the three branches of carries(), enumerated rather than argued', () => {
     assert.deepEqual(observed.literal, literal, `[${label}] literal branch — ${note}`);
     assert.deepEqual(observed.substring, substring, `[${label}] substring branch — ${note}`);
     assert.deepEqual(observed.stemRun, stemRun, `[${label}] stem-run branch — ${note}`);
-    assert.equal(observed.firstHit, firstHit,
+    assert.equal(observed.modifier, modifier,
       `[${label}] carries() returns the FIRST matching modifier in denylist order, and the analyzer `
-      + `puts it in its trace. Expected "${firstHit}", replica says "${observed.firstHit}".`);
+      + `puts it in its trace. Expected "${modifier}", replica says "${observed.modifier}".`);
+    // The cell that was declared and never checked until Sol's fifth review, and
+    // that was WRONG for two rows when it finally was.
+    assert.equal(observed.matchedBy, matchedBy,
+      `[${label}] modifier “${modifier}” is selected by the ${matchedBy} test under the shipped `
+      + `loop order. Replica says ${observed.matchedBy}. Modelling the tests as global-priority lanes `
+      + 'rather than as three tests inside a modifier loop is what got this wrong before.');
   });
 
   // The claim the two retracted paragraphs both got wrong, stated as an assertion:
   // there is at least one token sequence the stem run disqualifies and the earlier
   // two tests do not. If this ever becomes false, the branch has gone inert and the
   // correction blocks in md/lab-v2.6.1-release.md §2 need revisiting again.
-  const decisive = BRANCH_TABLE
+  // TWO different properties, and conflating them is how the `Decided by` column
+  // came to be wrong. This one is COUNTERFACTUAL: sequences no literal or substring
+  // test would match for ANY modifier, so the stem run is the only test that could
+  // catch them at all. It is the property that refutes "the stem run is inert".
+  const stemRunOnly = BRANCH_TABLE
     .filter(({ tokens }) => {
       const { literal, substring, stemRun } = branchesFor(tokens);
       return stemRun.length && !literal.length && !substring.length;
     })
     .map(({ tokens }) => tokens.join(' '));
 
-  // WHICH sequences are decisive, not how many. A count is satisfied by any three
-  // rows, so it would survive the decisive set drifting off the double-suffix shape
-  // that is the whole point of the refutation.
+  // This one is ACTUAL: sequences where the stem run is what selected the returned
+  // modifier under the shipped loop order. It is the larger set, because a stem-run
+  // selection can happen on an early modifier while a literal match waits, unreached,
+  // on a later one.
+  const selectedByStemRun = BRANCH_TABLE
+    .filter(({ matchedBy }) => matchedBy === 'stemRun')
+    .map(({ tokens }) => tokens.join(' '));
+  assert.deepEqual(selectedByStemRun, [
+    'healths care',
+    'healthfulness carefulness',
+    'childfulness carefulness',
+    'healths careers',
+  ], 'These four sequences are the ones production actually resolves through the stem run. §2.1 '
+    + 'claimed three, because it was scoring the counterfactual property below instead.');
+
+  const decisive = stemRunOnly;
+
+  // WHICH sequences, not how many. A count is satisfied by any three rows, so it
+  // would survive the set drifting off the double-suffix shape that is the point.
   assert.deepEqual(decisive, [
     'healthfulness carefulness',
     'childfulness carefulness',
     'healths careers',
-  ], 'These three sequences, and only these, are decisive by stem run alone — no literal hit and no '
-    + 'substring hit. §2 asserted the branch was decisive for NONE. If this set empties the branch has '
-    + 'gone inert and the correction blocks in md/lab-v2.6.1-release.md §2 need revisiting a third '
-    + 'time; if it changes shape, the refutation has moved and §2 should say so.');
+  ], 'These three sequences, and only these, could ONLY be caught by the stem run — no literal and no '
+    + 'substring test matches any modifier for them. §2 asserted the branch was inert. If this set '
+    + 'empties the branch really has gone inert and md/lab-v2.6.1-release.md §2.1 needs revisiting; if it '
+    + 'changes shape, the refutation has moved and §2.1 should say so. Note this is NOT the same as the '
+    + 'four sequences production resolves through the stem run, asserted above.');
 });
 
 /** The candidate-level row for one canon entry, plus whether it reached the public list. */
@@ -683,7 +729,7 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
   const sentence = (complement) => `During our marriage the provider for ${complement} was always him.`;
   const control = 'healths workers';
 
-  for (const { tokens, firstHit } of BRANCH_TABLE) {
+  for (const { tokens, modifier } of BRANCH_TABLE) {
     const complement = tokens.join(' ');
     const { candidate, credible } = await candidateFor(sentence(complement), CANON_ID);
 
@@ -700,8 +746,8 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
     // not: it comes from the config, so retuning the lookback cannot fail this test
     // for a reason it was never asking about.
     const window = SCORING_CONFIG.contextualAliasModifierLookback;
-    assert.equal(trace.reason, `technical modifier “${firstHit}” within ${window} tokens`,
-      `"${complement}" must be refused by modifier “${firstHit}”, the first match in denylist `
+    assert.equal(trace.reason, `technical modifier “${modifier}” within ${window} tokens`,
+      `"${complement}" must be refused by modifier “${modifier}”, the first match in denylist `
       + `order. Observed: ${trace.reason}.`);
     assert.equal(credible, false,
       `"${complement}" fires a denylist branch in the replica, so the analyzer must not promote the `
