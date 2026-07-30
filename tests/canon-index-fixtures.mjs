@@ -15,18 +15,18 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 450);
+assert.equal(index.stats.conceptCount, 463);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 35,
   'Five Levers': 35,
   'Gender Dynamics': 133,
   Instruments: 5,
-  Lexicon: 71,
+  Lexicon: 77,
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 12,
-  'Rules & Frameworks': 22,
+  'Rules & Frameworks': 29,
   Statistics: 31,
 });
 

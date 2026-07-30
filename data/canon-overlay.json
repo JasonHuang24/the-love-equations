@@ -955,6 +955,201 @@
       "pressureTests": [
         "Which suggested match fails after reciprocal choice and the Interaction Gate are applied?"
       ]
+    },
+    "frameworks:retention-gap": {
+      "aliases": [
+        "Retention Gap",
+        "formation-maintenance asymmetry",
+        "post-pairing blind spot"
+      ],
+      "phrases": [
+        "mate preference psychology after mate selection",
+        "post-pairing maintenance",
+        "after mate selection"
+      ],
+      "related": [
+        "frameworks:conversion-ladder",
+        "frameworks:good-news-rule",
+        "frameworks:sham-relationship"
+      ],
+      "boundaryConditions": [
+        "The gap is comparative thinness against this site's own formation-side coverage, not a claim that no maintenance doctrine exists here."
+      ],
+      "commonMisreadings": [
+        "The site says nothing about relationships once they have formed. The Good-News Rule and the Sham Relationship already exist; what is missing is depth and systematicity, not all coverage."
+      ],
+      "pressureTests": [
+        "Which Kept-rung claim on this site rests on a primary source rather than on inference from formation-side doctrine?"
+      ]
+    },
+    "frameworks:replaceability-asymmetry": {
+      "aliases": [
+        "Replaceability Asymmetry",
+        "mate value discrepancy",
+        "partner-self mate value discrepancy",
+        "partner-potential mate value discrepancy"
+      ],
+      "phrases": [
+        "mate value discrepancy",
+        "preference fulfilment",
+        "satisfied regardless of alternatives",
+        "mate value discrepancies"
+      ],
+      "related": [
+        "frameworks:matching-curve",
+        "frameworks:option-pool",
+        "smv:overview"
+      ],
+      "boundaryConditions": [
+        "The conditional runs through mate value discrepancy, not preference fulfilment; the weak Study 3 preference effect is unreplicated.",
+        "All three samples are partnered heterosexual convenience-panel adults, correlational, from one lab."
+      ],
+      "commonMisreadings": [
+        "Higher mate value than your partner leads to dissatisfaction. Without the alternatives-scarcity qualifier this states a conditional effect as a main effect, and misreports the only study that tested it."
+      ],
+      "pressureTests": [
+        "Does the claimed dissatisfaction survive when better alternatives are scarce? The source indicates it does not."
+      ]
+    },
+    "frameworks:attention-to-alternatives": {
+      "aliases": [
+        "Attention to Alternatives",
+        "comparison level for alternatives",
+        "attentiveness to alternatives"
+      ],
+      "phrases": [
+        "attention to alternatives",
+        "comparison level for alternatives",
+        "attentiveness to alternatives"
+      ],
+      "related": [
+        "frameworks:abundance-trap",
+        "frameworks:option-pool"
+      ],
+      "boundaryConditions": [
+        "The source is an unpublished draft chapter from a single research programme with small samples and no located independent replication.",
+        "The breakup-prediction result is one undergraduate sample over eight weeks and says nothing about established relationships."
+      ],
+      "commonMisreadings": [
+        "Noticing that a stranger is attractive puts a relationship at risk. The corrosive form measured is active searching and dwelling, not incidental noticing."
+      ],
+      "pressureTests": [
+        "Is the attentiveness chronic and trait-like, or situational and downstream of existing dissatisfaction?"
+      ]
+    },
+    "frameworks:mate-retention-intensity": {
+      "aliases": [
+        "Mate Retention Intensity",
+        "mate retention behaviour",
+        "mate retention behavior",
+        "mate guarding"
+      ],
+      "phrases": [
+        "mate retention behavior",
+        "mate retention intensity",
+        "mate guarding",
+        "retention tactics"
+      ],
+      "related": [
+        "frameworks:conversion-ladder",
+        "frameworks:sham-relationship"
+      ],
+      "boundaryConditions": [
+        "The satisfaction and trust pathways run in opposite directions in the same dataset; collapsing them into one quality-drives-effort story erases the finding.",
+        "One correlational path model on a convenience sample, with no located replication of the mediation."
+      ],
+      "commonMisreadings": [
+        "More retention behaviour means a more committed or healthier relationship. The inventory scores benign effort and coercive control on the same scale, so intensity carries no valence."
+      ],
+      "pressureTests": [
+        "Is the retention behaviour in question devotion or control? The score alone cannot tell you."
+      ]
+    },
+    "frameworks:desire-maintenance-split": {
+      "aliases": [
+        "Desire-Maintenance Split",
+        "desire decline",
+        "sexual desire decline"
+      ],
+      "phrases": [
+        "sexual desire",
+        "attachment-related relational needs",
+        "partner responsiveness",
+        "desire declines with familiarity"
+      ],
+      "related": [
+        "lexicon:term-desire",
+        "frameworks:conversion-ladder"
+      ],
+      "boundaryConditions": [
+        "The prospective leg covers newlyweds in the first four to five years only; nothing here speaks to decades-long relationships.",
+        "The cross-sectional leg cannot separate relationship duration from age or cohort, by its own authors' statement."
+      ],
+      "commonMisreadings": [
+        "Anxious attachment suppresses desire. The only located instrumented test found the opposite sign, a positive correlation, and rejected the moderation hypothesis.",
+        "Desire declines with familiarity, stated as one finding. That merges three sub-claims supported at three different strengths, one of which has no located test at all."
+      ],
+      "pressureTests": [
+        "Which of the three sub-claims is being asserted, and does the citation offered actually test that one?"
+      ]
+    },
+    "frameworks:satisfaction-flywheel": {
+      "aliases": [
+        "Satisfaction Flywheel",
+        "bidirectional satisfaction association"
+      ],
+      "phrases": [
+        "bidirectional association",
+        "frequency of sex",
+        "sexual satisfaction"
+      ],
+      "related": [
+        "frameworks:good-news-rule",
+        "frameworks:conversion-ladder"
+      ],
+      "boundaryConditions": [
+        "Demonstrated in newlywed couples in the first four to five years; the one located longer-marriage comparison found only one of the two directions.",
+        "The partner effects are exploratory secondary analyses, not the study's confirmatory hypotheses."
+      ],
+      "commonMisreadings": [
+        "Good sex causes a good relationship, or the reverse, as a one-way arrow. The finding is that both directions run independently and at roughly equal strength."
+      ],
+      "pressureTests": [
+        "Is the claimed direction the only one tested, or has the reverse path been modelled in the same data?"
+      ]
+    },
+    "frameworks:operative-frame": {
+      "aliases": [
+        "Operative Frame",
+        "feminine imperative",
+        "fem-centrism",
+        "male imperative",
+        "locus-of-control shift"
+      ],
+      "phrases": [
+        "feminine imperative",
+        "operative framework",
+        "fem-centrism",
+        "feminine primacy",
+        "male imperative"
+      ],
+      "related": [
+        "frameworks:status-trade",
+        "frameworks:mens-strike",
+        "lexicon:term-awalt-all-women-are-like-that"
+      ],
+      "boundaryConditions": [
+        "Era- and lever-specific: it describes the post-1960 window in which one contraceptive technology existed asymmetrically, and makes no claim about any individual couple.",
+        "The model predicts its own weakening if male-controlled contraception reaches parity."
+      ],
+      "commonMisreadings": [
+        "The feminine imperative is a coordinated plan. The primary text explicitly denies coordination and argues convergent incentive instead.",
+        "The feminine imperative describes individual women's intentions rather than an aggregate incentive gradient. That reading is the slide into blanket AWALT-style claims.",
+        "The 1960 contraceptive history and the causal weight assigned to it carry the same evidential status. Only the first is settled."
+      ],
+      "pressureTests": [
+        "Is the claim the historical asymmetry, which is documented, or the causal weight assigned to it, which is not?"
+      ]
     }
   }
 }
