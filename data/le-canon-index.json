@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+efd2832eb55f",
-  "generatedAt": "2026-07-27T11:38:21.000Z",
+  "indexVersion": "1.0.0+c179417cf20f",
+  "generatedAt": "2026-07-30T07:07:00.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -251,7 +251,7 @@
     },
     "anchoredConceptCount": 372,
     "conceptsWithExternalSources": 77,
-    "dependencyCount": 224,
+    "dependencyCount": 229,
     "relatedCount": 314
   },
   "entries": [
@@ -12603,7 +12603,9 @@
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
-      "dependencies": [],
+      "dependencies": [
+        "deep-dive:relationships-throughout-history"
+      ],
       "related": [],
       "boundaryConditions": [],
       "commonMisreadings": [],
@@ -12625,7 +12627,9 @@
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
-      "dependencies": [],
+      "dependencies": [
+        "deep-dive:third-spaces"
+      ],
       "related": [],
       "boundaryConditions": [],
       "commonMisreadings": [],
@@ -12647,7 +12651,9 @@
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
-      "dependencies": [],
+      "dependencies": [
+        "deep-dive:relationships-by-country"
+      ],
       "related": [],
       "boundaryConditions": [],
       "commonMisreadings": [],
@@ -12669,7 +12675,9 @@
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
-      "dependencies": [],
+      "dependencies": [
+        "deep-dive:what-the-wall-actually-is"
+      ],
       "related": [],
       "boundaryConditions": [],
       "commonMisreadings": [],
@@ -12691,7 +12699,9 @@
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
-      "dependencies": [],
+      "dependencies": [
+        "deep-dive:single-parenthood"
+      ],
       "related": [],
       "boundaryConditions": [],
       "commonMisreadings": [],

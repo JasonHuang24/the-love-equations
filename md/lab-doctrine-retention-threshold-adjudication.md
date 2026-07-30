@@ -14,7 +14,7 @@ and new entries enter the candidate set from a prior score of zero.
 ```
 analyzer   2.6.1 -> 2.6.1
 config     bt0a7p -> bt0a7p
-canon      1.0.0+949aef381d5f -> 1.0.0+efd2832eb55f  (doctrine moved)
+canon      1.0.0+949aef381d5f -> 1.0.0+c179417cf20f  (doctrine moved)
 population 103 retained passages x 463 entries = 47689 pairs
 changed    5223   2896 down / 2327 up
 candidateScoreFloor  0.08  98 gain / 9 loss

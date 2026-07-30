@@ -399,10 +399,18 @@ function normalizeContextualAliases(values) {
   return result;
 }
 
+/*
+ * Link data for a subtree. `allByTag` walks descendants only, so a node that is
+ * itself the link — deep-dive.html wraps each essay card in `<a class="dd-feature"
+ * href=...>` — would otherwise report no links at all. Widening to `node.parent`
+ * is not the fix: for a card sitting in a grid of sibling cards that pulls every
+ * sibling's href into every entry.
+ */
 function linkData(node) {
   const external = [];
   const internal = [];
-  for (const anchor of allByTag(node, 'a')) {
+  const anchors = node?.tag === 'a' ? [node, ...allByTag(node, 'a')] : allByTag(node, 'a');
+  for (const anchor of anchors) {
     const href = cleanText(anchor.attrs?.href || '');
     if (!href || /^(mailto:|tel:|javascript:)/i.test(href)) continue;
     if (/^https?:\/\//i.test(href)) {

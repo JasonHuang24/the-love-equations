@@ -40,6 +40,18 @@ assert.equal(required('M-TBD-10').title, 'Never go to bed angry.');
 assert.match(required('pills:page-blk').synopsis, /constraint awareness/i);
 assert(required('lexicon:term-smv-sexual-market-value').aliases.includes('SMV'));
 assert(required('deep-dive:relationships-throughout-history').related.includes('frameworks:the-wall'));
+
+// deep-dive.html wraps each hub card in `<a class="dd-feature" href=...>`, so the
+// href sits on the harvested node itself rather than under it. `linkData` walked
+// descendants only and every hub entry harvested with an empty relation set; a
+// hub whose whole job is pointing at its essay pointed nowhere.
+for (const hub of index.entries.filter((entry) => entry.id.startsWith('deep-dive:hub:'))) {
+  const essayId = hub.id.replace('deep-dive:hub:', 'deep-dive:');
+  assert(
+    hub.dependencies.includes(essayId),
+    `${hub.id} lost the link to the essay it exists to announce`,
+  );
+}
 assert.match(required('instrument:smv-calculator').synopsis, /Looks, Money, Status, Charm, and Exposure/);
 
 for (const entry of index.entries) {
