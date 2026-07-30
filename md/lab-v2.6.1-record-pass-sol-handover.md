@@ -1,7 +1,23 @@
 # LE Lab v2.6.1 record-fidelity pass — Sol verification handover brief
 
-**Status:** rewritten 2026-07-29 for the **fifth** pass. Maintainer lane throughout: **Claude Opus 5,
-/effort high**, single session.
+> ## CLOSED. DO NOT PASTE THIS.
+>
+> **The review loop was closed by Jason on 2026-07-29 after five verification passes.** This file is
+> retained as the record of what the fifth pass was asked to check. It is **not** an instruction to send
+> anything to anybody, and its contents are stale: the fifth pass returned CONTEST, its findings were
+> actioned in `33f0ef1`, `20e5849`, `b974f9b` and `63ea075`, and the sections this brief describes have
+> changed since.
+>
+> **Why it stopped.** Of the nineteen findings across passes 2–5, about seventeen were defects
+> introduced by the previous round's corrections rather than by the shipped release. The instrument was
+> ACCEPTed on all five passes and `js/lab-analyzer.js` never changed. The loop had stopped measuring the
+> release and started measuring the editing, and the editing was mine.
+>
+> **Work carried forward:** `md/lab-v2.6.2-scope.md`. Four items, each actionable from that file without
+> a sixth brief.
+
+**Status:** written 2026-07-29 for the **fifth** pass, now closed. Maintainer lane throughout:
+**Claude Opus 5, /effort high**, single session.
 
 **Identity convention, corrected on Sol's fourth-pass finding.** Earlier versions of this brief named
 a commit as "this brief," which went stale the moment the file was pushed again — the version Sol read
