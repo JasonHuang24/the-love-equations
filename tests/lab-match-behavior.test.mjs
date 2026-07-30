@@ -1200,3 +1200,91 @@ test('the cost of typing SMV: an unrelated SMV protocol now names the concept', 
     assert.equal(offResult.segments.flatMap((segment) => segment.matches).length, 0);
   }
 });
+
+/*
+ * A canon entry's words about ITSELF, frozen as a KNOWN DEFECT that was measured
+ * and deliberately left alone. 2026-07-30.
+ *
+ * The site's prose refers to its own artifacts constantly — "the card defines X",
+ * "the hub card carries the thesis", "this section records refusals" — and those
+ * words sit on the retrieval surface as ordinary content. 132 boundary conditions
+ * and 5 misreadings use the register; 71 of those are genuine self-reference.
+ *
+ * The defect is real. Below, `card` and `says` together carry a CREDIBLE,
+ * DISPLAYED match at 0.434 against minCredibleScore 0.43, between a passage about
+ * the age of the women men date and an entry about making peace with being alone.
+ * Every other shared token is a stopword or already low-information.
+ *
+ * THREE FIXES WERE MEASURED AND ALL THREE ARE WORSE THAN THE DEFECT.
+ *
+ * 1. Demote the terms into LOW_INFORMATION_MATCH_TERMS. Causation established by
+ *    building each variant, not by re-tokenizing by hand:
+ *
+ *      card alone .................. defect survives, archive cost 0
+ *      artifact nouns only ......... defect survives, archive cost 0
+ *      nouns + claim, state, describe  defect survives, archive cost 0
+ *      say* alone .................. defect survives, archive cost 3
+ *      all of the above ............ defect DIES,     archive cost 3
+ *
+ *    So `say*` causes the entire cost and the nouns buy nothing on their own; only
+ *    the full set kills the defect, and it still pays the 3. Those 3 are displayed
+ *    mappings on 01-pew-online-dating, whose prose is full of "women are more
+ *    likely to SAY online dating is not safe" — a survey reporting what
+ *    respondents said, which is ordinary reported speech and not an artifact
+ *    describing itself. One of the three (a romance-scammer entry on a
+ *    perceived-safety sentence) was junk anyway; the other two are apt. Trading
+ *    two apt credible matches for one constructed case is a bad trade.
+ *
+ * 2. Reword the register out of the canon. Wrong for a different reason: much of
+ *    it is not self-reference at all. "their claim about dating is true" and "a
+ *    causal claim about partner outcomes" are ordinary epistemic language, "wild
+ *    card" is not even the noun, and "the hub card carries the essay's thesis in
+ *    one line; the evidence lives in the essay itself" is real information about
+ *    how this site is built. A blanket rewrite deletes that.
+ *
+ * 3. Do nothing and pretend it is fine. Also wrong, which is why this test exists.
+ *
+ * Measured benefit of fixing it, on all 21 archived sources: ZERO either way. The
+ * archive is 21 PRIMARY sources, so it under-represents the register by
+ * construction — a reader pasting commentary about an article is exactly who would
+ * write "the card says". That is a reason to keep the finding visible, not a
+ * reason to ship a fix that was measured to cost more than it buys.
+ *
+ * If this is revisited: the promising direction is neither a denylist nor a
+ * rewrite, but scoping the demotion to the ENTRY side of the comparison, so an
+ * entry describing itself stops contributing while a passage reporting speech is
+ * untouched. That was not built.
+ */
+test('the canon describing itself is a known, measured, unfixed match surface', async () => {
+  const passage = 'The card says nothing about whether men who date older women stay longer.';
+  const resentment = 'gender-dynamics:male:the-cost-of-staying-true:make-peace-with-it-or-let-resentment-win';
+  const document = normalizeInput({
+    text: passage,
+    source: { title: 'meta-register defect, frozen' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+
+  const result = await analyzeDocument(document, canonIndex);
+  const matches = result.segments.flatMap((segment) => segment.matches);
+  const meta = matches.find((match) => match.canonId === resentment);
+
+  assert.ok(meta, 'The defect no longer reproduces. If that was deliberate, say which of the '
+    + 'three measured fixes was chosen and what it cost; if it was incidental, find out why '
+    + 'before deleting this test — the reasoning above is the only record of the measurement.');
+  assert.ok(meta.score >= 0.43,
+    `frozen at credible: ${meta.score} — a drop below minCredibleScore is a silent improvement `
+    + 'that still needs recording');
+
+  // The half a fix must not break, asserted here so the next attempt has it: a
+  // passage REPORTING a domain claim still reaches the concept its domain words
+  // point at. Option 1 above broke exactly this on the Pew source.
+  const reported = normalizeInput({
+    text: 'She says that women in their thirties get far less attention on dating apps than before.',
+    source: { title: 'reported domain claim' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+  const reportedResult = await analyzeDocument(reported, canonIndex);
+  assert.ok(reportedResult.segments.flatMap((segment) => segment.matches).length > 0,
+    'a claim someone is quoting must keep reaching its concept — demoting `say` is what cost '
+    + 'three displayed mappings on 01-pew-online-dating');
+});
