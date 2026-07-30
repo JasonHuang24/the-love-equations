@@ -47,6 +47,11 @@ const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const fixture = JSON.parse(readFileSync(
   path.join(ROOT_DIR, 'tests', 'fixtures', 'cultural-register-pairs.json'), 'utf8',
 ));
+// Read once at module scope: two tests now assert against benchmark cases by id,
+// and a second in-test read would let them drift onto different copies.
+const benchmark = JSON.parse(readFileSync(
+  path.join(ROOT_DIR, 'tests', 'fixtures', 'domain-relevance-benchmark.json'), 'utf8',
+));
 
 function verdictFor(text) {
   const units = classifyDomainRelevance(detectClaimUnits(normalizeInput({
@@ -157,10 +162,6 @@ test('the register gap is measured, and the defect count may only go down', () =
 const KNOWN_CULTURAL_FRAME_FALSE_POSITIVES = new Set(['pv-07']);
 
 test('the cultural frame never retains a passage the benchmark says to discard', () => {
-  const benchmark = JSON.parse(readFileSync(
-    path.join(ROOT_DIR, 'tests', 'fixtures', 'domain-relevance-benchmark.json'), 'utf8',
-  ));
-
   const blamed = [];
   benchmark.cases.filter((row) => row.expected === 'ignore').forEach((row) => {
     const [unit] = classifyDomainRelevance([{
@@ -230,4 +231,57 @@ test('the cultural frame requires a human participant, by construction', () => {
   const withPerson = verdictFor(somebody);
   assert.notEqual(withPerson.status, 'irrelevant',
     'the same claim with a participant in it is what option 1 exists to admit');
+});
+
+/*
+ * P2: `male` and `female` name people.
+ *
+ * Ruled by Jason on 2026-07-30 from md/lab-gate-participant-vocabulary.md, which
+ * measured five candidate widenings of HUMAN_PARTICIPANT_FRAMES and recommended
+ * this one alone. It was the only candidate whose cost was measured at zero
+ * rather than merely unmeasured: the other three each bought exactly one authored
+ * false positive, all of the same shape.
+ *
+ * The independent argument for it, which is why it holds regardless of what it
+ * buys: RELATIONAL_OUTCOME_FRAMES.cross-sex-selection in the same file already
+ * matches males|females. Before this change the analyzer disagreed with itself
+ * about whether those words name people, depending on which frame was asking.
+ *
+ * Both positives below are AUTHORED and deliberately pronoun-free. The corpus
+ * sentences that motivated the change carry `his` and `her`, which the pronoun
+ * frame already catches, so quoting them would have tested nothing — and
+ * lab-corpus/ is gitignored third-party text besides (md/RERUN.md §1).
+ */
+test('sexed nouns name people, the same way men and women do', () => {
+  for (const text of [
+    'Advertising teaches each female that worth gets decided before a word is spoken.',
+    'Sitcoms taught a generation of males that competence is the punchline.',
+  ]) {
+    const verdict = verdictFor(text);
+    assert.ok(verdict.frames.participant.detected,
+      `"${text}" names a person, so the participant frame has to see one`);
+    assert.notEqual(verdict.status, 'irrelevant',
+      'a sexed noun plus a cultural mechanism is the case P2 was ruled to admit');
+  }
+
+  // The cost side, asserted rather than assumed. These are pv-01 through pv-03 of
+  // the domain benchmark: the same two words in their hardware and plumbing
+  // senses. P2 makes them participants, so the only thing keeping these out is
+  // that no mechanism or outcome frame fires — which is exactly the property that
+  // would break quietly if a future frame grew looser.
+  for (const id of ['pv-01', 'pv-02', 'pv-03']) {
+    const row = benchmark.cases.find((item) => item.id === id);
+    assert.ok(row, `${id} is the measured cost side of P2 and must stay in the benchmark`);
+    const [unit] = classifyDomainRelevance([{
+      id: row.id,
+      parentSegmentId: `bench-${row.id}`,
+      segmentIndex: 0,
+      text: row.text,
+      wordCount: row.text.trim().split(/\s+/).length,
+      isClaimLike: true,
+      boundedContext: null,
+    }]);
+    assert.equal(unit.domainRelevance.status, 'irrelevant',
+      `${id} is the hardware sense of male/female and must stay out: ${row.text}`);
+  }
 });

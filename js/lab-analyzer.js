@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.4';
+export const ANALYZER_VERSION = '2.6.5';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -308,7 +308,23 @@ const HUMAN_PARTICIPANT_FRAMES = Object.freeze([
     id: 'human-individuals',
     label: 'Human individuals or relationship-seeking population',
     weight: 2,
-    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|men|women|man|woman|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
+    /*
+     * `males?` and `females?` were added on Jason's ruling of 2026-07-30 (P2 of
+     * md/lab-gate-participant-vocabulary.md), the one widening of five whose cost
+     * was measured at zero rather than left unmeasured.
+     *
+     * The reason it holds independently of what it buys: cross-sex-selection in
+     * RELATIONAL_OUTCOME_FRAMES below already matches males|females, so until now
+     * the analyzer disagreed with itself about whether these words name people,
+     * depending on which frame was asking.
+     *
+     * They are the ONE sense-ambiguous pair here — a male connector and a female
+     * coupling are hardware — and that ambiguity is load-bearing enough to be
+     * pinned as benchmark cases pv-01 through pv-03. What keeps those out is that
+     * no mechanism or outcome frame fires on them, not that the words go
+     * unrecognised.
+     */
+    test: (text) => /\b(?:people|persons?|someone|adults?|singles?|couples?|spouses?|husbands?|wives|boyfriends?|girlfriends?|lovers?|men|women|man|woman|males?|females?|unattached (?:adults?|residents?)|potential partners?)\b/i.test(text),
   },
   {
     id: 'human-groups',
