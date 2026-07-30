@@ -742,7 +742,7 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
  *
  * md/lab-v2.6.1-release.md §3 published this enumeration twice as "enumerated
  * over all sixteen entries" and it was wrong twice — first naming `pays`, which
- * does not match, and omitting six surfaces; then omitting `carefulness` and
+ * does not match, and omitting seven surfaces; then omitting `carefulness` and
  * `medicalization`, which Sol's verification review found. Both failures were the
  * same step: a mechanical candidate space filtered to real English BY HAND, where
  * a hand that forgets a word leaves no trace in the artifact.
@@ -813,7 +813,7 @@ test('the census generator uses the stemmer\'s own suffix inventory, not a copy 
 });
 
 test('the widening census is exhaustive over its own stated vocabulary', () => {
-  assert.equal(census.schema, 'le-lab.denylist-census/1.1');
+  assert.equal(census.schema, 'le-lab.denylist-census/1.2');
   assert.deepEqual(census.entries.map((row) => row.entry), DENYLIST_ENTRIES,
     'The census covers the denylist exactly, in order — a missing entry is how `service` and `care` '
     + 'were left out of the second published version.');
@@ -829,7 +829,7 @@ test('the widening census is exhaustive over its own stated vocabulary', () => {
     if (row.multiword) {
       // A single-surface census cannot describe a two-stem run; the truth table
       // above owns those, and the note has to say where they went.
-      assert.equal(row.newlyReached.length + row.reachedButUnattested.length, 0,
+      assert.equal(row.reachedAndAttested.length + row.reachedButUnattested.length, 0,
         `[${row.entry}] is multiword, so its widening belongs to the branch truth table.`);
       assert.ok(row.note && /truth table|decisive/u.test(row.note),
         `[${row.entry}] must point at where its widening IS recorded.`);
@@ -837,7 +837,7 @@ test('the widening census is exhaustive over its own stated vocabulary', () => {
     }
 
     const generated = mechanicalCandidates(row.entry, row.stem);
-    const ruled = [...row.newlyReached, ...row.reachedButUnattested].sort();
+    const ruled = [...row.reachedAndAttested, ...row.reachedButUnattested].sort();
 
     // THE ASSERTION THAT CLOSES THE HOLE: every generated candidate carries a
     // verdict, and no verdict is invented for a candidate the rules do not reach.
@@ -851,9 +851,9 @@ test('the widening census is exhaustive over its own stated vocabulary', () => {
 
     // Every surface claimed as newly reached must actually match by stem and must
     // actually have been missed by the literal tests — the `pays` error, inverted.
-    row.newlyReached.forEach((word) => {
+    row.reachedAndAttested.forEach((word) => {
       assert.equal(stemOf(word), row.stem,
-        `[${row.entry}] claims "${word}" is newly reached, but it stems to "${stemOf(word)}".`);
+        `[${row.entry}] claims "${word}" is attested-and-reached, but it stems to "${stemOf(word)}".`);
       assert.ok(word !== row.entry && word !== `${row.entry}s`,
         `[${row.entry}] claims "${word}" is NEWLY reached, but the literal tests already reach it.`);
     });
@@ -861,21 +861,37 @@ test('the widening census is exhaustive over its own stated vocabulary', () => {
 });
 
 test('the census records the surfaces the release report names, and pays is not one of them', () => {
-  const reached = new Map(census.entries.map((row) => [row.entry, row.newlyReached]));
+  const attested = new Map(census.entries.map((row) => [row.entry, row.reachedAndAttested]));
 
   // The corrections Sol's two reviews produced, pinned so they cannot quietly regress.
-  assert.ok(reached.get('care').includes('careers'), '`careers` reaches `care` — first review.');
-  assert.ok(reached.get('service').includes('serviceable'), '`serviceable` reaches `service`.');
-  assert.ok(reached.get('care').includes('carefulness'), '`carefulness` reaches `care` — second review.');
-  assert.ok(reached.get('medical').includes('medicalization'), '`medicalization` reaches `medical`.');
-  assert.ok(reached.get('hosting').includes('hostable'), '`hostable` reaches `host` — third review.');
-  assert.ok(reached.get('network').includes('networkable'), '`networkable` reaches `network`.');
+  assert.ok(attested.get('care').includes('careers'), '`careers` reaches `care` — first review.');
+  assert.ok(attested.get('service').includes('serviceable'), '`serviceable` reaches `service`.');
+  assert.ok(attested.get('care').includes('carefulness'), '`carefulness` reaches `care` — second review.');
+  assert.ok(attested.get('medical').includes('medicalization'), '`medicalization` reaches `medical`.');
+  assert.ok(attested.get('hosting').includes('hostable'), '`hostable` reaches `host` — third review.');
+  assert.ok(attested.get('network').includes('networkable'), '`networkable` reaches `network`.');
+  assert.ok(attested.get('internet').includes('internetization'),
+    '`internetization` reaches `internet` — fourth review.');
+  assert.ok(attested.get('network').includes('networkization'), '`networkization` reaches `network`.');
+
+  // Held AGAINST the fourth review, and pinned so the reasoning cannot be lost:
+  // the standards bodies write `softwarization`, which strips to `softwar` and is
+  // not reached at all. The reached spelling and the attested spelling are
+  // different words.
+  assert.equal(stemOf('softwarization'), 'softwar',
+    'The attested spelling `softwarization` must NOT reach `software`; if this changes, the census '
+    + 'entry for `software` and the argument in §3 both need revisiting.');
+  assert.equal(stemOf('softwareization'), 'software',
+    'The reached spelling `softwareization` does stem to `software`, which is why it is in the census '
+    + 'at all — as reached-but-unattested.');
+  assert.ok(!attested.get('software').includes('softwareization'),
+    '`softwareization` is reached but is not the spelling ITU and ETSI use, so it stays unattested.');
 
   // And the word the first census named that never matched at all.
   assert.equal(stemOf('pays'), 'pays',
     '`pays` is below minStemmableLength and returns unstemmed; if this ever changes the census and '
     + 'the report both need rewriting.');
-  assert.ok(!reached.get('payment').includes('pays'),
+  assert.ok(!attested.get('payment').includes('pays'),
     '`pays` does not reach `payment` and must not be listed as though it does.');
   assert.equal(stemOf('paid'), 'paid', '`paid` is irregular and no suffix rule reaches it.');
 });
@@ -886,7 +902,7 @@ test('every candidate in the census is REACHED, attested or not', () => {
   // let three review rounds argue about word calls as though they bounded what the
   // comparison catches. They never did: both fields are reached surfaces.
   census.entries.filter((row) => !row.multiword).forEach((row) => {
-    [...row.newlyReached, ...row.reachedButUnattested].forEach((word) => {
+    [...row.reachedAndAttested, ...row.reachedButUnattested].forEach((word) => {
       assert.equal(stemOf(word), row.stem,
         `[${row.entry}] "${word}" is listed in this census, so the shipped comparison must reach it `
         + `— it stems to "${stemOf(word)}" and the entry stems to "${row.stem}". A candidate that `
