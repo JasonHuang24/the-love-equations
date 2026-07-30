@@ -1202,8 +1202,29 @@ test('the cost of typing SMV: an unrelated SMV protocol now names the concept', 
 });
 
 /*
- * A canon entry's words about ITSELF, frozen as a KNOWN DEFECT that was measured
- * and deliberately left alone. 2026-07-30.
+ * A canon entry's words about ITSELF. FIXED 2026-07-30 in v2.6.8, by the route
+ * this block's own closing paragraph named a week's worth of measurements ago.
+ * The history below is kept verbatim because it is the reason the fix is the
+ * shape it is, and because three of the four things tried are still wrong.
+ *
+ * WHAT SHIPPED: `ENTRY_ARTIFACT_TERMS` in js/lab-analyzer.js removes the site's
+ * packaging nouns from the ENTRY's token sets and leaves the passage untouched.
+ * The defect below fell 0.434 -> 0.367 — under minCredibleScore, still over
+ * minWeakScore, so the passage now surfaces the concept as nearby rather than
+ * asserting a credible mapping. Measured over all 21 archived sources: 129
+ * displayed matches before, 129 after, none lost and none gained.
+ *
+ * WHY IT WORKS NOW AND DID NOT THEN, which is the transferable part: every
+ * variant below demoted terms into LOW_INFORMATION_MATCH_TERMS. That set feeds
+ * `admissionDistinctiveShared` and NOTHING ELSE — an ADMISSION lever that cannot
+ * move `sharedWeight`, `queryCoverage`, `canonCoverage` or `distinctiveBoost`.
+ * On that lever the nouns bought nothing and only `say*` killed the defect, at a
+ * cost of three displayed Pew mappings. On the SCORING lever the nouns alone
+ * kill it for free, and `say*` is not needed — so the reported-speech half never
+ * comes under threat at all. Same vocabulary, different quantity, opposite
+ * answer.
+ *
+ * ORIGINAL RECORD, 2026-07-30, when this was frozen as a known defect:
  *
  * The site's prose refers to its own artifacts constantly — "the card defines X",
  * "the hub card carries the thesis", "this section records refusals" — and those
@@ -1255,12 +1276,12 @@ test('the cost of typing SMV: an unrelated SMV protocol now names the concept', 
  * entry describing itself stops contributing while a passage reporting speech is
  * untouched. That was not built.
  */
-test('the canon describing itself is a known, measured, unfixed match surface', async () => {
+test('the canon describing itself no longer reaches a reader as a credible match', async () => {
   const passage = 'The card says nothing about whether men who date older women stay longer.';
   const resentment = 'gender-dynamics:male:the-cost-of-staying-true:make-peace-with-it-or-let-resentment-win';
   const document = normalizeInput({
     text: passage,
-    source: { title: 'meta-register defect, frozen' },
+    source: { title: 'meta-register, fixed in 2.6.8' },
     createdAt: '1970-01-01T00:00:00.000Z',
   });
 
@@ -1268,16 +1289,19 @@ test('the canon describing itself is a known, measured, unfixed match surface', 
   const matches = result.segments.flatMap((segment) => segment.matches);
   const meta = matches.find((match) => match.canonId === resentment);
 
-  assert.ok(meta, 'The defect no longer reproduces. If that was deliberate, say which of the '
-    + 'three measured fixes was chosen and what it cost; if it was incidental, find out why '
-    + 'before deleting this test — the reasoning above is the only record of the measurement.');
-  assert.ok(meta.score >= 0.43,
-    `frozen at credible: ${meta.score} — a drop below minCredibleScore is a silent improvement `
-    + 'that still needs recording');
+  assert.equal(meta, undefined,
+    'The meta-register defect is back: a passage about the age of the women men date is again a '
+    + 'CREDIBLE match for an entry about making peace with being alone, on the words the site '
+    + 'uses for its own furniture. Check ENTRY_ARTIFACT_TERMS is still applied to '
+    + '`entry._tokens` and `entry._distinctiveTokens`, and that nothing reintroduced those '
+    + 'words on the entry side.');
 
-  // The half a fix must not break, asserted here so the next attempt has it: a
-  // passage REPORTING a domain claim still reaches the concept its domain words
-  // point at. Option 1 above broke exactly this on the Pew source.
+  // The half the fix had to not break, and did not: a passage REPORTING a domain
+  // claim still reaches the concept its domain words point at. This is what the
+  // rejected admission-side variants cost, and it is asymmetry that protects it —
+  // `says` was never removed from anything, and even the entry-side nouns are
+  // absent from the passage side entirely, so a reader's own wording cannot be
+  // demoted by this change under any circumstances.
   const reported = normalizeInput({
     text: 'She says that women in their thirties get far less attention on dating apps than before.',
     source: { title: 'reported domain claim' },
@@ -1287,6 +1311,30 @@ test('the canon describing itself is a known, measured, unfixed match surface', 
   assert.ok(reportedResult.segments.flatMap((segment) => segment.matches).length > 0,
     'a claim someone is quoting must keep reaching its concept — demoting `say` is what cost '
     + 'three displayed mappings on 01-pew-online-dating');
+
+  /*
+   * And the passage side, stated as a property rather than left implied: a
+   * reader who writes `claim` gets no worse a match than one who does not. If
+   * this ever fails, the filter has leaked from `prepareCanonIndex` onto the
+   * unit, and the asymmetry that makes the fix free has quietly become a
+   * symmetric demotion.
+   */
+  const readerWords = normalizeInput({
+    text: 'The claim that women prefer taller men holds up across every dating app dataset.',
+    source: { title: 'reader using the register' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+  const plainWords = normalizeInput({
+    text: 'Women prefer taller men, and it holds up across every dating app dataset.',
+    source: { title: 'same claim without it' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+  const withRegister = await analyzeDocument(readerWords, canonIndex);
+  const without = await analyzeDocument(plainWords, canonIndex);
+  assert.ok(withRegister.segments.flatMap((segment) => segment.matches).length > 0
+    && without.segments.flatMap((segment) => segment.matches).length > 0,
+  'a reader writing "the claim that ..." must still reach a concept — ENTRY_ARTIFACT_TERMS is '
+  + 'an entry-side filter and must never touch the passage');
 });
 
 /*

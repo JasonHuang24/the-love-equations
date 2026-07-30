@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.7';
+export const ANALYZER_VERSION = '2.6.8';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -284,6 +284,41 @@ const LOW_INFORMATION_MATCH_TERMS = new Set([
   'reduce', 'reduces', 'rule', 'same', 'selection', 'stable', 'still', 'sustain',
   'tell', 'time', 'times', 'whether', 'different', 'effect', 'effects', 'general',
   'make', 'makes', 'more',
+].flatMap((term) => tokenize(term)));
+
+/*
+ * The canon's own packaging vocabulary, muted on the ENTRY SIDE ONLY.
+ *
+ * This canon is written as site copy, so its prose says `card`, `essay`, `hub`,
+ * `the claim that`. Those words describe how the site is BUILT, and an entry
+ * offering them as a match surface lets a reader's passage match on the
+ * furniture instead of the argument. Frozen for a week as a measured defect:
+ * "The card says nothing about whether men who date older women stay longer"
+ * reached an entry about making peace with being alone, at 0.434.
+ *
+ * ASYMMETRIC, and that is the whole idea. These are removed from the entry's
+ * token sets and left completely alone in the passage — a reader writing "the
+ * claim that women prefer height" keeps every one of their own tokens, and their
+ * query length is unchanged. Nothing here can make a passage match LESS because
+ * of a word the READER used.
+ *
+ * Why the earlier attempt failed and this one does not: it demoted the same
+ * words into LOW_INFORMATION_MATCH_TERMS, which feeds `admissionDistinctiveShared`
+ * and nothing else. That is an ADMISSION lever and it could not move
+ * `sharedWeight`, `queryCoverage`, `canonCoverage` or `distinctiveBoost`, so the
+ * defect survived every variant that did not also demote `say*` — which cost
+ * three displayed mappings on the Pew source, because a survey reporting what
+ * respondents SAID is ordinary reported speech. Removing a term from the entry's
+ * token set moves all four quantities, and it kills the defect on the nouns
+ * alone: measured over all 21 archived sources, 129 displayed matches before and
+ * 129 after, none lost and none gained.
+ *
+ * `say*` is deliberately NOT here. It kills the defect too and costs two
+ * displayed matches, and the nouns already do the job for free.
+ */
+const ENTRY_ARTIFACT_TERMS = new Set([
+  'card', 'cards', 'essay', 'essays', 'page', 'pages', 'section', 'sections',
+  'entry', 'entries', 'hub', 'hubs', 'dossier', 'dossiers', 'claim', 'claims',
 ].flatMap((term) => tokenize(term)));
 
 const CLAIM_CUES = [
@@ -1222,8 +1257,12 @@ function normalizeEntry(raw, index) {
     ...entry.commonMisreadings,
   ].join(' ');
   entry._normalized = normalizeText(lexicalText);
-  entry._tokens = unique(tokenize(lexicalText));
-  entry._distinctiveTokens = unique(tokenize(lexicalText, { keepGeneric: false }));
+  // Entry side only — see ENTRY_ARTIFACT_TERMS. The passage keeps every token
+  // it was written with, including these.
+  entry._tokens = unique(tokenize(lexicalText))
+    .filter((token) => !ENTRY_ARTIFACT_TERMS.has(token));
+  entry._distinctiveTokens = unique(tokenize(lexicalText, { keepGeneric: false }))
+    .filter((token) => !ENTRY_ARTIFACT_TERMS.has(token));
   entry._phrases = unique(aliases
     .map(normalizeText)
     .filter((phrase) => phrase.length >= SCORING_CONFIG.minPhraseLength));
