@@ -58,6 +58,25 @@
         "cr-16"
       ],
       "agreement": "Maintainer ruling: adopt option 1 from md/lab-gate-cultural-register.md. Committed RED, following the ds-* precedent, so the record shows the gap predates the fix. The gate retains claims ABOUT relationships and discards claims about CULTURE SHAPING relationships, which is the register most of the archived manosphere corpus is written in; six of eight minimal pairs in tests/fixtures/cultural-register-pairs.json split on a single word. Nine of the ten positives isolate the missing frame - each carries a participant term, a cultural force and a shaping verb, and no relational-outcome trigger, so nothing existing can retain them. cr-07 is the deliberate exception, already retained via the non-decisive relationship-concept frame at 2.2, kept to guard the existing path. The six negatives are the boundary the fix must preserve: culture-and-shaping with no human participant, or in a non-mating domain, stays out. No classifier code changes in this commit, per the append policy."
+    },
+    {
+        "date": "2026-07-30",
+        "register": "participant-vocabulary-traps",
+        "caseIds": [
+            "pv-01",
+            "pv-02",
+            "pv-03",
+            "pv-04",
+            "pv-05",
+            "pv-06",
+            "pv-07",
+            "pv-08",
+            "pv-09",
+            "pv-10",
+            "pv-11",
+            "pv-12"
+        ],
+        "agreement": "Maintainer append under the LE Lab parser-improvement objective, landing with md/lab-gate-participant-vocabulary.md and changing no classifier code. Reason for the append: of the 84 expected-ignore cases before it, ZERO contained the vocabulary the four candidate participant widenings would add and exactly one contained P3b's, so \"junkRecall unchanged\" was evidence the benchmark could not see the change rather than evidence the change was free. These twelve give it eyes. Measured after: the shipped gate bins 11 of 12, which RAISES junkRecall 0.833 -> 0.844 — and it rises because cases the gate already passes were added, not because the gate improved. pv-07 is the exception and is a pre-existing false positive, not one an option buys."
     }
   ],
   "cases": [
@@ -229,6 +248,18 @@
     { "id": "cr-13", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Institutional discourse frames the bond market as inherently fragile.", "note": "Append #3 (2026-07-30): the cr-07 construction in a finance sense." },
     { "id": "cr-14", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Conditioning in the training data shapes what the model treats as normal output.", "note": "Append #3 (2026-07-30): machine-learning sense of conditioning, training and normal." },
     { "id": "cr-15", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "The script for the quarterly earnings call was rewritten by the communications team.", "note": "Append #3 (2026-07-30): the cr-06 construction with a corporate script and no participant." },
-    { "id": "cr-16", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Building codes were rewritten without the trades being consulted about the change.", "note": "Append #3 (2026-07-30): the cr-03 construction in a construction-industry sense." }
+    { "id": "cr-16", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Building codes were rewritten without the trades being consulted about the change.", "note": "Append #3 (2026-07-30): the cr-03 construction in a construction-industry sense." },
+    {"id": "pv-01", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Male and female connectors are keyed so the cable only seats one way.", "note": "Append #4 (2026-07-30): the hardware sense of male and female, the words P2 would add to human-individuals."},
+    {"id": "pv-02", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "The male thread on the fitting shows corrosion where it meets the female coupling.", "note": "Append #4 (2026-07-30): the plumbing sense, next to a verb the mechanism frames read as contact."},
+    {"id": "pv-03", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Engineers taught the sorter to reject any male housing whose pins are bent.", "note": "Append #4 (2026-07-30): the hardware sense beside `taught`, which is a cultural-frame shaping verb."},
+    {"id": "pv-04", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Humanity has always shaped its institutions around whichever resource was scarcest.", "note": "Append #4 (2026-07-30): a real culture-shapes-institutions claim that is not about mating. P3a retains this."},
+    {"id": "pv-05", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Table 4 lists the mother and daughter nodes that the dependency graph normalizes.", "note": "Append #4 (2026-07-30): graph-theory kin terms beside `normalizes`, a cultural-frame force word."},
+    {"id": "pv-06", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Guys, the nightly build is broken again and nobody has claimed it.", "note": "Append #4 (2026-07-30): `guys` as generic address rather than as a population."},
+    {"id": "pv-07", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "The parent and sister packages inherit whatever the culture of the monorepo rewards.", "note": "Append #4 (2026-07-30): software kin terms. The SHIPPED gate already retains this one: `parent` is in human-groups and culture-plus-rewards fires the cultural frame, so it is a pre-existing false positive this append exposes rather than one an option buys."},
+    {"id": "pv-08", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "The engineering culture rewards anyone who ships, and everyone else drifts toward the exit.", "note": "Append #4 (2026-07-30): workplace culture with indefinite pronouns. P3b retains this."},
+    {"id": "pv-09", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Generations of compilers have taught programmers to distrust implicit conversions.", "note": "Append #4 (2026-07-30): `generations` and `taught` with no human relationship in the sentence."},
+    {"id": "pv-10", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Anyone can be assigned the ticket, but the process punishes whoever touched it last.", "note": "Append #4 (2026-07-30): `anyone` beside `punishes`, a cultural-frame shaping verb."},
+    {"id": "pv-11", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "Section i defines the terms and Table I lists the institutions that mandate reporting.", "note": "Append #4 (2026-07-30): the reason bare `i` is measured separately from the other pronouns. P1b retains this."},
+    {"id": "pv-12", "family": "polysemous-trap", "expected": "ignore", "register": "participant-vocabulary-traps", "text": "I benchmarked the parser and the framework rewrote my assumptions about throughput.", "note": "Append #4 (2026-07-30): first-person plus `framework` and `rewrote` in a software sense."}
   ]
 }
