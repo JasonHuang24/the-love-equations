@@ -22,7 +22,7 @@
     "minCredibleScore": 417,
     "pairs": 97814,
     "rulings": 5033,
-    "pending": 4880
+    "pending": 4875
   },
   "rulings": {
     "seg-00024-0ha18nw.claim-03|statistics:stat-couples-meet|candidateScoreFloor": {
@@ -34973,39 +34973,49 @@
       "after": 0.078
     },
     "seg-00009-165o1nj.claim-04|lexicon:term-the-consumer-unit|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.672
+      "after": 0.672,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00049-0273i9h.claim-05|lexicon:term-the-consumer-unit|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "REJECT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.613
+      "after": 0.613,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00010-1cvk93s.claim-03|lexicon:term-heteropessimism|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.61
+      "after": 0.61,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00009-165o1nj.claim-02|lexicon:term-the-consumer-unit|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00072-1p4flkz.claim-08|gender-dynamics:both-sides:meeting-people-the-odds:asking-fast-filters-for-lukewarm-dates|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.429,
-      "after": 0.43
+      "after": 0.43,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00009-165o1nj.claim-04|lexicon:term-the-consumer-unit|minWeakScore": {
       "ruling": "PENDING",

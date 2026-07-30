@@ -9,7 +9,7 @@ sheet and the fixture the suite enforces cannot disagree.
 change as well as to any scoring change: adding entries moves IDF for every pair,
 and new entries enter the candidate set from a prior score of zero.
 
-**Adjudication open — 649 of 649 crossings outstanding.**
+**Adjudication open — 644 of 649 crossings outstanding.**
 
 ```
 analyzer   2.6.6 -> 2.6.7
@@ -41,11 +41,11 @@ PENDING. The suite enforces that pairing.
 
 | Canon entry | Passage | Before | After | Δ | ACCEPT / REJECT |
 |---|---|---|---|---|---|
-| `lexicon:term-the-consumer-unit` | 04-heteropessimism · 20<br>`seg-00009-165o1nj.claim-04` | 0.000 | 0.672 | +0.672 |  |
-| `lexicon:term-the-consumer-unit` | 22-finkel-suffocation · 156<br>`seg-00049-0273i9h.claim-05` | 0.000 | 0.613 | +0.613 |  |
-| `lexicon:term-heteropessimism` | 04-heteropessimism · 26<br>`seg-00010-1cvk93s.claim-03` | 0.000 | 0.610 | +0.610 |  |
-| `lexicon:term-the-consumer-unit` | 04-heteropessimism · 19<br>`seg-00009-165o1nj.claim-02` | 0.000 | 0.540 | +0.540 |  |
-| `gender-dynamics:both-sides:meeting-people-the-odds:asking-fast-filters-for-lukewarm-dates` | 22-finkel-suffocation · 198<br>`seg-00072-1p4flkz.claim-08` | 0.429 | 0.430 | +0.001 |  |
+| `lexicon:term-the-consumer-unit` | 04-heteropessimism · 20<br>`seg-00009-165o1nj.claim-04` | 0.000 | 0.672 | +0.672 | **ACCEPT** · Jason |
+| `lexicon:term-the-consumer-unit` | 22-finkel-suffocation · 156<br>`seg-00049-0273i9h.claim-05` | 0.000 | 0.613 | +0.613 | **REJECT** · Jason |
+| `lexicon:term-heteropessimism` | 04-heteropessimism · 26<br>`seg-00010-1cvk93s.claim-03` | 0.000 | 0.610 | +0.610 | **ACCEPT** · Jason |
+| `lexicon:term-the-consumer-unit` | 04-heteropessimism · 19<br>`seg-00009-165o1nj.claim-02` | 0.000 | 0.540 | +0.540 | **ACCEPT** · Jason |
+| `gender-dynamics:both-sides:meeting-people-the-odds:asking-fast-filters-for-lukewarm-dates` | 22-finkel-suffocation · 198<br>`seg-00072-1p4flkz.claim-08` | 0.429 | 0.430 | +0.001 | **ACCEPT** · Jason |
 
 ## minWeakScore — 0.25
 
