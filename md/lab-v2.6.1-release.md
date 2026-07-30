@@ -22,7 +22,7 @@ canon index ............... 1.0.0+949aef381d5f  unchanged
 analysis schema ........... le-lab.analysis/2.6  unchanged
 research-queue schema ..... le-lab.research-queue/2.1  unchanged
 suite ..................... 170 pass / 0 fail  (+6 benchmark cases inside existing tests)
-suite, at the record pass .. 178 pass / 0 fail  (see §4; no analyzer change, Appendix A for why)
+suite, at the record pass .. 180 pass / 0 fail  (see §4; no analyzer change, Appendix A for why)
 ```
 
 > **The analyzer version DOES move here, and v2.4.2's rule is why.** That release held the version at
@@ -114,8 +114,10 @@ Guards, green before and after:
 
 `carries()` iterates the **denylist in order** and tries three tests **inside each modifier**,
 returning on the first modifier any test matches. The loop order is the part that is easy to get wrong,
-and this subsection got it wrong until Sol's fifth review: the tests are not global-priority lanes, so a
-literal hit on a LATER modifier never happens — the loop has already returned on an earlier one.
+and this subsection got it wrong until Sol's fifth review: the tests are not global-priority lanes, so
+once any modifier matches, a literal hit on a LATER modifier is never reached — the loop has already
+returned. (A later modifier's literal hit is reached perfectly well when no earlier modifier matched
+anything. The qualifier matters, and an earlier draft of this sentence dropped it.)
 
   for (const modifier of denylist) { if (test1) return; if (test2) return; if (test3) return; }
 
@@ -128,17 +130,33 @@ The three tests, in the order they run within one modifier:
 | 3 | a contiguous run of **stems** | every entry |
 
 Test 3 is what v2.6.1 added. It was **added beside** tests 1 and 2, not substituted for them, and the
-union is the whole of the safety argument: a test that only ever adds disqualifications cannot promote
-anything an earlier test rejected. That is a proof. It does **not** follow that nothing changes — a test
-that adds disqualifications changes behavior every time it adds one, which is exactly what the
-`utilities` repair in §1 does.
+union is the whole of the safety argument: a test that only adds disqualifications cannot promote anything
+an earlier test rejected. That is a proof, and it is **narrower than it looks, in two ways.**
+
+First, it does not follow that nothing changes. A test that adds disqualifications changes behavior every
+time it adds one, which is exactly what the `utilities` repair in §1 does.
+
+Second, and recorded nowhere else in this release: **the union is monotone on the verdict, not on the
+reported modifier.** Because the loop returns on the first matching modifier, adding test 3 can make an
+*earlier* modifier match where a *later* one used to, changing the `reason` string for a sentence whose
+disqualification is unchanged:
+
+| Complement | v2.6.0 would report | v2.6.1 reports |
+|---|---|---|
+| `healths care` | `care`, via the literal test | `health care`, via the stem run |
+
+Same refusal, different published reason. `reason` reaches flag files through `candidateTrace`, so this is
+a real change to an exported field. It is **unobserved rather than absent**: `provider` occurs zero times
+in the archived corpus, the same structural bound §4 records for everything else here. Found by the
+maintainer auditing his own negative claims before the sixth review rather than by the sixth review.
 
 **Test 2 was retained, so the shape it catches is still caught.** `the provider for health caregivers`
 is disqualified by `health care` found inside `caregivers`, and the humanly correct reading there is the
 provisioning sense. `bl-17` and `bl-18` freeze that as a documented limit under the `morphology` family.
 
 **Test 3 is reachable and can decide a case alone.** It decides whenever two stems line up and no
-earlier test fires, which for the canon's two multiword entries requires suffixing *both* words:
+*earlier modifier* matched by any test — not "no earlier test fired", which is the lane framing again.
+For the canon's two multiword entries that requires suffixing *both* words:
 
 **Read the columns carefully, because they answer two different questions.** The three test columns
 are *independent predicates* — which modifiers each test would match if asked about every modifier.
@@ -293,7 +311,7 @@ A fix that quietly buys a new false positive is how a guard rots. This one is in
 | Check | Result |
 |---|---|
 | `npm run test:lab`, release-time | **170 pass / 0 fail** — the suite as this release shipped |
-| `npm run test:lab`, record-pass | **178 pass / 0 fail** — after the 2026-07-29 record corrections, which added eight doc- and fixture-facing tests and no analyzer change |
+| `npm run test:lab`, record-pass | **180 pass / 0 fail** — after the 2026-07-29 record corrections, which added ten doc- and fixture-facing tests and no analyzer change |
 | Match-behavior benchmark | 12 tests green; `cm-16`/`17`/`18` RED → GREEN; every prior case unmoved |
 | Domain benchmark, canon-mapping benchmark, short-utterance, tokenizer, threshold-neighbors | all green, unmoved |
 | Demo freeze, behavior | `fixtures/demo-v2.6.0.json` regenerates **byte-identical** at the fix commit — `0ede1173…` |
