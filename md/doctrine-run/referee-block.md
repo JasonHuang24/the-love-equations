@@ -25,10 +25,10 @@ claims is a *within-instrument contrast*, and Section 6.7 records the errors mad
 | **Started** | 2026-07-29. Ratification: Jason's single front-loaded GO for the full three-batch plan |
 | **Orchestrator** | Claude Opus 5, effort xhigh. Coordinates only; does not research or review |
 | **Scouts dispatched** | **11** (S-A … S-I, then S-I-A and S-I-B). **10 returned; S-I failed** and was recovered as two |
-| **Cold reviews run** | **5** — batch 1 ×1, batch 2 ×2, batch 3 ×2. Each a fresh subagent fenced to one file (§3) |
+| **Cold reviews run** | **6** — batch 1 ×1, batch 2 ×2, **batch 3 ×3**. Each a fresh subagent fenced to one file (§3) |
 | **Instrument** | LE Lab v2.6.1, frozen for the run's duration. **No Lab file was modified.** |
 | **Corpus** | 4 sources → **22 manifest IDs, 21 analyzed** (source 03 carries no export) |
-| **Stop conditions fired** | **1 of 4** — cold-review CONTEST alleging an unverifiable source. Fired **three times**: batch 2 ×2 (§6.1, §6.2) and batch 3 (§6.2b). **The third is open; the run is halted on it** |
+| **Stop conditions fired** | **1 of 4** — cold-review CONTEST alleging an unverifiable source. Fired **three times**: batch 2 ×2 (§6.1, §6.2) and batch 3 (§6.2b). **All three closed. No stop condition is active** |
 
 **What the run set out to do.** Take the residue of doctrine checkpoint 01 — which closed with *zero*
 doctrine-ready candidates — and test its strongest claim clusters against outside primary literature under
@@ -144,7 +144,8 @@ presented as verified.
 | Batch 2, review 1 | 23 | 5 | 7 | 11 | **1** | **RUN HALTED** → escalated (§6.1) → repaired |
 | Batch 2, review 2 | 31 | 13 | 8 | 9 | **1** | **RUN HALTED** → escalated (§6.2) → repaired in the batch-3 seat, **unre-reviewed** |
 | Batch 3, review 1 | 8 | 1 | 1 | 6 | **0** | Central warrant refused; all confirmed errors repaired |
-| **Batch 3, review 2** | **43** | **24** | **9** | **9** | **CONTEST 1** | **RUN HALTED** → escalated (§6.2b) → repaired, **ruling pending** |
+| **Batch 3, review 2** | **43** | 24 | 9 | 9 | **CONTEST 1** | **RUN HALTED** → escalated (§6.2b) → repaired |
+| **Batch 3, review 3** | **43** | **36** | **4** | **3** | **0** | **CLEARED** — unit 34 itself ACCEPT; 7 findings applied; pushed |
 
 **The trend is worth naming.** Batch 1 returned ACCEPT 21 / CONTEST 5. Batch 2 returned ACCEPT 5 / CONTEST
 11 and escalated **twice**. The reviewer diagnosed why, and the diagnosis held: **citation completeness
@@ -389,6 +390,43 @@ superlatives"* and proposed scoping it to the batch. The claim is in fact **true
 withdraw a true statement the packet now **evidences** it — the five largest residues across all 21 analyzed
 sources (22→554 · 09→230 · 07→158 · 05→153 · 13→122), flagged as an orchestrator-side control. The diagnosis
 is honoured by supplying the data rather than by narrowing the claim.
+
+### 3.6 Batch 3, review 3 — ACCEPT 36 · REWORD 4 · CONTEST 3 · INTEGRITY 0 → CLEARED
+
+Ordered as the condition for closing escalation #3, so that the orchestrator would not be adjudicating its own
+escalation. A fresh subagent, no knowledge of reviews 1 or 2, same 43 units.
+
+**The gate cleared.** *"No claim, quote, figure, DOI or URL in Part One was found to lack a basis in a cited
+source, and no source the packet admits it could not reach is summarized as though read — the unreachable ones
+(Guttentag & Secord 1983, the published* Demography *text, the 13 commentaries, Proulx et al.) are recorded as
+gaps and their consequences carried through."* **Unit 34 came back ACCEPT**, with the repair verified against
+S-I-B's own parenthetical rather than taken on trust.
+
+**Three CONTESTs, all applied.** Two are one defect from opposite sides: **the 15 pre-batch-3 corpus sources
+were identified by topic label alone** — no author, year, venue or URL anywhere in the packet — while the
+citation appendix claimed to hold "locators for every source Part One relies on." The reviewer called that
+appendix the **weakest unit in the packet**, for asserting a completeness that made *"the floor failure it
+exists to close larger after the appendix than the appendix admits."* Fixed: all 21 corpus sources now carry
+full locators from the committed manifest, and the header no longer claims what it cannot deliver. The third
+CONTEST: the tier block named **two** limb-2 assignments when the packet relies on **four**.
+
+**Four REWORDs, all applied**, and every one of them targets a *repair* rather than an original claim — see
+§6.7's P8. It also flagged that **unit 6's per-source figures carried no trust-class flag** while units 4 and 36
+did: the last unflagged holdout of the disclosure defect behind all three escalations.
+
+**What its ACCEPTs establish.** It recomputed on different targets than review 2: resolved **every anchor** in
+Part One against its named block; recomputed all six robustness ratios and found *"every displayed ratio and
+numerator/denominator pair is exact"*; verified the 13-row epoch table reconciles to "twelve of thirteen";
+counted all ten SHA-256 digests to 64 characters; and checked the outside-the-hash-chain inventory
+**exhaustively against all four CONFIDENCE NOTES blocks** — S-G's six primary reads, S-H's five, S-I-A's two,
+S-I-B's four — concluding *"every one that is not a hashed corpus source appears in the table, and none is
+missing."* It called that unit **"the packet's best-evidenced inventory."**
+
+It affirmed three self-corrections on their merits rather than for existing: unit 27 (*"the strongest provenance
+correction in the packet"*), unit 32 (the GFG re-analysis downgrade, *"the conservative and correct call"*), and
+unit 41 (the extractor explanation, *"self-refuting in the packet's favour"*).
+
+---
 
 ## 4. RESIDUE, TREATED AS A FIRST-CLASS RESULT
 
@@ -787,6 +825,19 @@ concentrated in one layer, and it is the layer the orchestrator writes.
 | E47 | Unit 36: a **corpus-wide superlative asserted from a batch table** — the reviewer's phrasing: *"an unevidenced superlative in the unit whose purpose is withdrawing two unevidenced superlatives"* | **superlative unchecked against own data** |
 | E48 | Unit 41: the sub-80% cross-check explanation ("a different extractor on the scout's side") is **refuted by the packet's own 87.9%** — source 18 went through the same reader | explanation unchecked against own data |
 
+**Batch 3 — review 3** (ACCEPT 36 · REWORD 4 · CONTEST 3 · INTEGRITY 0). **Every one of these is a defect a
+repair introduced or re-imported**, which is why they get their own pattern below.
+
+| ID | Error | Class |
+|---|---|---|
+| E51 | Units 6 and 43: **the 15 pre-batch-3 corpus sources — the ones carrying the run's headline quantitative finding — were identified by topic label alone**, with no author, year, venue or URL anywhere in the packet, while the citation appendix claimed "locators for every source Part One relies on." The reviewer's verdict: the floor failure was *larger* after the appendix than the appendix admitted | **floor violation + header overclaim** |
+| E52 | Unit 6: the classification table's per-source figures carried **no trust-class flag** while units 4 and 36 did — the last unflagged holdout of the exact disclosure defect behind all three escalations | **selective disclosure** |
+| E53 | Unit 3: **the review-2 repair** named "both limb-2 assignments in this packet" when the packet relies on **four** — Esteve et al. 2016 and the Hirschl working paper are also graded TIER 1 on design in Part Two. A count refuted by the packet's own contents, **committed while fixing a different defect in the same unit** | **count unchecked against own document, introduced by a repair** |
+| E54 | Unit 40: **the review-2 repair** withdrew the phantom 60% cross-check floor and then wrote "none of the six collapsed" — **smuggling the same unstated criterion back in** | **withdrawn criterion re-imported by its own repair** |
+| E55 | Unit 14: **the review-2 repair** withdrew "partly falsified" on the ground that "'falsified' asserts a disconfirmation the two studies do not deliver" — **contradicted by the packet's own next two units**, which report that Trent & South did contradict the structural-power prediction and that Dollar's pooled result is a contradiction. Right withdrawal, wrong reason | **internal contradiction, introduced by a repair** |
+| E56 | Unit 1: **the review-2 repair** told the reader to check both unanchored provenance inventories against the scouts' CONFIDENCE NOTES, but the shingle percentages are **orchestrator-computed and appear nowhere in Part Two** — the instruction is unexecutable for one of the two | unexecutable instruction, introduced by a repair |
+| E57 | Unit 12: "the four tests above are all *new measurements*" — one is a **re-reading of existing corpus shares** under a new topical classification | scope precision |
+
 **Record defects found in this seat, pre-existing and already pushed** (batch-1/2 vintage, not review findings)
 
 | ID | Error | Class |
@@ -798,16 +849,21 @@ concentrated in one layer, and it is the layer the orchestrator writes.
 
 | Pattern | Instances | Status |
 |---|---|---|
-| **P1 — Provenance over-scope, read-status inflation, selective disclosure.** The orchestrator knows the provenance, compresses or omits it, and the compressed form reads stronger than the truth. **The scout files always carried it.** | **E8** (b1) → **E9**, **E15** (b2r1, *escalated*) → **E16** (b2r2, *escalated*) → **E33** (b3r1) → **E34**, **E42** (b3r2, *escalated*) | **NOT CLOSED. This is the run's defining failure mode.** Corrected in every batch and recurred in every batch. **All three integrity escalations are instances of it.** By b3r2 it had mutated: not a false claim but a *true* claim left uncheckable, and a disclosure rule the packet wrote and then exempted its own central evidence from |
+| **P1 — Provenance over-scope, read-status inflation, selective disclosure.** The orchestrator knows the provenance, compresses or omits it, and the compressed form reads stronger than the truth. **The scout files always carried it.** | **E8** (b1) → **E9**, **E15** (b2r1, *escalated*) → **E16** (b2r2, *escalated*) → **E33** (b3r1) → **E34**, **E42** (b3r2, *escalated*) → **E52** (b3r3, last holdout) | **CLOSED at the end of batch 3, on the sixth attempt — and it is the run's defining failure mode.** It recurred in every batch until then, and **all three integrity escalations are instances of it.** By b3r2 it had mutated from a false claim into a *true* claim left uncheckable, and into a disclosure rule the packet wrote and then exempted its own central evidence from. **Review 3 found no new instances** — only E52, the one table still missing its trust-class flag. What finally worked was not a convention or a reminder but a mechanism: **every unverifiable claim now carries an explicit trust-class flag naming what the reader cannot check** |
 | **P2 — Superlatives, counts and explanations asserted without checking the packet's own tables.** Every time, the refuting data was **in the same document**. | **E13** (b2r1) → **E23**, **E24**, **E25** (b3r1) → **E37**, **E47**, **E48** (b3r2) | **NOT CLOSED, and it got denser.** E47 is the sharpest single instance in the run: an unevidenced superlative inside the unit whose stated purpose was withdrawing two unevidenced superlatives |
 | **P3 — Overstating a source's own language; dropping the qualifiers and defeaters the source supplies.** The scout's hedge is consistently stronger than the synthesis's. | **E2** (b1) → **E12** (b2r1) → **E27**, **E32** (b3r1) → **E38**, **E43**, **E46** (b3r2) | **NOT CLOSED.** Note the direction: E38 and E46 both made the packet's *counter-evidence* stronger than its source supports. The bias is toward whatever sharpens the finding, not toward a side |
 | **P4 — UNVERIFIED upgraded, or precision asserted beyond the recorded inputs.** | **E19**, **E20** (b2r2) → **E29** (b3r1) → **E39** (b3r2) | **NOT CLOSED.** |
 | **P5 — Internal contradiction inside one section.** | **E6** (b1) → **E30** (b3r1) → **E41** (b3r2) | **NOT CLOSED.** |
 | **P6 — Tier discipline on sources that were never read.** | **E3** (b1) → **E44** (b3r2) | **PARTLY CLOSED, and an earlier version of this record wrongly called it closed.** The specific batch-1 failure — *inflating* an unread source's tier, or grading a hypothetical — did **not** recur, and all four batch-3 scouts applied "TIER 3 as sourced" themselves, unprompted. But E44 is the same discipline failing in a form the convention's wording never covered: an unread source **promoted by adjective** ("its strongest empirical citation") with its tier label simply **omitted**. A convention that names one failure mode does not close the family |
+| **P8 — Repairs introducing or re-importing the defects they fix.** Only observable because batch 3 was reviewed three times. | **E53**, **E54**, **E55**, **E56** — four of review 3's seven findings, all against review-2 repairs; **E51/E52** are the same class one step removed (a *cure* that overclaimed its own completeness) | **OPEN, and it is the run's most transferable finding.** Three of seven findings against a repaired packet were defects the repairs themselves created. **A repair pass needs its own verification pass against the same checks the original failed** — fixing a unit does not exempt the fix. This is also the empirical case for why "repaired" is a weaker status than "reviewed", and therefore why batch 2 (§6.2) should not be trusted at batch-3's level |
 | **P7 — The citation floor failing at whole-cluster scale.** | **E21** (b2r2, Cluster 3: S-F, zero URLs and zero DOIs across seven sources) → **E36** (b3r2, Cluster C9: S-H, five primary sources with locators deferred to an unembedded file) | **NOT CLOSED, and it is a process defect rather than a writing defect.** Both times the floor was stated *in the packet* and a whole cluster failed it. Both times the locators existed — in the capture files, or nowhere. **The fix is upstream: scout prompts must require locators inline in the findings file, because the findings file is what gets embedded** |
 
-**The honest summary: of seven patterns, one is partly closed and six are open. Every one of them was caught
-by cold review, and not one was caught by the orchestrator reading its own work.**
+**The honest summary: of eight patterns, two are closed, one is partly closed, and five are open. Every one of
+them was caught by cold review, and not one was caught by the orchestrator reading its own work.** P1 — the
+defining failure mode, and the one behind all three escalations — closed only on the sixth attempt, and only
+once the fix stopped being a convention and became a mechanism. **P8 exists only because batch 3 was reviewed
+three times**, and it is the pattern most likely to matter to anyone repeating this: a repair is not
+self-certifying.
 
 #### Countermeasures adopted, and whether they worked
 
@@ -827,15 +883,16 @@ by cold review, and not one was caught by the orchestrator reading its own work.
 1. **The scout layer held; the synthesis layer did not.** Across five reviews, **no scout fabricated prose and
    no reviewer found fabrication anywhere in any packet.** The scouts applied the run's own tier convention
    unprompted, named their own barriers, and recorded their own failures to reach sources. **Every one of the
-   50 errors above is the orchestrator's.**
+   57 errors above is the orchestrator's.**
 2. **The single failure mode is compression, and it is concentrated in the provenance layer.** P1 accounts for
-   six errors including **all three integrity escalations**. In every case the correct information was
+   seven errors including **all three integrity escalations**. In every case the correct information was
    **already in the run's own artifacts** and was lost when the orchestrator restated it more confidently than
    the source did. By the third escalation the defect had refined itself into something subtler than a false
    statement: a *true* statement left uncheckable, in a paragraph that disclosed the trust class of a
    neighbouring item and not of this one.
-3. **P2 is the cheapest failure to fix and it recurred seven times.** Every instance was refutable by
-   arithmetic on a table printed in the same document. This is not a knowledge problem or a sourcing problem.
+3. **P2 is the cheapest failure to fix and it recurred eight times**, the last of them (E53) inside a repair.
+   Every instance was refutable by arithmetic on a table printed in the same document. This is not a knowledge
+   problem or a sourcing problem.
 4. **Cold review, not self-review, found essentially everything.** The two things the orchestrator's own
    re-read found — the missing 68% counterweight, and source 16's 40% overlap being its own extraction —
    were both found *while checking a reviewer's charge*, not while checking its own work. **The one seat that
@@ -843,8 +900,9 @@ by cold review, and not one was caught by the orchestrator reading its own work.
    record, not in the reasoning.**
 5. **Two charges were rejected across the run, and both rejections are recorded.** Batch 1 ITEM 11's
    attribution (§6.3), and batch 3 unit 36's proposed narrowing, which was replaced with a *stronger* fix that
-   honoured the diagnosis by supplying the missing data rather than withdrawing a true claim. A disclosure
-   section that only confesses is as unreliable as one that only defends.
+   honoured the diagnosis by supplying the missing data rather than withdrawing a true claim. **Across six
+   reviews and 24 CONTESTs, those are the only two.** A disclosure section that only confesses is as unreliable
+   as one that only defends — but the ratio is what it is, and it is not flattering.
 6. **The disclosure asymmetry is the point.** Every defect above is discoverable from the committed artifacts
    by a reader with no access to this conversation. That is a property of the two-part doctrine, and it is the
    strongest single claim this lane makes.
@@ -853,13 +911,14 @@ by cold review, and not one was caught by the orchestrator reading its own work.
 
 ## 7. WHAT IS OPEN
 
-**The run is halted.** Batch 3's second cold review returned `INTEGRITY: CONTEST` on unit 34; per the run
-contract that halts the run and escalates. The defect is repaired and batch 3 is **committed but not pushed**.
-Item 0 below is the blocking one.
+**The run is complete and pushed.** Batch 3's second cold review escalated on unit 34; a third cold review of
+the repaired packet returned **zero integrity items** and the escalation is closed (§6.2b). Nothing below blocks
+a push; items 1–9 are handed to the referee.
 
 | # | Open item | Why it is not closed here |
 |---|---|---|
-| **0** | **⛔ THE BLOCKING ITEM: does the unit-34 repair close integrity escalation #3?** | §6.2b. Both charges were accepted; the conclusion was re-grounded on four repository checks with the trust class of each disclosed, and the non-independent corroboration was withdrawn. **But the orchestrator adjudicating its own escalation is exactly the arrangement the escalation contract exists to prevent**, which is why it is not marked resolved here. Options a ruling could take: accept the repair and push; require a third cold review of the repaired packet before pushing (the batch-2 precedent argues for this, since batch 2 was repaired and never re-reviewed); or require the C1d unit be cut back to what Part Two alone supports, dropping the site-internal reads entirely |
+| **0** | **CLOSED — integrity escalation #3.** The orchestrator did not adjudicate its own escalation | §6.2b. The repair was submitted to a **third** cold review rather than self-certified, because the orchestrator ruling on its own escalation is exactly the arrangement the contract exists to prevent. Review 3 returned **zero integrity items** and **unit 34 itself ACCEPT**, verifying the repair rather than accepting it: it checked the "(as described in my assignment)" withdrawal against S-I-B's own text and confirmed the conclusion is *"correctly narrowed to the candidate doctrine's pairing rather than the published page."* One observation it added, kept because it is right: checkpoint 01 *"is the orchestrator's own prior record rather than a foreign one"* — which is why the conclusion rests on the three file-search checks and not on the checkpoint |
+| **0a** | **NEW, and the most transferable finding of the batch: three of review 3's seven findings were defects the review-2 *repairs* introduced.** | Unit 3 (a count refuted by the packet's own contents, committed while fixing a different defect in the same unit), unit 40 (withdrew a phantom threshold, then smuggled the same unstated criterion back in), unit 14 (withdrew a claim for a reason its own next two units contradict). **A repair pass needs its own verification pass against the same checks the original failed.** Three of seven is high enough that **"repaired" must not be treated as a stronger status than "reviewed"** until the repair has itself been reviewed — which is exactly the gap that leaves batch 2 at item 2 below |
 | **0b** | **P7's process fix is specified and not applied** | §6.7. Both cluster-scale citation-floor failures happened because scouts recorded locators in a **companion `capture.json` that never gets embedded**, while the findings file is what Part Two carries. The batch-3 CITATION APPENDIX patches the symptom for 18 sources. **The fix is upstream — scout prompts must require locators inline in the findings file** — and it applies to any future batch, so it belongs in the run contract rather than in a packet |
 | 1 | **Which reading explains the retention gap** — stage asymmetry, or genre-proximity decay | Both are consistent with the observed monotone ordering (formation 24.1% > maintenance 7.0% > other 4.4% > method 0.0%), and the within-arm spread (3.7× maintenance, 4.1× formation) is already as large as the between-arm ratio (3.45×), which **neither reading is excluded by**. Separating them needs a **canon-side census by stage** and a **matched-pair analysis holding topic constant while varying stage** — new measurements, not re-readings. **The two readings imply different remedies**: write maintenance doctrine, versus accept that retrieval is lexically narrow and more doctrine in the same vocabulary will not fix it. **Referee question.** |
 | 2 | **Batch 2 is repaired but unre-reviewed** | §6.2. The escalated defect is fixed in the artifact; no cold reviewer has seen the corrected packet. |

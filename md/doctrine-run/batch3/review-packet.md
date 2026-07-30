@@ -15,8 +15,10 @@
 **It lets you audit the reasoning.** Every Part One claim *restated from* a scout carries an anchor into the
 Part Two block that supports it (convention below). **Two exceptions, named because the claim would otherwise
 be universal and false:** the two provenance inventories — "Primary reads OUTSIDE the hash chain" and "Scout
-cross-check" — are scout-*derived* rather than scout-restated, carry no anchors, and must be checked against
-the scouts' own CONFIDENCE NOTES. If Part One says something Part Two does not, that
+cross-check" — are scout-*derived* rather than scout-restated and carry no anchors. **They are not equally
+checkable.** The first can be verified line-by-line against the scouts' own CONFIDENCE NOTES. The second's
+overlap percentages are **orchestrator-computed, appear nowhere in Part Two**, and are an orchestrator-side
+control you are taking on trust. If Part One says something Part Two does not, that
 is visible from inside this document, with no other file needed. That is the property this structure is for,
 and it is the property a reader fenced to this packet can actually exercise.
 
@@ -58,9 +60,12 @@ read primary** ("TIER 3 as sourced", with the counterfactual stated separately).
 
 > A large-n **probability-sample** instrument with published methodology is TIER 1 under the second limb
 > regardless of replication status. **Where no margin of error is published, the assignment rests on sampling
-> design alone and is stated as such** — which is the case for both limb-2 assignments in this packet (Trent &
-> South 2011; Filser & Preetz 2021). An **opt-in or quota panel** is excluded from that limb however large it
-> is, and cannot exceed TIER 2 on sample size alone.
+> design alone and is stated as such** — which is the case for **all four** limb-2 assignments this packet
+> relies on: Trent & South 2011 and Filser & Preetz 2021 in S-G, and **Esteve et al. 2016** (120 countries,
+> 1960–2011, >0.5 billion person-records) and the **Hirschl CDE working paper** (N = 5,059,000) in S-I-A, both
+> of which S-I-A grades "TIER 1 as read" on design. An earlier revision of this block named only the first two;
+> that undercounted, and Part One relies on the Esteve assignment at the C12 cluster. An **opt-in or quota
+> panel** is excluded from that limb however large it is, and cannot exceed TIER 2 on sample size alone.
 >
 > An earlier draft of this block required "published methodology **and** a published margin of error" in the
 > blockquote while requiring only published methodology in the definition line. Neither limb-2 source here is
@@ -130,9 +135,14 @@ it can be, and **the invariance of the other twelve fields is what carries the w
 
 **⟦UNIT 6⟧**
 
-**This classification is the orchestrator's own judgment.** Two disclosures a reader is entitled to before
-weighing it: every source is **named** below so any assignment can be disputed individually, and the
-classification was made **with the mapped shares already in hand** — the shares were not blind to it.
+**This classification is the orchestrator's own judgment.** Three disclosures a reader is entitled to before
+weighing it. **One:** every source is **named** below so any assignment can be disputed individually, and
+**full locators for all 21 — author, year, venue, URL — are in the CITATION APPENDIX**, because a topic label
+is not a citation and an earlier revision of this packet offered only the label. **Two:** the classification
+was made **with the mapped shares already in hand** — the shares were not blind to it. **Three:** every
+per-source figure in this table and the two that follow is an **orchestrator-side control** read off the
+exports on disk, on the same footing as the epoch table above — **a packet-fenced reader cannot repeat any of
+it.**
 
 | Group | Sources | Claim-like | Mapped | Mapped share |
 |---|---|---|---|---|
@@ -229,9 +239,11 @@ accommodations are available and this corpus does not discriminate between them.
 
 **⟦UNIT 12⟧**
 
-**Why this is not adjudicated here.** The four tests above are all *new measurements* — a canon-side census
-and matched-pair analyses — not re-readings of existing data. None can be performed inside this packet, and
-the two readings imply different remedies for the site: Reading A says write maintenance doctrine, Reading B
+**Why this is not adjudicated here.** Three of the four tests above are *new measurements* — a canon-side
+census, a matched-pair analysis holding topic constant, and a formation source far from the canon's core.
+The fourth, the within-maintenance near-core/far-from-core comparison, is a **re-reading of existing corpus
+shares under a new topical classification** rather than a new measurement. **None of the four can be performed
+inside this packet**, and the two readings imply different remedies for the site: Reading A says write maintenance doctrine, Reading B
 says the retrieval is lexically narrow and more doctrine in the same vocabulary will not fix it.
 **Choosing between them is a referee question, and it is the most substantive unresolved item in batch 3.**
 
@@ -268,10 +280,13 @@ contradicted**," while the dyadic/whole-market-availability half "came out compa
 "**neither study found grounds to reject the dyadic-power half; both found the structural-power half harder
 to confirm than the book's framing implies**" [S-G §c ▸"weak, mixed, or contradicted"].
 
-**The word this packet previously used was "partly falsified." That overstated the record and is
-withdrawn.** "Falsified" asserts a disconfirmation the two studies do not deliver; S-G's three-way "weak,
-mixed, or contradicted" is the accurate description, and the defeaters below are why the stronger word
-cannot stand.
+**The word this packet previously used was "partly falsified," and it is withdrawn — but not for the reason an
+earlier revision gave.** That revision said "'falsified' asserts a disconfirmation the two studies do not
+deliver," which contradicts this packet's own next two units: Trent & South **did** contradict the
+structural-power prediction on three outcomes, and Dollar's pooled result **is** a contradiction. The accurate
+reason is narrower: **Dollar's pooled contradiction is self-attenuated** (she attributes it to her own measure)
+**and her moderator arm is mixed**, so the record across the two tests is S-G's three-way "weak, mixed, or
+contradicted" rather than a falsification. The defeaters below are what make the weaker word the right one.
 
 **⟦UNIT 15⟧**
 
@@ -667,8 +682,10 @@ corpus artifact.
 
 **No pass/fail threshold was ever set for this cross-check.** An earlier draft wrote "none fell below 60%,"
 which implies a floor this run never stated; withdrawn. The measure is diagnostic, not a gate: collapsed
-overlap would indicate a scout that paraphrased, truncated or invented prose. The lowest observed value is
-61.8%, and none of the six collapsed.
+overlap would indicate a scout that paraphrased, truncated or invented prose, **but this run set no criterion
+for collapse**, so the six values (**61.8%–95.2%**) are reported **without a pass/fail conclusion**. A previous
+revision withdrew the 60% floor and then wrote "none of the six collapsed," which smuggles the same unstated
+criterion back in; that verdict is withdrawn too.
 
 **⟦UNIT 41⟧**
 
@@ -698,7 +715,17 @@ re-extracted by the orchestrator, because a model-mediated transcription is not 
 
 **⟦UNIT 43⟧**
 
-**Why this section exists.** Part Two names many sources by author and year only. Cluster C9's block defers
+**Scope, stated first because an earlier revision of this header overclaimed it.** This appendix covers **two
+groups**: the sources batch-3 scouts read primary (first table), and the **21 analyzed corpus sources** behind
+the quantitative finding (second table). The earlier header said "locators for every source Part One relies
+on" while listing only the first group — omitting all 15 pre-batch-3 corpus sources, which were identified by
+topic label alone. That was the larger floor failure of the two, and it is cured below. Sources Part One
+relies on that **still** fail the floor are named at the end, so the header no longer claims completeness it
+does not have.
+
+### Sources the batch-3 scouts read primary
+
+**Why this table exists.** Part Two names many of these by author and year only. Cluster C9's block defers
 its locators to a `capture.json` **that is not embedded in this packet**, and the Dollar dissertation — the
 single most load-bearing unhashed source in Part One — appears in Part Two as "Dollar (2014) dissertation, NC
 State repository" with no title and no URL. On this packet's own citation floor those are **failures**, and
@@ -730,6 +757,48 @@ taking this table on the same trust as the hash controls.
 | Finkel, Cheung, Emery, Carswell & Larson (2015) — **PRÉCIS** | *Current Directions in Psychological Science* 24(3):238–244 | DOI `10.1177/0963721415569274` |
 | Genadek, Flood & Garcia Roman (2015) — **GFG, working paper, read** | Minnesota Population Center WP 2015-2 | DOI `10.18128/MPC2015-2` · `assets.ipums.org/_files/mpc/wp2015-02.pdf` |
 | GFG — **peer-reviewed version, NOT read** | *Demography* (2016) | DOI `10.1007/s13524-016-0512-8` |
+
+### The 21 analyzed corpus sources — locators for the quantitative finding
+
+**Why this table exists.** The classification table and every robustness row rest on **21 analyzed corpus
+sources**, and an earlier revision of this appendix identified 15 of them **by topic label alone** — "01 Pew
+online dating", "05 Kim generalizability" — with no author, year, venue or URL anywhere in the packet, while
+this section's header claimed to hold "locators for every source Part One relies on." **The header overclaimed
+and the floor failed for those 15.** Both are cured here.
+
+**Provenance:** taken from the committed corpus manifest, `lab-corpus.manifest.json`. Like the capture-file
+table above, the manifest sits **outside Part Two**, so a packet-fenced reader takes this on the same trust as
+the hash controls.
+
+| # | Author / organisation | Year | Venue | Locator |
+|---|---|---|---|---|
+| 01 | Emily A. Vogels & Colleen McClain | 2023 | Pew Research Center (Short Reads) | `pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/` |
+| 02 | Rollo Tomassi | 2011 | The Rational Male (blog) | `therationalmale.com/2011/12/21/fem-centrism/` |
+| 04 | Asa Seresin | 2019 | The New Inquiry | `thenewinquiry.com/on-heteropessimism/` |
+| 05 | Hyoun K. Kim, Deborah M. Capaldi & Lynn Crosby | 2007 | *Journal of Marriage and Family* 69(1):55–72 | `pmc.ncbi.nlm.nih.gov/articles/PMC1828692/` |
+| 06 | Richard E. Heyman & Amy M. Smith Slep | 2001 | *Journal of Marriage and Family* 63(2):473–479 | `pmc.ncbi.nlm.nih.gov/articles/PMC1622921/` |
+| 07 | Jacques van Lankveld, Marieke Dewitte, Peter Verboon & Susan van Hooren | 2021 | *Frontiers in Psychology* 12 | `pmc.ncbi.nlm.nih.gov/articles/PMC8255964/` |
+| 08 | James K. McNulty, Carolyn A. Wenner & Terri D. Fisher | 2016 | *Archives of Sexual Behavior* 45(1):85–97 | `pmc.ncbi.nlm.nih.gov/articles/PMC4472635/` |
+| 09 | Daniel Conroy-Beam, Cari D. Goetz & David M. Buss | 2016 | *Evolution and Human Behavior* 37(6):440–448 | `labs.la.utexas.edu/buss/files/2013/02/What-Predicts-Romantic-Relationship-Satisfaction-EHB-in-press-Conroy-Beam-Goetz-Buss-in-press.pdf` |
+| 10 | Rowland S. Miller | 2007 | 10th Sydney Symposium of Social Psychology (chapter draft) | `sydneysymposium.unsw.edu.au/2007/Chapters/MillerSSSP07.pdf` |
+| 11 | Wendy Wang, Institute for Family Studies | 2026 | IFS blog; survey fielded by YouGov | `ifstudies.org/blog/the-one-role-gen-z-women-still-want-men-to-play` |
+| 12 | National Election Pool / Edison Research | 2024 | NEP exit-poll methods statement | `s.abcnews.com/assets/dtci/elections/NEPExitPollMethodologyStatement.pdf` |
+| 13 | Brian J. Willoughby, Jason S. Carroll, Nathan Dover & Hailey Hakala (Wheatley Institute, BYU) | 2025 | Wheatley Institute report | `brightspotcdn.byu.edu/a6/a1/c3036cf14686accdae72a4861dd1/counterfeit-connections-report.pdf` |
+| 14 | Common Sense Media, with NORC at the University of Chicago | 2025 | Common Sense Media research report | `commonsensemedia.org/sites/default/files/research/report/talk-trust-and-trade-offs_2025_web.pdf` |
+| 15 | Daniel A. Cox, Survey Center on American Life | 2021 | American Perspectives Survey | `americansurveycenter.org/research/the-state-of-american-friendship-change-challenges-and-loss/` |
+| 16 | Pew Research Center | 2025 | "Men, Women and Social Connections", ch. 2 | `pewresearch.org/social-trends/2025/01/16/where-men-and-women-turn-for-emotional-support-and-social-connection/` |
+| 17–22 | *see the table above* | | | batch-3 sources, locators from the scout capture files |
+
+**Source 03 (The Gottman Institute, "The Four Horsemen") is in the manifest with no URL and no analysis
+export.** It is excluded from every figure in this packet, which is why the denominator is 21 and not 22
+(UNIT 6). It is listed here only so the exclusion is visible rather than silent.
+
+**Two things this table does not fix.** Sources **02** (a blog post) and **04** (a magazine essay) are now
+citable but are still **TIER 3 material by this packet's own definitions** — they sit in the "Other" group and
+contribute 1 mapped segment between them, so nothing in the quantitative finding turns on them. And a locator
+is not a read: these 21 sources were re-fetched and hashed by the orchestrator, which is a provenance property
+and **not** a claim that any scout or the orchestrator read them in full for this batch.
+
 
 **Sources Part One relies on that STILL fail the citation floor — named rather than repaired:**
 

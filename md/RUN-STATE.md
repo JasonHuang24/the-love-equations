@@ -7,17 +7,23 @@ without reading the conversation that produced it. Updated per batch.
 - **Started:** 2026-07-29. Ratification: Jason's single front-loaded GO for the full three-batch plan.
 - **Orchestrator:** Claude Opus 5, effort xhigh. Coordinates only; does not research or review.
 - **Instrument:** LE Lab v2.6.1, frozen for the run's duration. No Lab file has been modified.
-- **Repo at last update:** branch `main`, parent commit `1081155`. All three batches ingested; batch 3
-  committed, **not pushed**.
+- **Repo at last update:** branch `main`, parent commit `1081155`. All three batches ingested, reviewed and
+  **pushed**. Batch 3 took three cold reviews to clear.
 
-> ## ⛔ CURRENT STATE: HALTED, AWAITING JASON'S RULING
+> ## ✅ CURRENT STATE: ALL THREE BATCHES COMPLETE, REVIEWED, AND PUSHED
 >
-> Batch 3's second cold review returned **`INTEGRITY: CONTEST` on unit 34**. Per the run contract that halts
-> the run. **The defect is repaired in the artifact and batch 3 is committed but NOT pushed.** Read **§5ac**
-> before doing anything else; the ruling needed is whether the repair closes the escalation.
+> Batch 3's second cold review returned `INTEGRITY: CONTEST` on unit 34 and halted the run. **Jason ruled: run
+> a third cold review of the repaired packet, then push.** Review 3 returned **ACCEPT 36 · REWORD 4 · CONTEST 3
+> · INTEGRITY 0**, with unit 34 itself **ACCEPT** and the repair verified. **Escalation closed; all seven
+> quality findings applied; batch 3 pushed.** See **§5ac0** for the close-out, **§5ac** for the escalation.
 >
-> Two other things a fresh seat must not miss: **batch 2 is repaired but unre-reviewed** (§5aa), and the
-> referee-block spec now lives in **§5ad** because it was previously carried only in a dispatch prompt.
+> Two things a fresh seat must not miss: **batch 2 is repaired but unre-reviewed** (§5aa) — the one artifact in
+> the run whose repair no cold reviewer has seen — and the referee-block spec lives in **§5ad** because it was
+> previously carried only in a dispatch prompt.
+>
+> **The run promoted no doctrine.** That is the outcome, not a shortfall: three clusters came back weaker than
+> checkpoint 01 recorded them, one came back with two citation corrections, and the one quantitative finding
+> has two live readings the run refuses to choose between. The referee block carries all of it.
 
 ---
 
@@ -192,12 +198,13 @@ difference (the scout merged the landing page with the chapter; the whole fetche
 words including chrome, so 819 is the chapter's real prose, and the decisive sentence is present
 verbatim). Recorded because the cross-check is supposed to catch the orchestrator too.
 
-### Batch 3 — CITATION-GRADE CLOSERS — **ingested, packeted, reviewed TWICE, repaired, committed. ⛔ NOT PUSHED — see §5ac**
+### Batch 3 — CITATION-GRADE CLOSERS — **ingested, packeted, reviewed THREE TIMES, repaired twice, pushed**
 
 All four scouts returned (S-G, S-H, S-I-A, S-I-B). Six sources ingested (manifest 16 → 22), packet authored
 under the two-part doctrine, **two** cold reviews run, both repair passes applied, dispositions written to
-`md/doctrine-run/batch3/review-dispositions.md`. **Batch 3 is committed but NOT pushed**: review 2 returned an
-`INTEGRITY: CONTEST` and the run contract halts on that. See **§5ac**.
+`md/doctrine-run/batch3/review-dispositions.md`. Review 2 returned an `INTEGRITY: CONTEST` and halted the run;
+Jason ruled for a third review, which **cleared it** (ACCEPT 36 · REWORD 4 · CONTEST 3 · INTEGRITY 0, with unit
+34 itself ACCEPT). **Batch 3 is pushed.** See **§5ac0** for the close-out and **§5ac** for the escalation.
 
 The paragraph that used to sit here said "no source ingested, no packet authored, no review run." That was
 true when written and is now stale in every clause; it is replaced rather than annotated so a fresh seat cannot
@@ -245,8 +252,8 @@ Headline results, as data:
   non-parents are −11 min/day from 1975 but **+53 min/day from 1965**, and the pre-1975 series is not
   reported in the target article.
 
-**Batch 3 remaining work:** none, except Jason's ruling on the §5ac escalation and then the push. Everything
-else on the old checklist — ingest, merge, author, review, dispositions, update this file, commit — is done.
+**Batch 3 remaining work: none.** The §5ac escalation was closed by review 3 and the batch is pushed. Everything
+on the old checklist — ingest, merge, author, review, dispositions, update this file, commit — is done.
 
 | # | Source | Grade | Words | Claim-like | Mapped | Share | Queue | Scout overlap |
 |---|---|---|---|---|---|---|---|---|
@@ -323,7 +330,46 @@ multibyte characters and reads high — source 21 (347 multibyte chars) returns 
 Node, not in the shell; an earlier version of this note said "plain `wc -w`" and would send a reader chasing
 a phantom discrepancy.
 
-## 5ac. ⛔ HALTED — batch 3 review 2, the THIRD integrity escalation, and it is the same failure mode again
+## 5ac0. ✅ ESCALATION CLOSED — batch 3 review 3 cleared the repair, and three repairs had introduced new defects
+
+**Jason's ruling on the §5ac escalation:** run a third cold review of the repaired packet, then push. Done.
+
+**Review 3 — fresh subagent, no knowledge of reviews 1 or 2, fenced to the packet: ACCEPT 36 · REWORD 4 ·
+CONTEST 3 · INTEGRITY 0** across the same 43 units. **Unit 34, the escalated unit, came back ACCEPT** with the
+repair checked rather than accepted: the reviewer verified the "(as described in my assignment)" withdrawal
+against S-I-B's own text and confirmed the conclusion is *"correctly narrowed to the candidate doctrine's
+pairing rather than the published page."* On the gate overall: *"No claim, quote, figure, DOI or URL in Part One
+was found to lack a basis in a cited source."* **The escalation is closed and batch 3 is pushed.**
+
+**All seven quality findings applied, none rejected.** Two are worth carrying beyond this batch:
+
+- **The 15 pre-batch-3 corpus sources had no locators anywhere in the packet** — identified by topic label only
+  ("01 Pew online dating") while an appendix claimed to hold "locators for every source Part One relies on."
+  The reviewer called that appendix the packet's **weakest unit** for asserting a completeness it did not have.
+  Fixed: all 21 corpus sources now carry author, year, venue and URL from the committed manifest.
+- **Unit 6's per-source figures carried no trust-class flag** while units 4 and 36 did — the same selective
+  disclosure that produced the unit-34 escalation, on its last unflagged holdout. Flagged now.
+
+**THE FINDING THAT MATTERS MOST FOR ANY FUTURE BATCH: three of review 3's seven findings are defects the
+review-2 repairs themselves introduced or re-imported.**
+
+- **Unit 3** — the repair named two limb-2 tier assignments when the packet relies on four (Esteve and the
+  Hirschl WP are also graded TIER 1 on design). A count refuted by the packet's own contents, committed *while
+  fixing* a different defect in the same unit.
+- **Unit 40** — the repair withdrew the phantom 60% cross-check floor and then wrote "none of the six
+  collapsed," smuggling the same unstated criterion back in.
+- **Unit 14** — the repair withdrew "partly falsified" for a reason its own next two units contradict.
+
+**Therefore: a repair pass needs its own verification pass against the same checks the original failed.** Three
+of seven is high enough that **"repaired" must not be treated as a stronger status than "reviewed"** until the
+repair has itself been reviewed. That is exactly the gap that left batch 2 repaired-but-unre-reviewed, and
+exactly why requiring review 3 was substantive rather than ceremonial.
+
+**One pattern did close.** Review 3 found zero integrity items and zero provenance over-scope defects — the
+failure mode behind all three escalations. What worked was not a convention or a reminder but a mechanism:
+**every unverifiable claim now carries an explicit trust-class flag naming what the reader cannot check.**
+
+## 5ac. Batch 3 review 2 — the THIRD integrity escalation, since closed by review 3 (see §5ac0)
 
 The batch-3 repair was completed as ruled (all five items), the packet was rebuilt with per-claim anchors and
 43 numbered units, and a **fresh** cold reviewer with no knowledge of review 1 was dispatched. It returned:
@@ -578,12 +624,12 @@ output will be archived but batch 3 will not be closed or pushed until Jason rul
 - Checkpoint conflicting with repo state — **no** (see §1; the checkpoint was absent, not conflicting).
 - A subagent proposing to modify the Lab — **no**. Three scouts returned maintainer-facing
   observations in findings prose, as the contract requires, and generated no feedback files.
-- A cold-review CONTEST alleging fabrication or an unverifiable source — **YES, THREE TIMES.** Batch 2
+- A cold-review CONTEST alleging fabrication or an unverifiable source — **YES, THREE TIMES; all three closed.** Batch 2
   ITEM 15 (§5a), batch 2 revision 2 unit 30 (§5aa), and batch 3 review 2 unit 34 (§5ac). **All three alleged an
   unverifiable source presented as verified; none alleged fabrication, and no reviewer found fabrication
   anywhere in any packet.** All three were valid against the packet and repaired. Batch 1 and batch 3 review 1
-  returned zero INTEGRITY items. **The run is currently halted on the third escalation and awaits Jason's
-  ruling; batch 3 is committed and not pushed.**
+  returned zero INTEGRITY items. The third was closed by a third cold review that returned
+  zero integrity items (§5ac0). **No stop condition is currently active.**
 
 ## 7. OPERATING NOTES
 

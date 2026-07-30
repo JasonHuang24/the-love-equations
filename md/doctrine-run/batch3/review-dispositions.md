@@ -1,27 +1,75 @@
 # Batch 3 — cold review dispositions and their adjudication
 
-Two cold reviews were run against batch 3. **Review 1** saw the original packet; its findings drove a repair
-pass. **Review 2** saw the repaired packet, was a **fresh subagent with no knowledge that review 1 existed**,
-and is the review adjudicated in detail below.
+**Three** cold reviews were run against batch 3. **Review 1** saw the original packet. **Review 2** saw the
+repaired packet and escalated. **Review 3** was ordered by Jason as the condition for closing that escalation,
+saw the review-2-repaired packet, and **cleared it**.
 
-Both reviewers: dispatched with the packet plus the stripped review rules and nothing else — no run
-narrative, no orchestrator commentary, no prior findings. Fenced to reading one file, and told explicitly that
-an absence in the packet is itself a finding rather than a prompt to look elsewhere.
+All three reviewers: dispatched with the packet plus the stripped review rules and nothing else — no run
+narrative, no orchestrator commentary, no prior findings, and **no knowledge that any earlier review existed**.
+Fenced to reading one file, and told explicitly that an absence in the packet is itself a finding rather than a
+prompt to look elsewhere.
 
-| | Units | ACCEPT | REWORD | CONTEST | INTEGRITY |
-|---|---|---|---|---|---|
-| **Review 1** (original packet) | 8, reviewer-segmented | 1 | 1 | 6 | 0 |
-| **Review 2** (repaired packet) | **43**, marked in the artifact | **24** | **9** | **9** | **CONTEST 1** |
+| | Units | ACCEPT | REWORD | CONTEST | INTEGRITY | Outcome |
+|---|---|---|---|---|---|---|
+| **Review 1** (original packet) | 8, reviewer-segmented | 1 | 1 | 6 | 0 | Central warrant refused; repaired |
+| **Review 2** (repaired packet) | **43**, marked in the artifact | 24 | 9 | 9 | **CONTEST 1** | **HALTED** → escalated → repaired |
+| **Review 3** (review-2-repaired) | **43** | **36** | **4** | **3** | **0** | **CLEARED.** All 7 findings applied; pushed |
 
 ---
 
-## ⛔ THE RUN IS HALTED. Review 2 returned an INTEGRITY: CONTEST on unit 34.
+## ✅ ESCALATION CLOSED — review 3 returned zero INTEGRITY items
 
-Per the run contract — *"halt if a cold-review CONTEST alleges fabrication or an unverifiable source
-(integrity findings escalate to Jason; quality findings do not)"* — **batch 3 is NOT pushed.** The defect is
-repaired in the artifact and the repair is recorded below, but the escalation is Jason's to rule on. This is
-the **third** integrity escalation of the run and the **third instance of the same failure mode** (see the
-pattern note at the end).
+**Jason's ruling** on the open escalation was option 2 of the three the referee block set out: require a third
+cold review of the repaired packet before pushing. That review returned **ACCEPT 36 · REWORD 4 · CONTEST 3 ·
+INTEGRITY 0**, and **unit 34 — the escalated unit — came back ACCEPT** with the repair checked rather than
+taken on faith:
+
+> "Both texts are now quoted rather than inferred; the site quote is labelled as an orchestrator read with a
+> file:line locator and the whole four-check block is trust-classed as unverifiable from inside the packet,
+> which is disclosure, not concealment. The withdrawal of the S-I-B 'independent' corroboration is verified by
+> S-I-B's own parenthetical '(as described in my assignment)'… The conclusion is correctly narrowed to the
+> candidate doctrine's pairing rather than the published page."
+
+It added one observation the packet should carry rather than bury: **checkpoint 01 "is the orchestrator's own
+prior record rather than a foreign one."** True, and it is a reason the corroboration is weak, not a reason the
+conclusion fails — the conclusion now rests on the three file-search checks, not on the checkpoint.
+
+**On the integrity gate overall, review 3 stated:** *"No claim, quote, figure, DOI or URL in Part One was found
+to lack a basis in a cited source, and no source the packet admits it could not reach is summarized as though
+read — the unreachable ones (Guttentag & Secord 1983, the published Demography text, the 13 commentaries,
+Proulx et al.) are recorded as gaps and their consequences carried through."*
+
+**One thing a reader of this file must know: the pushed packet is review-3-*corrected*, not
+review-3-*as-reviewed*.** All seven of review 3's findings were applied after it returned, following the same
+practice as batches 1 and 2. The seven are adjudicated in the next section; none was rejected.
+
+### Review 3's seven findings — all applied, none rejected
+
+| Unit | Disposition | Charge | Adjudication |
+|---|---|---|---|
+| **3** | CONTEST | The limb-2 tier rule named *"both limb-2 assignments in this packet (Trent & South 2011; Filser & Preetz 2021)"* — but S-I-A grades **two more** on design without a published MOE: Esteve et al. 2016 (120 countries, >0.5 billion person-records) and the Hirschl CDE working paper (N = 5,059,000), both "TIER 1 as read". Part One relies on the Esteve assignment | **Applied.** Corrected to all four. **This defect was introduced by the review-2 repair of the same unit** — a count refuted by the packet's own contents, which is the run's second-most-recurrent pattern showing up inside its own fix |
+| **6** | CONTEST | The classification table makes a substantive content claim about each source's pairing stage, but **15 of the 21 sources are identified nowhere in the packet beyond a topic label** — no author, year, venue or URL — and none appears in an appendix headed "locators for every source Part One relies on" | **Applied.** All 21 corpus sources now carry author, year, venue and URL, from the committed manifest. The reviewer also noted the table's per-source figures carry **no trust-class flag** unlike units 4 and 36; that is the same selective-disclosure defect the run has now hit four times, and the flag is added |
+| **43** | CONTEST | The appendix *"asserts completeness while omitting every source behind the packet's headline quantitative finding, which means the floor failure it exists to close is larger after the appendix than the appendix admits"* — the reviewer's pick for **weakest unit in the packet** | **Applied.** The header no longer claims completeness it lacks; the appendix now has two tables (scout-read sources, and the 21 corpus sources) plus the named residue of genuine floor failures |
+| **1** | REWORD | The instruction to check the two unanchored inventories against the scouts' CONFIDENCE NOTES **is only executable for one of them** — the shingle percentages are orchestrator-computed and appear nowhere in Part Two | **Applied.** The two inventories are now distinguished by whether they can be checked at all |
+| **12** | REWORD | "The four tests above are all *new measurements*" — but the within-maintenance near-core/far-from-core comparison is a **re-reading of existing corpus shares** under a new classification | **Applied.** Three of four are new measurements; the fourth is a re-reading. The operative claim — none can be run inside the packet — is unchanged |
+| **14** | REWORD | The stated reason for withdrawing "partly falsified" (*"'falsified' asserts a disconfirmation the two studies do not deliver"*) **contradicts the packet's own next two units**, which report that Trent & South *did* contradict the structural-power prediction on three outcomes and that Dollar's pooled result *is* a contradiction | **Applied, and it is the sharpest of the seven.** The withdrawal was right and its rationale was wrong. The accurate reason is narrower: Dollar's pooled contradiction is **self-attenuated** and her moderator arm is **mixed**, so the two-test record is S-G's three-way phrase rather than a falsification |
+| **40** | REWORD | Withdrawing the phantom 60% floor and then writing *"none of the six collapsed"* **reinstates the same unstated criterion in weaker form** | **Applied.** The six values are now reported with no pass/fail conclusion at all. A clean catch: the repair had re-imported the defect it was repairing |
+
+### What review 3's ACCEPTs establish
+
+It recomputed rather than trusted, in the same style as review 2 and on different targets: it resolved **every
+anchor in Part One** against its named block; recomputed all six robustness ratios (3.449×, 2.630×, 3.084×,
+3.058×, 2.352×, 2.76×) and found *"every displayed ratio and numerator/denominator pair is exact"*; verified
+the 13-row epoch table reconciles to "twelve of thirteen"; counted all ten SHA-256 digests to 64 characters;
+and **checked the outside-the-hash-chain inventory exhaustively against all four CONFIDENCE NOTES blocks** —
+S-G's six primary reads, S-H's five, S-I-A's two, S-I-B's four — concluding *"every one that is not a hashed
+corpus source appears in the table, and none is missing."* It called that unit **"the packet's best-evidenced
+inventory."**
+
+It also affirmed three self-corrections as correct behaviour on their merits rather than for existing: unit 27
+(*"the strongest provenance correction in the packet"*), unit 32 (the GFG re-analysis downgrade as *"the
+conservative and correct call"*), and unit 41 (the extractor explanation *"self-refuting in the packet's
+favour"*).
 
 **Adjudication: the charge is valid against the packet, and the quotation it names is valid against its
 source. Both halves of the charge are accepted; nothing is rejected.**
@@ -166,3 +214,32 @@ artifact, because the findings file is what gets embedded.
 was found by comparing Part One against Part Two, from inside a single file, by a reader with no other
 context. Six of them were found by *arithmetic on the packet's own tables*. That is the property the structure
 was built for.
+
+---
+
+## What three reviews on one packet actually showed
+
+**The trajectory: ACCEPT 1 of 8 → 24 of 43 → 36 of 43, with the integrity gate clearing on the third pass.**
+The repairs held; review 3 re-checked the load-bearing ones by recomputation and confirmed them.
+
+**But three of review 3's seven findings are defects the repairs themselves introduced or re-imported**, and
+that is the most useful thing this batch produced:
+
+- **Unit 3** — the review-2 repair of the tier block named two limb-2 assignments when the packet relies on
+  four. A count refuted by the packet's own contents, committed *while fixing* a different defect in the same
+  unit.
+- **Unit 40** — the review-2 repair withdrew a phantom 60% floor and then wrote "none of the six collapsed",
+  smuggling the same unstated criterion back in.
+- **Unit 14** — the review-2 repair withdrew "partly falsified" for a reason contradicted by the packet's own
+  next two units.
+
+**The lesson is specific and worth carrying to any future batch: a repair pass needs its own verification pass
+against the same checks the original failed.** Fixing a unit does not exempt the fix. Three of seven is a high
+enough rate that "repaired" should not be treated as a stronger status than "reviewed" until the repair has
+itself been reviewed — which is precisely the gap that left batch 2 repaired-but-unre-reviewed, and precisely
+why requiring review 3 was the right ruling rather than a formality.
+
+**One pattern did close, and it is worth naming.** Review 3 found **zero** integrity items and zero provenance
+over-scope defects — the failure mode behind all three of the run's escalations. The fix that worked was not a
+convention or a reminder; it was **making every unverifiable claim carry an explicit trust-class flag naming
+what the reader cannot check.** Unit 6 was the last unflagged holdout and review 3 caught it.
