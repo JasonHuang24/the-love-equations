@@ -786,8 +786,8 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
 /*
  * The widening census, checkable instead of asserted.
  *
- * md/lab-v2.6.1-release.md §3 published this enumeration twice as "enumerated
- * over all sixteen entries" and it was wrong twice — first naming `pays`, which
+ * md/lab-v2.6.1-release.md §3 published this enumeration three times as "enumerated
+ * over all sixteen entries" and it was wrong all three times — first naming `pays`, which
  * does not match, and omitting seven surfaces; then omitting `carefulness` and
  * `medicalization`, which Sol's verification review found. Both failures were the
  * same step: a mechanical candidate space filtered to real English BY HAND, where
@@ -859,7 +859,7 @@ test('the census generator uses the stemmer\'s own suffix inventory, not a copy 
 });
 
 test('the widening census is exhaustive over its own stated vocabulary', () => {
-  assert.equal(census.schema, 'le-lab.denylist-census/1.2');
+  assert.equal(census.schema, 'le-lab.denylist-census/1.3');
   assert.deepEqual(census.entries.map((row) => row.entry), DENYLIST_ENTRIES,
     'The census covers the denylist exactly, in order — a missing entry is how `service` and `care` '
     + 'were left out of the second published version.');
@@ -920,18 +920,22 @@ test('the census records the surfaces the release report names, and pays is not 
     '`internetization` reaches `internet` — fourth review.');
   assert.ok(attested.get('network').includes('networkization'), '`networkization` reaches `network`.');
 
-  // Held AGAINST the fourth review, and pinned so the reasoning cannot be lost:
-  // the standards bodies write `softwarization`, which strips to `softwar` and is
-  // not reached at all. The reached spelling and the attested spelling are
-  // different words.
+  // The fourth pass ruled `softwareization` unattested on the maintainer's claim that
+  // ITU and ETSI write `softwarization` instead. That claim was made without opening
+  // either document and it was false; both print `softwareization`. Withdrawn, and
+  // pinned the other way so the correction cannot quietly revert.
+  assert.ok(attested.get('software').includes('softwareization'),
+    '`softwareization` is reached AND attested — ITU FG-NET2030 and ETSI White Paper 38 both print it, '
+    + 'and the evidence is recorded in census.attestationEvidence.');
+  assert.equal(stemOf('softwareization'), 'software', 'It reaches `software` through the `ization` rule.');
+
+  // The mirror-image finding, which survives the correction and is the more
+  // interesting half: the OTHER spelling is real and this denylist cannot see it.
   assert.equal(stemOf('softwarization'), 'softwar',
-    'The attested spelling `softwarization` must NOT reach `software`; if this changes, the census '
-    + 'entry for `software` and the argument in §3 both need revisiting.');
-  assert.equal(stemOf('softwareization'), 'software',
-    'The reached spelling `softwareization` does stem to `software`, which is why it is in the census '
-    + 'at all — as reached-but-unattested.');
-  assert.ok(!attested.get('software').includes('softwareization'),
-    '`softwareization` is reached but is not the spelling ITU and ETSI use, so it stays unattested.');
+    '`softwarization` strips to `softwar`, so the denylist never sees it. That is a GAP in the widening '
+    + 'rather than a cost of it, recorded in census.realButNotReached.');
+  assert.ok(census.realButNotReached && census.realButNotReached.softwarization,
+    'The gap has to be written down, or it is a fact nobody kept.');
 
   // And the word the first census named that never matched at all.
   assert.equal(stemOf('pays'), 'pays',
@@ -954,5 +958,38 @@ test('every candidate in the census is REACHED, attested or not', () => {
         + `— it stems to "${stemOf(word)}" and the entry stems to "${row.stem}". A candidate that `
         + 'does not stem-match belongs in neither field.');
     });
+  });
+});
+
+test('every contested attestation carries evidence a reader can check', () => {
+  // Sol's fifth review: attestation rulings were resting on prose about who said
+  // what — a reviewer's uncited citations in one case, and in another a
+  // maintainer's assertion about two documents he had not opened. Neither is
+  // checkable from the repository, which is the only standard that matters here.
+  const { arguableAttested, attestationEvidence } = census;
+  assert.ok(Array.isArray(arguableAttested) && arguableAttested.length,
+    'The census names which attestations were arguable; a file with none is not being honest.');
+
+  const attestedEverywhere = new Set(census.entries.flatMap((row) => row.reachedAndAttested));
+  arguableAttested.forEach((word) => {
+    assert.ok(attestedEverywhere.has(word),
+      `\`${word}\` is listed as an arguable ATTESTED surface but appears in no entry's `
+      + 'reachedAndAttested. Either it was withdrawn and this list is stale, or the list is wrong.');
+    const evidence = attestationEvidence[word];
+    assert.ok(Array.isArray(evidence) && evidence.length,
+      `\`${word}\` was contested and carries no evidence entry. A verdict a reader cannot check is `
+      + 'the thing this field exists to end.');
+    evidence.forEach((row) => {
+      assert.ok(row.source, `\`${word}\` has an evidence row with no source.`);
+      assert.ok(row.url || row.note,
+        `\`${word}\` has an evidence row with neither a URL nor a note explaining why there is none. `
+        + 'An unsourced verdict must at least say that it is unsourced.');
+    });
+  });
+
+  // And the reverse: evidence for something no entry claims is attested.
+  Object.keys(attestationEvidence).forEach((word) => {
+    assert.ok(attestedEverywhere.has(word),
+      `attestationEvidence carries \`${word}\`, which no entry lists as attested.`);
   });
 });

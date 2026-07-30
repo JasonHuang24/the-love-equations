@@ -237,11 +237,12 @@ The table below is the **attested** subset — the practical cost. It is not the
 | `service` | serviceable |
 | `medical` | medicalization |
 | `internet` | internetization |
+| `software` | softwareization |
 | `care` | careers, carefulness |
 | `payment` → `pay` | pay, paying, payers, payable, payed |
 | `energy`, `utility` | energies, utilities *(the two §1 repairs, listed for completeness)* |
 | `health care`, `child care` | not describable as single surfaces — see §2.1's truth table |
-| `healthcare`, `childcare`, `software`, `insurance` | nothing attested |
+| `healthcare`, `childcare`, `insurance` | nothing attested |
 
 **Most of these are the technical sense the denylist exists to reject.** `the provider of hosted email`
 and `the provider for networked storage` are both now correctly disqualified, and that is the fix
@@ -258,9 +259,21 @@ stem to `car` and `caregiv` and do **not** match, so which care-words the denyli
 the stripper's suffix table and not by meaning.
 
 **A reached surface and an attested one are genuinely independent, and `software` is the clean
-demonstration.** The attested standards term is **softwarization**, which strips to `softwar` and is
-**not reached**. The reached surface is `softwareization`, which the standards bodies do not use. One
-word is real and invisible to the denylist; the other is visible and not real.
+demonstration — though not in the direction this section first claimed.** `softwareization` is BOTH
+reached and attested: ITU FG-NET2030 and ETSI White Paper 38 both print it, with the quotations recorded
+in the census's `attestationEvidence`. And the other spelling, **`softwarization`**, strips to `softwar`
+and is **not reached at all**, so a live technical term is invisible to this denylist. That is a **gap in
+the widening rather than a cost of it**, it is the mirror image of everything else in §3, and it is
+recorded as its own finding in the census under `realButNotReached` rather than left as an aside.
+
+> **CORRECTION, 2026-07-29 (fifth pass).** The paragraph above previously asserted the opposite: that
+> the standards bodies use `softwarization` and not `softwareization`, so the reached spelling was "visible
+> and not real". **That was false, and it was asserted about two specific documents without opening
+> either** — from a general web search, against a reviewer who had quoted both. It is the fifth instance
+> of the pattern Appendix A records, and the first one committed while contesting the reviewer for the same
+> class of error. The maintainer's own attempt to verify returned HTTP 403 on the ETSI PDF, which is a
+> reason to defer to a reader who had the text, not a reason to keep the claim. Attestation verdicts now
+> carry a URL and a quoted phrase in the fixture so the next one is checkable without trusting anybody.
 
 The `pay` family is the cost, and **`bl-16` records it as a limit this release created rather than
 found**:
