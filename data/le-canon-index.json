@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+394862aa09a0",
+  "indexVersion": "1.0.0+7af861cfbd75",
   "generatedAt": "2026-07-30T07:07:00.000Z",
   "sourcePages": [
     {
@@ -89,8 +89,8 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "2df9b36c26fe3a14cf875a19bb5b9eb82f2bcea5c4b9c9525173501e324b9e7e",
-      "conceptCount": 77
+      "sha256": "22d27fd15c3ab7ca73745f59c444f963c356e8ea8b396d12e3462621cd9063eb",
+      "conceptCount": 83
     },
     {
       "page": "deep-dive.html",
@@ -215,14 +215,14 @@
     }
   ],
   "stats": {
-    "conceptCount": 463,
+    "conceptCount": 469,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
       "Five Levers": 35,
       "Gender Dynamics": 133,
       "Instruments": 5,
-      "Lexicon": 77,
+      "Lexicon": 83,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
@@ -233,7 +233,7 @@
       "Definitional": 1,
       "Evidence-based": 36,
       "Framework": 61,
-      "Glossary": 77,
+      "Glossary": 83,
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
@@ -249,9 +249,9 @@
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 372,
+    "anchoredConceptCount": 378,
     "conceptsWithExternalSources": 77,
-    "dependencyCount": 228,
+    "dependencyCount": 233,
     "relatedCount": 308
   },
   "entries": [
@@ -11768,6 +11768,103 @@
       "pressureTests": []
     },
     {
+      "id": "lexicon:term-looks-rating-support-resistance",
+      "title": "Looks Rating (support & resistance)",
+      "page": "lexicon.html",
+      "anchor": "term-looks-rating-support-resistance",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "Every looks score carries a support floor and a resistance ceiling — a band inside which familiarity, bias, and behavior move perception, and outside which they don’t. First reads are accurate; the band is how much drift that accuracy leaves room for.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "Looks Rating",
+        "support & resistance"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:looks-rating"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The band bounds how far perception travels; where the first rating came from is a separate question."
+      ],
+      "commonMisreadings": [
+        "A looks rating drifts freely, so any partner will eventually find you attractive."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Is the lift inside one observer's band, or is it a fresh rating by a different observer?"
+      ]
+    },
+    {
+      "id": "lexicon:term-the-matching-curve",
+      "title": "The Matching Curve",
+      "page": "lexicon.html",
+      "anchor": "term-the-matching-curve",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "Within-sex looks matching among couples that already formed: the further from average you sit, the harder your partner regresses toward the middle. One curve for both sexes — not a discovered sex-difference but a consequence of scoring within sex. Read the column as the average partner, not the typical one.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "Matching Curve"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:matching-curve"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The curve describes couples that already formed, so it cannot be read as who pairs at all."
+      ],
+      "commonMisreadings": [
+        "A top-rated woman dates a partner rated exactly as high as herself."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Is the number an average partner or a typical one, and how wide is the spread around it?"
+      ]
+    },
+    {
+      "id": "lexicon:term-the-option-pool",
+      "title": "The Option Pool",
+      "page": "lexicon.html",
+      "anchor": "term-the-option-pool",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "Who can be converted from attention into a date or a commitment — a different question from who reacts. Options are asymmetric; pairings are not. A woman’s raw pool usually reaches above her looks line with commitment gated; a man’s sits at or below his unless status, competence, or familiarity lifts it.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "Option Pool"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:option-pool"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Reach into a partner tier and conversion into a couple are separate measurements on the same ladder."
+      ],
+      "commonMisreadings": [
+        "A woman's option pool is the set of men she will actually date and keep."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Is this access to a tier, or an outcome recorded with one?"
+      ]
+    },
+    {
       "id": "lexicon:term-conversion-ladder",
       "title": "Conversion Ladder",
       "page": "lexicon.html",
@@ -12654,6 +12751,39 @@
       "sourceLinks": [],
       "pressureTests": [
         "Is the complaint that desire was not reciprocated, or that reciprocation was owed?"
+      ]
+    },
+    {
+      "id": "lexicon:term-heteropessimism",
+      "title": "Heteropessimism",
+      "page": "lexicon.html",
+      "anchor": "term-heteropessimism",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "Performed despair about straight life — regret, embarrassment, hopelessness — that almost never comes with actually leaving it. Named by Asa Seresin (2019), who called it an anesthetic: it numbs the feeling instead of changing the conditions. The site’s read: the mainstream mirror of the black pill.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "heteropessimism",
+        "straight culture",
+        "straight experience",
+        "performative disaffiliation"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Performed despair and an actual exit are separate measurements, and most speakers produce only the first."
+      ],
+      "commonMisreadings": [
+        "Heteropessimists have actually stopped dating men, so the despair predicts who leaves the market."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Would this speaker's dating behaviour over the next year differ from someone who never said any of it?"
       ]
     },
     {
@@ -13795,6 +13925,71 @@
       "commonMisreadings": [],
       "sourceLinks": [],
       "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-the-feminine-reality",
+      "title": "The feminine reality",
+      "page": "lexicon.html",
+      "anchor": "term-the-feminine-reality",
+      "category": "Lexicon",
+      "subcategory": "Red Pill",
+      "synopsis": "Tomassi’s term for the claim that men live inside a version of reality organized around women’s priorities and mistake it for reality itself. The Operative Frame is the mechanism; this is what living inside it is supposed to feel like. Real as a description of a default nobody voted on; empty the moment it turns unfalsifiable — if every counter-example is more proof of the frame, nothing could ever count against it.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "feminine reality"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:operative-frame"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "A default favouring one side is compatible with nobody having chosen it, and with individual women resenting it."
+      ],
+      "commonMisreadings": [
+        "Women consciously agreed among themselves on the terms men date under."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "What observation would count against the frame instead of counting as one more instance of it?"
+      ]
+    },
+    {
+      "id": "lexicon:term-feminization",
+      "title": "Feminization",
+      "page": "lexicon.html",
+      "anchor": "term-feminization",
+      "category": "Lexicon",
+      "subcategory": "Red Pill",
+      "synopsis": "The claim that culture, schooling, and media have been progressively remade around feminine norms — and that masculinity is now the thing boys get trained out of. Real as a shift in some institutions and in how men get written; useless as stated, because it reads every change as decline and never says what the right amount would have been. The testable version names an institution, a decade, and an outcome.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "feminization",
+        "feminisation"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:operative-frame"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "How men get portrayed in media and how boys get taught are separate measurements, and they often disagree."
+      ],
+      "commonMisreadings": [
+        "Men who date now behave identically to the women they pursue."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Which institution, which decade, which outcome — and what would the correct amount of change have looked like?"
+      ]
     },
     {
       "id": "lexicon:term-the-blue-pill",

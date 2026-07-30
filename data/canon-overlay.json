@@ -4074,6 +4074,82 @@
       "standaloneAliases": [
         "LMS"
       ]
+    },
+    "lexicon:term-heteropessimism": {
+      "aliases": [
+        "heteropessimism",
+        "straight culture",
+        "straight experience",
+        "performative disaffiliation"
+      ],
+      "commonMisreadings": [
+        "Heteropessimists have actually stopped dating men, so the despair predicts who leaves the market."
+      ],
+      "boundaryConditions": [
+        "Performed despair and an actual exit are separate measurements, and most speakers produce only the first."
+      ],
+      "pressureTests": [
+        "Would this speaker's dating behaviour over the next year differ from someone who never said any of it?"
+      ]
+    },
+    "lexicon:term-the-feminine-reality": {
+      "commonMisreadings": [
+        "Women consciously agreed among themselves on the terms men date under."
+      ],
+      "boundaryConditions": [
+        "A default favouring one side is compatible with nobody having chosen it, and with individual women resenting it."
+      ],
+      "pressureTests": [
+        "What observation would count against the frame instead of counting as one more instance of it?"
+      ]
+    },
+    "lexicon:term-feminization": {
+      "aliases": [
+        "feminization",
+        "feminisation"
+      ],
+      "commonMisreadings": [
+        "Men who date now behave identically to the women they pursue."
+      ],
+      "boundaryConditions": [
+        "How men get portrayed in media and how boys get taught are separate measurements, and they often disagree."
+      ],
+      "pressureTests": [
+        "Which institution, which decade, which outcome — and what would the correct amount of change have looked like?"
+      ]
+    },
+    "lexicon:term-looks-rating-support-resistance": {
+      "commonMisreadings": [
+        "A looks rating drifts freely, so any partner will eventually find you attractive."
+      ],
+      "boundaryConditions": [
+        "The band bounds how far perception travels; where the first rating came from is a separate question."
+      ],
+      "pressureTests": [
+        "Is the lift inside one observer's band, or is it a fresh rating by a different observer?"
+      ]
+    },
+    "lexicon:term-the-matching-curve": {
+      "commonMisreadings": [
+        "A top-rated woman dates a partner rated exactly as high as herself."
+      ],
+      "boundaryConditions": [
+        "The curve describes couples that already formed, so it cannot be read as who pairs at all."
+      ],
+      "pressureTests": [
+        "Is the number an average partner or a typical one, and how wide is the spread around it?"
+      ]
+    },
+    "lexicon:term-the-option-pool": {
+      "commonMisreadings": [
+        "A woman's option pool is the set of men she will actually date and keep."
+      ],
+      "boundaryConditions": [
+        "Reach into a partner tier and conversion into a couple are separate measurements on the same ladder."
+      ],
+      "pressureTests": [
+        "Is this access to a tier, or an outcome recorded with one?"
+      ]
     }
   }
 }

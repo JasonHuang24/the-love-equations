@@ -15,14 +15,14 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 463);
+assert.equal(index.stats.conceptCount, 469);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 35,
   'Five Levers': 35,
   'Gender Dynamics': 133,
   Instruments: 5,
-  Lexicon: 77,
+  Lexicon: 83,
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 12,
@@ -37,7 +37,7 @@ assert.deepEqual(index.stats.byCategory, {
  * the Contradicts branch reads: before tranche 2 the branch was dark on 132 of
  * 133 Gender Dynamics cards, 36 of 41 Love Hierarchy factors, all 35 Deep Dive
  * entries and 27 of 31 charts. A harvester or overlay regression that dropped
- * them would leave the canon still valid, still 463 concepts, and unable to
+ * them would leave the canon still valid, still 469 concepts, and unable to
  * disagree with anything.
  *
  * Stated as complete coverage per category rather than as a total, so the
@@ -54,9 +54,14 @@ for (const category of ['Gender Dynamics', 'Love Hierarchy', 'Deep Dives', 'Stat
 // The remaining 56 are Lexicon (32), Mythbuster (10), Five Levers (7),
 // Rules & Frameworks (5), Pill Dossiers (1) and Instruments (1) — the tranche-3
 // backlog. Pinned so it can only ever go down deliberately.
+//
+// The count held at 56 across the cultural-register doctrine merge because all
+// six entries it added arrived WITH a misreading. That is the standing rule for
+// new doctrine: an entry authored without one enlarges this number, and the
+// assertion below is what forces the author to notice.
 assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).length, 56);
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 407);
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 413);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 413);
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 419);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -155,6 +160,46 @@ for (const [id, alias] of [
   assert(!entry.standaloneAliases.includes(alias) && !entry.contextualAliases.some((item) => item.alias === alias),
     `"${alias}" on ${id} is left untyped deliberately — it is ordinary English under the length floor`);
 }
+/*
+ * The cultural-register doctrine, pinned by id because it exists for a measured
+ * reason and a lexicon.html edit is all it would take to remove it. Before it
+ * landed, the gate admitted cultural-register passages (option 1, ab62871) and
+ * the canon had nothing to map them to: of 24 labelled claims, 8 were admitted
+ * and only 3 reached a canon entry.
+ *
+ * `heteropessimism` and `feminization` carry a BARE-WORD alias, which the four
+ * cases above are pinned for NOT doing. The difference is distinctiveness, not
+ * length: `game` and `Wall` are ordinary English that happens to name a concept,
+ * while these two words occur in general prose only when the concept is the
+ * subject. Both clear minSingleAliasLength on their own, so neither needs
+ * typing — and each is load-bearing, since a single-word title generates no
+ * alias and the term could not otherwise reach the exact-phrase surface.
+ */
+for (const [id, title, alias] of [
+  ['lexicon:term-heteropessimism', 'Heteropessimism', 'heteropessimism'],
+  ['lexicon:term-the-feminine-reality', 'The feminine reality', 'feminine reality'],
+  ['lexicon:term-feminization', 'Feminization', 'feminization'],
+]) {
+  const entry = required(id);
+  assert.equal(entry.title, title);
+  assert(entry.aliases.includes(alias), `${id} reaches the phrase surface through "${alias}"`);
+  assert.equal(entry.commonMisreadings.length, 1, `${id} can disagree with a reader`);
+  assert.equal(entry.boundaryConditions.length, 1, `${id} states where it stops`);
+}
+// The three Frameworks sub-models that had no term-spine entry. Every other
+// frameworks.html anchor was referenced by some LEX row; these three were the
+// harvest gap. Asserted on the RESOLVED dependency rather than on the href,
+// because a row can link a page that has no such anchor and still look right —
+// resolution to a canon id is the part that proves the spine connects.
+for (const [id, dependency] of [
+  ['lexicon:term-looks-rating-support-resistance', 'frameworks:looks-rating'],
+  ['lexicon:term-the-matching-curve', 'frameworks:matching-curve'],
+  ['lexicon:term-the-option-pool', 'frameworks:option-pool'],
+]) {
+  assert(required(id).dependencies.includes(dependency),
+    `${id} resolves to ${dependency}`);
+}
+
 assert.deepEqual(
   required('smv:money:provisioning-signal').contextualAliases.map((item) => item.alias),
   ['provider', 'breadwinner'],
