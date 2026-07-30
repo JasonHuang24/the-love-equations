@@ -748,9 +748,11 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
   const weakPassage = weakResult.segments[0];
   assert.equal(weakPassage.mapped, false);
   assert.equal(weakPassage.weakMatches[0].title, 'Common interests');
-  // IDF is computed across the canon, so this score moves when the index grows.
-  // 0.436 at 450 concepts; 0.437 at 463 (the Retention & maintenance group).
-  assert.equal(weakPassage.weakMatches[0].score, 0.437);
+  // IDF is computed across the canon, so this score moves whenever the index
+  // gains text — new entries or new match parameters on existing ones.
+  // 0.436 at 450 concepts; 0.437 at 463; 0.436 again once overlay tranche 1
+  // enriched 73 previously bare entries.
+  assert.equal(weakPassage.weakMatches[0].score, 0.436);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
   assert.deepEqual(weakResult.researchQueue.items.map((item) => item.excerpt), [weakGenericClaim]);

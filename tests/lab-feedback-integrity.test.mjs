@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 import { analyzeDocument, SCORING_CONFIG } from '../js/lab-analyzer.js';
 import { createDemoDocument } from '../js/lab-demo.js';
+import { normalizeInput } from '../js/lab-intake.js';
 import { buildMappingFeedback } from '../js/lab-feedback.js';
 
 /*
@@ -315,9 +316,40 @@ test('RED D2: every candidate carries exactly one fate, and it is the true one',
   });
 });
 
-test('RED D3: the demo exercises all six fates, so none of them is untested vocabulary', () => {
-  const seen = new Set(diagnostics.claimUnits.flatMap((unit) => unit.candidates).map((c) => c.fate));
-  [...FATES].forEach((fate) => assert.ok(seen.has(fate), `the demo produces a ${fate} candidate`));
+/*
+ * The point of this test is that no fate is untested vocabulary. It used to rest
+ * on the demo happening to produce all six, which made it a hostage to the canon:
+ * enriching previously bare entries changed the demo's candidate mix and the
+ * `credible-cap` and `retained-after-prefix-cut` fates simply stopped occurring,
+ * failing a guard that had found no defect. Both fates need a claim carrying more
+ * credible candidates than the display cap, so that condition is now stated
+ * outright instead of hoped for, and the demo covers what it covers.
+ */
+const CAP_OVERFLOW_CLAIM = 'His looks, money, status, charm and exposure all rank high, '
+  + 'which makes him a high-value man on the sexual market.';
+
+test('RED D3: every fate is exercised, so none of them is untested vocabulary', async () => {
+  const overflow = await analyzeDocument(
+    normalizeInput({
+      text: CAP_OVERFLOW_CLAIM,
+      source: { title: 'cap-overflow probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }),
+    canonIndex,
+    { diagnostics: true },
+  );
+
+  const capCandidates = overflow.diagnostics.claimUnits.flatMap((unit) => unit.candidates);
+  const credible = capCandidates.filter((candidate) => candidate.admission.credible);
+  assert.ok(credible.length > SCORING_CONFIG.maxMatchesPerClaim,
+    `the overflow claim must carry more than ${SCORING_CONFIG.maxMatchesPerClaim} credible candidates `
+    + `for the cap fates to exist at all, found ${credible.length}`);
+
+  const seen = new Set([
+    ...diagnostics.claimUnits.flatMap((unit) => unit.candidates).map((c) => c.fate),
+    ...capCandidates.map((c) => c.fate),
+  ]);
+  [...FATES].forEach((fate) => assert.ok(seen.has(fate), `some fixture produces a ${fate} candidate`));
 });
 
 test('RED D4: threshold-hidden candidates are not counted as cap-hidden', () => {

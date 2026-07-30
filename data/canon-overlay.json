@@ -976,7 +976,7 @@
         "The gap is comparative thinness against this site's own formation-side coverage, not a claim that no maintenance doctrine exists here."
       ],
       "commonMisreadings": [
-        "The site says nothing about relationships once they have formed. The Good-News Rule and the Sham Relationship already exist; what is missing is depth and systematicity, not all coverage."
+        "The site says nothing about relationships once they have formed."
       ],
       "pressureTests": [
         "Which Kept-rung claim on this site rests on a primary source rather than on inference from formation-side doctrine?"
@@ -1005,7 +1005,7 @@
         "All three samples are partnered heterosexual convenience-panel adults, correlational, from one lab."
       ],
       "commonMisreadings": [
-        "Higher mate value than your partner leads to dissatisfaction. Without the alternatives-scarcity qualifier this states a conditional effect as a main effect, and misreports the only study that tested it."
+        "Higher mate value than your partner leads to dissatisfaction."
       ],
       "pressureTests": [
         "Does the claimed dissatisfaction survive when better alternatives are scarce? The source indicates it does not."
@@ -1031,7 +1031,7 @@
         "The breakup-prediction result is one undergraduate sample over eight weeks and says nothing about established relationships."
       ],
       "commonMisreadings": [
-        "Noticing that a stranger is attractive puts a relationship at risk. The corrosive form measured is active searching and dwelling, not incidental noticing."
+        "Noticing that a stranger is attractive puts a relationship at risk."
       ],
       "pressureTests": [
         "Is the attentiveness chronic and trait-like, or situational and downstream of existing dissatisfaction?"
@@ -1059,7 +1059,7 @@
         "One correlational path model on a convenience sample, with no located replication of the mediation."
       ],
       "commonMisreadings": [
-        "More retention behaviour means a more committed or healthier relationship. The inventory scores benign effort and coercive control on the same scale, so intensity carries no valence."
+        "More retention behaviour means a more committed or healthier relationship."
       ],
       "pressureTests": [
         "Is the retention behaviour in question devotion or control? The score alone cannot tell you."
@@ -1086,8 +1086,8 @@
         "The cross-sectional leg cannot separate relationship duration from age or cohort, by its own authors' statement."
       ],
       "commonMisreadings": [
-        "Anxious attachment suppresses desire. The only located instrumented test found the opposite sign, a positive correlation, and rejected the moderation hypothesis.",
-        "Desire declines with familiarity, stated as one finding. That merges three sub-claims supported at three different strengths, one of which has no located test at all."
+        "Anxious attachment suppresses sexual desire.",
+        "Desire declines with familiarity, and that is one settled finding."
       ],
       "pressureTests": [
         "Which of the three sub-claims is being asserted, and does the citation offered actually test that one?"
@@ -1112,7 +1112,7 @@
         "The partner effects are exploratory secondary analyses, not the study's confirmatory hypotheses."
       ],
       "commonMisreadings": [
-        "Good sex causes a good relationship, or the reverse, as a one-way arrow. The finding is that both directions run independently and at roughly equal strength."
+        "Good sex causes a good relationship."
       ],
       "pressureTests": [
         "Is the claimed direction the only one tested, or has the reverse path been modelled in the same data?"
@@ -1140,12 +1140,1114 @@
         "The model predicts its own weakening if male-controlled contraception reaches parity."
       ],
       "commonMisreadings": [
-        "The feminine imperative is a coordinated plan. The primary text explicitly denies coordination and argues convergent incentive instead.",
-        "The feminine imperative describes individual women's intentions rather than an aggregate incentive gradient. That reading is the slide into blanket AWALT-style claims.",
-        "The 1960 contraceptive history and the causal weight assigned to it carry the same evidential status. Only the first is settled."
+        "The feminine imperative is a coordinated plan women organise deliberately.",
+        "The feminine imperative describes what individual women intend.",
+        "The 1960 birth control history and its causal weight are equally settled."
       ],
       "pressureTests": [
         "Is the claim the historical asymmetry, which is documented, or the causal weight assigned to it, which is not?"
+      ]
+    },
+    "lexicon:term-assortative-mating": {
+      "aliases": [
+        "assortative mating",
+        "assortative pairing",
+        "matching hypothesis"
+      ],
+      "commonMisreadings": [
+        "Assortative mating is a law: couples always match on looks, so mismatched couples break up."
+      ],
+      "boundaryConditions": [
+        "The r of roughly 0.4 is observer-rated physical attractiveness; similarity on education or income is a separate correlation.",
+        "It describes who ended up paired, not who received attention — app attention skews far harder than pairing does."
+      ],
+      "pressureTests": [
+        "Is this measuring who actually paired, or who received attention?"
+      ]
+    },
+    "lexicon:term-stranger-market": {
+      "aliases": [
+        "stranger market",
+        "zero-exposure market",
+        "first-impression market"
+      ],
+      "commonMisreadings": [
+        "The stranger market is the whole dating market, so app data explains how every couple formed."
+      ],
+      "boundaryConditions": [
+        "The concept stops applying wherever repeated exposure exists; inside a social circle, charm and familiarity modify the first read.",
+        "Findings drawn from dating apps are stranger-market findings and do not license claims about how couples form in shared workplaces."
+      ],
+      "pressureTests": [
+        "How much exposure did these people have to each other before rating one another?"
+      ]
+    },
+    "lexicon:term-social-circle-market": {
+      "aliases": [
+        "social-circle market",
+        "repeated-exposure market"
+      ],
+      "commonMisreadings": [
+        "Inside a social circle enough familiarity makes looks stop mattering, so any man can date anyone."
+      ],
+      "boundaryConditions": [
+        "The advantage is access-gated, not value-gated: it requires a circle to be inside and does not scale the way app exposure does.",
+        "The model assumes genuinely repeated contact; a single second meeting is not the exposure it depends on."
+      ],
+      "pressureTests": [
+        "Did these people have repeated contact, or were they rating a photo?"
+      ]
+    },
+    "lexicon:term-sex-recession": {
+      "aliases": [
+        "sex recession",
+        "rising sexlessness"
+      ],
+      "phrases": [
+        "no sex in the past year"
+      ],
+      "commonMisreadings": [
+        "The sex recession means most young men and women are sexless and want a partner desperately."
+      ],
+      "boundaryConditions": [
+        "The measure is self-reported and bounded to the past twelve months; it does not separate involuntary celibacy from choice or life stage.",
+        "The effect is concentrated among young men — extending the slope across ages or both sexes overstates it."
+      ],
+      "pressureTests": [
+        "Does the source separate involuntary sexlessness from deliberate withdrawal?"
+      ]
+    },
+    "lexicon:term-third-places": {
+      "aliases": [
+        "third places",
+        "third place"
+      ],
+      "commonMisreadings": [
+        "The dating apps emptied the third places where couples used to meet before them."
+      ],
+      "boundaryConditions": [
+        "The venue decline is measured mostly on US civic, religious and associational participation and is not automatically the same elsewhere.",
+        "The concept covers where people meet, not who they choose — restoring a third place changes exposure, not standards."
+      ],
+      "pressureTests": [
+        "Does the timeline put the venue decline after the apps, or before them?"
+      ]
+    },
+    "lexicon:term-situationship": {
+      "aliases": [
+        "situationship",
+        "situationships"
+      ],
+      "phrases": [
+        "relationship without the title"
+      ],
+      "commonMisreadings": [
+        "A situationship is dysfunction by definition, so dating in one always wastes both people's time."
+      ],
+      "boundaryConditions": [
+        "The label describes the absence of defined terms, not the presence of dysfunction; some are honestly negotiated by both sides.",
+        "Prevalence figures come from self-labelling surveys, so they track how far the word spread as much as the arrangement."
+      ],
+      "pressureTests": [
+        "Is the source measuring the arrangement, or how many people now use the word for it?"
+      ]
+    },
+    "lexicon:term-post-wall": {
+      "aliases": [
+        "past the wall",
+        "post wall"
+      ],
+      "commonMisreadings": [
+        "She is post-wall at thirty, so men reject her and her dating life is over."
+      ],
+      "boundaryConditions": [
+        "The age effect is steepest in low-exposure settings where a photograph is the whole signal, and flattens where exposure carries.",
+        "It is an aggregate slope that makes no prediction about any individual, and men walk their own version of it."
+      ],
+      "pressureTests": [
+        "Is the evidence a drop in attention received, or a drop in relationships formed?"
+      ]
+    },
+    "lexicon:term-pick-me": {
+      "aliases": [
+        "pick-me girl",
+        "pick-me woman"
+      ],
+      "commonMisreadings": [
+        "A woman who admits how women date is just a pick-me, so her point is worthless."
+      ],
+      "boundaryConditions": [
+        "The term describes a rhetorical move inside female social enforcement; it does not establish that the accused woman was correct either.",
+        "The site's read is about how the label functions, not a measured claim about how often it is deployed."
+      ],
+      "pressureTests": [
+        "If a man had said the same sentence, would it have drawn a rebuttal instead of a label?"
+      ]
+    },
+    "lexicon:term-abundance-blindness": {
+      "aliases": [
+        "abundance blindness"
+      ],
+      "commonMisreadings": [
+        "Women get flooded with attention on dating apps, so they have it easy and men suffer."
+      ],
+      "boundaryConditions": [
+        "The blindness runs both ways; treating it as a one-sided female failure to notice is the same generalization the concept names.",
+        "It describes stranger-market attention, mostly on apps — inside a social circle neither inbox is the relevant signal."
+      ],
+      "pressureTests": [
+        "Whose inbox is this generalizing from, and would it survive being stated from the other side?"
+      ]
+    },
+    "lexicon:term-4b": {
+      "aliases": [
+        "4B movement",
+        "Korean 4B movement"
+      ],
+      "commonMisreadings": [
+        "The 4B movement made Korean women refuse dating and marriage, which caused the birth-rate collapse."
+      ],
+      "boundaryConditions": [
+        "Korea went sub-replacement in 1983, decades before the movement existed, so the timing puts 4B downstream of the trend.",
+        "It is a South Korean phenomenon with its own labor-market conditions; exporting it as a general model of Western withdrawal is unsupported."
+      ],
+      "pressureTests": [
+        "Does the trend this is blamed for start before or after the movement did?"
+      ]
+    },
+    "lexicon:term-halo-effect": {
+      "aliases": [
+        "halo effect",
+        "attractiveness halo"
+      ],
+      "phrases": [
+        "what is beautiful is good"
+      ],
+      "commonMisreadings": [
+        "The halo effect is accurate — attractive people really are kinder and make better dating partners."
+      ],
+      "boundaryConditions": [
+        "The halo is strongest at low exposure and on rated first impressions; sustained acquaintance supplies the evidence that dissolves it.",
+        "It explains why the looks lever leaks into the others; it does not mean the other levers are only looks in disguise."
+      ],
+      "pressureTests": [
+        "Were the other traits measured independently, or rated by people who could see the face?"
+      ]
+    },
+    "lexicon:term-friend-zone": {
+      "aliases": [
+        "friend zone",
+        "friendzone"
+      ],
+      "commonMisreadings": [
+        "Being in the friend zone for years means a woman owes you a chance at dating."
+      ],
+      "boundaryConditions": [
+        "The concept covers unreciprocated desire inside a genuine friendship; knowing extraction of support is the emotional harem instead.",
+        "It describes a state, not a cause — landing there is not by itself evidence about either person’s value."
+      ],
+      "pressureTests": [
+        "Is the complaint that desire was not reciprocated, or that reciprocation was owed?"
+      ]
+    },
+    "lexicon:term-looksmaxxing": {
+      "aliases": [
+        "looksmaxxing",
+        "looksmaxing"
+      ],
+      "commonMisreadings": [
+        "Looksmaxxing has unlimited returns, so enough surgery will make any man attractive to women."
+      ],
+      "boundaryConditions": [
+        "The returns concentrate in the improvable layers; the further a protocol moves toward bone and surgery, the thinner the evidence gets.",
+        "It raises the looks lever only and does nothing for exposure, which is the lever most often actually binding."
+      ],
+      "pressureTests": [
+        "Is the intervention in the soft-maxxing band where the evidence is, or the surgical band where it isn't?"
+      ]
+    },
+    "lexicon:term-mogging": {
+      "aliases": [
+        "mogging",
+        "mogged"
+      ],
+      "commonMisreadings": [
+        "A taller guy walks in and mogs you, so the woman instantly loses attraction to you."
+      ],
+      "boundaryConditions": [
+        "Contrast effects require the comparison to be visible and simultaneous; they do not persist once the comparison leaves the room.",
+        "Mogging describes how a pair is perceived side by side, not who either person actually pairs with."
+      ],
+      "pressureTests": [
+        "Does the claimed effect survive the comparison person leaving the room?"
+      ]
+    },
+    "lexicon:term-psl": {
+      "aliases": [
+        "PSL scale",
+        "PSL rating"
+      ],
+      "commonMisreadings": [
+        "Your PSL score to the decimal measures how much women want you and decides everything."
+      ],
+      "boundaryConditions": [
+        "The scale is a forum convention calibrated against forum consensus, not an instrument validated against pairing outcomes.",
+        "It rates a face at first glance and says nothing about how the same face is read after acquaintance."
+      ],
+      "pressureTests": [
+        "What was the scale validated against — pairing outcomes, or the agreement of its inventors?"
+      ]
+    },
+    "lexicon:term-chad-stacy": {
+      "aliases": [
+        "Chad and Stacy",
+        "Chads and Stacys"
+      ],
+      "commonMisreadings": [
+        "Chads and Stacys are a separate species, so women only want Chads and everyone else lost."
+      ],
+      "boundaryConditions": [
+        "The archetypes compress a distribution tail; treating them as a separate species you either are or are not is where the shorthand curdles.",
+        "Top-band advantages are largest in the stranger market, where the comparison is visible and instantaneous."
+      ],
+      "pressureTests": [
+        "Does the argument still work if the top band is a continuous tail rather than a separate class?"
+      ]
+    },
+    "lexicon:term-incel-femcel": {
+      "aliases": [
+        "incel",
+        "femcel",
+        "involuntary celibacy"
+      ],
+      "commonMisreadings": [
+        "Being an incel is a permanent life sentence because the fixed traits women reject stay fixed forever."
+      ],
+      "boundaryConditions": [
+        "The term names an outcome, not being chosen, and does not establish the cause, which may be exposure or presentation rather than fixed traits.",
+        "It applies to a genuinely bottom-band predicament; stretching it to anyone currently single goes past the outcome data."
+      ],
+      "pressureTests": [
+        "Is this describing a current state or asserting a permanent one, and what makes it permanent?"
+      ]
+    },
+    "lexicon:term-normie": {
+      "aliases": [
+        "normie",
+        "normies"
+      ],
+      "commonMisreadings": [
+        "Being an average-looking normie means women reject you, so the average face loses at dating."
+      ],
+      "boundaryConditions": [
+        "The label is a position on a rating scale, not a description of relationship outcomes.",
+        "It marks the middle of a forum grading convention, so its boundaries move with whoever is grading."
+      ],
+      "pressureTests": [
+        "If the broad middle still pairs at ordinary rates, what is the ladder actually predicting?"
+      ]
+    },
+    "lexicon:term-canthal-tilt": {
+      "aliases": [
+        "canthal tilt",
+        "positive canthal tilt"
+      ],
+      "commonMisreadings": [
+        "Negative canthal tilt is why women reject a man's face, and the tilt decides his attractiveness."
+      ],
+      "boundaryConditions": [
+        "The angle is real and reliably measurable; what is missing is any published effect on attractiveness ratings or pairing outcomes.",
+        "The honest verdict is unstudied rather than disproven — a future finding either way would be news."
+      ],
+      "pressureTests": [
+        "Which study measured canthal tilt against rated attractiveness, and what was the effect size?"
+      ]
+    },
+    "lexicon:term-hypergamy": {
+      "aliases": [
+        "hypergamous"
+      ],
+      "commonMisreadings": [
+        "Hypergamy is an iron law: women always trade up and marry the highest-status man available."
+      ],
+      "boundaryConditions": [
+        "The tilt is measured on stated and revealed preference for status and does not predict that any given pairing will be status-asymmetric.",
+        "The educational version has reversed across most developed countries, so evidence from an era of male educational advantage no longer transfers."
+      ],
+      "pressureTests": [
+        "Is the claim that women weight status more on average, or that women never pair downward?"
+      ]
+    },
+    "lexicon:term-mgtow": {
+      "aliases": [
+        "MGTOW",
+        "Men Going Their Own Way"
+      ],
+      "commonMisreadings": [
+        "MGTOW is why men quit dating; the ideology caused the withdrawal from the dating market."
+      ],
+      "boundaryConditions": [
+        "The ideology describes a stated exit; the measurable withdrawal it is credited with is uncoordinated and predates the label.",
+        "As a coordinated strategy it cannot hold, because defection pays, so the label describes individual exit rather than collective action."
+      ],
+      "pressureTests": [
+        "Did the withdrawal this is credited with start before or after the label existed?"
+      ]
+    },
+    "lexicon:term-simp": {
+      "aliases": [
+        "simping",
+        "simp economy"
+      ],
+      "commonMisreadings": [
+        "Any man who spends money on a woman he is dating is simping, full stop."
+      ],
+      "boundaryConditions": [
+        "The term describes an exchange rate, not a personality; the same behavior inside a reciprocated relationship is not the phenomenon.",
+        "It is a rhetorical label with no measured prevalence behind it."
+      ],
+      "pressureTests": [
+        "What did the other side actually return, and would this be called simping if it had been reciprocated?"
+      ]
+    },
+    "lexicon:term-emotional-harem": {
+      "aliases": [
+        "orbiters",
+        "beta orbiters"
+      ],
+      "commonMisreadings": [
+        "Being an orbiter in her emotional harem makes you special, so she will start dating you eventually."
+      ],
+      "boundaryConditions": [
+        "It requires knowing extraction; friendship where interest is unrequited but not exploited is the friend zone instead.",
+        "The site's read describes a dynamic, not a measured prevalence — there is no count of how common it is."
+      ],
+      "pressureTests": [
+        "Is the support flowing both ways, or only inward?"
+      ]
+    },
+    "lexicon:term-monk-mode": {
+      "aliases": [
+        "monk mode",
+        "monkmode"
+      ],
+      "commonMisreadings": [
+        "Permanent monk mode fixes your value, so a man should stay out of dating indefinitely."
+      ],
+      "boundaryConditions": [
+        "It targets the improvable levers — money, body, skills — and actively costs exposure while it runs.",
+        "It is a personal strategy with no outcome data behind it; the site files it as reasoned advice, not a measured effect."
+      ],
+      "pressureTests": [
+        "Is there an exit date and a measurable target, or has the season become the position?"
+      ]
+    },
+    "lexicon:term-fem-centrism": {
+      "aliases": [
+        "gynocentrism"
+      ],
+      "commonMisreadings": [
+        "Fem-centrism means women deliberately coordinate to set the rules about which men they date."
+      ],
+      "boundaryConditions": [
+        "The claim is about which side’s terms count as neutral, not about who holds formal power.",
+        "Asymmetries running the other way exist and do not refute the claim, nor does the concept license reading every one of them as design."
+      ],
+      "pressureTests": [
+        "Is the asymmetry evidence of a default nobody set, or is the argument asserting somebody set it?"
+      ]
+    },
+    "lexicon:term-there-s-someone-for-everyone": {
+      "aliases": [
+        "someone out there for everyone"
+      ],
+      "phrases": [
+        "there is someone for everyone"
+      ],
+      "commonMisreadings": [
+        "There is someone for everyone, so every man will meet someone eventually just by waiting."
+      ],
+      "boundaryConditions": [
+        "The base rates that undercut the slogan concern the tail of the distribution, not the median person, who does pair.",
+        "Lifetime pairing rates are cohort-bound and shifting, so a rate from one generation is not a forecast for the next."
+      ],
+      "pressureTests": [
+        "Is this offering patience, or licensing doing nothing?"
+      ]
+    },
+    "lexicon:term-personality-matters": {
+      "aliases": [
+        "personality over looks"
+      ],
+      "commonMisreadings": [
+        "Personality matters more than looks, so a great personality is what makes women choose a man."
+      ],
+      "boundaryConditions": [
+        "Personality's measured effect is largest on retention and satisfaction and smallest at the stranger market's first filter.",
+        "Ratings of personality taken after a face is visible are contaminated by the halo effect and overstate its independent contribution."
+      ],
+      "pressureTests": [
+        "Was personality measured before the first physical filter, or after it?"
+      ]
+    },
+    "lexicon:term-no-good-men-left": {
+      "aliases": [
+        "all the good men are taken"
+      ],
+      "commonMisreadings": [
+        "All the good men are taken, so a woman looking for a decent husband has zero options."
+      ],
+      "boundaryConditions": [
+        "Local sex ratios and assortative constraints can make the complaint true inside one city or age band while the population census shows no shortage.",
+        "The claim concerns availability, not desirability, and makes no argument about whether the standards themselves are calibrated."
+      ],
+      "pressureTests": [
+        "Is the shortage in the population, or in the overlap between one person's standards and their reachable market?"
+      ]
+    },
+    "lexicon:term-attention": {
+      "commonMisreadings": [
+        "A woman's pile of dating-app likes proves she is desired, because attention and selection are the same."
+      ],
+      "boundaryConditions": [
+        "Attention is market signal, not selection, and says nothing about whether anyone was chosen or kept.",
+        "Attention volume is platform-shaped; a skew measured inside a swipe app does not transfer to social-circle markets."
+      ],
+      "pressureTests": [
+        "Is the number a count of attention received, or of relationships formed?"
+      ]
+    },
+    "lexicon:term-desire": {
+      "commonMisreadings": [
+        "A man she desires is a man she will choose, so desire and commitment are the same."
+      ],
+      "boundaryConditions": [
+        "Desire says nothing about long-term fit; the traits that spike the pull and those that sustain a bond are not the same list.",
+        "Desire is warmer and narrower than attention and does not aggregate into a market rate the way attention counts do."
+      ],
+      "pressureTests": [
+        "Would the person doing the desiring actually pay an opportunity cost for it?"
+      ]
+    },
+    "lexicon:term-commitment": {
+      "commonMisreadings": [
+        "A man who keeps showing up is committed, so he already chooses you over everyone else."
+      ],
+      "boundaryConditions": [
+        "Commitment is a present willingness, not a forecast; a stated intention that has never cost anything has not been tested.",
+        "It describes selection against alternatives, so where alternatives are absent the same behavior carries far less information."
+      ],
+      "pressureTests": [
+        "What alternative was actually forgone here, and what did forgoing it cost?"
+      ]
+    },
+    "lexicon:term-pairing": {
+      "commonMisreadings": [
+        "The top twenty percent of men pair with every woman worth dating, so pairing is winner-take-all."
+      ],
+      "boundaryConditions": [
+        "Pairing counts couples formed and does not measure whether they lasted or whether either side was satisfied.",
+        "Pairing rates are slow-moving and cohort-bound, so a rate from one country or decade does not transfer without argument."
+      ],
+      "pressureTests": [
+        "Is this a count of couples formed, or of likes, matches and hypothetical preferences?"
+      ]
+    },
+    "lexicon:term-cope": {
+      "commonMisreadings": [
+        "Calling it cope settles the argument, so a comforting claim about dating is automatically worthless."
+      ],
+      "boundaryConditions": [
+        "The label describes a motive for holding a belief, not the belief's truth value; motive and accuracy are independent.",
+        "It only does work where a hard truth has been established; where the underlying claim is contested, the accusation begs the question."
+      ],
+      "pressureTests": [
+        "If this belief were true, would the person still be accused of coping for holding it?"
+      ]
+    },
+    "lexicon:term-frame": {
+      "commonMisreadings": [
+        "Holding frame means hiding every feeling from her, so a man stays stone-faced while dating."
+      ],
+      "boundaryConditions": [
+        "Frame is a disposition, not a technique that produces attraction; it removes a liability rather than adding value.",
+        "It says nothing about whether the interaction should continue — a well-held frame in a bad match is still a bad match."
+      ],
+      "pressureTests": [
+        "Is this describing self-possession, or a performance staged for someone else?"
+      ]
+    },
+    "lexicon:term-game": {
+      "commonMisreadings": [
+        "Enough game overcomes any face, so a man with tight game can attract any woman anywhere."
+      ],
+      "boundaryConditions": [
+        "The skill needs an interaction to run in; where the filter is a photograph there is nothing for it to act on.",
+        "The ceiling is set by access, not by how good the practitioner gets — more skill does not buy the exposure it requires."
+      ],
+      "pressureTests": [
+        "In this setting, is there enough interaction for social skill to act on at all?"
+      ]
+    },
+    "lexicon:term-unplugging": {
+      "commonMisreadings": [
+        "Once a man has unplugged he sees the dating market clearly and his model is settled."
+      ],
+      "boundaryConditions": [
+        "The concept describes noticing a frame, not what follows from it, and licenses no particular doctrine about how the market works.",
+        "It is a described cognitive shift with no measurement behind it; the site treats it as a Lens, not a finding."
+      ],
+      "pressureTests": [
+        "Does the person claiming to have unplugged still allow the new model to be wrong?"
+      ]
+    },
+    "lexicon:term-it-s-over": {
+      "commonMisreadings": [
+        "Bad bone structure means it is over: a man dealt that hand loses at dating forever."
+      ],
+      "boundaryConditions": [
+        "Fixed-trait penalties are largest at the stranger market’s first glance and shrink wherever exposure accumulates.",
+        "The phrase is a verdict about the future, which no cross-sectional attractiveness study is designed to issue."
+      ],
+      "pressureTests": [
+        "Does the cited evidence report a probability shift, or an impossibility?"
+      ]
+    },
+    "lexicon:term-statusmaxxing": {
+      "aliases": [
+        "statusmaxxing",
+        "statusmaxing"
+      ],
+      "commonMisreadings": [
+        "Performing dominance is how a man raises his status, so acting alpha makes women want him."
+      ],
+      "boundaryConditions": [
+        "Status elasticity is a male-side asymmetry; the same lever does not return the same amount on the female side.",
+        "Status is read locally — the status that prices well in one market prices at nothing in another."
+      ],
+      "pressureTests": [
+        "Is the status earned prestige, or a dominance performance the audience is expected to score?"
+      ]
+    },
+    "lexicon:term-preselection": {
+      "aliases": [
+        "mate choice copying"
+      ],
+      "commonMisreadings": [
+        "Looking wanted creates attraction from thin air, so women want a man other women already wanted."
+      ],
+      "boundaryConditions": [
+        "The effect requires the prior interest to be visible to the observer and does nothing where nobody can see who else wanted you.",
+        "Evidence for mate-choice copying is mixed and mostly from small lab studies; the direction is sound, the magnitude unsettled."
+      ],
+      "pressureTests": [
+        "Would the effect survive if the observer could not see who else was interested?"
+      ]
+    },
+    "lexicon:term-high-value-man": {
+      "aliases": [
+        "high-value man",
+        "high-value men"
+      ],
+      "commonMisreadings": [
+        "A high-value man is simply a better person, which is why women want him for a relationship."
+      ],
+      "boundaryConditions": [
+        "The read is market- and moment-specific: the same stack prices differently in another venue and age band.",
+        "It describes desirability as priced, not partner quality — nothing in the stack measures how someone treats a partner."
+      ],
+      "pressureTests": [
+        "Is high-value being used as a price, or as a verdict on the person?"
+      ]
+    },
+    "lexicon:term-just-be-yourself": {
+      "commonMisreadings": [
+        "Just be yourself and skip improving your style, because the right woman wants you as-is."
+      ],
+      "boundaryConditions": [
+        "It is sound where the problem is pretense and does nothing where the binding constraint is exposure or presentation.",
+        "It says who to be, not who will meet you, and makes no prediction about outcomes."
+      ],
+      "pressureTests": [
+        "Is the person being told to stop pretending, or not to bother improving?"
+      ]
+    },
+    "lexicon:term-conversion-ladder": {
+      "commonMisreadings": [
+        "Attention is attraction, attraction is selection, so a woman who likes your photo has chosen you."
+      ],
+      "boundaryConditions": [
+        "The ladder names where a person stalls, not why; the same stall can come from exposure, presentation or fit.",
+        "Stage order is the typical sequence, not a requirement — social-circle markets routinely collapse being seen and being known."
+      ],
+      "pressureTests": [
+        "Which rung is this evidence actually drawn from — visibility, attraction, selection or retention?"
+      ]
+    },
+    "lexicon:term-treatment-markup": {
+      "commonMisreadings": [
+        "Treating a partner well overrides any looks gap, so good treatment alone makes a woman want you."
+      ],
+      "boundaryConditions": [
+        "The markup applies on top of a base value that already cleared consideration and does nothing at the stranger-market stage.",
+        "Its size is a modeled magnitude, not a measured one — roughly one parity bracket, by judgment rather than a published effect size."
+      ],
+      "pressureTests": [
+        "Is the claimed uplift within one bracket of base value, or being asked to carry two?"
+      ]
+    },
+    "lexicon:term-body-count": {
+      "commonMisreadings": [
+        "A high body count destroys a woman's oxytocin, so her marriage is doomed from the start."
+      ],
+      "boundaryConditions": [
+        "The association is observational and confounded by religiosity and age at first marriage; controlling for those shrinks it.",
+        "It concerns a statistical association across populations and makes no prediction about any individual couple."
+      ],
+      "pressureTests": [
+        "Is the source claiming a correlation, or the biological mechanism the correlation does not support?"
+      ]
+    },
+    "lexicon:term-clock-market-context": {
+      "aliases": [
+        "the three multipliers"
+      ],
+      "commonMisreadings": [
+        "A strong five-lever score wins in any dating market, so timing and venue are irrelevant."
+      ],
+      "boundaryConditions": [
+        "The three scale the levers rather than adding to them; a zero on the levers stays a zero however favourable the market.",
+        "The multiplier framing is a modeling convention for how timing and venue scale value, not a measured coefficient."
+      ],
+      "pressureTests": [
+        "Would this claim still hold in a different age band and a different market?"
+      ]
+    },
+    "smv:looks:face": {
+      "commonMisreadings": [
+        "An average face is a plain forgettable face, so averageness makes women reject a man."
+      ],
+      "boundaryConditions": [
+        "The face does the most work in the opening seconds and progressively less once someone actually knows you; the shared score dissolves as acquaintance grows.",
+        "Averageness and symmetry are population-level rater agreements, not per-feature scores that can be summed into an individual's rating — single bones explain little alone."
+      ],
+      "pressureTests": [
+        "Is the claim about the first-impression read, or has it been extended to who gets chosen and kept after that?"
+      ]
+    },
+    "smv:looks:body": {
+      "commonMisreadings": [
+        "A 0.7 waist-to-hip ratio is the universal ideal, so men in every culture prefer exactly that."
+      ],
+      "boundaryConditions": [
+        "The dimorphic shape cues are read differently by sex and by ecology; hunter-gatherer samples prefer higher ratios than the Western samples the 0.7 figure came from.",
+        "Body composition is among the most movable slices of Looks, so a reading of it is a snapshot of a current state rather than a fixed trait."
+      ],
+      "pressureTests": [
+        "Is the claim about shape and composition, or has it quietly become a claim about a number on a scale?"
+      ]
+    },
+    "smv:looks:grooming-style": {
+      "aliases": [
+        "grooming and style",
+        "personal grooming"
+      ],
+      "phrases": [
+        "dressing better"
+      ],
+      "commonMisreadings": [
+        "Good grooming and style make up for the face underneath, so any man can attract women."
+      ],
+      "boundaryConditions": [
+        "Grooming moves in weeks, not generations, and cannot substitute for the layer LE classifies as fixed: bone structure, height, and base face.",
+        "Grooming improves the first-three-seconds read; it does not supply Charm, Exposure, or anything that happens after the door opens."
+      ],
+      "pressureTests": [
+        "Is the improvement being counted against the movable slice, or is it being asked to fix something the model classifies as fixed?"
+      ]
+    },
+    "smv:looks:voice": {
+      "commonMisreadings": [
+        "A deeper voice is more attractive for everyone, so women with lower voices attract more men."
+      ],
+      "boundaryConditions": [
+        "The pitch findings are rating-study effects on perceived attractiveness; they do not describe how a voice performs across a whole conversation, where Charm takes over.",
+        "LE states a perceptual effect only; it makes no claim that pitch is trainable or that performing a lower voice reproduces the effect."
+      ],
+      "pressureTests": [
+        "Is the pitch claim being applied to the correct sex, and is it about perception or about outcomes?"
+      ]
+    },
+    "smv:looks:age": {
+      "commonMisreadings": [
+        "Women peak at twenty-two and hit a wall, so after that age men stop wanting them."
+      ],
+      "boundaryConditions": [
+        "The Clock scales each factor differently — Looks and fertility cues are front-loaded while money, status, and prestige accrue with age — so one age number does not move total SMV in a single direction.",
+        "LE grades the peak-age story as Contested: a soft, averaged slope built on stated preferences and fertility cues, not a personal deadline."
+      ],
+      "pressureTests": [
+        "Is age being used as a population slope, an individual verdict, or a stand-in for an unstated relationship goal?"
+      ]
+    },
+    "smv:money:income": {
+      "commonMisreadings": [
+        "Women care most about income, so a bigger salary is what makes women want a man."
+      ],
+      "boundaryConditions": [
+        "The cross-cultural sex difference in weighting financial prospects is a stated preference and shrinks in live, face-to-face settings; stated and revealed diverge here.",
+        "Money's weight rises sharply for long-term mating and falls for short-term, and LE treats the floor — assets and stability — as doing more work than the headline number."
+      ],
+      "pressureTests": [
+        "Is the claim resting on what people said they wanted, or on who they actually picked?"
+      ]
+    },
+    "smv:money:assets-stability": {
+      "aliases": [
+        "assets and stability",
+        "financial stability"
+      ],
+      "phrases": [
+        "low debt",
+        "no money panic"
+      ],
+      "commonMisreadings": [
+        "Savings and low debt are boring, so women want visible flash and big spending instead."
+      ],
+      "boundaryConditions": [
+        "Where you start — family money, the local economy, your field's ceiling — is the opening hand, which LE classifies as luck rather than discipline.",
+        "Money's weight is context-dependent and rises for long-term mating, so a profile tuned for stability can underperform on short-term metrics."
+      ],
+      "pressureTests": [
+        "Is the signal being read as financial security, or as a moral claim about who deserves a partner?"
+      ]
+    },
+    "smv:money:trajectory": {
+      "aliases": [
+        "earning trajectory",
+        "income trajectory"
+      ],
+      "phrases": [
+        "upward trajectory",
+        "arrived but stalled"
+      ],
+      "commonMisreadings": [
+        "A rising trajectory is enough on its own, so women want potential more than an actual floor."
+      ],
+      "boundaryConditions": [
+        "Trajectory sits under Money, whose whole weight rises for long-term mating and falls for short-term.",
+        "LE puts the floor ahead of the slope and frames earning power as a multi-year build rather than a weekend hack."
+      ],
+      "pressureTests": [
+        "Is the trajectory claim backed by a moved floor, or is potential being asked to stand in for one?"
+      ]
+    },
+    "smv:money:spending-freedom": {
+      "aliases": [
+        "disposable income",
+        "spending power"
+      ],
+      "commonMisreadings": [
+        "Spending big on dates and gifts is what makes money attractive, so women want a flashy man."
+      ],
+      "boundaryConditions": [
+        "LE defines this as creating experiences without strain — not flexing, just not flinching — and names the wallet-as-personality flex as where the factor curdles.",
+        "It describes capacity, not obligation; LE counts both the flex and its mirror-image cope, \"she only wants money\", as failures of the same factor."
+      ],
+      "pressureTests": [
+        "Is the claim about strain-free capacity, or has it become a claim about visible spend?"
+      ]
+    },
+    "smv:status:dominance": {
+      "commonMisreadings": [
+        "Dominance is what status means, so a man acting alpha outranks everyone and women want him most."
+      ],
+      "boundaryConditions": [
+        "Dominance is one of two separable, measurable routes to rank; prestige is the other, and LE calls it the more durable one.",
+        "Women tend to favor dominance cues more for short-term partners and prestige more for long-term ones, so the lever's value is goal-dependent."
+      ],
+      "pressureTests": [
+        "Is the dominance read being scored for a short-term or a long-term goal, and does the answer change the verdict?"
+      ]
+    },
+    "smv:status:prestige": {
+      "commonMisreadings": [
+        "Prestige is just your job title and salary, so women want the man with the best title."
+      ],
+      "boundaryConditions": [
+        "Prestige is conferred by people who value the thing you are good at, which means it cannot be self-declared.",
+        "Prestige is weighted more heavily for long-term partners than short-term, and the inherited portion is slow to accrue and instant to squander."
+      ],
+      "pressureTests": [
+        "Is the respect being described freely given, or is it deference extracted by position?"
+      ]
+    },
+    "smv:status:reputation": {
+      "commonMisreadings": [
+        "A wrecked reputation rebuilds as fast as it was lost, so women want him again quickly."
+      ],
+      "boundaryConditions": [
+        "Reputation is what gets said about you when you are not in the room, not the impression you manage while present.",
+        "Reputation is scoped to the network that carries it and supplies no Exposure of its own: a good name in rooms you are never in scores nothing."
+      ],
+      "pressureTests": [
+        "Is the reputation claim scoped to a specific network, and is the person actually in front of that network?"
+      ]
+    },
+    "smv:status:leadership-network": {
+      "aliases": [
+        "leadership and network",
+        "social circle"
+      ],
+      "phrases": [
+        "people who vouch for you"
+      ],
+      "commonMisreadings": [
+        "More contacts means more status, so a man with a bigger network meets more women to date."
+      ],
+      "boundaryConditions": [
+        "LE reads this as the quality of the people who vouch for you and whether you shape rooms or just fill them, not as list size or attendance.",
+        "Who vouches for you is a Status signal, not an Exposure one — a strong network never converted into qualified encounters does not move the denominator."
+      ],
+      "pressureTests": [
+        "Is the claim about the quality of the people vouching, or about how many of them there are?"
+      ]
+    },
+    "smv:charm:conversation-wit": {
+      "aliases": [
+        "conversation and wit",
+        "conversational skill"
+      ],
+      "phrases": [
+        "sense of humor",
+        "being funny",
+        "makes me laugh"
+      ],
+      "commonMisreadings": [
+        "Being funny is a proven fitness signal, so a man who makes women laugh reliably wins attraction."
+      ],
+      "boundaryConditions": [
+        "LE grades humor as Mixed and the fitness-indicator mechanism as Contested: a speed-dating test failed to support it and the male humor-production edge is smaller than first claimed.",
+        "Charm operates after Looks have opened the door; conversation does not substitute for the first filter or for Exposure."
+      ],
+      "pressureTests": [
+        "Does the humor claim survive the replication failure LE cites, or does it depend on the original fitness-indicator framing?"
+      ]
+    },
+    "smv:charm:calibration": {
+      "commonMisreadings": [
+        "Creepiness is about the words a man picks, so a woman rejects him for content alone."
+      ],
+      "boundaryConditions": [
+        "LE grades Charm as the most trainable factor but marks that grading a Lens — a framing, not a measured finding — and says it improves only in live conversation, not rehearsal.",
+        "Baseline temperament, social wiring, and neurodivergence mean some people start with a genuinely steeper hill here, which LE names rather than papers over."
+      ],
+      "pressureTests": [
+        "Is the failure being described a content problem or a timing problem, and does that change the fix?"
+      ]
+    },
+    "smv:charm:emotional-steadiness": {
+      "aliases": [
+        "emotional stability"
+      ],
+      "phrases": [
+        "acting needy",
+        "coming across as needy"
+      ],
+      "commonMisreadings": [
+        "Staying calm means hiding every feeling and acting indifferent, so a woman wants you and chases."
+      ],
+      "boundaryConditions": [
+        "LE defines this as not leaking neediness under ambiguity, and grounds it in calm being rare and hard to fake — which is a claim about the difficulty of faking it.",
+        "Baseline temperament, social wiring, and neurodivergence set a genuinely steeper hill for some people, and steadiness sits inside Charm, which operates after Looks open the door."
+      ],
+      "pressureTests": [
+        "Is the calm being described real regulation under ambiguity, or disengagement wearing the same face?"
+      ]
+    },
+    "smv:charm:warmth": {
+      "commonMisreadings": [
+        "Being warm and kind is enough by itself, so a woman desires any man who is nice."
+      ],
+      "boundaryConditions": [
+        "The Context multiplier reweights toward stability, prestige, warmth, and reliability for long-term goals and away from them for short-term; warmth's weight moves with the game being played.",
+        "LE indexes warmth as the half of Charm the strategy crowd forgets, and grades Charm's trainability as a Lens rather than an evidence-backed effect size."
+      ],
+      "pressureTests": [
+        "Is the claim about making someone feel safe and seen, or about being agreeable enough to be chosen?"
+      ]
+    },
+    "smv:charm:presence": {
+      "commonMisreadings": [
+        "Presence means commanding the room and being the loudest man there, which is what women want."
+      ],
+      "boundaryConditions": [
+        "LE defines presence as whether people remember the feeling of being around you after you have left — a claim about residue, not about the room while you are in it.",
+        "Charm operates after Looks have opened the door, and LE grades its trainability as a Lens rather than a single measured finding."
+      ],
+      "pressureTests": [
+        "Is the presence being described what people felt afterwards, or only what they noticed at the time?"
+      ]
+    },
+    "smv:exposure:geography-sex-ratio": {
+      "aliases": [
+        "geography and sex ratio",
+        "sex ratio",
+        "operational sex ratio",
+        "local dating market"
+      ],
+      "commonMisreadings": [
+        "The sex ratio here is brutal, so the dating market is rigged and every approach fails."
+      ],
+      "boundaryConditions": [
+        "The ratio evidence is graded Mixed: it describes population-level shifts in commitment norms and bargaining power, not a per-person adjustment factor.",
+        "A brutal local market is data, not a verdict — LE classifies the market you are physically in as fixed while classifying which rooms and channels you use as movable."
+      ],
+      "pressureTests": [
+        "Is the ratio being used to explain the market's terms, or to explain away one person's outcomes?"
+      ]
+    },
+    "smv:exposure:volume-of-contact": {
+      "aliases": [
+        "qualified encounters"
+      ],
+      "phrases": [
+        "how many people you meet",
+        "meeting more people"
+      ],
+      "commonMisreadings": [
+        "Raw volume of contact fixes exposure, so a man who meets more single women will win."
+      ],
+      "boundaryConditions": [
+        "LE counts qualified encounters — plausible, available people — not raw foot traffic, and names spray-and-pray volume with zero standards as where Exposure curdles.",
+        "Exposure is the denominator under every other factor, not a replacement for them; more encounters do not raise Looks, Money, Status, or Charm."
+      ],
+      "pressureTests": [
+        "Are the encounters being counted actually plausible and available, or is the raw number doing the work?"
+      ]
+    },
+    "smv:exposure:recurring-environments": {
+      "aliases": [
+        "propinquity",
+        "mere exposure"
+      ],
+      "phrases": [
+        "repeated contact",
+        "being consistently around"
+      ],
+      "commonMisreadings": [
+        "Repeated exposure builds attraction, so a man should keep showing up until the woman wants him."
+      ],
+      "boundaryConditions": [
+        "Propinquity and mere exposure work slowly and quietly over time; LE frames the lever as being consistently around, which a single encounter cannot invoke.",
+        "Recurring environments raise the odds of being seen; they do not change how the market prices what it sees."
+      ],
+      "pressureTests": [
+        "Is the environment actually recurring with the same people, or is it a series of one-off rooms?"
+      ]
+    },
+    "smv:exposure:initiative": {
+      "commonMisreadings": [
+        "Initiative is the whole game, so enough approaches will eventually make some woman want you."
+      ],
+      "boundaryConditions": [
+        "Initiative multiplies what exists and cannot manufacture a pool the local market, ratio, and age band do not contain.",
+        "LE calls Exposure the most movable factor for anyone willing to act, which makes low initiative a diagnosis rather than a verdict on the market."
+      ],
+      "pressureTests": [
+        "Is the bottleneck the score being offered, or that almost nobody is seeing it?"
+      ]
+    },
+    "pills:just-be-first": {
+      "aliases": [
+        "first serious relationship"
+      ],
+      "phrases": [
+        "got there first",
+        "high school sweethearts"
+      ],
+      "commonMisreadings": [
+        "Just be first is the strategy: lock a woman in before she learns her own dating value."
+      ],
+      "boundaryConditions": [
+        "LE states outright that this is not a moral ideal or a seduction recommendation, but a structural story about timing and calibration.",
+        "The mechanic depends on a low-feedback environment before full market calibration, and explains why some mismatches survive rather than predicting that they will."
+      ],
+      "pressureTests": [
+        "Did the pairing form before comparison pressure was salient, or is \"we met young\" explaining a match that would have formed anyway?"
+      ]
+    },
+    "pills:page-rp:hypergamy": {
+      "commonMisreadings": [
+        "Hypergamy is a law with zero exceptions: a woman always leaves her man to date someone richer."
+      ],
+      "boundaryConditions": [
+        "LE indexes hypergamy as a useful pressure concept and a dangerous cartoon law — a directional pull over status, resources, desirability, and perceived mate value, not a threshold.",
+        "The Red Pill dossier's operating rule caps it: strategy stops being useful when it turns into blanket claims about women or men."
+      ],
+      "pressureTests": [
+        "Is the claim stated as a tendency with variation, or as a law no counterexample can touch?"
+      ]
+    },
+    "pills:page-rp:preselection": {
+      "commonMisreadings": [
+        "Social proof creates attraction outright, so women want any man other women were seen with."
+      ],
+      "boundaryConditions": [
+        "LE's claim is that visible wanting changes how existing value is read, not that social proof creates all attraction or manufactures value on inspection.",
+        "LE grades the mate-specific reading Contested: preselection may be domain-general social learning, since people copy others' choices about many things."
+      ],
+      "pressureTests": [
+        "Is the effect being attributed to mate-specific copying, or is domain-general social learning a sufficient explanation?"
+      ]
+    },
+    "pills:page-rp:frame": {
+      "commonMisreadings": [
+        "Frame means dominating every exchange and staying cold, so a woman wants a man who dominates."
+      ],
+      "boundaryConditions": [
+        "LE indexes frame as calm self-command at its best and performative dominance at its worst; citing only the healthy reading drops half the entry.",
+        "The Red Pill dossier names manipulation as its distortion and caps the technique: sharper but colder counts as losing part of the game."
+      ],
+      "pressureTests": [
+        "Is the frame being described self-command, or a performance staged for an audience?"
+      ]
+    },
+    "pills:page-bp:just-be-yourself": {
+      "aliases": [
+        "be yourself"
+      ],
+      "phrases": [
+        "just being yourself",
+        "being authentic"
+      ],
+      "commonMisreadings": [
+        "Improving your style and social skills is fake, so a man just being himself attracts women."
+      ],
+      "boundaryConditions": [
+        "LE rates this healthy when it means authenticity and harmful when it means refusing to improve presentation, social skill, standards, or exposure — not wrong outright.",
+        "It says nothing about the first filter: the Blue Pill dossier's own discard is that kindness is not a substitute for attraction."
+      ],
+      "pressureTests": [
+        "Is \"be yourself\" protecting a real self, or protecting an untouched presentation, social skill, standard, or exposure level?"
+      ]
+    },
+    "pills:page-bp:personality-matters": {
+      "aliases": [
+        "good personality"
+      ],
+      "phrases": [
+        "personality matters more than looks"
+      ],
+      "commonMisreadings": [
+        "A good personality creates attraction from scratch, so any man with one makes women want him."
+      ],
+      "boundaryConditions": [
+        "LE marks this true but incomplete: personality can deepen, convert, and sustain attraction, but does not always create initial consideration from nothing.",
+        "The claim is scoped to what happens once attraction has opened the door; the dossier's failure mode is reading rejection as a moral failure of the market."
+      ],
+      "pressureTests": [
+        "Is personality being credited with converting and sustaining attraction, or with creating it from nothing?"
       ]
     }
   }
