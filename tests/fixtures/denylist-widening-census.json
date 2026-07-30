@@ -1,9 +1,10 @@
 {
   "schema": "le-lab.denylist-census/1.0",
-  "question": "Which word surfaces does comparing denylist entries and passage tokens as STEMS newly reach, beyond what the literal `entry` / `entry + s` tests already reached?",
-  "ruling": "These, and this file is the vocabulary the answer is exhaustive OVER. The v2.6.1 release report published this census twice as 'enumerated over all sixteen entries' and it was wrong both times: the first version named `pays`, which does not match, and omitted six surfaces; the second omitted `carefulness` and `medicalization`, which Sol's verification review then found. Both failures were the same step — a candidate space generated mechanically and then filtered to real English BY HAND, where a hand that forgets a word leaves no trace. So the hand judgments are now the fixture. `tests/lab-match-behavior.test.mjs` regenerates the mechanical space from the stemmer's own suffix inventory and requires every candidate in it to carry an explicit verdict here, which is what makes an omission impossible rather than merely unlikely.",
+  "question": "Which word surfaces does comparing denylist entries and passage tokens as STEMS newly reach, beyond what the literal `entry` / `entry + s` tests already reached \u2014 and which of those are surfaces a real source could actually contain?",
+  "ruling": "These, and this file is the vocabulary the answer is exhaustive OVER. Read `newlyReached` + `reachedButUnattested` for what the comparison reaches; read `newlyReached` alone for the part of it a source could actually contain. The v2.6.1 release report published this census twice as 'enumerated over all sixteen entries' and it was wrong both times: the first version named `pays`, which does not match, and omitted six surfaces; the second omitted `carefulness` and `medicalization`, which Sol's verification review then found. Both failures were the same step — a candidate space generated mechanically and then filtered to real English BY HAND, where a hand that forgets a word leaves no trace. So the hand judgments are now the fixture. `tests/lab-match-behavior.test.mjs` regenerates the mechanical space from the stemmer's own suffix inventory and requires every candidate in it to carry an explicit verdict here, which is what makes an omission impossible rather than merely unlikely.",
   "notExhaustiveOver": "English. A surface is only in this file if the stemmer's suffix rules generate it from an entry or an entry's stem, so an irregular form reaching the same stem by another route would not appear — `paid` is the known example and it does not match anyway. Claims of exhaustiveness are about the generated space, never about the language.",
-  "wordStandard": "Listed in a standard English dictionary, or in settled technical use in the register these entries come from. Marginal calls are recorded as verdicts rather than dropped silently, so a reviewer can contest one word instead of the whole table, and the arguable ones are resolved in the direction that makes the census wider and the stated cost larger. Arguable and counted as words: `hosters`, `payed`, and \u2014 added 2026-07-29 on Sol's second review, which is exactly the contest this field was written to invite \u2014 `hostable` and `networkable`, both in settled technical use in the hosting and networking register these two entries come from. Arguable and still rejected: `cloudable`, the closest call in the file, kept out as unsettled marketing coinage rather than established use. That verdict is the one most likely to be wrong next.",
+  "twoFieldsTwoKindsOfClaim": "THE REACH SET IS newlyReached + reachedButUnattested, AND IT IS MECHANICAL. Every candidate in this file stems to its entry's stem, so the shipped comparison disqualifies every one of them today; that half is complete over the generated space and is not a matter of opinion. `attested` is the second, separate question \u2014 whether a real source could contain the surface \u2014 and it is a judgment that stays revisable. Moving a word between the two fields therefore changes NOTHING about what the instrument does or what this census claims to reach. It changes only which part of the widening is expected to be met in practice. Three review rounds were spent contesting word calls as though they bounded the reach; they never did, and the earlier field name `rejected` invited exactly that misreading.",
+  "wordStandard": "For `newlyReached`: listed in a standard English dictionary, or in settled technical use in the register the entry comes from. Arguable calls are recorded rather than applied silently, so a reviewer contests one word instead of the whole table, and they resolve toward the wider stated cost. Arguable and counted as attested: `hosters`, `payed`; `hostable` and `networkable`, added on Sol's second review; and `cloudable`, added on the third \u2014 Cisco's IBSG SMB cloud research uses \"cloudable\" spending for IT spend suitable for cloud delivery, which is settled enough for this register even though the scare quotes in the source show it began as a coinage. Everything in `reachedButUnattested` is still REACHED; it is only unlikely to appear in real text.",
   "generator": {
     "bases": ["the entry", "the entry's stem", "each base with no suffix at all"],
     "suffixes": ["ization", "ational", "fulness", "iveness", "ously", "ments", "ment", "ness", "able", "ible", "ally", "edly", "ingly", "ies", "ing", "ers", "ed", "es", "s"],
@@ -16,101 +17,101 @@
     {
       "entry": "cloud",
       "stem": "cloud",
-      "newlyReached": ["clouded", "clouding"],
-      "rejected": ["cloudable", "cloudally", "cloudational", "cloudedly", "clouders", "cloudes", "cloudfulness", "cloudible", "cloudingly", "cloudiveness", "cloudization", "cloudment", "cloudments", "cloudness", "cloudously"]
+      "newlyReached": ["cloudable", "clouded", "clouding"],
+      "reachedButUnattested": ["cloudally", "cloudational", "cloudedly", "clouders", "cloudes", "cloudfulness", "cloudible", "cloudingly", "cloudiveness", "cloudization", "cloudment", "cloudments", "cloudness", "cloudously"]
     },
     {
       "entry": "healthcare",
       "stem": "healthcare",
       "newlyReached": [],
-      "rejected": ["healthcareable", "healthcareally", "healthcareational", "healthcareed", "healthcareedly", "healthcareers", "healthcarees", "healthcarefulness", "healthcareible", "healthcareing", "healthcareingly", "healthcareiveness", "healthcareization", "healthcarement", "healthcarements", "healthcareness", "healthcareously"]
+      "reachedButUnattested": ["healthcareable", "healthcareally", "healthcareational", "healthcareed", "healthcareedly", "healthcareers", "healthcarees", "healthcarefulness", "healthcareible", "healthcareing", "healthcareingly", "healthcareiveness", "healthcareization", "healthcarement", "healthcarements", "healthcareness", "healthcareously"]
     },
     {
       "entry": "health care",
       "stem": "health care",
       "multiword": true,
       "newlyReached": [],
-      "rejected": [],
+      "reachedButUnattested": [],
       "note": "Multiword entries are matched as a contiguous run of two stems rather than as one token, so a single-surface census does not describe them. Their widening is a property of token SEQUENCES and is frozen as the branch truth table in tests/lab-match-behavior.test.mjs — `healthfulness carefulness` and `healths careers` are the sequences the stem run reaches and the literal and substring tests do not."
     },
     {
       "entry": "service",
       "stem": "service",
       "newlyReached": ["serviceable"],
-      "rejected": ["serviceally", "serviceational", "serviceed", "serviceedly", "serviceers", "servicees", "servicefulness", "serviceible", "serviceing", "serviceingly", "serviceiveness", "serviceization", "servicement", "servicements", "serviceness", "serviceously"]
+      "reachedButUnattested": ["serviceally", "serviceational", "serviceed", "serviceedly", "serviceers", "servicees", "servicefulness", "serviceible", "serviceing", "serviceingly", "serviceiveness", "serviceization", "servicement", "servicements", "serviceness", "serviceously"]
     },
     {
       "entry": "internet",
       "stem": "internet",
       "newlyReached": [],
-      "rejected": ["internetable", "internetally", "internetational", "interneted", "internetedly", "interneters", "internetes", "internetfulness", "internetible", "interneting", "internetingly", "internetiveness", "internetization", "internetment", "internetments", "internetness", "internetously"]
+      "reachedButUnattested": ["internetable", "internetally", "internetational", "interneted", "internetedly", "interneters", "internetes", "internetfulness", "internetible", "interneting", "internetingly", "internetiveness", "internetization", "internetment", "internetments", "internetness", "internetously"]
     },
     {
       "entry": "insurance",
       "stem": "insurance",
       "newlyReached": [],
-      "rejected": ["insuranceable", "insuranceally", "insuranceational", "insuranceed", "insuranceedly", "insuranceers", "insurancees", "insurancefulness", "insuranceible", "insuranceing", "insuranceingly", "insuranceiveness", "insuranceization", "insurancement", "insurancements", "insuranceness", "insuranceously"]
+      "reachedButUnattested": ["insuranceable", "insuranceally", "insuranceational", "insuranceed", "insuranceedly", "insuranceers", "insurancees", "insurancefulness", "insuranceible", "insuranceing", "insuranceingly", "insuranceiveness", "insuranceization", "insurancement", "insurancements", "insuranceness", "insuranceously"]
     },
     {
       "entry": "medical",
       "stem": "medical",
       "newlyReached": ["medicalization"],
-      "rejected": ["medicalable", "medicalally", "medicalational", "medicaled", "medicaledly", "medicalers", "medicales", "medicalfulness", "medicalible", "medicaling", "medicalingly", "medicaliveness", "medicalment", "medicalments", "medicalness", "medicalously"]
+      "reachedButUnattested": ["medicalable", "medicalally", "medicalational", "medicaled", "medicaledly", "medicalers", "medicales", "medicalfulness", "medicalible", "medicaling", "medicalingly", "medicaliveness", "medicalment", "medicalments", "medicalness", "medicalously"]
     },
     {
       "entry": "hosting",
       "stem": "host",
       "newlyReached": ["host", "hostable", "hosted", "hosters", "hosts"],
-      "rejected": ["hostally", "hostational", "hostedly", "hostes", "hostfulness", "hostible", "hostingable", "hostingally", "hostingational", "hostingedly", "hostingfulness", "hostingible", "hostingingly", "hostingiveness", "hostingization", "hostingly", "hostingment", "hostingments", "hostingness", "hostingously", "hostiveness", "hostization", "hostment", "hostments", "hostness", "hostously"]
+      "reachedButUnattested": ["hostally", "hostational", "hostedly", "hostes", "hostfulness", "hostible", "hostingable", "hostingally", "hostingational", "hostingedly", "hostingfulness", "hostingible", "hostingingly", "hostingiveness", "hostingization", "hostingly", "hostingment", "hostingments", "hostingness", "hostingously", "hostiveness", "hostization", "hostment", "hostments", "hostness", "hostously"]
     },
     {
       "entry": "software",
       "stem": "software",
       "newlyReached": [],
-      "rejected": ["softwareable", "softwareally", "softwareational", "softwareed", "softwareedly", "softwareers", "softwarees", "softwarefulness", "softwareible", "softwareing", "softwareingly", "softwareiveness", "softwareization", "softwarement", "softwarements", "softwareness", "softwareously"]
+      "reachedButUnattested": ["softwareable", "softwareally", "softwareational", "softwareed", "softwareedly", "softwareers", "softwarees", "softwarefulness", "softwareible", "softwareing", "softwareingly", "softwareiveness", "softwareization", "softwarement", "softwarements", "softwareness", "softwareously"]
     },
     {
       "entry": "payment",
       "stem": "pay",
       "newlyReached": ["pay", "payable", "payed", "payers", "paying"],
-      "rejected": ["paies", "payally", "payational", "payedly", "payes", "payfulness", "payible", "payingly", "payiveness", "payization", "paymentational", "paymentfulness", "paymentiveness", "paymentization", "paymentously", "payness", "payously"]
+      "reachedButUnattested": ["paies", "payally", "payational", "payedly", "payes", "payfulness", "payible", "payingly", "payiveness", "payization", "paymentational", "paymentfulness", "paymentiveness", "paymentization", "paymentously", "payness", "payously"]
     },
     {
       "entry": "energy",
       "stem": "energy",
       "newlyReached": ["energies"],
-      "rejected": ["energyable", "energyally", "energyational", "energyed", "energyedly", "energyers", "energyes", "energyfulness", "energyible", "energying", "energyingly", "energyiveness", "energyization", "energyment", "energyments", "energyness", "energyously"]
+      "reachedButUnattested": ["energyable", "energyally", "energyational", "energyed", "energyedly", "energyers", "energyes", "energyfulness", "energyible", "energying", "energyingly", "energyiveness", "energyization", "energyment", "energyments", "energyness", "energyously"]
     },
     {
       "entry": "utility",
       "stem": "utility",
       "newlyReached": ["utilities"],
-      "rejected": ["utilityable", "utilityally", "utilityational", "utilityed", "utilityedly", "utilityers", "utilityes", "utilityfulness", "utilityible", "utilitying", "utilityingly", "utilityiveness", "utilityization", "utilityment", "utilityments", "utilityness", "utilityously"]
+      "reachedButUnattested": ["utilityable", "utilityally", "utilityational", "utilityed", "utilityedly", "utilityers", "utilityes", "utilityfulness", "utilityible", "utilitying", "utilityingly", "utilityiveness", "utilityization", "utilityment", "utilityments", "utilityness", "utilityously"]
     },
     {
       "entry": "network",
       "stem": "network",
       "newlyReached": ["networkable", "networked", "networkers", "networking"],
-      "rejected": ["networkally", "networkational", "networkedly", "networkes", "networkfulness", "networkible", "networkingly", "networkiveness", "networkization", "networkment", "networkments", "networkness", "networkously"]
+      "reachedButUnattested": ["networkally", "networkational", "networkedly", "networkes", "networkfulness", "networkible", "networkingly", "networkiveness", "networkization", "networkment", "networkments", "networkness", "networkously"]
     },
     {
       "entry": "care",
       "stem": "care",
       "newlyReached": ["carefulness", "careers"],
-      "rejected": ["careable", "careally", "careational", "careed", "careedly", "carees", "careible", "careing", "careingly", "careiveness", "careization", "carement", "carements", "careness", "careously"]
+      "reachedButUnattested": ["careable", "careally", "careational", "careed", "careedly", "carees", "careible", "careing", "careingly", "careiveness", "careization", "carement", "carements", "careness", "careously"]
     },
     {
       "entry": "childcare",
       "stem": "childcare",
       "newlyReached": [],
-      "rejected": ["childcareable", "childcareally", "childcareational", "childcareed", "childcareedly", "childcareers", "childcarees", "childcarefulness", "childcareible", "childcareing", "childcareingly", "childcareiveness", "childcareization", "childcarement", "childcarements", "childcareness", "childcareously"]
+      "reachedButUnattested": ["childcareable", "childcareally", "childcareational", "childcareed", "childcareedly", "childcareers", "childcarees", "childcarefulness", "childcareible", "childcareing", "childcareingly", "childcareiveness", "childcareization", "childcarement", "childcarements", "childcareness", "childcareously"]
     },
     {
       "entry": "child care",
       "stem": "child care",
       "multiword": true,
       "newlyReached": [],
-      "rejected": [],
+      "reachedButUnattested": [],
       "note": "As `health care`. `childfulness carefulness` is the decisive sequence."
     }
   ]

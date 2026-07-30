@@ -495,9 +495,43 @@ test('the documented limits are what the analyzer actually does today', async ()
  * better instrument and is not available to a pass forbidden from touching the
  * analyzer.
  */
-const DENYLIST_ENTRIES = ['cloud', 'healthcare', 'health care', 'service', 'internet', 'insurance',
-  'medical', 'hosting', 'software', 'payment', 'energy', 'utility', 'network', 'care', 'childcare',
-  'child care'];
+/*
+ * The denylist, READ FROM THE CANON rather than copied beside it.
+ *
+ * This was a hand-typed array until Sol's third review pointed out that the census
+ * then checked itself against a test-owned copy: canon drift would have been
+ * invisible, since the fixture and the copy would still have agreed with each
+ * other. Same single-source correction as the suffix inventory, and the same reason
+ * — a duplicated registry is a registry that can silently be wrong.
+ *
+ * The canon holds exactly one non-empty `notAfter` list, which is itself the fact
+ * §1 of the release report rests on, so the assertion doubles as a check that it
+ * is still true.
+ */
+const DENYLIST_SOURCES = (() => {
+  const found = [];
+  const walk = (node) => {
+    if (Array.isArray(node)) { node.forEach(walk); return; }
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node.notAfter) && node.notAfter.length) {
+      found.push({ alias: node.alias, notAfter: node.notAfter });
+    }
+    Object.values(node).forEach(walk);
+  };
+  walk(canonIndex);
+  return found;
+})();
+
+test('the canon holds exactly one denylist, and it is the one these tests reason about', () => {
+  assert.equal(DENYLIST_SOURCES.length, 1,
+    `md/lab-v2.6.1-release.md §1 rests on the canon holding exactly ONE non-empty notAfter list; `
+    + `found ${DENYLIST_SOURCES.length}. A second one makes every count in §1 and §3 stale, and the `
+    + 'widening census incomplete.');
+  assert.equal(DENYLIST_SOURCES[0].alias, 'provider',
+    'The denylist belongs to the `provider` contextual alias.');
+});
+
+const DENYLIST_ENTRIES = DENYLIST_SOURCES[0].notAfter;
 
 /** stemToken via the exported tokenizer; short and stopword tokens keep their surface, as it does. */
 const stemOf = (token) => tokenize(token)[0] ?? token;
@@ -507,57 +541,67 @@ function branchesFor(tokens) {
   const run = tokens.join(' ');
   const stems = tokens.map(stemOf);
   const fires = (predicate) => DENYLIST_ENTRIES.filter(predicate);
+  const literal = (m) => tokens.includes(m) || tokens.includes(`${m}s`);
+  const substring = (m) => m.includes(' ') && (run.includes(m) || run.includes(`${m}s`));
+  const stemRun = (m) => {
+    const wanted = m.split(' ').map(stemOf);
+    return stems.some((_, at) => wanted.every((stem, offset) => stems[at + offset] === stem));
+  };
   return {
-    literal: fires((m) => tokens.includes(m) || tokens.includes(`${m}s`)),
-    substring: fires((m) => m.includes(' ') && (run.includes(m) || run.includes(`${m}s`))),
-    stemRun: fires((m) => {
-      const wanted = m.split(' ').map(stemOf);
-      return stems.some((_, at) => wanted.every((stem, offset) => stems[at + offset] === stem));
-    }),
+    literal: fires(literal),
+    substring: fires(substring),
+    stemRun: fires(stemRun),
+    // What `carries` RETURNS, as opposed to which branches would fire: the first
+    // modifier in denylist order matched by any test, because the real helper is a
+    // `.find` over modifiers with the three tests inside it. This is the value the
+    // analyzer puts in its trace, so it is the value that ties this replica to the
+    // shipped code rather than merely agreeing with it about the outcome.
+    firstHit: DENYLIST_ENTRIES
+      .find((m) => literal(m) || substring(m) || stemRun(m)) || null,
   };
 }
 
 const BRANCH_TABLE = [
   {
     tokens: ['health', 'caregivers'],
-    literal: [], substring: ['health care'], stemRun: [],
+    literal: [], substring: ['health care'], stemRun: [], firstHit: 'health care',
     note: 'bl-17. The spanned-word shape §2 claimed had been removed. Only the substring test sees it.',
   },
   {
     tokens: ['health', 'care'],
-    literal: ['care'], substring: ['health care'], stemRun: ['health care', 'care'],
+    literal: ['care'], substring: ['health care'], stemRun: ['health care', 'care'], firstHit: 'health care',
     note: 'bl-19 territory. All three tests see it, which is why dropping the substring test is safe '
       + 'here — the stem run and the single-word `care` entry both still catch it.',
   },
   {
     tokens: ['healths', 'care'],
-    literal: ['care'], substring: [], stemRun: ['health care', 'care'],
+    literal: ['care'], substring: [], stemRun: ['health care', 'care'], firstHit: 'health care',
     note: 'Refutes the SUBSTRING lemma: `healths` strips to `health`, so `health care` never appears '
       + 'as a substring while the stem run matches. It does NOT establish decisiveness — the '
       + 'single-word `care` entry fires literally, so an earlier branch would have caught it anyway.',
   },
   {
     tokens: ['healthfulness', 'carefulness'],
-    literal: [], substring: [], stemRun: ['health care', 'care'],
+    literal: [], substring: [], stemRun: ['health care', 'care'], firstHit: 'health care',
     note: "Sol's counterexample, and the row that does the real work. Suffixing BOTH words is what "
       + 'takes every earlier branch out of play, which is why the double suffix was not decoration.',
   },
   {
     tokens: ['childfulness', 'carefulness'],
-    literal: [], substring: [], stemRun: ['care', 'child care'],
+    literal: [], substring: [], stemRun: ['care', 'child care'], firstHit: 'care',
     note: 'The other multiword entry, decisive the same way, so the reachability is a property of '
       + "the branch and not of one entry's spelling.",
   },
   {
     tokens: ['healths', 'careers'],
-    literal: [], substring: [], stemRun: ['health care', 'care'],
+    literal: [], substring: [], stemRun: ['health care', 'care'], firstHit: 'health care',
     note: 'One ordinary plural and one ordinary noun, both stripped by the same rules. The cheapest '
       + 'decisive sequence found.',
   },
 ];
 
 test('the three branches of carries(), enumerated rather than argued', () => {
-  BRANCH_TABLE.forEach(({ tokens, literal, substring, stemRun, note }) => {
+  BRANCH_TABLE.forEach(({ tokens, literal, substring, stemRun, firstHit, note }) => {
     const observed = branchesFor(tokens);
     const label = tokens.join(' ');
     // All THREE branches are asserted. The first version of this test declared
@@ -567,6 +611,9 @@ test('the three branches of carries(), enumerated rather than argued', () => {
     assert.deepEqual(observed.literal, literal, `[${label}] literal branch — ${note}`);
     assert.deepEqual(observed.substring, substring, `[${label}] substring branch — ${note}`);
     assert.deepEqual(observed.stemRun, stemRun, `[${label}] stem-run branch — ${note}`);
+    assert.equal(observed.firstHit, firstHit,
+      `[${label}] carries() returns the FIRST matching modifier in denylist order, and the analyzer `
+      + `puts it in its trace. Expected "${firstHit}", replica says "${observed.firstHit}".`);
   });
 
   // The claim the two retracted paragraphs both got wrong, stated as an assertion:
@@ -616,13 +663,18 @@ async function candidateFor(text, canonId) {
  * and the admission verdict — the surface the documentedLimits block records and
  * the one the disqualification actually moves.
  *
- * What it CANNOT pin: `disqualifiedBy: 'technical-modifier'` and the modifier
- * string. Those live only in the internal trace inside `promotedAliases`, which no
- * published field carries; the bl-16/bl-17/bl-18 fixtures record them from a
- * diagnostic read by hand, and no test can assert them until the analyzer
- * publishes them. Said plainly rather than implied away — it is the strongest
- * anchor available to a pass forbidden from touching the analyzer, and the gap is
- * a finding for a release that may.
+ * It ALSO pins the promotion trace — `disqualifiedBy` and the exact modifier in
+ * `reason` — which an earlier version of this comment wrongly called unassertable
+ * without publishing new analyzer output. `scoreEntry` returns
+ * `contextualAliasTrace`, `analyzerInternals` exports `scoreEntry`, and the
+ * `contextualAliasTrace()` helper above this block has been reading it since
+ * v2.6.0. Sol's third review caught the claim, in the file that already disproved
+ * it.
+ *
+ * The modifier string is the assertion that does the real work: it ties the
+ * replica's `firstHit` — first match in denylist order — to what the shipped
+ * `carries` actually returned. Score and fate prove the outcome; only the modifier
+ * proves the technical-modifier mechanism caused it.
  */
 test('every sequence the replica calls disqualified is disqualified by the shipped analyzer', async () => {
   const CANON_ID = 'smv:money:provisioning-signal';
@@ -631,9 +683,22 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
   const sentence = (complement) => `During our marriage the provider for ${complement} was always him.`;
   const control = 'healths workers';
 
-  for (const { tokens } of BRANCH_TABLE) {
+  for (const { tokens, firstHit } of BRANCH_TABLE) {
     const complement = tokens.join(' ');
     const { candidate, credible } = await candidateFor(sentence(complement), CANON_ID);
+
+    // The mechanism, not just the outcome. `carries` returns one modifier and the
+    // analyzer names it in the trace, so this is where the replica either agrees
+    // with the shipped code about WHY the alias was refused or is caught not to.
+    const [trace] = contextualAliasTrace(unitFor(sentence(complement)), CANON_ID) || [];
+    assert.ok(trace, `"${complement}" produced no contextual-alias trace row.`);
+    assert.equal(trace.promoted, false, `"${complement}" must not promote the alias.`);
+    assert.equal(trace.disqualifiedBy, 'technical-modifier',
+      `"${complement}" must be refused BY THE DENYLIST, not by the window test. Observed `
+      + `${trace.disqualifiedBy}.`);
+    assert.equal(trace.reason, `technical modifier “${firstHit}” within 3 tokens`,
+      `"${complement}" must be refused by modifier “${firstHit}”, the first match in denylist `
+      + `order. Observed: ${trace.reason}.`);
     assert.equal(credible, false,
       `"${complement}" fires a denylist branch in the replica, so the analyzer must not promote the `
       + 'contextual alias for it.');
@@ -660,6 +725,12 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
     `"${control}" must score ${PROMOTED_SCORE}, the promoted-alias score. Observed ${candidate.score}.`);
   assert.equal(candidate.fate, 'displayed',
     `"${control}" must be displayed. Observed ${candidate.fate}.`);
+
+  const [controlTrace] = contextualAliasTrace(unitFor(sentence(control)), CANON_ID) || [];
+  assert.equal(controlTrace.promoted, true, `"${control}" must promote the alias.`);
+  assert.equal(controlTrace.disqualifiedBy, null,
+    `"${control}" must reach promotion with NO disqualifier — otherwise the rows above are not `
+    + 'measuring the denylist.');
 });
 
 /*
@@ -754,7 +825,7 @@ test('the widening census is exhaustive over its own stated vocabulary', () => {
     if (row.multiword) {
       // A single-surface census cannot describe a two-stem run; the truth table
       // above owns those, and the note has to say where they went.
-      assert.equal(row.newlyReached.length + row.rejected.length, 0,
+      assert.equal(row.newlyReached.length + row.reachedButUnattested.length, 0,
         `[${row.entry}] is multiword, so its widening belongs to the branch truth table.`);
       assert.ok(row.note && /truth table|decisive/u.test(row.note),
         `[${row.entry}] must point at where its widening IS recorded.`);
@@ -762,7 +833,7 @@ test('the widening census is exhaustive over its own stated vocabulary', () => {
     }
 
     const generated = mechanicalCandidates(row.entry, row.stem);
-    const ruled = [...row.newlyReached, ...row.rejected].sort();
+    const ruled = [...row.newlyReached, ...row.reachedButUnattested].sort();
 
     // THE ASSERTION THAT CLOSES THE HOLE: every generated candidate carries a
     // verdict, and no verdict is invented for a candidate the rules do not reach.
@@ -803,4 +874,19 @@ test('the census records the surfaces the release report names, and pays is not 
   assert.ok(!reached.get('payment').includes('pays'),
     '`pays` does not reach `payment` and must not be listed as though it does.');
   assert.equal(stemOf('paid'), 'paid', '`paid` is irregular and no suffix rule reaches it.');
+});
+
+test('every candidate in the census is REACHED, attested or not', () => {
+  // The half of this fixture that is mechanical rather than judged. `rejected` was
+  // the old name for the second field and it read as "not reached", which is what
+  // let three review rounds argue about word calls as though they bounded what the
+  // comparison catches. They never did: both fields are reached surfaces.
+  census.entries.filter((row) => !row.multiword).forEach((row) => {
+    [...row.newlyReached, ...row.reachedButUnattested].forEach((word) => {
+      assert.equal(stemOf(word), row.stem,
+        `[${row.entry}] "${word}" is listed in this census, so the shipped comparison must reach it `
+        + `— it stems to "${stemOf(word)}" and the entry stems to "${row.stem}". A candidate that `
+        + 'does not stem-match belongs in neither field.');
+    });
+  });
 });

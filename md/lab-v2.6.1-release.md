@@ -157,11 +157,26 @@ false-positive shape rather than fixing an observed one.
 > been too weak an anchor to hold a branch attribution, since a passage can leave that list several
 > ways.
 >
-> **What no test here can anchor:** `disqualifiedBy: "technical-modifier"` and the modifier string
-> itself. Those exist only in the internal trace inside `promotedAliases`, which no published field
-> carries — the `bl-16`/`bl-17`/`bl-18` fixtures record them from a diagnostic read by hand. That is a
-> real gap in what is assertable and it is stated rather than implied away; closing it means publishing
-> the promotion trace, which is a change to the analyzer and belongs to a release allowed to make one.
+> **The anchor also pins the mechanism**, not only the outcome: `disqualifiedBy: "technical-modifier"`
+> and the exact modifier named in `reason`, per row. The modifier is the assertion that does the real
+> work — it ties the replica's first-match-in-denylist-order to what the shipped `carries` actually
+> returned, so the replica now either agrees with production about *why* the alias was refused or is
+> caught not to. `childfulness carefulness` is refused by `care` rather than `child care`, because
+> `carries` is a `.find` over the denylist in order, and the test asserts that too.
+
+> **CORRECTION, 2026-07-29 (third pass).** The paragraph above previously said no test here *could*
+> anchor `disqualifiedBy` or the modifier string, because they lived only in an internal trace no
+> published field carried, and that closing the gap needed an analyzer change. **That was false.**
+> `scoreEntry` returns `contextualAliasTrace`, `analyzerInternals` exports `scoreEntry`, and
+> `tests/lab-match-behavior.test.mjs` has had a `contextualAliasTrace()` helper reading exactly that
+> since v2.6.0 — nine lines above the block that declared it impossible. Sol's third review found the
+> claim in the file that already disproved it.
+>
+> **This is the fourth error in this section of the same family**, and the family is now the finding:
+> asserting what a mechanism *cannot* do without going and looking. Twice about which code path can be
+> reached, once about which words the stemmer reaches, and now once about what a test can observe. In
+> every case the honest instrument was already available and cheaper than the paragraph claiming it was
+> not. **A limitation is a claim and needs the same evidence as a capability.**
 >
 > **The decisive surfaces are inflected forms the maintainer knows no natural sentence for** —
 > `healthfulness`, `childfulness`, `healths careers`. That is an observation about the examples found,
@@ -199,7 +214,7 @@ matched words are:
 |---|---|
 | `hosting` → `host` | host, hosts, hosted, hosters, hostable |
 | `network` | networked, networking, networkers, networkable |
-| `cloud` | clouded, clouding |
+| `cloud` | clouded, clouding, cloudable |
 | `service` | serviceable |
 | `medical` | medicalization |
 | `care` | careers, carefulness |
@@ -281,6 +296,32 @@ matched words are:
 > convention, not a stemmer rule**: `stemToken` maps a trailing `ies` to `y`, and the variant is how the
 > generator produces the surfaces that rule accepts. That is the one part of the space the stemmer's own
 > text cannot supply, and saying so is the difference between this block and the one above it.
+
+> **FOURTH CORRECTION, 2026-07-29 (third pass), and it retires the argument rather than continuing it.**
+> Sol contested `cloudable` and the last remaining hand-copied list. Both stand, and the second one
+> matters more.
+>
+> **`cloudable` joins the attested surfaces.** Cisco's IBSG SMB cloud research uses "cloudable" spending
+> for IT spend suitable for cloud delivery — verified independently rather than taken on citation, and
+> settled enough for this register even though the scare quotes in Cisco's own text show it began as a
+> coinage.
+>
+> **The denylist itself was still a hand-typed array in the test file**, so the census was checking
+> itself against a copy: if the canon's `notAfter` list changed, the fixture and the copy would still
+> have agreed with each other and the drift would have been invisible. It is now read from
+> `data/le-canon-index.json`, with an assertion that the canon still holds exactly **one** non-empty
+> denylist — the fact §1 rests on. Sentinel-checked by adding a term to the canon: the census fails.
+> That was the same defect as the suffix inventory, one level up, and finding it twice is the reason to
+> distrust every remaining "list beside a thing" in this record.
+>
+> **And the framing that produced three rounds of this is retired.** Word-hood was never a bound on what
+> the comparison *reaches*. Every candidate in the census stems to its entry, so the analyzer
+> disqualifies all of them today — `cloudable` included, before anyone ruled on it. The field formerly
+> called `rejected` is now **`reachedButUnattested`**, because "rejected" read as "not reached" and
+> invited three reviews' worth of argument about vocabulary as though it changed the instrument. It never
+> did. **The reach set is mechanical and complete over the generated space; attestation is a separate,
+> revisable judgment about which part of that reach a real source could contain.** A future contest over
+> one word now moves an annotation and cannot unsettle the census.
 
 All but the `pay` family are the technical sense the denylist exists to reject, and are improvements —
 `the provider of hosted email` and `the provider for networked storage` are both now correctly
