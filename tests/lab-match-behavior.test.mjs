@@ -601,3 +601,107 @@ test('every sequence the replica calls disqualified is disqualified by the shipp
     `"${control}" carries no denylist term and must still promote — otherwise the cases above prove `
     + 'nothing about the denylist.');
 });
+
+/*
+ * The widening census, checkable instead of asserted.
+ *
+ * md/lab-v2.6.1-release.md §3 published this enumeration twice as "enumerated
+ * over all sixteen entries" and it was wrong twice — first naming `pays`, which
+ * does not match, and omitting six surfaces; then omitting `carefulness` and
+ * `medicalization`, which Sol's verification review found. Both failures were the
+ * same step: a mechanical candidate space filtered to real English BY HAND, where
+ * a hand that forgets a word leaves no trace in the artifact.
+ *
+ * So the hand judgments became the fixture. This regenerates the mechanical space
+ * from the stemmer's own suffix inventory and requires every candidate in it to
+ * carry an explicit verdict — word or non-word. An omission now fails the suite
+ * rather than surviving a review.
+ */
+const census = JSON.parse(readFileSync(
+  new URL('./fixtures/denylist-widening-census.json', import.meta.url),
+  'utf8',
+));
+
+/** The candidate space, regenerated from the stemmer's rules rather than stored. */
+function mechanicalCandidates(entry, stem) {
+  const { suffixes } = census.generator;
+  const candidates = new Set();
+  for (const base of [entry, stem]) {
+    for (const suffix of suffixes) {
+      candidates.add(base + suffix);
+      candidates.add(base.replace(/y$/u, 'i') + suffix);
+    }
+  }
+  return [...candidates]
+    .filter((candidate) => candidate
+      && candidate !== entry
+      && candidate !== `${entry}s`
+      && stemOf(candidate) === stem)
+    .sort();
+}
+
+test('the widening census is exhaustive over its own stated vocabulary', () => {
+  assert.equal(census.schema, 'le-lab.denylist-census/1.0');
+  assert.deepEqual(census.entries.map((row) => row.entry), DENYLIST_ENTRIES,
+    'The census covers the denylist exactly, in order — a missing entry is how `service` and `care` '
+    + 'were left out of the second published version.');
+
+  census.entries.forEach((row) => {
+    // The recorded stem has to be the stem the shipped stemmer produces.
+    if (!row.multiword) {
+      assert.equal(stemOf(row.entry), row.stem,
+        `[${row.entry}] the census records stem "${row.stem}" and the tokenizer says `
+        + `"${stemOf(row.entry)}".`);
+    }
+
+    if (row.multiword) {
+      // A single-surface census cannot describe a two-stem run; the truth table
+      // above owns those, and the note has to say where they went.
+      assert.equal(row.newlyReached.length + row.rejected.length, 0,
+        `[${row.entry}] is multiword, so its widening belongs to the branch truth table.`);
+      assert.ok(row.note && /truth table|decisive/u.test(row.note),
+        `[${row.entry}] must point at where its widening IS recorded.`);
+      return;
+    }
+
+    const generated = mechanicalCandidates(row.entry, row.stem);
+    const ruled = [...row.newlyReached, ...row.rejected].sort();
+
+    // THE ASSERTION THAT CLOSES THE HOLE: every generated candidate carries a
+    // verdict, and no verdict is invented for a candidate the rules do not reach.
+    assert.deepEqual(ruled, generated,
+      `[${row.entry}] the census and the generator disagree about the candidate space. Unruled `
+      + `candidates are the defect that produced two wrong censuses: ${
+        generated.filter((word) => !ruled.includes(word)).join(', ') || '(none)'
+      }. Invented candidates: ${
+        ruled.filter((word) => !generated.includes(word)).join(', ') || '(none)'
+      }.`);
+
+    // Every surface claimed as newly reached must actually match by stem and must
+    // actually have been missed by the literal tests — the `pays` error, inverted.
+    row.newlyReached.forEach((word) => {
+      assert.equal(stemOf(word), row.stem,
+        `[${row.entry}] claims "${word}" is newly reached, but it stems to "${stemOf(word)}".`);
+      assert.ok(word !== row.entry && word !== `${row.entry}s`,
+        `[${row.entry}] claims "${word}" is NEWLY reached, but the literal tests already reach it.`);
+    });
+  });
+});
+
+test('the census records the surfaces the release report names, and pays is not one of them', () => {
+  const reached = new Map(census.entries.map((row) => [row.entry, row.newlyReached]));
+
+  // The corrections Sol's two reviews produced, pinned so they cannot quietly regress.
+  assert.ok(reached.get('care').includes('careers'), '`careers` reaches `care` — first review.');
+  assert.ok(reached.get('service').includes('serviceable'), '`serviceable` reaches `service`.');
+  assert.ok(reached.get('care').includes('carefulness'), '`carefulness` reaches `care` — second review.');
+  assert.ok(reached.get('medical').includes('medicalization'), '`medicalization` reaches `medical`.');
+
+  // And the word the first census named that never matched at all.
+  assert.equal(stemOf('pays'), 'pays',
+    '`pays` is below minStemmableLength and returns unstemmed; if this ever changes the census and '
+    + 'the report both need rewriting.');
+  assert.ok(!reached.get('payment').includes('pays'),
+    '`pays` does not reach `payment` and must not be listed as though it does.');
+  assert.equal(stemOf('paid'), 'paid', '`paid` is irregular and no suffix rule reaches it.');
+});

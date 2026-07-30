@@ -189,11 +189,15 @@ matched words are:
 | `network` | networked, networking, networkers |
 | `cloud` | clouded, clouding |
 | `service` | serviceable |
-| `care` | careers |
+| `medical` | medicalization |
+| `care` | careers, carefulness |
 | `payment` → `pay` | pay, paying, payers, payable, payed |
+| `energy`, `utility` | energies, utilities *(the two §1 repairs, listed for completeness)* |
+| `health care`, `child care` | not describable as single surfaces — see §2's truth table |
+| the other five entries | nothing |
 
 > **CORRECTION, 2026-07-29.** The table above is the enumeration re-run against the shipped stemmer.
-> The version this section first published listed **`pays`, which does not match**, and omitted six
+> The version this section first published listed **`pays`, which does not match**, and omitted seven
 > surfaces that do: `hosters`, `networkers`, `clouding`, `payable`, `payed`, and — the two that were
 > not a matter of one suffix — **`serviceable` and `careers`**, two entries the original table did not
 > reach at all.
@@ -216,6 +220,30 @@ matched words are:
 > **Nothing here moves a verdict.** The stem test was already shipped and these surfaces were already
 > reached; what was wrong was the census of them, which is what §3 exists to be. A cost stated as
 > smaller than it is is not a cost that was accepted.
+
+> **CORRECTION TO THE CORRECTION, 2026-07-29 (later the same day).** The correction above was itself
+> incomplete, and its own count was wrong. Sol's second verification review found **`carefulness`**
+> (reaching `care`) and **`medicalization`** (reaching `medical`), neither of which the literal tests
+> reach; and the paragraph said "six surfaces" while naming seven. Both are in the table now.
+>
+> **Two hand enumerations failed the same way, so the hand is no longer the instrument.** Each version
+> generated the candidate space mechanically from the stemmer's suffix rules and then filtered it to
+> real English by eye, and a word dropped by eye leaves nothing behind to review — `carefulness` and
+> `medicalization` were in the generated space both times and were never ruled on.
+>
+> The judgments are now a fixture: `tests/fixtures/denylist-widening-census.json` records, per entry,
+> every mechanically generated candidate as either newly reached or rejected as a non-word.
+> `tests/lab-match-behavior.test.mjs` regenerates the space from the stemmer's own suffix inventory and
+> **fails if any candidate carries no verdict**, which is what makes a silent omission impossible
+> rather than merely unlikely. It also pins all four surfaces the two reviews contributed, and pins
+> that `pays` stems to itself.
+>
+> **The claim this section makes is now narrower and checkable.** It is not "these are the words the
+> widening reaches in English" — that was the unfalsifiable version, twice. It is "these are the
+> candidates the stemmer's own rules generate from the sixteen entries, each one ruled on in the open."
+> `hosters` and `payed` are recorded as the two arguable word calls and counted as words, which widens
+> the stated cost rather than narrowing it. A reviewer who disagrees can now contest one verdict
+> instead of the whole table.
 
 All but the `pay` family are the technical sense the denylist exists to reject, and are improvements —
 `the provider of hosted email` and `the provider for networked storage` are both now correctly
