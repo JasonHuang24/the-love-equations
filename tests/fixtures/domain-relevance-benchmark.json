@@ -35,6 +35,29 @@
       "ambiguousCases": "ds-08 is flagged for Jason. Its bare form ('his game was off last night') is genuinely two-way and the ignore label rests on a disambiguating clause. Per the fixture policy, deliberately borderline passages are excluded; this one is included WITH the disambiguation and the ambiguity recorded rather than silently resolved.",
       "measuredAtAppend": "152 cases · domainRecall 0.9054 · ignorePrecision 0.9014 · junkRecall 0.8205 — RED, below both hard thresholds. All seven ds positives were being set aside by the shipped v2.2.0 build.",
       "measuredAfterFix": "152 cases · domainRecall 1.000 · ignorePrecision 1.000 · junkRecall 0.821 (up from 0.806). Not one of the frozen 134 changed status or reasonCode."
+    },
+    {
+      "date": "2026-07-30",
+      "register": "cultural-register",
+      "caseIds": [
+        "cr-01",
+        "cr-02",
+        "cr-03",
+        "cr-04",
+        "cr-05",
+        "cr-06",
+        "cr-07",
+        "cr-08",
+        "cr-09",
+        "cr-10",
+        "cr-11",
+        "cr-12",
+        "cr-13",
+        "cr-14",
+        "cr-15",
+        "cr-16"
+      ],
+      "agreement": "Maintainer ruling: adopt option 1 from md/lab-gate-cultural-register.md. Committed RED, following the ds-* precedent, so the record shows the gap predates the fix. The gate retains claims ABOUT relationships and discards claims about CULTURE SHAPING relationships, which is the register most of the archived manosphere corpus is written in; six of eight minimal pairs in tests/fixtures/cultural-register-pairs.json split on a single word. Nine of the ten positives isolate the missing frame - each carries a participant term, a cultural force and a shaping verb, and no relational-outcome trigger, so nothing existing can retain them. cr-07 is the deliberate exception, already retained via the non-decisive relationship-concept frame at 2.2, kept to guard the existing path. The six negatives are the boundary the fix must preserve: culture-and-shaping with no human participant, or in a non-mating domain, stays out. No classifier code changes in this commit, per the append policy."
     }
   ],
   "cases": [
@@ -190,6 +213,22 @@
     { "id": "ds-15", "family": "polysemous-trap", "expected": "ignore", "register": "dating-commentary-seduction", "text": "That new sneaker colorway has rizz, easily the best drop of the year.", "note": "Append #2 (2026-07-29): `rizz` as generic slang praise with no relational claim." },
     { "id": "ds-16", "family": "polysemous-trap", "expected": "ignore", "register": "dating-commentary-seduction", "text": "The mascot has serious rizz and the crowd loved the whole halftime bit.", "note": "Append #2 (2026-07-29): `rizz` as generic slang praise, in a sports setting." },
     { "id": "ds-17", "family": "polysemous-trap", "expected": "ignore", "register": "dating-commentary-seduction", "text": "Resumes with under five years of experience get filtered out before a recruiter ever reads them.", "note": "Append #2 (2026-07-29): recruiting trap, structurally parallel to ds-06 sentence-for-sentence, differing only in the screened population." },
-    { "id": "ds-18", "family": "polysemous-trap", "expected": "ignore", "register": "dating-commentary-seduction", "text": "The team was out of their league in the quarterfinal and lost by thirty.", "note": "Append #2 (2026-07-29): sports sense of the `out of X league` idiom ds-05 depends on." }
+    { "id": "ds-18", "family": "polysemous-trap", "expected": "ignore", "register": "dating-commentary-seduction", "text": "The team was out of their league in the quarterfinal and lost by thirty.", "note": "Append #2 (2026-07-29): sports sense of the `out of X league` idiom ds-05 depends on." },
+    { "id": "cr-01", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Media that ridiculed masculinity for a generation changed how young men present themselves.", "note": "Append #3 (2026-07-30): media as cultural force acting on how men present themselves; no relational-outcome trigger anywhere." },
+    { "id": "cr-02", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Family law encodes one parent's interests as the neutral baseline when a household dissolves.", "note": "Append #3 (2026-07-30): law as cultural force; `household dissolves` deliberately avoids the marriage frame." },
+    { "id": "cr-03", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Social conventions around pairing up were rewritten without the people following them voting on it.", "note": "Append #3 (2026-07-30): the minimal-pair partner of a retained phrasing that differs only by the word `courtship`." },
+    { "id": "cr-04", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "The operative frame in which adults encounter each other is culturally manufactured, not natural.", "note": "Append #3 (2026-07-30): names frameworks:operative-frame, a canon entry, and was discarded before the matcher saw it." },
+    { "id": "cr-05", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Conditioning teaches young people to distrust the qualities their parents were taught to admire.", "note": "Append #3 (2026-07-30): conditioning across generations; the shaping verb is `teaches`, not a selection verb." },
+    { "id": "cr-06", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "The script most adults inherit for a good life no longer has the household at its centre.", "note": "Append #3 (2026-07-30): inherited cultural script; `household` rather than `marriage` keeps the outcome frames out." },
+    { "id": "cr-07", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Institutional discourse frames the desire of young men as inherently suspect.", "note": "Append #3 (2026-07-30): kept deliberately as a CONTROL: already retained at freeze via the non-decisive relationship-concept frame, so it guards the existing path." },
+    { "id": "cr-08", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Advertising manufactures anxiety in women about ageing, and they internalise it.", "note": "Append #3 (2026-07-30): commercial culture acting on women; `about ageing` carries no selection verb." },
+    { "id": "cr-09", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Shame is the mechanism that stops most people from questioning what the culture calls normal.", "note": "Append #3 (2026-07-30): shame as the enforcement mechanism for a cultural default." },
+    { "id": "cr-10", "family": "indirect-mechanism", "expected": "retain", "register": "cultural-register", "text": "Entertainment taught a whole cohort of men what to expect from women, and the lesson was false.", "note": "Append #3 (2026-07-30): `expect` is deliberately not one of the selection verbs, so cross-sex-selection cannot fire." },
+    { "id": "cr-11", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Tax law encodes one industry's interests as the neutral baseline for every filing season.", "note": "Append #3 (2026-07-30): same law-as-baseline construction as cr-02 with no human participant; must stay out." },
+    { "id": "cr-12", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "The advertising industry manufactures cultural anxiety in order to sell moisturiser.", "note": "Append #3 (2026-07-30): culture and manufacture with nobody in the sentence; the boundary the fix must preserve." },
+    { "id": "cr-13", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Institutional discourse frames the bond market as inherently fragile.", "note": "Append #3 (2026-07-30): the cr-07 construction in a finance sense." },
+    { "id": "cr-14", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Conditioning in the training data shapes what the model treats as normal output.", "note": "Append #3 (2026-07-30): machine-learning sense of conditioning, training and normal." },
+    { "id": "cr-15", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "The script for the quarterly earnings call was rewritten by the communications team.", "note": "Append #3 (2026-07-30): the cr-06 construction with a corporate script and no participant." },
+    { "id": "cr-16", "family": "polysemous-trap", "expected": "ignore", "register": "cultural-register", "text": "Building codes were rewritten without the trades being consulted about the change.", "note": "Append #3 (2026-07-30): the cr-03 construction in a construction-industry sense." }
   ]
 }
