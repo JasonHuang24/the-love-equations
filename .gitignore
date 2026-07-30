@@ -32,3 +32,7 @@ lab-corpus/
 # LE Lab reviewer feedback inbox (flag files carry source excerpts; local triage
 # only, like lab-corpus/). Adjudicated cases reach the repo as fixture commits.
 lab-feedback/
+
+# Agent-run scratch output (doctrine runs, workflow intermediates). Durable
+# results reach the repo as md/ records and commits; this dir is local-only.
+artifacts/
