@@ -352,23 +352,51 @@ test('RED D3: every fate is exercised, so none of them is untested vocabulary', 
   [...FATES].forEach((fate) => assert.ok(seen.has(fate), `some fixture produces a ${fate} candidate`));
 });
 
-test('RED D4: threshold-hidden candidates are not counted as cap-hidden', () => {
+/*
+ * Constructed, not searched for — the same repair D3 needed, for the same
+ * reason. This used to scan the demo for a row whose hidden candidates were all
+ * sub-threshold, and overlay tranche 2 raised enough scores that no demo row had
+ * that shape any more. The guard failed having found no defect.
+ *
+ * The condition the test needs is one claim with hidden candidates that are ALL
+ * below minWeakScore, so it is now stated as a claim and asserted. The margin is
+ * thin by nature — a hidden candidate sits just under the weak line almost by
+ * definition — so the precondition is asserted separately with its own message.
+ * If a future canon change pushes one over, the failure says which.
+ */
+const THRESHOLD_HIDDEN_CLAIM = 'The pick-me label polices women who describe how women date.';
+
+test('RED D4: threshold-hidden candidates are not counted as cap-hidden', async () => {
   // The release report's worked example: 8 candidates, 3 displayed, and five
   // reported "HIDDEN BY DISPLAY CAPS" — of which every one was actually below
   // the weak threshold at 0.119, 0.116, 0.105 and lower. Nothing was cap-hidden
   // on that row at all.
-  const belowThresholdRow = analysis.segments.find((segment) => {
-    const traced = diagnostics.claimUnits.find((unit) => unit.segmentId === segment.unit.id);
-    if (!traced) return false;
-    const notDisplayed = traced.candidates.filter((c) => c.display === 'not-displayed');
-    return notDisplayed.length > 0
-      && notDisplayed.every((c) => c.score < SCORING_CONFIG.minWeakScore);
+  const probeDocument = normalizeInput({
+    text: THRESHOLD_HIDDEN_CLAIM,
+    source: { title: 'threshold-hidden probe' },
+    createdAt: '1970-01-01T00:00:00.000Z',
   });
-  assert.ok(belowThresholdRow, 'the demo has a row whose hidden candidates are all sub-threshold');
+  const probe = await analyzeDocument(probeDocument, canonIndex, { diagnostics: true });
+  const probeDiagnostics = probe.diagnostics;
+  const plainProbe = { ...probe };
+  delete plainProbe.diagnostics;
 
-  const feedback = flag({
-    segmentId: belowThresholdRow.unit.id,
-    review: { disposition: belowThresholdRow.mapped ? 'wrong-primary' : 'missing-expected-concept' },
+  const traced = probeDiagnostics.claimUnits[0];
+  const notDisplayed = traced.candidates.filter((c) => c.display === 'not-displayed');
+  assert.ok(notDisplayed.length > 0,
+    'the probe claim must produce candidates that are not displayed at all');
+  assert.ok(notDisplayed.every((c) => c.score < SCORING_CONFIG.minWeakScore),
+    'every hidden candidate must be sub-threshold for this row to isolate the defect, '
+    + `highest was ${Math.max(...notDisplayed.map((c) => c.score))} against ${SCORING_CONFIG.minWeakScore}`);
+
+  const segment = probe.segments.find((s) => s.unit.id === traced.segmentId);
+  const feedback = buildMappingFeedback({
+    analysis: plainProbe,
+    diagnostics: probeDiagnostics,
+    segmentId: traced.segmentId,
+    labRelease: '2.4.2',
+    generatedAt: '2026-07-29T00:00:00.000Z',
+    review: { disposition: segment.mapped ? 'wrong-primary' : 'missing-expected-concept' },
   });
   assert.equal(feedback.candidateTrace.hiddenByDisplayCaps, 0,
     'no candidate on this row was pushed off the ledger by a cap');

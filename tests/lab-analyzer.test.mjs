@@ -747,12 +747,25 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
   const weakResult = await analyzeDocument(normalizeInput({ text: weakGenericClaim }), REAL_CANON);
   const weakPassage = weakResult.segments[0];
   assert.equal(weakPassage.mapped, false);
-  assert.equal(weakPassage.weakMatches[0].title, 'Common interests');
-  // IDF is computed across the canon, so this score moves whenever the index
-  // gains text — new entries or new match parameters on existing ones.
-  // 0.436 at 450 concepts; 0.437 at 463; 0.436 again once overlay tranche 1
-  // enriched 73 previously bare entries.
-  assert.equal(weakPassage.weakMatches[0].score, 0.436);
+  /*
+   * The neighbour changed with overlay tranche 2, and it changed in the
+   * direction the test is about. Availability ("actually free to invest —
+   * emotionally, practically, and in timing") is the apter neighbour for a claim
+   * about time to sustain a relationship than Common interests ever was; it
+   * gained a match surface in tranche 2 and now outranks it.
+   *
+   * The point of this test is that score alone cannot admit a match. That got
+   * STRONGER, not weaker: the top weak score rose from 0.436 to 0.538 — well
+   * past minCredibleScore 0.43 — and the admission guard still refuses to map
+   * it. A pin that only ever moved down would not have shown that.
+   *
+   * IDF is computed across the canon, so this score moves whenever the index
+   * gains text. 0.436 at 450 concepts; 0.437 at 463; 0.436 again after tranche 1
+   * enriched 73 bare entries; 0.538 once tranche 2 gave this entry its own.
+   */
+  assert.equal(weakPassage.weakMatches[0].title, 'Availability');
+  assert.equal(weakPassage.weakMatches[0].score, 0.538);
+  assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
   assert.deepEqual(weakResult.researchQueue.items.map((item) => item.excerpt), [weakGenericClaim]);

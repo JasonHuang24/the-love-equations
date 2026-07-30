@@ -30,6 +30,34 @@ assert.deepEqual(index.stats.byCategory, {
   Statistics: 31,
 });
 
+/*
+ * Match-surface coverage, pinned because it is the thing two overlay tranches
+ * were for and nothing else in the suite would notice it disappearing. Every
+ * entry in these four categories carries a commonMisreading, which is the field
+ * the Contradicts branch reads: before tranche 2 the branch was dark on 132 of
+ * 133 Gender Dynamics cards, 36 of 41 Love Hierarchy factors, all 35 Deep Dive
+ * entries and 27 of 31 charts. A harvester or overlay regression that dropped
+ * them would leave the canon still valid, still 463 concepts, and unable to
+ * disagree with anything.
+ *
+ * Stated as complete coverage per category rather than as a total, so the
+ * assertion says what it means and does not quietly pass when 234 misreadings
+ * are replaced by 234 somewhere else.
+ */
+for (const category of ['Gender Dynamics', 'Love Hierarchy', 'Deep Dives', 'Statistics']) {
+  const inCategory = index.entries.filter((entry) => entry.category === category);
+  const dark = inCategory.filter((entry) => !entry.commonMisreadings.length);
+  assert.equal(dark.length, 0,
+    `${category}: ${dark.length} entries carry no commonMisreading, so the Contradicts `
+    + `branch is dark for them (first: ${dark[0]?.id})`);
+}
+// The remaining 56 are Lexicon (32), Mythbuster (10), Five Levers (7),
+// Rules & Frameworks (5), Pill Dossiers (1) and Instruments (1) — the tranche-3
+// backlog. Pinned so it can only ever go down deliberately.
+assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).length, 56);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 407);
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 413);
+
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
 assert.equal(required('frameworks:conversion-ladder').anchor, 'conversion-ladder');

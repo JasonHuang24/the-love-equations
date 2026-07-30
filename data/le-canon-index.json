@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+ce8582224e61",
+  "indexVersion": "1.0.0+01e6ed1457f7",
   "generatedAt": "2026-07-30T07:07:00.000Z",
   "sourcePages": [
     {
@@ -251,8 +251,8 @@
     },
     "anchoredConceptCount": 372,
     "conceptsWithExternalSources": 77,
-    "dependencyCount": 229,
-    "relatedCount": 314
+    "dependencyCount": 228,
+    "relatedCount": 308
   },
   "entries": [
     {
@@ -320,8 +320,12 @@
         "hierarchy:overview"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is one named person's stated preference ordering, published so it can be argued with; it is not a claim about what men in general rank first."
+      ],
+      "commonMisreadings": [
+        "A woman who passes every tier in Jason's hierarchy has earned a relationship with him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -345,9 +349,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Any single factor unmet → immediate disqualification. No exceptions, short- or long-term."
+        "Any single factor unmet → immediate disqualification. No exceptions, short- or long-term.",
+        "Tier 1 holds three factors that must all clear, so ranking looks first does not make looks sufficient."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Physical attractiveness alone carries a woman through the primary tier, with classiness and attraction optional."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -371,9 +378,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Any single factor unmet → immediate disqualification. No exceptions, short- or long-term."
+        "Any single factor unmet → immediate disqualification. No exceptions, short- or long-term.",
+        "Classiness here is bearing and self-presentation; sexual history sits in the separate secondary factor for baggage."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Classiness means a man wants a woman who is sexually inexperienced rather than dignified in bearing."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -397,9 +407,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Any single factor unmet → immediate disqualification. No exceptions, short- or long-term."
+        "Any single factor unmet → immediate disqualification. No exceptions, short- or long-term.",
+        "The factor asks for visible mutual pull, which means it cannot be satisfied by a woman's willingness to be pursued."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman tolerating his interest counts as attraction towards him at the primary tier."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -423,9 +436,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "All three met → long-term eligible. Partial → short-term only."
+        "All three met → long-term eligible. Partial → short-term only.",
+        "Low-friction company is about temperament, not compliance; a woman who argues well can still be easy to be around."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Men want an easygoing woman who agrees with him and avoids every disagreement."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -449,9 +465,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "All three met → long-term eligible. Partial → short-term only."
+        "All three met → long-term eligible. Partial → short-term only.",
+        "The factor asks her to carry a share, not to lead; it is a complaint about one-sided effort rather than a preference for being led."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Assertiveness in a woman means she leads the relationship while he follows her plans."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -475,9 +494,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "All three met → long-term eligible. Partial → short-term only."
+        "All three met → long-term eligible. Partial → short-term only.",
+        "The factor is about unresolved damage and ongoing chaos, which a partner count measures only loosely and sometimes not at all."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman's partner count is the whole of purity, so a low number clears this factor."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -501,9 +523,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Assumed in a long-term context — these factors sustain the relationship."
+        "Assumed in a long-term context — these factors sustain the relationship.",
+        "Tertiary placement records what gets evaluated last, not what matters least once a relationship is actually running."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Shared values matter more to him than physical attraction, so alignment outranks the primary tier."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -527,9 +552,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Assumed in a long-term context — these factors sustain the relationship."
+        "Assumed in a long-term context — these factors sustain the relationship.",
+        "Shared interests give a relationship texture; they are placed third because overlap can be built where attraction cannot."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A couple with the same hobbies has the compatibility that decides whether the relationship lasts."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -553,9 +581,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Assumed in a long-term context — these factors sustain the relationship."
+        "Assumed in a long-term context — these factors sustain the relationship.",
+        "Availability covers emotional and practical capacity as well as timing, so being unattached does not establish it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A single woman with free time is available, whatever she is still emotionally carrying."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -582,8 +613,12 @@
         "hierarchy:overview"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is a synthesis of two AI proposals about central tendency, arbitrated by hand; it describes an average gate and no individual man's."
+      ],
+      "commonMisreadings": [
+        "A man wants a woman for her status, income and achievement, exactly as women weigh his."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -607,9 +642,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it."
+        "Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it.",
+        "Vitality is part of this factor rather than a separate one, which is why the gate is written as appeal plus energy."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman's face and body decide his desire, so youth, health and energy add little."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -633,9 +671,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it."
+        "Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it.",
+        "Receptivity means warmth actually returned; passive evaluation reads as absence of it, not a quieter version of it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man desires a woman who politely tolerates his attention, since tolerance reads as receptivity."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -659,9 +700,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it."
+        "Fail any one and she never enters the frame — desire is the gate, and warmth, values, or loyalty can't manufacture it.",
+        "Low friction sits at the desire gate rather than the attachment gate, which is the claim that attraction can be extinguished early."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman's combative and chaotic streak stops mattering once a man finds her attractive enough."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -685,9 +729,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in."
+        "Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in.",
+        "Warmth is what the attachment gate weighs on the way to commitment; placing it after commitment inverts the sequence."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman's warmth toward a man matters only after he has committed to the relationship."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -711,9 +758,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in."
+        "Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in.",
+        "This factor is about the absence of reasons to doubt, so manufactured competition works against it rather than for it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman playing a man against other suitors deepens his attachment and his desire for exclusivity."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -737,9 +787,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in."
+        "Clear it and he can attach. Fail it and she stays attractive but short-term — unsafe to invest in.",
+        "Admiration here means valuing his effort as his; being useful to her ambitions is the failure mode the factor names."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman can want a man as a status accessory and still genuinely admire him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -763,9 +816,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Where a life holds together — values, stability, and daily compatibility decide whether it lasts."
+        "Where a life holds together — values, stability, and daily compatibility decide whether it lasts.",
+        "Gate 3 is the last gate, not an optional one; alignment is evaluated late and still has to hold."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man can marry a woman who wants a completely different domestic life and still fit."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -789,9 +845,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Where a life holds together — values, stability, and daily compatibility decide whether it lasts."
+        "Where a life holds together — values, stability, and daily compatibility decide whether it lasts.",
+        "The factor is about repair after conflict, not the absence of conflict, so a couple who fight and reconcile clear it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Constant drama makes a man desire a woman more, so volatility signals passion rather than misfit."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -815,9 +874,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Where a life holds together — values, stability, and daily compatibility decide whether it lasts."
+        "Where a life holds together — values, stability, and daily compatibility decide whether it lasts.",
+        "Practical fit is placed last because it is negotiable, which is different from being automatic."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Two partners with incompatible money habits and daily routines will settle it once love is strong."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -844,8 +906,12 @@
         "hierarchy:overview"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is a central tendency synthesized from mate-preference research; individual variation around it is wide enough that the ordering will be wrong for many women."
+      ],
+      "commonMisreadings": [
+        "Every woman ranks confidence, status and physical attractiveness the same way this central tendency does."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -869,9 +935,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Any single factor unmet → no real attraction. Disqualifying, short- or long-term."
+        "Any single factor unmet → no real attraction. Disqualifying, short- or long-term.",
+        "Frame here means holding his own centre, which is compatible with vulnerability and distinct from suppressing feeling."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a man who leans on them for reassurance, since dependence signals confident frame."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -895,9 +964,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Any single factor unmet → no real attraction. Disqualifying, short- or long-term."
+        "Any single factor unmet → no real attraction. Disqualifying, short- or long-term.",
+        "Status in this tier is read off competence and trajectory; measured income sits lower, in the tertiary provision factor."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a man's income rather than his direction, so drive without earnings weighs little."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -921,9 +993,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Any single factor unmet → no real attraction. Disqualifying, short- or long-term."
+        "Any single factor unmet → no real attraction. Disqualifying, short- or long-term.",
+        "Attractiveness is stated as attractiveness to her, which makes it a fit question rather than a universal ranking of male faces."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a man's looks least, so grooming and masculine presence stay optional for him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -947,9 +1022,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "All three met → long-term eligible. Partial → short-term / situationship only."
+        "All three met → long-term eligible. Partial → short-term / situationship only.",
+        "The factor is named hard-to-fake for a reason; it is the one item on this list that resists deliberate construction."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Chemistry between a man and a woman can be manufactured by following the right routine."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -973,9 +1051,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "All three met → long-term eligible. Partial → short-term / situationship only."
+        "All three met → long-term eligible. Partial → short-term / situationship only.",
+        "Leadership here is about making plans and making her feel chosen, which is a claim about initiative and not about authority over her."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man who waits for a woman to make the plans is leading the courtship well."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -999,9 +1080,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "All three met → long-term eligible. Partial → short-term / situationship only."
+        "All three met → long-term eligible. Partial → short-term / situationship only.",
+        "Steadiness is placed second, behind desire factors — which says it rarely creates attraction on its own, not that it costs him any."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman wants a man's unpredictability, so steady kind treatment lowers her attraction to him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1025,9 +1109,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Weighted toward provision & commitment for the long haul — these sustain the relationship."
+        "Weighted toward provision & commitment for the long haul — these sustain the relationship.",
+        "Provision is tertiary in this reading, which is the diagonal the page is built to show: status opens the gate, measured provision does not."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man's ability to provide is what first makes a woman want him, ahead of everything."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1051,9 +1138,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Weighted toward provision & commitment for the long haul — these sustain the relationship."
+        "Weighted toward provision & commitment for the long haul — these sustain the relationship.",
+        "Commitment is evaluated once desire and trust are established; its low placement is about sequence, not about how much it matters."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man's willingness to commit is what creates a woman's attraction rather than following it."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1077,9 +1167,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Weighted toward provision & commitment for the long haul — these sustain the relationship."
+        "Weighted toward provision & commitment for the long haul — these sustain the relationship.",
+        "Alignment is a filter applied to people already wanted, so it can end a relationship without ever having started one."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A couple aligned on children and lifestyle will feel attraction because the big questions match."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1106,8 +1199,12 @@
         "hierarchy:overview"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The claim is about ordering, not worth: kindness and loyalty are described as real and powerful once the first filter has cleared."
+      ],
+      "commonMisreadings": [
+        "Kindness and loyalty put a man through her first gate, before attraction and masculine competence."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1131,9 +1228,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it."
+        "Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it.",
+        "The factor names the physical channel plainly, including voice and presence, because softer language for it tends to hide rather than replace it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Calling it a vibe means women want personality first, with physical presence a later filter."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1157,9 +1257,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it."
+        "Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it.",
+        "Competence sits at the desire gate as a read taken early from bearing and social ease, not as a verified record of achievement."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a capable-seeming man only after trust is already fully established between them."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1183,9 +1286,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it."
+        "Fail any one and he never enters the frame. Attraction opens the door, competence keeps it romantic, safety lets her stay in it.",
+        "Calibration is about reading the room while still showing interest; the factor rules out neither pursuit nor directness."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a man whose interest arrives intensely and fast, so feeling trapped is her problem."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1209,9 +1315,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive."
+        "Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive.",
+        "Consistency is a trust-gate factor, which means it is what converts early interest into something durable rather than what creates the interest."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a man who vanishes and reappears, so steady follow-through weakens her trust."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1235,9 +1344,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive."
+        "Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive.",
+        "The factor explicitly pairs warmth with non-neediness, so it treats the two as separable rather than as points on one dial."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women reject a man attuned to their feelings, because noticing her reads as neediness."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1261,9 +1373,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive."
+        "Clear all three and she relaxes into the risk. Gaps here keep him at arm's length, however attractive.",
+        "Selectivity is about being chosen specifically; it is a claim about how investment is read, not an instruction to withhold it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a man who pursues every available woman, since volume signals high value."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1287,9 +1402,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts."
+        "Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts.",
+        "The factor is written as functional rather than rich, which makes it a read on how he handles adult life at any income."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want a man's wealth alone, so discipline and direction count for little."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1313,9 +1431,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts."
+        "Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts.",
+        "Which values are load-bearing varies by couple; the factor names the categories to check and does not rank them."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man can marry a woman with opposite family plans and ambitions and still fit."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -1339,9 +1460,12 @@
       ],
       "related": [],
       "boundaryConditions": [
-        "Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts."
+        "Where a life is built — values, provision capacity, and who he becomes under pressure decide whether it lasts.",
+        "This factor is placed last because pressure is what reveals it, which means it is usually observed after the earlier gates have already cleared."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women choose a man on his courtship behaviour, so conduct under pressure reveals less."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3816,8 +3940,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The climb is described as uneven and partial; naming it one of the few movable areas is not a promise that any given man moves."
+      ],
+      "commonMisreadings": [
+        "Every lever climbs at the same rate, so any man who trains will attract women."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3840,8 +3968,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The inversion is a change in who makes offers, not a change in whether the market can move against him again."
+      ],
+      "commonMisreadings": [
+        "Crossing the SMV threshold means women want a man permanently, so he stops filtering altogether."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3864,8 +3996,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Back-loaded describes a typical shape, not a guarantee; the card's actual claim is about how early rejection should be read."
+      ],
+      "commonMisreadings": [
+        "A man rejected early has weak leverage permanently, so building competence and status changes little."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3886,8 +4022,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Construction is offered as the rational response to being the default offer, which is a claim about strategy rather than about fairness."
+      ],
+      "commonMisreadings": [
+        "Bitterness is the rational male response once a man sees that women want the strongest offer."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3910,8 +4050,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A flat refusal after an invitation to be direct is read here as the invitation being insincere, not as an obligation to say yes."
+      ],
+      "commonMisreadings": [
+        "A woman asking a man to say what he wants will welcome any answer he gives."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3932,8 +4076,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card changes the framing and keeps the intent; it is a claim about delivery, not permission to conceal what is wanted."
+      ],
+      "commonMisreadings": [
+        "Wrapping the intention is dishonest, so a man who wants sex should state it bluntly."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3954,8 +4102,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The defence depends on context making the meaning obvious; the same line in an ambiguous setting would be the cop-out the card names."
+      ],
+      "commonMisreadings": [
+        "A man who whispers that he wants to make her feel good is hiding the ball."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -3978,8 +4130,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This card grants the other side's complaint; granting it does not withdraw the punished-directness claim it sits beside."
+      ],
+      "commonMisreadings": [
+        "Women complaining that male attention feels transactional on dating apps are inventing the pattern."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4000,8 +4156,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Training is meant in the behavioural sense of what gets rewarded, which is a claim about aggregate response rather than intent."
+      ],
+      "commonMisreadings": [
+        "Women reward direct men, so hiding intentions costs a guy attraction on every date."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4024,8 +4184,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Plausible deniability is described as the mechanism; describing why the move works is not an endorsement of using it to obscure consent."
+      ],
+      "commonMisreadings": [
+        "Inviting a woman over for wine works because both sides want the deniability removed."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4046,8 +4210,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The filtering is an aggregate effect across many individual choices, so it implies nothing about any one woman's dating pool."
+      ],
+      "commonMisreadings": [
+        "Women who reject blunt men keep their dating pool exactly as wide as before."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4068,8 +4236,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card redirects the question inward; doing so does not establish that the market has stayed the same underneath."
+      ],
+      "commonMisreadings": [
+        "Asking where the good men went settles why a woman attracts fewer of the men she wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4092,8 +4264,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Explaining where the resentment comes from is not a defence of it; the neighbouring cards argue against letting it curdle."
+      ],
+      "commonMisreadings": [
+        "Men resent the gap wrongly, since women want honest guys and smooth talkers equally."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4114,8 +4290,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Conditioning is the weaker and more defensible claim: shared programming produces a shared pattern without anyone coordinating it."
+      ],
+      "commonMisreadings": [
+        "Women want the script they were taught, and they coordinate the mismatch deliberately."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4136,8 +4316,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This explains why the industry grew, which is a different question from whether what it teaches is true or worth learning."
+      ],
+      "commonMisreadings": [
+        "Game became an industry because honest men were already attracting the women they wanted."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4158,8 +4342,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Two types is a deliberate simplification of a spectrum; most men sit somewhere between playing fully and refusing entirely."
+      ],
+      "commonMisreadings": [
+        "Every man learns game eventually, so the honest and direct ones date just as well."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4182,8 +4370,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The loop is a pattern some men live through, not a law; plenty of honest men never enter it and some settled pairings work."
+      ],
+      "commonMisreadings": [
+        "A woman who settles for the honest guy comes to desire him once she commits."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4204,8 +4396,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The analogy is offered for how the process feels, and it breaks down precisely where volume stops helping."
+      ],
+      "commonMisreadings": [
+        "Modern dating rewards effort like a job hunt, so more applications reliably win a partner."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4228,8 +4424,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Low investment lowers the emotional cost and the odds together; it is a way to stay in without grinding, not a strategy for winning."
+      ],
+      "commonMisreadings": [
+        "Playing lightly means quitting dating, since low investment and total withdrawal are identical."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4252,8 +4452,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Calling the slogans a deflection is a claim about why they get repeated, not proof that every pattern they dismiss is real."
+      ],
+      "commonMisreadings": [
+        "Being yourself and waiting for the right person is the advice that actually finds partners."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4274,8 +4478,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Both pieces of advice are treated as true but incomplete, which is a repair rather than a rejection of them."
+      ],
+      "commonMisreadings": [
+        "Being nice is enough on its own, so a woman will want a man who is kind."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4296,8 +4504,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is a claim about what people say in public, not about whether attraction or values actually drives them."
+      ],
+      "commonMisreadings": [
+        "People admit plainly that attraction and status drive their dating choices rather than values."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4318,8 +4530,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Convergence among people reasoning the same way is weak evidence on its own; shared premises reach shared conclusions whether or not they hold."
+      ],
+      "commonMisreadings": [
+        "Men who analyse dating coldly reach wildly different conclusions, so the patterns are imagined."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4340,8 +4556,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Usually is doing real work in this card; it describes a common trajectory and not an inevitable one."
+      ],
+      "commonMisreadings": [
+        "Women course-correct early, so most reassess their dating choices well before options thin out."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4362,8 +4582,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Self-acceptance and facing what is changeable are treated as compatible; the target is the version taken far enough to discourage either."
+      ],
+      "commonMisreadings": [
+        "Body positivity changes what men find attractive, so a woman can shift the market by demanding it."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4386,8 +4610,12 @@
       "related": [
         "statistics:stat-mythbuster"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Eastwick & Finkel measured live face-to-face settings; stated preferences and app behaviour are separate measurements that need not agree."
+      ],
+      "commonMisreadings": [
+        "Speed-dating research shows looks matter far less to women than to men when they meet face to face."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4408,8 +4636,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The reading depends on context — the same advice given unprompted, or to someone genuinely over-invested, can be exactly what it says."
+      ],
+      "commonMisreadings": [
+        "Telling a man to find hobbies outside dating is neutral life advice about balance."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4430,8 +4662,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card names a fear of social rejection rather than a character flaw, and the same pressure operates on men in their own groups."
+      ],
+      "commonMisreadings": [
+        "Social approval matters little to women, so they break ranks to defend the men they want."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4452,8 +4688,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Stated male preference for the natural look is survey-grade evidence, and some cosmetic work is done for reasons that have nothing to do with either audience."
+      ],
+      "commonMisreadings": [
+        "Women get cosmetic work because men want it, so male preference drives the fillers and BBLs."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4476,8 +4716,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Both eras carried herd pressure; that leaves open whether either script served the women following it."
+      ],
+      "commonMisreadings": [
+        "Today's independence script is freely chosen, unlike the 1950s pressure that pushed women to marry."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4498,8 +4742,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Group-level tendencies and individual variation are both real; the card rejects the rebuttal, not the variation it points at."
+      ],
+      "commonMisreadings": [
+        "Noticing that women move together as a group means claiming every woman wants identical things."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4520,8 +4768,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A lot is not most: this describes a visible pattern among some women rather than a general female preference for instability."
+      ],
+      "commonMisreadings": [
+        "Women avoid dangerous edgy men, so the thug-type attraction is a story guys invented."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4544,8 +4796,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card grants that game works on the metric of dates and sex; the emptiness it names is a separate cost, not evidence the technique fails."
+      ],
+      "commonMisreadings": [
+        "Learning pickup leaves a man fulfilled once women want him, mask and all."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4566,8 +4822,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Game is treated as a scale, so the argument for a required minimum is not an argument for the manipulative end of it."
+      ],
+      "commonMisreadings": [
+        "Baseline game means manipulating women, so a socially awkward man can still date well."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4588,8 +4848,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The example lines are illustrations of a register, not scripts; delivered without the calibration the neighbouring cards demand they land badly."
+      ],
+      "commonMisreadings": [
+        "Asking a woman how her day was creates the tension that makes her want him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4610,8 +4874,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Built rather than born is a claim about the trainable share, and it sits beside cards saying the starting point still differs by temperament."
+      ],
+      "commonMisreadings": [
+        "Men born bold attract women, so practice changes little for anyone else."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4632,8 +4900,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card's own title carries the limit: practice means lowering the stakes for yourself, not misrepresenting your interest to someone else."
+      ],
+      "commonMisreadings": [
+        "Treating every conversation as a final exam is how a man learns to attract women."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4654,8 +4926,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The advice is to stop censoring, which is different from advising the unfiltered version regardless of what it contains."
+      ],
+      "commonMisreadings": [
+        "A woman wants the careful, polite, personality-off version of a man, so restraint reads as authentic."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4676,8 +4952,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Mirroring explains some flat exchanges and not all of them; raising the energy is a test, not a way to overturn a real no."
+      ],
+      "commonMisreadings": [
+        "A flat conversation proves a woman rejects him, whatever energy he brought to it."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4698,8 +4978,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card conditions the advice on current leverage, which means it changes as leverage does rather than being right or wrong outright."
+      ],
+      "commonMisreadings": [
+        "Refusing to chase works at any level, so an average man can reject women like the top tier."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4720,8 +5004,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The dilemma is stated for men whose real presentation gets no traction; it is not a claim that every man faces the same choice."
+      ],
+      "commonMisreadings": [
+        "Women are attracted to the real personality underneath the mask, so game sustains a relationship."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4742,8 +5030,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The language analogy cuts both ways: hard to acquire, and genuinely learnable rather than fixed at birth."
+      ],
+      "commonMisreadings": [
+        "Game is a handful of memorised lines any man can use to attract women."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4764,8 +5056,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The same process producing opposite experiences is a claim about temperament, not about who deserves an outcome."
+      ],
+      "commonMisreadings": [
+        "Dating is fun for everyone, so a man who dislikes the chase enjoys it equally."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4788,8 +5084,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Treat her like a woman you are attracted to means adding flirtation, not subtracting the ordinary respect the advice was reaching for."
+      ],
+      "commonMisreadings": [
+        "Treating a woman you want exactly like a regular person is the route to attraction."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4810,8 +5110,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Green lights make escalation reasonable rather than guaranteed welcome; they can be withdrawn at any point and the next card covers that."
+      ],
+      "commonMisreadings": [
+        "A man should escalate identically whether a woman smiles and touches him or rejects it."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4832,8 +5136,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Fantasy talk is treated as genuine interest that has not yet become a plan, so the card slows the escalation without dismissing the signal."
+      ],
+      "commonMisreadings": [
+        "Flirty fantasy texting means a woman wants to come over tonight, so escalate immediately."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4854,8 +5162,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Flowing with an off-ramp is about pressure and calibration; it is not advice to abandon direction whenever anything is uncertain."
+      ],
+      "commonMisreadings": [
+        "Doubling down on his plan when a woman slows things reads as confident and attractive."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4876,8 +5188,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Rejecting the asshole advice is not rejecting boldness; the card asks for playfulness and social awareness held at once."
+      ],
+      "commonMisreadings": [
+        "Being a cocky arrogant asshole is real confidence, which is what women want in men."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4898,8 +5214,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Naming weak signals as a real problem does not make every missed signal her fault; the grey zone still requires a judgement call."
+      ],
+      "commonMisreadings": [
+        "Ambiguous signals are a fair test, and a real man will read what a woman wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4920,8 +5240,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card's whole method is that delivery disambiguates, so the phrase carries no fixed meaning on its own."
+      ],
+      "commonMisreadings": [
+        "A woman saying that's hot is always flirting, whatever her tone and delivery suggest."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4944,8 +5268,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is one of the few signals the page treats as unambiguous, which is why it is stated flatly rather than hedged."
+      ],
+      "commonMisreadings": [
+        "A woman who offers to be his wingwoman and discusses other men wants him romantically."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4966,8 +5294,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Almost zero margin describes the early romantic lane; established relationships and friendships are explicitly the contrast case."
+      ],
+      "commonMisreadings": [
+        "Dating forgives fumbles the way friendships do, so one awkward date costs a man little."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -4990,8 +5322,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card explains the freeze as risk management rather than indifference, which is a diagnosis and not a defence of it."
+      ],
+      "commonMisreadings": [
+        "A flat thanks to a woman's compliment reads as flirting rather than a closed door."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5012,8 +5348,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The contrast effect explains a difference in calibration, not a difference in how much attention either man actually receives."
+      ],
+      "commonMisreadings": [
+        "A man who was always attractive reads a woman's interest more sharply than a glow-up man."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5036,8 +5376,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This traces where the over-caution comes from; explaining the origin of the clamp is not the same as excusing staying inside it."
+      ],
+      "commonMisreadings": [
+        "A man readier to attract women is one who watched them mock a failed shot."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5060,8 +5404,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The bind is specific to being paid to be friendly; away from the register the same signal is readable and actionable."
+      ],
+      "commonMisreadings": [
+        "Flirting received at work is easy to act on, so a man can reciprocate freely."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5082,8 +5430,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The cost named here is informational: a flat answer forecloses learning, which is a separate matter from whether it was the polite choice."
+      ],
+      "commonMisreadings": [
+        "The safest customer-service reply to a woman's opening tells a man exactly what she wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5106,8 +5458,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The arrangement usually runs without anyone stating it, so naming it describes an exchange rather than alleging a deliberate scheme."
+      ],
+      "commonMisreadings": [
+        "A woman keeping several male friends for validation wants each of them romantically."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5128,8 +5484,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card names a genuine gain without disputing the loss; both sit in the same arrangement at the same time."
+      ],
+      "commonMisreadings": [
+        "The safe guy role is pure loss, and a man learns little about what women want."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5152,8 +5512,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Usually and can backfire are the card's own hedges; a genuine social introduction is a different move from being vouched for."
+      ],
+      "commonMisreadings": [
+        "An attractive female friend vouching for a man transfers her status and makes women want him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5174,8 +5538,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Overriding infatuation requires actually knowing the person, so the mechanism is unavailable for someone he has only looked at."
+      ],
+      "commonMisreadings": [
+        "Looks decide everything, so a man will want a woman whose personality he knows is incompatible."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5196,8 +5564,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card asks the question rather than answering it; high standards and avoidance can produce the same rejection record."
+      ],
+      "commonMisreadings": [
+        "A man who rejects every woman who shows interest is being principled about his standards."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5218,8 +5590,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The objection is to standards that cannot be checked, not to attraction being partly unpredictable."
+      ],
+      "commonMisreadings": [
+        "Saying he will know her when he sees her is an open-minded way to choose a partner."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5242,8 +5618,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card asks him to price the filter honestly against everything else he wants, which is not an instruction to drop it."
+      ],
+      "commonMisreadings": [
+        "A man holding out for a pure girl with minimal sexual history will still date widely."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5266,8 +5646,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is offered as a possibility worth testing against his own pattern, not as a diagnosis that fits every man who holds a high bar."
+      ],
+      "commonMisreadings": [
+        "A man who avoids the women he wants simply has standards set very high."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5288,8 +5672,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card exists to turn the unrealistic-standards charge back on men, so it is a symmetry argument rather than a claim only men do it."
+      ],
+      "commonMisreadings": [
+        "A decent job and gym sessions make a man the catch loyal women want."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5310,8 +5698,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The risk changing hands is a description of high leverage; the neighbouring card warns against adopting the posture before earning it."
+      ],
+      "commonMisreadings": [
+        "Raising his value leaves the entire approach risk on a man, however much women want him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5332,8 +5724,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card states the likely outcome plainly and treats it as a choice being made with open eyes, not a prediction about any individual."
+      ],
+      "commonMisreadings": [
+        "Staying true to himself guarantees a man finds a partner eventually, so the cost is imaginary."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5354,8 +5750,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Calling a relationship optional is aimed at the desperation that makes someone accept anything; it is not an argument against wanting one."
+      ],
+      "commonMisreadings": [
+        "A relationship is a necessity like a job, so a man is incomplete until women want him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5378,8 +5778,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The social cost described is how the choice is read by others, which says nothing about whether the choice itself was right."
+      ],
+      "commonMisreadings": [
+        "Refusing to play the game leaves a man respected by the guys and women he wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5400,8 +5804,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Usually is the hedge that matters: the trade-off is common rather than universal, and a circle of similar outsiders is the exception."
+      ],
+      "commonMisreadings": [
+        "A principled outsider gets both peace and belonging, so the circle accepts him and the dating works."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5422,8 +5830,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Both paths are stated as painful; the card ranks which pain is bearable rather than claiming one is free."
+      ],
+      "commonMisreadings": [
+        "A man who settles for a woman he barely wants takes the painless path."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5446,8 +5858,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Often is doing the work here: the same question can be genuine concern, and the card asks him to tell the two apart."
+      ],
+      "commonMisreadings": [
+        "Asking a man about grandchildren when he steps back from dating is pure sincere concern."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5468,8 +5884,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The test is about the source of the wanting; the card explicitly declines to take a position for or against having children."
+      ],
+      "commonMisreadings": [
+        "Wanting children because it is expected is identical to wanting them with a woman you choose."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5490,8 +5910,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "A market failing to reward integrity is a claim about the market's mechanism, not a claim that integrity has no value."
+      ],
+      "commonMisreadings": [
+        "The dating market rewards integrity, so an honest man is repaid for doing everything right."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5514,8 +5938,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The internal reward is real and unmeasurable; naming isolation as its price is what keeps the card from being encouragement."
+      ],
+      "commonMisreadings": [
+        "Staying true pays a man internally and externally, so integrity brings the women he wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5536,8 +5964,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card defines making peace as living with the situation clear-eyed, and says outright that some men never manage it."
+      ],
+      "commonMisreadings": [
+        "Making peace with dating alone means being happy about it and pretending it stopped hurting."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5558,8 +5990,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The third path is described as rare and difficult rather than as the obvious choice everyone should make."
+      ],
+      "commonMisreadings": [
+        "Red-pill rage and just-be-yourself comfort are the only two responses available to a man in dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5584,8 +6020,12 @@
       "related": [
         "statistics:stat-divorce"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card states the gains as real before naming the cost, and a trade-off is not a verdict on whether the trade was worth making."
+      ],
+      "commonMisreadings": [
+        "Feminism gave women freedoms and left every guardrail on marriage and pairing fully intact."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5608,8 +6048,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is an observation about which question gets asked in public, not a claim that women avoid commitment more than men do."
+      ],
+      "commonMisreadings": [
+        "The commitment question gets asked equally, so women are asked why they reject good men."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5632,8 +6076,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The claim is about several pressures coinciding; each strand has its own evidence base and they are not equally well measured."
+      ],
+      "commonMisreadings": [
+        "Young men faced one difficulty at a time, so housing costs and dating pressure arrived separately."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5657,8 +6105,12 @@
         "statistics:stat-sex-recession",
         "M-TBD-31"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The sourced part is the sexlessness trend; the wider claim about Gen Z having it worse is an inference drawn on top of it."
+      ],
+      "commonMisreadings": [
+        "Gen Z men are dating and having sex more than Millennials did at the same age."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5679,8 +6131,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This describes a specific cohort's experience of the narrowing window; it is not a claim that a man in his thirties is out of options."
+      ],
+      "commonMisreadings": [
+        "A man in his thirties who sees the game clearly can still date women his age."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5701,8 +6157,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The irony named is that information without agency demoralises; that is a claim about effect, not an argument for withholding the information."
+      ],
+      "commonMisreadings": [
+        "Red-pill statistics and warnings empower young men, so knowing the odds improves their dating outcomes."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5725,8 +6185,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "One attractive man's difficulty is a single case that can have its own explanation, which is exactly why it cannot carry the inference."
+      ],
+      "commonMisreadings": [
+        "A good-looking man struggling in dating proves the market is hopeless for everyone below him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5747,8 +6211,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Peak leverage describes a convergence of youth, beauty, novelty and attention; where it sits varies widely between individuals."
+      ],
+      "commonMisreadings": [
+        "A woman with peak leverage should attract offers, since filtering them matters much less."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5771,8 +6239,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Front-loaded is stated about the dating market specifically, and the card says outright that it does not reduce a woman to youth or looks."
+      ],
+      "commonMisreadings": [
+        "A woman wants offers at her highest-attention phase, which is also her wisest phase."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5793,8 +6265,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The inversion described applies at the top of the market she is competing in, not to the market as a whole."
+      ],
+      "commonMisreadings": [
+        "When high-value men grow scarce, attraction alone is enough for a woman to hold one."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5815,8 +6291,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Two distinct skills are named — filtering while leverage is high and competence once a partner is chosen — and neither substitutes for the other."
+      ],
+      "commonMisreadings": [
+        "Once a worthy offer appears a woman needs only leverage, so warmth and loyalty attract him later."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5839,8 +6319,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card objects to the label being used in place of an argument; it does not claim every use of it is social policing."
+      ],
+      "commonMisreadings": [
+        "Calling a woman a pick-me is a real rebuttal to what she noticed about women's dating behaviour."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5861,8 +6345,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card separates the flutter from reliability without claiming the two never coincide; a steady man can also produce it."
+      ],
+      "commonMisreadings": [
+        "Butterflies for the unavailable guy are a reliability signal, so a woman should want that spark."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5885,8 +6373,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The loop describes a common sequence rather than an inevitable one, and the resentment it names lands on both people in it."
+      ],
+      "commonMisreadings": [
+        "A woman who circles back to the steady man she passed on will genuinely desire him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5907,8 +6399,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The arrangement can exist without intent, which is why the card asks for an honest look rather than alleging manipulation."
+      ],
+      "commonMisreadings": [
+        "A woman who leans on male friends for validation is giving them what they want."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5929,8 +6425,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Self-acceptance is called healthy in the same breath; the target is using it to avoid what could actually be changed."
+      ],
+      "commonMisreadings": [
+        "Deciding the standard is unfair changes what men find attractive in a woman's body."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5951,8 +6451,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Turning the question inward is offered as the more useful move, not as proof that the market side of the complaint is empty."
+      ],
+      "commonMisreadings": [
+        "Blaming men is more useful for a woman than asking which men still want her."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5973,8 +6477,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Being driven by attraction and status is treated as ordinary rather than shameful; the card objects to concealing it, not to having it."
+      ],
+      "commonMisreadings": [
+        "Performing the nicer story is how a woman names what actually drives which men she wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -5995,8 +6503,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card turns a script around; men avoiding commitment is not denied, only its assumed monopoly on the pattern."
+      ],
+      "commonMisreadings": [
+        "Men avoid commitment, so a woman waiting to see if someone better wants her is strung along."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6017,8 +6529,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Reassessing early is advice about preserving choice, and it assumes the wall is a slope rather than the cliff the discourse describes."
+      ],
+      "commonMisreadings": [
+        "Waiting until her mid-thirties to reassess leaves a woman the same room to choose well."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6039,8 +6555,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Usually is the hedge: genuine anxiety or an unsafe context can suppress the effort a woman would otherwise show."
+      ],
+      "commonMisreadings": [
+        "A shy woman gives a man she wants exactly the same low effort as anyone else."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6061,8 +6581,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This card exists to bound the rest of the page; conceding the other side's difficulty does not retract the patterns named elsewhere."
+      ],
+      "commonMisreadings": [
+        "Every woman on the apps is delusional and entitled, and each of them wants an impossible man."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6085,8 +6609,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Standards are treated as legitimate whatever their content, so the complaint is about accuracy of description and nothing else."
+      ],
+      "commonMisreadings": [
+        "The frustration is that a woman wants a tall guy with money, rather than her dishonesty about it."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6107,8 +6635,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The continuity claim is about who gets selected; adult markets add money, status and timing that high school did not have."
+      ],
+      "commonMisreadings": [
+        "The high-school dynamic ends after graduation, so charisma stops deciding who gets chosen in dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6129,8 +6661,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Usually a decent preview is a screening heuristic, and the mirroring card next to it names the main way it misfires."
+      ],
+      "commonMisreadings": [
+        "A dry low-effort texter turns warm in person, so texting predicts little about dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6153,8 +6689,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The standoff is constructed so that neither party is at fault, which is what distinguishes it from genuine disinterest."
+      ],
+      "commonMisreadings": [
+        "A woman who retreats to polite after a flat reply simply stopped wanting him."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6175,8 +6715,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The arithmetic constrains how many people clear several bars at once; it says nothing about whether any particular pairing is available."
+      ],
+      "commonMisreadings": [
+        "Most people are above average, so anyone can find the partners they want."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6199,8 +6743,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Market response is feedback about a tier and a strategy, not a measure of a person's worth or a fixed ceiling."
+      ],
+      "commonMisreadings": [
+        "How much a person believes they bring sets their dating value, whatever the market returns."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6256,8 +6804,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card grants that not locking in at a low point has real logic; the trap is the version with no end condition."
+      ],
+      "commonMisreadings": [
+        "Waiting for an upgraded self before dating is always the disciplined choice, whatever the delay costs."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6278,8 +6830,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is about reading enthusiasm accurately; a hesitant yes is still a yes, and the card is not a rule about who may accept."
+      ],
+      "commonMisreadings": [
+        "An agreeable yes to dating signals real interest as reliably as an enthusiastic one."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6302,8 +6858,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The answer is conditioned on remaining runway, which means it is a scheduling judgement rather than a fixed rule either way."
+      ],
+      "commonMisreadings": [
+        "Grinding on yourself first is the right answer at every age, whatever runway remains for dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6324,8 +6884,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Naming the fallacy establishes that the label settles nothing; it does not establish that the underlying claim is correct."
+      ],
+      "commonMisreadings": [
+        "Calling someone an incel or a pick-me answers whether their claim about dating is true."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6346,8 +6910,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Several threads are named as simultaneous causes, and the card does not weigh them against each other."
+      ],
+      "commonMisreadings": [
+        "Feminism alone explains dating's dysfunction, so apps and social media changed little for anyone."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6368,8 +6936,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Sexual overperception bias is an average difference between groups, so it predicts nothing about a specific reading being wrong."
+      ],
+      "commonMisreadings": [
+        "Men and women read friendliness equally well, so nobody over-reads warmth as romantic interest."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6392,8 +6964,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The tax is highest where the same people recur — a gym, a campus, a neighbourhood — and lower in genuinely anonymous settings."
+      ],
+      "commonMisreadings": [
+        "Cold approaching at volume is cheap, so more approaches make more women want an average man."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6414,8 +6990,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The shop analogy is about which question gets asked; it is not a claim that every exit is a reasoned response to prices."
+      ],
+      "commonMisreadings": [
+        "Shaming men who date abroad or opt out addresses what made the local market bad."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6436,8 +7016,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Absorbing calibration by proximity assumes he is actually in the room and participating; the next card is about why that is the hard part."
+      ],
+      "commonMisreadings": [
+        "Social environment changes little, so time around socially skilled people leaves a man's dating unchanged."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6458,8 +7042,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The mechanism specified is repetition with the same faces plus engagement, which is why attendance alone is the failure mode named."
+      ],
+      "commonMisreadings": [
+        "Joining a club is enough to meet the partners a quiet man wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6482,8 +7070,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The bind is real for people whose genuine interests are solitary; it is not a claim that introverts cannot build a social life."
+      ],
+      "commonMisreadings": [
+        "Forcing yourself into a social hobby you dislike reliably works for meeting partners as an introvert."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6504,8 +7096,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The objection is about the composition of general-interest groups, so a group selected for age and intent is a different case."
+      ],
+      "commonMisreadings": [
+        "General meetup groups are full of single people your age looking to date, so attend them."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6526,8 +7122,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Naming a structural cause removes blame without removing the need to act inside the environment as it now is."
+      ],
+      "commonMisreadings": [
+        "Meeting partners feels hard for personal reasons, since the casual third spaces are still thriving."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6550,8 +7150,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card's point is that a single lucky sequence is not a method; it does not claim such outcomes are impossible."
+      ],
+      "commonMisreadings": [
+        "A shy person who barely dates can still marry, which proves the path is repeatable."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6572,8 +7176,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Calling the extrovert advantage long-standing rejects the conspiracy framing without claiming the current environment is unchanged."
+      ],
+      "commonMisreadings": [
+        "The dating environment is rigged against introverts, so extroverts gained their edge only recently."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6596,8 +7204,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card separates quiet from socially anxious and disconnected, which is a claim about which trait is load-bearing."
+      ],
+      "commonMisreadings": [
+        "Being quiet is what stops a person finding partners, connected or otherwise."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6618,8 +7230,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Calling these stories lottery tickets is about their usefulness as a plan, not a denial that they happened."
+      ],
+      "commonMisreadings": [
+        "Dumb-luck stories are a strategy, so a man who keeps going will meet the partner he wants."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6640,8 +7256,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The trade named is more meetings of lower average quality, so which side of it is better depends on what is being optimised."
+      ],
+      "commonMisreadings": [
+        "Asking fast on dating apps selects for people specifically interested in you."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6664,8 +7284,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card refuses both confident answers; sitting in the uncertainty is presented as accurate rather than as comforting."
+      ],
+      "commonMisreadings": [
+        "Whether the wild card arrives is knowable, so a man can say confidently that dating ends here."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6688,8 +7312,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Ranking fumbled chances as the heavier regret is a claim about how it lands, and the next card is the counterweight to it."
+      ],
+      "commonMisreadings": [
+        "A man regrets that women wanted him little, rather than the clear chances he missed."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6710,8 +7338,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The frame reinterprets past freezing as missing skill; it does not promise the skill has since been acquired."
+      ],
+      "commonMisreadings": [
+        "Freezing when the moment came proves a man is permanently broken for dating rather than untrained."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6734,8 +7366,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Easy mode refers to the density of same-age contact, not to the outcomes being easy for everyone inside it."
+      ],
+      "commonMisreadings": [
+        "High school and college were as hard for meeting partners as adult life is now."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6756,8 +7392,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The advice is called half-true rather than false; the omission is what the card is about."
+      ],
+      "commonMisreadings": [
+        "Focusing entirely on school and grades leaves a person's dating development fully intact."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6778,8 +7418,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card raises the question of whether the dissection helps and leaves it genuinely open."
+      ],
+      "commonMisreadings": [
+        "Tracing the exact causes always lightens the weight for a man analysing his dating history."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6800,8 +7444,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Clarity without change is described as rare rather than admirable; the card names the posture without recommending it."
+      ],
+      "commonMisreadings": [
+        "Seeing his situation with total clarity means a man will change how he approaches dating."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6822,8 +7470,12 @@
       "phrases": [],
       "dependencies": [],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The symmetry argument says why nothing moves; it does not establish that both sides carry equal responsibility for the situation."
+      ],
+      "commonMisreadings": [
+        "Asking the other side to change is what finally moves dating, so women and men should wait."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6847,9 +7499,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method Nationally representative online probability panel (Pew ATP, address-recruited), weighted to U.S. adults. Base: used a dating site/app in the past year. MOE ±5.8 pts."
+        "Method Nationally representative online probability panel (Pew ATP, address-recruited), weighted to U.S. adults. Base: used a dating site/app in the past year. MOE ±5.8 pts.",
+        "The reasons do not sum to 100% because they were not asked as alternatives; one respondent can select several."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Since 82% of women want a relationship and 18% want casual sex, the two exclude each other."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6873,9 +7528,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method Same Pew ATP probability panel, weighted. Base: past-year dating-app users. The gender gap is statistically significant only for casual sex — the other reasons show no significant gap."
+        "Method Same Pew ATP probability panel, weighted. Base: past-year dating-app users. The gender gap is statistically significant only for casual sex — the other reasons show no significant gap.",
+        "Both sexes rank a long-term partner first; the gap is an additional male openness to casual, not a different first choice."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Men want casual sex and women want love, which is why dating apps pair them badly."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6901,9 +7559,12 @@
         "pills:height-pill"
       ],
       "boundaryConditions": [
-        "Method Stated-preference + satisfaction-with-partner survey of university students (the ~21 cm / ~8 cm are curve-fit optima); not a measured-couples dataset. The male-taller norm comes from separate records-based couple samples."
+        "Method Stated-preference + satisfaction-with-partner survey of university students (the ~21 cm / ~8 cm are curve-fit optima); not a measured-couples dataset. The male-taller norm comes from separate records-based couple samples.",
+        "Random pairing of the two height distributions already produces roughly 90% man-taller couples, so only the few points above that are preference."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Men want shorter women as strongly as women want taller men, so the height gap is symmetric."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6927,9 +7588,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method Online College Social Life Survey — convenience sample of students across 21 colleges (not nationally representative → Tier 2). The 11% / 67% are women's descriptive orgasm rates from separate hookup and relationship analyses (overlapping analytic event counts), not one model that “controls for” context."
+        "Method Online College Social Life Survey — convenience sample of students across 21 colleges (not nationally representative → Tier 2). The 11% / 67% are women's descriptive orgasm rates from separate hookup and relationship analyses (overlapping analytic event counts), not one model that “controls for” context.",
+        "The orgasm gap by context is an average over encounters and says nothing about any individual couple's experience."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women orgasm as often in first-time hookups as in committed sex, so casual dating costs little."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -6953,9 +7617,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method Large opt-in online survey (via NBC News) — non-probability but very large; het. men 26,032 / het. women 24,102; logistic regression. The ~95/65 gap holds across other studies, which is what carries the Tier-1 tag."
+        "Method Large opt-in online survey (via NBC News) — non-probability but very large; het. men 26,032 / het. women 24,102; logistic regression. The ~95/65 gap holds across other studies, which is what carries the Tier-1 tag.",
+        "Commitment narrows the gap without closing it; the ~95% versus ~65% figures are measured across sexual intimacy generally, not within hookups."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Marriage closes the orgasm gap between husbands and wives completely once a couple is established."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7025,9 +7692,12 @@
         "M-TBD-65"
       ],
       "boundaryConditions": [
-        "Method Same Pew ATP probability panel, weighted. Base: ever used online dating (the larger 3,128 base). Women-under-50 figures from Pew's age/gender breakdown."
+        "Method Same Pew ATP probability panel, weighted. Base: ever used online dating (the larger 3,128 base). Women-under-50 figures from Pew's age/gender breakdown.",
+        "This is a baseline-versus-subgroup comparison, not a gender split: the all-user bars already contain the women shown beside them."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Pew's dating-app harassment figures show women under fifty and men at the same rate."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7127,9 +7797,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method GSS — NORC nationally representative in-person area-probability sample of U.S. household adults. The sexlessness rates sit on the 18–34 subsample (~400–480 per wave; sex-specific young-men cells smaller, ~150–300), so single-year points carry meaningful margins of error."
+        "Method GSS — NORC nationally representative in-person area-probability sample of U.S. household adults. The sexlessness rates sit on the 18–34 subsample (~400–480 per wave; sex-specific young-men cells smaller, ~150–300), so single-year points carry meaningful margins of error.",
+        "The measure is no partnered sex in the past year among 18-to-24-year-olds; it does not track frequency among the sexually active."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The sex recession hit young men and young women equally, so both date less now."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7153,9 +7826,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method How Couples Meet and Stay Together — nationally representative probability panel (RDD-recruited, surveyed online via KnowledgeNetworks/GfK); discrete-time event-history models controlling for relationship duration, quality, income gap, education, and children."
+        "Method How Couples Meet and Stay Together — nationally representative probability panel (RDD-recruited, surveyed online via KnowledgeNetworks/GfK); discrete-time event-history models controlling for relationship duration, quality, income gap, education, and children.",
+        "The 69% marital figure rests on 92 breakups with a 61–78% confidence interval, so it is directional rather than precise."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women want most divorces, so women also end most cohabiting and non-marital relationships."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7181,9 +7857,12 @@
         "frameworks:body-count"
       ],
       "boundaryConditions": [
-        "Method National Survey of Family Growth — NCHS/CDC nationally representative in-person probability sample. Bars are raw 5-year life-table divorce rates; multivariate controls (race, family-of-origin, age at marriage, church attendance) were checked separately and don't explain the pattern away."
+        "Method National Survey of Family Growth — NCHS/CDC nationally representative in-person probability sample. Bars are raw 5-year life-table divorce rates; multivariate controls (race, family-of-origin, age at marriage, church attendance) were checked separately and don't explain the pattern away.",
+        "The largest step is from zero to one partner, which points at who stays at zero rather than at a dose-response effect."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Each extra premarital partner a woman has raises her divorce risk, so counts predict marriage stability."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7253,9 +7932,12 @@
         "frameworks:mens-strike"
       ],
       "boundaryConditions": [
-        "Method Full one-month messaging records (not a poll) on a large free U.S. dating site — complete data, but a single platform; heterosexual users, four cities, Jan 2014. 81% of initial contacts male; women's reply rate <20%."
+        "Method Full one-month messaging records (not a poll) on a large free U.S. dating site — complete data, but a single platform; heterosexual users, four cities, Jan 2014. 81% of initial contacts male; women's reply rate <20%.",
+        "The ~81% figure covers four U.S. cities on one platform; the direction repeats elsewhere but the exact share is not national."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women send first messages on dating apps about as often as men do."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7279,9 +7961,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method U.S. Census + American Community Survey microdata (IPUMS) — the ACS is a very large mandatory probability household survey (~3.5 million addresses sampled per year), not a small opinion poll. This is the population-scale end of the spectrum vs. the ~1,000-person surveys elsewhere on this page."
+        "Method U.S. Census + American Community Survey microdata (IPUMS) — the ACS is a very large mandatory probability household survey (~3.5 million addresses sampled per year), not a small opinion poll. This is the population-scale end of the spectrum vs. the ~1,000-person surveys elsewhere on this page.",
+        "Pew's 63/34 under-30 gap and the GSS's ~56/54 disagree sharply on size, so trust the direction and not the spread."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women under thirty are the more single sex, and marriage rates have held steady for decades."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7305,9 +7990,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method Pew ATP probability panel (full sample N = 4,860), fielded Oct 2019, weighted. These reasons are asked only of the 787 single non-daters; the ±2.1-pt MOE is for the full sample, so this subgroup's band is wider."
+        "Method Pew ATP probability panel (full sample N = 4,860), fielded Oct 2019, weighted. These reasons are asked only of the 787 single non-daters; the ±2.1-pt MOE is for the full sample, so this subgroup's band is wider.",
+        "These are self-reports, so the flattering answers run high and the involuntary share is almost certainly understated."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Singles who stay out of dating chose it freely, and men report the same reasons as women."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7331,9 +8019,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method Vignette experiment (target's gender × partner count manipulated); 8,080 online + 144 undergrads. Genuinely mixed across methods — vignette designs detect a small effect, attitude scales find none (Endendijk et al. 2020 meta-analysis)."
+        "Method Vignette experiment (target's gender × partner count manipulated); 8,080 online + 144 undergrads. Genuinely mixed across methods — vignette designs detect a small effect, attitude scales find none (Endendijk et al. 2020 meta-analysis).",
+        "Belief in the double standard is well documented; the size of the actual penalty is what the controlled evidence disputes."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Women who date many men are judged far more harshly than men, in every controlled study."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7359,9 +8050,12 @@
         "deep-dive:relationships-throughout-history"
       ],
       "boundaryConditions": [
-        "Method U.S. Census Bureau Current Population Survey, historical table MS-2 (“Estimated Median Age at First Marriage, by Sex: 1890 to Present”). Survey-based medians — not means, and not vital records."
+        "Method U.S. Census Bureau Current Population Survey, historical table MS-2 (“Estimated Median Age at First Marriage, by Sex: 1890 to Present”). Survey-based medians — not means, and not vital records.",
+        "The series runs from 1890, and the mid-century floor is its lowest point — a postwar compression rather than a long historical norm."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The 1950s marriage ages of twenty-two and twenty were the baseline couples had always married at."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7389,9 +8083,12 @@
         "frameworks:status-trade"
       ],
       "boundaryConditions": [
-        "Method Pew analysis of Census Bureau data on opposite-sex marriages (earnings shares); the accompanying attitudes survey (n = 5,152, Jan 2023) is separate from the trend series."
+        "Method Pew analysis of Census Bureau data on opposite-sex marriages (earnings shares); the accompanying attitudes survey (n = 5,152, Jan 2023) is separate from the trend series.",
+        "It fell from 85% to 55%, which is a halved dominance and still a majority of marriages."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The husband-provides marriage has collapsed, so most wives now out-earn their husbands."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7415,9 +8112,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method How Couples Meet and Stay Together — nationally representative probability surveys (2009 and 2017 waves; 2009 wave n = 2,473). Trends are Lowess-smoothed except online (5-yr moving average). Venue categories are not mutually exclusive."
+        "Method How Couples Meet and Stay Together — nationally representative probability surveys (2009 and 2017 waves; 2009 wave n = 2,473). Trends are Lowess-smoothed except online (5-yr moving average). Venue categories are not mutually exclusive.",
+        "The 39% online share is for heterosexual couples as of 2017 and is a share of new pairings, not of existing relationships."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Couples still meet mostly through friends, with online dating a minority route into marriage."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7443,9 +8143,12 @@
         "deep-dive:third-spaces"
       ],
       "boundaryConditions": [
-        "Method American Time Use Survey (BLS, nationally representative time diaries), as compiled in the 2023 U.S. Surgeon General's advisory. The 2020 endpoint includes pandemic effects — but the pre-2020 trend line already showed most of the decline, so read the trend, not the endpoint."
+        "Method American Time Use Survey (BLS, nationally representative time diaries), as compiled in the 2023 U.S. Surgeon General's advisory. The 2020 endpoint includes pandemic effects — but the pre-2020 trend line already showed most of the decline, so read the trend, not the endpoint.",
+        "Most of the decline had already happened before 2020, and the contaminated 2020 endpoint marks the floor of the trend rather than its cause."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The pandemic caused the collapse in the in-person time where couples used to meet partners."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7473,9 +8176,12 @@
         "statistics:stat-couples-meet"
       ],
       "boundaryConditions": [
-        "Method Same How Couples Meet and Stay Together 2017 wave as the how-couples-meet chart above; these single-digit shares are the third-place venues drawn from that same breakdown, not new figures."
+        "Method Same How Couples Meet and Stay Together 2017 wave as the how-couples-meet chart above; these single-digit shares are the third-place venues drawn from that same breakdown, not new figures.",
+        "These are the same 2017 figures as the meeting-venue ranking, pulled out by venue type rather than measured separately."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Family, church and the neighborhood still introduce a large share of couples who marry."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7503,9 +8209,12 @@
         "deep-dive:relationships-by-country"
       ],
       "boundaryConditions": [
-        "Method UN World Population Prospects / UN DESA “World Fertility 2024”; regional 2023 figures via World Bank aggregates (the “Europe & Central Asia” and “North America” aggregates both sit near 1.6)."
+        "Method UN World Population Prospects / UN DESA “World Fertility 2024”; regional 2023 figures via World Bank aggregates (the “Europe & Central Asia” and “North America” aggregates both sit near 1.6).",
+        "The regional figures are one snapshot of a shared descent, so a high-fertility region is early on the same curve rather than off it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Falling fertility is a Western problem, since couples elsewhere still marry early and have five children."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7529,9 +8238,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method Statistics Korea social survey — large government household survey, ages 13+, biennial. TFR and marriage counts from Statistics Korea vital statistics."
+        "Method Statistics Korea social survey — large government household survey, ages 13+, biennial. TFR and marriage counts from Statistics Korea vital statistics.",
+        "Attitude shares are self-reported intentions; they sit alongside the fertility rate rather than explaining it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Korean men and women value marriage identically, which is why their fertility fell lowest."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7555,9 +8267,12 @@
       "dependencies": [],
       "related": [],
       "boundaryConditions": [
-        "Method UNICEF global databases — the standard indicator is the share of women aged 20–24 first married or in union before 18, from Demographic and Health Surveys and MICS."
+        "Method UNICEF global databases — the standard indicator is the share of women aged 20–24 first married or in union before 18, from Demographic and Health Surveys and MICS.",
+        "The 31% figure describes women now aged 20–24 looking back, so it lags current practice by up to a decade."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Child marriage has ended across sub-Saharan Africa, where women now marry as consenting adults."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7583,9 +8298,12 @@
         "deep-dive:what-the-wall-actually-is"
       ],
       "boundaryConditions": [
-        "Method Live births as a share of own-egg IVF cycles started, by age band, as compiled in ACOG Committee Opinion 589. “Advanced maternal age” (35) is a monitoring threshold, not either turn in the curve."
+        "Method Live births as a share of own-egg IVF cycles started, by age band, as compiled in ACOG Committee Opinion 589. “Advanced maternal age” (35) is a monitoring threshold, not either turn in the curve.",
+        "ACOG marks the turns at 32 and 37 and describes a slope; this chart carries the biological curve only, not desirability or market position."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A woman's fertility falls off a cliff at thirty, which is when men stop wanting her."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7613,9 +8331,12 @@
         "deep-dive:single-parenthood"
       ],
       "boundaryConditions": [
-        "Method Pew analysis of census and survey microdata; “single parent” = a sole adult living with at least one biological, step, or foster child under 18. Bar lengths scaled ×3 for readability; labels carry the real shares."
+        "Method Pew analysis of census and survey microdata; “single parent” = a sole adult living with at least one biological, step, or foster child under 18. Bar lengths scaled ×3 for readability; labels carry the real shares.",
+        "This counts solo-parent households — one parent and no other adult — so a household sharing with a grandparent falls outside it."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "American marriage produces solo-parent households at roughly the rate seen worldwide, around seven percent."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7643,9 +8364,12 @@
         "deep-dive:single-parenthood:route-in-flips"
       ],
       "boundaryConditions": [
-        "Method NCHS national vital statistics — complete birth registration, not a poll; single-mother composition from Pew's Census/CPS analysis (1960 vs 2011)."
+        "Method NCHS national vital statistics — complete birth registration, not a poll; single-mother composition from Pew's Census/CPS analysis (1960 vs 2011).",
+        "The never-married share grew elevenfold and pulled nearly level with the rest combined; the two series describe route, not outcome."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Single mothers are mostly divorced or widowed women, as they were when marriage was near-universal."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7672,9 +8396,12 @@
         "deep-dive:single-parenthood:the-ledger"
       ],
       "boundaryConditions": [
-        "Method Official poverty measure, families with related children under 18 (poverty bars scaled ×2 for readability; labels carry the real rates). Custody split from the CPS Child Support Supplement (2018 report)."
+        "Method Official poverty measure, families with related children under 18 (poverty bars scaled ×2 for readability; labels carry the real rates). Custody split from the CPS Child Support Supplement (2018 report).",
+        "The poverty ratio is a comparison of household types, not a causal estimate of what removing one adult does to a given family."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Single mothers and couples who marry raise children under similar poverty rates once income counts."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -7711,8 +8438,12 @@
         "M-TBD-35",
         "M-TBD-65"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This entry carries numbers already ruled on elsewhere, so the ruling and its tier live with the Mythbuster docket rather than here."
+      ],
+      "commonMisreadings": [
+        "Perceived similarity predicts attraction between partners more strongly than their actual similarity does."
+      ],
       "sourceLinks": [
         {
           "label": "Montoya et al. 2008",
@@ -7792,8 +8523,12 @@
       "related": [
         "deep-dive:single-parenthood:the-ledger"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This section exists to record refusals; a number appearing here has been examined and rejected, not left unexamined."
+      ],
+      "commonMisreadings": [
+        "The 82% relationship versus 18% casual split is a solid figure about what women want."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13280,8 +14015,12 @@
         "deep-dive:relationships-throughout-history"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The hub card carries the essay's thesis in one line; the evidence and the qualifications live in the essay itself."
+      ],
+      "commonMisreadings": [
+        "Marriage as we know it is the historical baseline that modern couples have drifted from."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13304,8 +14043,12 @@
         "deep-dive:third-spaces"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The hub card states the claim; whether the emptying caused the apps or merely preceded them is argued in the essay."
+      ],
+      "commonMisreadings": [
+        "Dating apps won the courtship market by outcompeting the places where couples used to meet."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13328,8 +14071,12 @@
         "deep-dive:relationships-by-country"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The hub card compresses a region-by-region comparison, so its one line is a summary rather than a finding about any country."
+      ],
+      "commonMisreadings": [
+        "The West invented the unbundling of marriage and childbearing, and other countries are copying it."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13352,8 +14099,12 @@
         "deep-dive:what-the-wall-actually-is"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card announces that three curves are being separated; which curve turns where is settled band by band in the essay."
+      ],
+      "commonMisreadings": [
+        "The wall is a cliff at thirty where men stop wanting a woman altogether."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13376,8 +14127,12 @@
         "deep-dive:single-parenthood"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The card's three-to-one comparison is against the global average, not against the next-highest country."
+      ],
+      "commonMisreadings": [
+        "Divorce still runs the single-parent home, and American marriage sits close to other wealthy countries."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13401,17 +14156,14 @@
         "frameworks:the-wall",
         "statistics:stat-never-married",
         "frameworks:smv-matching",
-        "deep-dive:what-the-wall-actually-is",
-        "deep-dive:relationships-by-country"
+        "deep-dive:what-the-wall-actually-is"
       ],
-      "boundaryConditions": [
-        "Historical institutions and incentives explain context; they do not supply one timeless natural law for intimate behavior."
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Alliance, religion and industry each refined one continuous idea of what marriage between two people was for."
       ],
-      "commonMisreadings": [],
       "sourceLinks": [],
-      "pressureTests": [
-        "Does the proposed rule survive societies with different property, kinship, fertility, labor, and courtship institutions?"
-      ]
+      "pressureTests": []
     },
     {
       "id": "deep-dive:relationships-throughout-history:alliance-era",
@@ -13434,8 +14186,12 @@
         "deep-dive:relationships-throughout-history"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This describes propertied and settled populations best, since they are the ones whose contracts survived to be read."
+      ],
+      "commonMisreadings": [
+        "For most of history a wedding joined a man and a woman who chose each other freely."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13460,8 +14216,12 @@
         "deep-dive:relationships-throughout-history"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Consent became the doctrinal test long before it became the practical one; families kept arranging matches throughout."
+      ],
+      "commonMisreadings": [
+        "The medieval Church made a father's signature and the property transfer what created a marriage."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13486,8 +14246,12 @@
         "deep-dive:relationships-throughout-history"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The bridal-pregnancy shares come from rural English parish registers, which are unusually well kept rather than representative of Europe."
+      ],
+      "commonMisreadings": [
+        "Early modern brides walked to the altar chaste, since couples avoided sex before the wedding."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13512,8 +14276,12 @@
         "deep-dive:relationships-throughout-history"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Industrialisation made the love-match affordable, which is a weaker mechanism than industrialisation having produced the romantic ideal."
+      ],
+      "commonMisreadings": [
+        "Couples began to marry for love because romantic ideals spread across society."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13541,8 +14309,12 @@
         "statistics:stat-marriage-age",
         "statistics:stat-couples-meet"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Calling the mid-century pattern a brief dip is a claim about its duration, not a judgement of whether it worked."
+      ],
+      "commonMisreadings": [
+        "The 1950s single-breadwinner household with a wife at home was marriage's long-standing historical baseline."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13565,19 +14337,14 @@
       "related": [
         "statistics:stat-app-reasons",
         "statistics:stat-attention",
-        "deep-dive:relationships-throughout-history",
-        "smv:exposure",
-        "frameworks:spiderman-effect",
-        "smv:multiplier:context"
+        "deep-dive:relationships-throughout-history"
       ],
-      "boundaryConditions": [
-        "Third spaces can increase repeated, legible interaction but do not guarantee chemistry or make communities mere dating funnels."
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Couples moved courtship online because dating apps offered more than the well and the agora did."
       ],
-      "commonMisreadings": [],
       "sourceLinks": [],
-      "pressureTests": [
-        "Does the claimed effect persist when exposure is plentiful but reciprocity, trust, or demographic fit is absent?"
-      ]
+      "pressureTests": []
     },
     {
       "id": "deep-dive:third-spaces:well-and-agora",
@@ -13600,8 +14367,12 @@
         "deep-dive:third-spaces"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The courtship function is a by-product of places built for water and trade, which is the section's whole point."
+      ],
+      "commonMisreadings": [
+        "The well and the public fountain were built so young men and women could meet partners."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13624,8 +14395,12 @@
         "deep-dive:third-spaces"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Parish and fair describe ordinary European life; elite courtship ran through household and dynasty instead."
+      ],
+      "commonMisreadings": [
+        "The parish church and seasonal fair vanished with Rome, so medieval courtship lost its venues."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13650,8 +14425,12 @@
         "deep-dive:third-spaces"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Commercial sociability was novel in being paid for and purposeless; most early coffeehouses were also largely male."
+      ],
+      "commonMisreadings": [
+        "The coffeehouse was built for courtship, which is why couples paid a coin to enter."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13676,8 +14455,12 @@
         "deep-dive:third-spaces"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The membership densities are strongest for the United States and Britain, where the joining statistics were actually collected."
+      ],
+      "commonMisreadings": [
+        "The dance hall and bowling league did little to introduce men and women who would marry."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13705,8 +14488,12 @@
         "statistics:stat-third-places",
         "statistics:stat-couples-meet"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Four mechanisms are named as simultaneous; the section does not apportion the decline between them."
+      ],
+      "commonMisreadings": [
+        "Suburbanization, the car and television left third places full, and couples kept meeting partners there."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13730,18 +14517,14 @@
         "deep-dive:relationships-throughout-history:great-unbundling",
         "statistics:stat-never-married",
         "statistics:stat-sex-recession",
-        "deep-dive:what-the-wall-actually-is",
-        "smv:multiplier:market",
-        "deep-dive:relationships-throughout-history"
+        "deep-dive:what-the-wall-actually-is"
       ],
-      "boundaryConditions": [
-        "Country comparisons are ecological context, not a license to assign every resident the national average."
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "The marriage transition reached East Asia, Latin America and sub-Saharan Africa at one uniform speed."
       ],
-      "commonMisreadings": [],
       "sourceLinks": [],
-      "pressureTests": [
-        "Does the conclusion survive within-country variation by age, class, region, urbanization, and cohort?"
-      ]
+      "pressureTests": []
     },
     {
       "id": "deep-dive:relationships-by-country:east-asia",
@@ -13762,8 +14545,12 @@
         "deep-dive:relationships-by-country"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "East Asia is the furthest along, not the only case: more than half the world's countries are already below replacement."
+      ],
+      "commonMisreadings": [
+        "Fertility below replacement is confined to a few East Asian countries where couples marry late."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13786,8 +14573,12 @@
         "deep-dive:relationships-by-country"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The free union is centuries old in much of the region, which is why Latin America reaches the same place in a different order."
+      ],
+      "commonMisreadings": [
+        "Latin American couples always needed a registered wedding, so the unión libre is a recent invention."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13810,8 +14601,12 @@
         "deep-dive:relationships-by-country"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "India is presented as the case where fertility fell while the marriage system held, so it works as a counter-example rather than a rule."
+      ],
+      "commonMisreadings": [
+        "Indian marriage loosened into free choice, which is why the birth rate fell there."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13834,8 +14629,12 @@
         "deep-dive:relationships-by-country"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Iran is the sharpest case of state pronatalism failing; one country losing the wheel does not establish that every policy fails."
+      ],
+      "commonMisreadings": [
+        "Iran steered its birth rate successfully whenever the state told couples to marry and reproduce."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13858,8 +14657,12 @@
         "deep-dive:relationships-by-country"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The region is large and internally varied; the description fits the high-fertility belt better than the southern and coastal cities."
+      ],
+      "commonMisreadings": [
+        "Sub-Saharan African marriage now looks Western: late, freely chosen, and without bride-wealth between families."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13878,22 +14681,18 @@
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
-      "dependencies": [
-        "frameworks:the-wall"
-      ],
+      "dependencies": [],
       "related": [
+        "frameworks:the-wall",
         "statistics:stat-first-message",
-        "statistics:stat-never-married",
-        "smv:multiplier:clock"
+        "statistics:stat-never-married"
       ],
-      "boundaryConditions": [
-        "The essay separates attention, fertility, age preferences, and actual pairing rather than treating them as one outcome."
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Desirability, fertility and marriage-market position are one curve turning on a woman's thirtieth birthday."
       ],
-      "commonMisreadings": [],
       "sourceLinks": [],
-      "pressureTests": [
-        "Which component moves first, which merely correlates with age, and which remains viable despite the average slope?"
-      ]
+      "pressureTests": []
     },
     {
       "id": "deep-dive:what-the-wall-actually-is:band-18-25",
@@ -13916,8 +14715,12 @@
       "related": [
         "statistics:stat-first-message"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "App-desirability curves measure attention inside one market, which is a narrower thing than being wanted."
+      ],
+      "commonMisreadings": [
+        "A woman's desirability, fertility and marriage-market position all peak together in her early twenties."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13943,8 +14746,12 @@
         "deep-dive:relationships-throughout-history:great-unbundling",
         "statistics:stat-never-married"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Median first-marriage age is a population median; it says where the middle sits, not when any individual window closes."
+      ],
+      "commonMisreadings": [
+        "A woman in her late twenties has already missed the age when most women marry."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13969,8 +14776,12 @@
       "related": [
         "statistics:stat-fertility-age"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "This is the one gradient the essay concedes to the wall; conceding it is not conceding the fused version."
+      ],
+      "commonMisreadings": [
+        "Fertility decline between thirty-two and thirty-seven comes from the dating market rather than the body."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13996,8 +14807,12 @@
         "deep-dive:relationships-by-country:sub-saharan-africa",
         "statistics:stat-why-single"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The age-gap measurement is unambiguous about direction and says nothing about whether either partner is satisfied."
+      ],
+      "commonMisreadings": [
+        "The age gap between partners who marry runs in both directions about equally often."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14022,8 +14837,12 @@
       "related": [
         "statistics:body-count"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The male curve does rise for decades before turning; the section disputes where it ends, not that it climbs."
+      ],
+      "commonMisreadings": [
+        "Men age like wine, so women want a man more as he passes fifty."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14048,8 +14867,12 @@
         "statistics:stat-never-married",
         "statistics:body-count"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The essay separates a money line, an outcome line and a meme line precisely because they do not survive scrutiny equally."
+      ],
+      "commonMisreadings": [
+        "The custody split and class gradient confirm the harshest outcome numbers about marriage and single mothers."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14072,8 +14895,12 @@
         "deep-dive:single-parenthood"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Pre-1968 figures predate the Census Bureau's modern series, so the early picture is assembled from less consistent sources."
+      ],
+      "commonMisreadings": [
+        "Before 1960 the one-parent home came from divorce rather than the death of a husband."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14100,8 +14927,12 @@
         "deep-dive:relationships-throughout-history:great-unbundling",
         "deep-dive:relationships-by-country"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Legal change is named as the trigger; the section does not claim no-fault divorce alone produced the whole rise."
+      ],
+      "commonMisreadings": [
+        "American children living with a husband and wife held their share steady through the 1970s."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14124,8 +14955,12 @@
         "deep-dive:single-parenthood"
       ],
       "related": [],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The flip is about the route in, so the same household share can be reached by two different paths with different histories."
+      ],
+      "commonMisreadings": [
+        "The single-parent share kept climbing after 1980 because divorce among married couples kept rising."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14150,8 +14985,12 @@
       "related": [
         "statistics:stat-marriage-age"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "The ranking covers the 130 countries in one study, so highest means highest of those measured."
+      ],
+      "commonMisreadings": [
+        "Several wealthy nations sit above America for children raised outside marriage by one parent."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14179,8 +15018,12 @@
         "statistics:body-count",
         "statistics:stat-why-single"
       ],
-      "boundaryConditions": [],
-      "commonMisreadings": [],
+      "boundaryConditions": [
+        "Keeping the three lines apart is the section's method: the money line is undisputed, the outcome line is smaller than advertised, the meme line is mostly fabricated."
+      ],
+      "commonMisreadings": [
+        "For the children of a couple who marry, the poverty gap and the memes are equal."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },

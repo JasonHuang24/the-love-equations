@@ -840,54 +840,23 @@
       ]
     },
     "deep-dive:relationships-throughout-history": {
-      "related": [
-        "deep-dive:relationships-by-country",
-        "frameworks:smv-matching"
-      ],
-      "boundaryConditions": [
-        "Historical institutions and incentives explain context; they do not supply one timeless natural law for intimate behavior."
-      ],
-      "pressureTests": [
-        "Does the proposed rule survive societies with different property, kinship, fertility, labor, and courtship institutions?"
+      "commonMisreadings": [
+        "Alliance, religion and industry each refined one continuous idea of what marriage between two people was for."
       ]
     },
     "deep-dive:third-spaces": {
-      "related": [
-        "smv:exposure",
-        "frameworks:spiderman-effect",
-        "smv:multiplier:context"
-      ],
-      "boundaryConditions": [
-        "Third spaces can increase repeated, legible interaction but do not guarantee chemistry or make communities mere dating funnels."
-      ],
-      "pressureTests": [
-        "Does the claimed effect persist when exposure is plentiful but reciprocity, trust, or demographic fit is absent?"
+      "commonMisreadings": [
+        "Couples moved courtship online because dating apps offered more than the well and the agora did."
       ]
     },
     "deep-dive:relationships-by-country": {
-      "related": [
-        "smv:multiplier:market",
-        "deep-dive:relationships-throughout-history"
-      ],
-      "boundaryConditions": [
-        "Country comparisons are ecological context, not a license to assign every resident the national average."
-      ],
-      "pressureTests": [
-        "Does the conclusion survive within-country variation by age, class, region, urbanization, and cohort?"
+      "commonMisreadings": [
+        "The marriage transition reached East Asia, Latin America and sub-Saharan Africa at one uniform speed."
       ]
     },
     "deep-dive:what-the-wall-actually-is": {
-      "dependencies": [
-        "frameworks:the-wall"
-      ],
-      "related": [
-        "smv:multiplier:clock"
-      ],
-      "boundaryConditions": [
-        "The essay separates attention, fertility, age preferences, and actual pairing rather than treating them as one outcome."
-      ],
-      "pressureTests": [
-        "Which component moves first, which merely correlates with age, and which remains viable despite the average slope?"
+      "commonMisreadings": [
+        "Desirability, fertility and marriage-market position are one curve turning on a woman's thirtieth birthday."
       ]
     },
     "instrument:smv-calculator": {
@@ -2248,6 +2217,1846 @@
       ],
       "pressureTests": [
         "Is personality being credited with converting and sustaining attraction, or with creating it from nothing?"
+      ]
+    },
+    "hierarchy:jasons-hierarchy": {
+      "commonMisreadings": [
+        "A woman who passes every tier in Jason's hierarchy has earned a relationship with him."
+      ],
+      "boundaryConditions": [
+        "This is one named person's stated preference ordering, published so it can be argued with; it is not a claim about what men in general rank first."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:primary-factors:physical-attractiveness": {
+      "commonMisreadings": [
+        "Physical attractiveness alone carries a woman through the primary tier, with classiness and attraction optional."
+      ],
+      "boundaryConditions": [
+        "Tier 1 holds three factors that must all clear, so ranking looks first does not make looks sufficient."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:primary-factors:classiness": {
+      "commonMisreadings": [
+        "Classiness means a man wants a woman who is sexually inexperienced rather than dignified in bearing."
+      ],
+      "boundaryConditions": [
+        "Classiness here is bearing and self-presentation; sexual history sits in the separate secondary factor for baggage."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:primary-factors:attraction-towards-me": {
+      "commonMisreadings": [
+        "A woman tolerating his interest counts as attraction towards him at the primary tier."
+      ],
+      "boundaryConditions": [
+        "The factor asks for visible mutual pull, which means it cannot be satisfied by a woman's willingness to be pursued."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:secondary-factors:fun-easygoing": {
+      "commonMisreadings": [
+        "Men want an easygoing woman who agrees with him and avoids every disagreement."
+      ],
+      "boundaryConditions": [
+        "Low-friction company is about temperament, not compliance; a woman who argues well can still be easy to be around."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:secondary-factors:assertiveness-initiative": {
+      "commonMisreadings": [
+        "Assertiveness in a woman means she leads the relationship while he follows her plans."
+      ],
+      "boundaryConditions": [
+        "The factor asks her to carry a share, not to lead; it is a complaint about one-sided effort rather than a preference for being led."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:secondary-factors:purity-lack-of-baggage": {
+      "commonMisreadings": [
+        "A woman's partner count is the whole of purity, so a low number clears this factor."
+      ],
+      "boundaryConditions": [
+        "The factor is about unresolved damage and ongoing chaos, which a partner count measures only loosely and sometimes not at all."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:tertiary-factors:alignment-in-values": {
+      "commonMisreadings": [
+        "Shared values matter more to him than physical attraction, so alignment outranks the primary tier."
+      ],
+      "boundaryConditions": [
+        "Tertiary placement records what gets evaluated last, not what matters least once a relationship is actually running."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:tertiary-factors:common-interests": {
+      "commonMisreadings": [
+        "A couple with the same hobbies has the compatibility that decides whether the relationship lasts."
+      ],
+      "boundaryConditions": [
+        "Shared interests give a relationship texture; they are placed third because overlap can be built where attraction cannot."
+      ]
+    },
+    "hierarchy:jasons-hierarchy:tertiary-factors:availability": {
+      "commonMisreadings": [
+        "A single woman with free time is available, whatever she is still emotionally carrying."
+      ],
+      "boundaryConditions": [
+        "Availability covers emotional and practical capacity as well as timing, so being unattached does not establish it."
+      ]
+    },
+    "hierarchy:a-generic-male": {
+      "commonMisreadings": [
+        "A man wants a woman for her status, income and achievement, exactly as women weigh his."
+      ],
+      "boundaryConditions": [
+        "This is a synthesis of two AI proposals about central tendency, arbitrated by hand; it describes an average gate and no individual man's."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-1-desire:physical-attractiveness-vitality": {
+      "commonMisreadings": [
+        "A woman's face and body decide his desire, so youth, health and energy add little."
+      ],
+      "boundaryConditions": [
+        "Vitality is part of this factor rather than a separate one, which is why the gate is written as appeal plus energy."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-1-desire:sexual-receptivity": {
+      "commonMisreadings": [
+        "A man desires a woman who politely tolerates his attention, since tolerance reads as receptivity."
+      ],
+      "boundaryConditions": [
+        "Receptivity means warmth actually returned; passive evaluation reads as absence of it, not a quieter version of it."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-1-desire:low-friction-presence": {
+      "commonMisreadings": [
+        "A woman's combative and chaotic streak stops mattering once a man finds her attractive enough."
+      ],
+      "boundaryConditions": [
+        "Low friction sits at the desire gate rather than the attachment gate, which is the claim that attraction can be extinguished early."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-2-attachment:warmth-kindness": {
+      "commonMisreadings": [
+        "A woman's warmth toward a man matters only after he has committed to the relationship."
+      ],
+      "boundaryConditions": [
+        "Warmth is what the attachment gate weighs on the way to commitment; placing it after commitment inverts the sequence."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-2-attachment:loyalty-exclusivity": {
+      "commonMisreadings": [
+        "A woman playing a man against other suitors deepens his attachment and his desire for exclusivity."
+      ],
+      "boundaryConditions": [
+        "This factor is about the absence of reasons to doubt, so manufactured competition works against it rather than for it."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-2-attachment:respect-admiration": {
+      "commonMisreadings": [
+        "A woman can want a man as a status accessory and still genuinely admire him."
+      ],
+      "boundaryConditions": [
+        "Admiration here means valuing his effort as his; being useful to her ambitions is the failure mode the factor names."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-3-life-fit:shared-values-family": {
+      "commonMisreadings": [
+        "A man can marry a woman who wants a completely different domestic life and still fit."
+      ],
+      "boundaryConditions": [
+        "Gate 3 is the last gate, not an optional one; alignment is evaluated late and still has to hold."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-3-life-fit:emotional-stability": {
+      "commonMisreadings": [
+        "Constant drama makes a man desire a woman more, so volatility signals passion rather than misfit."
+      ],
+      "boundaryConditions": [
+        "The factor is about repair after conflict, not the absence of conflict, so a couple who fight and reconcile clear it."
+      ]
+    },
+    "hierarchy:a-generic-male:gate-3-life-fit:practical-compatibility": {
+      "commonMisreadings": [
+        "Two partners with incompatible money habits and daily routines will settle it once love is strong."
+      ],
+      "boundaryConditions": [
+        "Practical fit is placed last because it is negotiable, which is different from being automatic."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take": {
+      "commonMisreadings": [
+        "Every woman ranks confidence, status and physical attractiveness the same way this central tendency does."
+      ],
+      "boundaryConditions": [
+        "This is a central tendency synthesized from mate-preference research; individual variation around it is wide enough that the ordering will be wrong for many women."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:primary-factors:confidence-frame": {
+      "commonMisreadings": [
+        "Women want a man who leans on them for reassurance, since dependence signals confident frame."
+      ],
+      "boundaryConditions": [
+        "Frame here means holding his own centre, which is compatible with vulnerability and distinct from suppressing feeling."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:primary-factors:status-ambition": {
+      "commonMisreadings": [
+        "Women want a man's income rather than his direction, so drive without earnings weighs little."
+      ],
+      "boundaryConditions": [
+        "Status in this tier is read off competence and trajectory; measured income sits lower, in the tertiary provision factor."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:primary-factors:physical-attractiveness": {
+      "commonMisreadings": [
+        "Women want a man's looks least, so grooming and masculine presence stay optional for him."
+      ],
+      "boundaryConditions": [
+        "Attractiveness is stated as attractiveness to her, which makes it a fit question rather than a universal ranking of male faces."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:secondary-factors:spark-chemistry": {
+      "commonMisreadings": [
+        "Chemistry between a man and a woman can be manufactured by following the right routine."
+      ],
+      "boundaryConditions": [
+        "The factor is named hard-to-fake for a reason; it is the one item on this list that resists deliberate construction."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:secondary-factors:leadership-pursuit": {
+      "commonMisreadings": [
+        "A man who waits for a woman to make the plans is leading the courtship well."
+      ],
+      "boundaryConditions": [
+        "Leadership here is about making plans and making her feel chosen, which is a claim about initiative and not about authority over her."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:secondary-factors:stability-treatment": {
+      "commonMisreadings": [
+        "A woman wants a man's unpredictability, so steady kind treatment lowers her attraction to him."
+      ],
+      "boundaryConditions": [
+        "Steadiness is placed second, behind desire factors — which says it rarely creates attraction on its own, not that it costs him any."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:tertiary-factors:provision-stability": {
+      "commonMisreadings": [
+        "A man's ability to provide is what first makes a woman want him, ahead of everything."
+      ],
+      "boundaryConditions": [
+        "Provision is tertiary in this reading, which is the diagonal the page is built to show: status opens the gate, measured provision does not."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:tertiary-factors:commitment-loyalty": {
+      "commonMisreadings": [
+        "A man's willingness to commit is what creates a woman's attraction rather than following it."
+      ],
+      "boundaryConditions": [
+        "Commitment is evaluated once desire and trust are established; its low placement is about sequence, not about how much it matters."
+      ]
+    },
+    "hierarchy:a-generic-female-claudes-take:tertiary-factors:shared-values-goals": {
+      "commonMisreadings": [
+        "A couple aligned on children and lifestyle will feel attraction because the big questions match."
+      ],
+      "boundaryConditions": [
+        "Alignment is a filter applied to people already wanted, so it can end a relationship without ever having started one."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take": {
+      "commonMisreadings": [
+        "Kindness and loyalty put a man through her first gate, before attraction and masculine competence."
+      ],
+      "boundaryConditions": [
+        "The claim is about ordering, not worth: kindness and loyalty are described as real and powerful once the first filter has cleared."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-1-desire:attraction": {
+      "commonMisreadings": [
+        "Calling it a vibe means women want personality first, with physical presence a later filter."
+      ],
+      "boundaryConditions": [
+        "The factor names the physical channel plainly, including voice and presence, because softer language for it tends to hide rather than replace it."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-1-desire:masculine-competence": {
+      "commonMisreadings": [
+        "Women want a capable-seeming man only after trust is already fully established between them."
+      ],
+      "boundaryConditions": [
+        "Competence sits at the desire gate as a read taken early from bearing and social ease, not as a verified record of achievement."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-1-desire:safety-calibration": {
+      "commonMisreadings": [
+        "Women want a man whose interest arrives intensely and fast, so feeling trapped is her problem."
+      ],
+      "boundaryConditions": [
+        "Calibration is about reading the room while still showing interest; the factor rules out neither pursuit nor directness."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-2-trust:consistency": {
+      "commonMisreadings": [
+        "Women want a man who vanishes and reappears, so steady follow-through weakens her trust."
+      ],
+      "boundaryConditions": [
+        "Consistency is a trust-gate factor, which means it is what converts early interest into something durable rather than what creates the interest."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-2-trust:emotional-attunement": {
+      "commonMisreadings": [
+        "Women reject a man attuned to their feelings, because noticing her reads as neediness."
+      ],
+      "boundaryConditions": [
+        "The factor explicitly pairs warmth with non-neediness, so it treats the two as separable rather than as points on one dial."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-2-trust:selective-investment": {
+      "commonMisreadings": [
+        "Women want a man who pursues every available woman, since volume signals high value."
+      ],
+      "boundaryConditions": [
+        "Selectivity is about being chosen specifically; it is a claim about how investment is read, not an instruction to withhold it."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-3-fit:provision-capacity": {
+      "commonMisreadings": [
+        "Women want a man's wealth alone, so discipline and direction count for little."
+      ],
+      "boundaryConditions": [
+        "The factor is written as functional rather than rich, which makes it a read on how he handles adult life at any income."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-3-fit:shared-values-lifestyle": {
+      "commonMisreadings": [
+        "A man can marry a woman with opposite family plans and ambitions and still fit."
+      ],
+      "boundaryConditions": [
+        "Which values are load-bearing varies by couple; the factor names the categories to check and does not rank them."
+      ]
+    },
+    "hierarchy:a-generic-female-chatgpts-take:gate-3-fit:character-under-pressure": {
+      "commonMisreadings": [
+        "Women choose a man on his courtship behaviour, so conduct under pressure reveals less."
+      ],
+      "boundaryConditions": [
+        "This factor is placed last because pressure is what reveals it, which means it is usually observed after the earlier gates have already cleared."
+      ]
+    },
+    "statistics:stat-app-reasons": {
+      "commonMisreadings": [
+        "Since 82% of women want a relationship and 18% want casual sex, the two exclude each other."
+      ],
+      "boundaryConditions": [
+        "The reasons do not sum to 100% because they were not asked as alternatives; one respondent can select several."
+      ]
+    },
+    "statistics:stat-casual-gap": {
+      "commonMisreadings": [
+        "Men want casual sex and women want love, which is why dating apps pair them badly."
+      ],
+      "boundaryConditions": [
+        "Both sexes rank a long-term partner first; the gap is an additional male openness to casual, not a different first choice."
+      ]
+    },
+    "statistics:height-pref": {
+      "commonMisreadings": [
+        "Men want shorter women as strongly as women want taller men, so the height gap is symmetric."
+      ],
+      "boundaryConditions": [
+        "Random pairing of the two height distributions already produces roughly 90% man-taller couples, so only the few points above that are preference."
+      ]
+    },
+    "statistics:stat-orgasm-context": {
+      "commonMisreadings": [
+        "Women orgasm as often in first-time hookups as in committed sex, so casual dating costs little."
+      ],
+      "boundaryConditions": [
+        "The orgasm gap by context is an average over encounters and says nothing about any individual couple's experience."
+      ]
+    },
+    "statistics:stat-orgasm-gender": {
+      "commonMisreadings": [
+        "Marriage closes the orgasm gap between husbands and wives completely once a couple is established."
+      ],
+      "boundaryConditions": [
+        "Commitment narrows the gap without closing it; the ~95% versus ~65% figures are measured across sexual intimacy generally, not within hookups."
+      ]
+    },
+    "statistics:stat-safety": {
+      "commonMisreadings": [
+        "Pew's dating-app harassment figures show women under fifty and men at the same rate."
+      ],
+      "boundaryConditions": [
+        "This is a baseline-versus-subgroup comparison, not a gender split: the all-user bars already contain the women shown beside them."
+      ]
+    },
+    "statistics:stat-sex-recession": {
+      "commonMisreadings": [
+        "The sex recession hit young men and young women equally, so both date less now."
+      ],
+      "boundaryConditions": [
+        "The measure is no partnered sex in the past year among 18-to-24-year-olds; it does not track frequency among the sexually active."
+      ]
+    },
+    "statistics:stat-divorce": {
+      "commonMisreadings": [
+        "Women want most divorces, so women also end most cohabiting and non-marital relationships."
+      ],
+      "boundaryConditions": [
+        "The 69% marital figure rests on 92 breakups with a 61–78% confidence interval, so it is directional rather than precise."
+      ]
+    },
+    "statistics:body-count": {
+      "commonMisreadings": [
+        "Each extra premarital partner a woman has raises her divorce risk, so counts predict marriage stability."
+      ],
+      "boundaryConditions": [
+        "The largest step is from zero to one partner, which points at who stays at zero rather than at a dose-response effect."
+      ]
+    },
+    "statistics:stat-first-message": {
+      "commonMisreadings": [
+        "Women send first messages on dating apps about as often as men do."
+      ],
+      "boundaryConditions": [
+        "The ~81% figure covers four U.S. cities on one platform; the direction repeats elsewhere but the exact share is not national."
+      ]
+    },
+    "statistics:stat-never-married": {
+      "commonMisreadings": [
+        "Women under thirty are the more single sex, and marriage rates have held steady for decades."
+      ],
+      "boundaryConditions": [
+        "Pew's 63/34 under-30 gap and the GSS's ~56/54 disagree sharply on size, so trust the direction and not the spread."
+      ]
+    },
+    "statistics:stat-why-single": {
+      "commonMisreadings": [
+        "Singles who stay out of dating chose it freely, and men report the same reasons as women."
+      ],
+      "boundaryConditions": [
+        "These are self-reports, so the flattering answers run high and the involuntary share is almost certainly understated."
+      ]
+    },
+    "statistics:stat-double-standard": {
+      "commonMisreadings": [
+        "Women who date many men are judged far more harshly than men, in every controlled study."
+      ],
+      "boundaryConditions": [
+        "Belief in the double standard is well documented; the size of the actual penalty is what the controlled evidence disputes."
+      ]
+    },
+    "statistics:stat-marriage-age": {
+      "commonMisreadings": [
+        "The 1950s marriage ages of twenty-two and twenty were the baseline couples had always married at."
+      ],
+      "boundaryConditions": [
+        "The series runs from 1890, and the mid-century floor is its lowest point — a postwar compression rather than a long historical norm."
+      ]
+    },
+    "statistics:stat-provider-norm": {
+      "commonMisreadings": [
+        "The husband-provides marriage has collapsed, so most wives now out-earn their husbands."
+      ],
+      "boundaryConditions": [
+        "It fell from 85% to 55%, which is a halved dominance and still a majority of marriages."
+      ]
+    },
+    "statistics:stat-couples-meet": {
+      "commonMisreadings": [
+        "Couples still meet mostly through friends, with online dating a minority route into marriage."
+      ],
+      "boundaryConditions": [
+        "The 39% online share is for heterosexual couples as of 2017 and is a share of new pairings, not of existing relationships."
+      ]
+    },
+    "statistics:stat-friend-time": {
+      "commonMisreadings": [
+        "The pandemic caused the collapse in the in-person time where couples used to meet partners."
+      ],
+      "boundaryConditions": [
+        "Most of the decline had already happened before 2020, and the contaminated 2020 endpoint marks the floor of the trend rather than its cause."
+      ]
+    },
+    "statistics:stat-third-places": {
+      "commonMisreadings": [
+        "Family, church and the neighborhood still introduce a large share of couples who marry."
+      ],
+      "boundaryConditions": [
+        "These are the same 2017 figures as the meeting-venue ranking, pulled out by venue type rather than measured separately."
+      ]
+    },
+    "statistics:stat-fertility-arc": {
+      "commonMisreadings": [
+        "Falling fertility is a Western problem, since couples elsewhere still marry early and have five children."
+      ],
+      "boundaryConditions": [
+        "The regional figures are one snapshot of a shared descent, so a high-fertility region is early on the same curve rather than off it."
+      ]
+    },
+    "statistics:stat-korea": {
+      "commonMisreadings": [
+        "Korean men and women value marriage identically, which is why their fertility fell lowest."
+      ],
+      "boundaryConditions": [
+        "Attitude shares are self-reported intentions; they sit alongside the fertility rate rather than explaining it."
+      ]
+    },
+    "statistics:stat-child-marriage": {
+      "commonMisreadings": [
+        "Child marriage has ended across sub-Saharan Africa, where women now marry as consenting adults."
+      ],
+      "boundaryConditions": [
+        "The 31% figure describes women now aged 20–24 looking back, so it lags current practice by up to a decade."
+      ]
+    },
+    "statistics:stat-fertility-age": {
+      "commonMisreadings": [
+        "A woman's fertility falls off a cliff at thirty, which is when men stop wanting her."
+      ],
+      "boundaryConditions": [
+        "ACOG marks the turns at 32 and 37 and describes a slope; this chart carries the biological curve only, not desirability or market position."
+      ]
+    },
+    "statistics:stat-single-parent-world": {
+      "commonMisreadings": [
+        "American marriage produces solo-parent households at roughly the rate seen worldwide, around seven percent."
+      ],
+      "boundaryConditions": [
+        "This counts solo-parent households — one parent and no other adult — so a household sharing with a grandparent falls outside it."
+      ]
+    },
+    "statistics:stat-single-route": {
+      "commonMisreadings": [
+        "Single mothers are mostly divorced or widowed women, as they were when marriage was near-universal."
+      ],
+      "boundaryConditions": [
+        "The never-married share grew elevenfold and pulled nearly level with the rest combined; the two series describe route, not outcome."
+      ]
+    },
+    "statistics:stat-single-ledger": {
+      "commonMisreadings": [
+        "Single mothers and couples who marry raise children under similar poverty rates once income counts."
+      ],
+      "boundaryConditions": [
+        "The poverty ratio is a comparison of household types, not a causal estimate of what removing one adult does to a given family."
+      ]
+    },
+    "statistics:stat-mythbuster": {
+      "commonMisreadings": [
+        "Perceived similarity predicts attraction between partners more strongly than their actual similarity does."
+      ],
+      "boundaryConditions": [
+        "This entry carries numbers already ruled on elsewhere, so the ruling and its tier live with the Mythbuster docket rather than here."
+      ]
+    },
+    "statistics:stat-cutting-room": {
+      "commonMisreadings": [
+        "The 82% relationship versus 18% casual split is a solid figure about what women want."
+      ],
+      "boundaryConditions": [
+        "This section exists to record refusals; a number appearing here has been examined and rejected, not left unexamined."
+      ]
+    },
+    "deep-dive:hub:relationships-throughout-history": {
+      "commonMisreadings": [
+        "Marriage as we know it is the historical baseline that modern couples have drifted from."
+      ],
+      "boundaryConditions": [
+        "The hub card carries the essay's thesis in one line; the evidence and the qualifications live in the essay itself."
+      ]
+    },
+    "deep-dive:hub:third-spaces": {
+      "commonMisreadings": [
+        "Dating apps won the courtship market by outcompeting the places where couples used to meet."
+      ],
+      "boundaryConditions": [
+        "The hub card states the claim; whether the emptying caused the apps or merely preceded them is argued in the essay."
+      ]
+    },
+    "deep-dive:hub:relationships-by-country": {
+      "commonMisreadings": [
+        "The West invented the unbundling of marriage and childbearing, and other countries are copying it."
+      ],
+      "boundaryConditions": [
+        "The hub card compresses a region-by-region comparison, so its one line is a summary rather than a finding about any country."
+      ]
+    },
+    "deep-dive:hub:what-the-wall-actually-is": {
+      "commonMisreadings": [
+        "The wall is a cliff at thirty where men stop wanting a woman altogether."
+      ],
+      "boundaryConditions": [
+        "The card announces that three curves are being separated; which curve turns where is settled band by band in the essay."
+      ]
+    },
+    "deep-dive:hub:single-parenthood": {
+      "commonMisreadings": [
+        "Divorce still runs the single-parent home, and American marriage sits close to other wealthy countries."
+      ],
+      "boundaryConditions": [
+        "The card's three-to-one comparison is against the global average, not against the next-highest country."
+      ]
+    },
+    "deep-dive:relationships-throughout-history:alliance-era": {
+      "commonMisreadings": [
+        "For most of history a wedding joined a man and a woman who chose each other freely."
+      ],
+      "boundaryConditions": [
+        "This describes propertied and settled populations best, since they are the ones whose contracts survived to be read."
+      ]
+    },
+    "deep-dive:relationships-throughout-history:church-era": {
+      "commonMisreadings": [
+        "The medieval Church made a father's signature and the property transfer what created a marriage."
+      ],
+      "boundaryConditions": [
+        "Consent became the doctrinal test long before it became the practical one; families kept arranging matches throughout."
+      ]
+    },
+    "deep-dive:relationships-throughout-history:early-modern": {
+      "commonMisreadings": [
+        "Early modern brides walked to the altar chaste, since couples avoided sex before the wedding."
+      ],
+      "boundaryConditions": [
+        "The bridal-pregnancy shares come from rural English parish registers, which are unusually well kept rather than representative of Europe."
+      ]
+    },
+    "deep-dive:relationships-throughout-history:love-match": {
+      "commonMisreadings": [
+        "Couples began to marry for love because romantic ideals spread across society."
+      ],
+      "boundaryConditions": [
+        "Industrialisation made the love-match affordable, which is a weaker mechanism than industrialisation having produced the romantic ideal."
+      ]
+    },
+    "deep-dive:relationships-throughout-history:great-unbundling": {
+      "commonMisreadings": [
+        "The 1950s single-breadwinner household with a wife at home was marriage's long-standing historical baseline."
+      ],
+      "boundaryConditions": [
+        "Calling the mid-century pattern a brief dip is a claim about its duration, not a judgement of whether it worked."
+      ]
+    },
+    "deep-dive:third-spaces:well-and-agora": {
+      "commonMisreadings": [
+        "The well and the public fountain were built so young men and women could meet partners."
+      ],
+      "boundaryConditions": [
+        "The courtship function is a by-product of places built for water and trade, which is the section's whole point."
+      ]
+    },
+    "deep-dive:third-spaces:parish-and-fair": {
+      "commonMisreadings": [
+        "The parish church and seasonal fair vanished with Rome, so medieval courtship lost its venues."
+      ],
+      "boundaryConditions": [
+        "Parish and fair describe ordinary European life; elite courtship ran through household and dynasty instead."
+      ]
+    },
+    "deep-dive:third-spaces:coffeehouse-century": {
+      "commonMisreadings": [
+        "The coffeehouse was built for courtship, which is why couples paid a coin to enter."
+      ],
+      "boundaryConditions": [
+        "Commercial sociability was novel in being paid for and purposeless; most early coffeehouses were also largely male."
+      ]
+    },
+    "deep-dive:third-spaces:golden-age-of-joining": {
+      "commonMisreadings": [
+        "The dance hall and bowling league did little to introduce men and women who would marry."
+      ],
+      "boundaryConditions": [
+        "The membership densities are strongest for the United States and Britain, where the joining statistics were actually collected."
+      ]
+    },
+    "deep-dive:third-spaces:great-emptying": {
+      "commonMisreadings": [
+        "Suburbanization, the car and television left third places full, and couples kept meeting partners there."
+      ],
+      "boundaryConditions": [
+        "Four mechanisms are named as simultaneous; the section does not apportion the decline between them."
+      ]
+    },
+    "deep-dive:relationships-by-country:east-asia": {
+      "commonMisreadings": [
+        "Fertility below replacement is confined to a few East Asian countries where couples marry late."
+      ],
+      "boundaryConditions": [
+        "East Asia is the furthest along, not the only case: more than half the world's countries are already below replacement."
+      ]
+    },
+    "deep-dive:relationships-by-country:latin-america": {
+      "commonMisreadings": [
+        "Latin American couples always needed a registered wedding, so the unión libre is a recent invention."
+      ],
+      "boundaryConditions": [
+        "The free union is centuries old in much of the region, which is why Latin America reaches the same place in a different order."
+      ]
+    },
+    "deep-dive:relationships-by-country:south-asia": {
+      "commonMisreadings": [
+        "Indian marriage loosened into free choice, which is why the birth rate fell there."
+      ],
+      "boundaryConditions": [
+        "India is presented as the case where fertility fell while the marriage system held, so it works as a counter-example rather than a rule."
+      ]
+    },
+    "deep-dive:relationships-by-country:mena": {
+      "commonMisreadings": [
+        "Iran steered its birth rate successfully whenever the state told couples to marry and reproduce."
+      ],
+      "boundaryConditions": [
+        "Iran is the sharpest case of state pronatalism failing; one country losing the wheel does not establish that every policy fails."
+      ]
+    },
+    "deep-dive:relationships-by-country:sub-saharan-africa": {
+      "commonMisreadings": [
+        "Sub-Saharan African marriage now looks Western: late, freely chosen, and without bride-wealth between families."
+      ],
+      "boundaryConditions": [
+        "The region is large and internally varied; the description fits the high-fertility belt better than the southern and coastal cities."
+      ]
+    },
+    "deep-dive:what-the-wall-actually-is:band-18-25": {
+      "commonMisreadings": [
+        "A woman's desirability, fertility and marriage-market position all peak together in her early twenties."
+      ],
+      "boundaryConditions": [
+        "App-desirability curves measure attention inside one market, which is a narrower thing than being wanted."
+      ]
+    },
+    "deep-dive:what-the-wall-actually-is:band-26-31": {
+      "commonMisreadings": [
+        "A woman in her late twenties has already missed the age when most women marry."
+      ],
+      "boundaryConditions": [
+        "Median first-marriage age is a population median; it says where the middle sits, not when any individual window closes."
+      ]
+    },
+    "deep-dive:what-the-wall-actually-is:band-32-37": {
+      "commonMisreadings": [
+        "Fertility decline between thirty-two and thirty-seven comes from the dating market rather than the body."
+      ],
+      "boundaryConditions": [
+        "This is the one gradient the essay concedes to the wall; conceding it is not conceding the fused version."
+      ]
+    },
+    "deep-dive:what-the-wall-actually-is:band-38-49": {
+      "commonMisreadings": [
+        "The age gap between partners who marry runs in both directions about equally often."
+      ],
+      "boundaryConditions": [
+        "The age-gap measurement is unambiguous about direction and says nothing about whether either partner is satisfied."
+      ]
+    },
+    "deep-dive:what-the-wall-actually-is:band-50-plus": {
+      "commonMisreadings": [
+        "Men age like wine, so women want a man more as he passes fifty."
+      ],
+      "boundaryConditions": [
+        "The male curve does rise for decades before turning; the section disputes where it ends, not that it climbs."
+      ]
+    },
+    "deep-dive:single-parenthood": {
+      "commonMisreadings": [
+        "The custody split and class gradient confirm the harshest outcome numbers about marriage and single mothers."
+      ],
+      "boundaryConditions": [
+        "The essay separates a money line, an outcome line and a meme line precisely because they do not survive scrutiny equally."
+      ]
+    },
+    "deep-dive:single-parenthood:widows-house": {
+      "commonMisreadings": [
+        "Before 1960 the one-parent home came from divorce rather than the death of a husband."
+      ],
+      "boundaryConditions": [
+        "Pre-1968 figures predate the Census Bureau's modern series, so the early picture is assembled from less consistent sources."
+      ]
+    },
+    "deep-dive:single-parenthood:divorce-rebuilds": {
+      "commonMisreadings": [
+        "American children living with a husband and wife held their share steady through the 1970s."
+      ],
+      "boundaryConditions": [
+        "Legal change is named as the trigger; the section does not claim no-fault divorce alone produced the whole rise."
+      ]
+    },
+    "deep-dive:single-parenthood:route-in-flips": {
+      "commonMisreadings": [
+        "The single-parent share kept climbing after 1980 because divorce among married couples kept rising."
+      ],
+      "boundaryConditions": [
+        "The flip is about the route in, so the same household share can be reached by two different paths with different histories."
+      ]
+    },
+    "deep-dive:single-parenthood:worlds-highest": {
+      "commonMisreadings": [
+        "Several wealthy nations sit above America for children raised outside marriage by one parent."
+      ],
+      "boundaryConditions": [
+        "The ranking covers the 130 countries in one study, so highest means highest of those measured."
+      ]
+    },
+    "deep-dive:single-parenthood:the-ledger": {
+      "commonMisreadings": [
+        "For the children of a couple who marry, the poverty gap and the memes are equal."
+      ],
+      "boundaryConditions": [
+        "Keeping the three lines apart is the section's method: the money line is undisputed, the outcome line is smaller than advertised, the meme line is mostly fabricated."
+      ]
+    },
+    "gender-dynamics:male:the-default-market:the-climb-building-smv": {
+      "commonMisreadings": [
+        "Every lever climbs at the same rate, so any man who trains will attract women."
+      ],
+      "boundaryConditions": [
+        "The climb is described as uneven and partial; naming it one of the few movable areas is not a promise that any given man moves."
+      ]
+    },
+    "gender-dynamics:male:the-default-market:the-inversion-threshold": {
+      "commonMisreadings": [
+        "Crossing the SMV threshold means women want a man permanently, so he stops filtering altogether."
+      ],
+      "boundaryConditions": [
+        "The inversion is a change in who makes offers, not a change in whether the market can move against him again."
+      ]
+    },
+    "gender-dynamics:gd-male-window": {
+      "commonMisreadings": [
+        "A man rejected early has weak leverage permanently, so building competence and status changes little."
+      ],
+      "boundaryConditions": [
+        "Back-loaded describes a typical shape, not a guarantee; the card's actual claim is about how early rejection should be read."
+      ]
+    },
+    "gender-dynamics:male:the-default-market:commentary": {
+      "commonMisreadings": [
+        "Bitterness is the rational male response once a man sees that women want the strongest offer."
+      ],
+      "boundaryConditions": [
+        "Construction is offered as the rational response to being the default offer, which is a claim about strategy rather than about fairness."
+      ]
+    },
+    "gender-dynamics:male:directness-delivery-the-indirect-game:the-just-tell-me-what-you-want-trap": {
+      "commonMisreadings": [
+        "A woman asking a man to say what he wants will welcome any answer he gives."
+      ],
+      "boundaryConditions": [
+        "A flat refusal after an invitation to be direct is read here as the invitation being insincere, not as an obligation to say yes."
+      ]
+    },
+    "gender-dynamics:male:directness-delivery-the-indirect-game:its-not-what-you-want-its-how-you-frame-it": {
+      "commonMisreadings": [
+        "Wrapping the intention is dishonest, so a man who wants sex should state it bluntly."
+      ],
+      "boundaryConditions": [
+        "The card changes the framing and keeps the intent; it is a claim about delivery, not permission to conceal what is wanted."
+      ]
+    },
+    "gender-dynamics:male:directness-delivery-the-indirect-game:smooth-isnt-the-same-as-coy": {
+      "commonMisreadings": [
+        "A man who whispers that he wants to make her feel good is hiding the ball."
+      ],
+      "boundaryConditions": [
+        "The defence depends on context making the meaning obvious; the same line in an ambiguous setting would be the cop-out the card names."
+      ]
+    },
+    "gender-dynamics:male:directness-delivery-the-indirect-game:the-transactional-attention-problem-is-real": {
+      "commonMisreadings": [
+        "Women complaining that male attention feels transactional on dating apps are inventing the pattern."
+      ],
+      "boundaryConditions": [
+        "This card grants the other side's complaint; granting it does not withdraw the punished-directness claim it sits beside."
+      ]
+    },
+    "gender-dynamics:male:directness-delivery-the-indirect-game:women-train-men-to-hide-their-intentions": {
+      "commonMisreadings": [
+        "Women reward direct men, so hiding intentions costs a guy attraction on every date."
+      ],
+      "boundaryConditions": [
+        "Training is meant in the behavioural sense of what gets rewarded, which is a claim about aggregate response rather than intent."
+      ]
+    },
+    "gender-dynamics:male:directness-delivery-the-indirect-game:the-wine-at-my-place-move": {
+      "commonMisreadings": [
+        "Inviting a woman over for wine works because both sides want the deniability removed."
+      ],
+      "boundaryConditions": [
+        "Plausible deniability is described as the mechanism; describing why the move works is not an endorsement of using it to obscure consent."
+      ]
+    },
+    "gender-dynamics:male:selection-hypocrisy-how-guys-respond:punishing-honesty-filters-the-pool": {
+      "commonMisreadings": [
+        "Women who reject blunt men keep their dating pool exactly as wide as before."
+      ],
+      "boundaryConditions": [
+        "The filtering is an aggregate effect across many individual choices, so it implies nothing about any one woman's dating pool."
+      ]
+    },
+    "gender-dynamics:male:selection-hypocrisy-how-guys-respond:no-good-men-left-dodges-the-real-question": {
+      "commonMisreadings": [
+        "Asking where the good men went settles why a woman attracts fewer of the men she wants."
+      ],
+      "boundaryConditions": [
+        "The card redirects the question inward; doing so does not establish that the market has stayed the same underneath."
+      ]
+    },
+    "gender-dynamics:male:selection-hypocrisy-how-guys-respond:the-disconnect-breeds-resentment": {
+      "commonMisreadings": [
+        "Men resent the gap wrongly, since women want honest guys and smooth talkers equally."
+      ],
+      "boundaryConditions": [
+        "Explaining where the resentment comes from is not a defence of it; the neighbouring cards argue against letting it curdle."
+      ]
+    },
+    "gender-dynamics:male:selection-hypocrisy-how-guys-respond:its-conditioning-not-conspiracy": {
+      "commonMisreadings": [
+        "Women want the script they were taught, and they coordinate the mismatch deliberately."
+      ],
+      "boundaryConditions": [
+        "Conditioning is the weaker and more defensible claim: shared programming produces a shared pattern without anyone coordinating it."
+      ]
+    },
+    "gender-dynamics:male:selection-hypocrisy-how-guys-respond:why-game-became-a-whole-industry": {
+      "commonMisreadings": [
+        "Game became an industry because honest men were already attracting the women they wanted."
+      ],
+      "boundaryConditions": [
+        "This explains why the industry grew, which is a different question from whether what it teaches is true or worth learning."
+      ]
+    },
+    "gender-dynamics:male:selection-hypocrisy-how-guys-respond:two-types-of-guys-left": {
+      "commonMisreadings": [
+        "Every man learns game eventually, so the honest and direct ones date just as well."
+      ],
+      "boundaryConditions": [
+        "Two types is a deliberate simplification of a spectrum; most men sit somewhere between playing fully and refusing entirely."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:the-raw-deal-cycle": {
+      "commonMisreadings": [
+        "A woman who settles for the honest guy comes to desire him once she commits."
+      ],
+      "boundaryConditions": [
+        "The loop is a pattern some men live through, not a law; plenty of honest men never enter it and some settled pairings work."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:modern-dating-feels-like-a-job-hunt": {
+      "commonMisreadings": [
+        "Modern dating rewards effort like a job hunt, so more applications reliably win a partner."
+      ],
+      "boundaryConditions": [
+        "The analogy is offered for how the process feels, and it breaks down precisely where volume stops helping."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:the-low-investment-middle-path": {
+      "commonMisreadings": [
+        "Playing lightly means quitting dating, since low investment and total withdrawal are identical."
+      ],
+      "boundaryConditions": [
+        "Low investment lowers the emotional cost and the odds together; it is a way to stay in without grinding, not a strategy for winning."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:the-cop-out-slogans": {
+      "commonMisreadings": [
+        "Being yourself and waiting for the right person is the advice that actually finds partners."
+      ],
+      "boundaryConditions": [
+        "Calling the slogans a deflection is a claim about why they get repeated, not proof that every pattern they dismiss is real."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:decoding-just-be-nice-and-just-be-yourself": {
+      "commonMisreadings": [
+        "Being nice is enough on its own, so a woman will want a man who is kind."
+      ],
+      "boundaryConditions": [
+        "Both pieces of advice are treated as true but incomplete, which is a repair rather than a rejection of them."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:saving-face-beats-telling-the-truth": {
+      "commonMisreadings": [
+        "People admit plainly that attraction and status drive their dating choices rather than values."
+      ],
+      "boundaryConditions": [
+        "This is a claim about what people say in public, not about whether attraction or values actually drives them."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:cold-logic-keeps-reaching-the-same-place": {
+      "commonMisreadings": [
+        "Men who analyse dating coldly reach wildly different conclusions, so the patterns are imagined."
+      ],
+      "boundaryConditions": [
+        "Convergence among people reasoning the same way is weak evidence on its own; shared premises reach shared conclusions whether or not they hold."
+      ]
+    },
+    "gender-dynamics:male:logic-feelings-the-cycle:most-dont-snap-out-of-it": {
+      "commonMisreadings": [
+        "Women course-correct early, so most reassess their dating choices well before options thin out."
+      ],
+      "boundaryConditions": [
+        "Usually is doing real work in this card; it describes a common trajectory and not an inevitable one."
+      ]
+    },
+    "gender-dynamics:male:facing-reality-what-attracts:reality-vs-feelings": {
+      "commonMisreadings": [
+        "Body positivity changes what men find attractive, so a woman can shift the market by demanding it."
+      ],
+      "boundaryConditions": [
+        "Self-acceptance and facing what is changeable are treated as compatible; the target is the version taken far enough to discourage either."
+      ]
+    },
+    "gender-dynamics:male:the-looks-first-reality:what-the-research-actually-shows": {
+      "commonMisreadings": [
+        "Speed-dating research shows looks matter far less to women than to men when they meet face to face."
+      ],
+      "boundaryConditions": [
+        "Eastwick & Finkel measured live face-to-face settings; stated preferences and app behaviour are separate measurements that need not agree."
+      ]
+    },
+    "gender-dynamics:male:the-looks-first-reality:get-a-hobby-is-code-for-give-up": {
+      "commonMisreadings": [
+        "Telling a man to find hobbies outside dating is neutral life advice about balance."
+      ],
+      "boundaryConditions": [
+        "The reading depends on context — the same advice given unprompted, or to someone genuinely over-invested, can be exactly what it says."
+      ]
+    },
+    "gender-dynamics:gd-social-approval": {
+      "commonMisreadings": [
+        "Social approval matters little to women, so they break ranks to defend the men they want."
+      ],
+      "boundaryConditions": [
+        "The card names a fear of social rejection rather than a character flaw, and the same pressure operates on men in their own groups."
+      ]
+    },
+    "gender-dynamics:male:the-female-approval-engine-mixed-signals:cosmetic-surgery-and-the-female-approval-engine": {
+      "commonMisreadings": [
+        "Women get cosmetic work because men want it, so male preference drives the fillers and BBLs."
+      ],
+      "boundaryConditions": [
+        "Stated male preference for the natural look is survey-grade evidence, and some cosmetic work is done for reasons that have nothing to do with either audience."
+      ]
+    },
+    "gender-dynamics:gd-herd-script": {
+      "commonMisreadings": [
+        "Today's independence script is freely chosen, unlike the 1950s pressure that pushed women to marry."
+      ],
+      "boundaryConditions": [
+        "Both eras carried herd pressure; that leaves open whether either script served the women following it."
+      ]
+    },
+    "gender-dynamics:male:the-female-approval-engine-mixed-signals:women-arent-a-monolith-is-a-weak-defense": {
+      "commonMisreadings": [
+        "Noticing that women move together as a group means claiming every woman wants identical things."
+      ],
+      "boundaryConditions": [
+        "Group-level tendencies and individual variation are both real; the card rejects the rebuttal, not the variation it points at."
+      ]
+    },
+    "gender-dynamics:gd-drawn-to-chaos": {
+      "commonMisreadings": [
+        "Women avoid dangerous edgy men, so the thug-type attraction is a story guys invented."
+      ],
+      "boundaryConditions": [
+        "A lot is not most: this describes a visible pattern among some women rather than a general female preference for instability."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:the-mask-of-game": {
+      "commonMisreadings": [
+        "Learning pickup leaves a man fulfilled once women want him, mask and all."
+      ],
+      "boundaryConditions": [
+        "The card grants that game works on the metric of dates and sex; the emptiness it names is a separate cost, not evidence the technique fails."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:game-is-a-scale-baseline-is-just-not-being-awkward": {
+      "commonMisreadings": [
+        "Baseline game means manipulating women, so a socially awkward man can still date well."
+      ],
+      "boundaryConditions": [
+        "Game is treated as a scale, so the argument for a required minimum is not an argument for the manipulative end of it."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:what-tension-actually-sounds-like": {
+      "commonMisreadings": [
+        "Asking a woman how her day was creates the tension that makes her want him."
+      ],
+      "boundaryConditions": [
+        "The example lines are illustrations of a register, not scripts; delivered without the calibration the neighbouring cards demand they land badly."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:boldness-is-built-not-born": {
+      "commonMisreadings": [
+        "Men born bold attract women, so practice changes little for anyone else."
+      ],
+      "boundaryConditions": [
+        "Built rather than born is a claim about the trainable share, and it sits beside cards saying the starting point still differs by temperament."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:treat-it-as-practice-without-leading-anyone-on": {
+      "commonMisreadings": [
+        "Treating every conversation as a final exam is how a man learns to attract women."
+      ],
+      "boundaryConditions": [
+        "The card's own title carries the limit: practice means lowering the stakes for yourself, not misrepresenting your interest to someone else."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:stop-showing-women-the-watered-down-you": {
+      "commonMisreadings": [
+        "A woman wants the careful, polite, personality-off version of a man, so restraint reads as authentic."
+      ],
+      "boundaryConditions": [
+        "The advice is to stop censoring, which is different from advising the unfiltered version regardless of what it contains."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:read-the-mutual-effort-she-often-mirrors-your-energy": {
+      "commonMisreadings": [
+        "A flat conversation proves a woman rejects him, whatever energy he brought to it."
+      ],
+      "boundaryConditions": [
+        "Mirroring explains some flat exchanges and not all of them; raising the energy is a test, not a way to overturn a real no."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:pickiness-is-earned": {
+      "commonMisreadings": [
+        "Refusing to chase works at any level, so an average man can reject women like the top tier."
+      ],
+      "boundaryConditions": [
+        "The card conditions the advice on current leverage, which means it changes as leverage does rather than being right or wrong outright."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:be-yourself-and-invisible-or-play-and-resent-yourself": {
+      "commonMisreadings": [
+        "Women are attracted to the real personality underneath the mask, so game sustains a relationship."
+      ],
+      "boundaryConditions": [
+        "The dilemma is stated for men whose real presentation gets no traction; it is not a claim that every man faces the same choice."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:game-is-like-learning-a-new-language": {
+      "commonMisreadings": [
+        "Game is a handful of memorised lines any man can use to attract women."
+      ],
+      "boundaryConditions": [
+        "The language analogy cuts both ways: hard to acquire, and genuinely learnable rather than fixed at birth."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:dating-is-fun-if-you-enjoy-the-game-itself": {
+      "commonMisreadings": [
+        "Dating is fun for everyone, so a man who dislikes the chase enjoys it equally."
+      ],
+      "boundaryConditions": [
+        "The same process producing opposite experiences is a claim about temperament, not about who deserves an outcome."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:the-treat-her-like-a-person-trap": {
+      "commonMisreadings": [
+        "Treating a woman you want exactly like a regular person is the route to attraction."
+      ],
+      "boundaryConditions": [
+        "Treat her like a woman you are attracted to means adding flirtation, not subtracting the ordinary respect the advice was reaching for."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:reading-the-signals-when-escalation-is-welcome": {
+      "commonMisreadings": [
+        "A man should escalate identically whether a woman smiles and touches him or rejects it."
+      ],
+      "boundaryConditions": [
+        "Green lights make escalation reasonable rather than guaranteed welcome; they can be withdrawn at any point and the next card covers that."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap": {
+      "commonMisreadings": [
+        "Flirty fantasy texting means a woman wants to come over tonight, so escalate immediately."
+      ],
+      "boundaryConditions": [
+        "Fantasy talk is treated as genuine interest that has not yet become a plan, so the card slows the escalation without dismissing the signal."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:read-the-room-and-flow-dont-prideful-double-down": {
+      "commonMisreadings": [
+        "Doubling down on his plan when a woman slows things reads as confident and attractive."
+      ],
+      "boundaryConditions": [
+        "Flowing with an off-ramp is about pressure and calibration; it is not advice to abandon direction whenever anything is uncertain."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:real-confidence-isnt-being-an-asshole": {
+      "commonMisreadings": [
+        "Being a cocky arrogant asshole is real confidence, which is what women want in men."
+      ],
+      "boundaryConditions": [
+        "Rejecting the asshole advice is not rejecting boldness; the card asks for playfulness and social awareness held at once."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:weak-signals-arent-your-fault-and-the-grey-zone-favors-the-bold": {
+      "commonMisreadings": [
+        "Ambiguous signals are a fair test, and a real man will read what a woman wants."
+      ],
+      "boundaryConditions": [
+        "Naming weak signals as a real problem does not make every missed signal her fault; the grey zone still requires a judgement call."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:decoding-thats-hot-flirty-or-just-a-compliment": {
+      "commonMisreadings": [
+        "A woman saying that's hot is always flirting, whatever her tone and delivery suggest."
+      ],
+      "boundaryConditions": [
+        "The card's whole method is that delivery disambiguates, so the phrase carries no fixed meaning on its own."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:the-wingwoman-tell-youre-genuinely-friend-zoned": {
+      "commonMisreadings": [
+        "A woman who offers to be his wingwoman and discusses other men wants him romantically."
+      ],
+      "boundaryConditions": [
+        "This is one of the few signals the page treats as unambiguous, which is why it is stated flatly rather than hedged."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:dating-has-no-margin-for-error": {
+      "commonMisreadings": [
+        "Dating forgives fumbles the way friendships do, so one awkward date costs a man little."
+      ],
+      "boundaryConditions": [
+        "Almost zero margin describes the early romantic lane; established relationships and friendships are explicitly the contrast case."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:the-plausible-deniability-freeze": {
+      "commonMisreadings": [
+        "A flat thanks to a woman's compliment reads as flirting rather than a closed door."
+      ],
+      "boundaryConditions": [
+        "The card explains the freeze as risk management rather than indifference, which is a diagnosis and not a defence of it."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:always-attractive-blindness": {
+      "commonMisreadings": [
+        "A man who was always attractive reads a woman's interest more sharply than a glow-up man."
+      ],
+      "boundaryConditions": [
+        "The contrast effect explains a difference in calibration, not a difference in how much attention either man actually receives."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:the-fear-of-being-that-guy": {
+      "commonMisreadings": [
+        "A man readier to attract women is one who watched them mock a failed shot."
+      ],
+      "boundaryConditions": [
+        "This traces where the over-caution comes from; explaining the origin of the clamp is not the same as excusing staying inside it."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:the-on-the-clock-trap": {
+      "commonMisreadings": [
+        "Flirting received at work is easy to act on, so a man can reciprocate freely."
+      ],
+      "boundaryConditions": [
+        "The bind is specific to being paid to be friendly; away from the register the same signal is readable and actionable."
+      ]
+    },
+    "gender-dynamics:male:game-the-mask-reading-signals:a-safe-answer-buys-you-no-information": {
+      "commonMisreadings": [
+        "The safest customer-service reply to a woman's opening tells a man exactly what she wants."
+      ],
+      "boundaryConditions": [
+        "The cost named here is informational: a flat answer forecloses learning, which is a separate matter from whether it was the polite choice."
+      ]
+    },
+    "gender-dynamics:gd-emotional-harem": {
+      "commonMisreadings": [
+        "A woman keeping several male friends for validation wants each of them romantically."
+      ],
+      "boundaryConditions": [
+        "The arrangement usually runs without anyone stating it, so naming it describes an exchange rather than alleging a deliberate scheme."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:being-the-safe-guy-cuts-both-ways": {
+      "commonMisreadings": [
+        "The safe guy role is pure loss, and a man learns little about what women want."
+      ],
+      "boundaryConditions": [
+        "The card names a genuine gain without disputing the loss; both sit in the same arrangement at the same time."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:the-wingwoman-myth": {
+      "commonMisreadings": [
+        "An attractive female friend vouching for a man transfers her status and makes women want him."
+      ],
+      "boundaryConditions": [
+        "Usually and can backfire are the card's own hedges; a genuine social introduction is a different move from being vouched for."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:knowing-the-personality-can-kill-the-infatuation": {
+      "commonMisreadings": [
+        "Looks decide everything, so a man will want a woman whose personality he knows is incompatible."
+      ],
+      "boundaryConditions": [
+        "Overriding infatuation requires actually knowing the person, so the mechanism is unavailable for someone he has only looked at."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:when-standards-become-a-shield": {
+      "commonMisreadings": [
+        "A man who rejects every woman who shows interest is being principled about his standards."
+      ],
+      "boundaryConditions": [
+        "The card asks the question rather than answering it; high standards and avoidance can produce the same rejection record."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:ill-know-it-when-i-see-it-is-an-escape-hatch": {
+      "commonMisreadings": [
+        "Saying he will know her when he sees her is an open-minded way to choose a partner."
+      ],
+      "boundaryConditions": [
+        "The objection is to standards that cannot be checked, not to attraction being partly unpredictable."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:the-pure-girl-filter-rejects-almost-everyone": {
+      "commonMisreadings": [
+        "A man holding out for a pure girl with minimal sexual history will still date widely."
+      ],
+      "boundaryConditions": [
+        "The card asks him to price the filter honestly against everything else he wants, which is not an instruction to drop it."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:the-high-standards-story-can-be-armor": {
+      "commonMisreadings": [
+        "A man who avoids the women he wants simply has standards set very high."
+      ],
+      "boundaryConditions": [
+        "This is offered as a possibility worth testing against his own pattern, not as a diagnosis that fits every man who holds a high bar."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:mens-main-character-syndrome": {
+      "commonMisreadings": [
+        "A decent job and gym sessions make a man the catch loyal women want."
+      ],
+      "boundaryConditions": [
+        "The card exists to turn the unrealistic-standards charge back on men, so it is a symmetry argument rather than a claim only men do it."
+      ]
+    },
+    "gender-dynamics:male:standards-leverage-desperation:going-high-value-flips-who-signals": {
+      "commonMisreadings": [
+        "Raising his value leaves the entire approach risk on a man, however much women want him."
+      ],
+      "boundaryConditions": [
+        "The risk changing hands is a description of high leverage; the neighbouring card warns against adopting the posture before earning it."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:choosing-to-stay-true-and-already-living-it": {
+      "commonMisreadings": [
+        "Staying true to himself guarantees a man finds a partner eventually, so the cost is imaginary."
+      ],
+      "boundaryConditions": [
+        "The card states the likely outcome plainly and treats it as a choice being made with open eyes, not a prediction about any individual."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:a-relationship-is-a-bonus-not-a-necessity": {
+      "commonMisreadings": [
+        "A relationship is a necessity like a job, so a man is incomplete until women want him."
+      ],
+      "boundaryConditions": [
+        "Calling a relationship optional is aimed at the desperation that makes someone accept anything; it is not an argument against wanting one."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:the-social-cost-of-going-against-the-grain": {
+      "commonMisreadings": [
+        "Refusing to play the game leaves a man respected by the guys and women he wants."
+      ],
+      "boundaryConditions": [
+        "The social cost described is how the choice is read by others, which says nothing about whether the choice itself was right."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:peace-or-belonging-you-usually-cant-have-both": {
+      "commonMisreadings": [
+        "A principled outsider gets both peace and belonging, so the circle accepts him and the dating works."
+      ],
+      "boundaryConditions": [
+        "Usually is the hedge that matters: the trade-off is common rather than universal, and a circle of similar outsiders is the exception."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:choosing-the-pain-you-can-respect": {
+      "commonMisreadings": [
+        "A man who settles for a woman he barely wants takes the painless path."
+      ],
+      "boundaryConditions": [
+        "Both paths are stated as painful; the card ranks which pain is bearable rather than claiming one is free."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:the-what-about-kids-pressure-is-often-manipulation": {
+      "commonMisreadings": [
+        "Asking a man about grandchildren when he steps back from dating is pure sincere concern."
+      ],
+      "boundaryConditions": [
+        "Often is doing the work here: the same question can be genuine concern, and the card asks him to tell the two apart."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:want-kids-for-the-right-reason-not-the-default": {
+      "commonMisreadings": [
+        "Wanting children because it is expected is identical to wanting them with a woman you choose."
+      ],
+      "boundaryConditions": [
+        "The test is about the source of the wanting; the card explicitly declines to take a position for or against having children."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:there-may-be-no-justice-and-thats-the-hardest-part": {
+      "commonMisreadings": [
+        "The dating market rewards integrity, so an honest man is repaid for doing everything right."
+      ],
+      "boundaryConditions": [
+        "A market failing to reward integrity is a claim about the market's mechanism, not a claim that integrity has no value."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:the-internal-reward-paid-for-with-isolation": {
+      "commonMisreadings": [
+        "Staying true pays a man internally and externally, so integrity brings the women he wants."
+      ],
+      "boundaryConditions": [
+        "The internal reward is real and unmeasurable; naming isolation as its price is what keeps the card from being encouragement."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:make-peace-with-it-or-let-resentment-win": {
+      "commonMisreadings": [
+        "Making peace with dating alone means being happy about it and pretending it stopped hurting."
+      ],
+      "boundaryConditions": [
+        "The card defines making peace as living with the situation clear-eyed, and says outright that some men never manage it."
+      ]
+    },
+    "gender-dynamics:male:the-cost-of-staying-true:neither-rage-nor-cope": {
+      "commonMisreadings": [
+        "Red-pill rage and just-be-yourself comfort are the only two responses available to a man in dating."
+      ],
+      "boundaryConditions": [
+        "The third path is described as rare and difficult rather than as the obvious choice everyone should make."
+      ]
+    },
+    "gender-dynamics:male:the-macro-picture-why-dating-broke:the-feminism-trade-off-freedoms-in-guardrails-out": {
+      "commonMisreadings": [
+        "Feminism gave women freedoms and left every guardrail on marriage and pairing fully intact."
+      ],
+      "boundaryConditions": [
+        "The card states the gains as real before naming the cost, and a trade-off is not a verdict on whether the trade was worth making."
+      ]
+    },
+    "gender-dynamics:male:the-macro-picture-why-dating-broke:the-one-sided-commitment-frame": {
+      "commonMisreadings": [
+        "The commitment question gets asked equally, so women are asked why they reject good men."
+      ],
+      "boundaryConditions": [
+        "This is an observation about which question gets asked in public, not a claim that women avoid commitment more than men do."
+      ]
+    },
+    "gender-dynamics:male:the-macro-picture-why-dating-broke:the-pile-on-young-men-hit-from-every-side": {
+      "commonMisreadings": [
+        "Young men faced one difficulty at a time, so housing costs and dating pressure arrived separately."
+      ],
+      "boundaryConditions": [
+        "The claim is about several pressures coinciding; each strand has its own evidence base and they are not equally well measured."
+      ]
+    },
+    "gender-dynamics:male:the-macro-picture-why-dating-broke:gen-z-has-it-even-worse": {
+      "commonMisreadings": [
+        "Gen Z men are dating and having sex more than Millennials did at the same age."
+      ],
+      "boundaryConditions": [
+        "The sourced part is the sexlessness trend; the wider claim about Gen Z having it worse is an inference drawn on top of it."
+      ]
+    },
+    "gender-dynamics:male:the-macro-picture-why-dating-broke:sold-a-fantasy-the-cost-of-a-decade-of-bad-advice": {
+      "commonMisreadings": [
+        "A man in his thirties who sees the game clearly can still date women his age."
+      ],
+      "boundaryConditions": [
+        "This describes a specific cohort's experience of the narrowing window; it is not a claim that a man in his thirties is out of options."
+      ]
+    },
+    "gender-dynamics:male:the-macro-picture-why-dating-broke:blackpilled-before-they-start": {
+      "commonMisreadings": [
+        "Red-pill statistics and warnings empower young men, so knowing the odds improves their dating outcomes."
+      ],
+      "boundaryConditions": [
+        "The irony named is that information without agency demoralises; that is a claim about effect, not an argument for withholding the information."
+      ]
+    },
+    "gender-dynamics:male:the-macro-picture-why-dating-broke:the-final-boss-cope": {
+      "commonMisreadings": [
+        "A good-looking man struggling in dating proves the market is hopeless for everyone below him."
+      ],
+      "boundaryConditions": [
+        "One attractive man's difficulty is a single case that can have its own explanation, which is exactly why it cannot carry the inference."
+      ]
+    },
+    "gender-dynamics:female:the-choosing-the-window:peak-leverage-the-filter": {
+      "commonMisreadings": [
+        "A woman with peak leverage should attract offers, since filtering them matters much less."
+      ],
+      "boundaryConditions": [
+        "Peak leverage describes a convergence of youth, beauty, novelty and attention; where it sits varies widely between individuals."
+      ]
+    },
+    "gender-dynamics:female:the-choosing-the-window:the-female-window": {
+      "commonMisreadings": [
+        "A woman wants offers at her highest-attention phase, which is also her wisest phase."
+      ],
+      "boundaryConditions": [
+        "Front-loaded is stated about the dating market specifically, and the card says outright that it does not reduce a woman to youth or looks."
+      ]
+    },
+    "gender-dynamics:female:the-choosing-the-window:when-the-dynamic-shifts": {
+      "commonMisreadings": [
+        "When high-value men grow scarce, attraction alone is enough for a woman to hold one."
+      ],
+      "boundaryConditions": [
+        "The inversion described applies at the top of the market she is competing in, not to the market as a whole."
+      ]
+    },
+    "gender-dynamics:female:the-choosing-the-window:commentary": {
+      "commonMisreadings": [
+        "Once a worthy offer appears a woman needs only leverage, so warmth and loyalty attract him later."
+      ],
+      "boundaryConditions": [
+        "Two distinct skills are named — filtering while leverage is high and competence once a partner is chosen — and neither substitutes for the other."
+      ]
+    },
+    "gender-dynamics:female:the-approval-engine:the-pick-me-label-keeps-women-in-line": {
+      "commonMisreadings": [
+        "Calling a woman a pick-me is a real rebuttal to what she noticed about women's dating behaviour."
+      ],
+      "boundaryConditions": [
+        "The card objects to the label being used in place of an argument; it does not claim every use of it is social policing."
+      ]
+    },
+    "gender-dynamics:female:your-standards-your-choices:butterflies-arent-the-same-as-a-good-match": {
+      "commonMisreadings": [
+        "Butterflies for the unavailable guy are a reliability signal, so a woman should want that spark."
+      ],
+      "boundaryConditions": [
+        "The card separates the flutter from reliability without claiming the two never coincide; a steady man can also produce it."
+      ]
+    },
+    "gender-dynamics:female:how-you-choose-and-what-it-does:the-backup-plan-cycle": {
+      "commonMisreadings": [
+        "A woman who circles back to the steady man she passed on will genuinely desire him."
+      ],
+      "boundaryConditions": [
+        "The loop describes a common sequence rather than an inevitable one, and the resentment it names lands on both people in it."
+      ]
+    },
+    "gender-dynamics:female:how-you-choose-and-what-it-does:be-honest-about-your-emotional-harem": {
+      "commonMisreadings": [
+        "A woman who leans on male friends for validation is giving them what they want."
+      ],
+      "boundaryConditions": [
+        "The arrangement can exist without intent, which is why the card asks for an honest look rather than alleging manipulation."
+      ]
+    },
+    "gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings": {
+      "commonMisreadings": [
+        "Deciding the standard is unfair changes what men find attractive in a woman's body."
+      ],
+      "boundaryConditions": [
+        "Self-acceptance is called healthy in the same breath; the target is using it to avoid what could actually be changed."
+      ]
+    },
+    "gender-dynamics:female:timing-honesty-the-mirror:there-are-no-good-men-left-turn-the-question-inward": {
+      "commonMisreadings": [
+        "Blaming men is more useful for a woman than asking which men still want her."
+      ],
+      "boundaryConditions": [
+        "Turning the question inward is offered as the more useful move, not as proof that the market side of the complaint is empty."
+      ]
+    },
+    "gender-dynamics:female:timing-honesty-the-mirror:saving-face-vs-telling-yourself-the-truth": {
+      "commonMisreadings": [
+        "Performing the nicer story is how a woman names what actually drives which men she wants."
+      ],
+      "boundaryConditions": [
+        "Being driven by attraction and status is treated as ordinary rather than shameful; the card objects to concealing it, not to having it."
+      ]
+    },
+    "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment": {
+      "commonMisreadings": [
+        "Men avoid commitment, so a woman waiting to see if someone better wants her is strung along."
+      ],
+      "boundaryConditions": [
+        "The card turns a script around; men avoiding commitment is not denied, only its assumed monopoly on the pattern."
+      ]
+    },
+    "gender-dynamics:female:timing-honesty-the-mirror:dont-wait-for-the-wall-to-course-correct": {
+      "commonMisreadings": [
+        "Waiting until her mid-thirties to reassess leaves a woman the same room to choose well."
+      ],
+      "boundaryConditions": [
+        "Reassessing early is advice about preserving choice, and it assumes the wall is a slope rather than the cliff the discourse describes."
+      ]
+    },
+    "gender-dynamics:female:timing-honesty-the-mirror:even-shy-girls-break-character-for-the-right-guy": {
+      "commonMisreadings": [
+        "A shy woman gives a man she wants exactly the same low effort as anyone else."
+      ],
+      "boundaryConditions": [
+        "Usually is the hedge: genuine anxiety or an unsafe context can suppress the effort a woman would otherwise show."
+      ]
+    },
+    "gender-dynamics:both-sides:the-shared-market:its-not-just-women-the-market-is-rough-for-them-too": {
+      "commonMisreadings": [
+        "Every woman on the apps is delusional and entitled, and each of them wants an impossible man."
+      ],
+      "boundaryConditions": [
+        "This card exists to bound the rest of the page; conceding the other side's difficulty does not retract the patterns named elsewhere."
+      ]
+    },
+    "gender-dynamics:both-sides:the-shared-market:the-problem-isnt-the-standards-its-the-dishonesty-about-them": {
+      "commonMisreadings": [
+        "The frustration is that a woman wants a tall guy with money, rather than her dishonesty about it."
+      ],
+      "boundaryConditions": [
+        "Standards are treated as legitimate whatever their content, so the complaint is about accuracy of description and nothing else."
+      ]
+    },
+    "gender-dynamics:both-sides:the-shared-market:its-the-same-game-as-high-school": {
+      "commonMisreadings": [
+        "The high-school dynamic ends after graduation, so charisma stops deciding who gets chosen in dating."
+      ],
+      "boundaryConditions": [
+        "The continuity claim is about who gets selected; adult markets add money, status and timing that high school did not have."
+      ]
+    },
+    "gender-dynamics:both-sides:the-shared-market:texting-energy-usually-previews-the-real-thing": {
+      "commonMisreadings": [
+        "A dry low-effort texter turns warm in person, so texting predicts little about dating."
+      ],
+      "boundaryConditions": [
+        "Usually a decent preview is a screening heuristic, and the mirroring card next to it names the main way it misfires."
+      ]
+    },
+    "gender-dynamics:both-sides:the-shared-market:the-signaling-standoff": {
+      "commonMisreadings": [
+        "A woman who retreats to polite after a flat reply simply stopped wanting him."
+      ],
+      "boundaryConditions": [
+        "The standoff is constructed so that neither party is at fault, which is what distinguishes it from genuine disinterest."
+      ]
+    },
+    "gender-dynamics:both-sides:standards-self-assessment-avoidance:most-people-are-average-thats-what-average-means": {
+      "commonMisreadings": [
+        "Most people are above average, so anyone can find the partners they want."
+      ],
+      "boundaryConditions": [
+        "The arithmetic constrains how many people clear several bars at once; it says nothing about whether any particular pairing is available."
+      ]
+    },
+    "gender-dynamics:both-sides:standards-self-assessment-avoidance:the-market-prices-you-not-your-self-assessment": {
+      "commonMisreadings": [
+        "How much a person believes they bring sets their dating value, whatever the market returns."
+      ],
+      "boundaryConditions": [
+        "Market response is feedback about a tier and a strategy, not a measure of a person's worth or a fixed ceiling."
+      ]
+    },
+    "gender-dynamics:both-sides:standards-self-assessment-avoidance:the-ill-start-when-im-better-trap": {
+      "commonMisreadings": [
+        "Waiting for an upgraded self before dating is always the disciplined choice, whatever the delay costs."
+      ],
+      "boundaryConditions": [
+        "The card grants that not locking in at a low point has real logic; the trap is the version with no end condition."
+      ]
+    },
+    "gender-dynamics:both-sides:standards-self-assessment-avoidance:an-agreeable-yes-isnt-an-enthusiastic-yes": {
+      "commonMisreadings": [
+        "An agreeable yes to dating signals real interest as reliably as an enthusiastic one."
+      ],
+      "boundaryConditions": [
+        "This is about reading enthusiasm accurately; a hesitant yes is still a yes, and the card is not a rule about who may accept."
+      ]
+    },
+    "gender-dynamics:both-sides:standards-self-assessment-avoidance:the-grind-vs-date-answer-flips-with-age": {
+      "commonMisreadings": [
+        "Grinding on yourself first is the right answer at every age, whatever runway remains for dating."
+      ],
+      "boundaryConditions": [
+        "The answer is conditioned on remaining runway, which means it is a scheduling judgement rather than a fixed rule either way."
+      ]
+    },
+    "gender-dynamics:both-sides:how-these-conversations-get-distorted:attacking-the-messenger-isnt-a-rebuttal": {
+      "commonMisreadings": [
+        "Calling someone an incel or a pick-me answers whether their claim about dating is true."
+      ],
+      "boundaryConditions": [
+        "Naming the fallacy establishes that the label settles nothing; it does not establish that the underlying claim is correct."
+      ]
+    },
+    "gender-dynamics:both-sides:how-these-conversations-get-distorted:its-not-just-feminism-apps-and-social-media-reshaped-everyone": {
+      "commonMisreadings": [
+        "Feminism alone explains dating's dysfunction, so apps and social media changed little for anyone."
+      ],
+      "boundaryConditions": [
+        "Several threads are named as simultaneous causes, and the card does not weigh them against each other."
+      ]
+    },
+    "gender-dynamics:both-sides:how-these-conversations-get-distorted:friendly-isnt-interested-and-men-over-read-it": {
+      "commonMisreadings": [
+        "Men and women read friendliness equally well, so nobody over-reads warmth as romantic interest."
+      ],
+      "boundaryConditions": [
+        "Sexual overperception bias is an average difference between groups, so it predicts nothing about a specific reading being wrong."
+      ]
+    },
+    "gender-dynamics:both-sides:how-these-conversations-get-distorted:the-cold-approach-tax": {
+      "commonMisreadings": [
+        "Cold approaching at volume is cheap, so more approaches make more women want an average man."
+      ],
+      "boundaryConditions": [
+        "The tax is highest where the same people recur — a gym, a campus, a neighbourhood — and lower in genuinely anonymous settings."
+      ]
+    },
+    "gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer": {
+      "commonMisreadings": [
+        "Shaming men who date abroad or opt out addresses what made the local market bad."
+      ],
+      "boundaryConditions": [
+        "The shop analogy is about which question gets asked; it is not a claim that every exit is a reasoned response to prices."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:your-social-circle-levels-you-up": {
+      "commonMisreadings": [
+        "Social environment changes little, so time around socially skilled people leaves a man's dating unchanged."
+      ],
+      "boundaryConditions": [
+        "Absorbing calibration by proximity assumes he is actually in the room and participating; the next card is about why that is the hard part."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:how-to-actually-build-a-social-circle": {
+      "commonMisreadings": [
+        "Joining a club is enough to meet the partners a quiet man wants."
+      ],
+      "boundaryConditions": [
+        "The mechanism specified is repetition with the same faces plus engagement, which is why attendance alone is the failure mode named."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:the-introverts-catch-22-and-the-way-out": {
+      "commonMisreadings": [
+        "Forcing yourself into a social hobby you dislike reliably works for meeting partners as an introvert."
+      ],
+      "boundaryConditions": [
+        "The bind is real for people whose genuine interests are solitary; it is not a claim that introverts cannot build a social life."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice": {
+      "commonMisreadings": [
+        "General meetup groups are full of single people your age looking to date, so attend them."
+      ],
+      "boundaryConditions": [
+        "The objection is about the composition of general-interest groups, so a group selected for age and intent is a different case."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:third-spaces-have-disappeared": {
+      "commonMisreadings": [
+        "Meeting partners feels hard for personal reasons, since the casual third spaces are still thriving."
+      ],
+      "boundaryConditions": [
+        "Naming a structural cause removes blame without removing the need to act inside the environment as it now is."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:the-game-is-built-for-extroverts-the-introverts-who-won-opted-out-of-it": {
+      "commonMisreadings": [
+        "A shy person who barely dates can still marry, which proves the path is repeatable."
+      ],
+      "boundaryConditions": [
+        "The card's point is that a single lucky sequence is not a method; it does not claim such outcomes are impossible."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:its-not-rigged-extroverts-just-always-had-the-edge": {
+      "commonMisreadings": [
+        "The dating environment is rigged against introverts, so extroverts gained their edge only recently."
+      ],
+      "boundaryConditions": [
+        "Calling the extrovert advantage long-standing rejects the conspiracy framing without claiming the current environment is unchanged."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:the-real-problem-isnt-being-quiet-its-being-quiet-and-disconnected": {
+      "commonMisreadings": [
+        "Being quiet is what stops a person finding partners, connected or otherwise."
+      ],
+      "boundaryConditions": [
+        "The card separates quiet from socially anxious and disconnected, which is a claim about which trait is load-bearing."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:lottery-ticket-success-stories-arent-a-strategy": {
+      "commonMisreadings": [
+        "Dumb-luck stories are a strategy, so a man who keeps going will meet the partner he wants."
+      ],
+      "boundaryConditions": [
+        "Calling these stories lottery tickets is about their usefulness as a plan, not a denial that they happened."
+      ]
+    },
+    "gender-dynamics:both-sides:meeting-people-the-odds:asking-fast-filters-for-lukewarm-dates": {
+      "commonMisreadings": [
+        "Asking fast on dating apps selects for people specifically interested in you."
+      ],
+      "boundaryConditions": [
+        "The trade named is more meetings of lower average quality, so which side of it is better depends on what is being optimised."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-honest-answer-is-i-dont-know-sit-in-it-without-coping": {
+      "commonMisreadings": [
+        "Whether the wild card arrives is knowable, so a man can say confidently that dating ends here."
+      ],
+      "boundaryConditions": [
+        "The card refuses both confident answers; sitting in the uncertainty is presented as accurate rather than as comforting."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-regret-that-hurts-most-real-chances-you-fumbled": {
+      "commonMisreadings": [
+        "A man regrets that women wanted him little, rather than the clear chances he missed."
+      ],
+      "boundaryConditions": [
+        "Ranking fumbled chances as the heavier regret is a claim about how it lands, and the next card is the counterweight to it."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:you-got-a-test-before-you-studied-for-it": {
+      "commonMisreadings": [
+        "Freezing when the moment came proves a man is permanently broken for dating rather than untrained."
+      ],
+      "boundaryConditions": [
+        "The frame reinterprets past freezing as missing skill; it does not promise the skill has since been acquired."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-deeper-regret-you-had-easy-mode-and-didnt-play-it": {
+      "commonMisreadings": [
+        "High school and college were as hard for meeting partners as adult life is now."
+      ],
+      "boundaryConditions": [
+        "Easy mode refers to the density of same-age contact, not to the outcomes being easy for everyone inside it."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:nobody-warned-you-the-social-window-closes": {
+      "commonMisreadings": [
+        "Focusing entirely on school and grades leaves a person's dating development fully intact."
+      ],
+      "boundaryConditions": [
+        "The advice is called half-true rather than false; the omission is what the card is about."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:naming-the-enemy-helps-even-when-it-cant-fix-anything": {
+      "commonMisreadings": [
+        "Tracing the exact causes always lightens the weight for a man analysing his dating history."
+      ],
+      "boundaryConditions": [
+        "The card raises the question of whether the dissection helps and leaves it genuinely open."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:self-awareness-isnt-the-same-as-change": {
+      "commonMisreadings": [
+        "Seeing his situation with total clarity means a man will change how he approaches dating."
+      ],
+      "boundaryConditions": [
+        "Clarity without change is described as rare rather than admirable; the card names the posture without recommending it."
+      ]
+    },
+    "gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:stop-waiting-for-the-other-side-to-change": {
+      "commonMisreadings": [
+        "Asking the other side to change is what finally moves dating, so women and men should wait."
+      ],
+      "boundaryConditions": [
+        "The symmetry argument says why nothing moves; it does not establish that both sides carry equal responsibility for the situation."
       ]
     }
   }
