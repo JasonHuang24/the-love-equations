@@ -793,6 +793,46 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
   assert.ok(readiness.whyMatched.some((reason) => /Distinctive overlap|Exact phrase|Concept signature/.test(reason)));
 });
 
+test('the weak list says how much of the band it is', async () => {
+  /*
+   * maxWeakMatches keeps three, retrieval keeps eight, and until v2.6.9 the
+   * payload published neither number — so a consumer could report the weak list
+   * as though it were the band. Across the 21-source archive the band is a
+   * median 4 and a p90 12, and the ledger's "Nearest: X" line stood in for more
+   * than one concept on 1,163 of 1,643 unmapped rows.
+   *
+   * The pins here are the RELATIONSHIP, not the count. weakBandTotal is an IDF
+   * quantity over the whole canon and moves on every doctrine merge; what must
+   * never move is that it can be trusted as a denominator.
+   */
+  const result = await analyzeDocument(normalizeInput({
+    text: 'Attraction, commitment, and long-term compatibility are not the same thing, '
+      + 'and treating them as one explains most of the confusion people have about dating.',
+  }), REAL_CANON);
+  const segment = result.segments[0];
+
+  assert.equal(typeof segment.weakBandTotal, 'number');
+  assert.ok(segment.weakBandTotal > segment.weakMatches.length,
+    'this passage is chosen because the cap bites: the band is wider than the carried list');
+  assert.equal(segment.weakMatches.length, SCORING_CONFIG.maxWeakMatches,
+    'and the carried list is at the cap, so the difference is suppression and not scarcity');
+
+  // The invariant, on every segment of a real document. A denominator smaller
+  // than its numerator would let the UI render "3 of 2 in the nearby band".
+  const demo = await analyzeDocument(createDemoDocument(), REAL_CANON);
+  demo.segments.forEach((row) => {
+    assert.ok(row.weakBandTotal >= row.weakMatches.length,
+      `${row.unit.id} publishes a band of ${row.weakBandTotal} under a carried list of ${row.weakMatches.length}`);
+  });
+
+  // Nothing retrieved means nothing to be honest about, and zero rather than
+  // undefined so a consumer can do arithmetic on it without guarding.
+  const empty = await analyzeDocument(normalizeInput({
+    text: 'Water freezes at zero degrees Celsius under standard atmospheric pressure.',
+  }), REAL_CANON);
+  empty.segments.forEach((row) => assert.equal(row.weakBandTotal, 0));
+});
+
 test('coverage distinguishes unavailable, zero, and positive denominators', async () => {
   const noDomain = await analyzeDocument(normalizeInput({
     text: 'The sky is blue. Water freezes at zero degrees Celsius.',

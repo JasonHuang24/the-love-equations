@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.6.8';
+} from './lab-intake.js?v=2.6.9';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,36 +15,36 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.6.8';
-import { createDemoDocument } from './lab-demo.js?v=2.6.8';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.6.8';
-import { claimUnitRowDigest } from './lab-analyzer.js?v=2.6.8';
+} from './lab-extractors.js?v=2.6.9';
+import { createDemoDocument } from './lab-demo.js?v=2.6.9';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.6.9';
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.6.9';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.6.8';
+} from './lab-export.js?v=2.6.9';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
   ledgerFilterIsActive,
   ledgerRowMatchesFilter,
   nextLedgerFilter,
-} from './lab-ledger.js?v=2.6.8';
+} from './lab-ledger.js?v=2.6.9';
 import {
   REVIEW_DISPOSITIONS,
   buildMappingFeedback,
   mappingFeedbackFileName,
   mappingFeedbackToJson,
-} from './lab-feedback.js?v=2.6.8';
+} from './lab-feedback.js?v=2.6.9';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.6.8';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.6.9';
 // The Lab build that rendered a flagged row. Deliberately distinct from
 // provenance.analyzer.version, which names the engine that produced the numbers:
 // a UI-only patch moves this and not that, and triage needs to tell them apart.
-const LAB_RELEASE = '2.6.4';
+const LAB_RELEASE = '2.6.9';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -847,6 +847,54 @@ function matchSection(match) {
   return [match.category, match.subcategory].filter(Boolean).join(' · ');
 }
 
+/**
+ * A nearby-concepts list the reader can see the size of.
+ *
+ * An unmapped row said "Nearest: X" and stopped. Measured across the 21-source
+ * archive, that single line stood in for more than one concept on 1,163 of
+ * 1,643 unmapped rows — median 3 in the band, p90 11, max 31 — so the row read
+ * as "the only neighbour" when it usually meant "the top one of several".
+ *
+ * Two caps do the hiding and neither was visible: retrieval keeps the top eight
+ * candidates, and maxWeakMatches keeps three of those. This shows the rest of
+ * what the payload carries and states plainly how many it does not. No score,
+ * threshold or cap moves — a display symptom gets a display fix.
+ */
+function appendNearbyBand(container, segment) {
+  const weak = segment.weakMatches || [];
+  const band = Math.max(segment.weakBandTotal || 0, weak.length);
+  if (band <= 1) return;
+  const details = document.createElement('details');
+  details.className = 'lab-adjacent-more';
+  const summary = document.createElement('summary');
+  summary.textContent = `${band} in the nearby band`;
+  details.appendChild(summary);
+  const list = document.createElement('ul');
+  weak.slice(1).forEach((match) => {
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = match.href;
+    link.textContent = match.title;
+    item.appendChild(link);
+    const section = matchSection(match);
+    item.appendChild(document.createTextNode(
+      ` — ${section ? `${section} · ` : ''}Below threshold · ${Math.round(match.score * 100)}/100`,
+    ));
+    list.appendChild(item);
+  });
+  const uncarried = band - weak.length;
+  if (uncarried > 0) {
+    // Named rather than silently dropped: these scored in the band and this
+    // report does not carry them, which is a different thing from not existing.
+    const item = document.createElement('li');
+    item.className = 'lab-nearby-uncarried';
+    item.textContent = `and ${uncarried} more in the band, not carried in this report`;
+    list.appendChild(item);
+  }
+  details.appendChild(list);
+  container.appendChild(details);
+}
+
 function buildLedgerRow(segment) {
   const row = document.createElement('tr');
   const refCell = document.createElement('td');
@@ -911,6 +959,7 @@ function buildLedgerRow(segment) {
     connectionCell.textContent = segment.weakMatches?.[0]
       ? `Nearest: ${segment.weakMatches[0].title}`
       : 'No credible match';
+    if (segment.weakMatches?.[0]) appendNearbyBand(connectionCell, segment);
     sectionCell.textContent = segment.weakMatches?.[0]
       ? matchSection(segment.weakMatches[0]) || '—'
       : '—';

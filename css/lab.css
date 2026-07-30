@@ -2556,6 +2556,7 @@ button.lab-metric > small { text-align: right; }
   gap: 0.25rem;
 }
 .lab-adjacent-more li { font-size: 12px; }
+.lab-nearby-uncarried { color: var(--text-dim); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
   button.lab-metric,

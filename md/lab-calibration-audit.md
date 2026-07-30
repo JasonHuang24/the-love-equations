@@ -113,6 +113,14 @@ project already knows and does not like, but it is not a cap problem.
 weak band and the 90th percentile has 12, so a reader is routinely shown 3 of 12
 nearby concepts with nothing indicating there are more.
 
+> **Corrected while shipping the fix.** The payload carries three; the ledger
+> displayed **one** — an unmapped row rendered `Nearest: X` from `weakMatches[0]`
+> and drew nothing else. On the 1,643 unmapped retained segments the band is a
+> median 3 and a p90 11, and that single line stood in for more than one concept
+> on **1,163 of them (70.8%)**. The sentence above understated the reader-visible
+> defect by measuring the payload instead of the screen. See
+> `md/lab-weak-band-label.md`.
+
 The cap is not obviously wrong — weak matches are weak by definition and a
 12-item list is noise. But two things make it worth a decision rather than a
 shrug:
@@ -134,7 +142,8 @@ options, none of which I have shipped:
   This is a threshold change and would move the record; it should not be done to
   fix a display symptom.
 
-I would take the second.
+I would take the second. **Jason took the second; it shipped in v2.6.9 —
+`md/lab-weak-band-label.md`.**
 
 ---
 

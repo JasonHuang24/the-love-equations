@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.8';
+export const ANALYZER_VERSION = '2.6.9';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -2803,7 +2803,7 @@ export const PUBLIC_UNIT_FIELDS = Object.freeze([
 ]);
 
 export const PUBLIC_SEGMENT_FIELDS = Object.freeze([
-  'unit', 'mapped', 'matches', 'weakMatches', 'ambiguity',
+  'unit', 'mapped', 'matches', 'weakMatches', 'weakBandTotal', 'ambiguity',
 ]);
 
 function allowlisted(value, fields) {
@@ -2916,12 +2916,27 @@ function buildCandidateSet(unit, prepared, context = null) {
   const bridged = context?.bridgedCanonIds || null;
   const working = [];
 
+  // How many canon entries landed in the nearby band for this passage, counted
+  // here because here is the only place the whole scored set exists. Two caps
+  // stand between this number and the reader — retrieval cuts to the top eight
+  // and maxWeakMatches cuts to three — so without it the display can say how
+  // many nearby concepts it is SHOWING and not how many there are.
+  //
+  // Measured before bounded context, which is a bound rather than a
+  // discrepancy: applyBoundedContext refuses to boost anything already below
+  // minWeakScore, so it can promote an entry out of this band and never into
+  // it. The count is an upper bound on the post-boost band and is exact
+  // wherever no promotion happened, which is the overwhelming majority.
+  const weakBandTotal = ranked.filter((match) => match.score >= SCORING_CONFIG.minWeakScore
+    && match.score < SCORING_CONFIG.minCredibleScore).length;
+
   ranked.forEach((match, index) => {
     // Recorded on every candidate so a diagnostic trace can say what happened
     // to the ones that used to disappear here, and why this one did not.
     const retrieval = {
       rankAtRetrieval: index + 1,
       candidatesAboveFloor: ranked.length,
+      weakBandTotal,
       truncationCap: cap,
     };
     if (index < cap) {
@@ -3607,6 +3622,10 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       mapped: credible.length > 0,
       matches: credible,
       weakMatches: weak.map(publicShape),
+      // A per-unit fact carried on every candidate, so which one it is read off
+      // does not matter. Zero when nothing was retrieved, which is also when
+      // the weak list is empty and there is nothing to be honest about.
+      weakBandTotal: candidates[0]?._retrieval?.weakBandTotal ?? 0,
       candidates,
       ambiguity,
     };
