@@ -164,20 +164,6 @@ false-positive shape rather than fixing an observed one.
 > caught not to. `childfulness carefulness` is refused by `care` rather than `child care`, because
 > `carries` is a `.find` over the denylist in order, and the test asserts that too.
 
-> **CORRECTION, 2026-07-29 (third pass).** The paragraph above previously said no test here *could*
-> anchor `disqualifiedBy` or the modifier string, because they lived only in an internal trace no
-> published field carried, and that closing the gap needed an analyzer change. **That was false.**
-> `scoreEntry` returns `contextualAliasTrace`, `analyzerInternals` exports `scoreEntry`, and
-> `tests/lab-match-behavior.test.mjs` has had a `contextualAliasTrace()` helper reading exactly that
-> since v2.6.0 — nine lines above the block that declared it impossible. Sol's third review found the
-> claim in the file that already disproved it.
->
-> **This is the fourth error in this section of the same family**, and the family is now the finding:
-> asserting what a mechanism *cannot* do without going and looking. Twice about which code path can be
-> reached, once about which words the stemmer reaches, and now once about what a test can observe. In
-> every case the honest instrument was already available and cheaper than the paragraph claiming it was
-> not. **A limitation is a claim and needs the same evidence as a capability.**
->
 > **The decisive surfaces are inflected forms the maintainer knows no natural sentence for** —
 > `healthfulness`, `childfulness`, `healths careers`. That is an observation about the examples found,
 > not a proof that none exists. The distinction is the entire lesson here: this block twice asserted
@@ -202,6 +188,21 @@ false-positive shape rather than fixing an observed one.
 > move the analyzer's hash, which this pass is not permitted to do — decided explicitly rather than
 > overlooked. It is queued with the §7 generalization that rewrites the comment anyway. Until then the
 > comment is wrong, and this block is the record that it is known to be wrong.
+
+> **CORRECTION, 2026-07-29 (third pass).** The first correction block above, in the paragraph now
+> headed "The anchor also pins the mechanism", originally said no test here *could* anchor
+> `disqualifiedBy` or the modifier string, because they lived only in an internal trace no published
+> field carried, and that closing the gap needed an analyzer change. **That was false.**
+> `scoreEntry` returns `contextualAliasTrace`, `analyzerInternals` exports `scoreEntry`, and
+> `tests/lab-match-behavior.test.mjs` has had a `contextualAliasTrace()` helper reading exactly that
+> since v2.6.0 — nine lines above the block that declared it impossible. Sol's third review found the
+> claim in the file that already disproved it.
+>
+> **This is the fourth error in this section of the same family**, and the family is now the finding:
+> asserting what a mechanism *cannot* do without going and looking. Twice about which code path can be
+> reached, once about which words the stemmer reaches, and now once about what a test can observe. In
+> every case the honest instrument was already available and cheaper than the paragraph claiming it was
+> not. **A limitation is a claim and needs the same evidence as a capability.**
 
 ---
 
