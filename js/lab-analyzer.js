@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.5';
+export const ANALYZER_VERSION = '2.6.6';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1533,7 +1533,39 @@ function ignoredPassageRecord(unit) {
   };
 }
 
-function localDomainRelevance(unit) {
+/**
+ * Every canon surface distinctive enough to place a passage in the domain on its
+ * own — multi-word alias phrases, and nothing else.
+ *
+ * Single words are excluded on the analyzer's own reasoning rather than to fit a
+ * fixture. `minSingleAliasLength` exists because one word is thin evidence, and
+ * the measurement agreed: admitting curated single-word aliases too costs two
+ * expected-ignore cases, both anchored on `rizz` — applied to a sneaker colorway
+ * and to a mascot. Slang escapes its domain; a phrase does so far less often.
+ * (`md/lab-gate-option2.md` records the variant that excluded `rizz` by name and
+ * reached one more retained claim. It is not shipped: that is fitting the rule
+ * to the fixture.)
+ */
+export function canonAdmissionSurfaces(prepared) {
+  const surfaces = new Set();
+  for (const entry of prepared?.entries || []) {
+    for (const phrase of entry._phrases || []) {
+      if (phrase.includes(' ')) surfaces.add(phrase);
+    }
+  }
+  return surfaces;
+}
+
+function namesCanonSurface(text, canonSurfaces) {
+  if (!canonSurfaces?.size) return null;
+  const normalized = normalizeText(text);
+  for (const phrase of canonSurfaces) {
+    if (normalized.includes(phrase)) return phrase;
+  }
+  return null;
+}
+
+function localDomainRelevance(unit, canonSurfaces = null) {
   const text = String(unit?.text || '').trim();
   const participantEvidence = collectFrameEvidence(
     HUMAN_PARTICIPANT_FRAMES, text, 'domain', 'participant',
@@ -1561,10 +1593,25 @@ function localDomainRelevance(unit) {
   const plausibleRelationalAnchor = frames.outcome.detected && !frames.nonDomain.detected;
   const plausibleSocialStructure = frames.mechanism.score >= SCORING_CONFIG.plausibleSocialStructureScore
     && !frames.nonDomain.detected;
+  /*
+   * Gate option 2a: a passage that NAMES a distinctive canon concept is in the
+   * domain by construction, whatever its frame vocabulary looks like. This is
+   * how gate scope grows by authoring doctrine instead of by editing a regex —
+   * a concept the site takes the trouble to name becomes a concept the Lab can
+   * recognise.
+   *
+   * It does not override an affirmative non-domain veto. A finance passage that
+   * happens to contain a canon phrase is still a finance passage, and the four
+   * frames stay the primary instrument; this only reaches passages the frames
+   * would otherwise bin for having no vocabulary at all.
+   */
+  const namedCanonSurface = namesCanonSurface(text, canonSurfaces);
+  const canonAnchored = Boolean(namedCanonSurface) && !frames.nonDomain.detected;
   const score = round(Math.max(
     frames.outcome.score,
     frames.mechanism.score,
-    humanGroundedOutcome || humanSocialMechanism ? SCORING_CONFIG.domainUncertainScore : 0,
+    humanGroundedOutcome || humanSocialMechanism || canonAnchored
+      ? SCORING_CONFIG.domainUncertainScore : 0,
   ), SCORING_CONFIG.domainScorePrecision);
   // Non-domain categories are capped at their strongest family. Correlated
   // tokens such as stock/market/finance never become independent veto votes.
@@ -1588,6 +1635,9 @@ function localDomainRelevance(unit) {
   ) {
     status = 'uncertain';
     reasonCode = 'plausible-human-relational-frame';
+  } else if (canonAnchored) {
+    status = 'uncertain';
+    reasonCode = 'named-canon-concept';
   } else if (frames.nonDomain.detected) {
     status = 'irrelevant';
     reasonCode = 'affirmative-non-domain-evidence';
@@ -1602,6 +1652,17 @@ function localDomainRelevance(unit) {
     ...mechanismEvidence,
     ...nonDomainEvidence,
   ];
+  if (canonAnchored) {
+    // Recorded even when a frame also fired, so a reader inspecting a retained
+    // passage can see that the canon had something to say about it.
+    evidence.push({
+      code: 'named-canon-concept',
+      label: `Names a canon concept by its full phrase: “${namedCanonSurface}”`,
+      weight: SCORING_CONFIG.domainUncertainScore,
+      polarity: 'domain',
+      frame: 'canon',
+    });
+  }
   if (!evidence.length) {
     evidence.push({
       code: reasonCode,
@@ -1696,9 +1757,20 @@ function applyDomainOverride(unit, action) {
   };
 }
 
-export function classifyDomainRelevance(units, overrides = new Map()) {
+/**
+ * @param {object[]} units
+ * @param {Map} [overrides]
+ * @param {Set<string>|null} [canonSurfaces] Distinctive canon phrases, from
+ *   `canonAdmissionSurfaces(prepareCanonIndex(index))`. Omitting it disables
+ *   canon-anchored admission, which is NOT the shipped gate — `analyzeDocument`
+ *   always passes it. Anything measuring the gate as a product decision has to
+ *   pass it too, and `tests/lab-domain-benchmark.test.mjs` asserts that it does.
+ *   Callers that are testing one frame's vocabulary in isolation may leave it
+ *   off; callers reporting acceptance numbers may not.
+ */
+export function classifyDomainRelevance(units, overrides = new Map(), canonSurfaces = null) {
   const classified = (units || []).map((unit) => applyDomainOverride(
-    { ...unit, domainRelevance: localDomainRelevance(unit) },
+    { ...unit, domainRelevance: localDomainRelevance(unit, canonSurfaces) },
     overrides.get(unit.id),
   ));
 
@@ -3418,7 +3490,9 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   const detectedUnits = detectClaimUnits(document);
   if (!detectedUnits.length) throw new Error('The extractor found text, but no analyzable passages.');
   const domainOverrides = normalizeDomainOverrides(options.domainOverrides);
-  const classifiedUnits = classifyDomainRelevance(detectedUnits, domainOverrides);
+  const classifiedUnits = classifyDomainRelevance(
+    detectedUnits, domainOverrides, canonAdmissionSurfaces(prepared),
+  );
   const detectedUnitIds = new Set(detectedUnits.map((unit) => unit.id));
   const appliedOverrides = [...domainOverrides.entries()]
     .filter(([unitId]) => detectedUnitIds.has(unitId))

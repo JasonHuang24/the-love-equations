@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   prepareCanonIndex,
+  canonAdmissionSurfaces,
   detectClaimUnits,
   classifyDomainRelevance,
   analyzerInternals,
@@ -81,6 +82,9 @@ const corpusPresent = SOURCES.every(({ file }) => existsSync(file));
 function currentScores() {
   const canonIndex = JSON.parse(readFileSync(path.join(ROOT_DIR, 'data', 'le-canon-index.json'), 'utf8'));
   const prepared = prepareCanonIndex(canonIndex);
+  // Same population as the sweep tool, which is the same population as the
+  // product: the shipped gate reads canon surfaces as of v2.6.6.
+  const surfaces = canonAdmissionSurfaces(prepared);
   const scores = new Map();
   let population = 0;
   SOURCES.forEach(({ id, file }) => {
@@ -98,7 +102,7 @@ function currentScores() {
     // would pin a number nothing computes (see `bd5dde4`, where three of the 29
     // rulings a human was asked for existed only because two headings were
     // being swept).
-    classifyDomainRelevance(detectClaimUnits(document))
+    classifyDomainRelevance(detectClaimUnits(document), new Map(), surfaces)
       .filter((unit) => unit.isClaimLike && unit.domainRelevance.status !== 'irrelevant')
       .forEach((unit) => {
         population += 1;

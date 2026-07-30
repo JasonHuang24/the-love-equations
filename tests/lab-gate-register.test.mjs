@@ -4,7 +4,12 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { detectClaimUnits, classifyDomainRelevance } from '../js/lab-analyzer.js';
+import {
+  detectClaimUnits,
+  classifyDomainRelevance,
+  prepareCanonIndex,
+  canonAdmissionSurfaces,
+} from '../js/lab-analyzer.js';
 import { normalizeInput } from '../js/lab-intake.js';
 
 /*
@@ -53,6 +58,17 @@ const benchmark = JSON.parse(readFileSync(
   path.join(ROOT_DIR, 'tests', 'fixtures', 'domain-relevance-benchmark.json'), 'utf8',
 ));
 
+/*
+ * The canon is passed because the shipped gate has it (v2.6.6, option 2a). It
+ * matters here more than anywhere: these are MINIMAL PAIRS, and 2a is precisely
+ * a mechanism that reads LE vocabulary. Measuring the pairs against a gate with
+ * no canon would report a keyword dependency the product does not have — or hide
+ * one it does. The `knownSplits` ratchet in this file is the judge either way.
+ */
+const CANON_SURFACES = canonAdmissionSurfaces(prepareCanonIndex(
+  JSON.parse(readFileSync(path.join(ROOT_DIR, 'data', 'le-canon-index.json'), 'utf8')),
+));
+
 function verdictFor(text) {
   const units = classifyDomainRelevance(detectClaimUnits(normalizeInput({
     text,
@@ -60,7 +76,7 @@ function verdictFor(text) {
     source: { title: 'cultural register pairs', type: 'fixture-file', url: null },
     extraction: { method: 'fixture', warnings: [] },
     createdAt: '1970-01-01T00:00:00.000Z',
-  }))).filter((unit) => unit.isClaimLike);
+  })), new Map(), CANON_SURFACES).filter((unit) => unit.isClaimLike);
   assert.equal(units.length, 1, `fixture case must produce exactly one claim-like unit: ${text}`);
   return units[0].domainRelevance;
 }

@@ -1,8 +1,16 @@
 # Gate option 2 — canon-anchored admission. Free on recall, and it needs a ruling anyway
 
-**Status: measured, recommended, NOT implemented.** No analyzer change. The reason
-it stopped short of shipping is not the recall or the ratchet — both came out
-well — but what it would do to the instrument that guards the gate.
+> **SHIPPED as 2a in v2.6.6, 2026-07-30.** Jason adopted 2a and ruled the
+> coupling **live**: canon authoring may move the domain benchmark's thresholds,
+> and the benchmark is re-run on every canon change. Recommendations 1–4 below
+> were all carried out. What shipping measured, against what this document
+> predicted, is in
+> [`lab-gate-option2a-shipped.md`](lab-gate-option2a-shipped.md).
+
+**Status when written: measured, recommended, NOT implemented.** No analyzer
+change. The reason it stopped short of shipping is not the recall or the ratchet
+— both came out well — but what it would do to the instrument that guards the
+gate.
 
 ## What option 2 is
 

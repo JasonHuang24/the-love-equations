@@ -44,6 +44,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   prepareCanonIndex,
+  canonAdmissionSurfaces,
   detectClaimUnits,
   classifyDomainRelevance,
   analyzerInternals,
@@ -130,14 +131,20 @@ function documentFor(text, title) {
  * population for anyone who wants the counterfactual anyway; it is not the
  * default, and a report built on it must say so.
  */
-function loadPassages(excerptChars, includeSetAside) {
+function loadPassages(excerptChars, includeSetAside, canonSurfaces) {
   const passages = [];
   for (const { id, file } of SOURCES) {
     if (!fs.existsSync(file)) {
       throw new Error(`Corpus source missing: ${file}\nThe corpus is gitignored; see md/RERUN.md §1.`);
     }
     const text = fs.readFileSync(file, 'utf8');
-    const units = classifyDomainRelevance(detectClaimUnits(documentFor(text, id)));
+    // The canon surfaces are passed because the SHIPPED gate has them (v2.6.6,
+    // option 2a). Without them this tool would sweep a narrower population than
+    // the product retains, and every census it prints would be short by exactly
+    // the passages canon-anchored admission rescued.
+    const units = classifyDomainRelevance(
+      detectClaimUnits(documentFor(text, id)), new Map(), canonSurfaces,
+    );
     let index = 0;
     units.forEach((unit) => {
       const status = unit.domainRelevance.status;
@@ -195,7 +202,9 @@ function main() {
   const options = parseArgs(process.argv.slice(2));
   const canonIndex = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'data', 'le-canon-index.json'), 'utf8'));
   const prepared = prepareCanonIndex(canonIndex);
-  const passages = loadPassages(options.excerptChars, options.includeSetAside);
+  const passages = loadPassages(
+    options.excerptChars, options.includeSetAside, canonAdmissionSurfaces(prepared),
+  );
   const byUnit = new Map(passages.map((row) => [row.unitId, row]));
   const pairs = sweep(passages, prepared, options.dumpFloor);
 

@@ -1,8 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { classifyDomainRelevance } from '../js/lab-analyzer.js';
+import {
+  classifyDomainRelevance,
+  prepareCanonIndex,
+  canonAdmissionSurfaces,
+} from '../js/lab-analyzer.js';
 
 /*
  * Frozen domain-relevance benchmark.
@@ -10,12 +16,33 @@ import { classifyDomainRelevance } from '../js/lab-analyzer.js';
  * cases, quantitative thresholds, no per-round goalpost moves. A failure here
  * is release-blocking; a fresh adversarial paraphrase outside the fixture is a
  * candidate for an agreed append, not an ad-hoc release blocker.
+ *
+ * THE CANON IS PART OF THE GATE AS OF v2.6.6, AND THEREFORE PART OF THIS
+ * CONTRACT. Gate option 2a admits a passage that names a distinctive canon
+ * concept, so `classifyCase` loads the shipped canon and passes its surfaces —
+ * a benchmark that called the gate without one would report true numbers about a
+ * gate that is not the gate, which is the failure mode this file exists to
+ * prevent.
+ *
+ * The consequence was ruled on deliberately by Jason on 2026-07-30 and is
+ * recorded here because it changes this file's own policy: **canon authoring may
+ * now move these thresholds.** Adding a multi-word alias to
+ * `data/canon-overlay.json` widens gate scope, so it is a gate change, and this
+ * benchmark is re-run on every canon change — not only on classifier changes.
+ * The standing rule that a benchmark APPEND lands in a commit touching no
+ * classifier code is unchanged; what changed is that a canon commit is now a
+ * commit this benchmark can fail on. See md/lab-gate-option2.md.
  */
+
+const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const benchmark = JSON.parse(readFileSync(
   new URL('./fixtures/domain-relevance-benchmark.json', import.meta.url),
   'utf8',
 ));
+
+const canonIndex = JSON.parse(readFileSync(path.join(ROOT_DIR, 'data', 'le-canon-index.json'), 'utf8'));
+const CANON_SURFACES = canonAdmissionSurfaces(prepareCanonIndex(canonIndex));
 
 const VALID_EXPECTED = ['retain', 'ignore'];
 const VALID_FAMILIES = ['direct-domain', 'indirect-mechanism', 'polysemous-trap', 'plain-junk'];
@@ -29,7 +56,7 @@ function classifyCase(entry) {
     wordCount: entry.text.trim().split(/\s+/).length,
     isClaimLike: true,
     boundedContext: null,
-  }]);
+  }], new Map(), CANON_SURFACES);
   return {
     verdict: unit.domainRelevance.status === 'irrelevant' ? 'ignore' : 'retain',
     status: unit.domainRelevance.status,
@@ -55,6 +82,46 @@ test('benchmark fixture is structurally sound', () => {
     assert.ok(threshold && threshold.minimum > 0 && threshold.minimum <= 1,
       `Threshold ${metric} is declared in the fixture.`);
   });
+});
+
+/*
+ * The one thing that would make every number in this file a lie.
+ *
+ * `classifyCase` takes a third argument the gate treats as optional. If a future
+ * edit drops it — refactoring the call, adding a parameter before it, copying the
+ * helper into a new test — this benchmark keeps passing while measuring a gate
+ * the product does not ship, and it would keep passing for as long as nobody
+ * looked. `md/lab-gate-option2.md` refused to ship option 2 behind an optional
+ * argument for exactly this reason; the argument is still optional in the
+ * signature, so the contract lives here instead.
+ *
+ * The passage below is retained ONLY by canon-anchored admission: no participant
+ * noun, no relational outcome, no decisive mechanism. Authored, not corpus text.
+ */
+test('the benchmark measures the gate that ships, canon included', () => {
+  assert.ok(CANON_SURFACES.size > 100,
+    `only ${CANON_SURFACES.size} distinctive canon surfaces — the canon failed to load, and every `
+    + 'threshold below is being measured against a gate with no doctrine in it');
+
+  const canonOnly = 'Put simply, the feminine imperative will not allow this.';
+  const bare = classifyDomainRelevance([{
+    id: 'canon-contract-bare',
+    parentSegmentId: 'canon-contract',
+    segmentIndex: 0,
+    text: canonOnly,
+    wordCount: 9,
+    isClaimLike: true,
+    boundedContext: null,
+  }])[0];
+  assert.equal(bare.domainRelevance.status, 'irrelevant',
+    'the control case stopped being canon-only — pick another passage that no frame retains, or '
+    + 'this test proves nothing');
+
+  const shipped = classifyCase({ id: 'canon-contract-shipped', text: canonOnly });
+  assert.equal(shipped.verdict, 'retain',
+    'classifyCase is no longer passing the canon to the gate. Every metric in this file is now a '
+    + 'true statement about a gate that is not the shipped gate. Restore the third argument.');
+  assert.equal(shipped.reasonCode, 'named-canon-concept');
 });
 
 test('relevance gate meets the frozen benchmark thresholds', () => {
