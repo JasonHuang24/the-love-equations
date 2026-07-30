@@ -146,10 +146,22 @@ false-positive shape rather than fixing an observed one.
 > plural example was sloppier, not simpler, and the table records both so the difference is visible.
 >
 > All six rows are frozen in `tests/lab-match-behavior.test.mjs` as an explicit truth table over the
-> three branches, with a test asserting that exactly three sequences are decisive by stem run alone —
-> the number §2 said was zero. `carries` is not exported, so the attribution runs against a replica;
-> the replica is anchored by a second test putting every disqualifying row through the shipped analyzer
-> end to end, plus a `healths workers` control that must still promote.
+> three branches — **all three columns asserted**, and the decisive set asserted by *identity* rather
+> than by count, because any three rows satisfy a count while only these three carry the double-suffix
+> shape the refutation turns on.
+>
+> `carries` is not exported, so attribution runs against a replica, anchored by a second test that puts
+> every disqualifying row through the shipped analyzer and pins its **candidate score, fate and
+> admission verdict** — `0.156`, `below-weak-threshold`, `credible: false` — plus a `healths workers`
+> control pinned at `0.540` and `displayed`. Absence from the public `matches` list alone would have
+> been too weak an anchor to hold a branch attribution, since a passage can leave that list several
+> ways.
+>
+> **What no test here can anchor:** `disqualifiedBy: "technical-modifier"` and the modifier string
+> itself. Those exist only in the internal trace inside `promotedAliases`, which no published field
+> carries — the `bl-16`/`bl-17`/`bl-18` fixtures record them from a diagnostic read by hand. That is a
+> real gap in what is assertable and it is stated rather than implied away; closing it means publishing
+> the promotion trace, which is a change to the analyzer and belongs to a release allowed to make one.
 >
 > **The decisive surfaces are inflected forms the maintainer knows no natural sentence for** —
 > `healthfulness`, `childfulness`, `healths careers`. That is an observation about the examples found,

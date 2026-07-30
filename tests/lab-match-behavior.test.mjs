@@ -557,9 +557,14 @@ const BRANCH_TABLE = [
 ];
 
 test('the three branches of carries(), enumerated rather than argued', () => {
-  BRANCH_TABLE.forEach(({ tokens, substring, stemRun, note }) => {
+  BRANCH_TABLE.forEach(({ tokens, literal, substring, stemRun, note }) => {
     const observed = branchesFor(tokens);
     const label = tokens.join(' ');
+    // All THREE branches are asserted. The first version of this test declared
+    // `literal` and never checked it, so that column could have said anything —
+    // which matters, because `literal` is exactly what makes `healths care`
+    // non-decisive, and that is the correction this table exists to record.
+    assert.deepEqual(observed.literal, literal, `[${label}] literal branch — ${note}`);
     assert.deepEqual(observed.substring, substring, `[${label}] substring branch — ${note}`);
     assert.deepEqual(observed.stemRun, stemRun, `[${label}] stem-run branch — ${note}`);
   });
@@ -568,38 +573,93 @@ test('the three branches of carries(), enumerated rather than argued', () => {
   // there is at least one token sequence the stem run disqualifies and the earlier
   // two tests do not. If this ever becomes false, the branch has gone inert and the
   // correction blocks in md/lab-v2.6.1-release.md §2 need revisiting again.
-  const decisive = BRANCH_TABLE.filter(({ tokens }) => {
-    const { literal, substring, stemRun } = branchesFor(tokens);
-    return stemRun.length && !literal.length && !substring.length;
-  });
-  assert.equal(decisive.length, 3,
-    'Three frozen sequences are decisive by stem run alone — no literal and no substring hit. §2 '
-    + `asserted the branch was decisive for NONE; found ${decisive.length}. If this drops to zero the `
-    + 'branch has gone inert and the correction blocks in md/lab-v2.6.1-release.md §2 need revisiting '
-    + 'a third time.');
+  const decisive = BRANCH_TABLE
+    .filter(({ tokens }) => {
+      const { literal, substring, stemRun } = branchesFor(tokens);
+      return stemRun.length && !literal.length && !substring.length;
+    })
+    .map(({ tokens }) => tokens.join(' '));
+
+  // WHICH sequences are decisive, not how many. A count is satisfied by any three
+  // rows, so it would survive the decisive set drifting off the double-suffix shape
+  // that is the whole point of the refutation.
+  assert.deepEqual(decisive, [
+    'healthfulness carefulness',
+    'childfulness carefulness',
+    'healths careers',
+  ], 'These three sequences, and only these, are decisive by stem run alone — no literal hit and no '
+    + 'substring hit. §2 asserted the branch was decisive for NONE. If this set empties the branch has '
+    + 'gone inert and the correction blocks in md/lab-v2.6.1-release.md §2 need revisiting a third '
+    + 'time; if it changes shape, the refutation has moved and §2 should say so.');
 });
 
+/** The candidate-level row for one canon entry, plus whether it reached the public list. */
+async function candidateFor(text, canonId) {
+  const unit = unitFor(text);
+  const result = await analyzeDocument(documentFor(text), canonIndex, { diagnostics: true });
+  const segment = result.segments.find((row) => row.unit.id === unit.id) || result.segments[0];
+  const traced = result.diagnostics.claimUnits.find((row) => row.segmentId === unit.id)
+    || result.diagnostics.claimUnits[0];
+  return {
+    candidate: (traced?.candidates || []).find((row) => row.canonId === canonId) || null,
+    credible: (segment?.matches || []).some((row) => row.canonId === canonId),
+  };
+}
+
+/*
+ * Anchors the replica above, at the candidate level rather than at the public one.
+ *
+ * The first version of this anchor asserted only absence from `matches`, which is
+ * too weak to hold a branch attribution: a passage can drop out of the public list
+ * for several reasons, so a replica or analyzer drift that still ended in
+ * non-promotion would have stayed green. It now pins the candidate score, the fate
+ * and the admission verdict — the surface the documentedLimits block records and
+ * the one the disqualification actually moves.
+ *
+ * What it CANNOT pin: `disqualifiedBy: 'technical-modifier'` and the modifier
+ * string. Those live only in the internal trace inside `promotedAliases`, which no
+ * published field carries; the bl-16/bl-17/bl-18 fixtures record them from a
+ * diagnostic read by hand, and no test can assert them until the analyzer
+ * publishes them. Said plainly rather than implied away — it is the strongest
+ * anchor available to a pass forbidden from touching the analyzer, and the gap is
+ * a finding for a release that may.
+ */
 test('every sequence the replica calls disqualified is disqualified by the shipped analyzer', async () => {
-  // Anchors the replica above. A drifted replica would still pass its own table;
-  // it cannot also pass this without the analyzer agreeing.
   const CANON_ID = 'smv:money:provisioning-signal';
+  const DISQUALIFIED_SCORE = 0.156;
+  const PROMOTED_SCORE = 0.54;
   const sentence = (complement) => `During our marriage the provider for ${complement} was always him.`;
   const control = 'healths workers';
 
   for (const { tokens } of BRANCH_TABLE) {
     const complement = tokens.join(' ');
-    const { matches } = await analyzeCase(sentence(complement));
-    assert.equal(matches.some((row) => row.canonId === CANON_ID), false,
-      `"${complement}" fires a denylist branch in the replica, so the analyzer must not promote `
-      + 'the contextual alias for it.');
+    const { candidate, credible } = await candidateFor(sentence(complement), CANON_ID);
+    assert.equal(credible, false,
+      `"${complement}" fires a denylist branch in the replica, so the analyzer must not promote the `
+      + 'contextual alias for it.');
+    assert.ok(candidate,
+      `"${complement}" produced no candidate at all, so there is nothing here to anchor.`);
+    assert.equal(candidate.score, DISQUALIFIED_SCORE,
+      `"${complement}" must score ${DISQUALIFIED_SCORE} at the candidate level, the alias-less score `
+      + `every disqualified case in this family records. Observed ${candidate.score}.`);
+    assert.equal(candidate.fate, 'below-weak-threshold',
+      `"${complement}" must fall below the weak line rather than leave the public list some other `
+      + `way. Observed fate ${candidate.fate}.`);
+    assert.equal(candidate.admission.credible, false,
+      `"${complement}" must fail admission, not merely lose a display slot.`);
   }
 
   // Without a denylist branch the same shape promotes, so the assertions above are
-  // measuring the denylist and not the sentence frame.
-  const { matches } = await analyzeCase(sentence(control));
-  assert.equal(matches.some((row) => row.canonId === CANON_ID), true,
+  // measuring the denylist and not the sentence frame. Pinned at the candidate
+  // level too: a control that merely appears proves less than one that scores.
+  const { candidate, credible } = await candidateFor(sentence(control), CANON_ID);
+  assert.equal(credible, true,
     `"${control}" carries no denylist term and must still promote — otherwise the cases above prove `
     + 'nothing about the denylist.');
+  assert.equal(candidate.score, PROMOTED_SCORE,
+    `"${control}" must score ${PROMOTED_SCORE}, the promoted-alias score. Observed ${candidate.score}.`);
+  assert.equal(candidate.fate, 'displayed',
+    `"${control}" must be displayed. Observed ${candidate.fate}.`);
 });
 
 /*
