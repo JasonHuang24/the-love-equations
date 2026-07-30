@@ -10,6 +10,7 @@ import {
   detectClaimUnits,
   classifyDomainRelevance,
   analyzerInternals,
+  tokenize,
   SCORING_CONFIG,
 } from '../js/lab-analyzer.js';
 import { normalizeInput } from '../js/lab-intake.js';
@@ -470,4 +471,133 @@ test('the documented limits are what the analyzer actually does today', async ()
   assert.equal(failures.length, 0,
     `${failures.length} documented limit(s) no longer describe the analyzer. A limit that has moved `
     + `is a limit nobody is documenting:\n${failures.join('\n')}`);
+});
+
+/*
+ * The three branches of `carries()`, as a truth table.
+ *
+ * v2.6.1 §2 claimed multiword entries had moved FROM substring matching TO a
+ * contiguous run of stems. They had not; the run of stems was added beside the
+ * substring test, which still runs first. The dated correction to that claim then
+ * asserted the stem run was therefore NEVER decisive, on the argument that any
+ * surface stemming to `care` carries `care` as a prefix — and Sol's verification
+ * review refuted it, because the FIRST word of a multiword entry is reachable by
+ * suffix removal too. `healths` and `healthfulness` both strip to `health`.
+ *
+ * So the branch is reachable and can decide a case alone. Two overclaims in a row
+ * were both about which code path can be reached, and both were argued in prose
+ * from one side of the comparison. This is the enumeration instead.
+ *
+ * `carries` is not exported, so the per-branch attribution runs against a replica
+ * copied from js/lab-analyzer.js. A replica can drift from what it mirrors, so it
+ * is ANCHORED: every row whose replica verdict is "disqualified" is also checked
+ * end to end through the shipped analyzer below. Exporting `carries` would be the
+ * better instrument and is not available to a pass forbidden from touching the
+ * analyzer.
+ */
+const DENYLIST_ENTRIES = ['cloud', 'healthcare', 'health care', 'service', 'internet', 'insurance',
+  'medical', 'hosting', 'software', 'payment', 'energy', 'utility', 'network', 'care', 'childcare',
+  'child care'];
+
+/** stemToken via the exported tokenizer; short and stopword tokens keep their surface, as it does. */
+const stemOf = (token) => tokenize(token)[0] ?? token;
+
+/** The three branches of `carries()`, reported separately instead of short-circuited. */
+function branchesFor(tokens) {
+  const run = tokens.join(' ');
+  const stems = tokens.map(stemOf);
+  const fires = (predicate) => DENYLIST_ENTRIES.filter(predicate);
+  return {
+    literal: fires((m) => tokens.includes(m) || tokens.includes(`${m}s`)),
+    substring: fires((m) => m.includes(' ') && (run.includes(m) || run.includes(`${m}s`))),
+    stemRun: fires((m) => {
+      const wanted = m.split(' ').map(stemOf);
+      return stems.some((_, at) => wanted.every((stem, offset) => stems[at + offset] === stem));
+    }),
+  };
+}
+
+const BRANCH_TABLE = [
+  {
+    tokens: ['health', 'caregivers'],
+    literal: [], substring: ['health care'], stemRun: [],
+    note: 'bl-17. The spanned-word shape §2 claimed had been removed. Only the substring test sees it.',
+  },
+  {
+    tokens: ['health', 'care'],
+    literal: ['care'], substring: ['health care'], stemRun: ['health care', 'care'],
+    note: 'bl-19 territory. All three tests see it, which is why dropping the substring test is safe '
+      + 'here — the stem run and the single-word `care` entry both still catch it.',
+  },
+  {
+    tokens: ['healths', 'care'],
+    literal: ['care'], substring: [], stemRun: ['health care', 'care'],
+    note: 'Refutes the SUBSTRING lemma: `healths` strips to `health`, so `health care` never appears '
+      + 'as a substring while the stem run matches. It does NOT establish decisiveness — the '
+      + 'single-word `care` entry fires literally, so an earlier branch would have caught it anyway.',
+  },
+  {
+    tokens: ['healthfulness', 'carefulness'],
+    literal: [], substring: [], stemRun: ['health care', 'care'],
+    note: "Sol's counterexample, and the row that does the real work. Suffixing BOTH words is what "
+      + 'takes every earlier branch out of play, which is why the double suffix was not decoration.',
+  },
+  {
+    tokens: ['childfulness', 'carefulness'],
+    literal: [], substring: [], stemRun: ['care', 'child care'],
+    note: 'The other multiword entry, decisive the same way, so the reachability is a property of '
+      + "the branch and not of one entry's spelling.",
+  },
+  {
+    tokens: ['healths', 'careers'],
+    literal: [], substring: [], stemRun: ['health care', 'care'],
+    note: 'One ordinary plural and one ordinary noun, both stripped by the same rules. The cheapest '
+      + 'decisive sequence found.',
+  },
+];
+
+test('the three branches of carries(), enumerated rather than argued', () => {
+  BRANCH_TABLE.forEach(({ tokens, substring, stemRun, note }) => {
+    const observed = branchesFor(tokens);
+    const label = tokens.join(' ');
+    assert.deepEqual(observed.substring, substring, `[${label}] substring branch — ${note}`);
+    assert.deepEqual(observed.stemRun, stemRun, `[${label}] stem-run branch — ${note}`);
+  });
+
+  // The claim the two retracted paragraphs both got wrong, stated as an assertion:
+  // there is at least one token sequence the stem run disqualifies and the earlier
+  // two tests do not. If this ever becomes false, the branch has gone inert and the
+  // correction blocks in md/lab-v2.6.1-release.md §2 need revisiting again.
+  const decisive = BRANCH_TABLE.filter(({ tokens }) => {
+    const { literal, substring, stemRun } = branchesFor(tokens);
+    return stemRun.length && !literal.length && !substring.length;
+  });
+  assert.equal(decisive.length, 3,
+    'Three frozen sequences are decisive by stem run alone — no literal and no substring hit. §2 '
+    + `asserted the branch was decisive for NONE; found ${decisive.length}. If this drops to zero the `
+    + 'branch has gone inert and the correction blocks in md/lab-v2.6.1-release.md §2 need revisiting '
+    + 'a third time.');
+});
+
+test('every sequence the replica calls disqualified is disqualified by the shipped analyzer', async () => {
+  // Anchors the replica above. A drifted replica would still pass its own table;
+  // it cannot also pass this without the analyzer agreeing.
+  const CANON_ID = 'smv:money:provisioning-signal';
+  const sentence = (complement) => `During our marriage the provider for ${complement} was always him.`;
+  const control = 'healths workers';
+
+  for (const { tokens } of BRANCH_TABLE) {
+    const complement = tokens.join(' ');
+    const { matches } = await analyzeCase(sentence(complement));
+    assert.equal(matches.some((row) => row.canonId === CANON_ID), false,
+      `"${complement}" fires a denylist branch in the replica, so the analyzer must not promote `
+      + 'the contextual alias for it.');
+  }
+
+  // Without a denylist branch the same shape promotes, so the assertions above are
+  // measuring the denylist and not the sentence frame.
+  const { matches } = await analyzeCase(sentence(control));
+  assert.equal(matches.some((row) => row.canonId === CANON_ID), true,
+    `"${control}" carries no denylist term and must still promote — otherwise the cases above prove `
+    + 'nothing about the denylist.');
 });

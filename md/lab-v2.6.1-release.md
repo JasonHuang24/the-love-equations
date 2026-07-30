@@ -117,19 +117,58 @@ false-positive shape rather than fixing an observed one.
 > spans it is caught by the second test, which returns before the third is reached. Nothing about that
 > shape changed. The run of stems was **added**, not substituted.
 >
-> **And for this canon the added test is never the decisive one.** Any surface whose stem is `care` is
-> either `care` itself or `care` plus a suffix the stripper removes, so it always carries `care` as a
-> prefix — which means `health ` + that surface always contains the substring `health care`, and the
-> substring test always fires first. The same argument covers `child care`. Those are the canon's only
-> two multiword entries, so the stem-run branch changed no verdict at v2.6.1 and could not have. That
-> is a stronger statement than the paragraph above makes and it points the opposite way.
+> What does not survive is "removes a latent false-positive shape." **Nothing was removed, and the
+> shape is live.** `bl-17` and `bl-18` now hold it: `the provider for health caregivers` is
+> disqualified by `health care` matched inside `caregivers`, and the humanly correct reading is the
+> provisioning sense.
 >
-> One half of the original claim survives, for a better reason than it gave. No denylist entry's
-> behavior changes — not because a shape was removed, but because a third test that only ever adds
-> disqualifications cannot subtract one. It is a union, exactly like §1's. What does not survive is
-> "removes a latent false-positive shape." **Nothing was removed, and the shape is live.** `bl-17` and
-> `bl-18` now hold it: `the provider for health caregivers` is disqualified by `health care` matched
-> inside `caregivers`, and the humanly correct reading is the provisioning sense.
+> **The added test is reachable, and can decide a case on its own.** It is a union with the substring
+> test, so it cannot promote anything the earlier tests rejected; that is the whole of the safety
+> argument and it is the only part of it that is a proof. It does **not** follow that no behavior
+> changes — a test that only adds disqualifications changes behavior every time it adds one, which is
+> exactly what the `utilities` fix in §1 does. For the multiword branch specifically, the stem run
+> decides whenever the two stems line up and the literal substring does not appear:
+>
+> | Complement tokens | Literal | Substring | Stem run | Decisive |
+> |---|---|---|---|---|
+> | `health caregivers` | — | `health care` | — | substring |
+> | `health care` | `care` | `health care` | `health care`, `care` | all three |
+> | `healths care` | `care` | — | `health care`, `care` | literal |
+> | `healthfulness carefulness` | — | — | `health care`, `care` | **stem run alone** |
+> | `childfulness carefulness` | — | — | `care`, `child care` | **stem run alone** |
+> | `healths careers` | — | — | `health care`, `care` | **stem run alone** |
+>
+> **Suffixing both words is what makes the stem run decisive, and that is why Sol's counterexample used
+> a double suffix rather than a plural.** `healths care` refutes the substring lemma — `healths` strips
+> to `health`, so `health care` never appears as a substring — but it does not establish decisiveness,
+> because the single-word `care` entry catches it literally on the first test. Only when every surface
+> in the window is an inflected form does the stem run decide alone. The maintainer's own "simpler"
+> plural example was sloppier, not simpler, and the table records both so the difference is visible.
+>
+> All six rows are frozen in `tests/lab-match-behavior.test.mjs` as an explicit truth table over the
+> three branches, with a test asserting that exactly three sequences are decisive by stem run alone —
+> the number §2 said was zero. `carries` is not exported, so the attribution runs against a replica;
+> the replica is anchored by a second test putting every disqualifying row through the shipped analyzer
+> end to end, plus a `healths workers` control that must still promote.
+>
+> **The decisive surfaces are inflected forms the maintainer knows no natural sentence for** —
+> `healthfulness`, `childfulness`, `healths careers`. That is an observation about the examples found,
+> not a proof that none exists. The distinction is the entire lesson here: this block twice asserted
+> something about a code path without enumerating what reaches it.
+
+> **CORRECTION TO THE CORRECTION, 2026-07-29 (later the same day).** The block above originally
+> asserted that the stem run is **never** the decisive test for this canon, on the argument that any
+> surface stemming to `care` carries `care` as a prefix, so `health ` + that surface always contains
+> `health care`. **That is false and Sol's verification review refuted it.** The lemma about the second
+> word is sound; the proof forgot that the **first** word is reachable by suffix removal too.
+> `healthfulness carefulness` stems to `health care`, contains no `health care` substring, carries no
+> literal denylist surface either, and disqualifies end to end on the stem run alone.
+>
+> The failure is worth more than the fix. This block was written to retract an overclaim and it
+> replaced it with a **stronger** overclaim of exactly the same shape — a universal statement about a
+> comparison, argued from one side of it. What the earlier paragraph and its first correction have in
+> common is asserting that a code path cannot be reached without enumerating what reaches it. The truth
+> table above is that enumeration, and it is a test rather than a paragraph for that reason.
 >
 > **This correction is documentation-only, and one copy of the error is deliberately left standing.**
 > The same claim is a comment on `carries()` at `js/lab-analyzer.js:1878`. Correcting a comment would
