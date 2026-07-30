@@ -1,0 +1,26 @@
+[
+  {
+    "file": "raw-01.txt",
+    "title": "Counterfeit Connections: The Rise of Romantic AI Companions and AI Sexualized Media Among the Rising Generation",
+    "author": "Brian J. Willoughby, Jason S. Carroll, Carson R. Dover, Rebekah H. Hakala",
+    "publication": "Wheatley Institute, Brigham Young University",
+    "year": 2025,
+    "url": "https://brightspotcdn.byu.edu/a6/a1/c3036cf14686accdae72a4861dd1/counterfeit-connections-report.pdf",
+    "accessedVia": "WebFetch (retrieved PDF binary) + Read tool (document-vision PDF text extraction); landing page https://wheatley.byu.edu/counterfeit-connections-ai-romantic-companions and press release https://www.prnewswire.com/news-releases/virtual-valentines-nearly-1-in-5-adults-report-having-chatted-with-ai-romantic-partner-302376017.html cross-checked for publication date (Feb 12-13, 2025)",
+    "wordCount": 7050,
+    "isOpenAccess": true,
+    "notes": "PRIMARY TARGET for this assignment. This is the exact Feb 2025 survey the claim under investigation rests on. Full report text (not just press release) successfully retrieved and transcribed verbatim from the PDF. Institute-published, not peer-reviewed; single-institution, single-survey (Qualtrics opt-in/quota panel, n=2,969 adults 18+, oversample of 1,000 young adults 18-29). Question wording for the headline 19%/31%/23% figures is a lifetime-experience item ('Have you ever chatted online with an AI system...that was meant to simulate a romantic partner?'), NOT a current-use, would-consider, or in-relationship-with item. Report itself explicitly states causal direction between AI use and depression/loneliness is unknown (cross-sectional data). Note: reference list cites a peer-reviewed companion article by the same authors (Willoughby, Dover, Hakala, & Carroll, 2025, Journal of Social and Personal Relationships, 42, 3363-3387) which was NOT independently retrieved for this assignment (see GAPS in evidence-notes.md)."
+  },
+  {
+    "file": "raw-02.txt",
+    "title": "Talk, Trust, and Trade-Offs: How and Why Teens Use AI Companions",
+    "author": "Michael B. Robb and Supreet Mann (report writing); data collection by NORC at the University of Chicago",
+    "publication": "Common Sense Media",
+    "year": 2025,
+    "url": "https://www.commonsensemedia.org/sites/default/files/research/report/talk-trust-and-trade-offs_2025_web.pdf",
+    "accessedVia": "WebFetch (retrieved PDF binary) + Read tool (document-vision PDF text extraction); press release https://www.commonsensemedia.org/press-releases/nearly-3-in-4-teens-have-used-ai-companions-new-national-survey-finds cross-checked for publication date (July 16, 2025)",
+    "wordCount": 3414,
+    "isOpenAccess": true,
+    "notes": "SECOND TARGET / independent source. Genuinely independent of the Wheatley Institute/BYU/IFS team: different publisher (Common Sense Media, a 501(c)(3)), different funders (Caldwell/Fisher, Patrick J. McGovern Foundation, Siegel Family Endowment), different data-collection firm (NORC at University of Chicago, not Qualtrics), and a stronger sampling design (AmeriSpeak Teen Omnibus probability-based panel, n=719, combined with a Prodege nonprobability supplement, n=341, total n=1,060; TrueNorth calibration; published margin of error +/-4.2 points at 95% CI). CAUTION: population is U.S. TEENS ages 13-17, not the 18-30 young-adult population the primary claim concerns -- figures from this source must not be merged with or substituted for adult/young-adult figures. Report's own Discussion section explicitly frames most teen use as prevalence/pragmatic-tool use rather than relationship substitution (80% of users still spend more time with real friends than AI; 67% find AI conversations less satisfying than human ones), which is directly relevant to the substitution-vs-complementarity question but is themselves only prevalence/attitudinal data, not a behavioral displacement measure."
+  }
+]

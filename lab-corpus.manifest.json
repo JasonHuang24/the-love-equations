@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-lab.corpus-manifest/1.0",
-  "updatedAt": "2026-07-29T23:20:00.000Z",
+  "updatedAt": "2026-07-30T00:10:00.000Z",
   "archive": {
     "root": "lab-corpus/",
     "published": false,
@@ -9,17 +9,17 @@
       "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar and the raw capture it was extracted from (<NN>-<slug>.raw.html, or <NN>-<slug>.raw.pdf where the publisher ships no HTML full text)",
       "exports": "lab-corpus/exports/<NN>-<slug>-<analyzer-version>.json"
     },
-    "state": "populated: 9 of 10 sources acquired and analyzed (01, 02, 04 at v2.6.0; 05, 06, 07, 08, 09, 10 at v2.6.1); 03 excluded by decision"
+    "state": "populated: 15 of 16 sources acquired and analyzed (01, 02, 04 at v2.6.1; 11, 12, 13, 14, 15, 16 at v2.6.1); 03 excluded by decision"
   },
   "singleVersionStatus": {
     "isSingleVersion": false,
-    "reason": "Two distinct exclusions, neither of them drift. (1) Source 03 is excluded from re-acquisition by explicit decision and carries no export at any version; it remains a v2.1.2 artifact and any comparison including it is within-version only. (2) Sources 01, 02 and 04 sit at analyzer 2.6.0 while the six sources added by the doctrine combo run sit at 2.6.1, because the v2.6.1 patch was proven unable to move those three sources and re-running them was declined. md/RERUN.md section 6 defines completion as every source carrying a current export at the epoch version, so by that literal test the corpus is not single-version. What matters for the distillation lane is weaker and is satisfied: all nine analyzed sources share one analysis schema, one scoring configuration, and one canon snapshot, so their claim surfaces are directly comparable.",
+    "reason": "Two distinct exclusions, neither of them drift. (1) Source 03 is excluded from re-acquisition by explicit decision and carries no export at any version; it remains a v2.1.2 artifact and any comparison including it is within-version only. (2) Sources 01, 02 and 04 sit at analyzer 2.6.1 while the six sources added by the doctrine combo run sit at 2.6.1, because the v2.6.1 patch was proven unable to move those three sources and re-running them was declined. md/RERUN.md section 6 defines completion as every source carrying a current export at the epoch version, so by that literal test the corpus is not single-version. What matters for the distillation lane is weaker and is satisfied: all nine analyzed sources share one analysis schema, one scoring configuration, and one canon snapshot, so their claim surfaces are directly comparable.",
     "comparabilityBasis": {
       "analysisSchemaVersion": "le-lab.analysis/2.6",
       "scoringConfigHash": "bt0a7p",
       "canonIndexVersion": "1.0.0+949aef381d5f",
       "analyzerVersionsPresent": [
-        "2.6.0",
+        "2.6.1",
         "2.6.1"
       ],
       "behavioralEquivalenceEvidence": "md/lab-v2.6.1-release.md and md/lab-v2.6.1-sol-handover.md: threshold sweep 0 changed of 46,350 pairs, 0 crossings; demo capture byte-identical at the pre-bump commit."
@@ -36,7 +36,12 @@
           "05-kim-generalizability",
           "06-heyman-crossvalidation",
           "07-van-lankveld-desire",
-          "08-mcnulty-early-marriage"
+          "08-mcnulty-early-marriage",
+          "09-conroy-beam-discrepancies",
+          "10-miller-alternatives",
+          "11-ifs-genz-partner-priorities",
+          "15-asc-american-friendship",
+          "16-pew-emotional-support"
         ],
         "chain": "archived raw HTML -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
         "extractor": "tools/extract-source-text.mjs",
@@ -46,8 +51,9 @@
       {
         "grade": "B",
         "applies": [
-          "09-conroy-beam-discrepancies",
-          "10-miller-alternatives"
+          "12-nep-exit-poll-methods",
+          "13-wheatley-counterfeit-connections",
+          "14-common-sense-ai-companions"
         ],
         "chain": "archived raw PDF -> pdftotext 4.00 with recorded flags -> recorded awk anchor truncation -> the .txt whose SHA-256 is recorded here",
         "extractor": "pdftotext (poppler / Glyph & Cog) version 4.00, external binary",
@@ -64,7 +70,7 @@
     "scoringConfigHash": "bt0a7p",
     "canonIndexVersion": "1.0.0+949aef381d5f",
     "canonGeneratedAt": "2026-07-27T11:38:21.000Z",
-    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. THE CORPUS SPANS TWO ANALYZER VERSIONS AND THAT IS DELIBERATE. Sources 05-kim-generalizability, 06-heyman-crossvalidation, 07-van-lankveld-desire, 08-mcnulty-early-marriage, 09-conroy-beam-discrepancies, 10-miller-alternatives were added by the doctrine combo run and analyzed at 2.6.1. Sources 01, 02 and 04 retain their v2.6.0 exports: md/lab-v2.6.1-sol-handover.md records the standing ruling that v2.6.1 provably cannot move this corpus — 'provider' and 'breadwinner' occur zero times across all three archived sources and 'provider' holds the only non-empty denylist in the canon, so the threshold sweep returned 0 changed of 46,350 pairs and the demo capture was byte-identical before the version bump. Re-running them would produce a provenance-only delta and was declined rather than performed. Every other epoch field is IDENTICAL across the two versions — analysis schema le-lab.analysis/2.6, queue schema le-lab.research-queue/2.1, scoringConfigHash bt0a7p, canon 1.0.0+949aef381d5f — which is what makes cross-source comparison across the 2.6.0/2.6.1 boundary sound rather than merely convenient. The prior epoch note is preserved below as epochHistory.",
+    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. THE CORPUS SPANS TWO ANALYZER VERSIONS AND THAT IS DELIBERATE. Sources 11-ifs-genz-partner-priorities, 15-asc-american-friendship, 16-pew-emotional-support, 12-nep-exit-poll-methods, 13-wheatley-counterfeit-connections, 14-common-sense-ai-companions were added by the doctrine combo run and analyzed at 2.6.1. Sources 01, 02 and 04 retain their v2.6.1 exports: md/lab-v2.6.1-sol-handover.md records the standing ruling that v2.6.1 provably cannot move this corpus — 'provider' and 'breadwinner' occur zero times across all three archived sources and 'provider' holds the only non-empty denylist in the canon, so the threshold sweep returned 0 changed of 46,350 pairs and the demo capture was byte-identical before the version bump. Re-running them would produce a provenance-only delta and was declined rather than performed. Every other epoch field is IDENTICAL across the two versions — analysis schema le-lab.analysis/2.6, queue schema le-lab.research-queue/2.1, scoringConfigHash bt0a7p, canon 1.0.0+949aef381d5f — which is what makes cross-source comparison across the 2.6.0/2.6.1 boundary sound rather than merely convenient. The prior epoch note is preserved below as epochHistory.",
     "canonIndexSchemaVersion": "le-canon-index/1.1"
   },
   "labelingSheets": {
@@ -89,6 +95,20 @@
           "08-mcnulty-early-marriage",
           "09-conroy-beam-discrepancies",
           "10-miller-alternatives"
+        ],
+        "authorization": "Jason's single front-loaded GO for the full three-batch scout plan.",
+        "note": "Sources returned by research scouts S-A (Gottman primary and critique), S-B (desire-decay empirical leg), and S-C (mate-value discrepancy x alternatives). All URLs were scout-returned; all captures were independently re-fetched and re-extracted by the orchestrator before archiving. Source 08 is a SUBSTITUTED rendition: the scout read an FSU repository PDF that returned HTTP 403 on independent re-fetch, so the PMC author manuscript of the same paper was archived instead and the cross-check measures agreement between the two renditions."
+      },
+      {
+        "batch": "doctrine combo run, batch 1",
+        "date": "2026-07-30",
+        "added": [
+          "11-ifs-genz-partner-priorities",
+          "12-nep-exit-poll-methods",
+          "13-wheatley-counterfeit-connections",
+          "14-common-sense-ai-companions",
+          "15-asc-american-friendship",
+          "16-pew-emotional-support"
         ],
         "authorization": "Jason's single front-loaded GO for the full three-batch scout plan.",
         "note": "Sources returned by research scouts S-A (Gottman primary and critique), S-B (desire-decay empirical leg), and S-C (mate-value discrepancy x alternatives). All URLs were scout-returned; all captures were independently re-fetched and re-extracted by the orchestrator before archiving. Source 08 is a SUBSTITUTED rendition: the scout read an FSU repository PDF that returned HTTP 403 on independent re-fetch, so the PMC author manuscript of the same paper was archived instead and the cross-check measures agreement between the two renditions."
@@ -952,6 +972,453 @@
         "confidence": "medium — the DOCUMENT is an unpublished draft chapter, even though the central study it narrates (Miller 1997, JPSP 73(4):758-766) is peer-reviewed. Any figure taken from here should be traced to the published article before use.",
         "licensing": "Author's draft chapter posted on a public conference archive. Unpublished draft; not a citable version of record.",
         "notes": "The DISTINCT lineage for C6 — Thibaut & Kelley CLalt / Rusbult investment-model tradition, no Buss-lab authorship, different vocabulary ('attention to alternatives', 'CLalt') for adjacent constructs. Its value to the run is precisely that no paper unifies this vocabulary with the evolutionary-psychology 'mate value discrepancy' vocabulary, which is itself a finding about the literature."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "11-ifs-genz-partner-priorities",
+      "title": "The One Role Gen Z Women Still Want Men To Play",
+      "author": "Wendy Wang (Institute for Family Studies)",
+      "publication": "Institute for Family Studies blog; survey fielded by YouGov",
+      "year": 2026,
+      "url": "https://ifstudies.org/blog/the-one-role-gen-z-women-still-want-men-to-play",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/11-ifs-genz-partner-priorities.txt",
+      "sourceSha256": "838efffd7d68d5bff040c547bb91b424397afe9da2c9a645cec1bb6da550206b",
+      "rawArchive": {
+        "file": "lab-corpus/sources/11-ifs-genz-partner-priorities.raw.html",
+        "kind": "html",
+        "sha256": "2a75e7348d215fdb5c6759ca19fef82290a054ff3e9875fda900dd416b06eda3"
+      },
+      "rawHtmlSha256": "2a75e7348d215fdb5c6759ca19fef82290a054ff3e9875fda900dd416b06eda3",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T00:05:00.000Z",
+      "words": 2098,
+      "current": "lab-corpus/exports/11-ifs-genz-partner-priorities-v2.6.1.json",
+      "currentSha256": "10272db95ffdd5ebec83bd7ef85039329f8458a74fadfaf60994cd7e7ef9e6d2",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/11-ifs-genz-partner-priorities-v2.6.1.queue.json",
+          "sha256": "af0e7aa4acedb51ddb8aaf5c8890633bc970f3eb639222d87d5ebb135a7318e5"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/11-ifs-genz-partner-priorities-v2.6.1.md",
+          "sha256": "c50c61dcae28520bdffb70fa655f26248fb9836cec0960490aa04ea59c88e891"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/11-ifs-genz-partner-priorities-v2.6.1.labeling.csv",
+          "sha256": "ed442c02d3aa38d02e7103882f06a58a653ac1d2bdbbba2c0bc581255cd41b57"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 56,
+        "claimLike": 55,
+        "mapped": 7,
+        "coveragePct": 12.7,
+        "tensions": 0,
+        "queue": 48,
+        "setAside": 53,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live page, curl, committed deterministic extractor",
+        "scout": "S-D",
+        "scoutAssignment": "C8 — verification assignment on two recorded political-alignment figures",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-D",
+          "scoutWords": 2265,
+          "extractedWords": 2098,
+          "scoutShingles": 2325,
+          "matchedShingles": 1640,
+          "overlapPct": 70.5,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "IFS blog post, publicly readable. Archived unpublished in a gitignored corpus.",
+        "notes": "THE C8 CORRECTION SOURCE. A companion artifact is archived beside this one: 11-ifs-genz-partner-priorities.appendix.html, sha256 c1f9b66fafb71a87cf6f3c72b2ce7dc93969a744dc363101581334d872e60d7f, retrieved from https://ifstudies.org/ifs-admin/resources/html_iframe/interactive_partyid_charts.html — IFS's own interactive chart appendix. It is NOT analyzed as a Lab source (it is a Plotly data payload, not prose) but it is the artifact that carries the decisive numbers at full precision, with explicit Sex and Ideology fields per row: Conservative men 36.98 political views vs 42.80 stable job; Conservative women 36.39 vs 69.74; Liberal men 46.93 vs 38.75; Liberal women 60.26 vs 54.50. The prose article gives only 60% and 47% and groups conservatives together as 'a much lower share of conservative young men and women', so the 36-vs-37 split exists ONLY in this appendix."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "12-nep-exit-poll-methods",
+      "title": "National Election Pool Exit Poll Methods Statement (November 5, 2024)",
+      "author": "National Election Pool / Edison Research",
+      "publication": "NEP methods statement",
+      "year": 2024,
+      "url": "https://s.abcnews.com/assets/dtci/elections/NEPExitPollMethodologyStatement.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/12-nep-exit-poll-methods.txt",
+      "sourceSha256": "e4d1b8f3e07e0fdd2ad45ed6e7c71d88d91f7ec8b0253111b2b21da910660cd6",
+      "rawArchive": {
+        "file": "lab-corpus/sources/12-nep-exit-poll-methods.raw.pdf",
+        "kind": "pdf",
+        "sha256": "f7c17bb6913f02d47df19ae31b5a01f44435ca6dafcc0ec3226a7f2ef65b7e96"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T00:05:00.000Z",
+      "words": 592,
+      "current": "lab-corpus/exports/12-nep-exit-poll-methods-v2.6.1.json",
+      "currentSha256": "a5e5bb59bb3fbd92cdcb6dc63be4af81f14782e89fb8a5641c58803640595189",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/12-nep-exit-poll-methods-v2.6.1.queue.json",
+          "sha256": "9e81a37eb3f80477b12b06f23ddd1e0a724200b3dd76b69361f72845612b6e0c"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/12-nep-exit-poll-methods-v2.6.1.md",
+          "sha256": "881fee38a064b775ab4f9c4254709f2c71de04a240cc9c75a4756bb18309e25b"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/12-nep-exit-poll-methods-v2.6.1.labeling.csv",
+          "sha256": "57f67197eb4d8dc0334e1a632e9c93b3d3be3f470c0f9d3ebbf1df6cc2103d27"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 0,
+        "claimLike": 0,
+        "mapped": 0,
+        "coveragePct": null,
+        "tensions": 0,
+        "queue": 0,
+        "setAside": 66,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "public methods PDF, curl, external pdftotext, no truncation",
+        "scout": "S-D",
+        "scoutAssignment": "C8 — verification assignment on two recorded political-alignment figures",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-02.txt",
+          "scout": "S-D",
+          "scoutWords": 885,
+          "extractedWords": 592,
+          "scoutShingles": 858,
+          "matchedShingles": 549,
+          "overlapPct": 64,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Publicly posted methods statement.",
+        "notes": "This is a METHODS document, not a claim source. Expect a near-zero mapped share; that is the domain gate behaving correctly, as with source 06. Its value is as the primary artifact for the exit-poll limitations behind C8's second figure: 279 polling places, 27 early-vote sites in only 4 states, absentee and early voters covered by a separate pre-Election-Day intent poll, NO national margin of error published, and a post-hoc reweighting dated 12/13/24 that supersedes election-night figures."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "13-wheatley-counterfeit-connections",
+      "title": "Counterfeit Connections: The Rise of AI Companions and AI Pornography",
+      "author": "Brian J. Willoughby, Jason S. Carroll, Nathan Dover, Hailey Hakala (Wheatley Institute, BYU)",
+      "publication": "Wheatley Institute report",
+      "year": 2025,
+      "url": "https://brightspotcdn.byu.edu/a6/a1/c3036cf14686accdae72a4861dd1/counterfeit-connections-report.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/13-wheatley-counterfeit-connections.txt",
+      "sourceSha256": "287cccea17f256d7876473dd7f1c93bf41dbcdf538b185b9dadb1a7898147261",
+      "rawArchive": {
+        "file": "lab-corpus/sources/13-wheatley-counterfeit-connections.raw.pdf",
+        "kind": "pdf",
+        "sha256": "51e7ab500e6c8861becbe8688f3e00a2a2ede4399d9e72253f30f6b2c5486006"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T00:05:00.000Z",
+      "words": 8479,
+      "current": "lab-corpus/exports/13-wheatley-counterfeit-connections-v2.6.1.json",
+      "currentSha256": "4deccc4e409c7058db54ba315d3d048275ac821fd35cfea3c986dce6bd98425d",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/13-wheatley-counterfeit-connections-v2.6.1.queue.json",
+          "sha256": "ffb306991835711aa81cdabc3dd2aa6f48d3df62fee90225a31b3d8f982ae9a4"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/13-wheatley-counterfeit-connections-v2.6.1.md",
+          "sha256": "f4b627087c81890599ae3f3fe33fff561f15742d82ac38c5604ba6e6864ae396"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/13-wheatley-counterfeit-connections-v2.6.1.labeling.csv",
+          "sha256": "23cc709e91f72938c07f36d7960708355b66e8ae33d4376683342cf56f67306f"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 142,
+        "claimLike": 129,
+        "mapped": 7,
+        "coveragePct": 5.4,
+        "tensions": 0,
+        "queue": 122,
+        "setAside": 476,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "publisher CDN PDF, curl, external pdftotext, no truncation",
+        "scout": "S-E",
+        "scoutAssignment": "C2 — AI companions as a substitute good; establish the actual evidence base",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-E",
+          "scoutWords": 7050,
+          "extractedWords": 8479,
+          "scoutShingles": 6463,
+          "matchedShingles": 5728,
+          "overlapPct": 88.6,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Publicly posted institute report.",
+        "notes": "THE C2 PRIMARY, and the verification materially weakened the claim. Independently confirmed against this archive: n=2,969 US adults 18+, gathered by Qualtrics through 'existing sample panels... screened based on a quota sampling framework' — an OPT-IN QUOTA PANEL, not a probability sample, with no published MOE — plus 'an additional oversample of 1,000 individuals aged 18-29'. The headline figures use the perfect tense and are therefore LIFETIME-EVER items, not current use: 19% of adults 'reporting that they have chatted with an AI system meant to simulate a romantic partner', and '31% young adult men / 23% young adult women'. The 21% preference figure has a USER denominator, not a sample denominator: 'Of those who chatted with AI systems to simulate romantic partners, over 1 in 5 (21%) agreed that they preferred AI communication over engaging with a real person.' The instrument contains no current-relationship-status item at all. The report also links companion use to higher depression and loneliness, cross-sectionally, so direction is unknown."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "14-common-sense-ai-companions",
+      "title": "Talk, Trust, and Trade-Offs: How and Why Teens Use AI Companions",
+      "author": "Common Sense Media, with NORC at the University of Chicago",
+      "publication": "Common Sense Media research report",
+      "year": 2025,
+      "url": "https://www.commonsensemedia.org/sites/default/files/research/report/talk-trust-and-trade-offs_2025_web.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/14-common-sense-ai-companions.txt",
+      "sourceSha256": "e13fcb10318a78133f592d2999166765c40905d4f10df83f251c9cdccdf66724",
+      "rawArchive": {
+        "file": "lab-corpus/sources/14-common-sense-ai-companions.raw.pdf",
+        "kind": "pdf",
+        "sha256": "e8d2f2aeb0383da8d179b3ecf3591d8ae878c153712319ba1aedfc9d6b7b9648"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T00:05:00.000Z",
+      "words": 4963,
+      "current": "lab-corpus/exports/14-common-sense-ai-companions-v2.6.1.json",
+      "currentSha256": "f618ee640ffdaaf9699253e58ac438eaf47599ede171a59e1445b19cb140379f",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/14-common-sense-ai-companions-v2.6.1.queue.json",
+          "sha256": "e5829e64e51e9c6630bf7c2dbafe2eea50a23f0cc7993ee6137ce1ddb8a0cd3b"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/14-common-sense-ai-companions-v2.6.1.md",
+          "sha256": "4722573d50f0ea01393e73427b03af4fecbbe0b9d576c6450729732607711f32"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/14-common-sense-ai-companions-v2.6.1.labeling.csv",
+          "sha256": "4e093472c3c90b02cfcfa0cb35bb55cfd184a7690d9bbd82cef936a42f34d8bf"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 20,
+        "claimLike": 17,
+        "mapped": 1,
+        "coveragePct": 5.9,
+        "tensions": 0,
+        "queue": 16,
+        "setAside": 383,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "publisher PDF, curl, external pdftotext, no truncation",
+        "scout": "S-E",
+        "scoutAssignment": "C2 — AI companions as a substitute good; establish the actual evidence base",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-02.txt",
+          "scout": "S-E",
+          "scoutWords": 3414,
+          "extractedWords": 4963,
+          "scoutShingles": 3520,
+          "matchedShingles": 2767,
+          "overlapPct": 78.6,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Publicly posted research report.",
+        "notes": "THE INDEPENDENT SOURCE FOR C2 — different publisher, funder, and data-collection firm from source 13, using a genuine AmeriSpeak Teen probability panel with a calibrated nonprobability supplement and a published MOE of plus/minus 4.2 points. STRONGER METHODOLOGY THAN THE PRIMARY, WRONG POPULATION FOR THE CLAIM: it covers teens 13-17, while C2 concerns adults roughly 18-30. Its figures therefore cannot be merged with source 13's, and the scout correctly refused to do so. Archived because a genuinely independent probability-panel instrument on this topic is the scarcest artifact in the cluster, and because its population mismatch is itself the finding."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "15-asc-american-friendship",
+      "title": "The State of American Friendship: Change, Challenges, and Loss",
+      "author": "Daniel A. Cox (Survey Center on American Life)",
+      "publication": "Survey Center on American Life, American Perspectives Survey (May 2021)",
+      "year": 2021,
+      "url": "https://www.americansurveycenter.org/research/the-state-of-american-friendship-change-challenges-and-loss/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/15-asc-american-friendship.txt",
+      "sourceSha256": "2f93abbed45414f4ba988bdebc17a2f4fdfc5c21c1016a7e1564ac699fad0a78",
+      "rawArchive": {
+        "file": "lab-corpus/sources/15-asc-american-friendship.raw.html",
+        "kind": "html",
+        "sha256": "ec3817436e5a7031233392ef898bc9e85d8b7a2c71d8cabe2fb6e82a0d6e6c9f"
+      },
+      "rawHtmlSha256": "ec3817436e5a7031233392ef898bc9e85d8b7a2c71d8cabe2fb6e82a0d6e6c9f",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T00:05:00.000Z",
+      "words": 4592,
+      "current": "lab-corpus/exports/15-asc-american-friendship-v2.6.1.json",
+      "currentSha256": "9c04fa8f274180ffaf4f391392fa332798c82d34cdc2ff2a62bd577213e4f226",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/15-asc-american-friendship-v2.6.1.queue.json",
+          "sha256": "1cb8e18311cdc30068a61cec20dd3f94d4d2018944aafc647bf4a81ab32c0f30"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/15-asc-american-friendship-v2.6.1.md",
+          "sha256": "c05030d00c342ac11d3507d97ecd576fdfe3a90494407e3dd0a94f2f13ce6ce5"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/15-asc-american-friendship-v2.6.1.labeling.csv",
+          "sha256": "b92faf37e8858d300e5d530457af2460e46da28c1bab1ff4017c5d70ab2d2891"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 17,
+        "claimLike": 17,
+        "mapped": 0,
+        "coveragePct": 0,
+        "tensions": 0,
+        "queue": 17,
+        "setAside": 265,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live page, curl, committed deterministic extractor",
+        "scout": "S-F",
+        "scoutAssignment": "C10 — the friendship-decline sex split, and whether the sole-channel step exists in source data",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-F",
+          "scoutWords": 4610,
+          "extractedWords": 4592,
+          "scoutShingles": 4724,
+          "matchedShingles": 4296,
+          "overlapPct": 90.9,
+          "verdict": "CORROBORATED — the scout reasoned over the text the Lab will analyze"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Publicly readable research report. Archived unpublished in a gitignored corpus.",
+        "notes": "C10's verified figure, and the strongest-methodology instrument in this batch: N=2,019 US adults on the Ipsos KnowledgePanel — a genuine PROBABILITY panel — fielded May 14-23 2021, MOE plus/minus 2.4 points. Independently confirmed verbatim against this archive: 'Four in 10 (41 percent) women report having received emotional support from a friend within the past week, compared to 21 percent of men.' Recall window is 'within the past week', stated explicitly. GAP: the literal interviewer-facing question wording is not recoverable — the topline PDF is image-rendered. CRITICAL: this report, which is the usual citation for the sole-channel claim, contains NO concentration or sole-channel step. The prior integrity flag is confirmed for this source specifically."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "16-pew-emotional-support",
+      "title": "Where Men and Women Turn for Emotional Support and Social Connection",
+      "author": "Pew Research Center",
+      "publication": "Pew Research Center, 'Men, Women and Social Connections', American Trends Panel Wave 154",
+      "year": 2025,
+      "url": "https://www.pewresearch.org/social-trends/2025/01/16/where-men-and-women-turn-for-emotional-support-and-social-connection/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/16-pew-emotional-support.txt",
+      "sourceSha256": "12b07208d739cf93649118998ba7511a5bc9a3cbb7e3d6304eaaaa2b24bb8edd",
+      "rawArchive": {
+        "file": "lab-corpus/sources/16-pew-emotional-support.raw.html",
+        "kind": "html",
+        "sha256": "c8dc54cb3c8f7dc16136dd2c0b3a4a5e3c9d5d759b1b7d69f4aad993308343d0"
+      },
+      "rawHtmlSha256": "c8dc54cb3c8f7dc16136dd2c0b3a4a5e3c9d5d759b1b7d69f4aad993308343d0",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T00:05:00.000Z",
+      "words": 819,
+      "current": "lab-corpus/exports/16-pew-emotional-support-v2.6.1.json",
+      "currentSha256": "a4de32caf0083bd6771f1df20eab5b704baa774a3e95761587c0e225add9a219",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/16-pew-emotional-support-v2.6.1.queue.json",
+          "sha256": "7f5f3466fe104ec0dd48e5b3b91d1dd459f4b0e56668e1e3b132292aca92f183"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/16-pew-emotional-support-v2.6.1.md",
+          "sha256": "df6b4bb83628ab93c542b67b00807dc95bbb9e81034c922b8774d4baff39e15b"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/16-pew-emotional-support-v2.6.1.labeling.csv",
+          "sha256": "377f0b6e55f5b4f86671a5d5d9425808a4f8639314e45411d31418713275bdd5"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 3,
+        "claimLike": 3,
+        "mapped": 0,
+        "coveragePct": 0,
+        "tensions": 0,
+        "queue": 3,
+        "setAside": 39,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live page, curl, committed deterministic extractor",
+        "scout": "S-F",
+        "scoutAssignment": "C10 — the friendship-decline sex split, and whether the sole-channel step exists in source data",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-02.txt",
+          "scout": "S-F",
+          "scoutWords": 2042,
+          "extractedWords": 819,
+          "scoutShingles": 2025,
+          "matchedShingles": 810,
+          "overlapPct": 40,
+          "verdict": "DIVERGENT — investigate before trusting this scout findings"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Publicly readable research report. Archived unpublished in a gitignored corpus.",
+        "notes": "THE COUNTER-EVIDENCE for C10's causal step. Pew, n=6,204, American Trends Panel Wave 154 — a probability panel. It found NO sex gap in partner reliance itself: men and women are about equally likely to say they would lean on a spouse or partner. The sex gap is in the BREADTH of other channels, not in partner concentration. This cuts against the naive sole-channel mechanism, and is the reason C10's answer is a three-way split rather than a confirmation."
       },
       "analyzerVersion": "2.6.1"
     }
