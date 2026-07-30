@@ -52,18 +52,21 @@ import {
   SCORING_CONFIG_HASH,
 } from '../js/lab-analyzer.js';
 import { normalizeInput } from '../js/lab-intake.js';
+import { corpusSources } from './lab-corpus-sources.mjs';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /*
- * The archived corpus, in manifest order. 03 (Gottman) is excluded by standing
- * decision and is still a v2.1.2 artifact; including it would mix instruments.
+ * The archived corpus, in manifest order — every source the manifest records an
+ * archived text for. 03 (Gottman) is excluded there by standing decision and is
+ * still a v2.1.2 artifact; including it would mix instruments.
+ *
+ * This was a hand-written three-element array until 2026-07-30, so every
+ * "corpus-wide" number this tool produced before then covered 3 of the 21
+ * archived sources. See md/lab-threshold-sweep-widening.md and
+ * ./lab-corpus-sources.mjs.
  */
-const SOURCES = [
-  '01-pew-online-dating',
-  '02-fem-centrism',
-  '04-heteropessimism',
-];
+const SOURCES = corpusSources(ROOT_DIR);
 
 /** The three lines a pair can cross, named so the report can say which one. */
 const THRESHOLDS = [
@@ -129,8 +132,7 @@ function documentFor(text, title) {
  */
 function loadPassages(excerptChars, includeSetAside) {
   const passages = [];
-  for (const id of SOURCES) {
-    const file = path.join(ROOT_DIR, 'lab-corpus', 'sources', `${id}.txt`);
+  for (const { id, file } of SOURCES) {
     if (!fs.existsSync(file)) {
       throw new Error(`Corpus source missing: ${file}\nThe corpus is gitignored; see md/RERUN.md §1.`);
     }
