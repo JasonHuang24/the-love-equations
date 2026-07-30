@@ -110,8 +110,29 @@ belongs with the remaining constants audit.
 specifically because `minWeakScore` must not be moved to fix a display symptom.
 `maxWeakMatches` stays at 3.
 
+## The sweep that had to find nothing
+
+A display change should move no score, and the retrieval layer is where that
+claim is checkable. Regenerating the threshold-neighbour band against the tree
+carrying both this change and the constants audit:
+
+```
+97,888 pairs · 2,401 passages · scoringConfigHash bt0a7p
+  gained 0 · lost 0 · moved 0     — every pair byte-identical to the committed fixture
+```
+
+The population, the band membership and every individual score are unchanged, so
+there are no crossings, nothing to adjudicate, and no fixture to rewrite. The
+record stands at `0 credible (blocking) · 516/516 weak (ratchet) · 4,622 census`.
+
+Worth doing rather than assumed: `weakBandTotal` is computed inside
+`buildCandidateSet`, which is one function away from `scoreEntry`, and "it only
+adds a field" is exactly the kind of claim that turns out to be false.
+
 ## Reproducing
 
 ```
 weak-band-census.mjs   band vs carried through analyzeDocument, all 21 sources
+node tools/lab-threshold-sweep.mjs --neighbors <scratch>   then diff .scores
+                       against tests/fixtures/threshold-neighbors.json
 ```
