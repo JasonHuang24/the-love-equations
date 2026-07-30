@@ -27,8 +27,15 @@ is another instance of a shape already frozen, it is a line here.
 
 **The family table below is the routing table**, and it is executable in the sense that matters:
 `tests/lab-feedback-integrity.test.mjs` asserts that every `family` appearing in the fixture block is
-registered here with cases listed, and that this table registers no family no case carries. A family a
-fixture knows about and the routing table does not is a flag with nowhere to go.
+registered here, that each row's case list matches that family's documented limits **exactly**, and
+that this table registers no family no case carries. A family a fixture knows about and the routing
+table does not is a flag with nowhere to go.
+
+**The Cases column lists documented limits only — never guards.** This table routes a production hit
+onto a frozen failure, and a guard is not a destination for one: it records behavior that is already
+correct. So `bl-11b`, `bl-15` and `bl-19` appear nowhere below. The table was inconsistent about this
+until 2026-07-29 — `window` omitted its guard, `coordination` listed one, and the new `morphology` row
+copied the wrong precedent — which is what an exact-comparison test is for.
 
 That test was written for `morphology`, which sat in the fixture from v2.6.1 and in neither this table
 nor the block's own ruling. **It immediately found a second one:** `qualification`, unregistered since
@@ -52,11 +59,11 @@ where the one worked example correctly ends in nothing.*
 
 | Family | Cases | What repeated real-source hits would argue for |
 |---|---|---|
-| `coordination` | bl-08, bl-09, bl-10, bl-15 | Clause boundaries at coordinating conjunctions, which needs to know whether the conjuncts share a subject — the first thing here that is genuinely grammar rather than punctuation. |
+| `coordination` | bl-08, bl-09, bl-10 | Clause boundaries at coordinating conjunctions, which needs to know whether the conjuncts share a subject — the first thing here that is genuinely grammar rather than punctuation. |
 | `subordination` | bl-01, bl-07 | Subordinator scope, in both directions: a negator inside a subordinate clause, and a pre-posed concession before the assertion. |
 | `appositive` | bl-13, bl-14 | A comma that introduces a modifier of the preceding noun is not a clause boundary. Narrower than the others, and the most likely to be fixable without a full parser. |
 | `attribution` | bl-03, bl-05 | Named speakers and multi-level reporting chains. The risk is the opposite of the others: a rule loose enough to catch these makes every capitalised subject an attribution. |
 | `quotation` | bl-02, bl-04 | Linking a quoted span to the occurrence it reports rather than to the passage. Independently valuable, and the cheapest of the clause families. |
 | `qualification` | bl-06 | A qualification cue that is not subject-linked, so "but the dashboard is too simplistic" softens an equivalence asserted flatly about something else. Needs to know what the following clause is ABOUT, which is the same information `subordination` needs from the other direction — the two probably fall to one change or to neither. Registered here from 2026-07-29; it was in the fixture from v2.6.0 and in this table never, found by the test that now guards it. |
 | `window` | bl-11, bl-12 | Evidence that resolves a borrowed word from an adjacent clause, or from just past the eight-token radius. The trade here is direct: widening the window re-admits exactly the cases v2.5.0 tightened it to exclude. |
-| `morphology` | bl-16, bl-17, bl-18, bl-19 | The denylist and the passage disagreeing about what a word is. Not a clause problem and not fixed by a parser: `payment` seeing `paying` is a stem comparison reaching too far, and `health care` seeing `caregivers` is a substring test that was never replaced. Repeated real-source hits argue for a comparison written in one representation on both sides — the same change v2.4.2 and v2.6.1 each made once and each left half-finished. The cheapest family to act on, and the only one whose members this project CREATED rather than found. |
+| `morphology` | bl-16, bl-17, bl-18 | The denylist and the passage disagreeing about what a word is. Not a clause problem and not fixed by a parser: `payment` seeing `paying` is a stem comparison reaching too far, and `health care` seeing `caregivers` is a substring test that was never replaced. Repeated real-source hits argue for a comparison written in one representation on both sides — the same change v2.4.2 and v2.6.1 each made once and each left half-finished. The cheapest family to act on, and the only one whose members this project CREATED rather than found. |

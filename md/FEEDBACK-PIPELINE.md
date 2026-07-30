@@ -234,11 +234,27 @@ unlinked qualification cue, and the hard edge of a token window. The other three
 which is not a clause problem at all — the denylist and the passage disagreeing about what a word is.
 Each freezes current behavior with the humanly correct answer recorded beside it.
 
-**Every family has a registered destination, and a test enforces that.** The eight are `coordination`,
-`subordination`, `appositive`, `attribution`, `quotation`, `qualification`, `window` and `morphology`;
-all eight route to `md/limit-hit-ledger.md`, whose family table says what repeated real-source hits on
-each would argue for. `tests/lab-feedback-integrity.test.mjs` asserts that every `family` value present
-in the fixture block appears in that table, and that the table registers no family no case carries.
+**Every family has a registered destination, and a test enforces that.** All eight route to
+`md/limit-hit-ledger.md`, whose family table says what repeated real-source hits on each would argue
+for. This is the routing list, and it is the list the test reads — it is parsed out of THIS subsection
+rather than out of the whole file, because both `morphology` and `qualification` are also named in the
+explanatory prose above and a test that searched the file would stay green while the routing list lost
+one:
+
+| Family | Destination |
+|---|---|
+| `coordination` | `md/limit-hit-ledger.md` |
+| `subordination` | `md/limit-hit-ledger.md` |
+| `appositive` | `md/limit-hit-ledger.md` |
+| `attribution` | `md/limit-hit-ledger.md` |
+| `quotation` | `md/limit-hit-ledger.md` |
+| `qualification` | `md/limit-hit-ledger.md` |
+| `window` | `md/limit-hit-ledger.md` |
+| `morphology` | `md/limit-hit-ledger.md` |
+
+`tests/lab-feedback-integrity.test.mjs` asserts that every `family` value present in the fixture block
+appears in the table above, that the ledger's own family table registers it with its documented cases
+listed **exactly**, and that neither table carries a family no case does.
 
 The test was written because `morphology` was in the fixture from v2.6.1 and in neither the table nor
 the block's ruling. It then found `qualification` missing since v2.6.0. Two families with frozen cases

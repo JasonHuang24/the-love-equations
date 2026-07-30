@@ -483,18 +483,34 @@ test('RED D6: retainedOnEvidenceAfterCap counts evidence retention and nothing e
 });
 
 /*
- * Every documented-limit family has a routing destination.
+ * Every documented-limit family has a routing destination, and each row names
+ * exactly the limits it routes.
  *
  * `morphology` sat in the fixture block from v2.6.1 and appeared in neither the
  * ledger's family table nor the block's own ruling until 2026-07-29. Nothing was
  * checking, so the gap was invisible rather than accepted: a flag adjudicated
  * onto that family had a case to point at and no row to be recorded in, which is
- * the one state §4 of md/FEEDBACK-PIPELINE.md exists to prevent.
+ * the one state §4 of md/FEEDBACK-PIPELINE.md exists to prevent. The first version
+ * of this test found a second gap immediately — `qualification`, unregistered
+ * since v2.6.0.
+ *
+ * Sol's verification review then found two holes in the test itself, both fixed
+ * here:
+ *
+ *   1  it searched the WHOLE of FEEDBACK-PIPELINE.md for each family name, and
+ *      both new families are also named in the explanatory prose, so the routing
+ *      list could have lost one while the test stayed green — while the test's own
+ *      failure message claimed it was checking §4. It now parses the routing table
+ *      out of that subsection alone.
+ *   2  it accepted any row containing some `bl-*` ID, so a row could list the
+ *      wrong cases, or a guard. Guards are not destinations for limit hits: they
+ *      record behavior that is already correct. Rows are now compared EXACTLY
+ *      against the family's `limitDocumented` cases.
  *
  * The tables are prose, so this reads them as prose. Parsing the markdown is the
- * point rather than a shortcut — the document IS the routing table for limit
- * families, exactly as tools/lab-feedback.mjs is for dispositions, and a
- * registry duplicated into code here would be a third place to forget.
+ * point rather than a shortcut — the documents ARE the routing table for limit
+ * families, exactly as tools/lab-feedback.mjs is for dispositions, and a registry
+ * duplicated into code here would be a third place to forget.
  */
 test('every limit family in the fixture is registered in the routing table', () => {
   const benchmark = JSON.parse(readFileSync(
@@ -502,11 +518,15 @@ test('every limit family in the fixture is registered in the routing table', () 
   const ledger = readFileSync(path.join(ROOT_DIR, 'md', 'limit-hit-ledger.md'), 'utf8');
   const pipeline = readFileSync(path.join(ROOT_DIR, 'md', 'FEEDBACK-PIPELINE.md'), 'utf8');
 
-  const families = [...new Set(benchmark.blocks.documentedLimits.cases
-    .map((entry) => entry.family)
-    .filter(Boolean))].sort();
-  assert.ok(families.length >= 7,
+  const cases = benchmark.blocks.documentedLimits.cases;
+  const families = [...new Set(cases.map((entry) => entry.family).filter(Boolean))].sort();
+  assert.ok(families.length >= 8,
     `Expected the documented-limit family population, found ${families.length}: ${families}`);
+
+  /** The documented limits of one family, in fixture order. Guards are not routed. */
+  const limitsOf = (family) => cases
+    .filter((entry) => entry.family === family && entry.limitDocumented)
+    .map((entry) => entry.id);
 
   // Rows of the ledger's "Families, and what a hit on each would mean" table:
   // | `family` | cases | what a hit argues for |
@@ -523,20 +543,40 @@ test('every limit family in the fixture is registered in the routing table', () 
     + 'frozen case to point at and nowhere to be recorded. Register it, or the fixture is documenting '
     + 'a limit the pipeline cannot route.');
 
+  // The §4 routing list, parsed from that subsection ONLY. Searching the whole
+  // file would pass on a name that appears solely in the surrounding prose.
+  const SECTION = 'When adjudication lands on a documented limit';
+  const sectionStart = pipeline.indexOf(`### ${SECTION}`);
+  assert.notEqual(sectionStart, -1, `md/FEEDBACK-PIPELINE.md no longer has a "${SECTION}" subsection.`);
+  const rest = pipeline.slice(sectionStart + SECTION.length);
+  const sectionEnd = rest.search(/\r?\n(?:## |---\r?\n)/u);
+  const section = sectionEnd === -1 ? rest : rest.slice(0, sectionEnd);
+  const routed = new Set([...section.matchAll(/^\|\s*`([a-z-]+)`\s*\|/gmu)].map((row) => row[1]));
+
   families.forEach((family) => {
-    // A row with no cases listed is a heading, not a destination.
-    assert.match(registered.get(family), /bl-\d/u,
-      `The routing row for \`${family}\` lists no fixture cases, so nothing connects the family to `
-      + 'the limits it is meant to route.');
-    assert.ok(pipeline.includes(`\`${family}\``),
-      `md/FEEDBACK-PIPELINE.md §4 does not name \`${family}\`, so the routing document and the `
-      + 'routing table disagree about which families exist.');
+    // Each row lists this family's documented limits and nothing else — not a
+    // guard, not another family's case, not an ID that has been renamed.
+    const listed = [...registered.get(family).matchAll(/bl-[\w]+/gu)].map((hit) => hit[0]);
+    assert.deepEqual(listed, limitsOf(family),
+      `The routing row for \`${family}\` lists [${listed.join(', ')}] and the fixture's documented `
+      + `limits for it are [${limitsOf(family).join(', ')}]. Rows route production hits onto frozen `
+      + 'failures, so they carry documented limits only — a guard records behavior that is already '
+      + 'correct and is not a destination for a limit hit.');
+
+    assert.ok(routed.has(family),
+      `The §4 routing list in md/FEEDBACK-PIPELINE.md does not include \`${family}\`. It is parsed `
+      + 'from that subsection alone, so being named in the surrounding prose does not count — the '
+      + 'routing document and the routing table must agree about which families exist.');
   });
 
-  // And the reverse: a row for a family no fixture case carries is a destination
-  // for nothing, which is how the table drifts back out of date from the far side.
+  // And the reverse, on both tables: a row for a family no fixture case carries
+  // is a destination for nothing, which is how a registry drifts from the far side.
   const orphans = [...registered.keys()].filter((family) => !families.includes(family));
   assert.equal(orphans.length, 0,
-    `The routing table registers ${orphans.length} family/families no fixture case carries: `
+    `The ledger's routing table registers ${orphans.length} family/families no fixture case carries: `
     + `${orphans.join(', ')}.`);
+  const routedOrphans = [...routed].filter((family) => !families.includes(family));
+  assert.equal(routedOrphans.length, 0,
+    `The §4 routing list names ${routedOrphans.length} family/families no fixture case carries: `
+    + `${routedOrphans.join(', ')}.`);
 });
