@@ -85,9 +85,22 @@ export const SCORING_CONFIG = Object.freeze({
   domainRelevantScore: 4,
   domainUncertainScore: 1,
   // Carried over from v2.1.2 and still surfaced through analyzerInternals, but
-  // no decision in this file reads it. Kept at its original value because this
-  // pass changes no values; flagged for the next calibration pass.
+  // no decision in this file reads it.
+  //
+  // The calibration pass it was flagged for ran on 2026-07-30 and confirmed the
+  // finding: two occurrences in the whole repository, this declaration and the
+  // analyzerInternals re-export, and no reader anywhere including the tests.
+  // KEPT anyway, and now for a stated reason rather than by deferral. Deleting
+  // it changes SCORING_CONFIG_HASH, which every export carries as provenance —
+  // so a removal that changes no behaviour would make every prior export's
+  // config stamp disagree with the current one, and the re-export is a
+  // compatibility surface for callers written against v2.1.2. A dead constant
+  // that costs nothing is cheaper than a provenance discontinuity that buys
+  // nothing.
   nonDomainDecisiveScore: 4,
+  // The no-participant threshold for the social-mechanism frame. Its live
+  // relationship to the cultural frame's weight is asserted in
+  // tests/lab-analyzer.test.mjs — see md/lab-constants-audit.md.
   plausibleSocialStructureScore: 3,
 
   // Tokenization. Both NEW at v2.6.0; the first surfaces a number that was
@@ -3798,6 +3811,11 @@ export const analyzerInternals = Object.freeze({
   // what survives retrieval rather than inferring it from what happens to be
   // displayed. Callers outside analyzeDocument pass no bounded context.
   candidateSetFor: (unit, prepared, context = null) => buildCandidateSet(unit, prepared, context),
+  // Exposed so the suite can assert a frame's DECLARED weight against the
+  // threshold it must stay under, rather than waiting for a benchmark case to
+  // flip and then guessing which of two literals moved. No behaviour changes
+  // with it, so the bundle token does not move.
+  socialMechanismFrames: SOCIAL_MECHANISM_FRAMES,
   // Exposed so the export boundary can be tested directly rather than only
   // through a whole analysis, where a leak with an ordinary name would have to
   // reach a fixture before anyone saw it.

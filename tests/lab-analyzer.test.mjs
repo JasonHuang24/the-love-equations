@@ -1415,6 +1415,98 @@ test('the scoring config is frozen, complete, and hashes stably', () => {
 });
 
 /*
+ * Constants that only mean what they say because a SECOND constant holds.
+ *
+ * The calibration audit went looking for a value that was wrong and found
+ * something more useful: relationships between two literals, each sound today,
+ * each stated only in a comment, and each silent if broken. `dumpFloor` against
+ * the band was the first (tests/lab-threshold-neighbors.test.mjs). These are the
+ * three the second pass found, and all three sit hundreds of lines from the
+ * constant they depend on.
+ *
+ * A relationship gets an assertion here when breaking it is (a) silent, or (b)
+ * reported as an unrelated symptom. Redundant belt-and-braces couplings do not:
+ * `max(contextBoost) < minWeakScore - candidateScoreFloor` is true and cited in
+ * md/lab-adjudication-at-scale.md, but applyBoundedContext refuses outright to
+ * boost anything under minWeakScore, so the numeric margin can never be the only
+ * thing standing there. Measured, reported, not pinned.
+ */
+test('a constant that is only sound because another constant holds says so', () => {
+  const { socialMechanismFrames } = analyzerInternals;
+
+  /*
+   * 1. The cultural frame's weight against the no-participant threshold.
+   *
+   * Jason ruled option 1 of md/lab-gate-cultural-register.md over option 2. The
+   * entire difference between them is that a culture-and-shaping passage with
+   * NOBODY in the sentence stays out — and the only thing producing that is
+   * weight 2.5 being unable to reach plausibleSocialStructureScore 3, since a
+   * frame score is a MAX over matched definitions.
+   *
+   * Measured both ways on the domain benchmark: raising the weight to 3 and
+   * lowering the threshold to 2 give the IDENTICAL outcome — cases the benchmark
+   * says to discard go from 1 retained on this frame to 7, and junkRecall falls
+   * 0.844 -> 0.781. So the suite does catch it, as a junkRecall ratchet failure
+   * listing six extra cases, three hundred lines from either literal. This says
+   * which two numbers to look at.
+   */
+  const cultural = socialMechanismFrames.find((frame) => frame.id === 'cultural-frame-mechanism');
+  assert.ok(cultural, 'the cultural frame is the one Jason ruled on and must stay identifiable');
+  assert.ok(cultural.weight < SCORING_CONFIG.plausibleSocialStructureScore,
+    `The cultural frame's weight ${cultural.weight} has reached plausibleSocialStructureScore `
+    + `${SCORING_CONFIG.plausibleSocialStructureScore}, so culture-and-shaping language now retains a `
+    + 'passage with no human participant in it. That is option 2 of md/lab-gate-cultural-register.md, '
+    + 'which Jason ruled against; measured, it takes benchmark cases retained on this frame from 1 to 7 '
+    + 'and junkRecall from 0.844 to 0.781.');
+  assert.equal(cultural.decisive, false,
+    'A decisive frame retains on its own, which routes around the weight comparison above entirely.');
+
+  /*
+   * 2. minClaimWords against shortUnitWordCount.
+   *
+   * The short-unit penalty fires on any scored unit under shortUnitWordCount
+   * words. A unit under minClaimWords words gets claimLikelihood 0 and so is
+   * never claim-like — but it is still RETAINED and still SCORED, which the
+   * first draft of this assertion got wrong: analyzeDocument scores every unit
+   * the gate keeps, and only the ledger, the coverage denominators and the
+   * research queue filter on isClaimLike.
+   *
+   * Measured, that distinction is worth 8 credible matches: setting the floor to
+   * 4 gains 10 displayed credible matches and disabling the penalty outright
+   * gains 18, and the difference is entirely sub-4-word retained passages that
+   * only the exports carry.
+   *
+   * So the range where the penalty can touch a CLAIM is [minClaimWords,
+   * shortUnitWordCount) — {4, 5} today. Raise the floor to the ceiling and every
+   * reader-facing surface stops seeing the penalty while it keeps firing out of
+   * sight, which is worse than switching it off.
+   */
+  assert.ok(SCORING_CONFIG.minClaimWords < SCORING_CONFIG.shortUnitWordCount,
+    `minClaimWords ${SCORING_CONFIG.minClaimWords} has reached shortUnitWordCount `
+    + `${SCORING_CONFIG.shortUnitWordCount}. No claim-like unit can be short enough for the penalty any `
+    + 'more, so it vanishes from the ledger, coverage and the research queue while still firing on '
+    + 'retained non-claim passages that only the exports carry.');
+
+  /*
+   * 3. minPhraseLength against minSingleAliasLength.
+   *
+   * A single-word alias must survive minPhraseLength to enter entry._phrases and
+   * then clear minSingleAliasLength to be a hit, so the stricter floor decides
+   * and the looser one is invisible. md/lab-canon-alias-pass-01.md already warns
+   * "do not lower minSingleAliasLength to 4" for exactly this reason — a prose
+   * warning in a document, which is where dumpFloor's rule lived too.
+   *
+   * Measured: the 4-character floor deletes 6 of 798 alias surfaces, and every
+   * one of the 6 is under 5 characters, so it currently removes nothing that
+   * minSingleAliasLength would not remove anyway.
+   */
+  assert.ok(SCORING_CONFIG.minPhraseLength <= SCORING_CONFIG.minSingleAliasLength,
+    `minPhraseLength ${SCORING_CONFIG.minPhraseLength} is above minSingleAliasLength `
+    + `${SCORING_CONFIG.minSingleAliasLength}. Single-word aliases are now filtered out before the floor `
+    + 'that is supposed to decide them, so lowering minSingleAliasLength would silently change nothing.');
+});
+
+/*
  * A canon entry may reject more than one reading. Overlap used to be measured
  * against every misreading concatenated into one token set, so each misreading
  * an author added made all the others harder to detect: the passage had to cover

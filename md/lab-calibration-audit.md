@@ -155,6 +155,13 @@ the same era and are not measured here. The three in this document were the ones
 named in `md/lab-adjudication-at-scale.md`; the rest are owed the same treatment
 and have not had it.
 
+> **They have now** — `md/lab-constants-audit.md`, same day. No value moved.
+> Three more relationships of the `dumpFloor` shape are asserted, the largest
+> being that the cultural frame's weight 2.5 must stay under
+> `plausibleSocialStructureScore` 3 or Jason's rejected gate option ships by
+> accident. It also found that this archive is the wrong population for two of
+> the constants, which is a caveat this document should have carried.
+
 ## Reproducing
 
 ```
