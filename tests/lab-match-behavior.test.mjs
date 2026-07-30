@@ -1288,3 +1288,86 @@ test('the canon describing itself is a known, measured, unfixed match surface', 
     'a claim someone is quoting must keep reaching its concept — demoting `say` is what cost '
     + 'three displayed mappings on 01-pew-online-dating');
 });
+
+/*
+ * A NUMERAL IS NOT A CONCEPT, AND THE ENGINE CANNOT TELL. Frozen by adjudication.
+ *
+ * Jason ruled REJECT on 2026-07-30, reversing an ACCEPT of 2026-07-29, for
+ * `seg-00025-0dyedk3.claim-02 | statistics:stat-pay-to-play | minCredibleScore`
+ * — a Pew sentence about which platform leads among users under 50, displayed as
+ * a credible match for an entry about who PAYS for dating apps. It scored 0.432
+ * on four loose tokens with no phrase, alias, or signature hit anywhere:
+ *
+ *   sharedTokens        [online, dat, users, 50]
+ *   queryCoverage       0.471      canonCoverage  0.036
+ *   phraseHits []  exactAliasHits []  signatureHits []  promotedAliasHits []
+ *
+ * `50` is the bare integer. The entry's synopsis reports "58% vs 50%"; the
+ * passage says "under 50". Two unrelated uses of the same two digits.
+ *
+ * THREE DISCRIMINATORS WERE MEASURED. ALL THREE ARE REFUSED.
+ *
+ * 1. Stop counting bare numerals as distinctive. Measured over all 21 archived
+ *    sources: of 904 pairs at or above minCredibleScore, 25 share a numeral and
+ *    23 of those have no phrase/alias anchor. But the STRONGEST of the 23 are
+ *    correct matches in which the numeral is the entry's own statistic —
+ *
+ *      0.634  stat-pay-to-play   "...paid for these sites and apps (41% vs. 29%)"
+ *      0.638  satisfaction-flywheel  "...eight assessments of sexual and marital
+ *                                     satisfaction from 207 newlywed couples..."
+ *      0.564  stat-marriage-age  "median age at first marriage rose from 23.2..."
+ *
+ *    On a statistics page the digits ARE the evidence. Banning them costs the
+ *    best matches in the set to remove the worst, and only 2 of the 23 rest on
+ *    two or fewer non-numeric tokens besides.
+ *
+ * 2. Require more canonCoverage. It does not separate them. The bands overlap
+ *    exactly where it matters: the correct 0.634 row sits at cc=0.087 and the
+ *    coincidental 0.456 row sits at cc=0.087 too. This defect is at cc=0.036,
+ *    the lowest of the 23, but there is no line that keeps 0.076 and drops 0.036
+ *    without being fitted to these three cases.
+ *
+ * 3. Exclude numerals from `admissionDistinctiveShared`. Would not move this pair
+ *    at all: it drops from 3 tokens to 2, and `minAdmissionDistinctiveShared` is
+ *    2. Checked before proposing, which is why it is not proposed.
+ *
+ * So the ruling is recorded and the behavior is frozen, per the sheet's own rule
+ * that a REJECT becomes a pinned outcome and a written cost rather than a
+ * threshold change. The passages below are AUTHORED — `lab-corpus/` is
+ * gitignored third-party text (md/RERUN.md §1) and the adjudicated sentence
+ * stays in the sweep fixture as IDs and scores.
+ *
+ * Record: md/lab-numeral-coincidence.md
+ */
+test('a shared numeral can carry an unrelated statistic to a credible match', async () => {
+  const document = normalizeInput({
+    text: 'Online dating users spend about 50 minutes a day inside these apps.',
+    source: { title: 'numeral coincidence, frozen' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+  const result = await analyzeDocument(document, canonIndex);
+  const match = result.segments.flatMap((segment) => segment.matches)
+    .find((row) => row.canonId === 'statistics:stat-pay-to-play');
+
+  assert.ok(match, 'The defect no longer reproduces. If that was deliberate, say which of the '
+    + 'three measured discriminators was adopted and what it cost — the reasoning above is the '
+    + 'only record of the measurement, and Jason ruled REJECT on the real pair expecting it to '
+    + 'stay visible.');
+  assert.ok(match.score >= SCORING_CONFIG.minCredibleScore,
+    `frozen at credible: ${match.score}. A claim about screen time is not a claim about who pays.`);
+
+  /*
+   * Not specific to one entry, which is the part that makes it a defect in the
+   * scoring surface rather than a defect in one synopsis: a sentence about
+   * services launching reaches a DIVORCE statistic.
+   */
+  const elsewhere = normalizeInput({
+    text: 'Roughly 50 new online dating services launched last year, and most users never heard of them.',
+    source: { title: 'numeral coincidence, second entry' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+  const elsewhereResult = await analyzeDocument(elsewhere, canonIndex);
+  assert.ok(elsewhereResult.segments.flatMap((segment) => segment.matches)
+    .some((row) => row.canonId === 'statistics:stat-divorce'),
+  'the second half of the finding stopped reproducing; re-measure before deleting it');
+});

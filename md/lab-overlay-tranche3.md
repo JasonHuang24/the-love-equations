@@ -101,11 +101,29 @@ tranche 1.
 
 The single credible-line loss is `statistics:stat-pay-to-play` at **0.430 →
 0.429**, on a Pew passage defining who counts as a current online-dating user.
-That pair moved **+0.001 in the doctrine merge and was ruled ACCEPT**, and it has
-now moved back. It is not a regression so much as a pair sitting exactly on a line
-and oscillating with every canon change — which is the argument for ruling it once
-and pinning it, rather than re-ruling it every tranche. Left PENDING for that
-ruling.
+
+> **Corrected 2026-07-30.** This paragraph originally said the pair had moved
+> +0.001 in the doctrine merge, been ruled ACCEPT, and moved back — "a pair
+> sitting exactly on a line and oscillating with every canon change". That is
+> wrong, and the correction matters because it changes the verdict. There are
+> **three different Pew passages** mapping to this one entry, all within a
+> thousandth of 0.43, and each carries its own ruling key. Nothing was re-ruled:
+> the merge skips any key already answered (`if (rulings[key]) continue;`), so a
+> ruled pair can never re-enter PENDING.
+>
+> ```
+> 0.432  seg-00025  REJECT   "Tinder is the top online dating platform among users under 50."
+> 0.431  seg-00030  ACCEPT   "Around six-in-ten paid users (58%) say ... positive ..."
+> 0.429  seg-00013  ACCEPT   "Current or recent online dating users refers to the 9% ..."
+> ```
+>
+> Ruled by Jason on 2026-07-30. The loss recorded here — `seg-00013` — is a
+> survey **definition** sentence about who counts as a user; it says nothing
+> about paying and never belonged above the credible line, so the loss is the
+> engine getting it right. `seg-00025` went the other way: it had been ACCEPTed
+> on 2026-07-29 and was reopened and REJECTed, because a claim about platform
+> share is not a claim about who pays. See
+> [`lab-numeral-coincidence.md`](lab-numeral-coincidence.md).
 
 Sheet: `md/lab-overlay-tranche3-threshold-adjudication.md`.
 

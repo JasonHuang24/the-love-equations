@@ -22,7 +22,7 @@
     "minCredibleScore": 396,
     "pairs": 90432,
     "rulings": 4394,
-    "pending": 4242
+    "pending": 4241
   },
   "rulings": {
     "seg-00024-0ha18nw.claim-03|statistics:stat-couples-meet|candidateScoreFloor": {
@@ -908,13 +908,18 @@
       "ruledAt": "2026-07-29"
     },
     "seg-00025-0dyedk3.claim-02|statistics:stat-pay-to-play|minCredibleScore": {
-      "ruling": "ACCEPT",
+      "ruling": "REJECT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.424,
       "after": 0.432,
       "ruledBy": "Jason",
-      "ruledAt": "2026-07-29"
+      "ruledAt": "2026-07-30",
+      "supersedes": {
+        "ruling": "ACCEPT",
+        "ruledBy": "Jason",
+        "ruledAt": "2026-07-29"
+      }
     },
     "seg-00031-0gcwxe4.claim-02|statistics:stat-app-reasons|minCredibleScore": {
       "ruling": "ACCEPT",
@@ -30766,11 +30771,13 @@
       "after": 0.077
     },
     "seg-00013-13mahyu.claim-01|statistics:stat-pay-to-play|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "loss",
       "before": 0.43,
-      "after": 0.429
+      "after": 0.429,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00009-165o1nj.claim-07|frameworks:sham-relationship|minWeakScore": {
       "ruling": "PENDING",
