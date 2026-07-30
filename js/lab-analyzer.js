@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.1';
+export const ANALYZER_VERSION = '2.6.2';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1157,7 +1157,21 @@ function normalizeEntry(raw, index) {
   entry._phrases = unique(aliases
     .map(normalizeText)
     .filter((phrase) => phrase.length >= SCORING_CONFIG.minPhraseLength));
+  /*
+   * The union, still used to locate the misreading inside the passage: any
+   * rejected reading's words are a legitimate place to look.
+   */
   entry._misreadingTokens = unique(tokenize(entry.commonMisreadings.join(' ')));
+  /*
+   * ...and each rejected reading on its own, because overlap is a SHARE of the
+   * set it is measured against. Measured against the union, every misreading an
+   * author added raised the bar for all the others — a passage had to cover a
+   * share of a bigger set — so the canon was penalised for being thorough and a
+   * well-written entry could reject a reading it then failed to recognise.
+   */
+  entry._misreadingTokenSets = entry.commonMisreadings
+    .map((misreading) => unique(tokenize(misreading)))
+    .filter((tokens) => tokens.length);
   /*
    * Alias typing. A single word is insufficient evidence by default, which is
    * why the untyped path below still applies minSingleAliasLength and the
@@ -2088,8 +2102,15 @@ function scoreEntry(unit, entry, idf) {
     penaltiesApplied.push({ code: 'short-unit', factor: SCORING_CONFIG.shortUnitPenalty });
   }
 
-  const misreadingOverlap = entry._misreadingTokens.length
-    ? entry._misreadingTokens.filter((token) => querySet.has(token)).length / entry._misreadingTokens.length
+  /*
+   * The strongest single rejected reading decides. Scored per misreading rather
+   * than against the union, so an entry that rejects three readings detects each
+   * one as well as an entry that rejects only that one.
+   */
+  const misreadingOverlap = entry._misreadingTokenSets.length
+    ? Math.max(...entry._misreadingTokenSets.map((tokens) => (
+      tokens.filter((token) => querySet.has(token)).length / tokens.length
+    )))
     : 0;
 
   // Which surface supplied each shared token. Costs one set lookup per token

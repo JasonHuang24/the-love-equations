@@ -12,9 +12,9 @@ and new entries enter the candidate set from a prior score of zero.
 **Adjudication open — 137 of 138 crossings outstanding.**
 
 ```
-analyzer   2.6.1 -> 2.6.1
+analyzer   2.6.1 -> 2.6.2
 config     bt0a7p -> bt0a7p
-canon      1.0.0+949aef381d5f -> 1.0.0+c179417cf20f  (doctrine moved)
+canon      1.0.0+949aef381d5f -> 1.0.0+e7f986915a19  (doctrine moved)
 population 103 retained passages x 463 entries = 47689 pairs
 changed    5223   2896 down / 2327 up
 candidateScoreFloor  0.08  98 gain / 9 loss

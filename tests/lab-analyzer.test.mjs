@@ -1351,3 +1351,72 @@ test('the scoring config is frozen, complete, and hashes stably', () => {
     SCORING_CONFIG_HASH,
   );
 });
+
+/*
+ * A canon entry may reject more than one reading. Overlap used to be measured
+ * against every misreading concatenated into one token set, so each misreading
+ * an author added made all the others harder to detect: the passage had to cover
+ * a share of a bigger set to reach misreadingContradictionShare. The canon was
+ * penalised for being thorough, and a well-written entry could reject a reading
+ * it could not then recognise.
+ *
+ * Each misreading is now scored on its own and the strongest one decides.
+ */
+test('each rejected reading is detected on its own, not diluted by its siblings', async () => {
+  const misreadingCanon = (misreadings) => ({
+    schemaVersion: 'le-canon-index/1.1',
+    indexVersion: 'fixture-misreading',
+    generatedAt: '2026-07-30T00:00:00.000Z',
+    sourcePages: ['frameworks.html'],
+    stats: { conceptCount: 1, sourceCount: 1 },
+    entries: [{
+      id: 'frameworks.retention-probe',
+      title: 'Retention Intensity Probe',
+      page: 'frameworks.html',
+      anchor: 'retention-probe',
+      category: 'Rules & Frameworks',
+      subcategory: 'Retention & maintenance',
+      synopsis: 'Mate retention behaviour is an output of satisfaction, not a measure of relationship health.',
+      evidenceType: 'Framework',
+      aliases: ['mate retention intensity', 'retention behaviour'],
+      phrases: ['mate retention behaviour'],
+      dependencies: [],
+      related: [],
+      boundaryConditions: [],
+      commonMisreadings: misreadings,
+      sourceLinks: [],
+      pressureTests: [],
+    }],
+  });
+
+  const target = 'More retention behaviour means a healthier relationship.';
+  const document = normalizeInput({ text: `${target} Mate retention intensity is the measure people cite.` });
+
+  const stanceFor = async (canon) => {
+    const result = await analyzeDocument(document, canon);
+    for (const segment of result.segments) {
+      const hit = [...segment.matches, ...segment.weakMatches]
+        .find((match) => match.canonId === 'frameworks.retention-probe');
+      if (hit) return { stance: hit.alignment?.label, overlap: hit.alignment?.evidence?.misreadingSurfaceOverlap };
+    }
+    return { stance: null, overlap: null };
+  };
+
+  // Alone, this misreading is detected. That is the baseline the siblings must
+  // not be able to take away.
+  const alone = await stanceFor(misreadingCanon([target]));
+  assert.equal(alone.stance, 'Contradicts',
+    'a passage asserting the single rejected reading reads as Contradicts');
+
+  // Two unrelated further rejections, neither of which this passage asserts.
+  const withSiblings = await stanceFor(misreadingCanon([
+    target,
+    'Retention effort proves a partner is trustworthy and devoted to the marriage.',
+    'Guarding a partner closely is evidence of a secure and contented pairing.',
+  ]));
+  assert.equal(withSiblings.stance, 'Contradicts',
+    'adding further rejected readings must not hide the one the passage actually asserts');
+  assert.ok(withSiblings.overlap >= SCORING_CONFIG.misreadingContradictionShare,
+    `overlap ${withSiblings.overlap} must still clear ${SCORING_CONFIG.misreadingContradictionShare} `
+    + 'when the entry rejects more than one reading');
+});
