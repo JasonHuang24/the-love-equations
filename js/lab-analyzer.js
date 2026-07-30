@@ -34,7 +34,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.2';
+export const ANALYZER_VERSION = '2.6.3';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1949,11 +1949,40 @@ function disqualifyingModifier(occurrence, segments, modifiers) {
  * occurrences that failed and why. A verdict a reader cannot audit is not much
  * of a verdict.
  */
+/*
+ * The token set a single-token alias is looked up in.
+ *
+ * `normalized.split(/\W+/)` on its own silently loses every alias that contains
+ * punctuation, because a split on non-word characters cannot produce a token
+ * that contains one. `fem-centrism`, `Sub-5` and `AF/BB` were unmatchable no
+ * matter what a passage said — excluded from the phrase path for having no
+ * space, and from this path for being unproducible. normalizeText keeps
+ * punctuation, so the alias and the passage agreed and the lookup still failed.
+ *
+ * Splitting on whitespace and trimming only EDGE punctuation recovers them. The
+ * two splits are UNIONED rather than swapped, which is what makes this safe to
+ * add: every token the old split produced is still in the set, so no lookup that
+ * succeeded before can begin to fail. "wall." still yields `wall` from the
+ * \W+ side while "fem-centrism" now also yields itself whole.
+ *
+ * It cannot loosen matching either. A punctuated alias fires only on a passage
+ * containing that exact punctuated token, which is stricter than the plain
+ * tokens already in the set — not a new way for a short generic word to match.
+ */
+function aliasLookupTokens(normalized) {
+  const tokens = normalized.split(/\W+/).filter(Boolean);
+  for (const chunk of normalized.split(/\s+/)) {
+    const trimmed = chunk.replace(/^[^a-z0-9]+/, '').replace(/[^a-z0-9]+$/, '');
+    if (trimmed) tokens.push(trimmed);
+  }
+  return new Set(tokens);
+}
+
 function promotedAliases(unit, entry, normalized, admissionDistinctiveShared) {
   if (!entry._standaloneAliases.size && !entry._contextualAliases.size) {
     return { hits: [], trace: [] };
   }
-  const present = new Set(normalized.split(/\W+/).filter(Boolean));
+  const present = aliasLookupTokens(normalized);
   const hits = [];
   const trace = [];
   let segments = null;
@@ -2029,10 +2058,11 @@ function scoreEntry(unit, entry, idf) {
   const phraseHits = entry._phrases
     .filter((phrase) => phrase.includes(' ') && normalized.includes(phrase))
     .sort((a, b) => b.length - a.length);
+  const aliasTokensPresent = aliasLookupTokens(normalized);
   const singleAliasHits = entry._phrases
     .filter((phrase) => !phrase.includes(' ')
       && phrase.length >= SCORING_CONFIG.minSingleAliasLength
-      && normalized.split(/\W+/).includes(phrase));
+      && aliasTokensPresent.has(phrase));
   const credibleSingleAliasHits = singleAliasHits
     .filter((alias) => tokenize(alias)
       .some((token) => !LOW_INFORMATION_MATCH_TERMS.has(token)));

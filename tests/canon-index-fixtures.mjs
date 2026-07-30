@@ -121,8 +121,40 @@ for (const entry of index.entries) {
 const typedEntries = index.entries.filter(
   (entry) => entry.standaloneAliases.length || entry.contextualAliases.length,
 );
-assert.equal(typedEntries.length, 2, 'Unexpected number of entries carrying alias typing');
+assert.equal(typedEntries.length, 6, 'Unexpected number of entries carrying alias typing');
 assert.deepEqual(required('frameworks:smv-matching').standaloneAliases, ['hypergamy']);
+/*
+ * Four acronym-or-slang aliases typed because minPhraseLength and
+ * minSingleAliasLength were discarding them before matching ran. `SMV` is three
+ * characters, so it never entered entry._phrases at all — the site's own flagship
+ * acronym could not fire the phrase path on either entry that carries it. Typing
+ * routes them through promotedAliases, which reads entry._singleTokenAliases and
+ * applies no length filter, and standalone is bounded by the gate: it means
+ * "present in an ALREADY RETAINED relationship-domain passage".
+ */
+assert.deepEqual(required('smv:overview').standaloneAliases, ['SMV']);
+assert.deepEqual(required('lexicon:term-smv-sexual-market-value').standaloneAliases, ['SMV']);
+assert.deepEqual(required('lexicon:term-lms-looks-money-status').standaloneAliases, ['LMS']);
+assert.deepEqual(required('smv:charm').standaloneAliases, ['rizz']);
+/*
+ * And the four left dead on purpose. `game`, `Wall` and `Sham` are ordinary
+ * English words under minSingleAliasLength, which is the shape that produced the
+ * `provider` defect; each concept is reached anyway through the token surface
+ * (measured in lab-match-behavior.test.mjs), so typing them would buy
+ * false-positive risk for no measured recall. Pinned so reviving one is a
+ * decision rather than a drift.
+ */
+for (const [id, alias] of [
+  ['smv:charm', 'game'],
+  ['frameworks:the-wall', 'Wall'],
+  ['lexicon:term-the-wall', 'Wall'],
+  ['lexicon:term-the-sham', 'Sham'],
+]) {
+  const entry = required(id);
+  assert(entry.aliases.includes(alias), `${id} still lists "${alias}"`);
+  assert(!entry.standaloneAliases.includes(alias) && !entry.contextualAliases.some((item) => item.alias === alias),
+    `"${alias}" on ${id} is left untyped deliberately — it is ordinary English under the length floor`);
+}
 assert.deepEqual(
   required('smv:money:provisioning-signal').contextualAliases.map((item) => item.alias),
   ['provider', 'breadwinner'],

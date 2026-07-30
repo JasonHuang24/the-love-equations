@@ -1030,3 +1030,173 @@ test('§1 of the release report: seven entries unify with their plural, nine sep
       `\`${entry}\` must unify with \`${pluralOf(entry)}\` under the stemmer — that unification IS the fix.`);
   });
 });
+
+/*
+ * ---------------------------------------------------------------------------
+ * RED. Dead aliases. These fail against the canon as committed.
+ * ---------------------------------------------------------------------------
+ * scoreEntry routes an alias one of exactly two ways (lab-analyzer.js:2029):
+ *
+ *   phraseHits       phrase.includes(' ')                -> substring match
+ *   singleAliasHits  no space, length >= minSingleAliasLength,
+ *                    and membership in normalized.split(/\W+/)
+ *
+ * Two consequences nobody wrote down:
+ *
+ *   1. A single-token alias containing punctuation is excluded from the phrase
+ *      path for having no space, AND from the single path because a /\W+/ split
+ *      can never yield a token that contains \W. `fem-centrism`, `Sub-5` and
+ *      `AF/BB` are structurally unmatchable. promotedAliases() uses the same
+ *      split, so typing them does not rescue them either.
+ *
+ *   2. An alias shorter than minPhraseLength never enters entry._phrases at all,
+ *      so `SMV` — the site's own flagship acronym, on two entries — is discarded
+ *      before any matching runs.
+ *
+ * A census of the committed canon finds eleven aliases that cannot fire. Nine of
+ * them are redundant spellings whose concept is retrieved anyway through the
+ * token surface; that is measured in the sibling test below, and it is why this
+ * commit does not touch `game`, `Wall`, `Sham` or `LMS`. Two are real misses:
+ * "SMV" retrieves lexicon:term-high-value-man instead of an SMV entry, and
+ * "rizz" retrieves nothing at all.
+ */
+
+const DEAD_ALIAS_CASES = [
+  {
+    label: 'the flagship acronym reaches an SMV entry',
+    text: 'His SMV is high because women want him and he can pick.',
+    wantAnyOf: ['smv:overview', 'lexicon:term-smv-sexual-market-value'],
+    wantAlias: 'smv',
+  },
+  {
+    label: 'rizz reaches Charm',
+    text: 'His rizz is what makes women want him on a first date.',
+    wantAnyOf: ['smv:charm'],
+    wantAlias: 'rizz',
+  },
+  {
+    /*
+     * `fem-centrism` is listed on frameworks:operative-frame AND is the whole
+     * title of lexicon:term-fem-centrism. The lexicon entry wins it, and that is
+     * the site's architecture rather than a competition: the Lexicon is the term
+     * spine and the framework is what a reader reaches through it. Written down
+     * as the Lexicon entry because that is what the analyzer does, not because
+     * the framework was the wrong answer.
+     */
+    label: 'a hyphenated alias reaches the entry that owns it',
+    text: 'Fem-centrism decides what a woman wants before she chooses a man.',
+    wantAnyOf: ['lexicon:term-fem-centrism', 'frameworks:operative-frame'],
+    wantAlias: 'fem-centrism',
+  },
+  {
+    label: 'a hyphen-plus-digit alias reaches the entry that owns it',
+    text: 'A Sub-5 component disqualifies a man however much women want the rest.',
+    wantAnyOf: ['lexicon:term-sub-5-auto-disqualification'],
+    wantAlias: 'sub-5',
+  },
+  {
+    label: 'a slashed alias reaches the entry that owns it',
+    text: 'The AF/BB pattern claims women want genes from one man and provision from another.',
+    wantAnyOf: ['lexicon:term-af-bb-alpha-fucks-beta-bucks'],
+    wantAlias: 'af/bb',
+  },
+];
+
+test('RED: an alias a canon author wrote down can actually fire', async () => {
+  for (const problem of DEAD_ALIAS_CASES) {
+    const result = await analyzeDocument(normalizeInput({
+      text: problem.text,
+      source: { title: 'dead-alias probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }), canonIndex);
+    const matches = result.segments.flatMap((segment) => segment.matches);
+    const hit = matches.find((match) => problem.wantAnyOf.includes(match.canonId));
+    assert.ok(hit,
+      `${problem.label}: no credible match among ${problem.wantAnyOf.join(' / ')}. `
+      + `Got ${matches.map((m) => `${m.canonId}@${m.score}`).join(', ') || '(nothing)'}`);
+    assert.ok(
+      hit.whyMatched.some((reason) => reason.toLowerCase().includes(`“${problem.wantAlias}”`)),
+      `${problem.label}: ${hit.canonId} matched, but not on the alias — whyMatched was `
+      + `${JSON.stringify(hit.whyMatched)}. Retrieval through shared tokens is not the alias firing.`,
+    );
+  }
+});
+
+/*
+ * The other half of the finding, and the reason the fix is small: a dead alias
+ * usually costs nothing, because the alias text still contributes retrieval
+ * tokens. These four concepts are reached without their dead alias, which is why
+ * `game` and `Wall` — ordinary English words that minSingleAliasLength is
+ * correctly refusing, and the shape that produced the `provider` defect — are
+ * left dead on purpose rather than promoted to typed aliases for no measured
+ * gain. If that ever stops being true, this test is where it shows up.
+ */
+const REACHED_WITHOUT_THEIR_ALIAS = [
+  { text: 'The LMS model says attraction reduces to looks, money and status for women.', want: 'lexicon:term-lms-looks-money-status' },
+  { text: 'She hit the Wall and men stopped wanting her.', want: 'frameworks:the-wall' },
+  { text: 'Their Sham marriage persists although neither partner wants the other.', want: 'lexicon:term-the-sham' },
+];
+
+test('a dead alias is only a defect where the token surface does not already carry the concept', async () => {
+  for (const probe of REACHED_WITHOUT_THEIR_ALIAS) {
+    const result = await analyzeDocument(normalizeInput({
+      text: probe.text,
+      source: { title: 'token-surface probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }), canonIndex);
+    const matches = result.segments.flatMap((segment) => segment.matches);
+    assert.ok(matches.some((match) => match.canonId === probe.want),
+      `${probe.want} is reached without its dead alias; if that changed, promoting the alias `
+      + `becomes worth its false-positive risk. Got ${matches.map((m) => m.canonId).join(', ') || '(nothing)'}`);
+  }
+});
+
+/*
+ * The false positive typing `SMV` buys, frozen rather than hidden.
+ *
+ * A passage about an unrelated "SMV protocol" now names the SMV concept at 0.54.
+ * Worth being precise about who caused it: the gate's dating-market-leverage
+ * frame already treats a bare `smv` token as DECISIVE domain evidence
+ * (lab-analyzer.js:359), so this passage was retained as relevant before this
+ * commit and was always going to be analyzed. What changed is that the SMV
+ * entries now match it instead of the passage being retained and mapped to
+ * something else.
+ *
+ * Left in rather than defended against, for two reasons. Suppressing it would
+ * mean either un-typing the site's flagship acronym or teaching the matcher a
+ * denylist of unrelated SMV expansions, and the triage gate is user-overridable
+ * by design — a reader who says this is not about dating can exclude the unit.
+ * The frozen case is here so the cost stays visible if anyone revisits it.
+ */
+test('the cost of typing SMV: an unrelated SMV protocol now names the concept', async () => {
+  const offDomain = 'The SMV protocol defines how the sensor module reports voltage to the bus.';
+  const document = normalizeInput({
+    text: offDomain,
+    source: { title: 'SMV collision' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+
+  const units = classifyDomainRelevance(detectClaimUnits(document));
+  assert.equal(units[0].domainRelevance.status, 'relevant',
+    'the gate treats a bare smv token as decisive domain evidence, independent of this commit');
+
+  const result = await analyzeDocument(document, canonIndex);
+  const matched = result.segments.flatMap((segment) => segment.matches).map((match) => match.canonId);
+  assert.ok(matched.includes('smv:overview'),
+    'recorded as the known cost of typing the acronym, not as desired behaviour');
+
+  // The neighbouring senses that DO stay out, and why: no relational frame, so
+  // the gate never retains them and the typed alias is never consulted.
+  for (const text of [
+    'Our LMS tracks every student course completion for the whole department.',
+    'The AF/BB connector pinout is documented in appendix four of the manual.',
+    'He has real rizz in front of an audience when presenting quarterly numbers.',
+  ]) {
+    const off = normalizeInput({ text, source: { title: 'off-domain acronym' } });
+    const offUnits = classifyDomainRelevance(detectClaimUnits(off));
+    assert.ok(offUnits.every((unit) => unit.domainRelevance.status === 'irrelevant'),
+      `"${text}" must stay out at the gate — that is what bounds the typed-alias risk`);
+    const offResult = await analyzeDocument(off, canonIndex);
+    assert.equal(offResult.segments.flatMap((segment) => segment.matches).length, 0);
+  }
+});

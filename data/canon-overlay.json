@@ -53,6 +53,9 @@
       ],
       "pressureTests": [
         "Does the conclusion survive a change of age band, location, platform, relationship goal, or available pool?"
+      ],
+      "standaloneAliases": [
+        "SMV"
       ]
     },
     "smv:looks": {
@@ -195,6 +198,9 @@
       ],
       "pressureTests": [
         "Did the source observe an actual interaction, or infer charm's power from profiles that never met?"
+      ],
+      "standaloneAliases": [
+        "rizz"
       ]
     },
     "smv:exposure": {
@@ -4057,6 +4063,16 @@
       ],
       "boundaryConditions": [
         "The symmetry argument says why nothing moves; it does not establish that both sides carry equal responsibility for the situation."
+      ]
+    },
+    "lexicon:term-smv-sexual-market-value": {
+      "standaloneAliases": [
+        "SMV"
+      ]
+    },
+    "lexicon:term-lms-looks-money-status": {
+      "standaloneAliases": [
+        "LMS"
       ]
     }
   }

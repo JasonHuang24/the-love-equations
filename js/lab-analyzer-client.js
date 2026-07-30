@@ -1,4 +1,4 @@
-import { analyzeDocument } from './lab-analyzer.js?v=2.6.2';
+import { analyzeDocument } from './lab-analyzer.js?v=2.6.3';
 
 function abortError() {
   try {
@@ -16,7 +16,7 @@ function abortError() {
  * deterministic analyzer contract.
  */
 export class LabAnalyzerClient {
-  constructor({ workerUrl = new URL('./lab-analyzer-worker.js?v=2.6.2', import.meta.url) } = {}) {
+  constructor({ workerUrl = new URL('./lab-analyzer-worker.js?v=2.6.3', import.meta.url) } = {}) {
     this.workerUrl = workerUrl;
     this.worker = null;
     this.jobs = new Map();

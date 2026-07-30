@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+01e6ed1457f7",
+  "indexVersion": "1.0.0+394862aa09a0",
   "generatedAt": "2026-07-30T07:07:00.000Z",
   "sourcePages": [
     {
@@ -1489,7 +1489,9 @@
         "market value",
         "your league"
       ],
-      "standaloneAliases": [],
+      "standaloneAliases": [
+        "SMV"
+      ],
       "contextualAliases": [],
       "phrases": [
         "Looks + Money + Status + Charm + Exposure × Clock × Market × Context",
@@ -2197,7 +2199,9 @@
         "rizz",
         "social calibration"
       ],
-      "standaloneAliases": [],
+      "standaloneAliases": [
+        "rizz"
+      ],
       "contextualAliases": [],
       "phrases": [
         "What you do with the attention once you have it.",
@@ -11688,7 +11692,9 @@
         "SMV",
         "Sexual Market Value"
       ],
-      "standaloneAliases": [],
+      "standaloneAliases": [
+        "SMV"
+      ],
       "contextualAliases": [],
       "phrases": [],
       "dependencies": [
@@ -12785,7 +12791,9 @@
         "LMS",
         "Looks · Money · Status"
       ],
-      "standaloneAliases": [],
+      "standaloneAliases": [
+        "LMS"
+      ],
       "contextualAliases": [],
       "phrases": [],
       "dependencies": [
