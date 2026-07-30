@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-lab.corpus-manifest/1.0",
-  "updatedAt": "2026-07-30T00:10:00.000Z",
+  "updatedAt": "2026-07-30T01:35:00.000Z",
   "archive": {
     "root": "lab-corpus/",
     "published": false,
@@ -9,17 +9,17 @@
       "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar and the raw capture it was extracted from (<NN>-<slug>.raw.html, or <NN>-<slug>.raw.pdf where the publisher ships no HTML full text)",
       "exports": "lab-corpus/exports/<NN>-<slug>-<analyzer-version>.json"
     },
-    "state": "populated: 15 of 16 sources acquired and analyzed (01, 02, 04 at v2.6.1; 11, 12, 13, 14, 15, 16 at v2.6.1); 03 excluded by decision"
+    "state": "populated: 21 of 22 sources acquired and analyzed (01, 02, 04 at v2.6.0; 05-22 at v2.6.1); 03 excluded by decision"
   },
   "singleVersionStatus": {
     "isSingleVersion": false,
-    "reason": "Two distinct exclusions, neither of them drift. (1) Source 03 is excluded from re-acquisition by explicit decision and carries no export at any version; it remains a v2.1.2 artifact and any comparison including it is within-version only. (2) Sources 01, 02 and 04 sit at analyzer 2.6.1 while the six sources added by the doctrine combo run sit at 2.6.1, because the v2.6.1 patch was proven unable to move those three sources and re-running them was declined. md/RERUN.md section 6 defines completion as every source carrying a current export at the epoch version, so by that literal test the corpus is not single-version. What matters for the distillation lane is weaker and is satisfied: all nine analyzed sources share one analysis schema, one scoring configuration, and one canon snapshot, so their claim surfaces are directly comparable.",
+    "reason": "Two distinct exclusions, neither of them drift. (1) Source 03 is excluded from re-acquisition by explicit decision and carries no export at any version; it remains a v2.1.2 artifact and any comparison including it is within-version only. (2) Sources 01, 02 and 04 sit at analyzer 2.6.0 while the eighteen sources added by the doctrine combo run (05-22) sit at 2.6.1, because the v2.6.1 patch was proven unable to move those three sources and re-running them was declined. md/RERUN.md section 6 defines completion as every source carrying a current export at the epoch version, so by that literal test the corpus is not single-version. What matters for the distillation lane is weaker and is satisfied: all 21 analyzed sources share one analysis schema, one analyzer mode, one scoring configuration, and one canon snapshot (canonIndex.conceptCount 450 and provenance.identity.canonSnapshotHash 1v8z11a1xzrjgp are invariant across all 21 exports), so their claim surfaces are directly comparable.",
     "comparabilityBasis": {
       "analysisSchemaVersion": "le-lab.analysis/2.6",
       "scoringConfigHash": "bt0a7p",
       "canonIndexVersion": "1.0.0+949aef381d5f",
       "analyzerVersionsPresent": [
-        "2.6.1",
+        "2.6.0",
         "2.6.1"
       ],
       "behavioralEquivalenceEvidence": "md/lab-v2.6.1-release.md and md/lab-v2.6.1-sol-handover.md: threshold sweep 0 changed of 46,350 pairs, 0 crossings; demo capture byte-identical at the pre-bump commit."
@@ -40,8 +40,14 @@
           "09-conroy-beam-discrepancies",
           "10-miller-alternatives",
           "11-ifs-genz-partner-priorities",
+          "12-nep-exit-poll-methods",
+          "13-wheatley-counterfeit-connections",
+          "14-common-sense-ai-companions",
           "15-asc-american-friendship",
-          "16-pew-emotional-support"
+          "16-pew-emotional-support",
+          "17-trent-south-sex-ratios",
+          "19-zhang-preference-replication",
+          "20-marzoli-mate-preferences"
         ],
         "chain": "archived raw HTML -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
         "extractor": "tools/extract-source-text.mjs",
@@ -51,9 +57,9 @@
       {
         "grade": "B",
         "applies": [
-          "12-nep-exit-poll-methods",
-          "13-wheatley-counterfeit-connections",
-          "14-common-sense-ai-companions"
+          "18-li-necessities-luxuries",
+          "21-hirschl-assortative-mating",
+          "22-finkel-suffocation"
         ],
         "chain": "archived raw PDF -> pdftotext 4.00 with recorded flags -> recorded awk anchor truncation -> the .txt whose SHA-256 is recorded here",
         "extractor": "pdftotext (poppler / Glyph & Cog) version 4.00, external binary",
@@ -70,7 +76,7 @@
     "scoringConfigHash": "bt0a7p",
     "canonIndexVersion": "1.0.0+949aef381d5f",
     "canonGeneratedAt": "2026-07-27T11:38:21.000Z",
-    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. THE CORPUS SPANS TWO ANALYZER VERSIONS AND THAT IS DELIBERATE. Sources 11-ifs-genz-partner-priorities, 15-asc-american-friendship, 16-pew-emotional-support, 12-nep-exit-poll-methods, 13-wheatley-counterfeit-connections, 14-common-sense-ai-companions were added by the doctrine combo run and analyzed at 2.6.1. Sources 01, 02 and 04 retain their v2.6.1 exports: md/lab-v2.6.1-sol-handover.md records the standing ruling that v2.6.1 provably cannot move this corpus — 'provider' and 'breadwinner' occur zero times across all three archived sources and 'provider' holds the only non-empty denylist in the canon, so the threshold sweep returned 0 changed of 46,350 pairs and the demo capture was byte-identical before the version bump. Re-running them would produce a provenance-only delta and was declined rather than performed. Every other epoch field is IDENTICAL across the two versions — analysis schema le-lab.analysis/2.6, queue schema le-lab.research-queue/2.1, scoringConfigHash bt0a7p, canon 1.0.0+949aef381d5f — which is what makes cross-source comparison across the 2.6.0/2.6.1 boundary sound rather than merely convenient. The prior epoch note is preserved below as epochHistory.",
+    "note": "Copied from provenance.analyzer and provenance.canonIndex of the exports themselves, not from memory, per md/RERUN.md section 5 step 2. THE CORPUS SPANS TWO ANALYZER VERSIONS AND THAT IS DELIBERATE. Sources 17-trent-south-sex-ratios, 19-zhang-preference-replication, 20-marzoli-mate-preferences, 18-li-necessities-luxuries, 21-hirschl-assortative-mating, 22-finkel-suffocation were added by the doctrine combo run and analyzed at 2.6.1. Sources 01, 02 and 04 retain their v2.6.0 exports: md/lab-v2.6.1-sol-handover.md records the standing ruling that v2.6.1 provably cannot move this corpus — 'provider' and 'breadwinner' occur zero times across all three archived sources and 'provider' holds the only non-empty denylist in the canon, so the threshold sweep returned 0 changed of 46,350 pairs and the demo capture was byte-identical before the version bump. Re-running them would produce a provenance-only delta and was declined rather than performed. Every other epoch field is IDENTICAL across the two versions — analysis schema le-lab.analysis/2.6, queue schema le-lab.research-queue/2.1, scoringConfigHash bt0a7p, canon 1.0.0+949aef381d5f — which is what makes cross-source comparison across the 2.6.0/2.6.1 boundary sound rather than merely convenient. The prior epoch note is preserved below as epochHistory.",
     "canonIndexSchemaVersion": "le-canon-index/1.1"
   },
   "labelingSheets": {
@@ -109,6 +115,20 @@
           "14-common-sense-ai-companions",
           "15-asc-american-friendship",
           "16-pew-emotional-support"
+        ],
+        "authorization": "Jason's single front-loaded GO for the full three-batch scout plan.",
+        "note": "Sources returned by research scouts S-A (Gottman primary and critique), S-B (desire-decay empirical leg), and S-C (mate-value discrepancy x alternatives). All URLs were scout-returned; all captures were independently re-fetched and re-extracted by the orchestrator before archiving. Source 08 is a SUBSTITUTED rendition: the scout read an FSU repository PDF that returned HTTP 403 on independent re-fetch, so the PMC author manuscript of the same paper was archived instead and the cross-check measures agreement between the two renditions."
+      },
+      {
+        "batch": "doctrine combo run, batch 1",
+        "date": "2026-07-30",
+        "added": [
+          "17-trent-south-sex-ratios",
+          "18-li-necessities-luxuries",
+          "19-zhang-preference-replication",
+          "20-marzoli-mate-preferences",
+          "21-hirschl-assortative-mating",
+          "22-finkel-suffocation"
         ],
         "authorization": "Jason's single front-loaded GO for the full three-batch scout plan.",
         "note": "Sources returned by research scouts S-A (Gottman primary and critique), S-B (desire-decay empirical leg), and S-C (mate-value discrepancy x alternatives). All URLs were scout-returned; all captures were independently re-fetched and re-extracted by the orchestrator before archiving. Source 08 is a SUBSTITUTED rendition: the scout read an FSU repository PDF that returned HTTP 403 on independent re-fetch, so the PMC author manuscript of the same paper was archived instead and the cross-check measures agreement between the two renditions."
@@ -1419,6 +1439,453 @@
         "confidence": "high",
         "licensing": "Publicly readable research report. Archived unpublished in a gitignored corpus.",
         "notes": "THE COUNTER-EVIDENCE for C10's causal step. Pew, n=6,204, American Trends Panel Wave 154 — a probability panel. It found NO sex gap in partner reliance itself: men and women are about equally likely to say they would lean on a spouse or partner. The sex gap is in the BREADTH of other channels, not in partner concentration. This cuts against the naive sole-channel mechanism, and is the reason C10's answer is a three-way split rather than a confirmation."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "17-trent-south-sex-ratios",
+      "title": "Too Many Men? Sex Ratios and Women's Partnering Behavior in China",
+      "author": "Katherine Trent, Scott J. South",
+      "publication": "Social Forces 90(1):247-267",
+      "year": 2011,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3244803/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/17-trent-south-sex-ratios.txt",
+      "sourceSha256": "a0687bc8dc468b77728f32eba4dff105163d70593da39980a49aac5419779316",
+      "rawArchive": {
+        "file": "lab-corpus/sources/17-trent-south-sex-ratios.raw.html",
+        "kind": "html",
+        "sha256": "c2635686f87589c41e2109144de8d13281f0ce910fafc47d6d487bae9982c927"
+      },
+      "rawHtmlSha256": "c2635686f87589c41e2109144de8d13281f0ce910fafc47d6d487bae9982c927",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T01:30:00.000Z",
+      "words": 6689,
+      "current": "lab-corpus/exports/17-trent-south-sex-ratios-v2.6.1.json",
+      "currentSha256": "5a75bdd0082a7a1e5a489409ebc15fecf5795a96ac6bfd346214f7334771f549",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/17-trent-south-sex-ratios-v2.6.1.queue.json",
+          "sha256": "0961252fc0852328e7c59bbd48f6519e256d6c55ed822ce0a7479631c0cf5b1d"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/17-trent-south-sex-ratios-v2.6.1.md",
+          "sha256": "b580ba46843556404724b0d158169cb6e3fa5d837f49a50253f2da280177ecca"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/17-trent-south-sex-ratios-v2.6.1.labeling.csv",
+          "sha256": "179e0e5ccd9055bef2129568e7658db3186ba08f3df0cdb949491d62b13c2049"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 97,
+        "claimLike": 97,
+        "mapped": 16,
+        "coveragePct": 16.5,
+        "tensions": 0,
+        "queue": 81,
+        "setAside": 160,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live PMC page, curl, committed deterministic extractor",
+        "scout": "S-G",
+        "scoutAssignment": "C4 — the dyadic-vs-structural power mechanism behind the sex-ratio thesis",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-G",
+          "scoutWords": 2862,
+          "extractedWords": 6689,
+          "scoutShingles": 2959,
+          "matchedShingles": 2817,
+          "overlapPct": 95.2,
+          "verdict": "CORROBORATED — the scout reasoned over the text the Lab will analyze"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "NIH/HHS author manuscript, free to read on PMC, not CC-BY.",
+        "notes": "THE DIRECT TEST OF C4's MECHANISM, and it came out against the structural half. n=3,821 nationally representative Chinese survey. The paper derives competing predictions from 'sociocultural theory' (Guttentag & Secord's dyadic PLUS structural mechanism) versus 'demographic-opportunity theory' (no structural-power component), and the data matched demographic-opportunity rather than the structural prediction for premarital, extramarital and multiple-partner sex. So C4's missing half is not merely absent from the site — it is partly falsified. Note the site currently cites Guttentag & Secord for the individual-value reading only."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "18-li-necessities-luxuries",
+      "title": "The Necessities and Luxuries of Mate Preferences: Testing the Tradeoffs",
+      "author": "Norman P. Li, J. Michael Bailey, Douglas T. Kenrick, Joan A. W. Linsenmeier",
+      "publication": "Journal of Personality and Social Psychology 82(6):947-955",
+      "year": 2002,
+      "url": "https://pdfs.semanticscholar.org/ac8b/4d80ae733ec47f697b4ece632c6cc749d138.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/18-li-necessities-luxuries.txt",
+      "sourceSha256": "6b222a7e5e3e6796c830f44986f5bccfec04168ef2b9d763784f99afa71e206b",
+      "rawArchive": {
+        "file": "lab-corpus/sources/18-li-necessities-luxuries.raw.pdf",
+        "kind": "pdf",
+        "sha256": "f1d24c17b500068fa63b99ae874d240a1718b1571ad44d3478e09a92c6673386"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T01:30:00.000Z",
+      "words": 7588,
+      "current": "lab-corpus/exports/18-li-necessities-luxuries-v2.6.1.json",
+      "currentSha256": "6d144282345a30fe533de30575293ba867ed1f2ad0e9f0d825052bce04c6793a",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/18-li-necessities-luxuries-v2.6.1.queue.json",
+          "sha256": "5357aea7d0e6a6e148aa9ae32fdaa61f41cd51faa25a5f6d5a6a0237b18a8395"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/18-li-necessities-luxuries-v2.6.1.md",
+          "sha256": "3c8a18c98b01c332090322f18ea6a2033c8fc868861cc29099a15f3f572075f7"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/18-li-necessities-luxuries-v2.6.1.labeling.csv",
+          "sha256": "71e3d8b40f6b3bb88b8fc19269dd8f012743a9907ba1b9fa928c5543d2ad0fa5"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 120,
+        "claimLike": 117,
+        "mapped": 31,
+        "coveragePct": 26.5,
+        "tensions": 0,
+        "queue": 86,
+        "setAside": 321,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "Semantic Scholar mirror PDF, curl, external pdftotext with recorded anchor truncation",
+        "scout": "S-H",
+        "scoutAssignment": "C9 — budget-structured mate preferences, the convergence half, and the surveys-are-free inference",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-H",
+          "scoutWords": 4056,
+          "extractedWords": 7588,
+          "scoutShingles": 4289,
+          "matchedShingles": 3769,
+          "overlapPct": 87.9,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high on identity; the mirror is not the version of record",
+        "licensing": "APA article, paywalled at the publisher; this is a third-party mirror. Archived unpublished in a gitignored corpus.",
+        "notes": "C9's primary. The gate/necessity-luxury architecture it introduced now reaches TIER 1 via independent replication (source 19), but the CONVERGENCE half — sex differences shrinking as budget grows — remains TIER 2 with no independent replication and, per S-G's finding, cannot be replicated by either independent lineage because neither varied budget size. The convergence finding itself is genuine and correctly attributed here: explicit Budget x Sex interactions, F(2,278)=12.06 and F(2,278)=9.77, p<.001."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "19-zhang-preference-replication",
+      "title": "Chinese and UK participants' preferences for physical attractiveness and social status in potential mates",
+      "author": "Lingshan Zhang, Hongyi Wang, Amanda C. Hahn, Lisa M. DeBruine, Benedict C. Jones",
+      "publication": "Royal Society Open Science (as recorded by the scout; verify volume before citing)",
+      "year": 2019,
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6894565/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/19-zhang-preference-replication.txt",
+      "sourceSha256": "8c7ce87a0aa6bcf9f6d0b3f1dea1fda5b841bfb5b29db27ca386b6bbba8969e4",
+      "rawArchive": {
+        "file": "lab-corpus/sources/19-zhang-preference-replication.raw.html",
+        "kind": "html",
+        "sha256": "671dfbbc65888bb460918cb1bde7d5e7f974316a234fcd340941c07faa5db7ea"
+      },
+      "rawHtmlSha256": "671dfbbc65888bb460918cb1bde7d5e7f974316a234fcd340941c07faa5db7ea",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T01:30:00.000Z",
+      "words": 4257,
+      "current": "lab-corpus/exports/19-zhang-preference-replication-v2.6.1.json",
+      "currentSha256": "105f18dbfc07946a61d997080c7a6edee69811d0ca28e17643a07d76460f2a20",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/19-zhang-preference-replication-v2.6.1.queue.json",
+          "sha256": "668f515ecdd4538000211a1c0b3c825ac2eb4ee5d5d28e2741699e26ad8f12f9"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/19-zhang-preference-replication-v2.6.1.md",
+          "sha256": "6e4cff09367fa977b9ba45bc7cdd6d852e782bfd459854d1a9331e30cfac0449"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/19-zhang-preference-replication-v2.6.1.labeling.csv",
+          "sha256": "eefc6d9e139bbc6ac726c003f47c3ea2c638abd55beaefc59891ca512e3e6acf"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 86,
+        "claimLike": 86,
+        "mapped": 33,
+        "coveragePct": 38.4,
+        "tensions": 0,
+        "queue": 53,
+        "setAside": 164,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live PMC page, curl, committed deterministic extractor",
+        "scout": "S-H",
+        "scoutAssignment": "C9 — budget-structured mate preferences, the convergence half, and the surveys-are-free inference",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-02.txt",
+          "scout": "S-H",
+          "scoutWords": 1663,
+          "extractedWords": 4257,
+          "scoutShingles": 1718,
+          "matchedShingles": 1166,
+          "overlapPct": 67.9,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high on identity; the author list and venue as given here are the scout's record and the exact venue string should be re-checked before any citation",
+        "licensing": "Open access.",
+        "notes": "THE INDEPENDENT PREREGISTERED REPLICATION that lifts C9's core architecture to TIER 1 — Glasgow/ECNU, no author overlap with the Li program, UK and Chinese samples. It replicated the core sex-typed pattern (attractiveness weighted by men, status/resources by women). Critically for the cluster's weakest joint, it used a SINGLE FIXED BUDGET and therefore could not test the budget-convergence claim at all."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "20-marzoli-mate-preferences",
+      "title": "Environmental Influences on Mate Preferences as Assessed by a Scenario Manipulation Experiment",
+      "author": "Daniele Marzoli and colleagues (see source for full list)",
+      "publication": "PLOS ONE (as recorded by the scout; verify before citing)",
+      "year": 2013,
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3771886/",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/20-marzoli-mate-preferences.txt",
+      "sourceSha256": "793b49e448816314955670daf422d62f0ea05be6de1dc4ad6951bdcd2d7596c8",
+      "rawArchive": {
+        "file": "lab-corpus/sources/20-marzoli-mate-preferences.raw.html",
+        "kind": "html",
+        "sha256": "29bc347bcff27df5a456ac8fbd12ba8154a0abd99f1e249a2c7cc4481834f4cc"
+      },
+      "rawHtmlSha256": "29bc347bcff27df5a456ac8fbd12ba8154a0abd99f1e249a2c7cc4481834f4cc",
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T01:30:00.000Z",
+      "words": 6503,
+      "current": "lab-corpus/exports/20-marzoli-mate-preferences-v2.6.1.json",
+      "currentSha256": "e4c3ef70f16a12c76bd0bfe2eeefde033e888df7cc3a4884099346177677805e",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/20-marzoli-mate-preferences-v2.6.1.queue.json",
+          "sha256": "fd8323d72c6a137ac3a873e7d271e2625b067a83fd02c6ca5776f797edec475d"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/20-marzoli-mate-preferences-v2.6.1.md",
+          "sha256": "de0ce5ed658a264c2015a88de88e0f0fa6d63dbf8c4cdf4201dadb103a5d8a69"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/20-marzoli-mate-preferences-v2.6.1.labeling.csv",
+          "sha256": "e7c05451dcd0cc94aab8caebac29e8b2a5d82e2d3e109955c3235768bd1fc70b"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 86,
+        "claimLike": 86,
+        "mapped": 9,
+        "coveragePct": 10.5,
+        "tensions": 0,
+        "queue": 77,
+        "setAside": 138,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "live PMC page, curl, committed deterministic extractor",
+        "scout": "S-H",
+        "scoutAssignment": "C9 — budget-structured mate preferences, the convergence half, and the surveys-are-free inference",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-03.txt",
+          "scout": "S-H",
+          "scoutWords": 1644,
+          "extractedWords": 6503,
+          "scoutShingles": 1697,
+          "matchedShingles": 1261,
+          "overlapPct": 74.3,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high on identity; full author list not transcribed here — read it from the archive before citing",
+        "licensing": "Open access.",
+        "notes": "THE PARTIAL REPLICATION FAILURE, archived because a failure is as load-bearing as a success. Chieti/Stirling, independent of the Li program. Under a scenario manipulation it CONFIRMED the attractiveness-for-men half and partially FAILED to replicate the resources-for-women half. Like source 19 it did not vary budget size, so it too cannot speak to convergence."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "21-hirschl-assortative-mating",
+      "title": "Eight Decades of Educational Assortative Mating: A Research Note (CDE Working Paper 2022-01)",
+      "author": "Noah Hirschl, Christine R. Schwartz, Elia Boschetti",
+      "publication": "Center for Demography and Ecology, University of Wisconsin-Madison, Working Paper 2022-01; published as Demography 61(5):1293-1307 (2024), DOI 10.1215/00703370-11558914",
+      "year": 2024,
+      "url": "https://cde.wisc.edu/wp-content/uploads/sites/278/2023/02/cde-working-paper-2022-01-1.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/21-hirschl-assortative-mating.txt",
+      "sourceSha256": "406daa09c098a42807f7d41cc1bd84e87eda78b46e0086e78a7e396ecdb24fce",
+      "rawArchive": {
+        "file": "lab-corpus/sources/21-hirschl-assortative-mating.raw.pdf",
+        "kind": "pdf",
+        "sha256": "19e9a2f2010b269814ed0cf5c454e34735dc267fe5f16f6166902c8e1a1e133a"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T01:30:00.000Z",
+      "words": 3352,
+      "current": "lab-corpus/exports/21-hirschl-assortative-mating-v2.6.1.json",
+      "currentSha256": "da4458633267faa9daa6c48fd9c96ebff2c68a6b06f5765846eca41cb2d16f8d",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/21-hirschl-assortative-mating-v2.6.1.queue.json",
+          "sha256": "938fa958412755b80e77fe6626c9ca64646ea4628fc7037de9def07cd613dcfd"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/21-hirschl-assortative-mating-v2.6.1.md",
+          "sha256": "ae245f2a6b8dc4e8068785a6d23d060ec124c698d3396fcc060588276df3b91f"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/21-hirschl-assortative-mating-v2.6.1.labeling.csv",
+          "sha256": "a16c24f040b9dd6931375122a358c8aba4ecaca4603c877f5c5c8f61a30890fb"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 42,
+        "claimLike": 32,
+        "mapped": 6,
+        "coveragePct": 18.8,
+        "tensions": 0,
+        "queue": 26,
+        "setAside": 245,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "institutional working-paper PDF, curl, external pdftotext with recorded anchor truncation",
+        "scout": "S-I-A",
+        "scoutAssignment": "C12 — hypergamy reversal versus homogamy stall, and where the 1990 inflection belongs",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-I-A",
+          "scoutWords": 1224,
+          "extractedWords": 3352,
+          "scoutShingles": 1277,
+          "matchedShingles": 953,
+          "overlapPct": 74.6,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high for the working paper; NOT the version of record",
+        "licensing": "Publicly posted institutional working paper.",
+        "notes": "THIS IS THE WORKING PAPER, NOT THE PUBLISHED ARTICLE. The published Demography body text was unreachable (Duke University Press returned 403 to every method tried); the scout cross-checked the abstract word-for-word against secondary descriptions of the published version and it matches, but every substantive finding here is sourced to the working paper and must be labelled as such. TWO CORRECTIONS TO THE PRIOR RECORD: the first author is HIRSCHL, not Schwartz — the claim was recorded as 'Schwartz et al.' — and the 1990 inflection belongs to HOMOGAMY, not to hypergamy, whose rise runs continuously from about 1970. The paper's relationship to Esteve et al. (2016) is refinement, not correction: Esteve never treats homogamy as a construct and there is no numeric conflict, so the site's existing Esteve citation is incomplete rather than wrong. N=5,059,000 different-sex couple-records, IPUMS censuses 1940-2000 plus ACS 2001-2020."
+      },
+      "analyzerVersion": "2.6.1"
+    },
+    {
+      "id": "22-finkel-suffocation",
+      "title": "The Suffocation of Marriage: Climbing Mount Maslow Without Enough Oxygen",
+      "author": "Eli J. Finkel, Chin Ming Hui, Kathleen L. Carswell, Grace M. Larson",
+      "publication": "Psychological Inquiry 25(1):1-41",
+      "year": 2014,
+      "url": "https://faculty.wcas.northwestern.edu/eli-finkel/documents/2014_FinkelHuiCarswellLarson_PsychInquiry-Copy.pdf",
+      "urlProvenance": "scout-returned URL, independently re-fetched by the orchestrator",
+      "sourceFile": "lab-corpus/sources/22-finkel-suffocation.txt",
+      "sourceSha256": "61f5f1166434b76a1189edd9e8b679dfcb05f68c8ad73dd83bc669e095073eab",
+      "rawArchive": {
+        "file": "lab-corpus/sources/22-finkel-suffocation.raw.pdf",
+        "kind": "pdf",
+        "sha256": "b776263205de4a262fd0ae5464c92feb5496166af92bef282cf5b11880e42d28"
+      },
+      "capturedBy": "original",
+      "capturedAt": "2026-07-30T01:30:00.000Z",
+      "words": 26323,
+      "current": "lab-corpus/exports/22-finkel-suffocation-v2.6.1.json",
+      "currentSha256": "e33ea97018b5c20fe0f9ff46107f77025ecd4cf55da32cb09c2da4d43c0e91d6",
+      "companions": {
+        "queue": {
+          "file": "lab-corpus/exports/22-finkel-suffocation-v2.6.1.queue.json",
+          "sha256": "5c1df60fcfda2a893701dcc5ac0801f20860ecd2b7fbf959ba58fbae688dcf2e"
+        },
+        "markdown": {
+          "file": "lab-corpus/exports/22-finkel-suffocation-v2.6.1.md",
+          "sha256": "7fc8e5c0c5ae6ab1e4bd8f4e1156e55c7be2b8a6eea252a99adb97ccd2bf5917"
+        },
+        "labelingSheet": {
+          "file": "lab-corpus/exports/22-finkel-suffocation-v2.6.1.labeling.csv",
+          "sha256": "757e0b8c3776964011f4b25defbd027f60f622f4d3184ea3912d706adaf7b8f2"
+        }
+      },
+      "superseded": [],
+      "priorExport": null,
+      "priorRun": null,
+      "result": {
+        "analyzedPassages": 617,
+        "claimLike": 576,
+        "mapped": 22,
+        "coveragePct": 3.8,
+        "tensions": 0,
+        "queue": 554,
+        "setAside": 765,
+        "provisional": true
+      },
+      "delta": {
+        "against": null,
+        "note": "First analysis of this source. There is no prior run to compare against — this is an addition to the corpus, not a re-run of it."
+      },
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "author-posted PDF, curl, external pdftotext with recorded anchor truncation",
+        "scout": "S-I-B",
+        "scoutAssignment": "C1d — the suffocation model, and whether each component is measured or asserted",
+        "scoutCrossCheck": {
+          "ran": true,
+          "scoutFile": "raw-01.txt",
+          "scout": "S-I-B",
+          "scoutWords": 1301,
+          "extractedWords": 26323,
+          "scoutShingles": 1306,
+          "matchedShingles": 807,
+          "overlapPct": 61.8,
+          "verdict": "PARTIAL — scout kept a different span, or cleaned more aggressively"
+        },
+        "reacquirable": "yes",
+        "confidence": "high",
+        "licensing": "Author-posted copy of a Taylor & Francis article.",
+        "notes": "C1d's primary, and THE ARTICLE REPORTS NO ORIGINAL DATA — it is a target article (Psychological Inquiry 25(1):1-41, followed by 13 commentaries from 22 authors and a reply at 120-145), and every figure in it is adapted from someone else's analysis. It is therefore TIER 3 for every EMPIRICAL claim despite being read in full: grade the claim, not the venue. Per S-I-B: demand concentration is ASSERTED and is not the claim the popular phrasing implies (the article explicitly rejects the 'more is asked of marriage' reading as other people's and claims an Altitude x Time interaction with total demand roughly constant); the investment shortfall is measured only for clock time and only through secondary sources; and VARIANCE WIDENING — the half with predictive content — is never measured anywhere, with its strongest citation (Proulx et al. 2007) reporting a strengthening correlation, which is a different quantity from a widening dispersion."
       },
       "analyzerVersion": "2.6.1"
     }

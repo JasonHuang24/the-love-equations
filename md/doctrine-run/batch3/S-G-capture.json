@@ -1,0 +1,26 @@
+[
+  {
+    "file": "raw-01.txt",
+    "title": "Too Many Men? Sex Ratios and Women's Partnering Behavior in China",
+    "author": "Katherine Trent and Scott J. South",
+    "publication": "Social Forces, 90(1):247-267 (published version); PMC author manuscript PMC3244803, NIHMSID NIHMS338053",
+    "year": 2011,
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3244803/",
+    "accessedVia": "direct HTTP fetch of PMC article page, HTML stripped to plain text with a local script, verbatim prose sections selected by hand",
+    "wordCount": 2863,
+    "isOpenAccess": true,
+    "notes": "Peer-reviewed (Social Forces); large-n nationally-representative sample (Chinese Health and Family Life Survey, n=3,821 adults ages 20-64) with published methodology; author-manuscript deposited under NIH public access policy, publicly readable on PMC. Directly defines 'dyadic power' and 'structural power' in Guttentag & Secord's terms, derives competing hypotheses from 'sociocultural theory' (= Guttentag & Secord's mechanism, including structural power) versus 'demographic-opportunity theory' (whole-market availability effect without a structural-power component), and reports that the China data supported demographic-opportunity predictions but NOT the sociocultural/structural-power predictions. Tables, regression coefficients, and the Data/Methods and Results sections were omitted from the raw file as non-continuous-prose/tabular; abstract, introduction, full theory/hypotheses section, and full discussion/conclusion were kept verbatim and in order."
+  },
+  {
+    "file": "raw-02.txt",
+    "title": "Gender-Power Disparity Over Time: Testing the Sex Ratio Thesis, 1970-2000 (PhD dissertation)",
+    "author": "Cindy Brooks Dollar (committee chair Charles R. Tittle)",
+    "publication": "North Carolina State University, Department of Sociology",
+    "year": 2014,
+    "url": "https://repository.lib.ncsu.edu/server/api/core/bitstreams/1444bb2d-81f2-4d89-9c55-7fe87dad0e30/content",
+    "accessedVia": "direct HTTP fetch of PDF binary, text extracted locally with pdftotext -layout, verbatim theory-chapter sections selected by hand",
+    "wordCount": 2596,
+    "isOpenAccess": true,
+    "notes": "Institutional-repository dissertation (Tier 2 as a study in its own right: single dissertation, not a peer-reviewed journal article, though it passed a doctoral committee). Its distinct value here is as the most extensive available verbatim exposition of Guttentag & Secord's (1983) dyadic-power/structural-power distinction, WITH specific page citations to the original book (1983:30, 1983:26, 1983:154/174/239, 1983:167) that this scout could not otherwise reach. Also reports the empirical literature on structural power as a moderator (South 1988's cross-national finding that sex-ratio associations are moderated by women's economic independence) and is itself an original empirical test using U.S. Census 1970-2000 data with female relative labor-force participation operationalizing structural power -- a genuinely distinct dataset and author lineage from raw-01 (China/CHFLS vs. U.S. Census). Everything attributed to Guttentag and Secord in this file is Dollar's characterization/paraphrase+quotation of the book, not text this scout read directly from the book itself."
+  }
+]
