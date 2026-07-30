@@ -3,11 +3,13 @@
   "question": "Which word surfaces does comparing denylist entries and passage tokens as STEMS newly reach, beyond what the literal `entry` / `entry + s` tests already reached?",
   "ruling": "These, and this file is the vocabulary the answer is exhaustive OVER. The v2.6.1 release report published this census twice as 'enumerated over all sixteen entries' and it was wrong both times: the first version named `pays`, which does not match, and omitted six surfaces; the second omitted `carefulness` and `medicalization`, which Sol's verification review then found. Both failures were the same step — a candidate space generated mechanically and then filtered to real English BY HAND, where a hand that forgets a word leaves no trace. So the hand judgments are now the fixture. `tests/lab-match-behavior.test.mjs` regenerates the mechanical space from the stemmer's own suffix inventory and requires every candidate in it to carry an explicit verdict here, which is what makes an omission impossible rather than merely unlikely.",
   "notExhaustiveOver": "English. A surface is only in this file if the stemmer's suffix rules generate it from an entry or an entry's stem, so an irregular form reaching the same stem by another route would not appear — `paid` is the known example and it does not match anyway. Claims of exhaustiveness are about the generated space, never about the language.",
-  "wordStandard": "Listed in a standard English dictionary, or in settled technical use in the register these entries come from. Marginal calls are recorded as verdicts rather than dropped silently, so a reviewer can contest one word instead of the whole table: `hosters` and `payed` are the two the maintainer considers arguable and both are counted as words, which is the direction that makes the census wider and the cost larger.",
+  "wordStandard": "Listed in a standard English dictionary, or in settled technical use in the register these entries come from. Marginal calls are recorded as verdicts rather than dropped silently, so a reviewer can contest one word instead of the whole table, and the arguable ones are resolved in the direction that makes the census wider and the stated cost larger. Arguable and counted as words: `hosters`, `payed`, and \u2014 added 2026-07-29 on Sol's second review, which is exactly the contest this field was written to invite \u2014 `hostable` and `networkable`, both in settled technical use in the hosting and networking register these two entries come from. Arguable and still rejected: `cloudable`, the closest call in the file, kept out as unsettled marketing coinage rather than established use. That verdict is the one most likely to be wrong next.",
   "generator": {
-    "bases": ["the entry", "the entry's stem"],
-    "suffixes": ["ization", "ational", "fulness", "iveness", "ously", "ments", "ment", "ness", "able", "ible", "ally", "edly", "ingly", "ies", "ing", "ers", "er", "ed", "es", "s", ""],
+    "bases": ["the entry", "the entry's stem", "each base with no suffix at all"],
+    "suffixes": ["ization", "ational", "fulness", "iveness", "ously", "ments", "ment", "ness", "able", "ible", "ally", "edly", "ingly", "ies", "ing", "ers", "ed", "es", "s"],
+    "suffixSource": "The alternations inside stemToken's own `.replace(/(?:\u2026)$/u, \u2026)` chain in js/lab-analyzer.js, extracted from the source text by tests/lab-match-behavior.test.mjs and asserted equal to the list above. This list is therefore not a second copy that can drift: a suffix added to stemToken and not here fails the suite. It previously WAS a copy, and carried `er`, which stemToken does not strip \u2014 Sol's second review caught it. Dropping `er` changed no candidate, because nothing it generates survives the stem filter (`hoster` stems to `hoster`).",
     "variants": ["the base as written", "the base with a final y replaced by i"],
+    "variantsSource": "Generator convention, NOT a stemToken rule. stemToken maps a trailing `ies` to `y`; the y-to-i variant is how this generator produces the surfaces that rule accepts (`energies`, `utilities`). Declared rather than derived, because it is the one part of the space the stemmer's own text does not give.",
     "keep": "candidates whose stem equals the entry's stem, excluding the entry itself and `entry + s` (both already reached by the literal tests)"
   },
   "entries": [
@@ -58,8 +60,8 @@
     {
       "entry": "hosting",
       "stem": "host",
-      "newlyReached": ["host", "hosted", "hosters", "hosts"],
-      "rejected": ["hostable", "hostally", "hostational", "hostedly", "hostes", "hostfulness", "hostible", "hostingable", "hostingally", "hostingational", "hostingedly", "hostingfulness", "hostingible", "hostingingly", "hostingiveness", "hostingization", "hostingly", "hostingment", "hostingments", "hostingness", "hostingously", "hostiveness", "hostization", "hostment", "hostments", "hostness", "hostously"]
+      "newlyReached": ["host", "hostable", "hosted", "hosters", "hosts"],
+      "rejected": ["hostally", "hostational", "hostedly", "hostes", "hostfulness", "hostible", "hostingable", "hostingally", "hostingational", "hostingedly", "hostingfulness", "hostingible", "hostingingly", "hostingiveness", "hostingization", "hostingly", "hostingment", "hostingments", "hostingness", "hostingously", "hostiveness", "hostization", "hostment", "hostments", "hostness", "hostously"]
     },
     {
       "entry": "software",
@@ -88,8 +90,8 @@
     {
       "entry": "network",
       "stem": "network",
-      "newlyReached": ["networked", "networkers", "networking"],
-      "rejected": ["networkable", "networkally", "networkational", "networkedly", "networkes", "networkfulness", "networkible", "networkingly", "networkiveness", "networkization", "networkment", "networkments", "networkness", "networkously"]
+      "newlyReached": ["networkable", "networked", "networkers", "networking"],
+      "rejected": ["networkally", "networkational", "networkedly", "networkes", "networkfulness", "networkible", "networkingly", "networkiveness", "networkization", "networkment", "networkments", "networkness", "networkously"]
     },
     {
       "entry": "care",

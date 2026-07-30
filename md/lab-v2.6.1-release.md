@@ -197,8 +197,8 @@ matched words are:
 
 | From | Newly reached |
 |---|---|
-| `hosting` → `host` | host, hosts, hosted, hosters |
-| `network` | networked, networking, networkers |
+| `hosting` → `host` | host, hosts, hosted, hosters, hostable |
+| `network` | networked, networking, networkers, networkable |
 | `cloud` | clouded, clouding |
 | `service` | serviceable |
 | `medical` | medicalization |
@@ -253,9 +253,34 @@ matched words are:
 > **The claim this section makes is now narrower and checkable.** It is not "these are the words the
 > widening reaches in English" — that was the unfalsifiable version, twice. It is "these are the
 > candidates the stemmer's own rules generate from the sixteen entries, each one ruled on in the open."
-> `hosters` and `payed` are recorded as the two arguable word calls and counted as words, which widens
+> `hosters` and `payed` are recorded as the arguable word calls and counted as words, which widens
 > the stated cost rather than narrowing it. A reviewer who disagrees can now contest one verdict
 > instead of the whole table.
+
+> **THIRD CORRECTION, 2026-07-29 (same day).** Sol's second review contested two of those open verdicts
+> and the provenance of the generator, and both stand.
+>
+> **`hostable` and `networkable` move from rejected to newly reached.** Both stem to `host` and
+> `network`, neither is reached by the literal tests, and both are in settled technical use in exactly
+> the hosting and networking register these two entries come from. They were rejected as coinages, which
+> was the wrong call under this file's own `wordStandard`. **This is the mechanism working rather than
+> failing**: the verdicts were in the open, so a reviewer contested two of them instead of the table,
+> and the correction is two words rather than a rewrite. `cloudable` is now the closest surviving
+> rejection and is labelled as the one most likely to be wrong next.
+>
+> **The generator was not reading "the stemmer's own suffix inventory," and the previous correction
+> block said it was.** It read a hand-copied JSON list — a second copy, which had already drifted: it
+> carried `er`, which `stemToken` does not strip. So a suffix added to the stemmer and not to the
+> fixture would have left a region of the candidate space that nobody ever ruled on, invisibly, which is
+> precisely the defect this fixture was built to end. It is now extracted from the `.replace(/(?:…)$/u,
+> …)` chain in `js/lab-analyzer.js` as source text and asserted equal to the fixture's list, so drift
+> fails the suite. Sentinel-checked by deleting one suffix from the fixture. Dropping `er` changed no
+> candidate — nothing it generates survives the stem filter, since `hoster` stems to `hoster`.
+>
+> The y-to-i variant stays declared rather than derived, and is now labelled as a **generator
+> convention, not a stemmer rule**: `stemToken` maps a trailing `ies` to `y`, and the variant is how the
+> generator produces the surfaces that rule accepts. That is the one part of the space the stemmer's own
+> text cannot supply, and saying so is the difference between this block and the one above it.
 
 All but the `pay` family are the technical sense the denylist exists to reject, and are improvements —
 `the provider of hosted email` and `the provider for networked storage` are both now correctly

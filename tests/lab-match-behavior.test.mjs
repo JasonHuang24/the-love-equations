@@ -682,12 +682,39 @@ const census = JSON.parse(readFileSync(
   'utf8',
 ));
 
+/**
+ * stemToken's suffix inventory, read out of the analyzer's own source text.
+ *
+ * The census generator used to carry a hand-copied list, which is a second copy
+ * that can drift — and had already drifted: it carried `er`, which stemToken does
+ * not strip. Sol's second review caught it. Extracting the alternations from the
+ * `.replace(/(?:…)$/u, …)` chain inside stemToken makes the analyzer the single
+ * source of truth, so a suffix added there and not to the fixture fails the suite
+ * instead of silently shrinking the candidate space.
+ *
+ * Reading production source as DATA, which a record pass may do; it writes nothing.
+ */
+function stemmerSuffixInventory() {
+  const source = readFileSync(path.join(ROOT_DIR, 'js', 'lab-analyzer.js'), 'utf8');
+  const opens = source.indexOf('function stemToken(');
+  assert.notEqual(opens, -1, 'js/lab-analyzer.js no longer defines stemToken.');
+  const body = source.slice(opens, source.indexOf('\n}', opens));
+  const groups = [...body.matchAll(/\.replace\(\/\(\?:([^)]+)\)\$\/u/gu)];
+  assert.ok(groups.length >= 4,
+    `Expected stemToken's suffix-stripping chain, found ${groups.length} alternation groups. If the `
+    + 'stemmer has been rewritten in another shape, this extraction is stale and the census generator '
+    + 'is no longer linked to it.');
+  return groups.flatMap((group) => group[1].split('|'));
+}
+
 /** The candidate space, regenerated from the stemmer's rules rather than stored. */
 function mechanicalCandidates(entry, stem) {
   const { suffixes } = census.generator;
   const candidates = new Set();
   for (const base of [entry, stem]) {
-    for (const suffix of suffixes) {
+    // The bare base, then every suffix — both for the base as written and for the
+    // y-to-i variant. Declared in the fixture's `generator` block.
+    for (const suffix of ['', ...suffixes]) {
       candidates.add(base + suffix);
       candidates.add(base.replace(/y$/u, 'i') + suffix);
     }
@@ -699,6 +726,16 @@ function mechanicalCandidates(entry, stem) {
       && stemOf(candidate) === stem)
     .sort();
 }
+
+test('the census generator uses the stemmer\'s own suffix inventory, not a copy of it', () => {
+  assert.deepEqual([...census.generator.suffixes].sort(), stemmerSuffixInventory().sort(),
+    "The census generator's suffix list and stemToken's own alternations disagree. A suffix the "
+    + 'stemmer strips and the generator does not know about is a region of the candidate space nobody '
+    + 'ever ruled on, which is the defect that produced two wrong censuses. Regenerate the fixture '
+    + 'rather than editing the list to match.');
+  assert.ok(!census.generator.suffixes.includes('er'),
+    '`er` is not stripped by stemToken and must not be in the inventory — it was the drift Sol found.');
+});
 
 test('the widening census is exhaustive over its own stated vocabulary', () => {
   assert.equal(census.schema, 'le-lab.denylist-census/1.0');
@@ -756,6 +793,8 @@ test('the census records the surfaces the release report names, and pays is not 
   assert.ok(reached.get('service').includes('serviceable'), '`serviceable` reaches `service`.');
   assert.ok(reached.get('care').includes('carefulness'), '`carefulness` reaches `care` — second review.');
   assert.ok(reached.get('medical').includes('medicalization'), '`medicalization` reaches `medical`.');
+  assert.ok(reached.get('hosting').includes('hostable'), '`hostable` reaches `host` — third review.');
+  assert.ok(reached.get('network').includes('networkable'), '`networkable` reaches `network`.');
 
   // And the word the first census named that never matched at all.
   assert.equal(stemOf('pays'), 'pays',
