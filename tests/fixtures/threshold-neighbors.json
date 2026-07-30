@@ -22,7 +22,7 @@
     "minCredibleScore": 61,
     "pairs": 5346,
     "rulings": 3867,
-    "pending": 3744
+    "pending": 3715
   },
   "rulings": {
     "seg-00024-0ha18nw.claim-03|statistics:stat-couples-meet|candidateScoreFloor": {
@@ -1882,39 +1882,49 @@
       "after": 0.064
     },
     "seg-00016-0jahdlp.claim-01|frameworks:operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00016-0jahdlp.claim-01|lexicon:term-the-locus-of-control-shift|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.523
+      "after": 0.523,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00030-0kv9wpp.claim-02|statistics:stat-pay-to-play|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.429,
-      "after": 0.43
+      "after": 0.43,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00036-0t2gpvx.claim-01|statistics:stat-app-reasons|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "loss",
       "before": 0.447,
-      "after": 0.422
+      "after": 0.422,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00037-0rlkmop.claim-01|gender-dynamics:male:the-macro-picture-why-dating-broke:gen-z-has-it-even-worse|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "loss",
       "before": 0.449,
-      "after": 0.419
+      "after": 0.419,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00016-0jahdlp.claim-01|frameworks:operative-frame|minWeakScore": {
       "ruling": "PENDING",
@@ -7853,18 +7863,22 @@
       "after": 0.077
     },
     "seg-00014-0brr9zu.claim-03|lexicon:term-mgtow|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.265,
-      "after": 0.645
+      "after": 0.645,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00040-0cn4hh2.claim-03|M-TBD-44|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "loss",
       "before": 0.432,
-      "after": 0.425
+      "after": 0.425,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00004-16tvudg.claim-01|lexicon:term-stranger-market|minWeakScore": {
       "ruling": "PENDING",
@@ -17681,32 +17695,40 @@
       "after": 0.032
     },
     "seg-00049-10fc995.claim-01|statistics:stat-couples-meet|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.161,
-      "after": 0.493
+      "after": 0.493,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00049-10fc995.claim-01|deep-dive:third-spaces|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.096,
-      "after": 0.477
+      "after": 0.477,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00049-10fc995.claim-01|statistics:stat-orgasm-context|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.15,
-      "after": 0.471
+      "after": 0.471,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00029-186g33t.claim-04|M-TBD-45|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "loss",
       "before": 0.434,
-      "after": 0.429
+      "after": 0.429,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00049-10fc995.claim-01|statistics:stat-couples-meet|minWeakScore": {
       "ruling": "PENDING",
@@ -24128,46 +24150,58 @@
       "after": 0.08
     },
     "seg-00001-1ls04yg.claim-02|frameworks:operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00001-1ls04yg.claim-02|lexicon:term-the-operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00001-1ls04yg.claim-04|frameworks:operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00001-1ls04yg.claim-04|lexicon:term-the-operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00007-07z07zp.claim-03|lexicon:term-the-feminine-imperative|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00007-07z07zp.claim-03|frameworks:operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00001-1ls04yg.claim-02|frameworks:operative-frame|minWeakScore": {
       "ruling": "PENDING",
@@ -25493,60 +25527,76 @@
       "after": 0.063
     },
     "seg-00016-0jahdlp.claim-04|lexicon:term-the-feminine-reality|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00008-10nh3tb.claim-02|lexicon:term-the-feminine-reality|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00007-1jirrr9.claim-04|lexicon:term-heteropessimism|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00008-1qs6s6l.claim-02|lexicon:term-heteropessimism|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00001-1ls04yg.claim-04|lexicon:term-the-feminine-reality|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.495
+      "after": 0.495,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00014-0brr9zu.claim-03|lexicon:term-heteropessimism|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.448
+      "after": 0.448,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00008-1qs6s6l.claim-01|lexicon:term-heteropessimism|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.435
+      "after": 0.435,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00009-165o1nj.claim-01|frameworks:attention-market|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "loss",
       "before": 0.437,
-      "after": 0.361
+      "after": 0.361,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00016-0jahdlp.claim-04|lexicon:term-the-feminine-reality|minWeakScore": {
       "ruling": "PENDING",
@@ -27173,32 +27223,40 @@
       "after": 0.096
     },
     "seg-00001-1ls04yg.claim-03|lexicon:term-the-male-imperative|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00015-14bwlf7.claim-02|lexicon:term-the-feminine-imperative|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.575
+      "after": 0.575,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00001-1ls04yg.claim-03|frameworks:operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00015-14bwlf7.claim-02|frameworks:operative-frame|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0,
-      "after": 0.54
+      "after": 0.54,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-30"
     },
     "seg-00001-1ls04yg.claim-03|lexicon:term-the-male-imperative|minWeakScore": {
       "ruling": "PENDING",
