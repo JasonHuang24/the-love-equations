@@ -215,16 +215,29 @@ displayed now: mate-retention-intensity@0.643 · satisfaction-flywheel@0.457
 That sentence is about mate retention behaviour, and `mate-retention-intensity`
 holds it at **0.643** — far above the entry that let go of it. A marginal second
 match leaving while the correct home sits 0.21 above it is the matcher getting
-*more* right, not less. **Recommended ACCEPT; left PENDING, because that line is
-Jason's by standing rule and nothing here carries a machine verdict on it.**
+*more* right, not less. Recommended ACCEPT, and left PENDING until ruled, because
+that line is Jason's by standing rule and nothing here carries a machine verdict
+on it.
 
-> **When it is ruled, it is TWO edits, not one** (see
-> `md/lab-face-age-adjudication.md`): set
-> `counts.pendingByThreshold.minCredibleScore` to **`0`** rather than deleting the
-> key — a deleted key compares `undefined` against a counted `0` and fails with
+> **RULED ACCEPT 2026-07-31 by Jason, in session.** Stamped by key with
+> `ruledBy: Jason`, no `--rule`. `minCredibleScore` PENDING goes 1 → 0, the weak
+> ratchet stays at exactly 516/516, and the candidate-floor census is untouched at
+> 4,725. The suite is green.
+>
+> Recorded as the two edits it is (see `md/lab-face-age-adjudication.md`):
+> `counts.pendingByThreshold.minCredibleScore` set to **`0`** rather than deleted —
+> a deleted key compares `undefined` against a counted `0` and fails with
 > *"recorded PENDING count … disagrees with the rulings"*, which reads like the
-> ruling did not take rather than like a missing key — and bring `counts.pending`
-> down with it, or test 1 fails on internal consistency.
+> ruling did not take rather than like a missing key — and `counts.pending`
+> brought down 5242 → 5241 with it, or test 1 fails on internal consistency.
+>
+> **What the verdict settles, beyond this row.** This is the first credible-line
+> crossing ruled where the recommendation was to accept a **loss**. The precedent
+> it sets is that the blocking line asks whether the *displayed set* got better,
+> not whether it got larger: a match may leave the credible band and the change
+> still be right, when a better-ranked entry already holds the sentence. The
+> instrument that makes that checkable is the displayed diff through
+> `analyzeDocument`, never the crossing count out of the sweep.
 
 Eleven `minWeakScore` crossings, all on the edited entry, ruled by key with
 `ruledBy: Claude` — **5 ACCEPT / 6 REJECT**, and the weak backlog held at exactly
