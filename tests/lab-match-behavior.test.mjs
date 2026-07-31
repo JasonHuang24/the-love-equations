@@ -1741,7 +1741,40 @@ test('a shared numeral can carry an unrelated statistic to a credible match', as
     createdAt: '1970-01-01T00:00:00.000Z',
   });
   const elsewhereResult = await analyzeDocument(elsewhere, canonIndex);
-  assert.ok(elsewhereResult.segments.flatMap((segment) => segment.matches)
-    .some((row) => row.canonId === 'statistics:stat-divorce'),
-  'the second half of the finding stopped reproducing; re-measure before deleting it');
+  /*
+   * RE-MEASURED 2026-07-31, per this assertion's own instruction, when it went
+   * red on the canon growing 494 -> 507 (statistics +10, pills +3).
+   *
+   * The second half no longer reaches a CREDIBLE match, and the reason is not a
+   * discriminator being adopted — none was. The pair was sitting on the floor
+   * and fell off it:
+   *
+   *   canon 494:  statistics:stat-divorce  0.430  credible (survived on >=)
+   *   canon 507:  statistics:stat-divorce  0.428  weak
+   *
+   * 0.430 against a minCredibleScore of 0.430 is a zero-margin pass, so the
+   * thirteen new entries needed only to move IDF by 0.002 to take it. The first
+   * half is untouched at 0.449 and still reproduces, which is what keeps this a
+   * record of a real defect rather than a fixed one.
+   *
+   * Kept rather than deleted, and re-pinned to guard in BOTH directions: the
+   * pair must still be REACHED (the coincidence mechanism is intact) but must
+   * stay below the credible line (the display got better). If it climbs back the
+   * assertion fires again, which is the outcome this record exists to catch.
+   * Deleting it would have thrown away the only measurement of the mechanism.
+   */
+  const elsewhereCredible = elsewhereResult.segments.flatMap((segment) => segment.matches)
+    .find((row) => row.canonId === 'statistics:stat-divorce');
+  const elsewhereWeak = elsewhereResult.segments.flatMap((segment) => segment.weakMatches || [])
+    .find((row) => row.canonId === 'statistics:stat-divorce');
+
+  assert.ok(elsewhereCredible || elsewhereWeak,
+    'the numeral coincidence stopped reaching the divorce statistic at all. That is a bigger '
+    + 'change than the credible-line drop recorded above — re-measure and say what moved before '
+    + 'deleting this, because it is the only record of the mechanism.');
+  assert.ok(!elsewhereCredible,
+    `the second half returned to a CREDIBLE match at ${elsewhereCredible?.score}. It fell to `
+    + '0.428 on canon 507 from a zero-margin 0.430, so a later IDF shift can hand it back. A '
+    + 'sentence about services launching is not a claim about divorce; this needs a ruling, not '
+    + 'a re-pin.');
 });

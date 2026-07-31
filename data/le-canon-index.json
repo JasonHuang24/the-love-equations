@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+05cb41f932c6",
-  "generatedAt": "2026-07-31T10:35:04.000Z",
+  "indexVersion": "1.0.0+437e5418a444",
+  "generatedAt": "2026-07-31T10:53:20.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -55,8 +55,8 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "5d3902f3f90eda2846d341fb4dbd92a9ea684d974f7a4a58db282e68a3cd4d8e",
-      "conceptCount": 31
+      "sha256": "fcd184e39547a4dc4ff6c5c3421a0427d520978ed1300632afbb67479a7eb3d0",
+      "conceptCount": 41
     },
     {
       "page": "mythbuster.html",
@@ -78,8 +78,8 @@
       "inputs": [
         "pills.html"
       ],
-      "sha256": "168bb2b513b721d1b2c3b330909363fb4b9dcc50809debcea98e02acc4a2afa7",
-      "conceptCount": 12
+      "sha256": "c81e37aad33ed526b8e6b97f8363b9f3583b1fcc0c565df6251062f6f6fda3da",
+      "conceptCount": 15
     },
     {
       "page": "lexicon.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 494,
+    "conceptCount": 507,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -225,9 +225,9 @@
       "Lexicon": 90,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
-      "Pill Dossiers": 12,
+      "Pill Dossiers": 15,
       "Rules & Frameworks": 47,
-      "Statistics": 31
+      "Statistics": 41
     },
     "byEvidenceType": {
       "Definitional": 1,
@@ -237,7 +237,7 @@
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
-      "Lens": 69,
+      "Lens": 72,
       "Long-form synthesis": 12,
       "Model": 34,
       "Observation": 46,
@@ -245,13 +245,13 @@
       "Record + framework": 13,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 29,
+      "Tier 1": 39,
       "Tier 2": 7,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 403,
-    "conceptsWithExternalSources": 94,
-    "dependencyCount": 239,
+    "anchoredConceptCount": 416,
+    "conceptsWithExternalSources": 104,
+    "dependencyCount": 242,
     "relatedCount": 393
   },
   "entries": [
@@ -9745,6 +9745,340 @@
       "pressureTests": []
     },
     {
+      "id": "statistics:stat-commitment-model",
+      "title": "Commitment is more than satisfaction",
+      "page": "statistics.html",
+      "anchor": "stat-commitment-model",
+      "category": "Statistics",
+      "subcategory": "Inside the partnership",
+      "synopsis": "Across the Investment Model literature, satisfaction is the strongest single correlate of commitment — but the exit door and the life already built matter almost as much. In relationship samples, satisfaction, alternatives, and investments together accounted for about 63% of the variance in commitment; commitment in turn correlated with stay/leave behavior at r =.47.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Meta-analytic correlations with relationship commitment (bar length shows the magnitude of r):"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Meta-analysis of Investment Model tests. Bars are relationship-specific pooled correlations; the 63% figure pools relationship samples reporting multivariable R&sup2;. Correlation is not intervention evidence."
+      ],
+      "commonMisreadings": [
+        "How satisfied someone feels is what decides whether they stay in a relationship."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1111/1475-6811.00035"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-demand-withdraw",
+      "title": "The demand-withdraw loop travels with worse outcomes",
+      "page": "statistics.html",
+      "anchor": "stat-demand-withdraw",
+      "category": "Statistics",
+      "subcategory": "Inside the partnership",
+      "synopsis": "One partner pushes harder to discuss or change; the other evades, shuts down, or leaves; each response intensifies the other. Across 74 studies, that loop had a moderate association with worse outcomes. The useful unit is the cycle, not a villain: the meta-analysis combined who demanded and who withdrew, and the pooled result does not establish which behavior started the conflict or whether outside stress caused both…",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [
+        "demand-withdraw loop travels with worse outcomes"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Pooled association between demand-withdraw communication and adverse individual, relationship, and communication outcomes:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Meta-analysis of observed and self-reported demand, withdrawal, and demand-withdraw patterns. The published r =.36 is the average effect magnitude across coded outcomes; most links are reciprocal and observational, not causal."
+      ],
+      "commonMisreadings": [
+        "The partner who withdraws during conflict is the one driving the relationship downward."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1080/03637751.2013.813632"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-married-cohabiting",
+      "title": "Marriage and cohabitation do not feel identical from inside",
+      "page": "statistics.html",
+      "anchor": "stat-married-cohabiting",
+      "category": "Statistics",
+      "subcategory": "Inside the partnership",
+      "synopsis": "Married adults report a deeper center of gravity around the relationship. The gap survives statistical adjustment for age, gender, education, religion, race, and relationship duration, but that still does not prove the certificate caused it: people with stronger commitment may be more likely to marry.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Partnered U.S. adults describing the relationship as going “very well,” and naming their spouse or partner as the adult they feel closest to:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Weighted Pew American Trends Panel probability survey of 9,834 U.S. adults (2019); these bars use the partnered subsamples. Self-reported relationship appraisal, cross-sectional."
+      ],
+      "commonMisreadings": [
+        "Getting married itself deepens commitment, which is why married people report more of it."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report →",
+          "url": "https://www.pewresearch.org/social-trends/2019/11/06/how-married-and-cohabiting-adults-see-their-relationships/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-parenthood-satisfaction",
+      "title": "The first baby brings a shared satisfaction dip",
+      "page": "statistics.html",
+      "anchor": "stat-parenthood-satisfaction",
+      "category": "Statistics",
+      "subcategory": "Inside the partnership",
+      "synopsis": "The average drop is about three-tenths of a standard deviation and remarkably similar for mothers and fathers. That makes the transition a predictable load, not evidence that one sex suddenly values the relationship less. The strongest caution is the comparison group: only nine independent samples followed nonparents over a comparable span, and satisfaction can decline with relationship time even without a baby.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [
+        "first baby brings a shared satisfaction dip"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Standardized change in marital satisfaction from pregnancy through the first 12 months after birth:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Meta-analysis of prepartum-to-postpartum satisfaction change. Women: 50 samples / 139,791; men: 45 samples / 4,625. Heterogeneity was high, so the pooled effect is a center, not a universal trajectory."
+      ],
+      "commonMisreadings": [
+        "After a first baby arrives, mothers disengage from the relationship far more than fathers."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Open article →",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9350520/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-cohabitation-outcomes",
+      "title": "A first cohabitation is neither a sure audition nor a dead end",
+      "page": "statistics.html",
+      "anchor": "stat-cohabitation-outcomes",
+      "category": "Statistics",
+      "subcategory": "The household contract",
+      "synopsis": "Three years in, marriage is the single largest destination, but a majority have not married that partner: roughly a third remain together without marrying and just over a quarter have split. Education changes the route sharply — 53% of first cohabitations among women with a bachelor’s degree transitioned to marriage, versus 30% among women without a high-school diploma.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Where women’s first premarital cohabitations stood three years after moving in together:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Nationally representative 2006–2010 NSFG, women ages 15–44; retrospective union histories analyzed with a multiple-decrement life table. Percentages sum to 99% from rounding. Dated cohort, so use as a durable baseline rather than a current forecast."
+      ],
+      "commonMisreadings": [
+        "Moving in together is the step just before marriage for most couples who do it."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report PDF →",
+          "url": "https://www.cdc.gov/nchs/data/nhsr/nhsr064.pdf"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-equal-earner-labor",
+      "title": "Equal earnings still do not buy equal time",
+      "page": "statistics.html",
+      "anchor": "stat-equal-earner-labor",
+      "category": "Statistics",
+      "subcategory": "The household contract",
+      "synopsis": "Even when paychecks are nearly even, wives average about 4.5 more hours of unpaid care and housework each week, while husbands average 3.6 more leisure hours and 3.1 more paid-work hours. Among parents in these marriages the care gap widens: mothers log 12.2 hours versus fathers’ 9.0.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Average weekly hours in opposite-sex “egalitarian” marriages, where each spouse earns 40%–60% of joint earnings:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Pew analysis of pooled 2016–2021 American Time Use Survey diaries. Weekly care, housework, and leisure equal reported daily time ×7; paid work is usual weekly hours. Bar lengths use a 50-hour scale; labels carry the actual hours."
+      ],
+      "commonMisreadings": [
+        "Once a wife earns as much as her husband, household labour divides about evenly."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report →",
+          "url": "https://www.pewresearch.org/social-trends/2023/04/13/in-a-growing-share-of-u-s-marriages-husbands-and-wives-earn-about-the-same/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-intermarriage",
+      "title": "Intermarriage moved from exception to one in six",
+      "page": "statistics.html",
+      "anchor": "stat-intermarriage",
+      "category": "Statistics",
+      "subcategory": "Who pairs next",
+      "synopsis": "The share rose more than fivefold after Loving v. Virginia, and 11 million married Americans were in an intermarriage by 2015. Composition matters: growth in Asian and Hispanic populations expanded the number of cross-group pairings available, while acceptance also changed sharply.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "U.S. newlyweds married to someone of a different race or ethnicity:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Pew analysis of decennial Census and American Community Survey microdata. “Newlywed” means married in the prior 12 months in 2008–2015; the 1967–1980 series is limited to first marriages, while later years include remarriages. Bar lengths use a 20% scale."
+      ],
+      "commonMisreadings": [
+        "The rise in intermarriage measures how far American racial attitudes improved after Loving."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report →",
+          "url": "https://www.pewresearch.org/social-trends/2017/05/18/intermarriage-in-the-u-s-50-years-after-loving-v-virginia./"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-remarriage-gap",
+      "title": "After a marriage ends, men are more likely to marry again",
+      "page": "statistics.html",
+      "anchor": "stat-remarriage-gap",
+      "category": "Statistics",
+      "subcategory": "Who pairs next",
+      "synopsis": "The behavior gap and the stated-desire gap point the same way. More than half of previously married women said they did not want to remarry (54%), compared with 30% of men. But age carries much of the aggregate: among eligible adults ages 25–54, women and men were about equally likely to have remarried; the large difference remained among adults 55 and older.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Among adults eligible to remarry because a first marriage ended in divorce or widowhood:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Remarriage prevalence from Pew analysis of Census/ACS microdata; stated desire from a separate nationally representative Pew survey in 2014. Eligibility combines divorce and widowhood, which have different age profiles."
+      ],
+      "commonMisreadings": [
+        "Women are far less interested in remarrying than men at every stage of adult life."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report →",
+          "url": "https://www.pewresearch.org/social-trends/2014/11/14/chapter-2-the-demographics-of-remarriage/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-ipv-severity",
+      "title": "Any partner violence is near-even; lifetime severity is not",
+      "page": "statistics.html",
+      "anchor": "stat-ipv-severity",
+      "category": "Statistics",
+      "subcategory": "Stakes beyond the match",
+      "synopsis": "A binary “ever hit” frame hides the severity gradient. Men and women report nearly identical lifetime exposure to the broad physical-violence category, while women report substantially more severe acts such as being choked, beaten, burned, having a knife or gun used against them, or being slammed into something.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "U.S. adults reporting physical violence by an intimate partner at any point in their lifetime:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method CDC NISVS 2016/2017 nationally weighted random-digit-dial survey, behaviorally specific questions, adults 18+. Weighted response rate was 7.6% (cooperation 58.6%), an important nonresponse caveat despite weighting."
+      ],
+      "commonMisreadings": [
+        "Partner violence lands on men and women about equally, so gendered framing overstates it."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report PDF →",
+          "url": "https://www.cdc.gov/nisvs/documentation/NISVSReportonIPV_2022.pdf"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-childfree-intent",
+      "title": "Nearly half of nonparents under 50 now say children are unlikely",
+      "page": "statistics.html",
+      "anchor": "stat-childfree-intent",
+      "category": "Statistics",
+      "subcategory": "Stakes beyond the match",
+      "synopsis": "This is an intention shift before it is a completed-fertility statistic: younger respondents can change their minds, and “unlikely” is not “never.” Still, the same question moved ten points in five years. In a 2024 follow-up limited to under-50 nonparents who already said children were unlikely, 57% named simply not wanting children as a major reason; 44% cited other priorities, 38% the state of the world, and 36%…",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "U.S. adults ages 18–49 without children saying they are “not too” or “not at all” likely to have children someday:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Pew American Trends Panel probability surveys with matched wording; 2023 full wave N=11,945, including 1,916 nonparents ages 18–49. The 2024 reasons survey used a separate screened base of 770 under-50 nonparents already unlikely to have children."
+      ],
+      "commonMisreadings": [
+        "Roughly half of American adults under fifty will finish their lives childless."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report →",
+          "url": "https://www.pewresearch.org/social-trends/2024/07/25/the-experiences-of-u-s-adults-who-dont-have-children/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
       "id": "statistics:stat-mythbuster",
       "title": "Numbers carried by Mythbuster rulings",
       "page": "statistics.html",
@@ -12744,6 +13078,34 @@
       "pressureTests": []
     },
     {
+      "id": "pills:constraint-triage",
+      "title": "Sort the constraint before you obey it",
+      "page": "pills.html",
+      "anchor": "constraint-triage",
+      "category": "Pill Dossiers",
+      "subcategory": "Black Pill",
+      "synopsis": "The Black Pill is most useful as a diagnostic pass, not a permanent residence. When an outcome keeps repeating, separate what is fixed from what is trainable and what belongs to the environment. That prevents two equal-and-opposite mistakes: trying to self-improve your way through a hard limit, or calling a changeable bottleneck destiny.",
+      "evidenceType": "Lens",
+      "contentType": "Pill case study",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-blk"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The useful sentence: “This channel exposes a constraint.” The fatalistic sentence: “This result explains my whole future.” The first invites a decision; the second erases every variable the test never measured."
+      ],
+      "commonMisreadings": [
+        "A repeated bad outcome reveals a fixed limit that explains how the rest will go."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "pills:just-be-first",
       "title": "Just Be First",
       "page": "pills.html",
@@ -12812,6 +13174,32 @@
       "pressureTests": [
         "Would the strategy still be defensible if the other person's agency and full information were made explicit?"
       ]
+    },
+    {
+      "id": "pills:red-strategy-loop",
+      "title": "Turn observation into an ethical loop",
+      "page": "pills.html",
+      "anchor": "red-strategy-loop",
+      "category": "Pill Dossiers",
+      "subcategory": "Red Pill",
+      "synopsis": "The Red Pill becomes constructive when strategy means noticing feedback and improving your side of the interaction. It becomes theater when every conversation is a dominance test and every person is reduced to a predictable opponent. A clean strategy loop keeps agency while leaving the other person fully free to say yes, no, or not yet.",
+      "evidenceType": "Lens",
+      "contentType": "Pill case study",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-rp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Every conversation with a potential partner is a dominance test you either pass or fail."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
     },
     {
       "id": "pills:page-rp:hypergamy",
@@ -12938,6 +13326,32 @@
       "pressureTests": [
         "What observed rejection or selection pattern would the optimistic account need to explain rather than dismiss?"
       ]
+    },
+    {
+      "id": "pills:blue-bond-path",
+      "title": "Kindness is not the key to every door. It is what makes a room livable.",
+      "page": "pills.html",
+      "anchor": "blue-bond-path",
+      "category": "Pill Dossiers",
+      "subcategory": "Blue Pill",
+      "synopsis": "Blue Pill advice often fails because it puts relationship virtues at the first-impression stage. Kindness, loyalty, patience, and communication are enormously valuable, but much of their value can only be observed after contact repeats. The correction is not to discard them. It is to place them at the stages where they can do their real work.",
+      "evidenceType": "Lens",
+      "contentType": "Pill case study",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-bp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Being kind and loyal enough is what earns attraction from someone you just met."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
     },
     {
       "id": "pills:page-bp:just-be-yourself",
