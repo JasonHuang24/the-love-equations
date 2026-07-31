@@ -1301,6 +1301,67 @@ const GENERIC_TITLE_REACHED_ANYWAY = [
     text: 'Learned seduction skill is real but near-powerless online and strongest inside a social circle.' },
 ];
 
+/*
+ * What the match surface BOUGHT, pinned so it cannot quietly be lost.
+ *
+ * md/lab-face-age-match-surface.md built eleven candidate surfaces and kept two,
+ * one misreading per entry, each measured at +0 / -0 displayed credible matches
+ * across the 21-source archive. The survivors have one property in common and it
+ * is the transferable rule: they are written in the ORDINARY REGISTER OF THE
+ * CLAIM, not in the entry's own vocabulary. The age entry could already be
+ * reached by anyone writing "looks are time-stamped"; what it could not reach was
+ * anyone writing the claim the way the claim is actually made.
+ *
+ * These probes are the ones that MOVED, and they are pinned as sides rather than
+ * scores — the numbers are IDF quantities that drift on every doctrine merge.
+ * face-P2 crossing from the weak band to a displayed match is the whole result;
+ * if it stops crossing, the surface has been diluted and the record has to say so.
+ */
+const MATCH_SURFACE_BUYS = [
+  { want: 'smv:looks:face', id: 'face-P2', credible: true,
+    text: 'Facial symmetry and averageness are what men select for when they choose a woman on looks alone.' },
+  { want: 'smv:looks:face', id: 'face-P1', credible: true,
+    text: "Women judge a man's attractiveness from his face in the first second, and the jaw does most of the work." },
+  { want: 'smv:looks:age', id: 'age-P4', credible: true,
+    text: "Her looks are time-stamped: a woman's dating value falls with age while a man's rises with money and status." },
+];
+
+test('the face and age match surfaces reach the claims that motivated them', async () => {
+  for (const probe of MATCH_SURFACE_BUYS) {
+    const result = await analyzeDocument(normalizeInput({
+      text: probe.text,
+      source: { title: 'match-surface probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }), canonIndex);
+    const segment = result.segments[0];
+    const hit = (segment.matches || []).find((match) => match.canonId === probe.want);
+    const weak = (segment.weakMatches || []).find((match) => match.canonId === probe.want);
+    assert.ok(hit,
+      `${probe.id} no longer reaches ${probe.want} as a displayed credible match — it is `
+      + `${weak ? `weak at ${weak.score}` : 'not reached at all'}. This is what the match surface `
+      + 'in md/lab-face-age-match-surface.md bought; losing it means the entry has been diluted, '
+      + 'and the record has to say so rather than the assertion being relaxed.');
+  }
+
+  /*
+   * And the half that did NOT get bought, pinned so nobody re-litigates it by
+   * accident. The market-register phrasing is still unreached: the only
+   * component that reached it was a `younger women` alias whose single archive
+   * gain was a harassment prevalence statistic, because the phrase signals the
+   * population being described rather than the claim being made.
+   */
+  const stillOpen = await analyzeDocument(normalizeInput({
+    text: 'Men prefer younger women, and the gap widens as the man gets older.',
+    source: { title: 'match-surface probe' },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  }), canonIndex);
+  const reached = (stillOpen.segments[0].matches || []).find((m) => m.canonId === 'smv:looks:age');
+  assert.equal(reached, undefined,
+    `the market-register phrasing now reaches smv:looks:age at ${reached?.score}. That is a real `
+    + 'gain and it closes §6 of md/lab-face-age-match-surface.md — record what closed it, and '
+    + 'check it was not a `younger women` alias, which was measured to buy a false positive.');
+});
+
 test('the two generic titles that carry their concept anyway still do', async () => {
   for (const probe of GENERIC_TITLE_REACHED_ANYWAY) {
     const result = await analyzeDocument(normalizeInput({

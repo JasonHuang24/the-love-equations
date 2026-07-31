@@ -163,7 +163,28 @@ the claim. **The failure is register-specific, not absolute**, and the earlier
 record's "not reached" is too strong for the concept even though it was true of
 its probe.
 
-## 7. NOT APPLIED — the two-line patch, ready
+## 7. APPLIED — 2026-07-31, canon `1.0.0+07fb1c92bac5`
+
+> **Status update, same day.** §7 was written as NOT APPLIED because a
+> concurrent session held the canon files. A window opened after their
+> advice-layer batch landed and the patch went in: both misreadings re-verified
+> free at canon 491 first (`+0 / -0` displayed credible, 1,254 both sides), then
+> applied, rebuilt, swept and adjudicated. `tests/canon-index-fixtures.mjs`
+> needed no change, as predicted — 491 concepts and unchanged misreading and
+> boundary counts, because this is a surface edit inside existing entries.
+>
+> Adjudication is its own record: `md/lab-face-age-adjudication.md`. Headline —
+> 93 crossings, **1 minCredibleScore left PENDING for Jason** (release-blocking,
+> the suite is red until he rules), 15 minWeakScore ruled by me 9 ACCEPT / 6
+> REJECT, 77 candidate-floor census. `WEAK_BACKLOG_CEILING` held at exactly 516.
+>
+> **And the displayed weak band moved +2 / −4, not +15.** I read the sweep's 15
+> weak crossings as a display effect, concluded the change cost more than it
+> bought, and reverted it — before remembering that the sweep is retrieval-only
+> and re-measuring `weakMatches` through `analyzeDocument`. Both gains are
+> lateral swaps at near-identical scores. The original §7 text is kept below.
+
+## 7 (as written before the window opened) — NOT APPLIED, the two-line patch, ready
 
 A concurrent session held `data/canon-overlay.json`, `data/le-canon-index.json`,
 `tests/canon-index-fixtures.mjs` and `tests/fixtures/threshold-neighbors.json`
