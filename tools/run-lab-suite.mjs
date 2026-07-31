@@ -21,8 +21,8 @@
  * stops everything after it. Running every step and aggregating is what removes
  * the failure mode rather than relocating it.
  *
- * IT ALSO REPORTS THE TWO NEIGHBOURING TRAPS, because all three cost real
- * mistakes in one session:
+ * IT ALSO REPORTS THE NEIGHBOURING TRAPS, because each one cost a real
+ * mistake in a real session:
  *
  *   1. `&&` chaining hid every later step behind an earlier failure.  (fixed here)
  *   2. Grepping `not ok` misses bare `AssertionError`s — `canon-index-fixtures.mjs`
@@ -31,6 +31,15 @@
  *      `lab-corpus/` is absent, which silently disarms the adjudication tripwire
  *      — correct behaviour, dangerous state, invisible to a `not ok` grep.
  *      (surfaced here as its own line, never folded into "pass")
+ *   4. A red suite in a stale tree looks exactly like a regression. On
+ *      2026-07-31 the shared checkout sat detached at a merge commit eight
+ *      files behind origin/main; there, this suite honestly reported
+ *      FAIL(1), and at main the same command reported 18/18 ok. Sessions
+ *      legitimately test old commits — they just must not do it unknowingly,
+ *      so the first line always says WHICH tree produced the numbers, and
+ *      DETACHED or behind>0 gets a banner. A banner, not a failure: the
+ *      count is against the local origin/main ref (no fetch), and testing
+ *      the past on purpose is a normal thing to do.  (printed here, first)
  *
  * The generalisation worth keeping: an instrument that cannot see the population
  * reports success either way.
@@ -65,6 +74,41 @@ const STEPS = [
   ['python', 'tools/lab_ui_audit.py'],
   ['python', 'tools/site_integrity_audit.py'],
 ];
+
+/* Trap 4: say which tree these numbers describe, before printing any of them. */
+const git = (...args) => {
+  const run = spawnSync('git', args, { cwd: ROOT, encoding: 'utf8' });
+  return run.status === 0 ? run.stdout.trim() : null;
+};
+{
+  const branch = git('rev-parse', '--abbrev-ref', 'HEAD');
+  const sha = git('rev-parse', '--short', 'HEAD');
+  if (branch === null || sha === null) {
+    process.stdout.write('testing UNKNOWN TREE — git unavailable, results cannot be tied to a commit\n\n');
+  } else {
+    const detached = branch === 'HEAD';
+    const dirty = (git('status', '--porcelain') ?? '') !== '';
+    const behindRaw = git('rev-list', '--count', 'HEAD..origin/main');
+    const behind = behindRaw === null ? null : Number(behindRaw);
+    const where = detached ? `DETACHED ${sha}` : `${branch} ${sha}`;
+    const behindNote = behind === null ? 'origin/main ref absent' : `${behind} behind origin/main`;
+    process.stdout.write(`testing ${where} · ${dirty ? 'dirty' : 'clean'} · ${behindNote}\n`);
+    if (detached || (behind !== null && behind > 0)) {
+      const why = [
+        detached ? 'HEAD is DETACHED' : null,
+        behind !== null && behind > 0 ? `this tree is ${behind} commit(s) behind origin/main` : null,
+      ].filter(Boolean).join(' and ');
+      process.stdout.write([
+        '#'.repeat(70),
+        `#  STALE TREE: ${why}.`,
+        '#  A red below may already be fixed at the tip, and a green proves',
+        '#  nothing about it. Fine on purpose — ruinous unknowingly.',
+        '#'.repeat(70),
+      ].join('\n') + '\n');
+    }
+    process.stdout.write('\n');
+  }
+}
 
 const results = [];
 for (const [cmd, file] of STEPS) {
