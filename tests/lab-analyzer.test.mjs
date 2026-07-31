@@ -776,6 +776,18 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * removed, 476 both sides. Same lesson as the tranche 3 step, from the other
    * direction: prose edits inside existing entries move the denominators too, so
    * this pin drifts on rewrites and not only on growth.
+   *
+   * Back to 0.538 at 485, the Lab hookup pass: six Lexicon terms added AND the
+   * Substitution Layer's "AI companion" alias removed. Both move IDF, in opposite
+   * directions, and the pin landed back where it started. Six round trips now on
+   * a number that has never once been the assertion.
+   *
+   * 0.537 at 488, the market-container batch: three entries whose match surfaces
+   * are dense in market and ratio vocabulary. Note this is the SECOND time the pin
+   * has sat at 0.537 and the second time it got there by a different route — 476
+   * by rewording, 488 by growth. A pin that returns to the same value from
+   * unrelated causes is measuring the corpus, not the change, which is the whole
+   * reason the three assertions around it carry the test.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
   assert.equal(weakPassage.weakMatches[0].score, 0.537);
