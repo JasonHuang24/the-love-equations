@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+19b16e04659d",
+  "indexVersion": "1.0.0+21e55026096b",
   "generatedAt": "2026-07-31T12:28:40.000Z",
   "sourcePages": [
     {
@@ -89,7 +89,7 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "02f8d78b822631b1f20df118126c5a19e5108e1f59381af5a61ba17422d43132",
+      "sha256": "6f1f9b181409758497221fdfd54d1c5901bd4610102264db8d362f195d865785",
       "conceptCount": 93
     },
     {
@@ -251,7 +251,7 @@
     },
     "anchoredConceptCount": 441,
     "conceptsWithExternalSources": 113,
-    "dependencyCount": 262,
+    "dependencyCount": 263,
     "relatedCount": 403
   },
   "entries": [
@@ -14746,7 +14746,9 @@
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [],
-      "dependencies": [],
+      "dependencies": [
+        "pills:page-blk"
+      ],
       "related": [],
       "boundaryConditions": [
         "The label describes a motive for holding a belief, not the belief's truth value; motive and accuracy are independent.",
