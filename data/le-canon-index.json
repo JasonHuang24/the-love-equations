@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+6cf046c1e769",
+  "indexVersion": "1.0.0+aa6cd85db4e5",
   "generatedAt": "2026-07-30T14:14:56.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "22e9fa94861fd76a25e2285f65d71d6593a2ef1b0d2c8ae3c1a1d5aafbcb4ac6",
-      "conceptCount": 29
+      "sha256": "4acb36cd155c269fbafe3e1268539a9ba931919548bed25e268505bea354b489",
+      "conceptCount": 35
     },
     {
       "page": "gender-dynamics.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 470,
+    "conceptCount": 476,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -226,13 +226,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
-      "Rules & Frameworks": 29,
+      "Rules & Frameworks": 35,
       "Statistics": 31
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 61,
+      "Framework": 67,
       "Glossary": 84,
       "Hard data": 28,
       "Instrument": 5,
@@ -249,10 +249,10 @@
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 379,
-    "conceptsWithExternalSources": 77,
+    "anchoredConceptCount": 385,
+    "conceptsWithExternalSources": 82,
     "dependencyCount": 233,
-    "relatedCount": 308
+    "relatedCount": 340
   },
   "entries": [
     {
@@ -2774,6 +2774,8 @@
         "frameworks:interaction-gate",
         "frameworks:readiness-gate",
         "frameworks:good-news-rule",
+        "frameworks:search-cost",
+        "frameworks:sixth-rung",
         "lexicon:term-conversion-ladder",
         "statistics:stat-relationship-quality"
       ],
@@ -2786,6 +2788,62 @@
       "sourceLinks": [],
       "pressureTests": [
         "At exactly which transition did the evidence occur, and what evidence shows movement to the next stage?"
+      ]
+    },
+    {
+      "id": "frameworks:calibration-error",
+      "title": "The Calibration Error",
+      "page": "frameworks.html",
+      "anchor": "calibration-error",
+      "category": "Rules & Frameworks",
+      "subcategory": "Orientation",
+      "synopsis": "Every score on this site is an estimate of an estimate. The ratings that feed the curves, the gates and the calculators are overwhelmingly self-assessments — and self-assessed looks track how strangers actually rate you at about r ≈ 0.24. That is not a rounding problem. It means the input to almost every model here carries an error bar wider than most of the distinctions people argue about with it.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Calibration Error",
+        "self-rated attractiveness",
+        "self-assessed mate value",
+        "self-perceived attractiveness",
+        "rating accuracy"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "self-rated attractiveness",
+        "observer-rated attractiveness",
+        "overestimate their attractiveness",
+        "self-perceived mate value",
+        "she thinks she is a 9"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:matching-curve",
+        "frameworks:parity-rule",
+        "frameworks:seven-seven-rule",
+        "frameworks:interaction-gate"
+      ],
+      "boundaryConditions": [
+        "The error measured is self-about-self on physical attractiveness; ratings of third parties are a different and more reliable instrument.",
+        "A weak correlation with observer ratings does not make self-rating useless as a predictor of the rater's own behaviour."
+      ],
+      "commonMisreadings": [
+        "In dating, a self-rated looks score is accurate enough to fix your matching-curve position.",
+        "Women in dating overestimate their looks, and men rate themselves accurately."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Feingold (1992), Psychological Bulletin 111(2):304–341",
+          "url": "https://gwern.net/doc/iq/1992-feingold.pdf"
+        },
+        {
+          "label": "Greitemeyer (2020), Scandinavian Journal of Psychology 61(4)",
+          "url": "https://onlinelibrary.wiley.com/doi/full/10.1111/sjop.12631"
+        }
+      ],
+      "pressureTests": [
+        "Is the difference being argued about larger than the instrument's own error bar?"
       ]
     },
     {
@@ -2810,6 +2868,7 @@
         "frameworks:conversion-ladder"
       ],
       "related": [
+        "frameworks:signal-cost-rule",
         "smv:charm",
         "instrument:compatibility-calculator",
         "lexicon:term-the-interaction-gate"
@@ -3101,6 +3160,7 @@
         "frameworks:sham-relationship",
         "frameworks:treatment-markup",
         "frameworks:attention-market",
+        "frameworks:calibration-error",
         "frameworks:status-trade",
         "frameworks:option-pool",
         "deep-dive:third-spaces"
@@ -3150,6 +3210,7 @@
       ],
       "related": [
         "statistics:stat-looks-matching",
+        "frameworks:search-cost",
         "statistics:stat-attention",
         "frameworks:spiderman-effect",
         "frameworks:abundance-trap",
@@ -3193,7 +3254,9 @@
       "dependencies": [
         "frameworks:smv-matching"
       ],
-      "related": [],
+      "related": [
+        "frameworks:search-cost"
+      ],
       "boundaryConditions": [
         "Regression toward the middle describes the average partner, and the spread around that average stays wide."
       ],
@@ -3385,6 +3448,7 @@
         "frameworks:conversion-ladder",
         "statistics:stat-never-married",
         "statistics:stat-why-single",
+        "frameworks:substitution-layer",
         "frameworks:the-wall"
       ],
       "boundaryConditions": [
@@ -3497,6 +3561,180 @@
       "sourceLinks": [],
       "pressureTests": [
         "Is the claim the historical asymmetry, which is documented, or the causal weight assigned to it, which is not?"
+      ]
+    },
+    {
+      "id": "frameworks:search-cost",
+      "title": "The Search Cost",
+      "page": "frameworks.html",
+      "anchor": "search-cost",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "Everything above this entry prices people. Nothing above it prices the search. Being in the market costs time, money, attention and a running dose of rejection — and that meter, not a change of heart about anybody, is usually what ends a search. People rarely lower their standards because they revalued someone. They lower them because the budget ran out.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Search Cost",
+        "search friction",
+        "search frictions",
+        "reservation value",
+        "dating app burnout",
+        "swipe fatigue"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "cost of search",
+        "search frictions",
+        "stopping rule",
+        "lower their standards",
+        "gave up on the apps",
+        "class partition"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:signal-cost-rule",
+        "frameworks:third-party-layer",
+        "frameworks:matching-curve",
+        "statistics:stat-pay-to-play",
+        "frameworks:abundance-trap"
+      ],
+      "boundaryConditions": [
+        "Burdett and Coles is a theoretical sufficiency result: search frictions can generate tiering, which does not establish that they generate this market's tiering.",
+        "The Pew figures measure user sentiment, not a search budget; no study has instrumented a dating search budget directly."
+      ],
+      "commonMisreadings": [
+        "People who settle in dating stopped wanting anyone better than the partner they accepted.",
+        "Quitting the dating apps after long searching proves a person had unrealistic standards."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Burdett & Coles (1997), “Marriage and Class,” Quarterly Journal of Economics 112(1):141–168",
+          "url": "https://academic.oup.com/qje/article-abstract/112/1/141/1870888"
+        },
+        {
+          "label": "Pew Research Center (Feb 2020)",
+          "url": "https://www.pewresearch.org/internet/2020/02/06/the-virtues-and-downsides-of-online-dating/"
+        },
+        {
+          "label": "Pew Research Center (Feb 2023)",
+          "url": "https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/"
+        }
+      ],
+      "pressureTests": [
+        "Did this person's standards change, or did the search budget they had left change?"
+      ]
+    },
+    {
+      "id": "frameworks:signal-cost-rule",
+      "title": "The Signal Cost Rule",
+      "page": "frameworks.html",
+      "anchor": "signal-cost-rule",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "Every profile is a set of claims, and the market has no referee. The rule that sorts them is not honesty and not intuition: a signal carries information in proportion to what it would cost to fake. Height typed into a box costs nothing and means nearly nothing. A physique costs two years and means what it says.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Signal Cost Rule",
+        "costly signalling",
+        "costly signaling",
+        "signalling theory",
+        "signaling theory",
+        "handicap principle",
+        "profile deception"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "cost to fake",
+        "costly signal",
+        "cheap talk",
+        "separating equilibrium",
+        "height inflation",
+        "profile accuracy",
+        "verification event"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:treatment-markup",
+        "frameworks:charm-ceiling",
+        "instrument:face-calculator",
+        "instrument:body-calculator",
+        "frameworks:calibration-error",
+        "frameworks:interaction-gate",
+        "frameworks:third-party-layer"
+      ],
+      "boundaryConditions": [
+        "The rule ranks the cost of the display, not the price of the object: a rented car is expensive to own and cheap to show.",
+        "The ground-truth deception study covers 80 daters in one metropolitan area before swipe apps, so its magnitudes are historical rather than current."
+      ],
+      "commonMisreadings": [
+        "Online dating profiles are mostly fabrications, so the person who arrives is a stranger.",
+        "In dating, any profile claim that happens to be true is reliable evidence about someone."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Toma, Hancock & Ellison (2008), Personality and Social Psychology Bulletin 34(8):1023–1036",
+          "url": "https://journals.sagepub.com/doi/10.1177/0146167208318067"
+        }
+      ],
+      "pressureTests": [
+        "What would this signal have cost the sender if it were false?"
+      ]
+    },
+    {
+      "id": "frameworks:third-party-layer",
+      "title": "The Third-Party Layer",
+      "page": "frameworks.html",
+      "anchor": "third-party-layer",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "Every model on this page treats pairing as a transaction between two people. It is not. Friends and family supply introductions, information, approval, veto and enforcement — and how much approval a relationship has predicts whether it survives. This site has charted the collapse of the venues and the channels where that layer used to operate without ever naming what the layer was doing.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Third-Party Layer",
+        "social network approval",
+        "network approval",
+        "Romeo and Juliet effect",
+        "parental interference",
+        "family approval"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "network approval",
+        "parental interference",
+        "friends and family approve",
+        "met through friends",
+        "social network effect"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-couples-meet",
+        "deep-dive:third-spaces",
+        "frameworks:signal-cost-rule"
+      ],
+      "boundaryConditions": [
+        "The approval evidence is correlational and mostly measures perceived approval reported by one partner, so the causal direction stays open.",
+        "Network power that stabilises a good pairing also enforces a bad one and gates partners on class, caste, race or religion."
+      ],
+      "commonMisreadings": [
+        "Family disapproval of a romance makes couples fight harder and bond more tightly together.",
+        "Friends and family approving of a romance is what causes couples to stay together."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Sinclair, Hood & Wright (2014), Social Psychology 45(3):170–178",
+          "url": "https://econtent.hogrefe.com/doi/10.1027/1864-9335/a000181"
+        }
+      ],
+      "pressureTests": [
+        "Is the approval predicting the relationship, or is the relationship producing the approval?"
       ]
     },
     {
@@ -3854,6 +4092,105 @@
       ],
       "pressureTests": [
         "Is the claimed direction the only one tested, or has the reverse path been modelled in the same data?"
+      ]
+    },
+    {
+      "id": "frameworks:sixth-rung",
+      "title": "The Sixth Rung — Ended",
+      "page": "frameworks.html",
+      "anchor": "sixth-rung",
+      "category": "Rules & Frameworks",
+      "subcategory": "Exit & re-entry",
+      "synopsis": "The Conversion Ladder ran Seen, Noticed, Desired, Chosen, Kept — and stopped. But every pairing reaches a sixth state, by separation or by death, and the exit has its own drivers, its own asymmetries and a re-entry price that nothing on the formation side ever charges for. Ended is now drawn on the ladder as a dashed terminal cell rather than a sixth box, because it is a state that arrives, not a rung you climb.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Sixth Rung — Ended",
+        "Sixth Rung",
+        "Ended",
+        "re-entry discount",
+        "divorce initiation",
+        "exit asymmetry"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "who wants the breakup",
+        "initiate divorce",
+        "back on the market",
+        "re-enter the market",
+        "post-divorce dating"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:conversion-ladder",
+        "statistics:stat-divorce",
+        "frameworks:search-cost",
+        "frameworks:substitution-layer"
+      ],
+      "boundaryConditions": [
+        "Ended is a state with a base rate of one hundred percent over a long horizon, so reaching it grades where a bond stopped rather than whether it was worthwhile.",
+        "The re-entry discount has no instrumented source and is the weakest claim in this group."
+      ],
+      "commonMisreadings": [
+        "A romance that ended was a failed relationship, so the years spent were wasted.",
+        "Women leave relationships more readily than men, in marriage and in dating alike."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Is the exit pattern being explained by a trait, when the data localises it to marriage?"
+      ]
+    },
+    {
+      "id": "frameworks:substitution-layer",
+      "title": "The Substitution Layer",
+      "page": "frameworks.html",
+      "anchor": "substitution-layer",
+      "category": "Rules & Frameworks",
+      "subcategory": "Exit & re-entry",
+      "synopsis": "Exit from the dating market is not exit to nothing. It is a switch to substitute goods — gaming, pornography, parasocial media, and now synthetic companionship — that deliver a fraction of the reward at a small fraction of the cost, with the rejection risk removed. That last property is the one that matters structurally: substitutes are what make withdrawal durable. A strike with no alternative ends when hunger wins.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Substitution Layer",
+        "substitute good",
+        "leisure luxury",
+        "AI companion",
+        "parasocial substitute"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "substitute good",
+        "leisure luxuries",
+        "recreational computing",
+        "checked out of the market",
+        "AI girlfriend",
+        "rejection risk"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:mens-strike",
+        "statistics:stat-sex-recession"
+      ],
+      "boundaryConditions": [
+        "The instrumented result covers labour supply among young men, contains no dating outcome, and the extension to the dating market is an inference.",
+        "Substitution and complementarity are observationally identical in cross-section, so the causal direction is unavailable in either direction."
+      ],
+      "commonMisreadings": [
+        "Men stopped dating because video games and pornography are more enjoyable than real relationships.",
+        "Cheap substitutes only fill time that a failed dating market had already emptied out."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Aguiar, Bils, Charles & Hurst, “Leisure Luxuries and the Labor Supply of Young Men,” Journal of Political Economy 129(2), 2021",
+          "url": "https://www.journals.uchicago.edu/doi/10.1086/711916"
+        }
+      ],
+      "pressureTests": [
+        "Does the substitute cause the withdrawal, or absorb time freed by a withdrawal that already happened?"
       ]
     },
     {

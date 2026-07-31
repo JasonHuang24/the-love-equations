@@ -1159,6 +1159,176 @@
         "Is the claim the historical asymmetry, which is documented, or the causal weight assigned to it, which is not?"
       ]
     },
+    "frameworks:calibration-error": {
+      "aliases": [
+        "Calibration Error",
+        "self-rated attractiveness",
+        "self-assessed mate value",
+        "self-perceived attractiveness",
+        "rating accuracy"
+      ],
+      "phrases": [
+        "self-rated attractiveness",
+        "observer-rated attractiveness",
+        "overestimate their attractiveness",
+        "self-perceived mate value",
+        "she thinks she is a 9"
+      ],
+      "boundaryConditions": [
+        "The error measured is self-about-self on physical attractiveness; ratings of third parties are a different and more reliable instrument.",
+        "A weak correlation with observer ratings does not make self-rating useless as a predictor of the rater's own behaviour."
+      ],
+      "commonMisreadings": [
+        "In dating, a self-rated looks score is accurate enough to fix your matching-curve position.",
+        "Women in dating overestimate their looks, and men rate themselves accurately."
+      ],
+      "pressureTests": [
+        "Is the difference being argued about larger than the instrument's own error bar?"
+      ]
+    },
+    "frameworks:search-cost": {
+      "aliases": [
+        "Search Cost",
+        "search friction",
+        "search frictions",
+        "reservation value",
+        "dating app burnout",
+        "swipe fatigue"
+      ],
+      "phrases": [
+        "cost of search",
+        "search frictions",
+        "stopping rule",
+        "lower their standards",
+        "gave up on the apps",
+        "class partition"
+      ],
+      "boundaryConditions": [
+        "Burdett and Coles is a theoretical sufficiency result: search frictions can generate tiering, which does not establish that they generate this market's tiering.",
+        "The Pew figures measure user sentiment, not a search budget; no study has instrumented a dating search budget directly."
+      ],
+      "commonMisreadings": [
+        "People who settle in dating stopped wanting anyone better than the partner they accepted.",
+        "Quitting the dating apps after long searching proves a person had unrealistic standards."
+      ],
+      "pressureTests": [
+        "Did this person's standards change, or did the search budget they had left change?"
+      ]
+    },
+    "frameworks:signal-cost-rule": {
+      "aliases": [
+        "Signal Cost Rule",
+        "costly signalling",
+        "costly signaling",
+        "signalling theory",
+        "signaling theory",
+        "handicap principle",
+        "profile deception"
+      ],
+      "phrases": [
+        "cost to fake",
+        "costly signal",
+        "cheap talk",
+        "separating equilibrium",
+        "height inflation",
+        "profile accuracy",
+        "verification event"
+      ],
+      "boundaryConditions": [
+        "The rule ranks the cost of the display, not the price of the object: a rented car is expensive to own and cheap to show.",
+        "The ground-truth deception study covers 80 daters in one metropolitan area before swipe apps, so its magnitudes are historical rather than current."
+      ],
+      "commonMisreadings": [
+        "Online dating profiles are mostly fabrications, so the person who arrives is a stranger.",
+        "In dating, any profile claim that happens to be true is reliable evidence about someone."
+      ],
+      "pressureTests": [
+        "What would this signal have cost the sender if it were false?"
+      ]
+    },
+    "frameworks:third-party-layer": {
+      "aliases": [
+        "Third-Party Layer",
+        "social network approval",
+        "network approval",
+        "Romeo and Juliet effect",
+        "parental interference",
+        "family approval"
+      ],
+      "phrases": [
+        "network approval",
+        "parental interference",
+        "friends and family approve",
+        "met through friends",
+        "social network effect"
+      ],
+      "boundaryConditions": [
+        "The approval evidence is correlational and mostly measures perceived approval reported by one partner, so the causal direction stays open.",
+        "Network power that stabilises a good pairing also enforces a bad one and gates partners on class, caste, race or religion."
+      ],
+      "commonMisreadings": [
+        "Family disapproval of a romance makes couples fight harder and bond more tightly together.",
+        "Friends and family approving of a romance is what causes couples to stay together."
+      ],
+      "pressureTests": [
+        "Is the approval predicting the relationship, or is the relationship producing the approval?"
+      ]
+    },
+    "frameworks:sixth-rung": {
+      "aliases": [
+        "Sixth Rung",
+        "Ended",
+        "re-entry discount",
+        "divorce initiation",
+        "exit asymmetry"
+      ],
+      "phrases": [
+        "who wants the breakup",
+        "initiate divorce",
+        "back on the market",
+        "re-enter the market",
+        "post-divorce dating"
+      ],
+      "boundaryConditions": [
+        "Ended is a state with a base rate of one hundred percent over a long horizon, so reaching it grades where a bond stopped rather than whether it was worthwhile.",
+        "The re-entry discount has no instrumented source and is the weakest claim in this group."
+      ],
+      "commonMisreadings": [
+        "A romance that ended was a failed relationship, so the years spent were wasted.",
+        "Women leave relationships more readily than men, in marriage and in dating alike."
+      ],
+      "pressureTests": [
+        "Is the exit pattern being explained by a trait, when the data localises it to marriage?"
+      ]
+    },
+    "frameworks:substitution-layer": {
+      "aliases": [
+        "Substitution Layer",
+        "substitute good",
+        "leisure luxury",
+        "AI companion",
+        "parasocial substitute"
+      ],
+      "phrases": [
+        "substitute good",
+        "leisure luxuries",
+        "recreational computing",
+        "checked out of the market",
+        "AI girlfriend",
+        "rejection risk"
+      ],
+      "boundaryConditions": [
+        "The instrumented result covers labour supply among young men, contains no dating outcome, and the extension to the dating market is an inference.",
+        "Substitution and complementarity are observationally identical in cross-section, so the causal direction is unavailable in either direction."
+      ],
+      "commonMisreadings": [
+        "Men stopped dating because video games and pornography are more enjoyable than real relationships.",
+        "Cheap substitutes only fill time that a failed dating market had already emptied out."
+      ],
+      "pressureTests": [
+        "Does the substitute cause the withdrawal, or absorb time freed by a withdrawal that already happened?"
+      ]
+    },
     "lexicon:term-assortative-mating": {
       "aliases": [
         "assortative mating",

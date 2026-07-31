@@ -93,7 +93,7 @@
 .gk-item.g-holds { color: #0F6E56; } .gk-item.g-overgen { color: #51606F; } .gk-item.g-overstated { color: #A06A12; } .gk-item.g-absolutized { color: #B5531A; } .gk-item.g-confounded { color: #A82238; } .gk-item.g-myth { color: var(--scarlet-dim); }
 .ladder-graph {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
   align-items: stretch;
   margin: 1.15rem 0 1.2rem;
@@ -130,6 +130,22 @@
   z-index: 1;
 }
 .ladder-stage:last-child::after { display: none; }
+/*
+ * Ended is a state, not an achievement. Rendering it as a sixth identical box
+ * would assert "climb to Ended" — so the cell is muted and dashed, its numeral
+ * is a dot rather than a 6, and the connector feeding it is greyed to read as a
+ * transition out rather than another step up.
+ */
+.ladder-stage.terminal {
+  border-style: dashed;
+  border-color: var(--border);
+  background: rgba(246,243,238,0.55);
+}
+.ladder-stage:nth-last-child(2)::after {
+  background: var(--border);
+  border-top-color: rgba(0,0,0,0.06);
+  border-bottom-color: rgba(0,0,0,0.06);
+}
 .ladder-num {
   width: 28px;
   height: 28px;
@@ -141,6 +157,12 @@
   color: #fffaf3;
   font-size: 12px;
   font-weight: 800;
+}
+.ladder-num.terminal {
+  background: transparent;
+  border: 0.5px dashed var(--border);
+  color: var(--text-dim);
+  font-size: 15px;
 }
 .ladder-name {
   font-family: "Playfair Display", Georgia, serif;
