@@ -137,6 +137,42 @@ with governance implications, and three sessions are working in this tree. This 
 report. The enumerate-before-you-fix discipline says the next step is to enumerate all 23 pairs
 and decide which of the two artifacts is wrong, before either is changed.
 
+### 4b. Resolved at v2.6.11 — and it was neither of the two candidate fixes
+
+Enumerating the 23 killed both candidates at once. **All 23 carry the stance `Context only`**,
+which is not an accident: `stanceFor` has an explicit `!unit.isClaimLike` branch. The analyzer
+was never treating these as claims, so "make `analyzeDocument` skip them" would have deleted a
+deliberate feature and left the stance branch dead. And the sweep's skip is a defensible *scope*
+choice, so "widen the sweep" was not indicated either.
+
+The actual defect was one line below the disagreement, in scoring. Of 788 mapped top-slots, 14
+sat on units under `shortUnitWordCount` — and 13 of those 14 were non-claim. The short-unit
+penalty that should have caught them was exempting `exactLexicalHit || signatureHits.length`,
+an exemption written for the two *overlap* penalties beside it and applied to this one by
+grouping. Precision does not answer length, and on short text they correlate backwards: a
+three-word heading that is the canon title matches at 100% by construction, so the exemption
+fired hardest exactly where the passage was least able to carry a reading.
+
+Dropping the exemption outright was the first attempt and it was **too broad** — it failed
+`ta-01`, where `"Hypergamy shapes modern dating."` is four words and *is* a claim. The line is
+the one the claim detector already draws: a label names a topic, a short assertion asserts one.
+The exemption now survives, conditioned on `isClaimLike`.
+
+Result: the seven High-confidence heading mappings are gone — **zero** non-claim mappings are
+now High (9 Medium, 12 Low), and half the short ones drop out of credible entirely.
+
+**The finding that outlives the fix:** the sweep could not have caught this. It skips non-claim
+units, and the exemption had *never once fired on a claim-like unit in the corpus* — **0 of
+1,188,070 swept pairs move**. So no threshold shifts, no frozen band changes, and there is
+nothing to adjudicate. A scoring defect lived for months inside the blind spot of the instrument
+built to catch scoring defects, because the instrument's exclusion and the defect's habitat were
+the same set. When a tool narrows its population, the excluded region is not merely unmeasured —
+it is where defects accumulate.
+
+`tools/lab-threshold-sweep.mjs` keeps the skip, but its comment no longer justifies it with the
+two false claims this audit caught (that retrieval never runs on such units, and that they could
+never reach a reader). It now states the scope choice and names the residual.
+
 ## 5. What was and was not done
 
 Read-only throughout: no canon entry, overlay, page, threshold band, or test was modified. The
@@ -149,5 +185,7 @@ own header warns about — the numbers above were all produced by importing the 
 1. `local-market` / `effective-ratio` shadowed by `sex-ratio` — owner's call whether that is
    intended (§2).
 2. `clearing-order`'s two non-claim captures, one of which it ties with `local-market` (§2, §3).
-3. **The claim-detector/mapping disagreement (§4)** — the largest item here, pre-existing, and
-   affecting entries from the retention merge rather than either audited batch.
+3. ~~**The claim-detector/mapping disagreement (§4)**~~ — **CLOSED at v2.6.11**, see §4b. The
+   disagreement was real but was not itself the defect; it was hiding a scoring bug in the
+   short-unit penalty's exemption. Fixed there. The sweep's population choice stands, with the
+   residual now stated in the tool rather than justified by a false premise.
