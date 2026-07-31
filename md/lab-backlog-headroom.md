@@ -2,6 +2,11 @@
 
 **Status: LIVE — measurement only. Nothing below was ruled, and nothing in the fixture was touched.**
 
+> **Both open questions were since answered, same day.** §5(a): the 91 readable
+> crossings were ruled (`md/lab-weak-backlog-sitting-91.md`). §5(b): Jason ruled the
+> 425 orphans RETIRED as a class (`md/lab-weak-orphan-retirement.md`). The
+> measurement below stands unedited.
+
 The question: `tests/fixtures/threshold-neighbors.json` holds 516 pending `minWeakScore`
 crossings against `WEAK_BACKLOG_CEILING = 516` — zero headroom, so the next doctrine batch
 that moves any weak score cannot ship. What is the cheapest honest way to make room?

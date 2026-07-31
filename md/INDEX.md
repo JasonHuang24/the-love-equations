@@ -80,6 +80,7 @@ record whose own headline was later corrected, with the correction recorded in-f
 - 2026-07-31 · [lab-hookup-threshold-adjudication.md](lab-hookup-threshold-adjudication.md) **SUP → the fixture (snapshot)** — 5,312 crossings from the hookup pass: 3 credible gains / 152 losses — the substitution-layer unwinding of its own 153 gains
 - 2026-07-31 · [lab-backlog-headroom.md](lab-backlog-headroom.md) **LIVE ★** — 425 of the 516 pending weak crossings are keyed to passages the restored corpus no longer contains; 91 are readable (68 in one source); recommendation: rule the 91, put the orphan class in front of Jason
 - 2026-07-31 · [lab-weak-backlog-sitting-91.md](lab-weak-backlog-sitting-91.md) **LIVE** — all 91 readable weak crossings ruled hand-entered (48 ACCEPT / 43 REJECT, ruledBy Claude); ceiling ratcheted 516 → 425; every remaining pending weak row is known-unreadable; 2 losses REJECTed as real costs
+- 2026-07-31 · [lab-weak-orphan-retirement.md](lab-weak-orphan-retirement.md) **LIVE ★** — Jason RULED the 425 epoch orphans RETIRED as a class (a record that no verdict is possible, never ACCEPT/REJECT); ceiling ratcheted 425 → 0 — the weak backlog no longer exists and every future weak crossing blocks until ruled
 
 ## Doctrine
 

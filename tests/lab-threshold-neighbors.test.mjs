@@ -118,7 +118,15 @@ function currentScores() {
 
 const THRESHOLDS = ['candidateScoreFloor', 'minWeakScore', 'minCredibleScore'];
 
-const RULINGS = new Set(['ACCEPT', 'REJECT', 'PENDING']);
+/*
+ * RETIRED is not a verdict on the crossing — it is the record that no verdict
+ * is possible. The 2026-07-31 corpus loss orphaned 425 minWeakScore rows whose
+ * passages did not survive re-acquisition; nobody can ever read them. Jason
+ * ruled them retired as a class that same day (md/lab-weak-orphan-retirement.md).
+ * It is never a substitute for ACCEPT/REJECT on a readable row, and the sweep's
+ * --rule cannot produce it.
+ */
+const RULINGS = new Set(['ACCEPT', 'REJECT', 'PENDING', 'RETIRED']);
 
 test('the frozen band is internally consistent', () => {
   assert.equal(fixture.schema, 'le-lab.threshold-sweep/1.0');
@@ -234,7 +242,7 @@ test('the frozen band is internally consistent', () => {
  *
  * Lowering WEAK_BACKLOG_CEILING is the only edit to it this file permits.
  */
-const WEAK_BACKLOG_CEILING = 425;
+const WEAK_BACKLOG_CEILING = 0;
 
 test('an outstanding credible-line verdict blocks, and the weak backlog may only fall', () => {
   const pendingBy = fixture.counts.pendingByThreshold;
