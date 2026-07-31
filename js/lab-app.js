@@ -351,7 +351,7 @@ function handleExtractionProgress(event) {
 function handleAnalysisProgress(progress) {
   const value = Math.round(Math.max(0, Math.min(1, progress?.value || 0)) * 100);
   ui.analysisProgress.value = value;
-  ui.analysisStatusDetail.textContent = progress?.message || 'Checking claims against this site’s concepts.';
+  ui.analysisStatusDetail.textContent = progress?.message || 'Checking claims against the canon.';
   ui.intakeStatus.textContent = progress?.message || 'Analyzing source locally.';
 }
 
@@ -396,7 +396,7 @@ function refreshReadyState(readiness = currentInputReadiness()) {
   ui.analyze.disabled = !canAnalyze;
 
   if (!state.canonIndex) {
-    ui.readyNote.textContent = 'The concept library must load before analysis.';
+    ui.readyNote.textContent = 'The canon index must load before analysis.';
   } else if (readiness.urlError) {
     ui.readyNote.textContent = readiness.metadataUrlWarning
       ? 'The source is ready to analyze, but this URL is invalid and will be omitted from provenance.'
@@ -676,7 +676,7 @@ function renderCategorySpectrum(distribution) {
   clearNode(ui.categorySpectrum);
   if (!distribution.length) {
     const empty = document.createElement('p');
-    empty.textContent = 'No topic reached a solid match.';
+    empty.textContent = 'No canon category reached a solid match.';
     ui.categorySpectrum.appendChild(empty);
     ui.dominantCategory.textContent = 'No matches yet';
     return;
@@ -1247,7 +1247,7 @@ function flagRowContext(segmentId) {
       id: passage.segmentId,
     }),
     primaryCanonId: null,
-    current: `Currently skipped: ${passage.reasonLabel}. It was never compared against this site's concepts, so there is no match trace to attach.`,
+    current: `Currently skipped: ${passage.reasonLabel}. It was never compared against the canon, so there is no match trace to attach.`,
     defaultDisposition: 'domain-gate-error',
   };
 }

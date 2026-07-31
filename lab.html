@@ -21,7 +21,7 @@
     <header class="lab-hero">
       <div class="lab-hero-inner">
         <div class="lab-hero-copy">
-          <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> Test any dating claim against this site</div>
+          <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> Test any dating claim against the canon</div>
           <h1>The Love Equations <em>Lab</em></h1>
           <p class="lab-product-line">Bring a claim. See where it fits, where it strains, and what the map is missing.</p>
           <p class="lab-hero-sub">Paste text or drop a file. The Lab shows which ideas on this site your text touches, where its claims overreach, and what it could not match.</p>
@@ -44,11 +44,11 @@
           <details class="lab-method-details">
             <summary>How it works</summary>
             <div class="lab-method-details-body">
-              <p>It matches exact phrases and weighted word overlap against this site&rsquo;s concepts, then runs explicit reasoning checks. The result is a traceable map, not a verdict.</p>
+              <p>It matches exact phrases and weighted word overlap against the site&rsquo;s canon, then runs explicit reasoning checks. The result is a traceable map, not a verdict.</p>
               <dl class="lab-method-meta">
                 <div>
-                  <dt>Concepts</dt>
-                  <dd id="lab-index-meta" aria-live="polite">Loading the concept library&hellip;</dd>
+                  <dt>Canon</dt>
+                  <dd id="lab-index-meta" aria-live="polite">Loading the canon index&hellip;</dd>
                 </div>
                 <div>
                   <dt>Contracts</dt>
@@ -232,7 +232,7 @@
               </li>
               <li>
                 <span>03</span>
-                <div><strong>Match</strong><small>Compared against this site&rsquo;s concepts, with confidence shown and misses kept visible</small></div>
+                <div><strong>Match</strong><small>Compared against the canon, with confidence shown and misses kept visible</small></div>
               </li>
             </ol>
           </div>
@@ -264,10 +264,10 @@
           <div class="lab-state-copy">
             <strong class="lab-state-message" data-state-message="empty">Waiting for text</strong>
             <strong class="lab-state-message" data-state-message="extracting">Reading your text</strong>
-            <strong class="lab-state-message" data-state-message="analyzing">Checking claims against this site&rsquo;s concepts</strong>
+            <strong class="lab-state-message" data-state-message="analyzing">Checking claims against the canon</strong>
             <strong class="lab-state-message" data-state-message="success">Analysis complete</strong>
             <strong class="lab-state-message" data-state-message="partial">Analysis complete, with reading warnings</strong>
-            <strong class="lab-state-message" data-state-message="no-match">No solid matches found</strong>
+            <strong class="lab-state-message" data-state-message="no-match">No solid canon matches found</strong>
             <strong class="lab-state-message" data-state-message="no-domain">No relationship claims found</strong>
             <strong class="lab-state-message" data-state-message="failure">The analysis stopped</strong>
             <span id="lab-analysis-status-detail">No text is loaded. Nothing has been analyzed.</span>
@@ -383,7 +383,7 @@
                   <output id="lab-flow-canon-count">&mdash;</output>
                 </div>
                 <strong>LE connections</strong>
-                <small id="lab-flow-canon-label">Solid matches on this site</small>
+                <small id="lab-flow-canon-label">Solid canon matches</small>
               </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
               <button type="button" class="lab-assay-stage is-tensions" data-flow-stage="tensions" data-lab-goto="pressure" aria-label="Tensions stage — open the Pressure Test view">
@@ -445,14 +445,14 @@
             <div class="lab-ledger-filter-note" id="lab-ledger-filter-note" role="status" aria-live="polite" hidden></div>
             <div class="lab-table-scroll" tabindex="0" aria-label="Scrollable match table">
               <table class="lab-map-table" id="lab-map-table">
-                <caption>Each detected claim and the concept it matched on this site. Column headers sort; the tiles above filter.</caption>
+                <caption>Each detected claim and the canon concept it matched. Column headers sort; the tiles above filter.</caption>
                 <thead>
                   <tr>
                     <th scope="col" aria-sort="ascending"><button type="button" class="lab-sort-button" data-sort-key="order" aria-label="Sort by passage order">Passage <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="excerpt" aria-label="Sort your text alphabetically">Your text <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="alignment" aria-label="Sort and group by stance">Stance <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="connection" aria-label="Sort matched concepts alphabetically">Matched concept <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
-                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="section" aria-label="Sort and group by site section">Section <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="section" aria-label="Sort and group by canon section">Section <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="confidence" aria-label="Sort by confidence">Confidence <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="triage" aria-label="Sort and group by inclusion">Included? <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col" class="lab-review-only">Feedback</th>
@@ -543,7 +543,7 @@
           <div class="lab-empty-result" id="lab-research-empty">
             <i class="ti ti-flask-empty" aria-hidden="true"></i>
             <strong id="lab-research-empty-title">No open questions yet</strong>
-            <p id="lab-research-empty-copy">Claims that match nothing on this site stay visible here instead of being forced into the closest concept.</p>
+            <p id="lab-research-empty-copy">Claims that match nothing on this site stay visible here instead of being forced into the closest canon concept.</p>
           </div>
           <div class="lab-result-list" id="lab-research-list"></div>
         </div>
@@ -655,7 +655,7 @@
         <blockquote data-field="excerpt"></blockquote>
         <p class="lab-unmapped-reason" data-field="reason"></p>
         <dl class="lab-research-grid">
-          <div><dt>Closest concepts on this site</dt><dd data-field="nearest"></dd></div>
+          <div><dt>Closest canon concepts</dt><dd data-field="nearest"></dd></div>
           <div><dt>Where it could belong</dt><dd data-field="destination"></dd></div>
           <div><dt>The question it raises</dt><dd data-field="question"></dd></div>
           <div><dt>What would disprove it</dt><dd data-field="falsifier"></dd></div>
@@ -703,13 +703,13 @@
           <div class="lab-flag-field">
             <label for="lab-flag-expected">Concepts it should have matched</label>
             <input type="text" id="lab-flag-expected" list="lab-flag-canon-ids" autocomplete="off"
-                   placeholder="concept IDs, comma separated &mdash; optional" />
+                   placeholder="canon IDs, comma separated &mdash; optional" />
             <small>e.g. <code>smv:money:provisioning-signal</code>. Leave empty if you only know it is wrong.</small>
           </div>
           <div class="lab-flag-field">
             <label for="lab-flag-forbidden">Concepts it should not have matched</label>
             <input type="text" id="lab-flag-forbidden" list="lab-flag-canon-ids" autocomplete="off"
-                   placeholder="concept IDs, comma separated &mdash; optional" />
+                   placeholder="canon IDs, comma separated &mdash; optional" />
             <small>Pre-filled with the current primary when you flag a wrong match.</small>
           </div>
           <div class="lab-flag-field">
