@@ -218,6 +218,14 @@ match leaving while the correct home sits 0.21 above it is the matcher getting
 *more* right, not less. **Recommended ACCEPT; left PENDING, because that line is
 Jason's by standing rule and nothing here carries a machine verdict on it.**
 
+> **When it is ruled, it is TWO edits, not one** (see
+> `md/lab-face-age-adjudication.md`): set
+> `counts.pendingByThreshold.minCredibleScore` to **`0`** rather than deleting the
+> key — a deleted key compares `undefined` against a counted `0` and fails with
+> *"recorded PENDING count … disagrees with the rulings"*, which reads like the
+> ruling did not take rather than like a missing key — and bring `counts.pending`
+> down with it, or test 1 fails on internal consistency.
+
 Eleven `minWeakScore` crossings, all on the edited entry, ruled by key with
 `ruledBy: Claude` — **5 ACCEPT / 6 REJECT**, and the weak backlog held at exactly
 516. The six REJECTs are honest and worth stating rather than absorbing:

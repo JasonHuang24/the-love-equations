@@ -29,6 +29,21 @@ committed fixture, selected by key diff rather than by eye.
 crossing, which here would have stamped 4,699 unread candidate-floor rows.
 Jason declined the bulk stamp on 2026-07-30. These fifteen were stamped by key.
 
+> **RULED 2026-07-31, `b6de5a7`.** Jason ruled **ACCEPT** in session, stamped by
+> key with `ruledBy: Jason`, no `--rule`. He ruled on the reasoning below
+> *including the argument against it*, which is therefore recorded as overridden
+> rather than dismissed. `minCredibleScore` went to 0 and the suite went green.
+>
+> **RECORDING A VERDICT IS TWO EDITS, NOT ONE** — learned by the concurrent
+> session getting it wrong first, and it applies to every future ruling:
+>
+> - set `counts.pendingByThreshold.<threshold>` to **`0`**, never delete the key.
+>   A deleted key makes the per-threshold assertion compare `undefined` against a
+>   counted `0`, and it fails with *"recorded PENDING count for minCredibleScore
+>   disagrees with the rulings"* — which reads like the ruling did not take rather
+>   than like a missing key.
+> - bring `counts.pending` down with it, or test 1 fails on internal consistency.
+
 ## The one blocking crossing — PENDING, recommendation only
 
 ```
