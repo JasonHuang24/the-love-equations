@@ -53,7 +53,7 @@ import {
   SCORING_CONFIG_HASH,
 } from '../js/lab-analyzer.js';
 import { normalizeInput } from '../js/lab-intake.js';
-import { corpusSources } from './lab-corpus-sources.mjs';
+import { corpusSources, corpusEpoch } from './lab-corpus-sources.mjs';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -292,6 +292,37 @@ function main() {
      * it is visibly unanswered rather than silently absent.
      */
     const rulings = { ...(existing?.rulings ?? {}) };
+    /*
+     * The corpus a ruling was keyed to, and the boundary when it changes.
+     *
+     * Merging rulings across a corpus change is right — the alternative is
+     * discarding hand-entered verdicts over an archive event nobody chose — but
+     * it is only honest if the file says WHICH text each side was read against.
+     * `unitId` is content-derived, so a ruling survives a regeneration exactly
+     * while its passage still says the same thing; after the 2026-07-31
+     * destruction and re-acquisition, 20 of 21 sources came back changed.
+     *
+     * So when the fingerprint moves, the outgoing epoch is retired into
+     * `corpusEpochHistory` carrying the count of rulings that existed under it.
+     * That count is the honest one: those verdicts were made against that text,
+     * and everything recorded after the boundary was not.
+     */
+    const epoch = corpusEpoch(ROOT_DIR);
+    // A fixture written before this field existed carries rulings with no epoch.
+    // Reconstruct the one they were made under rather than retiring nothing,
+    // which would lose the boundary in the exact regeneration that creates it.
+    const priorEpoch = existing?.corpusEpoch
+      ?? (Object.keys(existing?.rulings ?? {}).length ? corpusEpoch(ROOT_DIR, { prior: true }) : null);
+    const epochHistory = [...(existing?.corpusEpochHistory ?? [])];
+    if (priorEpoch && priorEpoch.fingerprint !== epoch.fingerprint) {
+      epochHistory.push({
+        ...priorEpoch,
+        retiredAt: new Date().toISOString().slice(0, 10),
+        rulingsCarriedForward: Object.keys(rulings).length,
+        note: 'Rulings made under this epoch were carried forward by key into the epoch '
+          + 'below. A verdict from here describes a passage that may since have changed.',
+      });
+    }
     for (const crossing of comparison?.crossings ?? []) {
       // Keyed by threshold as well as by pair: a single pair can clear two
       // lines in one move, and a ruling that recorded only the first would be
@@ -366,6 +397,8 @@ function main() {
         + ' caught 829 of 2,304 real drift crossings (36%), and the --baseline comparison'
         + ' catches those and the rest. `rulings` is the human record for every pair that'
         + ' has ever crossed, including the ones that crossed from outside the band.',
+      corpusEpoch: epoch,
+      corpusEpochHistory: epochHistory,
       counts: {
         ...perThreshold,
         pairs: Object.keys(scores).length,

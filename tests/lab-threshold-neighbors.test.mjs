@@ -13,7 +13,7 @@ import {
   SCORING_CONFIG,
 } from '../js/lab-analyzer.js';
 import { normalizeInput } from '../js/lab-intake.js';
-import { corpusSources } from '../tools/lab-corpus-sources.mjs';
+import { corpusSources, corpusEpoch } from '../tools/lab-corpus-sources.mjs';
 
 /*
  * The threshold-neighbour band, frozen.
@@ -123,6 +123,27 @@ const RULINGS = new Set(['ACCEPT', 'REJECT', 'PENDING']);
 test('the frozen band is internally consistent', () => {
   assert.equal(fixture.schema, 'le-lab.threshold-sweep/1.0');
   assert.equal(fixture.population, 'retained');
+
+  /*
+   * WHICH CORPUS the rulings were read against.
+   *
+   * Rulings are merged across regenerations and keyed by a content-derived
+   * unitId, so a verdict survives only while its passage still says the same
+   * thing. The 2026-07-31 archive loss and re-acquisition brought back 20 of 21
+   * sources changed, and Jason ruled the rulings carry forward rather than being
+   * discarded -- which is right, and is only honest if the file records the
+   * boundary. This asserts the band was swept against the corpus the MANIFEST
+   * describes, so editing one without re-sweeping the other fails here instead
+   * of leaving a verdict silently attached to text it was never read against.
+   *
+   * Manifest-only, so it holds whether or not the gitignored archive is on disk.
+   */
+  assert.ok(fixture.corpusEpoch, 'the fixture predates the corpus epoch record; regenerate the band');
+  assert.equal(fixture.corpusEpoch.fingerprint, corpusEpoch(ROOT_DIR).fingerprint,
+    'The band was swept against a different corpus than lab-corpus.manifest.json now describes. '
+    + 'Re-sweep, or explain the manifest change -- a ruling keyed to text that has since moved is '
+    + 'the failure this record exists to make visible.');
+  assert.ok(Array.isArray(fixture.corpusEpochHistory));
   assert.equal(Object.keys(fixture.scores).length, fixture.counts.pairs);
   THRESHOLDS.forEach((name) => {
     assert.equal(fixture.thresholds[name], SCORING_CONFIG[name],
