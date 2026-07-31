@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+36e59ca91dda",
-  "generatedAt": "2026-07-31T01:21:51.000Z",
+  "indexVersion": "1.0.0+0d01291161d6",
+  "generatedAt": "2026-07-31T03:05:04.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "bb21f2f476d994bbc8c6f742597931418b61baf47d8485da8380c62ca86339b7",
-      "conceptCount": 35
+      "sha256": "a9587dda269aad99ce1ab94b38fe1bc78138f74ffea7976187d55b73cba8cf27",
+      "conceptCount": 38
     },
     {
       "page": "gender-dynamics.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 476,
+    "conceptCount": 479,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -226,13 +226,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
-      "Rules & Frameworks": 35,
+      "Rules & Frameworks": 38,
       "Statistics": 31
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 66,
+      "Framework": 69,
       "Glossary": 84,
       "Hard data": 28,
       "Instrument": 5,
@@ -249,10 +249,10 @@
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 385,
-    "conceptsWithExternalSources": 82,
+    "anchoredConceptCount": 388,
+    "conceptsWithExternalSources": 85,
     "dependencyCount": 233,
-    "relatedCount": 340
+    "relatedCount": 352
   },
   "entries": [
     {
@@ -4199,6 +4199,233 @@
       ],
       "pressureTests": [
         "Does the substitute cause the withdrawal, or absorb time freed by a withdrawal that already happened?"
+      ]
+    },
+    {
+      "id": "frameworks:stock-flow-error",
+      "title": "The Stock–Flow Error",
+      "page": "frameworks.html",
+      "anchor": "stock-flow-error",
+      "category": "Rules & Frameworks",
+      "subcategory": "The population layer",
+      "synopsis": "A stock counts who is in a state right now. A flow counts who enters or leaves it over time. Almost every famous number in this subject is a stock being read as a flow — a photograph of one moment presented as the shape of a life. It is the most productive error in the discourse, and this site is not exempt from it.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Stock–Flow Error",
+        "Stock-Flow Error",
+        "stock and flow",
+        "period measure",
+        "cohort measure",
+        "length-biased sampling",
+        "right-censored",
+        "synthetic cohort"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "half of marriages end in divorce",
+        "top 20% of men",
+        "will never marry",
+        "refined divorce rate",
+        "snapshot of the market",
+        "counting people in a state"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:residual-pool",
+        "frameworks:clearing-order",
+        "frameworks:calibration-error"
+      ],
+      "boundaryConditions": [
+        "Period and cohort measures answer different questions, and the direction of a snapshot bias follows composition drift rather than a fixed rule.",
+        "Length-biased sampling explains the dating-app case, while the divorce ratio is a malformed statistic built on non-overlapping denominators."
+      ],
+      "commonMisreadings": [
+        "Half of all marriages end in divorce, so a wedding today carries roughly even odds.",
+        "A quarter of young adults today will stay unmarried for the whole of their lives.",
+        "The top twenty percent of men receive eighty percent of the likes on dating apps."
+      ],
+      "sourceLinks": [
+        {
+          "label": "NCHS/CDC national marriage and divorce rate tables (2000–2023)",
+          "url": "https://www.cdc.gov/nchs/data/dvs/marriage-divorce/national-marriage-divorce-rates-00-23.pdf"
+        },
+        {
+          "label": "Kennedy & Ruggles (2014), “Breaking Up Is Hard to Count,” Demography 51(2):587–598",
+          "url": "https://doi.org/10.1007/s13524-013-0270-9"
+        },
+        {
+          "label": "Pew Research Center (June 2023)",
+          "url": "https://www.pewresearch.org/short-reads/2023/06/28/a-record-high-share-of-40-year-olds-in-the-us-have-never-been-married/"
+        },
+        {
+          "label": "Brown, Lin & Mellencamp (2022), Journal of Marriage and Family 84(4):1220–1233",
+          "url": "https://doi.org/10.1111/jomf.12861"
+        },
+        {
+          "label": "Bruch & Newman (2018), Science Advances 4(8):eaap9815",
+          "url": "https://doi.org/10.1126/sciadv.aap9815"
+        }
+      ],
+      "pressureTests": [
+        "Is this number counting people in a state right now, or counting events over a period?",
+        "Do the numerator and the denominator contain the same people?"
+      ]
+    },
+    {
+      "id": "frameworks:residual-pool",
+      "title": "The Residual Pool",
+      "page": "frameworks.html",
+      "anchor": "residual-pool",
+      "category": "Rules & Frameworks",
+      "subcategory": "The population layer",
+      "synopsis": "Every model above this entry draws candidates from a pool it treats as fixed — an urn whose contents do not change while you are reaching into it. They do change. People pair off and leave, others divorce and return, and the pool’s composition shifts for reasons that have nothing to do with anyone still in it. The average of a group can fall while every single person in it improves, purely because of who left.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Residual Pool",
+        "adverse selection",
+        "market for lemons",
+        "composition effect",
+        "damaged goods",
+        "leftovers"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "everyone left is damaged",
+        "the good ones are taken",
+        "selection into marriage",
+        "who is still single at forty",
+        "picked over"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:stock-flow-error",
+        "frameworks:bone-pill",
+        "frameworks:sixth-rung",
+        "statistics:stat-never-married",
+        "frameworks:clearing-order"
+      ],
+      "boundaryConditions": [
+        "A composition effect on quality requires exit to be ordered on a shared index, and romantic evaluation becomes largely dyad-specific once people are acquainted.",
+        "The unpartnered population mixes never-married with divorced and widowed people, so it behaves as a mixture rather than a sealed residue."
+      ],
+      "commonMisreadings": [
+        "Everyone still single after forty was passed over because the better partners were selected first.",
+        "The dating pool gets worse with age because desirable people pair off and leave it behind."
+      ],
+      "sourceLinks": [
+        {
+          "label": "George Akerlof, “The Market for ‘Lemons’” (1970), Quarterly Journal of Economics 84(3):488–500",
+          "url": "https://academic.oup.com/qje/article-abstract/84/3/488/1896241"
+        },
+        {
+          "label": "Angelucci & Bennett (2021), Review of Economic Studies 88(5):2119–2148",
+          "url": "https://doi.org/10.1093/restud/rdaa088"
+        },
+        {
+          "label": "Pew Research Center (2021)",
+          "url": "https://www.pewresearch.org/social-trends/2021/10/05/rising-share-of-u-s-adults-are-living-without-a-spouse-or-partner/"
+        },
+        {
+          "label": "Pew (June 2023)",
+          "url": "https://www.pewresearch.org/short-reads/2023/06/28/a-record-high-share-of-40-year-olds-in-the-us-have-never-been-married/"
+        },
+        {
+          "label": "Eastwick & Hunt (2014), Journal of Personality and Social Psychology 106(5):728–751",
+          "url": "https://doi.org/10.1037/a0035884"
+        },
+        {
+          "label": "Autor, Dorn & Hanson (2019), AER: Insights 1(2):161–178",
+          "url": "https://doi.org/10.1257/aeri.20180010"
+        },
+        {
+          "label": "Guner, Kulikova & Llull (2018), European Economic Review 104:138–166",
+          "url": "https://doi.org/10.1016/j.euroecorev.2018.02.005"
+        }
+      ],
+      "pressureTests": [
+        "Did the people in this pool change, or did the membership of the pool change around them?",
+        "Is this difference between married and single people a result of marriage, or of who marries?"
+      ]
+    },
+    {
+      "id": "frameworks:clearing-order",
+      "title": "The Clearing Order",
+      "page": "frameworks.html",
+      "anchor": "clearing-order",
+      "category": "Rules & Frameworks",
+      "subcategory": "The population layer",
+      "synopsis": "People do not leave the market at random, and if they leave in an order then time in the market is not neutral. The discourse assumes it knows the order: the most desirable pair off first, so the pool thins from the top and waiting is expensive. The order is real. It is not that one, and for the first decade it runs backwards.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Clearing Order",
+        "exit order",
+        "first marriage rate",
+        "marriage hazard",
+        "pool turnover",
+        "previously married"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "everyone good is taken",
+        "lock it down early",
+        "the market clears",
+        "peak marrying years",
+        "re-enter the market",
+        "running out of time"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:the-wall",
+        "frameworks:sixth-rung",
+        "frameworks:stock-flow-error",
+        "frameworks:residual-pool"
+      ],
+      "boundaryConditions": [
+        "Education predicts both a later first marriage and a higher lifetime marriage rate, so a single ordering story accounts for one fact by contradicting the other.",
+        "Attractiveness has been related to whether a person ever marries, while its relation to the timing of marriage remains unmeasured."
+      ],
+      "commonMisreadings": [
+        "The most desirable people pair off first, so waiting leaves a thinner pool behind them.",
+        "A woman who delays past thirty has spent the years when marriages actually get made."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Copen, Daniels, Vespa & Mosher (2012), “First Marriages in the United States,” NCHS National Health Statistics Reports no. 49",
+          "url": "https://www.cdc.gov/nchs/data/nhsr/nhsr049.pdf"
+        },
+        {
+          "label": "NHSR no. 64 (2013)",
+          "url": "https://www.cdc.gov/nchs/data/nhsr/nhsr064.pdf"
+        },
+        {
+          "label": "Brown, Lin & Mellencamp (2022), Journal of Marriage and Family 84(4):1220–1233",
+          "url": "https://doi.org/10.1111/jomf.12861"
+        },
+        {
+          "label": "ACS 2024 1-year, table B12002",
+          "url": "https://data.census.gov/table/ACSDT1Y2024.B12002"
+        },
+        {
+          "label": "Kearney & Wilson (2018), “Male Earnings, Marriageable Men, and Nonmarital Fertility,” Review of Economics and Statistics 100(4):678–690",
+          "url": "https://doi.org/10.1162/rest_a_00711"
+        },
+        {
+          "label": "Bruch & Newman (2018), Science Advances 4(8):eaap9815",
+          "url": "https://doi.org/10.1126/sciadv.aap9815"
+        }
+      ],
+      "pressureTests": [
+        "Is this claim about the order in which people exit, or about how one person changes with age?",
+        "Does the pool at this age differ in quality, or in how many have been married before?"
       ]
     },
     {

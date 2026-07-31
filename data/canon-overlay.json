@@ -1337,6 +1337,114 @@
         "Does the substitute cause the withdrawal, or absorb time freed by a withdrawal that already happened?"
       ]
     },
+    "frameworks:stock-flow-error": {
+      "aliases": [
+        "Stock-Flow Error",
+        "stock and flow",
+        "period measure",
+        "cohort measure",
+        "length-biased sampling",
+        "right-censored",
+        "synthetic cohort"
+      ],
+      "phrases": [
+        "half of marriages end in divorce",
+        "top 20% of men",
+        "will never marry",
+        "refined divorce rate",
+        "snapshot of the market",
+        "counting people in a state"
+      ],
+      "related": [
+        "frameworks:residual-pool",
+        "frameworks:clearing-order",
+        "frameworks:calibration-error"
+      ],
+      "boundaryConditions": [
+        "Period and cohort measures answer different questions, and the direction of a snapshot bias follows composition drift rather than a fixed rule.",
+        "Length-biased sampling explains the dating-app case, while the divorce ratio is a malformed statistic built on non-overlapping denominators."
+      ],
+      "commonMisreadings": [
+        "Half of all marriages end in divorce, so a wedding today carries roughly even odds.",
+        "A quarter of young adults today will stay unmarried for the whole of their lives.",
+        "The top twenty percent of men receive eighty percent of the likes on dating apps."
+      ],
+      "pressureTests": [
+        "Is this number counting people in a state right now, or counting events over a period?",
+        "Do the numerator and the denominator contain the same people?"
+      ]
+    },
+    "frameworks:residual-pool": {
+      "aliases": [
+        "Residual Pool",
+        "adverse selection",
+        "market for lemons",
+        "composition effect",
+        "damaged goods",
+        "leftovers"
+      ],
+      "phrases": [
+        "everyone left is damaged",
+        "the good ones are taken",
+        "selection into marriage",
+        "who is still single at forty",
+        "picked over"
+      ],
+      "related": [
+        "frameworks:stock-flow-error",
+        "frameworks:clearing-order",
+        "frameworks:sixth-rung",
+        "frameworks:bone-pill"
+      ],
+      "boundaryConditions": [
+        "A composition effect on quality requires exit to be ordered on a shared index, and romantic evaluation becomes largely dyad-specific once people are acquainted.",
+        "The unpartnered population mixes never-married with divorced and widowed people, so it behaves as a mixture rather than a sealed residue."
+      ],
+      "commonMisreadings": [
+        "Everyone still single after forty was passed over because the better partners were selected first.",
+        "The dating pool gets worse with age because desirable people pair off and leave it behind."
+      ],
+      "pressureTests": [
+        "Did the people in this pool change, or did the membership of the pool change around them?",
+        "Is this difference between married and single people a result of marriage, or of who marries?"
+      ]
+    },
+    "frameworks:clearing-order": {
+      "aliases": [
+        "Clearing Order",
+        "exit order",
+        "first marriage rate",
+        "marriage hazard",
+        "pool turnover",
+        "previously married"
+      ],
+      "phrases": [
+        "everyone good is taken",
+        "lock it down early",
+        "the market clears",
+        "peak marrying years",
+        "re-enter the market",
+        "running out of time"
+      ],
+      "related": [
+        "frameworks:stock-flow-error",
+        "frameworks:residual-pool",
+        "frameworks:sixth-rung",
+        "frameworks:the-wall"
+      ],
+      "boundaryConditions": [
+        "Education predicts both a later first marriage and a higher lifetime marriage rate, so a single ordering story accounts for one fact by contradicting the other.",
+        "Attractiveness has been related to whether a person ever marries, while its relation to the timing of marriage remains unmeasured."
+      ],
+      "commonMisreadings": [
+        "The most desirable people pair off first, so waiting leaves a thinner pool behind them.",
+        "A woman who delays past thirty has spent the years when marriages actually get made."
+      ],
+      "pressureTests": [
+        "Is this claim about the order in which people exit, or about how one person changes with age?",
+        "Does the pool at this age differ in quality, or in how many have been married before?"
+      ]
+    },
     "lexicon:term-assortative-mating": {
       "aliases": [
         "assortative mating",
