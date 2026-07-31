@@ -273,6 +273,14 @@ neighbouring entries do the same: `too many women` on `sex-ratio`,
 discourse-register aliases.** That is the strongest confirmation of the alias
 recommendation in either census, and it arrived disguised as a counterexample.
 
+Its author's own note on it is the generalisation worth keeping: those aliases
+were written because they sounded like things people say, not from a theory, and
+then the entry spent an hour being treated as a counterexample to the finding it
+demonstrates. **When one case contradicts the pattern, interrogate the case
+before rescuing the pattern** — the odd one out is where the mechanism is
+visible, which is the same reason `md/lab-canon-alias-pass-01.md` says a frozen
+expectation that breaks may have frozen the bug.
+
 ### Are multi-word aliases safe? Not by being multi-word
 
 The standing remedy is now aliases, and the obvious worry is that
