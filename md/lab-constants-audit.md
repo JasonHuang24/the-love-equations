@@ -259,6 +259,14 @@ silenced by the 5-character floor   12 of 88 untyped single-word aliases
     cope · simp · 4b · psl
 ```
 
+> **Ruled 2026-07-30, and the grouping above was wrong.** These are not one
+> class. `simp` and `4B` were typed; `cope` and `PSL` are reached by multi-word
+> aliases instead, because typing them maps the ordinary sense
+> (`md/lab-slang-alias-typing.md`). The remaining four — `face`, `body`, `age`,
+> `game` — all stay dead: typed standalone they add 75 credible matches across
+> the archive of which none are right, and displace two that were
+> (`md/lab-generic-title-aliases.md`). **The list is now closed.**
+
 `SMV`, `LMS` and `rizz` were typed `standalone` precisely because the floor was
 silencing them. `cope`, `simp`, `4B` and `PSL` are the same shape — Lexicon terms
 whose whole purpose is to name a piece of vocabulary — and nothing in the record

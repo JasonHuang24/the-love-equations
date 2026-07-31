@@ -203,6 +203,50 @@ for (const [id, alias] of [
   assert(!entry.standaloneAliases.includes(alias) && !entry.contextualAliases.some((item) => item.alias === alias),
     `"${alias}" on ${id} is left untyped deliberately — it is ordinary English under the length floor`);
 }
+/*
+ * And the last four, ruled 2026-07-30, which closes the list
+ * md/lab-constants-audit.md opened. All four are TITLE-derived — none of these
+ * entries carries a single authored alias — so the bare word reaches
+ * _singleTokenAliases from the title and dies at minSingleAliasLength.
+ *
+ * Unlike cope/simp/4B/PSL these words are common in the archive, so the archive
+ * IS the right population here. Typed standalone across all 21 sources:
+ * displayed credible 1,093 -> 1,166, +75 and -2, and on inspection NOT ONE of
+ * the 75 is right. Each fails differently, which is the part worth keeping:
+ *
+ *   face  +5   HOMONYM, the verb. Every archive gain is "women tended to FACE a
+ *              relative abundance of men" or "in the FACE of a male surplus".
+ *   body  +1   HOMONYM, the collective noun: "this entire BODY of research".
+ *   game  +1   HOMONYM, the adjective: Dan Savage's "good, giving, and GAME".
+ *   age   +68  NOT A HOMONYM, and a failure shape this record did not have. In
+ *              a corpus of quantitative social science `age` is a MEASUREMENT
+ *              AXIS every dataset breaks out — "varies by income, age and
+ *              education", "assessed at about age 21 years". Its presence says
+ *              nothing about whether the passage makes a claim about age, so it
+ *              cannot carry the concept even though it means exactly what the
+ *              concept is about.
+ *
+ * The -2 matters too: the new 0.540 hits displaced two correct matches through
+ * maxMatchesPerClaim, so typing cost real coverage as well as buying noise.
+ *
+ * `body` and `game` are reached without their alias anyway (0.852 and 0.690 on
+ * probes that make the claim), so their dead alias is free. `face` and `age` are
+ * NOT — they need a match surface, which is tranche work and not typing.
+ */
+for (const [id, bare] of [
+  ['smv:looks:face', 'Face'],
+  ['smv:looks:body', 'Body'],
+  ['smv:looks:age', 'Age'],
+  ['lexicon:term-game', 'Game'],
+]) {
+  const entry = required(id);
+  assert.equal(entry.aliases.length, 0,
+    `${id} has gained an alias. It had none, so the bare "${bare}" comes from its TITLE — `
+    + 'read the block above before adding one.');
+  assert.equal(entry.standaloneAliases.length + entry.contextualAliases.length, 0,
+    `${id} now types an alias. Typing "${bare}" was measured across all 21 sources and added 75 `
+    + 'credible matches of which none were right, while displacing two that were.');
+}
 for (const [id, bare, phrase] of [
   ['lexicon:term-cope', 'cope', 'is cope'],
   ['lexicon:term-psl', 'PSL', 'on PSL'],

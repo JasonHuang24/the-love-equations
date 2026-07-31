@@ -1220,6 +1220,83 @@ test('slang terms map on the concept sense and not on the ordinary one', async (
 });
 
 /*
+ * The last four aliases the length floor silences, ruled 2026-07-30: face, body,
+ * age, game. All four stay dead, and the refusal is frozen here because a count
+ * cannot say whether a new match is right — these were read.
+ *
+ * Typed standalone across all 21 archived sources, displayed credible matches
+ * went 1,093 -> 1,166: +75, -2, and none of the 75 correct. Three fail as
+ * HOMONYMS — the verb "to face", the collective "body of research", the
+ * adjective "game" in Dan Savage's good-giving-and-game — and `age` fails a
+ * fourth way that this suite had no case for: it is not a homonym at all. It
+ * means exactly what the concept is about, and it still cannot carry it, because
+ * in quantitative social science `age` is the axis every dataset breaks out.
+ * Sixty-eight of the seventy-five were survey crosstabs.
+ *
+ * The probes below are AUTHORED, not lifted: the corpus is gitignored
+ * third-party text (md/RERUN.md §1) and a committed fixture in this register has
+ * to be written rather than quoted. Each reproduces a shape typing broke, and
+ * each was checked to reach the matcher — two further probes were dropped
+ * because the gate discards them, and a probe the gate never delivers cannot
+ * demonstrate anything about the matcher.
+ */
+const ORDINARY_SENSE_STAYS_UNMAPPED = [
+  { want: 'smv:looks:face', sense: 'the verb',
+    text: 'Men who are rejected early face a longer wait before the next match arrives.' },
+  { want: 'smv:looks:body', sense: 'the collective noun',
+    text: 'The whole body of longitudinal research points the same way on relationship satisfaction.' },
+  { want: 'lexicon:term-game', sense: 'the adjective',
+    text: 'Advice columns tell partners to be good, giving, and game about what each other wants.' },
+  { want: 'smv:looks:age', sense: 'a crosstab axis',
+    text: 'Responses to the dating survey varied by income, age and education across the sample.' },
+];
+
+test('a generic title word never becomes a match surface on its own', async () => {
+  for (const probe of ORDINARY_SENSE_STAYS_UNMAPPED) {
+    const result = await analyzeDocument(normalizeInput({
+      text: probe.text,
+      source: { title: 'generic title-word probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }), canonIndex);
+    const hit = result.segments.flatMap((segment) => segment.matches)
+      .find((match) => match.canonId === probe.want);
+    assert.equal(hit, undefined,
+      `"${probe.text}" uses ${probe.sense} and now maps to ${probe.want} at ${hit?.score}. `
+      + 'That is what typing this title word would have cost, measured at +75 wrong matches '
+      + 'and -2 right ones across the archive, and it is why it was refused.');
+  }
+});
+
+/*
+ * And the other half, the same shape as the dead-alias test above: `body` and
+ * `game` are reached without their alias, so their dead alias is free. `face`
+ * and `age` are NOT — measured at weak 0.369 and not-reached respectively on
+ * probes that plainly make the claim. Their dead alias does cost something, but
+ * the fix is a match surface, not typing: typing them is what produced the 75.
+ * Recorded here rather than in a comment somewhere, so it stays visible.
+ */
+const GENERIC_TITLE_REACHED_ANYWAY = [
+  { want: 'smv:looks:body',
+    text: 'Waist-to-hip ratio and V-taper carry more attraction signal than raw body weight does.' },
+  { want: 'lexicon:term-game',
+    text: 'Learned seduction skill is real but near-powerless online and strongest inside a social circle.' },
+];
+
+test('the two generic titles that carry their concept anyway still do', async () => {
+  for (const probe of GENERIC_TITLE_REACHED_ANYWAY) {
+    const result = await analyzeDocument(normalizeInput({
+      text: probe.text,
+      source: { title: 'generic title-word probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }), canonIndex);
+    const matches = result.segments.flatMap((segment) => segment.matches);
+    assert.ok(matches.some((match) => match.canonId === probe.want),
+      `${probe.want} is reached without its dead alias; if that stopped being true, the alias `
+      + `would be worth re-arguing. Got ${matches.map((m) => m.canonId).join(', ') || '(nothing)'}`);
+  }
+});
+
+/*
  * The false positive typing `SMV` buys, frozen rather than hidden.
  *
  * A passage about an unrelated "SMV protocol" now names the SMV concept at 0.54.

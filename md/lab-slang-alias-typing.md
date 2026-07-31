@@ -172,11 +172,15 @@ certifies a guard that was never exercised. The real verification patches
 ordinary English and belongs with `game`/`Wall`/`Sham`, and `PSL` has a coffee
 collision. The grouping was an assumption dressed as a finding.
 
-## Still unruled
+## The other four — ruled the same day
 
-The other four the floor silences: `face`, `body`, `age` on the SMV entries, and
-`game` on `lexicon:term-game`. All four are ordinary English in the same class as
-the ones already ruled dead, and none has been measured.
+`face`, `body`, `age` and `game` all stay dead: typed standalone they add 75
+credible matches across the archive of which **none are right**, while displacing
+two that were. Three fail as homonyms; `age` fails a fourth way, by being a
+measurement axis rather than a claim. `md/lab-generic-title-aliases.md`.
+
+My guess above — "all four are ordinary English in the same class" — held for
+three of them and missed the interesting one.
 
 ## Reproducing
 
