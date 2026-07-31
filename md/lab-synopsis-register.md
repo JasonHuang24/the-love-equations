@@ -15,9 +15,12 @@ doctrine session asked the obvious next question about the surface an author doe
 > entry I have written is reachable by people who already think like the page and
 > invisible to people making the actual claim.
 
-It does, and they often are — see §4a, which narrows "every entry" to "most, and
-it tracks the alias set" after a contest that also found a real bug in the
-harness below.
+**The mechanism half of the answer is yes and holds up. The outcome half does
+not, and is withdrawn.** Read §4a and then §4c before quoting anything in §1: the
+synopsis-emptying result reproduced independently across nine entries, and the
+ordinary-versus-analytic table below turned out to be three probe *pairs* rather
+than a fact about three entries. Six ordinary-register sentences about one claim
+span *not reached* to *rank 1 at 0.540* against an unchanged index.
 
 ## 1. The outcome: same claim, two registers
 
@@ -301,6 +304,83 @@ carries, that is the signature of a thin alias set rather than of an analytic
 register as such. That is a better statement of §2 than §2 makes, and it sharpens
 the recommendation: the cheapest lever is multi-word aliases, not prose.
 
+## 4c. The outcome half does not survive its own sample size
+
+The other session tested the standing remedy in memory and reported the thing
+that undoes §1: four contract-compliant ordinary-register probes **already
+mapping at rank 1** (0.434 / 0.540 / 0.605 / 0.622) against the same two entries
+whose ordinary probes came back NOT REACHED in both censuses.
+
+Checked on my own probes, because I have a stake in the finding surviving and
+that is precisely when to generate the sample before looking at it. Twelve
+probes, six per entry, all authored to the contract and written into the rig
+before it was run once:
+
+```
+frameworks:virality-filter        comparable 5/6   MAPPED 0   range 0.000–0.000
+frameworks:survivorship-channel   comparable 6/6   MAPPED 3   range 0.000–0.540
+```
+
+**`survivorship-channel` settles it.** Six ordinary-register sentences about the
+same claim, against an unchanged index, span *not reached* to *rank 1 at 0.540*:
+
+```
+MAPPED 0.540   "Dating coaches are the people who happened to succeed and then
+                started charging for the story."
+MAPPED 0.481   "The guys selling dating advice all say it worked for them and
+                none of them ever tested it."
+MAPPED 0.466   "Nobody who failed with this dating advice is around to tell you
+                that it did not work."
+weak   0.388   "You only ever hear from the people the dating strategy actually
+                worked for."
+weak   0.331   "The dating advice industry is built on men who got lucky once and
+                called it a method."
+not reached    "A dating guru's track record is the guru telling you about his
+                own track record."
+```
+
+**"Ordinary register" is not a condition. It is a wide distribution of
+phrasings, and both sessions sampled it about four times each.** The
+between-probe variance swamps the between-register difference at that n.
+
+### What survives, and what is withdrawn
+
+**WITHDRAWN — the outcome claim in §1.** That table is three probe *pairs*, not a
+characterisation of three entries, and it should never have been written as
+though a single ordinary probe could establish that an entry is unreachable in
+ordinary register. §4a narrowed it from "universal" to "common and directional";
+this withdraws the directional claim too, at this sample size.
+
+**SURVIVES — the mechanism in §2**, and the reason it survives is structural
+rather than lucky: **the synopsis-emptying test holds the probe constant and
+varies the index.** Every probe is its own control, so between-probe variance
+cannot contaminate it. That is why it reproduced cleanly across nine entries in
+two independent censuses while the outcome half did not reproduce across four
+probes in one.
+
+**UNRESOLVED, and worth someone's scope.** Pooling both sessions, `virality-filter`
+is reached by 2 of 8 ordinary probes and `survivorship-channel` by 5 of 8. That
+gap may be real and may track the alias set — `survivorship-channel` carries
+`dating coach` and `untested advice`, `virality-filter` carries
+`engagement optimisation` and `moral contagion` — but n=8 per entry cannot
+support the claim and it is recorded as a hypothesis, not a result.
+
+### The methodological rule this leaves
+
+**Do not publish a register claim off a handful of probes, in either direction,
+and do not let the person with a stake in the answer author the probes.** Both
+sessions found what they went looking for before catching themselves — one
+hoping to confirm a defect already announced, one hoping to confirm a finding
+already published, ten minutes apart. A real register measurement needs a probe
+set an order of magnitude larger, authored by someone with no position on the
+outcome.
+
+The remedy measurement they ran is worth keeping regardless: multi-word
+ordinary-register aliases on two entries moved two of four probes by 0.13–0.15
+with **no measured collateral** — `smv:looks:age` and `saturation-rule` both
+unchanged. That is a mechanism result of the same shape as §2, for the same
+reason: the probe is held constant.
+
 ## 5. Why it stops here
 
 This is a canon-wide structural finding about 491 entries and the remedy is
@@ -327,6 +407,8 @@ synopsis-register-2.mjs  NO-UNIT split out from GATE-BINNED, the three published
 overlap-vs-growth.mjs    the growth-versus-overlap check, three canon points
 local-market-settle.mjs  both sessions' probes on one build, plus which surface
                          each probe's vocabulary lives on
+register-variance.mjs    twelve probes, six per entry, authored before the rig
+                         was run once — the sample that withdrew §1
 ```
 
 **Do not reuse `synopsis-register.mjs`.** It is kept only because §1–§3 were
