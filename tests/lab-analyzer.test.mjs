@@ -6,6 +6,7 @@ import { normalizeInput } from '../js/lab-intake.js';
 import { createDemoDocument } from '../js/lab-demo.js';
 import {
   ANALYSIS_SCHEMA_VERSION,
+  RESEARCH_QUEUE_SCHEMA_VERSION,
   ANALYZER_VERSION,
   DIAGNOSTICS_SCHEMA_VERSION,
   PUBLIC_MATCH_FIELDS,
@@ -775,9 +776,14 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * removed, 476 both sides. Same lesson as the tranche 3 step, from the other
    * direction: prose edits inside existing entries move the denominators too, so
    * this pin drifts on rewrites and not only on growth.
+   *
+   * Back to 0.538 at 485, the Lab hookup pass: six Lexicon terms added AND the
+   * Substitution Layer's "AI companion" alias removed. Both move IDF, in opposite
+   * directions, and the pin landed back where it started. Six round trips now on
+   * a number that has never once been the assertion.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.537);
+  assert.equal(weakPassage.weakMatches[0].score, 0.538);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
@@ -839,6 +845,64 @@ test('the weak list says how much of the band it is', async () => {
   empty.segments.forEach((row) => assert.equal(row.weakBandTotal, 0));
 });
 
+test('the research card says what its three nearest concepts are three of', async () => {
+  /*
+   * `maxNearestConcepts` keeps three behind a retrieval cut to eight, and until
+   * v2.6.10 the queue item published neither number: 1,607 of 1,617 research
+   * items across the 21-source archive sat at the cap reading as a complete
+   * list. Same defect the ledger carried until v2.6.9, one surface over.
+   *
+   * The pins are the RELATIONSHIP, not the counts — `scoredConceptTotal` is an
+   * IDF quantity over the whole canon and moves on every doctrine merge.
+   */
+  const demo = await analyzeDocument(createDemoDocument(), REAL_CANON);
+  const items = demo.researchQueue.items;
+  assert.ok(items.length, 'the demo must produce research items for this to measure anything');
+
+  items.forEach((item) => {
+    assert.equal(typeof item.scoredConceptTotal, 'number');
+    assert.equal(typeof item.nearbyBandTotal, 'number');
+    assert.ok(item.scoredConceptTotal >= item.nearestConcepts.length,
+      `${item.segmentId} publishes a scored total of ${item.scoredConceptTotal} under a shown list `
+      + `of ${item.nearestConcepts.length}`);
+  });
+
+  const capped = items.find((item) => item.nearestConcepts.length === SCORING_CONFIG.maxNearestConcepts);
+  assert.ok(capped, 'chosen because the cap bites: the list is at the cap, so the gap is suppression');
+  assert.ok(capped.scoredConceptTotal > capped.nearestConcepts.length,
+    'and there is more behind it than the card shows');
+
+  /*
+   * WHY THE BAND IS NOT THE DENOMINATOR, frozen as a specimen.
+   *
+   * `nearbyBandTotal` is the obvious choice — it is what the ledger names — and
+   * it would reintroduce the defect it fixed. The band is [minWeakScore,
+   * minCredibleScore); this list is the top of the CANDIDATE set. Measured over
+   * the archive the band sits below the shown count on 687 of 1,617 items and
+   * is zero on 197, so the card would have read "3 of 0 in the nearby band".
+   *
+   * This probe is authored rather than lifted: the corpus is gitignored
+   * third-party text (md/RERUN.md §1). It clears the gate on a decisive frame,
+   * is claim-like, and shares no distinctive canon vocabulary, so every
+   * candidate lands under the weak floor and the band is empty while three
+   * concepts are still shown.
+   */
+  const belowBand = await analyzeDocument(normalizeInput({
+    text: 'Women who date beekeepers inherit an unexpected quantity of protective netting, '
+      + 'smokers, hive tools and unlabelled honey jars.',
+  }), REAL_CANON);
+  const specimen = belowBand.researchQueue.items[0];
+  assert.ok(specimen, 'the probe must reach the research queue for the specimen to mean anything');
+  assert.equal(specimen.nearbyBandTotal, 0);
+  assert.equal(specimen.nearestConcepts.length, SCORING_CONFIG.maxNearestConcepts);
+  specimen.nearestConcepts.forEach((concept) => {
+    assert.ok(concept.score < SCORING_CONFIG.minWeakScore,
+      'the band is empty because every shown concept is under the weak floor, not because nothing scored');
+  });
+  assert.ok(specimen.scoredConceptTotal >= specimen.nearestConcepts.length,
+    'and the denominator that ships still holds where the band does not');
+});
+
 test('coverage distinguishes unavailable, zero, and positive denominators', async () => {
   const noDomain = await analyzeDocument(normalizeInput({
     text: 'The sky is blue. Water freezes at zero degrees Celsius.',
@@ -847,8 +911,13 @@ test('coverage distinguishes unavailable, zero, and positive denominators', asyn
   // The constant, not a literal: this asserts that the analysis stamps its own
   // schema version, which is true at every release. A literal here made a
   // routine version bump look like a coverage regression.
+  //
+  // The queue line was still a literal, one line under that comment, and the
+  // v2.6.10 queue-shape bump duly failed it as a fake coverage regression —
+  // the exact defect the sentence above describes, sitting inside the test it
+  // describes. Same fix, applied for real this time.
   assert.equal(noDomain.schemaVersion, ANALYSIS_SCHEMA_VERSION);
-  assert.equal(noDomain.researchQueue.schemaVersion, 'le-lab.research-queue/2.1');
+  assert.equal(noDomain.researchQueue.schemaVersion, RESEARCH_QUEUE_SCHEMA_VERSION);
   assert.equal(noDomain.coverage.mappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.unmappedClaimSegmentSharePct, null);
   assert.equal(noDomain.coverage.mappedClaimWordSharePct, null);

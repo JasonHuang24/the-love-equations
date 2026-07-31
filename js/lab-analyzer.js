@@ -30,11 +30,13 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 // Bumped to 2.1 because the queue object itself now carries a provenance
 // block, so a queue lifted out of an analysis is self-describing on its own.
 // Held at 2.1 through v2.3.0: the gate change alters how many items reach the
-// queue, but not the shape of a queue item.
-export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.1';
+// queue, but not the shape of a queue item. Moved to 2.2 at v2.6.10, which
+// does change the item shape: `scoredConceptTotal` and `nearbyBandTotal` say
+// what the three nearest concepts are three OF.
+export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.9';
+export const ANALYZER_VERSION = '2.6.10';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -3100,6 +3102,32 @@ function researchItemFor(result) {
       score: candidate.score,
       confidence: candidate.confidence,
     })),
+    /*
+     * What the top-three slice above is a slice OF.
+     *
+     * `maxNearestConcepts` cuts to three behind a retrieval cut to
+     * `maxCandidatesPerUnit`, and neither was disclosed: measured across the
+     * 21-source archive, 1,607 of 1,617 research items (99.4%) sit at the cap
+     * with no denominator. Same defect the ledger carried until v2.6.9, one
+     * surface over.
+     *
+     * `scoredConceptTotal` is the denominator and `nearbyBandTotal` is NOT.
+     * The band was the obvious choice — it is what the ledger names — and the
+     * census says it would reintroduce the exact defect it fixed: the band sits
+     * BELOW the shown count on 687 of 1,617 items and is ZERO on 197 of them,
+     * because `nearestConcepts` is the top of the candidate set rather than the
+     * band. Two of those 197 display three concepts scoring 0.61 that failed
+     * ADMISSION, so they are above the credible line and outside a band defined
+     * as [minWeakScore, minCredibleScore). "3 of 0 in the nearby band" is a
+     * denominator under its numerator.
+     *
+     * `candidatesAboveFloor` is safe by measurement, not by argument: >= the
+     * shown count on all 1,617 items, 0 violations, never zero. The band is
+     * still published, as a named SUBSET of the scored set rather than as the
+     * denominator of the list.
+     */
+    scoredConceptTotal: result.candidates[0]?._retrieval?.candidatesAboveFloor ?? 0,
+    nearbyBandTotal: result.weakBandTotal ?? 0,
     suggestedDestination: destination,
     empiricalQuestion: makeResearchQuestion(result.unit, risks, destination),
     suggestedSearchTerms: searchTerms,

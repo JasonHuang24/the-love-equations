@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.6.9';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=2.6.9';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.6.10';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=2.6.10';
 
 /*
  * LE Lab export adapters.
@@ -257,6 +257,23 @@ function relevanceTriageLines(result) {
   return lines;
 }
 
+/**
+ * What the three nearest concepts are three OF.
+ *
+ * Mirrors `appendNearestConcepts` in lab-app.js: the denominator is the SCORED
+ * set, not the nearby band. The band would be below the shown count on 687 of
+ * 1,617 archive items and zero on 197, because this list is the top of the
+ * candidate set rather than the band; it is reported as a subset instead.
+ * Silent when the list is the whole scored set, which is 14 items in 1,617.
+ */
+function nearestScaleNote(item) {
+  const shown = item?.nearestConcepts?.length || 0;
+  const scored = Math.max(Number(item?.scoredConceptTotal || 0), shown);
+  if (scored <= shown) return '';
+  const band = Number(item?.nearbyBandTotal || 0);
+  return ` — _${shown} of ${scored} concepts that scored${band ? ` · ${band} in the nearby band` : ''}_`;
+}
+
 export function researchQueueToMarkdown(result, { includeHeading = true } = {}) {
   const queue = result?.researchQueue || result;
   const ignored = Number(result?.metrics?.ignoredDomainSegments || 0);
@@ -299,7 +316,7 @@ export function researchQueueToMarkdown(result, { includeHeading = true } = {}) 
       `- **Location:** ${location || markdownText(item.segmentId)}`,
       `- **Why unmapped:** ${markdownText(item.whyUnmapped)}`,
       `- **Nearest LE concepts:** ${item.nearestConcepts?.length
-        ? item.nearestConcepts.map((nearest) => `${markdownLink(nearest.title, nearest.href)} (${(Number(nearest.score || 0) * 100).toFixed(0)})`).join(' · ')
+        ? `${item.nearestConcepts.map((nearest) => `${markdownLink(nearest.title, nearest.href)} (${(Number(nearest.score || 0) * 100).toFixed(0)})`).join(' · ')}${nearestScaleNote(item)}`
         : 'No defensible neighbor'}`,
       `- **Empirical question:** ${markdownText(item.empiricalQuestion)}`,
       `- **Suggested search terms:** ${(item.suggestedSearchTerms || []).map((term) => `\`${markdownText(term).replace(/`/g, '\\`')}\``).join(', ')}`,

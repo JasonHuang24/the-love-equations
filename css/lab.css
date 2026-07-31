@@ -2558,6 +2558,16 @@ button.lab-metric > small { text-align: right; }
 .lab-adjacent-more li { font-size: 12px; }
 .lab-nearby-uncarried { color: var(--text-dim); font-style: italic; }
 
+/* The research card's nearest-concepts list is a top-three slice; this says
+   what of (v=2.6.10). Same register as .lab-nearby-uncarried on the ledger. */
+.lab-nearest-scale {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 12px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   button.lab-metric,
   button.lab-assay-stage { transition: none; }

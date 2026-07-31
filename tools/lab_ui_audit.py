@@ -133,6 +133,7 @@ if without_comments.count("{") != without_comments.count("}"):
 for selector in (
     ".lab-triage", ".lab-triage-button", ".lab-triage-chip", ".lab-triage-cell",
     ".lab-sort-button", ".lab-ledger-filter-note", ".lab-adjacent-more",
+    ".lab-nearest-scale",
     ".lab-section-cell", "button.lab-metric", "button.lab-assay-stage",
     ".lab-flag-dialog", ".lab-flag-disposition", ".lab-flag-privacy",
     ".lab-review-cell", ".lab-triage-button.is-flag",
