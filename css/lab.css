@@ -2811,3 +2811,13 @@ button.lab-metric > small { text-align: right; }
   gap: 0.6rem;
   flex-wrap: wrap;
 }
+
+/* The feedback lane is a maintainer instrument (Jason's ruling, 2026-07-31):
+   without ?debug the app root carries .lab-review-hidden and the Feedback
+   column, Report buttons, and the bullet describing them all disappear from
+   the reader view. The dialog and hooks stay in the DOM for the audit. */
+.lab-review-hidden .lab-review-cell,
+.lab-review-hidden .lab-review-only,
+.lab-review-hidden .lab-triage-button.is-flag {
+  display: none;
+}

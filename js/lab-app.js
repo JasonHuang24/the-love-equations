@@ -53,6 +53,17 @@ const MAX_RENDERED_TRIAGE_ROWS = 120;
 const app = document.getElementById('lab-app');
 if (!app) throw new Error('LE Lab root was not found.');
 
+/*
+ * The per-row feedback lane (Feedback column, Report buttons, the dialog they
+ * open, and the privacy bullet describing it) is a maintainer instrument, not
+ * a reader control — Jason ruled it hidden from the reader view on 2026-07-31.
+ * `?debug` reveals it. Unlike the calculators' batch gate, localhost does NOT
+ * count as debug here: the :8753 preview is how the reader view is checked,
+ * so plain localhost must show exactly what a reader sees.
+ */
+const REVIEW_LANE_VISIBLE = /[?&]debug\b/.test(window.location.search || '');
+if (!REVIEW_LANE_VISIBLE) app.classList.add('lab-review-hidden');
+
 function byId(id) {
   const element = document.getElementById(id);
   if (!element) throw new Error(`LE Lab expected #${id}.`);
