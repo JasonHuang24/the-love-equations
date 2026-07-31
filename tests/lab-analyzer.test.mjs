@@ -300,6 +300,30 @@ test('independent mixed fixtures do not inherit SMV or gender signatures', async
     const novelResult = result.segments.find((segment) => segment.unit.text === fixture.novel);
 
     assert.ok(knownResult?.matches.some((match) => match.canonId === fixture.expectedCanonId));
+
+    /*
+     * The property this test is NAMED for, asserted directly.
+     *
+     * `mapped === false` below is the original check and it is worth keeping,
+     * but it is a proxy: it cannot distinguish the failure this test exists to
+     * catch — the novel claim picking up its neighbour's concept — from a
+     * topical match the novel claim earned standing alone. Both read as
+     * `mapped: true`, and they route to opposite repairs. When the probe aged
+     * into the canon on 2026-07-31 that ambiguity cost three sessions a day:
+     * the proxy broke while the property still held, and nothing in the file
+     * could say so. Deciding it needed a hand-run diff of the segment's matches
+     * against `expectedCanonId`.
+     *
+     * So both live here now. If a future probe ages in the same way, this line
+     * stays green and says the contamination guard is intact, and the argument
+     * starts from that fact instead of arriving at it.
+     */
+    assert.ok(
+      !novelResult?.matches.some((match) => match.canonId === fixture.expectedCanonId),
+      `the novel claim inherited ${fixture.expectedCanonId} from its neighbour — this is `
+      + 'contamination, not the probe ageing into the canon, and the two need different fixes',
+    );
+
     assert.equal(novelResult?.mapped, false);
     assert.equal(result.coverage.mappedClaimSegmentSharePct, 50);
     assert.ok(result.researchQueue.items.some((item) => item.excerpt === fixture.novel));
