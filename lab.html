@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Bring dating commentary to The Love Equations Lab. Map its claims to the LE canon, pressure-test the reasoning, and keep the unmapped residue as a research queue—all on-device." />
+  <meta name="description" content="Paste any dating commentary into The Love Equations Lab and see which ideas on this site it touches, where its claims overreach, and what it leaves unanswered—all on your device." />
   <title>LE Lab &mdash; The Love Equations</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="css/styles.css?v=2.4" />
@@ -14,17 +14,17 @@
   <script type="module" src="js/lab-app.js?v=2.6.11"></script>
 </head>
 <body data-page="lab">
-  <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab workbench</a>
+  <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab</a>
   <div data-include="navigation-bar"></div>
 
   <main class="page lab-page" id="lab-app" data-lab-state="empty">
     <header class="lab-hero">
       <div class="lab-hero-inner">
         <div class="lab-hero-copy">
-          <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> On-device canon mapper &amp; pressure lab</div>
+          <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> Test any dating claim against this site</div>
           <h1>The Love Equations <em>Lab</em></h1>
           <p class="lab-product-line">Bring a claim. See where it fits, where it strains, and what the map is missing.</p>
-          <p class="lab-hero-sub">Paste a transcript, drop a file, or keep a URL as provenance. The Lab returns a cited claim map, pressure tests, and a research queue for what does not fit.</p>
+          <p class="lab-hero-sub">Paste text or drop a file. The Lab shows which ideas on this site your text touches, where its claims overreach, and what it could not match.</p>
           <div class="lab-hero-actions">
             <button class="btn lab-demo-button" id="lab-load-demo" type="button">
               <i class="ti ti-player-play" aria-hidden="true"></i> Demo Test
@@ -32,23 +32,23 @@
           </div>
         </div>
 
-        <aside class="lab-method-card" aria-label="Lab method and canon index status">
+        <aside class="lab-method-card" aria-label="How the Lab works">
           <div class="lab-method-mark" aria-hidden="true">
             <i class="ti ti-binary-tree-2"></i>
           </div>
           <div class="lab-method-intro">
-            <div class="lab-method-label">Current instrument</div>
-            <div class="lab-method-title">Local lexical analysis</div>
-            <p>Deterministic, local, and inspectable&mdash;never an invisible AI verdict.</p>
+            <div class="lab-method-label">Under the hood</div>
+            <div class="lab-method-title">Word matching, on your device</div>
+            <p>Rule-based, local, and fully inspectable&mdash;never an invisible AI verdict.</p>
           </div>
           <details class="lab-method-details">
-            <summary>How this instrument works</summary>
+            <summary>How it works</summary>
             <div class="lab-method-details-body">
-              <p>Exact language, weighted concept overlap, canon relationships, and explicit reasoning checks produce a traceable map rather than a verdict.</p>
+              <p>It matches exact phrases and weighted word overlap against this site&rsquo;s concepts, then runs explicit reasoning checks. The result is a traceable map, not a verdict.</p>
               <dl class="lab-method-meta">
                 <div>
-                  <dt>Canon</dt>
-                  <dd id="lab-index-meta" aria-live="polite">Loading the canon index&hellip;</dd>
+                  <dt>Concepts</dt>
+                  <dd id="lab-index-meta" aria-live="polite">Loading the concept library&hellip;</dd>
                 </div>
                 <div>
                   <dt>Contracts</dt>
@@ -56,7 +56,7 @@
                 </div>
                 <div>
                   <dt>Mode</dt>
-                  <dd id="lab-analysis-mode">On-device lexical</dd>
+                  <dd id="lab-analysis-mode">On-device word matching</dd>
                 </div>
               </dl>
             </div>
@@ -77,9 +77,9 @@
         <div class="lab-panel lab-intake-panel">
           <div class="lab-panel-head">
             <div>
-              <div class="lab-section-kicker">01 &middot; Source intake</div>
-              <h2 id="lab-intake-title">Place a source on the bench.</h2>
-              <p>Text is the analyzable layer. Files, images, documents, and companion subtitles all normalize into the same ordered segment format before any claim matching begins.</p>
+              <div class="lab-section-kicker">01 &middot; Add your text</div>
+              <h2 id="lab-intake-title">Add something to analyze.</h2>
+              <p>The Lab reads text. Paste it directly, or attach files, images, documents, or subtitles&mdash;everything is converted to plain text on your device before the analysis starts.</p>
             </div>
             <span class="lab-local-badge"><i class="ti ti-device-laptop" aria-hidden="true"></i> Local by default</span>
           </div>
@@ -92,7 +92,7 @@
                        autocomplete="off" placeholder="e.g. Dating Advice Episode 42" />
               </div>
               <div class="lab-field">
-                <label for="lab-source-url">Source URL <span>provenance, optional</span></label>
+                <label for="lab-source-url">Source URL <span>optional</span></label>
                 <div class="lab-input-icon">
                   <i class="ti ti-link" aria-hidden="true"></i>
                   <input id="lab-source-url" name="sourceUrl" type="url" inputmode="url"
@@ -112,7 +112,7 @@
                   <textarea id="lab-text-input" name="sourceText" rows="15"
                             spellcheck="true" aria-describedby="lab-text-hint"
                             placeholder="Paste commentary, an article, show notes, or a transcript here. Speaker labels and timestamps are welcome."></textarea>
-                  <p class="lab-field-note" id="lab-text-hint">Long sources are segmented locally. The Lab preserves recoverable speakers, timestamps, and original excerpt boundaries.</p>
+                  <p class="lab-field-note" id="lab-text-hint">Long text is split into passages on your device. Speaker names and timestamps are kept when present.</p>
                 </div>
                 <div class="lab-inline-actions">
                   <button class="btn lab-subtle-button" id="lab-paste-button" type="button">
@@ -130,7 +130,7 @@
                 <button class="lab-drop-zone" id="lab-drop-zone" type="button"
                         aria-describedby="lab-file-types lab-drop-status">
                   <span class="lab-drop-icon" aria-hidden="true"><i class="ti ti-file-upload"></i></span>
-                  <span class="lab-drop-title">Drop a source here</span>
+                  <span class="lab-drop-title">Drop a file here</span>
                   <span class="lab-drop-or">or choose a local file</span>
                   <span class="lab-drop-types" id="lab-file-types">TXT, MD, SRT, VTT, JSON, CSV, PDF, HTML, images, audio, or video</span>
                 </button>
@@ -153,7 +153,7 @@
                     <i class="ti ti-chevron-down lab-details-chevron" aria-hidden="true"></i>
                   </summary>
                   <div class="lab-media-body">
-                    <p>Local audio and video can be previewed without upload. Attach subtitles or a transcript to make the source analyzable.</p>
+                    <p>Local audio and video can be previewed without upload. Attach subtitles or a transcript so the Lab has text to analyze.</p>
                     <div class="lab-media-preview" id="lab-media-preview" hidden aria-label="Local media preview"></div>
                     <label class="lab-companion-label" for="lab-companion-input">
                       <span><i class="ti ti-file-text" aria-hidden="true"></i> Attach companion transcript</span>
@@ -171,7 +171,7 @@
             <div class="lab-intake-feedback" id="lab-intake-feedback">
               <div class="lab-intake-status" id="lab-intake-status" role="status" aria-live="polite" aria-atomic="true">
                 <span class="lab-status-dot" aria-hidden="true"></span>
-                <span id="lab-intake-status-message">Ready for a source.</span>
+                <span id="lab-intake-status-message">Ready when you are.</span>
               </div>
               <div class="lab-progress-wrap" id="lab-progress-wrap" hidden>
                 <div class="lab-progress-label">
@@ -184,7 +184,7 @@
               <div class="lab-error-box" id="lab-intake-error" role="alert" hidden>
                 <i class="ti ti-alert-triangle" aria-hidden="true"></i>
                 <div>
-                  <strong>That source could not be prepared.</strong>
+                  <strong>That file could not be read.</strong>
                   <p id="lab-intake-error-message"></p>
                 </div>
               </div>
@@ -192,7 +192,7 @@
 
             <div class="lab-form-actions">
               <button class="btn btn-scarlet lab-analyze-button" id="lab-analyze" type="submit" disabled>
-                <i class="ti ti-flask" aria-hidden="true"></i> Map this source
+                <i class="ti ti-flask" aria-hidden="true"></i> Analyze
               </button>
               <button class="btn lab-cancel-button" id="lab-cancel" type="button" hidden>
                 <i class="ti ti-player-stop" aria-hidden="true"></i> Cancel
@@ -208,31 +208,31 @@
         <aside class="lab-bench-aside">
           <div class="lab-privacy-card">
             <div class="lab-privacy-icon" aria-hidden="true"><i class="ti ti-shield-lock"></i></div>
-            <div class="lab-section-kicker">Privacy model</div>
-            <h2>Your supplied source stays at your bench.</h2>
-            <p>Pasted text and local files are processed in this browser tab and are not sent by LE Lab. Raw media and transcripts are not persisted by default.</p>
+            <div class="lab-section-kicker">Your privacy</div>
+            <h2>What you paste stays on your device.</h2>
+            <p>Pasted text and local files are processed in this browser tab and are not sent by LE Lab. Your media and transcripts are not saved.</p>
             <ul>
               <li><i class="ti ti-check" aria-hidden="true"></i> Reset cancels work, revokes local previews, and clears the session.</li>
               <li><i class="ti ti-check" aria-hidden="true"></i> PDF/OCR dependencies contact pinned download hosts; they do not upload your source.</li>
               <li><i class="ti ti-check" aria-hidden="true"></i> Mapping a fetchable URL explicitly contacts that publisher. Blocked requests fail without converting the URL into analyzable text.</li>
-              <li><i class="ti ti-check" aria-hidden="true"></i> Flagging a mapping writes a JSON file to your own disk and nothing else: nothing is sent anywhere, nothing is stored in this browser, and no fixture changes. The file carries the flagged passage and the analyzer's trace for it &mdash; never the full transcript, and source title and URL only if you tick the box.</li>
+              <li><i class="ti ti-check" aria-hidden="true"></i> Reporting a match writes a JSON file to your own disk and nothing else: nothing is sent anywhere, nothing is stored in this browser, and no fixture changes. The file carries the flagged passage and the analyzer's trace for it &mdash; never the full transcript, and source title and URL only if you tick the box.</li>
             </ul>
           </div>
 
           <div class="lab-capability-card">
-            <div class="lab-section-kicker">What reaches the analyzer</div>
+            <div class="lab-section-kicker">How your text is processed</div>
             <ol class="lab-pipeline-list">
               <li>
                 <span>01</span>
-                <div><strong>Extract</strong><small>Text, subtitles, documents, OCR, or a companion transcript</small></div>
+                <div><strong>Read</strong><small>Text, subtitles, documents, or scanned images</small></div>
               </li>
               <li>
                 <span>02</span>
-                <div><strong>Normalize</strong><small>Ordered segments with stable IDs, speakers, timestamps, and warnings</small></div>
+                <div><strong>Prepare</strong><small>Split into ordered passages, keeping speakers and timestamps</small></div>
               </li>
               <li>
                 <span>03</span>
-                <div><strong>Map &amp; strain</strong><small>Canon matches, transparent confidence, pressure tests, and unmapped residue</small></div>
+                <div><strong>Match</strong><small>Compared against this site&rsquo;s concepts, with confidence shown and misses kept visible</small></div>
               </li>
             </ol>
           </div>
@@ -242,9 +242,9 @@
       <section class="lab-workspace" id="lab-workspace" aria-labelledby="lab-workspace-title" aria-busy="false">
         <div class="lab-workspace-head">
           <div>
-            <div class="lab-section-kicker">02 &middot; Analysis bench</div>
-            <h2 id="lab-workspace-title">Source assay</h2>
-            <p id="lab-workspace-subtitle">The empty instrument shows the route. Run the Demo Test or bring a source to populate every chamber with real, source-derived results.</p>
+            <div class="lab-section-kicker">02 &middot; Results</div>
+            <h2 id="lab-workspace-title">Analysis</h2>
+            <p id="lab-workspace-subtitle">Run the Demo Test or add your own text to fill this page with real results.</p>
           </div>
           <div class="lab-export-controls" aria-label="Analysis exports">
             <button class="btn lab-export-button" id="lab-copy-markdown" type="button" disabled>
@@ -262,55 +262,55 @@
         <div class="lab-state-strip" id="lab-analysis-status" role="status" aria-live="polite" aria-atomic="true">
           <div class="lab-state-orbit" aria-hidden="true"><span></span></div>
           <div class="lab-state-copy">
-            <strong class="lab-state-message" data-state-message="empty">Waiting for a specimen</strong>
-            <strong class="lab-state-message" data-state-message="extracting">Extracting the analyzable layer</strong>
-            <strong class="lab-state-message" data-state-message="analyzing">Tracing claims through the canon</strong>
-            <strong class="lab-state-message" data-state-message="success">Assay complete</strong>
-            <strong class="lab-state-message" data-state-message="partial">Assay complete with extraction warnings</strong>
-            <strong class="lab-state-message" data-state-message="no-match">No credible canon match found</strong>
-            <strong class="lab-state-message" data-state-message="no-domain">No relationship-domain claims detected</strong>
-            <strong class="lab-state-message" data-state-message="failure">The assay stopped</strong>
-            <span id="lab-analysis-status-detail">No source is loaded. Nothing has been analyzed.</span>
+            <strong class="lab-state-message" data-state-message="empty">Waiting for text</strong>
+            <strong class="lab-state-message" data-state-message="extracting">Reading your text</strong>
+            <strong class="lab-state-message" data-state-message="analyzing">Checking claims against this site&rsquo;s concepts</strong>
+            <strong class="lab-state-message" data-state-message="success">Analysis complete</strong>
+            <strong class="lab-state-message" data-state-message="partial">Analysis complete, with reading warnings</strong>
+            <strong class="lab-state-message" data-state-message="no-match">No solid matches found</strong>
+            <strong class="lab-state-message" data-state-message="no-domain">No relationship claims found</strong>
+            <strong class="lab-state-message" data-state-message="failure">The analysis stopped</strong>
+            <span id="lab-analysis-status-detail">No text is loaded. Nothing has been analyzed.</span>
           </div>
           <div class="lab-state-progress" id="lab-analysis-progress-wrap" hidden>
             <progress id="lab-analysis-progress" max="100" value="0">0%</progress>
           </div>
         </div>
 
-        <div class="lab-metrics" aria-label="Claim-like segments coverage summary">
+        <div class="lab-metrics" aria-label="Analysis summary">
           <div class="lab-metric">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-letter-w"></i></span>
             <div><output id="lab-metric-words">&mdash;</output><span>Total words</span></div>
           </div>
           <div class="lab-metric">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-section"></i></span>
-            <div><output id="lab-metric-segments">&mdash;</output><span>Segments</span></div>
+            <div><output id="lab-metric-segments">&mdash;</output><span>Passages</span></div>
           </div>
-          <button type="button" class="lab-metric lab-metric-button" id="lab-metric-claims-tile" data-ledger-filter="all" aria-pressed="false" aria-controls="lab-map-table" aria-label="Show every claim-like segment in the connection ledger">
+          <button type="button" class="lab-metric lab-metric-button" id="lab-metric-claims-tile" data-ledger-filter="all" aria-pressed="false" aria-controls="lab-map-table" aria-label="Show every claim in the match table">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-message-question"></i></span>
-            <div><output id="lab-metric-claims">&mdash;</output><span>Claim-like segments</span></div>
+            <div><output id="lab-metric-claims">&mdash;</output><span>Claims detected</span></div>
           </button>
-          <button type="button" class="lab-metric lab-metric-coverage lab-metric-button" id="lab-metric-coverage-tile" data-ledger-filter="mapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="Filter the connection ledger to mapped segments">
+          <button type="button" class="lab-metric lab-metric-coverage lab-metric-button" id="lab-metric-coverage-tile" data-ledger-filter="mapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="Filter the match table to matched claims">
             <span class="lab-metric-icon" aria-hidden="true"><i class="ti ti-route"></i></span>
-            <div><output id="lab-metric-coverage">&mdash;</output><span>Claim-like segments mapped</span></div>
-            <small>Share of claim-like segments, not proof</small>
+            <div><output id="lab-metric-coverage">&mdash;</output><span>Claims matched</span></div>
+            <small>Share of detected claims, not proof</small>
           </button>
         </div>
 
         <details class="lab-triage" id="lab-triage" hidden>
           <summary class="lab-triage-summary">
-            <span id="lab-triage-headline">No passages were set aside by the relevance gate.</span>
-            <span class="lab-triage-hint" aria-hidden="true">Review the calls</span>
+            <span id="lab-triage-headline">Nothing was skipped.</span>
+            <span class="lab-triage-hint" aria-hidden="true">See what was skipped</span>
           </summary>
           <div class="lab-triage-body">
             <p class="lab-triage-explainer">
-              The relevance gate is deterministic lexical triage, not ground truth. Every passage it set
-              aside is listed here with the frames that decided it. If a real relationship claim was
-              binned, include it back — the assay re-runs on this device with your decision locked.
-              Retained passages can be excluded the same way from the ledger. Overrides last for this
-              session and are disclosed in every export.
+              The Lab skips text that does not look like it is about dating or relationships. It
+              decides by wording, so it can get this wrong. Everything it skipped is listed here with
+              the reason. If something relationship-related was skipped, add it back — the analysis
+              re-runs instantly on your device. You can also leave out anything it kept by mistake.
+              Your choices last for this session and are noted in every export.
             </p>
-            <ul class="lab-triage-list" id="lab-triage-list" aria-label="Passages set aside by the relevance gate"></ul>
+            <ul class="lab-triage-list" id="lab-triage-list" aria-label="Passages the Lab skipped"></ul>
           </div>
         </details>
 
@@ -331,7 +331,7 @@
           </button>
           <button class="lab-tab" id="lab-tab-research" type="button" role="tab"
                   aria-selected="false" aria-controls="lab-panel-research" tabindex="-1" data-lab-tab="research">
-            <i class="ti ti-bulb" aria-hidden="true"></i> Research Queue
+            <i class="ti ti-bulb" aria-hidden="true"></i> Open Questions
             <span class="lab-tab-count" id="lab-research-count">0</span>
           </button>
           <button class="lab-tab" id="lab-tab-source" type="button" role="tab"
@@ -345,13 +345,13 @@
           <figure class="lab-assay" aria-labelledby="lab-assay-title" aria-describedby="lab-assay-caption">
             <div class="lab-assay-head">
               <div>
-                <div class="lab-section-kicker">Routing diagram</div>
-                <h3 id="lab-assay-title">From source to mapped residue</h3>
+                <div class="lab-section-kicker">How your text flowed</div>
+                <h3 id="lab-assay-title">From your text to matched concepts</h3>
               </div>
               <div class="lab-assay-legend" aria-label="Map legend">
-                <span><i class="lab-legend-dot is-mapped" aria-hidden="true"></i> Mapped</span>
+                <span><i class="lab-legend-dot is-mapped" aria-hidden="true"></i> Matched</span>
                 <span><i class="lab-legend-dot is-tension" aria-hidden="true"></i> Tension</span>
-                <span><i class="lab-legend-dot is-unmapped" aria-hidden="true"></i> Unmapped</span>
+                <span><i class="lab-legend-dot is-unmapped" aria-hidden="true"></i> Unmatched</span>
               </div>
             </div>
 
@@ -363,27 +363,27 @@
                   <output id="lab-flow-source-count">&mdash;</output>
                 </div>
                 <strong>Source</strong>
-                <small id="lab-flow-source-label">No normalized document</small>
+                <small id="lab-flow-source-label">No text yet</small>
               </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
-              <button type="button" class="lab-assay-stage is-claims" data-flow-stage="claims" data-ledger-filter="all" aria-pressed="false" aria-controls="lab-map-table" aria-label="Claims stage — show every claim-like segment in the connection ledger">
+              <button type="button" class="lab-assay-stage is-claims" data-flow-stage="claims" data-ledger-filter="all" aria-pressed="false" aria-controls="lab-map-table" aria-label="Claims stage — show every claim in the match table">
                 <span class="lab-stage-number">02</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-message-circle-question" aria-hidden="true"></i>
                   <output id="lab-flow-claims-count">&mdash;</output>
                 </div>
                 <strong>Claims</strong>
-                <small id="lab-flow-claims-label">Claim-like segments</small>
+                <small id="lab-flow-claims-label">Statements that make a claim</small>
               </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
-              <button type="button" class="lab-assay-stage is-canon" data-flow-stage="canon" data-ledger-filter="mapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="LE connections stage — filter the connection ledger to mapped segments">
+              <button type="button" class="lab-assay-stage is-canon" data-flow-stage="canon" data-ledger-filter="mapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="Matches stage — filter the match table to matched claims">
                 <span class="lab-stage-number">03</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-binary-tree" aria-hidden="true"></i>
                   <output id="lab-flow-canon-count">&mdash;</output>
                 </div>
                 <strong>LE connections</strong>
-                <small id="lab-flow-canon-label">Credible canon matches</small>
+                <small id="lab-flow-canon-label">Solid matches on this site</small>
               </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
               <button type="button" class="lab-assay-stage is-tensions" data-flow-stage="tensions" data-lab-goto="pressure" aria-label="Tensions stage — open the Pressure Test view">
@@ -393,74 +393,74 @@
                   <output id="lab-flow-tension-count">&mdash;</output>
                 </div>
                 <strong>Tensions</strong>
-                <small id="lab-flow-tension-label">Prioritized reasoning strains</small>
+                <small id="lab-flow-tension-label">Claims worth questioning</small>
               </button>
               <span class="lab-flow-arrow" aria-hidden="true"><i class="ti ti-arrow-right"></i></span>
-              <button type="button" class="lab-assay-stage is-unmapped" data-flow-stage="unmapped" data-ledger-filter="unmapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="Unmapped residue stage — filter the connection ledger to unmapped segments">
+              <button type="button" class="lab-assay-stage is-unmapped" data-flow-stage="unmapped" data-ledger-filter="unmapped" aria-pressed="false" aria-controls="lab-map-table" aria-label="Unmatched stage — filter the match table to unmatched claims">
                 <span class="lab-stage-number">05</span>
                 <div class="lab-stage-vessel">
                   <i class="ti ti-grain" aria-hidden="true"></i>
                   <output id="lab-flow-unmapped-count">&mdash;</output>
                 </div>
-                <strong>Unmapped residue</strong>
-                <small id="lab-flow-unmapped-label">Research candidates, not doctrine</small>
+                <strong>Unmatched</strong>
+                <small id="lab-flow-unmapped-label">Open questions, not conclusions</small>
               </button>
             </div>
 
             <div class="lab-assay-readouts">
               <section class="lab-spectrum" aria-labelledby="lab-spectrum-title">
                 <div class="lab-readout-head">
-                  <h4 id="lab-spectrum-title">Canon concentration</h4>
+                  <h4 id="lab-spectrum-title">Where the matches landed</h4>
                   <span id="lab-dominant-category">Waiting for results</span>
                 </div>
                 <div class="lab-category-spectrum" id="lab-category-spectrum">
-                  <p>Matched categories will form a concentration profile here.</p>
+                  <p>Matched topics will appear here.</p>
                 </div>
               </section>
               <section class="lab-coverage-readout" id="lab-coverage-readout" aria-labelledby="lab-coverage-title">
                 <div class="lab-readout-head">
-                  <h4 id="lab-coverage-title">Claim-like segments mapped</h4>
+                  <h4 id="lab-coverage-title">Claims matched</h4>
                   <output id="lab-coverage-label">&mdash;</output>
                 </div>
-                <p class="lab-provisional-tag" id="lab-coverage-provisional" hidden>v2.3.0 provisional &middot; thresholds uncalibrated</p>
-                <div class="lab-coverage-track" id="lab-coverage-track" role="img" aria-label="No mapped share of claim-like segments yet">
+                <p class="lab-provisional-tag" id="lab-coverage-provisional" hidden>provisional &middot; still being calibrated</p>
+                <div class="lab-coverage-track" id="lab-coverage-track" role="img" aria-label="No matched share yet">
                   <span class="lab-coverage-fill" id="lab-coverage-fill"></span>
                   <span class="lab-coverage-marker" id="lab-coverage-marker"></span>
                 </div>
-                <div class="lab-coverage-axis" aria-hidden="true"><span>0%</span><span>Mapped share of claim-like segments</span><span>100%</span></div>
-                <p>Coverage is the share of retained relationship-domain claim-like segments that found a credible LE connection. When none were detected, coverage is not applicable. Context-only and clearly non-domain passages are excluded. It is not a truth score, population statistic, or claim of causation.</p>
+                <div class="lab-coverage-axis" aria-hidden="true"><span>0%</span><span>Matched share of detected claims</span><span>100%</span></div>
+                <p>Coverage is the share of relationship claims in your text that found a solid match on this site. If no such claims were detected, coverage does not apply. It is not a truth score&mdash;a high number only means your text talks about things this site covers.</p>
               </section>
             </div>
-            <figcaption id="lab-assay-caption">The diagram summarizes routing volume and concentration. The ledger below is the accessible, excerpt-level equivalent.</figcaption>
+            <figcaption id="lab-assay-caption">The diagram is the summary. The table below lists every passage.</figcaption>
           </figure>
 
           <section class="lab-ledger" aria-labelledby="lab-ledger-title">
             <div class="lab-subsection-head">
               <div>
-                <div class="lab-section-kicker">Text equivalent</div>
-                <h3 id="lab-ledger-title">Connection ledger</h3>
+                <div class="lab-section-kicker">The details</div>
+                <h3 id="lab-ledger-title">Match table</h3>
               </div>
-              <p id="lab-map-summary">No source has been mapped.</p>
+              <p id="lab-map-summary">Nothing analyzed yet.</p>
             </div>
             <div class="lab-ledger-filter-note" id="lab-ledger-filter-note" role="status" aria-live="polite" hidden></div>
-            <div class="lab-table-scroll" tabindex="0" aria-label="Scrollable connection ledger">
+            <div class="lab-table-scroll" tabindex="0" aria-label="Scrollable match table">
               <table class="lab-map-table" id="lab-map-table">
-                <caption>Detected claim-like segments mapped to The Love Equations canon. Column headers sort; stat tiles filter.</caption>
+                <caption>Each detected claim and the concept it matched on this site. Column headers sort; the tiles above filter.</caption>
                 <thead>
                   <tr>
-                    <th scope="col" aria-sort="ascending"><button type="button" class="lab-sort-button" data-sort-key="order" aria-label="Sort by segment order">Segment <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
-                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="excerpt" aria-label="Sort source excerpts alphabetically">Source excerpt <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
-                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="alignment" aria-label="Sort and group by alignment">Alignment <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
-                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="connection" aria-label="Sort LE connections alphabetically">LE connection <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
-                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="section" aria-label="Sort and group by canon section">Section <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col" aria-sort="ascending"><button type="button" class="lab-sort-button" data-sort-key="order" aria-label="Sort by passage order">Passage <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="excerpt" aria-label="Sort your text alphabetically">Your text <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="alignment" aria-label="Sort and group by stance">Stance <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="connection" aria-label="Sort matched concepts alphabetically">Matched concept <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="section" aria-label="Sort and group by site section">Section <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
                     <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="confidence" aria-label="Sort by confidence">Confidence <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
-                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="triage" aria-label="Sort and group by triage state">Triage <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
-                    <th scope="col">Review</th>
+                    <th scope="col"><button type="button" class="lab-sort-button" data-sort-key="triage" aria-label="Sort and group by inclusion">Included? <i class="ti ti-arrows-sort" aria-hidden="true"></i></button></th>
+                    <th scope="col">Feedback</th>
                   </tr>
                 </thead>
                 <tbody id="lab-map-table-body">
                   <tr id="lab-map-table-empty">
-                    <td colspan="8">Run an analysis to populate the segment-by-segment map.</td>
+                    <td colspan="8">Run an analysis to fill this table.</td>
                   </tr>
                 </tbody>
               </table>
@@ -469,13 +469,13 @@
 
           <section class="lab-distributions" aria-label="Match distributions">
             <div>
-              <div class="lab-readout-head"><h3>Alignment</h3><span>What the source is doing</span></div>
+              <div class="lab-readout-head"><h3>Stance</h3><span>What your text does with each concept</span></div>
               <div class="lab-distribution-list" id="lab-alignment-distribution">
                 <p>No alignment labels yet.</p>
               </div>
             </div>
             <div>
-              <div class="lab-readout-head"><h3>Evidence tier</h3><span>What the matched canon carries</span></div>
+              <div class="lab-readout-head"><h3>Evidence tier</h3><span>How well-supported the matched concepts are</span></div>
               <div class="lab-distribution-list" id="lab-evidence-distribution">
                 <p>No matched evidence tiers yet.</p>
               </div>
@@ -487,9 +487,9 @@
              aria-labelledby="lab-tab-citations" data-lab-panel="citations" hidden>
           <div class="lab-view-intro">
             <div>
-              <div class="lab-section-kicker">Canon retrieval</div>
-              <h3>Excerpts beside the LE text they touched.</h3>
-              <p>Every match keeps the source passage, the canon-faithful synopsis, its exact LE page or anchor, and the language that earned the confidence. Weak overlap stays weak.</p>
+              <div class="lab-section-kicker">Side by side</div>
+              <h3>Your words beside this site&rsquo;s.</h3>
+              <p>Every match shows your passage, this site&rsquo;s own summary, a link to the exact page, and the words that earned the match. Weak overlap is labeled weak.</p>
             </div>
             <div class="lab-confidence-key" aria-label="Confidence key">
               <span class="is-strong">Strong</span>
@@ -500,7 +500,7 @@
           <div class="lab-empty-result" id="lab-citations-empty">
             <i class="ti ti-notes-off" aria-hidden="true"></i>
             <strong>No citations yet</strong>
-            <p>Credible canon matches will appear here. The Lab does not turn generic shared words into a citation.</p>
+            <p>Solid matches will appear here. Shared everyday words alone never earn a citation.</p>
           </div>
           <div class="lab-result-list" id="lab-citations-list"></div>
         </div>
@@ -509,9 +509,9 @@
              aria-labelledby="lab-tab-pressure" data-lab-panel="pressure" hidden>
           <div class="lab-view-intro">
             <div>
-              <div class="lab-section-kicker">Reasoning under load</div>
-              <h3>Where the claim strains&mdash;and what would change the read.</h3>
-              <p>The Lab prioritizes consequential tensions: universal language, causal leaps, stage collapse, moralized market value, scope errors, and boundaries the source ignored. A flag is a question to investigate, not an automatic conviction.</p>
+              <div class="lab-section-kicker">Stress test</div>
+              <h3>Where a claim overreaches&mdash;and what would change the verdict.</h3>
+              <p>The Lab flags the risky patterns: absolute language, causal leaps, collapsed stages, moralized market value, scope errors, and ignored boundary conditions. A flag is a question to investigate, not a conviction.</p>
             </div>
             <div class="lab-risk-key" aria-label="Common pressure-test flags">
               <span>Absolute</span><span>Causal</span><span>Gender scope</span><span>Stage collapse</span><span>Boundary</span>
@@ -519,7 +519,7 @@
           </div>
           <div class="lab-pressure-summary" id="lab-pressure-summary">
             <i class="ti ti-gauge" aria-hidden="true"></i>
-            <p>Run an analysis to see which matched claims deserve pressure first.</p>
+            <p>Run an analysis to see which claims deserve scrutiny first.</p>
           </div>
           <div class="lab-result-list" id="lab-pressure-list"></div>
         </div>
@@ -528,9 +528,9 @@
              aria-labelledby="lab-tab-research" data-lab-panel="research" hidden>
           <div class="lab-view-intro">
             <div>
-              <div class="lab-section-kicker">Unmapped research queue</div>
-              <h3>Keep the residue. Do not quietly promote it.</h3>
-              <p>Unmapped and weakly mapped claims are grouped into research candidates with a nearest concept, possible destination, empirical question, search terms, falsifier, and risk flags.</p>
+              <div class="lab-section-kicker">Open questions</div>
+              <h3>What didn&rsquo;t match stays visible.</h3>
+              <p>Claims with no solid match are collected here, with the closest concept this site has, the question each one raises, and how you could check it.</p>
             </div>
             <button class="btn lab-export-button" id="lab-export-research" type="button" disabled>
               <i class="ti ti-download" aria-hidden="true"></i> Export queue
@@ -538,12 +538,12 @@
           </div>
           <div class="lab-research-banner">
             <i class="ti ti-microscope" aria-hidden="true"></i>
-            <div><strong>Research candidates&mdash;not new LE doctrine.</strong><p>A useful gap can still be wrong, unfalsifiable, too narrow, or already explained by a nearby framework.</p></div>
+            <div><strong>Open questions&mdash;not conclusions.</strong><p>An interesting gap can still be wrong, uncheckable, too narrow, or already covered by a nearby concept.</p></div>
           </div>
           <div class="lab-empty-result" id="lab-research-empty">
             <i class="ti ti-flask-empty" aria-hidden="true"></i>
-            <strong id="lab-research-empty-title">No research candidates yet</strong>
-            <p id="lab-research-empty-copy">Unmapped claim-like passages will remain visible here instead of being forced into the nearest canon bucket.</p>
+            <strong id="lab-research-empty-title">No open questions yet</strong>
+            <p id="lab-research-empty-copy">Claims that match nothing on this site stay visible here instead of being forced into the closest concept.</p>
           </div>
           <div class="lab-result-list" id="lab-research-list"></div>
         </div>
@@ -552,9 +552,9 @@
              aria-labelledby="lab-tab-source" data-lab-panel="source" hidden>
           <div class="lab-view-intro">
             <div>
-              <div class="lab-section-kicker">Normalized document</div>
-              <h3>The exact layer the analyzer received.</h3>
-              <p>Inspect extraction method, warnings, speakers, timestamps, stable segment IDs, and ordered excerpts. If extraction was partial, the limitation belongs beside the results.</p>
+              <div class="lab-section-kicker">What the Lab read</div>
+              <h3>Exactly what was analyzed.</h3>
+              <p>Check how your text was read: warnings, speakers, timestamps, and every passage in order. If reading was partial, that limitation belongs next to the results.</p>
             </div>
           </div>
           <dl class="lab-source-metadata" id="lab-source-metadata">
@@ -566,28 +566,28 @@
             <div><dt>Schema</dt><dd id="lab-source-meta-schema">le-lab.normalized-document/1.0.0</dd></div>
           </dl>
           <section class="lab-source-warnings" id="lab-source-warnings" aria-labelledby="lab-source-warnings-title" hidden>
-            <h4 id="lab-source-warnings-title"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Extraction warnings</h4>
+            <h4 id="lab-source-warnings-title"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Reading warnings</h4>
             <ul id="lab-extraction-warnings"></ul>
           </section>
           <div class="lab-empty-result" id="lab-source-empty">
             <i class="ti ti-file-search" aria-hidden="true"></i>
-            <strong>No normalized source yet</strong>
-            <p>Load a demonstration, paste text, or attach a supported source to inspect its normalized segments.</p>
+            <strong>Nothing loaded yet</strong>
+            <p>Run the demo, paste text, or attach a file to see what the Lab reads.</p>
           </div>
-          <ol class="lab-source-segments" id="lab-source-segments" aria-label="Normalized source segments"></ol>
+          <ol class="lab-source-segments" id="lab-source-segments" aria-label="Your text, passage by passage"></ol>
         </div>
       </section>
 
       <section class="lab-limits" aria-labelledby="lab-limits-title">
         <div>
-          <div class="lab-section-kicker">Instrument limits</div>
+          <div class="lab-section-kicker">What the Lab can&rsquo;t do</div>
           <h2 id="lab-limits-title">A map is not a verdict.</h2>
         </div>
         <div class="lab-limit-grid">
-          <p><strong>Matching is not proof.</strong> Lexical and dependency overlap can retrieve a relevant LE concept; it cannot establish that either source is true.</p>
-          <p><strong>Coverage is document coverage.</strong> A high mapped share means more detected claim-like segments found credible indexed connections, not that the source represents a population.</p>
-          <p><strong>Unmapped is useful.</strong> It may be noise, a source error, an LE limitation, or a research lead. The queue keeps those possibilities separate.</p>
-          <p><strong>Irony is read straight.</strong> Alignment reads negation, quotation, attribution, and qualification from the sentence itself. It has no way to detect sarcasm, so a passage that mocks an idea by stating it is recorded as stating it. Where a stance label looks backwards, check the tone first.</p>
+          <p><strong>Matching is not proof.</strong> Word overlap can find a relevant concept on this site; it cannot establish that either side is true.</p>
+          <p><strong>Coverage describes your text only.</strong> A high matched share means your text talks about things this site covers&mdash;not that it represents anyone else.</p>
+          <p><strong>Unmatched is useful.</strong> It may be noise, a source error, a gap on this site, or a lead worth chasing. The Open Questions view keeps those possibilities separate.</p>
+          <p><strong>Irony is read straight.</strong> The stance label reads negation, quotation, attribution, and qualification from the sentence itself. It has no way to detect sarcasm, so a passage that mocks an idea by stating it is recorded as stating it. Where a stance label looks backwards, check the tone first.</p>
           <p><strong>Word shapes are approximated too.</strong> A short list of technical words stops a term like <em>provider</em> being read in its vendor sense, and that list is compared against the passage by stripping suffixes rather than by knowing English. It reaches too far in places and not far enough in others: <em>paying</em> is treated as <em>payment</em>, while <em>carers</em> is not treated as <em>care</em>. Where a plainly relational sentence is rejected, or a technical one is accepted, the word's shape is the first thing to check.</p>
           <p><strong>Clauses are guessed from punctuation.</strong> Deciding who is claiming what, and which words a borrowed term is standing next to, both need to know where one clause ends and the next begins. That boundary is approximated from commas, semicolons and dashes rather than parsed, so coordination without a comma, a negator inside a subordinate clause, an appositive, and a chain of attributions can all put a word in the wrong place. Flagged cases route to the feedback pipeline, where they accumulate as the argument for a real parser.</p>
         </div>
@@ -635,12 +635,12 @@
         <h4 data-field="title"></h4>
         <blockquote data-field="excerpt"></blockquote>
         <dl class="lab-pressure-grid">
-          <div><dt>LE states</dt><dd data-field="canon-rule"></dd></div>
+          <div><dt>This site says</dt><dd data-field="canon-rule"></dd></div>
           <div><dt>Boundary conditions</dt><dd data-field="boundaries"></dd></div>
-          <div><dt>What would strain it</dt><dd data-field="strain-scenario"></dd></div>
-          <div><dt>Evidence that would change the read</dt><dd data-field="change-evidence"></dd></div>
+          <div><dt>What would weaken it</dt><dd data-field="strain-scenario"></dd></div>
+          <div><dt>Evidence that would change the verdict</dt><dd data-field="change-evidence"></dd></div>
           <div><dt>Did the source supply it?</dt><dd data-field="evidence-supplied"></dd></div>
-          <div><dt>Tension points to</dt><dd data-field="tension-type"></dd></div>
+          <div><dt>The tension</dt><dd data-field="tension-type"></dd></div>
         </dl>
         <div class="lab-risk-flags" data-field="risk-flags"></div>
       </article>
@@ -649,16 +649,16 @@
     <template id="lab-research-template">
       <article class="lab-result-card lab-research-card">
         <header>
-          <span class="lab-candidate-badge">Research candidate</span>
+          <span class="lab-candidate-badge">Open question</span>
           <span class="lab-segment-ref" data-field="segment-ref"></span>
         </header>
         <blockquote data-field="excerpt"></blockquote>
         <p class="lab-unmapped-reason" data-field="reason"></p>
         <dl class="lab-research-grid">
-          <div><dt>Nearest LE concepts</dt><dd data-field="nearest"></dd></div>
-          <div><dt>Possible destination</dt><dd data-field="destination"></dd></div>
-          <div><dt>Empirical question</dt><dd data-field="question"></dd></div>
-          <div><dt>What would falsify it</dt><dd data-field="falsifier"></dd></div>
+          <div><dt>Closest concepts on this site</dt><dd data-field="nearest"></dd></div>
+          <div><dt>Where it could belong</dt><dd data-field="destination"></dd></div>
+          <div><dt>The question it raises</dt><dd data-field="question"></dd></div>
+          <div><dt>What would disprove it</dt><dd data-field="falsifier"></dd></div>
           <div><dt>Suggested search terms</dt><dd data-field="search-terms"></dd></div>
         </dl>
         <div class="lab-risk-flags" data-field="risk-flags"></div>
@@ -684,8 +684,8 @@
       <form class="lab-flag-form" id="lab-flag-form">
         <div class="lab-flag-head">
           <div>
-            <div class="lab-section-kicker">Mapping feedback</div>
-            <h2 id="lab-flag-title">Flag this mapping</h2>
+            <div class="lab-section-kicker">Feedback</div>
+            <h2 id="lab-flag-title">Report this match</h2>
           </div>
           <span class="lab-flag-row-kind" id="lab-flag-row-kind"></span>
         </div>
@@ -694,7 +694,7 @@
         <p class="lab-flag-current" id="lab-flag-current"></p>
 
         <fieldset class="lab-flag-field">
-          <legend id="lab-flag-disposition-legend">What did the analyzer get wrong?</legend>
+          <legend id="lab-flag-disposition-legend">What did the Lab get wrong?</legend>
           <div class="lab-flag-dispositions" id="lab-flag-dispositions" role="radiogroup"
                aria-labelledby="lab-flag-disposition-legend"></div>
         </fieldset>
@@ -703,17 +703,17 @@
           <div class="lab-flag-field">
             <label for="lab-flag-expected">Concepts it should have matched</label>
             <input type="text" id="lab-flag-expected" list="lab-flag-canon-ids" autocomplete="off"
-                   placeholder="canon IDs, comma separated &mdash; optional" />
+                   placeholder="concept IDs, comma separated &mdash; optional" />
             <small>e.g. <code>smv:money:provisioning-signal</code>. Leave empty if you only know it is wrong.</small>
           </div>
           <div class="lab-flag-field">
             <label for="lab-flag-forbidden">Concepts it should not have matched</label>
             <input type="text" id="lab-flag-forbidden" list="lab-flag-canon-ids" autocomplete="off"
-                   placeholder="canon IDs, comma separated &mdash; optional" />
+                   placeholder="concept IDs, comma separated &mdash; optional" />
             <small>Pre-filled with the current primary when you flag a wrong match.</small>
           </div>
           <div class="lab-flag-field">
-            <label for="lab-flag-alignment">Alignment it should have carried</label>
+            <label for="lab-flag-alignment">The stance it should have shown</label>
             <select id="lab-flag-alignment">
               <option value="">Not applicable</option>
               <option value="Supports">Supports</option>
@@ -725,7 +725,7 @@
             </select>
           </div>
           <div class="lab-flag-field">
-            <label for="lab-flag-note">Note for the adjudicator</label>
+            <label for="lab-flag-note">Note for the reviewer</label>
             <textarea id="lab-flag-note" rows="2" placeholder="Optional. One sentence is plenty."></textarea>
           </div>
         </div>
@@ -748,7 +748,7 @@
         <div class="lab-flag-actions">
           <button class="btn" type="button" id="lab-flag-cancel">Cancel</button>
           <button class="btn btn-scarlet" type="submit" id="lab-flag-submit">
-            <i class="ti ti-download" aria-hidden="true"></i> Download flag file
+            <i class="ti ti-download" aria-hidden="true"></i> Download report file
           </button>
         </div>
       </form>

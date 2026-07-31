@@ -112,7 +112,7 @@ for required_id in (
 # The flag export is a local download and nothing else. The page must keep
 # saying so where a visitor decides whether to use it, not only in the report.
 for disclosure in (
-    "Flagging a mapping writes a JSON file to your own disk",
+    "Reporting a match writes a JSON file to your own disk",
     "Downloads to this device only.",
     "never the full transcript",
 ):
@@ -150,15 +150,15 @@ if ".lab-provisional-tag" not in css_text:
 
 app_text = (ROOT / "js" / "lab-app.js").read_text(encoding="utf-8")
 for phrase in (
-    "No relationship-domain claims were detected in this source.",
+    "No relationship claims were found in this text.",
     "Original text remains intact in Source.",
-    "Coverage is unavailable because no relationship-domain claims were detected.",
+    "Coverage is unavailable because no relationship claims were found.",
     "coverage not applicable",
     "Analysis 2.2 · Queue 2.1",
     "provisional",
-    "Include in analysis",
-    "Exclude",
-    "Included by you",
+    "Add back in",
+    "Leave out",
+    "Added back by you",
     "Nothing was sent anywhere.",
 ):
     if phrase not in app_text:
