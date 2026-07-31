@@ -239,7 +239,62 @@ conflict). Rulings are Jason's; this is the reading, not a verdict:
 | `seg-00037` Pew under-30 | GD *Gen Z has it even worse* 0.435 → 0.405 | **Yes** — holds 0.430 on M-TBD-59, though now sitting on the line. |
 | `seg-00036` Pew 42%-easier | `stat-app-reasons` 0.437 → 0.411 | **No** — this passage loses its only credible match. The one materially adverse crossing in the batch. Note `frameworks:search-cost` is its new second-ranked entry at 0.356: thematically the right home (the passage is about whether apps made searching easier), just not yet strong enough to take it. |
 
-## 7. Follow-up: the Lab pass (separate, not done here)
+## 7. Cold review and corrections (2026-07-31)
+
+A cold review returned "changes are warranted" with eight findings. Seven were sustained and
+applied; one was checked against the source and **rejected**. The corrections are edits to
+claims, not additional tags — a Lens label cannot repair an invalid inference.
+
+| # | Finding | Call | Correction applied |
+| --- | --- | --- | --- |
+| 1 | Substitution's causal refusal not honoured — "make withdrawal durable", "explain duration" | **Sustained** | Duration is itself an unmeasured dating outcome. Entry now claims only that the layer exists, has describable economics, and has an adjacent studied analogue. The verdict callout names the earlier over-claim. |
+| 1b | "Instrumented economics" is wrong | **Sustained — verified verbatim** | The paper: *"since broadband had saturated the country … that leaves no regional or time-series variation to use as an instrument."* Split the tier: Tier 1 descriptive trend, Tier 2 model-based attribution. |
+| 1c | "Not for young women or older men" too categorical | **REJECTED** | The paper's own words: *"distinctively a leisure luxury for younger men, but not for other demographic groups"*, plus no effect on older men's labour supply and only a small effect on younger women's. Kept, and now attributed to the authors explicitly. |
+| 2 | Burdett–Coles overstated; falsifier reversed | **Sustained, both parts** | The model still needs a shared vertical ranking and *mutual* acceptance, so it formalises "who wants you back" rather than retiring it, and yields discrete classes rather than the site's smooth r ≈ 0.4 curve. The comparative static is corrected: cheaper waiting makes people **pickier** and the partition **finer**. Also separated BC's stationary reservation standard from this entry's depleting-budget story. |
+| 3 | Calibration converts a correlation into an error bar | **Sustained** | The ±1-point band and the comparison against SD ≈ 0.9 are **removed**, not re-tagged. Also fixed the conditional inversion: Greitemeyer grouped by *stranger-rated* looks, which does not license a claim about people who self-report a low score. |
+| 4 | Toma over-attribution | **Sustained** | Only height, weight and age were ground-truthed; the photograph/relationship-status ordering is daters rating their own accuracy. "They knew" reduced to the authors' inference from a correlation. |
+| 5 | Signal Cost states a broader theorem than Spence | **Sustained** | Restated: separation requires a cost that **differs across sender types**. The proportional-to-faking-cost rule is now labelled the site's heuristic in the lead, with two named failure modes. "Only remaining verification event" → "primary". |
+| 6 | "Net-negative sentiment" contradicted by the same surveys | **Sustained** | It contradicted the row directly beneath it. Now carries both readings — 57/42 positive in 2020, 53/46 in 2023, against frustrated 45% vs hopeful 28% — and says the interesting fact is that both hold. The n values are labelled total-survey samples, not item bases. |
+| 7 | Sixth Rung turns association into causal exclusion | **Sustained** | "Kills the trait explanation outright" → strains it without excluding it; selection into marriage is not random and the source leaves the mechanism open. Re-entry components rewritten as explicitly unmeasured hypotheses. |
+| 8 | Third-Party hardens correlational evidence | **Sustained** | "Opposition corrodes bonds" → the forbidden-love premium has no evidential support left, which is the smaller claim the evidence carries. |
+| — | Ladder `aria-label` omits Ended | **Sustained** | Fixed. |
+
+The review also found no link-target infidelity in the five cross-cites and no hedged mush;
+its diagnosis that the failure mode was *hardening tendencies into laws* was correct, and the
+corrections above are calibration rather than softening — the register is unchanged.
+
+## 7b. What the corrections cost at the retrieval layer
+
+Sheet: `md/lab-transaction-layer-review-threshold-adjudication.md`, generated from a baseline
+captured **before** the corrections this time, per the lesson in §6.
+
+```
+canon      1.0.0+aa6cd85db4e5 -> 1.0.0+36e59ca91dda   (prose only; 476 entries both sides)
+population 2515 retained passages, unchanged
+changed    32638 pairs   19437 down / 13201 up
+minCredibleScore  0.43   3 gain / 4 loss
+```
+
+Rewording moves retrieval as surely as adding entries does — no entry was added or removed and
+32,638 pairs still changed score. The `tests/lab-analyzer.test.mjs` Availability pin drifted
+0.538 → 0.537 for the same reason, and its comment history now records that this pin moves on
+rewrites and not only on growth.
+
+**The false positive the fix bought, recorded rather than tuned away.** Two of the three
+credible-line gains are `frameworks:calibration-error` picking up passages about attractiveness
+as a *mate preference* — Li's necessities/luxuries item list (0.288 → 0.451) and Zhang's
+"men did not value physical attractiveness more than kindness" (0.327 → 0.452). Neither passage
+is about rating *accuracy*, which is what the entry claims. They match because the corrected
+boundary condition introduced the phrase "physical attractiveness" to an entry that previously
+carried only "self-rated"/"observer-rated" forms. The page was **not** reworded to game the
+matcher; the boundary is correct prose and stays. Logged for adjudication.
+
+The third gain is defensible: `frameworks:sixth-rung` on Finkel's suffocation-of-marriage title
+(0.337 → 0.474), which the corrected text earned by adding the selection-into-marriage
+discussion. Of the four losses, three are ≤ 0.032 drift and one is −0.001 (`sixth-rung` on a
+Wheatley passage, 0.430 → 0.429) — a pair that was resting on the line.
+
+## 8. Follow-up: the Lab pass (separate, not done here)
 
 1. **Lexicon terms** for the six new concepts — the Lexicon is the retrieval spine and six new
    frameworks with no glossary rows are under-reachable. Moves Lexicon counts and pins.

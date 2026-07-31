@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+aa6cd85db4e5",
+  "indexVersion": "1.0.0+36e59ca91dda",
   "generatedAt": "2026-07-31T01:21:51.000Z",
   "sourcePages": [
     {
@@ -33,7 +33,7 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "4acb36cd155c269fbafe3e1268539a9ba931919548bed25e268505bea354b489",
+      "sha256": "bb21f2f476d994bbc8c6f742597931418b61baf47d8485da8380c62ca86339b7",
       "conceptCount": 35
     },
     {
@@ -232,12 +232,12 @@
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 67,
+      "Framework": 66,
       "Glossary": 84,
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
-      "Lens": 68,
+      "Lens": 69,
       "Long-form synthesis": 12,
       "Model": 34,
       "Observation": 46,
@@ -2797,7 +2797,7 @@
       "anchor": "calibration-error",
       "category": "Rules & Frameworks",
       "subcategory": "Orientation",
-      "synopsis": "Every score on this site is an estimate of an estimate. The ratings that feed the curves, the gates and the calculators are overwhelmingly self-assessments — and self-assessed looks track how strangers actually rate you at about r ≈ 0.24. That is not a rounding problem. It means the input to almost every model here carries an error bar wider than most of the distinctions people argue about with it.",
+      "synopsis": "Every score on this site is an estimate of an estimate. The ratings that feed the curves, the gates and the calculators are overwhelmingly self-assessments — and self-assessed looks track how strangers actually rate you at about r ≈ 0.24. That is not a rounding problem.",
       "evidenceType": "Framework",
       "contentType": "Framework",
       "verdict": "",
@@ -2826,7 +2826,9 @@
       ],
       "boundaryConditions": [
         "The error measured is self-about-self on physical attractiveness; ratings of third parties are a different and more reliable instrument.",
-        "A weak correlation with observer ratings does not make self-rating useless as a predictor of the rater's own behaviour."
+        "A weak correlation with observer ratings does not make self-rating useless as a predictor of the rater's own behaviour.",
+        "A correlation of this kind does not convert into a point-scale margin of error, and no source here supplies one.",
+        "The overestimation was measured on people grouped by stranger-rated looks, not on people who report a low score for themselves."
       ],
       "commonMisreadings": [
         "In dating, a self-rated looks score is accurate enough to fix your matching-curve position.",
@@ -3570,7 +3572,7 @@
       "anchor": "search-cost",
       "category": "Rules & Frameworks",
       "subcategory": "The transaction layer",
-      "synopsis": "Everything above this entry prices people. Nothing above it prices the search. Being in the market costs time, money, attention and a running dose of rejection — and that meter, not a change of heart about anybody, is usually what ends a search. People rarely lower their standards because they revalued someone. They lower them because the budget ran out.",
+      "synopsis": "Everything above this entry prices people. Nothing above it prices the search. Being in the market costs time, money, attention and a running dose of rejection — and that meter is a live input to how a search ends, alongside everything the rest of this page already models. The claim here is not that budgets explain settling.",
       "evidenceType": "Framework",
       "contentType": "Framework",
       "verdict": "",
@@ -3601,7 +3603,8 @@
         "frameworks:abundance-trap"
       ],
       "boundaryConditions": [
-        "Burdett and Coles is a theoretical sufficiency result: search frictions can generate tiering, which does not establish that they generate this market's tiering.",
+        "Burdett and Coles shows only that a taste for similarity is unnecessary; it still requires a shared desirability ranking and mutual acceptance, and yields discrete classes rather than a smooth matching curve.",
+        "In that model cheaper search makes people pickier and the classes finer, so lowering search cost is not predicted to blur the bands.",
         "The Pew figures measure user sentiment, not a search budget; no study has instrumented a dating search budget directly."
       ],
       "commonMisreadings": [
@@ -3633,8 +3636,8 @@
       "anchor": "signal-cost-rule",
       "category": "Rules & Frameworks",
       "subcategory": "The transaction layer",
-      "synopsis": "Every profile is a set of claims, and the market has no referee. The rule that sorts them is not honesty and not intuition: a signal carries information in proportion to what it would cost to fake. Height typed into a box costs nothing and means nearly nothing. A physique costs two years and means what it says.",
-      "evidenceType": "Framework",
+      "synopsis": "Every profile is a set of claims, and the market has no referee. The working rule this site proposes is neither honesty nor intuition: ask what a claim would have cost the sender if it were false. A physique costs two years and is hard to send falsely at all.",
+      "evidenceType": "Lens",
       "contentType": "Framework",
       "verdict": "",
       "aliases": [
@@ -3669,6 +3672,8 @@
       ],
       "boundaryConditions": [
         "The rule ranks the cost of the display, not the price of the object: a rented car is expensive to own and cheap to show.",
+        "Signalling theory requires a cost that differs across sender types; proportionality to absolute faking cost is this site's heuristic rather than the theorem.",
+        "Only height, weight and age were checked against ground truth; the photograph and relationship-status ordering rests on daters rating their own accuracy.",
         "The ground-truth deception study covers 80 daters in one metropolitan area before swipe apps, so its magnitudes are historical rather than current."
       ],
       "commonMisreadings": [
@@ -3721,6 +3726,7 @@
       ],
       "boundaryConditions": [
         "The approval evidence is correlational and mostly measures perceived approval reported by one partner, so the causal direction stays open.",
+        "A failed replication of the forbidden-love effect removes its support without establishing that opposition corrodes a relationship.",
         "Network power that stabilises a good pairing also enforces a bad one and gates partners on class, caste, race or religion."
       ],
       "commonMisreadings": [
@@ -4131,6 +4137,7 @@
       ],
       "boundaryConditions": [
         "Ended is a state with a base rate of one hundred percent over a long horizon, so reaching it grades where a bond stopped rather than whether it was worthwhile.",
+        "The institution-specific contrast strains a trait explanation without excluding one: selection into marriage is not random and the source leaves the mechanism open.",
         "The re-entry discount has no instrumented source and is the weakest claim in this group."
       ],
       "commonMisreadings": [
@@ -4149,7 +4156,7 @@
       "anchor": "substitution-layer",
       "category": "Rules & Frameworks",
       "subcategory": "Exit & re-entry",
-      "synopsis": "Exit from the dating market is not exit to nothing. It is a switch to substitute goods — gaming, pornography, parasocial media, and now synthetic companionship — that deliver a fraction of the reward at a small fraction of the cost, with the rejection risk removed. That last property is the one that matters structurally: substitutes are what make withdrawal durable. A strike with no alternative ends when hunger wins.",
+      "synopsis": "Exit from the dating market is not exit to nothing. People who withdraw move toward substitute goods — gaming, pornography, parasocial media, and now synthetic companionship — which deliver a fraction of the reward at a small fraction of the cost, with the rejection risk removed.",
       "evidenceType": "Framework",
       "contentType": "Framework",
       "verdict": "",
@@ -4176,8 +4183,9 @@
         "statistics:stat-sex-recession"
       ],
       "boundaryConditions": [
-        "The instrumented result covers labour supply among young men, contains no dating outcome, and the extension to the dating market is an inference.",
-        "Substitution and complementarity are observationally identical in cross-section, so the causal direction is unavailable in either direction."
+        "The leisure-luxury result covers labour supply among young men under an identifying assumption rather than an instrument, contains no dating outcome, and the extension to dating is an inference.",
+        "Substitution and complementarity are observationally identical in cross-section, so the causal direction is unavailable in either direction.",
+        "How long a withdrawal lasts is itself an unmeasured dating outcome, so duration is this layer's hypothesis rather than its finding."
       ],
       "commonMisreadings": [
         "Men stopped dating because video games and pornography are more enjoyable than real relationships.",

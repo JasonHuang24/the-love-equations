@@ -1176,7 +1176,9 @@
       ],
       "boundaryConditions": [
         "The error measured is self-about-self on physical attractiveness; ratings of third parties are a different and more reliable instrument.",
-        "A weak correlation with observer ratings does not make self-rating useless as a predictor of the rater's own behaviour."
+        "A weak correlation with observer ratings does not make self-rating useless as a predictor of the rater's own behaviour.",
+        "A correlation of this kind does not convert into a point-scale margin of error, and no source here supplies one.",
+        "The overestimation was measured on people grouped by stranger-rated looks, not on people who report a low score for themselves."
       ],
       "commonMisreadings": [
         "In dating, a self-rated looks score is accurate enough to fix your matching-curve position.",
@@ -1204,7 +1206,8 @@
         "class partition"
       ],
       "boundaryConditions": [
-        "Burdett and Coles is a theoretical sufficiency result: search frictions can generate tiering, which does not establish that they generate this market's tiering.",
+        "Burdett and Coles shows only that a taste for similarity is unnecessary; it still requires a shared desirability ranking and mutual acceptance, and yields discrete classes rather than a smooth matching curve.",
+        "In that model cheaper search makes people pickier and the classes finer, so lowering search cost is not predicted to blur the bands.",
         "The Pew figures measure user sentiment, not a search budget; no study has instrumented a dating search budget directly."
       ],
       "commonMisreadings": [
@@ -1236,6 +1239,8 @@
       ],
       "boundaryConditions": [
         "The rule ranks the cost of the display, not the price of the object: a rented car is expensive to own and cheap to show.",
+        "Signalling theory requires a cost that differs across sender types; proportionality to absolute faking cost is this site's heuristic rather than the theorem.",
+        "Only height, weight and age were checked against ground truth; the photograph and relationship-status ordering rests on daters rating their own accuracy.",
         "The ground-truth deception study covers 80 daters in one metropolitan area before swipe apps, so its magnitudes are historical rather than current."
       ],
       "commonMisreadings": [
@@ -1264,6 +1269,7 @@
       ],
       "boundaryConditions": [
         "The approval evidence is correlational and mostly measures perceived approval reported by one partner, so the causal direction stays open.",
+        "A failed replication of the forbidden-love effect removes its support without establishing that opposition corrodes a relationship.",
         "Network power that stabilises a good pairing also enforces a bad one and gates partners on class, caste, race or religion."
       ],
       "commonMisreadings": [
@@ -1291,6 +1297,7 @@
       ],
       "boundaryConditions": [
         "Ended is a state with a base rate of one hundred percent over a long horizon, so reaching it grades where a bond stopped rather than whether it was worthwhile.",
+        "The institution-specific contrast strains a trait explanation without excluding one: selection into marriage is not random and the source leaves the mechanism open.",
         "The re-entry discount has no instrumented source and is the weakest claim in this group."
       ],
       "commonMisreadings": [
@@ -1318,8 +1325,9 @@
         "rejection risk"
       ],
       "boundaryConditions": [
-        "The instrumented result covers labour supply among young men, contains no dating outcome, and the extension to the dating market is an inference.",
-        "Substitution and complementarity are observationally identical in cross-section, so the causal direction is unavailable in either direction."
+        "The leisure-luxury result covers labour supply among young men under an identifying assumption rather than an instrument, contains no dating outcome, and the extension to dating is an inference.",
+        "Substitution and complementarity are observationally identical in cross-section, so the causal direction is unavailable in either direction.",
+        "How long a withdrawal lasts is itself an unmeasured dating outcome, so duration is this layer's hypothesis rather than its finding."
       ],
       "commonMisreadings": [
         "Men stopped dating because video games and pornography are more enjoyable than real relationships.",

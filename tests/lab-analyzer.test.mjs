@@ -769,9 +769,15 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * without the population moving. Drift in both directions on the same pin is
    * the clearest argument that the number is not the assertion: the three around
    * it are, and they have held through every one of these steps.
+   *
+   * 0.538 held at 476 when the transaction-layer batch landed, and went to 0.537
+   * when that batch's entries were REWORDED after cold review — no entry added or
+   * removed, 476 both sides. Same lesson as the tranche 3 step, from the other
+   * direction: prose edits inside existing entries move the denominators too, so
+   * this pin drifts on rewrites and not only on growth.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.538);
+  assert.equal(weakPassage.weakMatches[0].score, 0.537);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
