@@ -789,20 +789,23 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * unrelated causes is measuring the corpus, not the change, which is the whole
    * reason the three assertions around it carry the test.
    *
-   * 0.536 at 491, the advice-layer batch. Eight moves now, and the cumulative
+   * 0.536 at 491, the advice-layer batch. 0.537 at 529, the statistics and pill
+   * concepts of bfaff2e. Nine moves now, and the cumulative
    * drift across all of them is 0.003 — three thousandths, against a
    * minCredibleScore of 0.43 that the assertion below actually cares about. The
    * honest summary of this pin's whole history is that canon growth moves it far
    * too little to matter, and it has never once come close to changing the
    * behaviour the test exists to check.
    *
-   * 0.537 at 532, the largest single jump the pin has seen: 41 concepts arrived
-   * at once (13 pill-dossier entries, 9 charts, 3 Lexicon terms, plus the earlier
-   * batches' backlog) when the index was regenerated after drifting stale at 507.
-   * Nine moves, cumulative drift still 0.003, and the third visit to 0.537 by a
-   * third distinct route. Worth recording that the biggest population change in
-   * this log produced the same thousandth-scale step as a rewording did — the
-   * pin is measuring the corpus, and it is not sensitive to how the corpus grew.
+   * 0.537 HELD at 532 when three Lexicon terms landed — the first entry in this
+   * log recording a change that moved the pin by nothing at all, which is worth
+   * as much as the ones that moved it. Note what the 491 → 529 → 532 stretch
+   * actually was: the index had drifted stale at a committed 507 while
+   * pills.html and statistics.html grew the canon underneath it, so the 38
+   * concepts of the 529 step arrived in one regeneration rather than one batch.
+   * The largest population change in this log still produced the same
+   * thousandth-scale step a rewording once did. The pin measures the corpus, and
+   * it is not sensitive to how the corpus grew.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
   assert.equal(weakPassage.weakMatches[0].score, 0.537);
