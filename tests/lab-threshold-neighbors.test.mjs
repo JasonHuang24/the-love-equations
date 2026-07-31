@@ -234,7 +234,7 @@ test('the frozen band is internally consistent', () => {
  *
  * Lowering WEAK_BACKLOG_CEILING is the only edit to it this file permits.
  */
-const WEAK_BACKLOG_CEILING = 516;
+const WEAK_BACKLOG_CEILING = 425;
 
 test('an outstanding credible-line verdict blocks, and the weak backlog may only fall', () => {
   const pendingBy = fixture.counts.pendingByThreshold;
