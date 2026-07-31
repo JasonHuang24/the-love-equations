@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 491);
+assert.equal(index.stats.conceptCount, 494);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 35,
@@ -26,7 +26,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 12,
-  'Rules & Frameworks': 44,
+  'Rules & Frameworks': 47,
   Statistics: 31,
 });
 
@@ -67,11 +67,11 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 491);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 494);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 485);
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 488);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');

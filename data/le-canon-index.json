@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+541177fbf3a6",
+  "indexVersion": "1.0.0+05cb41f932c6",
   "generatedAt": "2026-07-31T07:08:16.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "1cc93ed588bc2430247927223f05a72fc23566901ee88e3d3a4f65a932dd7e00",
-      "conceptCount": 44
+      "sha256": "d783eba9f18ad2f4fe0709f2744964d5f167f66559fa945fb406b9852bbc310c",
+      "conceptCount": 47
     },
     {
       "page": "gender-dynamics.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 491,
+    "conceptCount": 494,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -226,13 +226,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
-      "Rules & Frameworks": 44,
+      "Rules & Frameworks": 47,
       "Statistics": 31
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 75,
+      "Framework": 78,
       "Glossary": 90,
       "Hard data": 28,
       "Instrument": 5,
@@ -249,10 +249,10 @@
       "Tier 2": 7,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 400,
-    "conceptsWithExternalSources": 91,
+    "anchoredConceptCount": 403,
+    "conceptsWithExternalSources": 94,
     "dependencyCount": 239,
-    "relatedCount": 379
+    "relatedCount": 393
   },
   "entries": [
     {
@@ -4866,6 +4866,287 @@
       "pressureTests": [
         "Was this claim selected for being accurate, or for being novel and naming an enemy?",
         "Can the audience for this advice ever observe whether it worked?"
+      ]
+    },
+    {
+      "id": "frameworks:the-surplus",
+      "title": "The Surplus",
+      "page": "frameworks.html",
+      "anchor": "the-surplus",
+      "category": "Rules & Frameworks",
+      "subcategory": "The bargaining layer",
+      "synopsis": "A pairing exists because it produces something neither person could produce alone. How big that something is and how it gets divided are two different questions — and nearly every argument about relationships answers the second while borrowing the authority of the first. “What do men get out of marriage” is a split question wearing a size question’s clothes.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Surplus",
+        "The Surplus",
+        "gains from trade",
+        "sharing rule",
+        "household public goods",
+        "economies of scale",
+        "risk pooling"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "what do men get out of marriage",
+        "who gets the better deal",
+        "marriage is a bad deal",
+        "two can live cheaper than one",
+        "she brings nothing to the table"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:substitution-layer",
+        "frameworks:sex-ratio",
+        "frameworks:clearing-order",
+        "frameworks:outside-option",
+        "frameworks:commitment-problem",
+        "frameworks:calibration-error"
+      ],
+      "boundaryConditions": [
+        "The size of a pairing’s surplus is separately identified from its division, and only the size half replicates across studies.",
+        "Measured consumption scale economies run near 6 to 18 percent once leisure is in the bundle, well under the 33 percent implied by administrative equivalence scales.",
+        "The largest measured component is insurance through family labour supply, which is asymmetric by earnings weight rather than equal across partners."
+      ],
+      "commonMisreadings": [
+        "Marriage is a straightforwardly bad deal for men and a good one for women.",
+        "Specialisation by comparative advantage is the established reason marriage produces gains.",
+        "A lasting marriage is worth about a hundred thousand dollars a year to a person."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Blundell, Pistaferri & Saporta-Eksten (2016), “Consumption Inequality and Family Labor Supply,” AER 106(2):387–435",
+          "url": "https://doi.org/10.1257/aer.20121549"
+        },
+        {
+          "label": "Roelfs et al. (2011), American Journal of Epidemiology 174(4):379–389",
+          "url": "https://doi.org/10.1093/aje/kwr111"
+        },
+        {
+          "label": "Lindmarker, Kolk & Drefahl (2025), European Journal of Population 41(1):2",
+          "url": "https://doi.org/10.1007/s10680-024-09722-6"
+        },
+        {
+          "label": "Stevenson & Wolfers (2007), JEP 21(2):27–52",
+          "url": "https://doi.org/10.1257/jep.21.2.27"
+        },
+        {
+          "label": "Lundberg & Pollak (2007), JEP 21(2):3–26",
+          "url": "https://doi.org/10.1257/jep.21.2.3"
+        },
+        {
+          "label": "Eika, Mogstad & Zafar (2019), JPE 127(6):2795–2835",
+          "url": "https://doi.org/10.1086/702018"
+        },
+        {
+          "label": "Ludwig & Br&uuml;derl (2018), American Sociological Review 83(4):744–770",
+          "url": "https://doi.org/10.1177/0003122418784909"
+        }
+      ],
+      "pressureTests": [
+        "Is this a claim about how large the surplus is, or about how it gets divided?",
+        "Which measured component of the surplus does this argument actually rest on?"
+      ]
+    },
+    {
+      "id": "frameworks:outside-option",
+      "title": "The Outside Option",
+      "page": "frameworks.html",
+      "anchor": "outside-option",
+      "category": "Rules & Frameworks",
+      "subcategory": "The bargaining layer",
+      "synopsis": "What each party could get elsewhere shapes what they get inside — and it does so without anyone renegotiating anything out loud. That much has been measured, in some of the cleanest natural experiments in this entire field. Two things had to be cut from the first draft of this entry: the claim that outside options matter rather than contribution or fairness, and the counter-evidence we intended to publish against it,…",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Outside Option",
+        "The Outside Option",
+        "threat point",
+        "household bargaining",
+        "separate spheres",
+        "income pooling",
+        "principle of least interest"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "she has other options",
+        "he has nowhere else to go",
+        "treat them how they let you",
+        "the one who cares less",
+        "she can always leave"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:the-surplus",
+        "frameworks:commitment-problem",
+        "frameworks:sex-ratio",
+        "frameworks:replaceability-asymmetry"
+      ],
+      "boundaryConditions": [
+        "The measured improvement in treatment depends on exit being both credible and enforced, and the protective effect disappears where enforcement is absent.",
+        "The evidence rejects income pooling inside households, which falls well short of ranking alternatives above contribution, fairness or effort.",
+        "Every result with a clean design comes from households governed by exit law or a shared budget, and the extension to dating markets is unmeasured."
+      ],
+      "commonMisreadings": [
+        "Wives who out-earn their husbands take on extra housework to compensate for the reversal.",
+        "Improving a woman’s earnings raises her risk of violence from her partner.",
+        "Whoever has better alternatives gets better treatment, whatever the setting happens to be."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Lundberg & Pollak (1993), “Separate Spheres Bargaining and the Marriage Market,” JPE 101(6):988–1010",
+          "url": "https://doi.org/10.1086/261912"
+        },
+        {
+          "label": "Brassiolo (2016), “Domestic Violence and Divorce Law,” Journal of Labor Economics 34(2):443–477",
+          "url": "https://doi.org/10.1086/683666"
+        },
+        {
+          "label": "Aizer (2010), “The Gender Wage Gap and Domestic Violence,” AER 100(4):1847–1859",
+          "url": "https://doi.org/10.1257/aer.100.4.1847"
+        },
+        {
+          "label": "Stevenson & Wolfers (2006), “Bargaining in the Shadow of the Law,” QJE 121(1):267–288",
+          "url": "https://doi.org/10.1093/qje/121.1.267"
+        },
+        {
+          "label": "Hoehn-Velasco & Silverio-Murillo (2020), Economics Letters 187",
+          "url": "https://doi.org/10.1016/j.econlet.2019.108891"
+        },
+        {
+          "label": "Buller, Peterman, Ranganathan, Bleile, Hidrobo & Heise (2018), World Bank Research Observer 33(2):218–258",
+          "url": "https://doi.org/10.1093/wbro/lky002"
+        },
+        {
+          "label": "Hidrobo & Fernald (2013), Journal of Health Economics 32(1):304–319",
+          "url": "https://doi.org/10.1016/j.jhealeco.2012.11.002"
+        },
+        {
+          "label": "Bergvall (2024), Journal of Public Economics 239:105211",
+          "url": "https://doi.org/10.1016/j.jpubeco.2024.105211"
+        },
+        {
+          "label": "Goodman-Bacon (2021), Journal of Econometrics 225(2):254–277",
+          "url": "https://doi.org/10.1016/j.jeconom.2021.03.014"
+        },
+        {
+          "label": "Bertrand, Kamenica & Pan (2015), QJE 130(2):571–614",
+          "url": "https://doi.org/10.1093/qje/qjv001"
+        },
+        {
+          "label": "Binder & Lam (2022), Journal of Human Resources 57(6)",
+          "url": "https://doi.org/10.3368/jhr.58.2.0320-10803R1"
+        },
+        {
+          "label": "Zinovyeva & Tverdostup (2021), AEJ: Applied Economics 13(4):258–284",
+          "url": "https://doi.org/10.1257/app.20180542"
+        },
+        {
+          "label": "Killewald & Gough (2010), “Money Isn’t Everything,” Social Science Research 39(6):987–1003",
+          "url": "https://doi.org/10.1016/j.ssresearch.2010.08.005"
+        },
+        {
+          "label": "Abramitzky, Delavande & Vasconcelos (2011), AEJ: Applied 3(3):124–157",
+          "url": "https://doi.org/10.1257/app.3.3.124"
+        }
+      ],
+      "pressureTests": [
+        "Is leaving actually available here, and would anyone enforce it?",
+        "Was this measured on households with a shared budget, or on people who are dating?"
+      ]
+    },
+    {
+      "id": "frameworks:commitment-problem",
+      "title": "The Commitment Problem",
+      "page": "frameworks.html",
+      "anchor": "commitment-problem",
+      "category": "Rules & Frameworks",
+      "subcategory": "The bargaining layer",
+      "synopsis": "Commitment is almost always discussed as a feeling — how much someone means it. The mechanism that actually makes a promise believable is the opposite: you destroy your own ability to renege. This entry was drafted around a sharper version of that claim, and a field experiment involving free virtual roses proved the sharper version wrong.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Commitment Problem",
+        "The Commitment Problem",
+        "commitment device",
+        "credible threat",
+        "cheap talk",
+        "specific investment",
+        "covenant marriage"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "talk is cheap",
+        "actions speak louder",
+        "he says he will change",
+        "put a ring on it",
+        "anyone can say that"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:signal-cost-rule",
+        "frameworks:the-surplus",
+        "frameworks:outside-option",
+        "frameworks:sixth-rung"
+      ],
+      "boundaryConditions": [
+        "A signal carries information in proportion to what sending it forecloses, so a scarce free signal can outperform an unlimited costly one.",
+        "What fell measurably when exit became cheaper was relationship-specific investment, while the rise in dissolution decayed to nothing within about a decade.",
+        "The same reforms that weakened binding commitment coincided with measured falls in female suicide and intimate partner homicide."
+      ],
+      "commonMisreadings": [
+        "A promise that costs nothing to break is worthless as evidence of future behaviour.",
+        "Making divorce easier is the reason marriages became less stable over the last fifty years.",
+        "Couples given a stronger commitment contract stay together because the contract binds them."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Lee & Niederle (2015), “Propose with a rose? Signaling in internet dating markets,” Experimental Economics 18(4):731–755",
+          "url": "https://doi.org/10.1007/s10683-014-9425-9"
+        },
+        {
+          "label": "Wolfers (2006), AER 96(5):1802–1820",
+          "url": "https://doi.org/10.1257/aer.96.5.1802"
+        },
+        {
+          "label": "Stevenson (2007), “The Impact of Divorce Laws on Marriage-Specific Capital,” Journal of Labor Economics 25(1):75–94",
+          "url": "https://doi.org/10.1086/508732"
+        },
+        {
+          "label": "Voena (2015), AER 105(8):2295–2332",
+          "url": "https://doi.org/10.1257/aer.20120234"
+        },
+        {
+          "label": "Lafortune & Low (2023), “Collateralized Marriage,” AEJ: Applied Economics 15(4)",
+          "url": "https://doi.org/10.1257/app.20210614"
+        },
+        {
+          "label": "Matouschek & Rasul (2008), Journal of Law and Economics 51(1):59–110",
+          "url": "https://doi.org/10.1086/588596"
+        },
+        {
+          "label": "Goodman-Bacon (2021), Journal of Econometrics 225(2):254–277",
+          "url": "https://doi.org/10.1016/j.jeconom.2021.03.014"
+        },
+        {
+          "label": "Stevenson & Wolfers (2006), QJE 121(1):267–288",
+          "url": "https://doi.org/10.1093/qje/121.1.267"
+        },
+        {
+          "label": "Gruber (2004), Journal of Labor Economics 22(4):799–833",
+          "url": "https://doi.org/10.1086/423155"
+        }
+      ],
+      "pressureTests": [
+        "What would breaking this promise actually cost the person making it?",
+        "Is the commitment located in an asset or an option, or only in how someone feels?"
       ]
     },
     {

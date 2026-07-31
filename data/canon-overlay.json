@@ -1658,6 +1658,117 @@
         "Can the audience for this advice ever observe whether it worked?"
       ]
     },
+    "frameworks:the-surplus": {
+      "aliases": [
+        "The Surplus",
+        "gains from trade",
+        "sharing rule",
+        "household public goods",
+        "economies of scale",
+        "risk pooling"
+      ],
+      "phrases": [
+        "what do men get out of marriage",
+        "who gets the better deal",
+        "marriage is a bad deal",
+        "two can live cheaper than one",
+        "she brings nothing to the table"
+      ],
+      "related": [
+        "frameworks:outside-option",
+        "frameworks:commitment-problem",
+        "frameworks:substitution-layer",
+        "frameworks:calibration-error"
+      ],
+      "boundaryConditions": [
+        "The size of a pairing’s surplus is separately identified from its division, and only the size half replicates across studies.",
+        "Measured consumption scale economies run near 6 to 18 percent once leisure is in the bundle, well under the 33 percent implied by administrative equivalence scales.",
+        "The largest measured component is insurance through family labour supply, which is asymmetric by earnings weight rather than equal across partners."
+      ],
+      "commonMisreadings": [
+        "Marriage is a straightforwardly bad deal for men and a good one for women.",
+        "Specialisation by comparative advantage is the established reason marriage produces gains.",
+        "A lasting marriage is worth about a hundred thousand dollars a year to a person."
+      ],
+      "pressureTests": [
+        "Is this a claim about how large the surplus is, or about how it gets divided?",
+        "Which measured component of the surplus does this argument actually rest on?"
+      ]
+    },
+    "frameworks:outside-option": {
+      "aliases": [
+        "The Outside Option",
+        "threat point",
+        "household bargaining",
+        "separate spheres",
+        "income pooling",
+        "principle of least interest"
+      ],
+      "phrases": [
+        "she has other options",
+        "he has nowhere else to go",
+        "treat them how they let you",
+        "the one who cares less",
+        "she can always leave"
+      ],
+      "related": [
+        "frameworks:the-surplus",
+        "frameworks:commitment-problem",
+        "frameworks:sex-ratio",
+        "frameworks:replaceability-asymmetry"
+      ],
+      "boundaryConditions": [
+        "The measured improvement in treatment depends on exit being both credible and enforced, and the protective effect disappears where enforcement is absent.",
+        "The evidence rejects income pooling inside households, which falls well short of ranking alternatives above contribution, fairness or effort.",
+        "Every result with a clean design comes from households governed by exit law or a shared budget, and the extension to dating markets is unmeasured."
+      ],
+      "commonMisreadings": [
+        "Wives who out-earn their husbands take on extra housework to compensate for the reversal.",
+        "Improving a woman’s earnings raises her risk of violence from her partner.",
+        "Whoever has better alternatives gets better treatment, whatever the setting happens to be."
+      ],
+      "pressureTests": [
+        "Is leaving actually available here, and would anyone enforce it?",
+        "Was this measured on households with a shared budget, or on people who are dating?"
+      ]
+    },
+    "frameworks:commitment-problem": {
+      "aliases": [
+        "The Commitment Problem",
+        "commitment device",
+        "credible threat",
+        "cheap talk",
+        "specific investment",
+        "covenant marriage"
+      ],
+      "phrases": [
+        "talk is cheap",
+        "actions speak louder",
+        "he says he will change",
+        "put a ring on it",
+        "anyone can say that"
+      ],
+      "related": [
+        "frameworks:signal-cost-rule",
+        "frameworks:the-surplus",
+        "frameworks:outside-option",
+        "frameworks:sixth-rung"
+      ],
+      "boundaryConditions": [
+        "A signal carries information in proportion to what sending it forecloses, so a scarce free signal can outperform an unlimited costly one.",
+        "What fell measurably when exit became cheaper was relationship-specific investment, while the rise in dissolution decayed to nothing within about a decade.",
+        "The same reforms that weakened binding commitment coincided with measured falls in female suicide and intimate partner homicide."
+      ],
+      "commonMisreadings": [
+        "A promise that costs nothing to break is worthless as evidence of future behaviour.",
+        "Making divorce easier is the reason marriages became less stable over the last fifty years.",
+        "Couples given a stronger commitment contract stay together because the contract binds them."
+      ],
+      "pressureTests": [
+        "What would breaking this promise actually cost the person making it?",
+        "Is the commitment located in an asset or an option, or only in how someone feels?"
+      ]
+    },
     "lexicon:term-assortative-mating": {
       "aliases": [
         "assortative mating",
