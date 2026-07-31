@@ -22,11 +22,11 @@
     "minCredibleScore": 443,
     "pairs": 102584,
     "rulings": 5389,
-    "pending": 5216,
+    "pending": 5215,
     "pendingByThreshold": {
       "candidateScoreFloor": 4699,
       "minWeakScore": 516,
-      "minCredibleScore": 1
+      "minCredibleScore": 0
     }
   },
   "rulings": {
@@ -37963,11 +37963,13 @@
       "after": 0.079
     },
     "seg-00066-181m2s3.claim-04|smv:looks:face|minCredibleScore": {
-      "ruling": "PENDING",
+      "ruling": "ACCEPT",
       "threshold": "minCredibleScore",
       "direction": "gain",
       "before": 0.243,
-      "after": 0.46
+      "after": 0.46,
+      "ruledBy": "Jason",
+      "ruledAt": "2026-07-31"
     },
     "seg-00066-181m2s3.claim-04|smv:looks:face|minWeakScore": {
       "ruling": "ACCEPT",
