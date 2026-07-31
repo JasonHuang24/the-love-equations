@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.6.14';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=2.6.14';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.6.15';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=2.6.15';
 
 /*
  * LE Lab export adapters.
@@ -315,7 +315,7 @@ export function researchQueueToMarkdown(result, { includeHeading = true } = {}) 
       '',
       `- **Location:** ${location || markdownText(item.segmentId)}`,
       `- **Why unmapped:** ${markdownText(item.whyUnmapped)}`,
-      `- **Nearest LE concepts:** ${item.nearestConcepts?.length
+      `- **Nearest LE concepts by wording:** ${item.nearestConcepts?.length
         ? `${item.nearestConcepts.map((nearest) => `${markdownLink(nearest.title, nearest.href)} (${(Number(nearest.score || 0) * 100).toFixed(0)})`).join(' · ')}${nearestScaleNote(item)}`
         : 'No defensible neighbor'}`,
       `- **Empirical question:** ${markdownText(item.empiricalQuestion)}`,

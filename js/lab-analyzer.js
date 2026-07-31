@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.14';
+export const ANALYZER_VERSION = '2.6.15';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -2709,7 +2709,7 @@ function stanceFor(unit, match) {
   const reported = scope ? scope.reported : REPORTED_SPEECH_CUES.test(text);
   const denied = scope ? scope.denialParity : MISREADING_DENIAL_CUES.test(text);
   let label = 'Resembles';
-  let rationale = 'The source and canon entry share a distinctive concept pattern, but the local engine cannot infer full agreement from wording alone.';
+  let rationale = 'The source and canon entry share distinctive wording, but wording alone cannot show whether they agree.';
 
   if (!unit.isClaimLike) {
     label = 'Context only';
@@ -3192,11 +3192,20 @@ function researchItemFor(result) {
   const destination = chooseDestination(result.unit, nearest);
   const distinctiveTerms = unique(tokenize(result.unit.text, { keepGeneric: false }))
     .slice(0, SCORING_CONFIG.maxResearchSearchTerms);
+  /*
+   * A passage the gate kept only conservatively must say so in the payload,
+   * not just on the screen: exports render the destination verbatim as the
+   * item's heading, and a Kubernetes sentence was leaving here with
+   * "Possible destination: Lexicon" attached (crash-test findings 11–13).
+   * The screen's amber caution reads the same status, so the two surfaces
+   * cannot disagree about which passages are doubted.
+   */
+  const uncertainDomain = result.unit.domainRelevance?.status === 'uncertain';
   const reason = !nearest
     ? 'No canon entry shared enough distinctive language for a defensible match.'
     : nearest.score < SCORING_CONFIG.minWeakScore
       ? 'The nearest canon concept shares only weak or generic wording.'
-      : 'A nearby concept exists, but confidence stayed below the credible-match threshold.';
+      : 'A nearby concept exists, but the shared wording is too weak to call it a match.';
   const searchTerms = unique([
     ...distinctiveTerms,
     nearest?.title,
@@ -3248,7 +3257,9 @@ function researchItemFor(result) {
      */
     scoredConceptTotal: result.candidates[0]?._retrieval?.candidatesAboveFloor ?? 0,
     nearbyBandTotal: result.weakBandTotal ?? 0,
-    suggestedDestination: destination,
+    suggestedDestination: uncertainDomain
+      ? 'maybe nowhere — this may not be a relationship claim'
+      : destination,
     empiricalQuestion: makeResearchQuestion(result.unit, risks, destination),
     suggestedSearchTerms: searchTerms,
     falsifier: risks.includes('causal claim')
