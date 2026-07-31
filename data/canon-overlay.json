@@ -1313,7 +1313,6 @@
         "Substitution Layer",
         "substitute good",
         "leisure luxury",
-        "AI companion",
         "parasocial substitute"
       ],
       "phrases": [
@@ -1321,7 +1320,11 @@
         "leisure luxuries",
         "recreational computing",
         "checked out of the market",
-        "AI girlfriend",
+        "substitute for a partner",
+        "instead of a relationship",
+        "alternative to real partners",
+        "replace real relationships",
+        "replacement for a real relationship",
         "rejection risk"
       ],
       "boundaryConditions": [
@@ -4864,6 +4867,54 @@
       ],
       "pressureTests": [
         "If the couple stopped being the unit advertisers target, which measured dating or marriage behaviour changed with it?"
+      ]
+    },
+    "lexicon:term-search-cost": {
+      "commonMisreadings": [
+        "Someone who settles in dating after a long search has revalued the partner they accepted."
+      ],
+      "boundaryConditions": [
+        "Search theory shows costly looking can tier a market; it does not establish that search cost tiers this one."
+      ]
+    },
+    "lexicon:term-costly-signal": {
+      "commonMisreadings": [
+        "An expensive display in dating is reliable evidence about the person sending it."
+      ],
+      "boundaryConditions": [
+        "Separation requires a cost that differs across sender types, so absolute expense alone settles little."
+      ]
+    },
+    "lexicon:term-network-approval": {
+      "commonMisreadings": [
+        "Family opposition to a romance pushes the couple closer together and strengthens their bond."
+      ],
+      "boundaryConditions": [
+        "The evidence is correlational and mostly records one partner's perception of what the network thinks."
+      ]
+    },
+    "lexicon:term-the-re-entry-discount": {
+      "commonMisreadings": [
+        "A woman returning to dating after divorce faces a thinner market than a man does."
+      ],
+      "boundaryConditions": [
+        "No study measures the three components as a combined effect on re-entrant outcomes."
+      ]
+    },
+    "lexicon:term-substitute-good": {
+      "commonMisreadings": [
+        "Pornography and video games are why young men stopped dating and pursuing relationships."
+      ],
+      "boundaryConditions": [
+        "Substitution and complementarity are observationally identical in cross-section, so the direction stays unresolved."
+      ]
+    },
+    "lexicon:term-the-calibration-error": {
+      "commonMisreadings": [
+        "A dating self-rating is close enough to a stranger's rating to argue about single points."
+      ],
+      "boundaryConditions": [
+        "The correlation does not convert into a point-scale margin of error, and none is published here."
       ]
     }
   }

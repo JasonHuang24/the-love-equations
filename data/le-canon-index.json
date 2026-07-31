@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+0d01291161d6",
-  "generatedAt": "2026-07-31T03:05:04.000Z",
+  "indexVersion": "1.0.0+f09b1aa1430b",
+  "generatedAt": "2026-07-31T05:10:02.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -89,8 +89,8 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "49c86de884355004b231452dd88ae107f99898e77be25ad1384c8ef635fc1a94",
-      "conceptCount": 84
+      "sha256": "a4243b73db455b0ba7b0e9c3ab63a30dffd5aa791b447decee378188f6f9fe9c",
+      "conceptCount": 90
     },
     {
       "page": "deep-dive.html",
@@ -215,14 +215,14 @@
     }
   ],
   "stats": {
-    "conceptCount": 479,
+    "conceptCount": 485,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
       "Five Levers": 35,
       "Gender Dynamics": 133,
       "Instruments": 5,
-      "Lexicon": 84,
+      "Lexicon": 90,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
@@ -233,7 +233,7 @@
       "Definitional": 1,
       "Evidence-based": 36,
       "Framework": 69,
-      "Glossary": 84,
+      "Glossary": 90,
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
@@ -249,9 +249,9 @@
       "Tier 2": 8,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 388,
+    "anchoredConceptCount": 394,
     "conceptsWithExternalSources": 85,
-    "dependencyCount": 233,
+    "dependencyCount": 239,
     "relatedCount": 352
   },
   "entries": [
@@ -4164,7 +4164,6 @@
         "Substitution Layer",
         "substitute good",
         "leisure luxury",
-        "AI companion",
         "parasocial substitute"
       ],
       "standaloneAliases": [],
@@ -4174,7 +4173,11 @@
         "leisure luxuries",
         "recreational computing",
         "checked out of the market",
-        "AI girlfriend",
+        "substitute for a partner",
+        "instead of a relationship",
+        "alternative to real partners",
+        "replace real relationships",
+        "replacement for a real relationship",
         "rejection risk"
       ],
       "dependencies": [],
@@ -13486,6 +13489,178 @@
       "pressureTests": [
         "Would this speaker's dating behaviour over the next year differ from someone who never said any of it?"
       ]
+    },
+    {
+      "id": "lexicon:term-search-cost",
+      "title": "Search cost",
+      "page": "lexicon.html",
+      "anchor": "term-search-cost",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "What being in the market charges you to stay in it — time, money, attention, and a running dose of rejection. Matters because a model that prices only the people can read a stopping rule as a preference: someone who accepts a partner after a long search may have revalued nobody and simply run out of budget.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:search-cost"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Search theory shows costly looking can tier a market; it does not establish that search cost tiers this one."
+      ],
+      "commonMisreadings": [
+        "Someone who settles in dating after a long search has revalued the partner they accepted."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-costly-signal",
+      "title": "Costly signal",
+      "page": "lexicon.html",
+      "anchor": "term-costly-signal",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "A claim you can believe because it would have been expensive to send falsely. The theorem is narrower than the slogan — separation needs a cost that differs across senders, not merely a high one — but the working question is blunt: what would this have cost if it were false? Nothing means decoration. A body someone has to arrive in, a reputation, two years of training: evidence.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:signal-cost-rule"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Separation requires a cost that differs across sender types, so absolute expense alone settles little."
+      ],
+      "commonMisreadings": [
+        "An expensive display in dating is reliable evidence about the person sending it."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-network-approval",
+      "title": "Network approval",
+      "page": "lexicon.html",
+      "anchor": "term-network-approval",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "What the friends and family around a couple think of it — and it travels with whether the couple lasts. The famous opposite claim, the Romeo and Juliet effect (parental interference deepens love), was re-tested and did not appear; interference tracked poorer quality on every measure. Correlational throughout, and mostly one partner’s guess at what everyone else thinks, so the causal arrow stays open.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:third-party-layer"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The evidence is correlational and mostly records one partner's perception of what the network thinks."
+      ],
+      "commonMisreadings": [
+        "Family opposition to a romance pushes the couple closer together and strengthens their bond."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-the-re-entry-discount",
+      "title": "The re-entry discount",
+      "page": "lexicon.html",
+      "anchor": "term-the-re-entry-discount",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "The claim that the market you return to after a relationship ends is not the one you left — the cohort thinned, constraints grew, and the exchange rate you last transacted at went stale. Runs in both directions; the discourse only ever aims it at women, and the divorced man rediscovering that his twenties-era approach no longer clears is the same mechanism without a catchphrase.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "re-entry discount"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:sixth-rung"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "No study measures the three components as a combined effect on re-entrant outcomes."
+      ],
+      "commonMisreadings": [
+        "A woman returning to dating after divorce faces a thinner market than a man does."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-substitute-good",
+      "title": "Substitute good",
+      "page": "lexicon.html",
+      "anchor": "term-substitute-good",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "What someone leaving the dating market leaves for — gaming, pornography, parasocial media, synthetic companionship — delivering part of the reward at a fraction of the cost with the rejection risk removed. The economics are describable and the causal arrow is not: substitution and complementarity look identical in cross-section, so whether substitutes start a withdrawal, prolong it, or merely occupy the freed time is…",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:substitution-layer"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Substitution and complementarity are observationally identical in cross-section, so the direction stays unresolved."
+      ],
+      "commonMisreadings": [
+        "Pornography and video games are why young men stopped dating and pursuing relationships."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-the-calibration-error",
+      "title": "The calibration error",
+      "page": "lexicon.html",
+      "anchor": "term-the-calibration-error",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "The gap between how you rate your own looks and how strangers rate them — about r ≈ 0.24, close to orthogonal. It is also bottom-heavy: measured against stranger ratings, the low-rated group over-places itself while the top rates itself accurately or slightly low. Fences every instrument on this site, because they all take a self-supplied number.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "calibration error"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:calibration-error"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The correlation does not convert into a point-scale margin of error, and none is published here."
+      ],
+      "commonMisreadings": [
+        "A dating self-rating is close enough to a stranger's rating to argue about single points."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
     },
     {
       "id": "lexicon:term-the-consumer-unit",
