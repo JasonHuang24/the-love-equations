@@ -2154,6 +2154,20 @@
 
 .lab-unmapped-reason { margin: 0.8rem 0 0; color: var(--text-muted); font-size: 11.5px; line-height: 1.6; }
 
+/* Rendered only when the payload's own domain verdict is "uncertain" — the
+   card must not sound more sure of a passage than the engine was. Same amber
+   register as .lab-source-warnings. */
+.lab-research-caution {
+  margin: 0.55rem 0 0;
+  padding: 0.55rem 0.8rem;
+  border: 0.5px solid rgba(154, 101, 20, 0.25);
+  border-radius: 10px;
+  background: var(--lab-amber-pale);
+  color: #69440c;
+  font-size: 10.75px;
+  line-height: 1.55;
+}
+
 /* ── Normalized source view ── */
 .lab-source-metadata {
   margin: 0 0 1rem;

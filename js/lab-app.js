@@ -1507,6 +1507,16 @@ function appendNearestConcepts(container, concepts, item) {
 function renderResearchQueue(result) {
   clearNode(ui.researchList);
   const items = result.researchQueue?.items || [];
+  /*
+   * The engine's own verdict on these passages is "uncertain", but the card
+   * never said so: a Kubernetes sentence kept conservatively still rendered
+   * named concepts, a destination, and search terms with nothing marking the
+   * neighbors as wording coincidence. The caution repeats the payload's
+   * uncertainty where the reader is actually deciding what the card means.
+   */
+  const uncertainSegments = new Set((result.segments || [])
+    .filter((segment) => segment.unit?.domainRelevance?.status === 'uncertain')
+    .map((segment) => segment.unit.id));
   const noDomainClaims = result.metrics.claimLikeSegments === 0
     && result.metrics.ignoredDomainSegments > 0;
   ui.researchEmpty.hidden = items.length > 0;
@@ -1525,6 +1535,12 @@ function renderResearchQueue(result) {
     });
     field(fragment, 'excerpt').textContent = item.excerpt;
     field(fragment, 'reason').textContent = item.whyUnmapped;
+    if (uncertainSegments.has(item.segmentId)) {
+      const caution = document.createElement('p');
+      caution.className = 'lab-research-caution';
+      caution.textContent = 'This passage may not be about relationships at all — it was kept so you can judge for yourself. The concepts below may share nothing but wording with it.';
+      field(fragment, 'reason').insertAdjacentElement('afterend', caution);
+    }
     appendNearestConcepts(field(fragment, 'nearest'), item.nearestConcepts, item);
     field(fragment, 'destination').textContent = item.suggestedDestination;
     field(fragment, 'question').textContent = item.empiricalQuestion;
