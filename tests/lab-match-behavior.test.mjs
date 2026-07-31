@@ -1452,11 +1452,28 @@ test('the retention tension has a rung to route to, and two claims still cannot 
       `${row.id} is now set aside by the gate. The benchmark says retain, so this is a gate `
       + 'regression, not a mapping result.');
     assert.equal(segment.unit.isClaimLike, true);
+    if (row.id === 'dd-05') {
+      /*
+       * CLOSED 2026-07-31. dd-05 was the RETRIEVAL half of the gap: its home
+       * entry existed and spoke `desire decline` where the claim says
+       * `attraction fades`. One authored misreading in the ordinary register of
+       * the claim closed it. md/lab-retention-reachability.md §7 has the cost.
+       */
+      assert.equal(segment.mapped, true,
+        'dd-05 no longer maps. The match surface on frameworks:desire-maintenance-split is what '
+        + 'closed this gap; losing it reopens the retrieval half of the retention gap and '
+        + 'md/lab-retention-reachability.md has to say so.');
+      assert.equal(segment.matches[0].canonId, 'frameworks:desire-maintenance-split',
+        `dd-05 maps to ${segment.matches[0].canonId}, not to the entry the surface was authored `
+        + 'on. Mapping to the wrong home is a different outcome from mapping, and the record '
+        + 'claims the right one.');
+      continue;
+    }
     assert.equal(segment.mapped, false,
       `${row.id} now MAPS, to ${segment.matches[0]?.canonId} at ${segment.matches[0]?.score}. `
-      + 'That is a retention gap closing and it is good news — record which of the two it was in '
-      + 'md/lab-retention-reachability.md (dd-05 is retrieval, dd-28 is doctrine) and update this '
-      + 'assertion to name the case that is still open.');
+      + 'dd-28 is the DOCTRINE half of the retention gap — nothing in the canon covers conflict '
+      + 'repair or contempt — so this closing means doctrine landed. Record what closed it in '
+      + 'md/lab-retention-reachability.md rather than relaxing this assertion.');
   }
 });
 

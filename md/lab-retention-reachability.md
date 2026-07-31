@@ -191,6 +191,64 @@ moves either.
 
 Reproduce: `dd05-cost.mjs`.
 
+## 8. SHIPPED — dd-05 is closed, canon `1.0.0+dbc262abfc7e`
+
+Jason ruled the face crossing ACCEPT at `b6de5a7`, which was the ruling this was
+waiting behind. The second draft went in unchanged, 491 concepts both sides, no
+fixture pin moved.
+
+```
+dd-05   unmapped, best 0.410 to the wrong entry
+   ->   MAPPED 0.484  frameworks:desire-maintenance-split
+dd-28   unchanged, and still the doctrine half
+```
+
+**The credible-line crossing this produced is a LOSS and it is the right one.**
+
+```
+frameworks:desire-maintenance-split   0.431 -> 0.429
+"We predicted that mate retention behaviors would be positively related to
+ relationship satisfaction."
+displayed now: mate-retention-intensity@0.643 · satisfaction-flywheel@0.457
+```
+
+That sentence is about mate retention behaviour, and `mate-retention-intensity`
+holds it at **0.643** — far above the entry that let go of it. A marginal second
+match leaving while the correct home sits 0.21 above it is the matcher getting
+*more* right, not less. **Recommended ACCEPT; left PENDING, because that line is
+Jason's by standing rule and nothing here carries a machine verdict on it.**
+
+Eleven `minWeakScore` crossings, all on the edited entry, ruled by key with
+`ruledBy: Claude` — **5 ACCEPT / 6 REJECT**, and the weak backlog held at exactly
+516. The six REJECTs are honest and worth stating rather than absorbing:
+
+- four are gains on **methods and affect prose** — sample-inclusion criteria, the
+  role of anger, positive affect predicting intactness, Gottman on affect. The
+  misreading contributed `couple` / `relationship` / `long`, and those fire on any
+  longitudinal-couples paper.
+- two are **losses of correct neighbours** — satisfaction predicting changes in
+  couples' sexual frequency, and sexual satisfaction predicting marital
+  satisfaction. Both are this entry's own subject, both dropped 0.002 out of the
+  band. Costed and recorded rather than waved through.
+
+Ratio: 6 of 11 wrong, against the face/age patch's 6 of 15. **This is the more
+expensive of the two surfaces**, and it bought a documented gap closure the site's
+own acceptance contract had been asserting since Checkpoint 01.
+
+The guard in `tests/lab-match-behavior.test.mjs` now asserts dd-05 **maps, and
+maps to the entry the surface was authored on** — mapping to the wrong home is a
+different outcome from mapping. RED-verified by removing the misreading from
+`data/canon-overlay.json` and rebuilding:
+
+> dd-05 no longer maps. The match surface on
+> `frameworks:desire-maintenance-split` is what closed this gap; losing it
+> reopens the retrieval half of the retention gap.
+
+dd-28 keeps its original assertion with a sharper failure message: it is the
+doctrine half, so its closing means doctrine landed.
+
+Reproduce: `dd05-cost.mjs` · `read-crossings.mjs` · `rule-weak-dd05.mjs`.
+
 The canon was mutated **in memory** for this check. That is legitimate here and
 would not be for `tests/canon-index-fixtures.mjs`, which calls
 `buildCanonIndex()` and never reads `data/le-canon-index.json` — patching the
