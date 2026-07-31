@@ -15,7 +15,9 @@ doctrine session asked the obvious next question about the surface an author doe
 > entry I have written is reachable by people who already think like the page and
 > invisible to people making the actual claim.
 
-It does, and they are.
+It does, and they often are — see §4a, which narrows "every entry" to "most, and
+it tracks the alias set" after a contest that also found a real bug in the
+harness below.
 
 ## 1. The outcome: same claim, two registers
 
@@ -109,6 +111,106 @@ Two directions that follow, neither of them costed here:
   MULTI-WORD alias set is the cheapest register bridge available. Note it is also
   a gate change under the live coupling (v2.6.6 option 2a).
 
+## 4a. CONTEST, 2026-07-31 — the finding survives, the instrument did not
+
+The concurrent session extended the harness from three entries to nine, nearly
+published *"only 2 of 9 reachable in ordinary register"*, and caught that it was
+mostly their own probes. Every claim below was re-run here rather than taken on
+trust.
+
+### The harness bug, and it is mine
+
+`probe()` opened with
+
+```js
+if (!s || s.unit.domainRelevance.status === 'irrelevant') return 'GATE-BINNED';
+```
+
+so `segments.length === 0` reported as **GATE-BINNED**. Those are different
+failures: one is the domain gate rejecting a unit, the other is **no unit ever
+forming**, with retrieval never running. Four of their nine ordinary probes
+returned zero segments and read as *"the gate rejects ordinary register"* — a
+much more alarming and completely wrong finding, and the gate is the thing anyone
+would then have gone and "fixed".
+
+Confirmed reachable, one claim in three framings:
+
+```
+bare conversational   segments 0   residual-pool  NO-UNIT
+in a paragraph        segments 1   residual-pool  weak   0.473
+declarative rewrite   segments 1   residual-pool  MAPPED 0.582
+```
+
+*"Anyone still single at forty is single for a reason, all the good ones got
+taken years ago"* — comma-spliced, two clauses, conversational — produces
+nothing. The same claim in a paragraph segments and reaches; rewritten
+declaratively it maps. **The exact trigger is not isolated here** (splice, clause
+count and length are all confounded in that probe); what is established is that
+the failure is at segmentation, before the gate and before retrieval.
+
+The label is now split: `NO-UNIT` when no segment forms, `GATE-BINNED` only when
+a unit exists and the gate marked it irrelevant.
+
+### §1 and §2 stand, checked
+
+All six probes behind the published table formed units, so nothing in §1–§3
+inherits the defect:
+
+```
+saturation-rule       ordinary not reached   analytic MAPPED 0.647
+survivorship-channel  ordinary MAPPED 0.472  analytic MAPPED 0.654
+virality-filter       ordinary not reached   analytic MAPPED 0.765
+every probe formed a unit: YES
+```
+
+### The effect is real, directional, and NOT universal
+
+Their corrected census over the five comparable pairs of nine: **three show the
+asymmetry, one shows none, and one runs backwards** — `local-market` is reachable
+in ordinary register and only weak in its own analytic vocabulary. So §1's
+framing needs narrowing. **"The synopsis makes entries unreachable" is too
+strong.** The honest statement is that the gap is common and directional, not a
+property every entry has.
+
+My own check of four extra entries adds one comparable pair and agrees:
+
+```
+clearing-order   ordinary MAPPED 0.485   analytic MAPPED 0.652   both reach
+```
+
+### And I reproduced the probe defect immediately after being warned about it
+
+Three of my four new probes hit `NO-UNIT` — `local-market` ordinary,
+`residual-pool` analytic, and `sex-ratio` in **both** registers. I authored them
+in the same hurry the other session did, having just been handed the diagnosis.
+**Probe authoring needs its own contract the way `commonMisreading` does:** one
+declarative clause, no comma splice, and enough surrounding context to segment.
+Until that exists, any register census is measuring the prose of whoever wrote
+the probes.
+
+### What survives, and it is a stronger version of the alias conclusion
+
+They report six of nine entries unaffected by emptying the synopsis. I can
+corroborate part of it on my own probes and not all of it:
+
+```
+residual-pool   ordinary  0.507 -> 0.514   unchanged, agrees
+clearing-order  ordinary  0.485 -> 0.488   unchanged, agrees
+clearing-order  analytic  0.652 -> 0.566   -0.086, the synopsis contributes
+local-market    analytic  0.598 -> 0.511   -0.087, DISAGREES with their 0.404 -> 0.408
+```
+
+The `local-market` disagreement is a different probe, not a different answer —
+theirs scored 0.404 weak where mine maps at 0.598, so the two measurements are of
+different sentences and neither refutes the other. **Recorded as unresolved
+rather than averaged.**
+
+What both censuses agree on is the shape: **the synopsis carries an entry only
+when the alias set does not already cover the claim's vocabulary.** Where it
+carries, that is the signature of a thin alias set rather than of an analytic
+register as such. That is a better statement of §2 than §2 makes, and it sharpens
+the recommendation: the cheapest lever is multi-word aliases, not prose.
+
 ## 5. Why it stops here
 
 This is a canon-wide structural finding about 491 entries and the remedy is
@@ -126,7 +228,16 @@ sources it fails on are written in the register of argument.**
 ## Reproducing
 
 ```
-synopsis-register.mjs   the three matched pairs, the synopsis-stripped variant,
-                        and the smv:looks:age control
-overlap-vs-growth.mjs   the growth-versus-overlap check, three canon points
+synopsis-register.mjs    the three matched pairs, the synopsis-stripped variant,
+                         and the smv:looks:age control. CARRIES THE LABEL BUG —
+                         use round 2 instead.
+synopsis-register-2.mjs  NO-UNIT split out from GATE-BINNED, the three published
+                         pairs re-verified, the four-framing demonstration, and
+                         four more entries
+overlap-vs-growth.mjs    the growth-versus-overlap check, three canon points
 ```
+
+**Do not reuse `synopsis-register.mjs`.** It is kept only because §1–§3 were
+measured with it and every probe behind them was verified to form a unit; its
+`GATE-BINNED` label is wrong for the `segments.length === 0` case and that is
+exactly the confusion §4a is about.
