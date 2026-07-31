@@ -122,7 +122,33 @@ removed. Every number here came from importing the shipped analyzer, not from a 
 
 **Open, and needing Jason:**
 
-1. **Test 8** — reword the probe (the measurement in §2 supports it) or leave red. Ruled (a) twice.
+1. ~~**Test 8**~~ — **RULED AND CLOSED.** Jason adjudicated (c), reword the probe. §2 is why (b)
+   was rejected: an entry reaching two passages, one of them exactly on subject, is not
+   over-broad, and narrowing it would have cost the correct capture. See §7.
 2. **The absorbed crossings** (§1) — unrecoverable; noted so no later reader mistakes `ok 3` for
    a statement about the 507 → 532 growth.
 3. **The ten unvalidated entries** (§4) — needs a register the current corpus does not contain.
+
+## 7. The ruling, and the selection rule it leaves behind
+
+Jason held (a) until the entry could be measured, then ruled **(c) reword the probe**. The new
+probe is *"A new claim says volcanic ash decides which romantic partner sneezes more in autumn."*
+
+It was chosen by measurement against two criteria, because the old one died of being written in
+vocabulary the canon later grew into:
+
+1. **Headroom below `minCredibleScore`.** Best match 0.336 (`lexicon:term-the-consumer-unit`)
+   against the 0.43 line — **0.094 clear**. Seven candidates were measured.
+2. **Outside the canon's growth direction.** *"does the laundry"* (0.346) and *"parks the car"*
+   (0.335) scored as well or better and were **rejected anyway**: `statistics` now carries
+   `stat-equal-earner-labor`, so household-labour vocabulary is precisely where this canon is
+   expanding. Seasonal physiology is not.
+
+**The general rule: a negative control has to sit OUTSIDE the distribution it controls for.**
+The old probe's failure was drifting inside it — 0.475 against genuine corpus captures of
+0.431–0.486 on the same topic. Headroom alone is not enough, because headroom erodes in whatever
+direction the canon is growing. If this probe ages out too, re-measure candidates the same way
+rather than taking the first sentence that passes.
+
+Verified after the reword, with the corpus present so the tripwire is armed rather than skipped:
+`npm run test:lab` — **18 steps · 18 ok · 0 failed**.

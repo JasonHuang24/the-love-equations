@@ -249,39 +249,44 @@ test('independent mixed fixtures do not inherit SMV or gender signatures', async
       known: 'All women always choose the highest-status man.',
       expectedCanonId: 'lexicon:term-awalt-all-women-are-like-that',
       /*
-       * THIS ASSERTION IS RED ON PURPOSE. DO NOT REPAIR IT. Jason ruled it red
-       * on 2026-07-31 and the ruling holds until he adjudicates it; the reasoning
-       * is in the md/mission-notes.md row for `5726a2d`, and cb6625f reverted the
-       * reword that had briefly made it green.
+       * Reworded 2026-07-31 at canon 532, by Jason's adjudication. The previous
+       * probe read "volcanic ash predicts which romantic partner cancels a date"
+       * and had stopped being novel: statistics:stat-desire-prediction is about
+       * predicting which two people click, so it mapped there at 0.475 Low.
        *
-       * The probe below was authored to be unmappable and is not any more:
-       * statistics:stat-desire-prediction is about predicting which two people
-       * click, so this sentence maps to it at 0.476 Low (canon 529) / 0.475 Low
-       * (canon 532). Three sessions diagnosed it independently and agree — no
-       * over-broad alias, no authoring defect. The entry is legitimately dense in
-       * predict / romantic / date because that is its subject, and this probe was
-       * written from that vocabulary before any such entry existed. The
-       * misreadings added alongside it move the score 0.477 -> 0.476, so they are
-       * not the cause either.
+       * The ruling took three attempts to settle and the record matters, because
+       * two sessions greened this in good faith before it was adjudicated. The
+       * options were (a) leave red, (b) narrow the entry's match surface,
+       * (c) reword the probe. Jason held (a) until the entry could be measured,
+       * then chose (c) — and the measurement is why (b) was rejected:
+       * stat-desire-prediction reaches exactly TWO passages in the whole corpus,
+       * one of them "Most U.S. adults are skeptical or unsure that dating
+       * algorithms can predict love", which is precisely its subject. Narrowing
+       * it would have cost a correct capture to protect a synthetic sentence.
+       * Full record: md/lab-post-restoration-sweep-532.md.
        *
-       * Offered (a) leave red for adjudication, (b) narrow the entry's match
-       * surface, (c) reword the probe and freeze it as an accepted cost, Jason
-       * chose (a) — twice, the second time after a (c) had already landed. A
-       * frozen benchmark's goalpost does not move without a ruling, and "the test
-       * went red so I refreshed the fixture" is exactly the move that rule exists
-       * to prevent. Two sessions have already tried to green this in good faith;
-       * this comment exists so a third reads the ruling first.
+       * WHY THIS REPLACEMENT AND NOT ANOTHER — the selection rule, which is the
+       * reusable part. The old probe died because it was written in vocabulary
+       * (predict / romantic / date) that the canon later grew into, so a
+       * replacement is chosen by MEASUREMENT against two criteria, not by taste:
        *
-       * Scope, measured: ONE probe, not a false-positive class. The Saturn-rings
-       * fixture above shares this test and stays unmapped at canon 532, and this
-       * is the only failing subtest in the file.
+       *   1. Maximum headroom below minCredibleScore. This one's best match is
+       *      0.336 (lexicon:term-the-consumer-unit) against a 0.43 line, so it
+       *      sits 0.094 clear. Seven candidates were measured; the runners-up
+       *      were "does the laundry" (0.346) and "parks the car" (0.335).
+       *   2. Outside the canon's growth direction. "Laundry" and "parks the car"
+       *      scored as well or better but were REJECTED: statistics carries
+       *      stat-equal-earner-labor, so household-labour vocabulary is exactly
+       *      where this canon is expanding — the same trap that killed the last
+       *      probe. Seasonal physiology is nowhere near relationship science.
        *
-       * Known cost, and part of what is being ruled on: `npm run test:lab` chains
-       * with `&&`, so this stops the run before the threshold and audit steps —
-       * which makes the suite uninformative about admission lines, not merely
-       * incomplete. Run those directly while this stands.
+       * A negative control has to sit OUTSIDE the distribution it controls for.
+       * The old probe's failure was that it drifted inside: it scored 0.475 while
+       * genuine corpus captures on that topic score 0.431-0.486. If this one ages
+       * out too, re-measure candidates the same way rather than reaching for the
+       * first sentence that passes.
        */
-      novel: 'A new claim says volcanic ash predicts which romantic partner cancels a date.',
+      novel: 'A new claim says volcanic ash decides which romantic partner sneezes more in autumn.',
     },
   ];
 
