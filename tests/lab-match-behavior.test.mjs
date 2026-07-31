@@ -1274,6 +1274,25 @@ test('a generic title word never becomes a match surface on its own', async () =
  * probes that plainly make the claim. Their dead alias does cost something, but
  * the fix is a match surface, not typing: typing them is what produced the 75.
  * Recorded here rather than in a comment somewhere, so it stays visible.
+ *
+ * CORRECTION 2026-07-31, from the match-surface pass
+ * (md/lab-face-age-match-surface.md). "not-reached" is too strong for the
+ * CONCEPT, though it was true of that probe. `smv:looks:age` reaches 0.581
+ * displayed on "Her looks are time-stamped: a woman's dating value falls with
+ * age while a man's rises with money and status" — a probe that plainly makes
+ * the claim, written in the entry's own register. The failure is
+ * REGISTER-SPECIFIC: the entry is reachable by anyone writing in its
+ * vocabulary and unreachable by anyone writing the claim the way the claim is
+ * actually made ("Men prefer younger women, and the gap widens as the man gets
+ * older" reaches nothing, before or after).
+ *
+ * That distinction is why the fix is a misreading and not an alias. The one
+ * component that DID reach the market-register phrasing was a `younger women`
+ * alias, at 0.540 — and its only archive gain was a harassment prevalence
+ * statistic, because `younger women` signals the population being described
+ * rather than the claim being made. That is the fourth failure shape the
+ * generic-title ruling named, and it does not improve by lengthening the token
+ * into a phrase.
  */
 const GENERIC_TITLE_REACHED_ANYWAY = [
   { want: 'smv:looks:body',
