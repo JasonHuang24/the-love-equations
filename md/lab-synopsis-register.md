@@ -303,8 +303,24 @@ the POPULATION OR TOPIC the claim is about. A phrase that names the population
 fires on every passage describing that population, which is the fourth failure
 shape whatever its length.
 
-That rule is stated from existing data and **has not been tested prospectively.**
-It is the obvious next measurement if anyone gets scope for it.
+That rule is stated from existing data and ~~**has not been tested
+prospectively**~~ **was tested prospectively the same day —
+`md/lab-alias-naming-rule.md`.** The result in short:
+
+- **The test is VOID for the half that matters.** Only 1 of 32 PREDICATIVE
+  aliases occurs anywhere in the archive, so the class has no population and a
+  null says nothing. The single hit is a book title.
+- **Which means the discourse-register recommendation in §2 and §4b rests
+  entirely on authored probes.** `just move` reaches an authored sentence at
+  0.645 and occurs **zero times** in twenty-one sources. The archive can neither
+  confirm nor refute the remedy this document recommends.
+- **The surviving half sharpens the axis**: it is not claim-versus-population, it
+  is **CONCEPT versus population**. `physical attractiveness` (84 hits) *is* the
+  looks lever and lands on claims; `previously married` (3 hits) is a demographic
+  category and lands on a figure axis label. Naming the concept is necessary and
+  not sufficient — `age` names its concept exactly and still fails, because the
+  token's presence is not evidence.
+- **331 of 360 multi-word aliases never occur in the archive at all.**
 
 What both censuses agree on is the shape: **the synopsis carries an entry only
 when the alias set does not already cover the claim's vocabulary.** Where it
