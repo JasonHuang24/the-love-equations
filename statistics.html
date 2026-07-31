@@ -106,12 +106,30 @@
             <a class="toc-entry" href="#stat-childfree-intent"><span class="toc-num">39</span> The choice not to parent</a>
           </div>
           <div class="toc-group">
+            <div class="toc-group-label">What the search can predict</div>
+            <a class="toc-entry" href="#stat-desire-prediction"><span class="toc-num">40</span> What a profile can&rsquo;t tell you</a>
+            <a class="toc-entry" href="#stat-marriage-market"><span class="toc-num">41</span> The pool is not the population</a>
+            <a class="toc-entry" href="#stat-acquaintance-matching"><span class="toc-num">42</span> Friends first changes the odds</a>
+          </div>
+          <div class="toc-group">
+            <div class="toc-group-label">Decisions that stick</div>
+            <a class="toc-entry" href="#stat-cycling"><span class="toc-num">43</span> Breaking up and going back</a>
+            <a class="toc-entry" href="#stat-cohab-timing"><span class="toc-num">44</span> When you moved in together</a>
+            <a class="toc-entry" href="#stat-wedding-hazard"><span class="toc-num">45</span> What the wedding predicts</a>
+          </div>
+          <div class="toc-group">
+            <div class="toc-group-label">The trainable part</div>
+            <a class="toc-entry" href="#stat-relationship-education"><span class="toc-num">46</span> Do the skills programs work?</a>
+            <a class="toc-entry" href="#stat-sexual-communication"><span class="toc-num">47</span> Talking about sex</a>
+            <a class="toc-entry" href="#stat-sex-frequency"><span class="toc-num">48</span> The once-a-week ceiling</a>
+          </div>
+          <div class="toc-group">
             <div class="toc-group-label">Verified on the Mythbuster</div>
-            <a class="toc-entry" href="#stat-mythbuster"><span class="toc-num">40</span> Numbers carried by rulings</a>
+            <a class="toc-entry" href="#stat-mythbuster"><span class="toc-num">49</span> Numbers carried by rulings</a>
           </div>
           <div class="toc-group">
             <div class="toc-group-label">Numbers that break</div>
-            <a class="toc-entry" href="#stat-cutting-room"><span class="toc-num">41</span> Stats we refused to chart</a>
+            <a class="toc-entry" href="#stat-cutting-room"><span class="toc-num">50</span> Stats we refused to chart</a>
           </div>
         </div>
       </details>
@@ -822,6 +840,181 @@
           <span class="chart-method"><span class="mlabel">Method</span> Pew American Trends Panel probability surveys with matched wording; 2023 full wave N=11,945, including 1,916 nonparents ages 18&ndash;49. The 2024 reasons survey used a separate screened base of 770 under-50 nonparents already unlikely to have children.</span>
         </div>
         <div class="chart-source">Pew Research Center (2024), &ldquo;The Experiences of U.S. Adults Who Don&rsquo;t Have Children.&rdquo; <a href="https://www.pewresearch.org/social-trends/2024/07/25/the-experiences-of-u-s-adults-who-dont-have-children/" target="_blank" rel="noopener">Report &rarr;</a></div>
+      </div>
+
+      <div class="dos-section">What the search can and cannot predict</div>
+
+      <div class="chart-card" id="stat-desire-prediction">
+        <div class="chart-kicker">Matching algorithms &middot; speed dating <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">The part you most want predicted is the part nobody could predict</div>
+        <div class="chart-q">Share of romantic-desire variance a machine-learning model recovered from more than 100 self-report measures collected <em>before</em> the daters met &mdash; and, in the last row, from what they reported right after a four-minute date:</div>
+        <div class="predictor-chart" role="group" aria-label="Variance in romantic desire explained, on a zero to thirty percent scale">
+          <div class="predictor-scale" aria-hidden="true"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30%</span></div>
+          <div class="predictor-row" role="img" aria-label="Being desired by others, predicted from pre-date measures: 21.5 percent of variance">
+            <div class="predictor-label">Being desired by others</div>
+            <div class="predictor-track"><div class="predictor-fill partner" style="width:71.6%;"></div></div>
+            <div class="predictor-value">21.5%<span>pre-date</span></div>
+          </div>
+          <div class="predictor-row" role="img" aria-label="Desiring others in general, predicted from pre-date measures: 15.5 percent of variance">
+            <div class="predictor-label">Desiring others in general</div>
+            <div class="predictor-track"><div class="predictor-fill individual" style="width:51.6%;"></div></div>
+            <div class="predictor-value">15.5%<span>pre-date</span></div>
+          </div>
+          <div class="predictor-row" role="img" aria-label="Unique desire for one specific partner, predicted from pre-date measures: approximately zero percent of variance">
+            <div class="predictor-label">Wanting <em>that</em> person specifically</div>
+            <div class="predictor-track"><div class="predictor-fill relation" style="width:0.6%;"></div></div>
+            <div class="predictor-value">&asymp;0%<span>pre-date</span></div>
+          </div>
+          <div class="predictor-row" role="img" aria-label="Unique desire for one specific partner, predicted from measures taken after the date: 16 to 29 percent of variance">
+            <div class="predictor-label">Wanting <em>that</em> person &mdash; asked after the date</div>
+            <div class="predictor-track"><div class="predictor-fill relation" style="width:75%;"></div></div>
+            <div class="predictor-value">16&ndash;29%<span>post-date</span></div>
+          </div>
+        </div>
+        <div class="chart-note">Traits and preferences do predict something: who is broadly desirable, and who is broadly hard to please. What they do not predict is the thing every matching service sells &mdash; that two particular people will click. And this is not a case of a small target: unique, person-specific desire was the <em>largest</em> component of the outcome (about 35% of the variance in desire), which means the model had the most room to work exactly where it failed. Trained on one sample and tested on the other, the two unique-desire models scored &minus;2.2% and &minus;0.6% variance explained &mdash; worse than predicting the average for everyone. Yet the same algorithm recovered 16&ndash;29% of that same unique desire from what people said <em>after</em> four minutes of conversation. The practical reading is unglamorous: paper screening can rule out, it cannot match, so the information you actually need is on the other side of meeting. <a href="#stat-relationship-quality" style="color:var(--scarlet-dim);">And once a couple exists, the relationship outpredicts the r&eacute;sum&eacute; &rarr;</a></div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> 350 daters &middot; 15 speed-dating events</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Two independent undergraduate samples (163 daters in 2005, 187 in 2007), each attending roughly twelve four-minute dates. Desire was split into actor, partner and relationship components with a social-relations model, then predicted by random forests trained on one sample and tested on the other (181 predictors in one, 112 in the other). Bars are those cross-validated figures; across all model variants the paper reports 4&ndash;18% for actor and 7&ndash;27% for partner variance. The post-date row shows the reported 16&ndash;29% range, drawn at its midpoint. Undergraduates, one platform for meeting, and a measure of initial desire &mdash; not long-run compatibility.</span>
+        </div>
+        <div class="chart-source">Joel, Eastwick &amp; Finkel (2017), <em>Psychological Science</em> 28(10):1478&ndash;1489, &ldquo;Is romantic desire predictable?&rdquo; <a href="https://doi.org/10.1177/0956797617714580" target="_blank" rel="noopener">Article &rarr;</a></div>
+      </div>
+
+      <div class="chart-card" id="stat-marriage-market">
+        <div class="chart-kicker">Marriage market &middot; sex ratios <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">The pool is not the population</div>
+        <div class="chart-q">Never-married men per 100 never-married women, ages 25&ndash;34 &mdash; all of them, and the employed subset:</div>
+        <div class="bar-group-label">All never-married young adults</div>
+        <div class="bar-row"><div class="bar-label">All men</div><div class="bar-track"><div class="bar-fill male" style="width:63%;">126</div></div></div>
+        <div class="bar-row"><div class="bar-label">Employed men</div><div class="bar-track"><div class="bar-fill muted" style="width:45.5%;">91</div></div></div>
+        <div class="bar-group-label">High school education or less</div>
+        <div class="bar-row"><div class="bar-label">All men</div><div class="bar-track"><div class="bar-fill male" style="width:87%;">174</div></div></div>
+        <div class="bar-row"><div class="bar-label">Employed men</div><div class="bar-track"><div class="bar-fill muted" style="width:54%;">108</div></div></div>
+        <div class="bar-group-label">Bachelor&rsquo;s degree</div>
+        <div class="bar-row"><div class="bar-label">All men</div><div class="bar-track"><div class="bar-fill male" style="width:51%;">102</div></div></div>
+        <div class="bar-row"><div class="bar-label">Employed men</div><div class="bar-track"><div class="bar-fill muted" style="width:44%;">88</div></div></div>
+        <div class="bar-group-label">Post-graduate degree</div>
+        <div class="bar-row"><div class="bar-label">All men</div><div class="bar-track"><div class="bar-fill male" style="width:38.5%;">77</div></div></div>
+        <div class="bar-row"><div class="bar-label">Employed men</div><div class="bar-track"><div class="bar-fill muted" style="width:33.5%;">67</div></div></div>
+        <div class="chart-note">Headcount says there is a surplus of never-married young men &mdash; 126 for every 100 women. Apply one filter that most women say they care about, a job, and the surplus becomes a shortfall: 91. Then the ratio flips again by education, and it flips <em>hard</em>. A woman with a post-graduate degree who wants a similarly credentialed man is choosing inside a pool of 67 employed men per 100 women; a woman with a high-school education or less is choosing inside one of 108. That is the same country, the same year, and two opposite markets &mdash; which is the whole point. Aggregate ratios describe nobody in particular; the ratio that governs your search is the one left standing after your own filters. Every filter you add is a market you are choosing to enter. <a href="#stat-never-married" style="color:var(--scarlet-dim);">See what the never-married share has done since &rarr;</a></div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-database" aria-hidden="true"></i> Census/ACS &middot; millions</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Pew analysis of the 1960&ndash;2000 decennial censuses and the 2010&ndash;2012 American Community Survey via IPUMS; figures shown are 2012. Bars use a 200-per-100 scale, so widths are half the printed values. &ldquo;Employed&rdquo; is a blunt proxy for provision, and these counts include every never-married person in the age band regardless of city, orientation, or any interest in marrying. Vintage matters: this is a 2012 snapshot, and the education gap has widened since.</span>
+        </div>
+        <div class="chart-source">Pew Research Center (2014), &ldquo;Record Share of Americans Have Never Married,&rdquo; Ch. 4. <a href="https://www.pewresearch.org/social-trends/2014/09/24/chapter-4-never-married-young-adults-on-the-marriage-market/" target="_blank" rel="noopener">Report &rarr;</a></div>
+      </div>
+
+      <div class="chart-card" id="stat-acquaintance-matching">
+        <div class="chart-kicker">Looks matching &middot; acquaintance <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">Being friends first changes who you can pair with</div>
+        <div class="chart-q">Correlation between partners&rsquo; rated physical attractiveness, by whether they were platonic friends before dating (bar length shows the magnitude of <em>r</em>):</div>
+        <div class="bar-row"><div class="bar-label">Not friends first</div><div class="bar-track"><div class="bar-fill muted" style="width:67%;">r = .67</div></div></div>
+        <div class="bar-row"><div class="bar-label">Partners disagreed</div><div class="bar-track"><div class="bar-fill muted" style="width:57%;">r = .57</div></div></div>
+        <div class="bar-row"><div class="bar-label">Friends first</div><div class="bar-track"><div class="bar-fill muted" style="width:43%;">r = .43</div></div></div>
+        <div class="chart-note">Looks-matching is real, but its strength is not fixed &mdash; it depends on how the couple met. Strangers agree strongly about who is attractive, and where there is consensus there is a market, so couples who paired off quickly were tightly sorted by appearance. Time dissolves that consensus into personal taste: for couples who knew each other about nine months or longer before dating, attractiveness matching was no longer statistically distinguishable from zero. Read it as a structural fact rather than a trick. The stranger market prices you against everyone at once, which is exactly what a dating app is; a room you keep turning up in prices you against nobody. This is correlational and retrospective &mdash; friends-first couples may differ in other ways &mdash; but it is the cleanest available evidence that the venue sets the terms. <a href="#stat-looks-matching" style="color:var(--scarlet-dim);">See the baseline looks-matching coefficient &rarr;</a></div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> 167 couples</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Coder-rated physical attractiveness for both partners; acquaintance length computed as months known minus months romantically involved (mean 3.8, median 2.0), with 20 couples beyond Tukey&rsquo;s outer fences excluded. Bars are the observed correlations by friends-first status (n = 68 / 31 / 67) for the joint attractiveness assessment, not model-predicted values; the separate-assessment measure runs lower (.46 / .43 / .20) in the same direction.</span>
+        </div>
+        <div class="chart-source">Hunt, Eastwick &amp; Finkel (2015), <em>Psychological Science</em> 26(7):1046&ndash;1053, &ldquo;Leveling the playing field.&rdquo; <a href="https://doi.org/10.1177/0956797615579273" target="_blank" rel="noopener">Article &rarr;</a></div>
+      </div>
+
+      <div class="dos-section">Decisions that stick</div>
+
+      <div class="chart-card" id="stat-cycling">
+        <div class="chart-kicker">Churn &middot; on-again relationships <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">Getting back together is common, and it leaves a mark</div>
+        <div class="chart-q">Share who report having broken up and reconciled with the partner they are currently with:</div>
+        <div class="bar-row"><div class="bar-label">Cohabiting</div><div class="bar-track"><div class="bar-fill muted" style="width:37%;">37%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Married</div><div class="bar-track"><div class="bar-fill muted" style="width:23%;">23%</div></div></div>
+        <div class="chart-note">Reconciliation is not a rare event &mdash; more than a third of cohabiting couples and nearly a quarter of married ones had already ended the relationship at least once and restarted it. But cyclers looked different afterward, in the same direction on both sides of the couple and at both stages: more uncertainty about the relationship&rsquo;s future, and lower satisfaction (cohabiting women averaged 14.98 versus 16.72 on the satisfaction measure; married women 16.20 versus 17.12). Past cycling also predicted more cycling. Two honest limits: this is retrospective self-report, and it is correlational &mdash; going back does not prove the relationship got worse, because whatever caused the first breakup may be producing the lower satisfaction too. What the data will support is narrower and still useful: a breakup-and-return is information about the relationship, not a reset of it.</div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> 323 cohabiting &middot; 752 married couples</span>
+          <span class="chart-method"><span class="mlabel">Method</span> National sample of couples, both partners surveyed; retrospective reports of a breakup and renewal within the current relationship; dyadic regressions accounting for the non-independence of partners&rsquo; answers. Among married cyclers, 87% of the breakups happened while dating rather than while living together.</span>
+        </div>
+        <div class="chart-source">Vennum, Lindstrom, Monk &amp; Adams (2014), <em>Journal of Social and Personal Relationships</em> 31(3):410&ndash;430. <a href="https://doi.org/10.1177/0265407513501987" target="_blank" rel="noopener">Article &rarr;</a></div>
+      </div>
+
+      <div class="chart-card" id="stat-cohab-timing">
+        <div class="chart-kicker">Cohabitation &middot; timing <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">When you moved in beat whether you moved in</div>
+        <div class="chart-q">Route into marriage, among adults married within the previous ten years:</div>
+        <div class="bar-row"><div class="bar-label">Moved in before engagement</div><div class="bar-track"><div class="bar-fill muted" style="width:43.1%;">43.1%</div></div></div>
+        <div class="bar-row"><div class="bar-label">No cohabiting before marriage</div><div class="bar-track"><div class="bar-fill muted" style="width:40.5%;">40.5%</div></div></div>
+        <div class="bar-row"><div class="bar-label">Moved in only after engagement</div><div class="bar-track"><div class="bar-fill muted" style="width:16.4%;">16.4%</div></div></div>
+        <div class="chart-note">The people who moved in together before making any commitment to marry later reported lower marital satisfaction, less dedication, less confidence in the marriage, more negative communication, and more proneness to divorce. The people who moved in <em>after</em> getting engaged looked no different from the people who never cohabited at all &mdash; which is why the finding is about sequence, not about living together. Differences were small and survived controls for marriage length, age, income, education, and religiousness. The mechanism is genuinely contested and we are not going to pretend otherwise: Kuperberg (2014) shows that age at moving in absorbs much of the classic premarital-cohabitation penalty, and Rosenfeld &amp; Roesler (2019) find premarital cohabitation raises divorce risk in the first year and lowers it later. What survives all three readings is modest and practical &mdash; the lease is not the decision, and letting it stand in for one is the part that shows up later. <a href="#stat-cohabitation-outcomes" style="color:var(--scarlet-dim);">See where first cohabitations actually go &rarr;</a></div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> n = 1,050</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Random-digit telephone survey of men and women married within the past ten years; self-reported route and self-reported marital quality, measured at one point in time. Selection is the standing caveat &mdash; the survey did not assign anyone to a sequence, and people who wait for a commitment may differ from those who do not in ways no control variable captures.</span>
+        </div>
+        <div class="chart-source">Rhoades, Stanley &amp; Markman (2009), <em>Journal of Family Psychology</em> 23(1):107&ndash;111, &ldquo;The pre-engagement cohabitation effect.&rdquo; <a href="https://doi.org/10.1037/a0014358" target="_blank" rel="noopener">Article &rarr;</a></div>
+      </div>
+
+      <div class="chart-card" id="stat-wedding-hazard">
+        <div class="chart-kicker">Divorce hazard &middot; wedding decisions <span class="chart-tier t2">Tier 2</span></div>
+        <div class="chart-title">What the wedding predicts about the marriage</div>
+        <div class="chart-q">Hazard of divorce relative to the comparison group, from one multivariate survival model. Below 1.00 means a lower hazard; the bars run on a 0&ndash;1.60 scale:</div>
+        <div class="bar-row"><div class="bar-label">101&ndash;200 guests</div><div class="bar-track"><div class="bar-fill muted" style="width:26.4%;">0.42</div></div></div>
+        <div class="bar-row"><div class="bar-label">Knew spouse very well</div><div class="bar-track"><div class="bar-fill muted" style="width:35.3%;">0.56</div></div></div>
+        <div class="bar-row"><div class="bar-label">Wedding under $1,000</div><div class="bar-track"><div class="bar-fill muted" style="width:40.1%;">0.64</div></div></div>
+        <div class="bar-row"><div class="bar-label">Dated 3+ years first</div><div class="bar-track"><div class="bar-fill muted" style="width:47.8%;">0.76</div></div></div>
+        <div class="bar-row"><div class="bar-label">Took a honeymoon</div><div class="bar-track"><div class="bar-fill muted" style="width:54.4%;">0.87</div></div></div>
+        <div class="bar-row"><div class="bar-label">Partner&rsquo;s looks mattered</div><div class="bar-track"><div class="bar-fill muted" style="width:80.9%;">1.29</div></div></div>
+        <div class="bar-row"><div class="bar-label">Wedding $20,000 or more</div><div class="bar-track"><div class="bar-fill muted" style="width:82.7%;">1.32</div></div></div>
+        <div class="chart-note">Every association here runs against the advertising. Spending less than $1,000 on the wedding went with a lower divorce hazard; spending $20,000 or more went with a higher one. Filling the room, on the other hand, went the industry&rsquo;s way &mdash; 101 to 200 guests carried the lowest hazard on the board, and taking a honeymoon of any cost went with a lower one. So the pattern is not &ldquo;weddings are bad.&rdquo; It is that the variables tracking the <em>relationship</em> &mdash; knowing each other well, dating three or more years before the proposal, having witnesses present &mdash; line up with survival, while the ones tracking the <em>production</em> do not. Three cautions. This is an online retrospective survey weighted to census benchmarks, not a probability sample. It is association, never causation: couples who throw cheap weddings differ from couples who throw expensive ones in ways the controls cannot fully absorb. And the courtship result is carried by men in this specification &mdash; among men the three-year hazard ratio was 0.58, among women 0.98 and not significant, a split the pooled bar hides.</div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> n = 3,151 ever-married adults</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Cox proportional-hazards model, population-weighted against the 2012 ACS, controlling for age, age at marriage, sex, race, education, employment, household income, region, religious attendance, spousal differences in age/race/education, and children. Bars show the all-persons multivariate column on a 0&ndash;1.60 scale where 1.00 is the reference group (couple-only wedding, $5,000&ndash;$10,000 spend, dating under a year). Guests, knowing well, low spend, dating length and looks are significant at p&nbsp;&lt;&nbsp;.01; the honeymoon and $20,000+ estimates only at p&nbsp;&lt;&nbsp;.10.</span>
+        </div>
+        <div class="chart-source">Francis-Tan &amp; Mialon (2015), <em>Economic Inquiry</em> 53(4):1919&ndash;1930, &ldquo;&lsquo;A diamond is forever&rsquo; and other fairy tales.&rdquo; <a href="https://doi.org/10.1111/ecin.12206" target="_blank" rel="noopener">Article &rarr;</a></div>
+      </div>
+
+      <div class="dos-section">The trainable part</div>
+
+      <div class="chart-card" id="stat-relationship-education">
+        <div class="chart-kicker">Relationship education &middot; meta-analysis <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">The skills are teachable, and the effect is real but modest</div>
+        <div class="chart-q">Average effect of marriage and relationship education programs across experimental studies, in standard deviations (Cohen&rsquo;s <em>d</em>):</div>
+        <div class="bar-row"><div class="bar-label">Communication skills</div><div class="bar-track"><div class="bar-fill muted" style="width:44%;">d = .43&ndash;.45</div></div></div>
+        <div class="bar-row"><div class="bar-label">Relationship quality</div><div class="bar-track"><div class="bar-fill muted" style="width:33%;">d = .30&ndash;.36</div></div></div>
+        <div class="chart-note">This is the rare place in this literature with randomized trials behind it, and the answer is neither &ldquo;communication fixes everything&rdquo; nor &ldquo;nothing works.&rdquo; Taught couples ended up roughly a third to a half of a standard deviation ahead of untaught ones &mdash; a real, moderate shift, larger for observable skills than for how happy people felt. Dosage mattered: moderate-length programs beat short ones. One later randomized trial makes the magnitude concrete. Among 662 Army couples, those who had moved in together before committing to marry divorced at 14.6% over two years versus 7.5% for those who had not &mdash; but among couples randomly assigned to a skills program, that gap disappeared (7.8% versus 7.4%). Caveats worth keeping: the meta-analytic samples were thin on racial, ethnic and economic diversity, stability and aggression were rarely measured as outcomes, and the divorce comparison above is a subgroup within one military population, not the trial&rsquo;s headline result. <a href="#stat-demand-withdraw" style="color:var(--scarlet-dim);">See the conflict pattern these programs target &rarr;</a></div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> 117 studies &middot; 500+ effect sizes</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Meta-analysis of 86 codable reports; bars show the midpoint of each published experimental range and are drawn on a 0&ndash;1.00 <em>d</em> scale, so they are standardized mean differences, not percentages. Quasi-experimental studies produced smaller effects, attributable to pretest group differences. The Army figures come from a separate randomized controlled trial with two years of follow-up.</span>
+        </div>
+        <div class="chart-source">Hawkins, Blanchard, Baldwin &amp; Fawcett (2008), <em>Journal of Consulting and Clinical Psychology</em> 76(5). <a href="https://pubmed.ncbi.nlm.nih.gov/18837590/" target="_blank" rel="noopener">Abstract &rarr;</a> &middot; Trial: Rhoades, Stanley, Markman &amp; Allen (2015), <em>Journal of Family Psychology</em> 29(3):500&ndash;506. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4461475/" target="_blank" rel="noopener">Open article &rarr;</a></div>
+      </div>
+
+      <div class="chart-card" id="stat-sexual-communication">
+        <div class="chart-kicker">Sexual communication &middot; meta-analysis <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">How well couples talk about sex outranks how often</div>
+        <div class="chart-q">Pooled correlations between three dimensions of couples&rsquo; sexual communication and satisfaction (bar length shows the magnitude of <em>r</em>):</div>
+        <div class="bar-group-label">With sexual satisfaction</div>
+        <div class="bar-row"><div class="bar-label">Quality of the talking</div><div class="bar-track"><div class="bar-fill muted" style="width:52%;">r = .52</div></div></div>
+        <div class="bar-row"><div class="bar-label">Sexual self-disclosure</div><div class="bar-track"><div class="bar-fill muted" style="width:39%;">r = .39</div></div></div>
+        <div class="bar-row"><div class="bar-label">Frequency of the talking</div><div class="bar-track"><div class="bar-fill muted" style="width:31%;">r = .31</div></div></div>
+        <div class="bar-group-label">With relationship satisfaction</div>
+        <div class="bar-row"><div class="bar-label">Quality of the talking</div><div class="bar-track"><div class="bar-fill muted" style="width:43%;">r = .43</div></div></div>
+        <div class="bar-row"><div class="bar-label">Frequency of the talking</div><div class="bar-track"><div class="bar-fill muted" style="width:31%;">r = .31</div></div></div>
+        <div class="bar-row"><div class="bar-label">Sexual self-disclosure</div><div class="bar-track"><div class="bar-fill muted" style="width:28%;">r = .28</div></div></div>
+        <div class="chart-note">Pooled across the whole literature, sexual communication correlated with sexual satisfaction at r&nbsp;=&nbsp;.43 and with relationship satisfaction at r&nbsp;=&nbsp;.37 &mdash; among the larger associations anything in this field posts. The internal ranking is the usable part: quality beat both frequency and raw disclosure on both outcomes. Bringing it up more often is not the lever; being able to have the conversation well is. Married samples ran higher (r&nbsp;=&nbsp;.49) than mixed-status ones (.35). The unavoidable caveat is direction &mdash; these are cross-sectional correlations, and a good sex life plainly makes the conversation easier as much as the conversation improves the sex. One moderator result is worth publishing precisely because it is so lopsided: among people low in sociosexuality, the association with relationship satisfaction was r&nbsp;=&nbsp;.69 for men and r&nbsp;=&nbsp;.16 for women, a reminder that a pooled coefficient can hide two very different populations. <a href="#stat-orgasm-gender" style="color:var(--scarlet-dim);">See the outcome gap this sits on top of &rarr;</a></div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> 93 studies &middot; 209 effect sizes &middot; N = 38,499</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Multilevel meta-analysis of individuals currently in a relationship, with moderators for age, relationship length, marital status, individualism and national gender inequality. Bars map <em>r</em> directly to width. Self-report on both sides of every correlation, and no study here randomly assigned couples to talk.</span>
+        </div>
+        <div class="chart-source">Mallory (2022), <em>Journal of Family Psychology</em> 36(3):358&ndash;371. <a href="https://pubmed.ncbi.nlm.nih.gov/34968095/" target="_blank" rel="noopener">Abstract &rarr;</a></div>
+      </div>
+
+      <div class="chart-card" id="stat-sex-frequency">
+        <div class="chart-kicker">Sexual frequency &middot; well-being <span class="chart-tier t1">Tier 1</span></div>
+        <div class="chart-title">More is not better past about once a week</div>
+        <div class="chart-q">Across three samples totalling 30,645 people, the link between how often partnered people have sex and how well they report doing is curved, not straight &mdash; it climbs, then flattens:</div>
+        <div class="chart-note">A straight line fits the data at first glance, and that is the version that circulates. Add a squared term and the curve wins: well-being rises with frequency up to roughly once a week and stops rising after that. Two findings sharpen it. Among single people there was no association at all, linear or curved &mdash; the effect lives inside relationships, and it runs through relationship satisfaction, which follows the same flattening shape. And the size is not trivial: the authors benchmarked it against money, and the gap between having sex less than monthly and having it weekly was larger than the gap between earning $15,000&ndash;$25,000 and earning $50,000&ndash;$75,000 a year. What it does not license is a scoreboard. These are cross-sectional self-reports, so a good relationship producing more sex fits the data as well as more sex producing a good relationship; the plateau is an average across tens of thousands of people, not a target for any particular couple; and nothing here says a couple below the average is failing.</div>
+        <div class="chart-note"><strong>Why there are no bars on this card.</strong> The source publishes this result as a fitted curve with confidence bands rather than a table of means, so there are no per-frequency values to chart. We would rather print the finding without a picture than build a picture out of numbers the study never reported.</div>
+        <div class="chart-meta">
+          <span class="chart-sample"><i class="ti ti-users" aria-hidden="true"></i> N = 30,645 across three studies</span>
+          <span class="chart-method"><span class="mlabel">Method</span> Study 1: 25,510 respondents across 14 waves of the nationally representative General Social Survey, 1989&ndash;2012. Study 2: 335 partnered adults, using the Satisfaction With Life Scale and the income benchmark quoted above. Study 3: the National Survey of Families and Households, 2,400 married couples across three waves spanning 14 years. Linear and squared frequency terms were entered together in every model; the flattening held across gender, age, and relationship length.</span>
+        </div>
+        <div class="chart-source">Muise, Schimmack &amp; Impett (2016), <em>Social Psychological and Personality Science</em> 7(4):295&ndash;302. <a href="https://doi.org/10.1177/1948550615616462" target="_blank" rel="noopener">Article &rarr;</a></div>
       </div>
 
       <div class="dos-section">Verified on the Mythbuster</div>
