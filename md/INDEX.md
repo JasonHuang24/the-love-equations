@@ -49,6 +49,8 @@ record whose own headline was later corrected, with the correction recorded in-f
 - 2026-07-31 · [lab-capture-quality-audit-02.md](lab-capture-quality-audit-02.md) **HIST ⚠** — no magnets in population/sex-ratio batches; §4's framing corrected in-file at §4b: the sweep/product disagreement was hiding the short-unit-penalty exemption bug, fixed v2.6.11 in the sweep's blind spot
 - 2026-07-31 · [lab-research-card-denominator.md](lab-research-card-denominator.md) **HIST** — v2.6.10: research card says "3 of N scored"; the obvious weakBandTotal denominator measured wrong ("3 of 0" on 197 items)
 - 2026-07-31 · [lab-post-restoration-sweep-532.md](lab-post-restoration-sweep-532.md) **LIVE ⚠** — canon-532 restored-corpus sweep: gate clean; stat-desire-prediction NOT over-broad (the probe aged into the distribution); §4 corrected twice at 77b0293 — fourteen not ten, and "zero captures" meant zero top slots, not zero reach
+- 2026-07-31 · [lab-cold-crash-test-gpt56.md](lab-cold-crash-test-gpt56.md) **LIVE** — GPT-5.6 cold crash-test (engine-only, no browser): 14 findings awaiting triage — correct canon statistics labeled Contradicts at High confidence, the gate drops ordinary and named-canon prose, off-domain junk gets confident research neighbors
+- 2026-07-31 · [lab-live-crash-test-01.md](lab-live-crash-test-01.md) **LIVE** — on-screen second pass: all 14 GPT findings reproduce on the real UI; measured the class — 54/532 entries label their OWN synopsis Contradicts (top match, High; branch threshold 0.36, not 0.5) and 150/532 synopses are gate-binned; the AWALT branch is a distinct negation-blind defect; stance fails in both directions (asserted 80/20 lock-out → Supports)
 
 ## Lab gate
 
