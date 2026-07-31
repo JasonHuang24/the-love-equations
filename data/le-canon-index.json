@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+7a8b16547d89",
-  "generatedAt": "2026-07-31T06:14:00.000Z",
+  "indexVersion": "1.0.0+9fdfcb020ea2",
+  "generatedAt": "2026-07-31T06:25:01.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "c865baeda102763400669767fee11082ef189e4126475af506dbf975e5c47fd5",
-      "conceptCount": 41
+      "sha256": "1cc93ed588bc2430247927223f05a72fc23566901ee88e3d3a4f65a932dd7e00",
+      "conceptCount": 44
     },
     {
       "page": "gender-dynamics.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 488,
+    "conceptCount": 491,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -226,13 +226,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
-      "Rules & Frameworks": 41,
+      "Rules & Frameworks": 44,
       "Statistics": 31
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 72,
+      "Framework": 75,
       "Glossary": 90,
       "Hard data": 28,
       "Instrument": 5,
@@ -249,10 +249,10 @@
       "Tier 2": 7,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 397,
-    "conceptsWithExternalSources": 88,
+    "anchoredConceptCount": 400,
+    "conceptsWithExternalSources": 91,
     "dependencyCount": 239,
-    "relatedCount": 367
+    "relatedCount": 379
   },
   "entries": [
     {
@@ -4650,6 +4650,220 @@
       "pressureTests": [
         "Does this local statistic describe the submarket this person is in, or a city-wide average?",
         "Did the apparent benefit of moving survive a correction for who chooses to move?"
+      ]
+    },
+    {
+      "id": "frameworks:saturation-rule",
+      "title": "The Saturation Rule",
+      "page": "frameworks.html",
+      "anchor": "saturation-rule",
+      "category": "Rules & Frameworks",
+      "subcategory": "The advice layer",
+      "synopsis": "The intuition is that advice which works is advice that has not spread yet — a tactic’s edge dies as everyone adopts it. The decay is real and it is large. The reason is not the one everybody gives. Edges do not die because the knowledge got out.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Saturation Rule",
+        "alpha decay",
+        "post-publication decay",
+        "limits to arbitrage",
+        "cost of adoption",
+        "signal saturation"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "stops working once everyone",
+        "everyone is doing it",
+        "the edge is gone",
+        "used to work",
+        "no longer works"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:survivorship-channel",
+        "frameworks:virality-filter",
+        "frameworks:signal-cost-rule",
+        "frameworks:charm-ceiling"
+      ],
+      "boundaryConditions": [
+        "The measured decay comes from asset and matching markets; no study has ever tested whether a dating tactic loses effectiveness as it spreads.",
+        "Apparent decay must first beat two explanations that involve no diffusion at all: an overstated original estimate, and a programme being tried on its easiest targets first."
+      ],
+      "commonMisreadings": [
+        "A dating tactic stops working as soon as enough people have heard about it.",
+        "Improving yourself keeps its full value even when everyone else improves by the same amount."
+      ],
+      "sourceLinks": [
+        {
+          "label": "McLean & Pontiff (2016), “Does Academic Research Destroy Stock Return Predictability?” Journal of Finance 71(1):5–32",
+          "url": "https://doi.org/10.1111/jofi.12365"
+        },
+        {
+          "label": "Jacobs & M&uuml;ller (2020), Journal of Financial Economics 135(1):213–230",
+          "url": "https://doi.org/10.1016/j.jfineco.2019.06.004"
+        },
+        {
+          "label": "Open Science Collaboration (2015), Science 349(6251)",
+          "url": "https://doi.org/10.1126/science.aac4716"
+        },
+        {
+          "label": "Allcott (2015), “Site Selection Bias in Program Evaluation,” Quarterly Journal of Economics 130(3):1117–1165",
+          "url": "https://doi.org/10.1093/qje/qjv015"
+        }
+      ],
+      "pressureTests": [
+        "Is this tactic cheap to copy, or does it stay expensive for everyone who wants it?",
+        "Did the effect decay because it spread, or because the first estimate was inflated?"
+      ]
+    },
+    {
+      "id": "frameworks:survivorship-channel",
+      "title": "The Survivorship Channel",
+      "page": "frameworks.html",
+      "anchor": "survivorship-channel",
+      "category": "Rules & Frameworks",
+      "subcategory": "The advice layer",
+      "synopsis": "Dating advice is produced almost entirely by people selected for having succeeded, or for being able to sell — and the part of the genre that actually sells has essentially never been tested. Not tested and failed. Tested at all. The failures do exist, and the sharper finding of this entry is where they go: they survive inside the literature and get stripped out on the way to you.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Survivorship Channel",
+        "survivorship bias",
+        "publication bias",
+        "dating coach",
+        "untested advice",
+        "selection on success"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "it worked for me",
+        "studies show",
+        "proven method",
+        "what successful men do",
+        "has never been tested"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:saturation-rule",
+        "frameworks:virality-filter",
+        "frameworks:calibration-error",
+        "instrument:compatibility-calculator"
+      ],
+      "boundaryConditions": [
+        "The charge against popular dating advice is that it is unmeasured rather than disproved, and several widely mocked recommendations are supported by the best randomised evidence available.",
+        "Some failures are published rather than hidden, and the loss happens between the study and the advice rather than inside the literature."
+      ],
+      "commonMisreadings": [
+        "A dating tactic with a plausible mechanism and confident advocates has been shown to work.",
+        "Advice without a randomised trial behind it has been shown to be worthless in practice."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Egebark, Ekstr&ouml;m, Plug & van Praag (2021), Journal of Public Economics 196:104372",
+          "url": "https://doi.org/10.1016/j.jpubeco.2021.104372"
+        },
+        {
+          "label": "Bapna, Ramaprasad, Shmueli & Umyarov (2016), Management Science 62(11):3100–3122",
+          "url": "https://doi.org/10.1287/mnsc.2015.2301"
+        },
+        {
+          "label": "Joel, Eastwick & Finkel (2017), Psychological Science 28(10):1478–1489",
+          "url": "https://doi.org/10.1177/0956797617714580"
+        },
+        {
+          "label": "Whitchurch, Wilson & Gilbert (2011), Psychological Science 22(2):172–175",
+          "url": "https://doi.org/10.1177/0956797610393745"
+        },
+        {
+          "label": "Finkel, Eastwick, Karney, Reis & Sprecher (2012), Psychological Science in the Public Interest 13(1):3–66",
+          "url": "https://doi.org/10.1177/1529100612436522"
+        },
+        {
+          "label": "Turner, Matthews, Linardatos, Tell & Rosenthal (2008), New England Journal of Medicine 358(3):252–260",
+          "url": "https://doi.org/10.1056/NEJMsa065779"
+        }
+      ],
+      "pressureTests": [
+        "Did the study being cited measure the thing this advice claims it measured?",
+        "Who would be telling this story if the method had failed for them?"
+      ]
+    },
+    {
+      "id": "frameworks:virality-filter",
+      "title": "The Virality Filter",
+      "page": "frameworks.html",
+      "anchor": "virality-filter",
+      "category": "Rules & Frameworks",
+      "subcategory": "The advice layer",
+      "synopsis": "Every claim you hold about dating arrived through a filter, and the filter was not selecting for accuracy. It selected for novelty, for out-group targeting, for negative framing, and above all for confidence. The comfortable version of this entry blames an algorithm. The evidence says the filter is people — which includes you, and includes us.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Virality Filter",
+        "engagement optimisation",
+        "moral contagion",
+        "out-group animosity",
+        "confidence heuristic",
+        "goes viral"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "everyone is saying",
+        "went viral",
+        "the algorithm pushes",
+        "popular opinion",
+        "confident advice"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:saturation-rule",
+        "frameworks:survivorship-channel",
+        "frameworks:signal-cost-rule",
+        "frameworks:calibration-error"
+      ],
+      "boundaryConditions": [
+        "The measured spread advantage for falsehood applies within fact-checked contested rumours, and amounts to a likelihood ratio near 1.7, which flips almost no prior beliefs.",
+        "The causal agent identified by the evidence is human sharing preference rather than algorithmic ranking, and one large randomised test found that removing the ranking made information diets worse."
+      ],
+      "commonMisreadings": [
+        "A dating claim that goes viral online is for that reason likely to be inaccurate.",
+        "Recommendation algorithms are the reason misleading relationship advice reaches so many people."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Vosoughi, Roy & Aral (2018), “The spread of true and false news online,” Science 359(6380):1146–1151",
+          "url": "https://doi.org/10.1126/science.aap9559"
+        },
+        {
+          "label": "Rathje, Van Bavel & van der Linden (2021), PNAS 118(26)",
+          "url": "https://doi.org/10.1073/pnas.2024292118"
+        },
+        {
+          "label": "Robertson et al. (2023), Nature Human Behaviour",
+          "url": "https://doi.org/10.1038/s41562-023-01538-4"
+        },
+        {
+          "label": "Guess et al. (2023), Science 381(6656)",
+          "url": "https://doi.org/10.1126/science.abp9364"
+        },
+        {
+          "label": "Salganik, Dodds & Watts (2006), Science 311(5762)",
+          "url": "https://doi.org/10.1126/science.1121066"
+        },
+        {
+          "label": "Pennycook et al. (2021), Nature 592",
+          "url": "https://doi.org/10.1038/s41586-021-03344-2"
+        }
+      ],
+      "pressureTests": [
+        "Was this claim selected for being accurate, or for being novel and naming an enemy?",
+        "Can the audience for this advice ever observe whether it worked?"
       ]
     },
     {

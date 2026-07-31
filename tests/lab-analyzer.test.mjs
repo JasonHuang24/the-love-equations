@@ -788,9 +788,16 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * by rewording, 488 by growth. A pin that returns to the same value from
    * unrelated causes is measuring the corpus, not the change, which is the whole
    * reason the three assertions around it carry the test.
+   *
+   * 0.536 at 491, the advice-layer batch. Eight moves now, and the cumulative
+   * drift across all of them is 0.003 — three thousandths, against a
+   * minCredibleScore of 0.43 that the assertion below actually cares about. The
+   * honest summary of this pin's whole history is that canon growth moves it far
+   * too little to matter, and it has never once come close to changing the
+   * behaviour the test exists to check.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.537);
+  assert.equal(weakPassage.weakMatches[0].score, 0.536);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));

@@ -1553,6 +1553,111 @@
         "Did the apparent benefit of moving survive a correction for who chooses to move?"
       ]
     },
+    "frameworks:saturation-rule": {
+      "aliases": [
+        "Saturation Rule",
+        "alpha decay",
+        "post-publication decay",
+        "limits to arbitrage",
+        "cost of adoption",
+        "signal saturation"
+      ],
+      "phrases": [
+        "stops working once everyone",
+        "everyone is doing it",
+        "the edge is gone",
+        "used to work",
+        "no longer works"
+      ],
+      "related": [
+        "frameworks:survivorship-channel",
+        "frameworks:virality-filter",
+        "frameworks:signal-cost-rule",
+        "frameworks:charm-ceiling"
+      ],
+      "boundaryConditions": [
+        "The measured decay comes from asset and matching markets; no study has ever tested whether a dating tactic loses effectiveness as it spreads.",
+        "Apparent decay must first beat two explanations that involve no diffusion at all: an overstated original estimate, and a programme being tried on its easiest targets first."
+      ],
+      "commonMisreadings": [
+        "A dating tactic stops working as soon as enough people have heard about it.",
+        "Improving yourself keeps its full value even when everyone else improves by the same amount."
+      ],
+      "pressureTests": [
+        "Is this tactic cheap to copy, or does it stay expensive for everyone who wants it?",
+        "Did the effect decay because it spread, or because the first estimate was inflated?"
+      ]
+    },
+    "frameworks:survivorship-channel": {
+      "aliases": [
+        "Survivorship Channel",
+        "survivorship bias",
+        "publication bias",
+        "dating coach",
+        "untested advice",
+        "selection on success"
+      ],
+      "phrases": [
+        "it worked for me",
+        "studies show",
+        "proven method",
+        "what successful men do",
+        "has never been tested"
+      ],
+      "related": [
+        "frameworks:saturation-rule",
+        "frameworks:virality-filter",
+        "frameworks:calibration-error",
+        "instrument:compatibility-calculator"
+      ],
+      "boundaryConditions": [
+        "The charge against popular dating advice is that it is unmeasured rather than disproved, and several widely mocked recommendations are supported by the best randomised evidence available.",
+        "Some failures are published rather than hidden, and the loss happens between the study and the advice rather than inside the literature."
+      ],
+      "commonMisreadings": [
+        "A dating tactic with a plausible mechanism and confident advocates has been shown to work.",
+        "Advice without a randomised trial behind it has been shown to be worthless in practice."
+      ],
+      "pressureTests": [
+        "Did the study being cited measure the thing this advice claims it measured?",
+        "Who would be telling this story if the method had failed for them?"
+      ]
+    },
+    "frameworks:virality-filter": {
+      "aliases": [
+        "Virality Filter",
+        "engagement optimisation",
+        "moral contagion",
+        "out-group animosity",
+        "confidence heuristic",
+        "goes viral"
+      ],
+      "phrases": [
+        "everyone is saying",
+        "went viral",
+        "the algorithm pushes",
+        "popular opinion",
+        "confident advice"
+      ],
+      "related": [
+        "frameworks:saturation-rule",
+        "frameworks:survivorship-channel",
+        "frameworks:signal-cost-rule",
+        "frameworks:calibration-error"
+      ],
+      "boundaryConditions": [
+        "The measured spread advantage for falsehood applies within fact-checked contested rumours, and amounts to a likelihood ratio near 1.7, which flips almost no prior beliefs.",
+        "The causal agent identified by the evidence is human sharing preference rather than algorithmic ranking, and one large randomised test found that removing the ranking made information diets worse."
+      ],
+      "commonMisreadings": [
+        "A dating claim that goes viral online is for that reason likely to be inaccurate.",
+        "Recommendation algorithms are the reason misleading relationship advice reaches so many people."
+      ],
+      "pressureTests": [
+        "Was this claim selected for being accurate, or for being novel and naming an enemy?",
+        "Can the audience for this advice ever observe whether it worked?"
+      ]
+    },
     "lexicon:term-assortative-mating": {
       "aliases": [
         "assortative mating",
