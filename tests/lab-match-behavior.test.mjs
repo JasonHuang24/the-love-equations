@@ -1297,6 +1297,90 @@ test('the two generic titles that carry their concept anyway still do', async ()
 });
 
 /*
+ * THE RETENTION GAP, as the instrument actually sees it in 2026-07.
+ *
+ * Checkpoint 01 (md/claude-doctrine-checkpoint-01.md) recorded the site's
+ * biggest structural hole with three artifacts inside this repo. Measured at
+ * canon 479 and again at 488 after two batches landed mid-run, they no longer
+ * say the same thing, and this freezes the split so a later pass cannot move it
+ * silently. Nothing below moved between the two measurements.
+ *
+ *   ARTIFACT 1 — CLOSED. The severity-3 tension
+ *   `selection-retention-collapse` had "no rung to route to". It has six now:
+ *   the retention doctrine merge shipped retention-gap,
+ *   replaceability-asymmetry, mate-retention-intensity,
+ *   desire-maintenance-split, satisfaction-flywheel and the conversion-ladder.
+ *   The one real firing across the 21-source archive routed to
+ *   `frameworks:mate-retention-intensity`, correctly. Nobody updated the
+ *   checkpoint, so the gap read as open for a month after it was filled.
+ *
+ *   ARTIFACT 2 — dd-05, still open, and it is a RETRIEVAL failure rather than
+ *   a doctrine one. `frameworks:desire-maintenance-split` IS this claim's home
+ *   and does not reach the top eight of sixty-four candidates, because the entry
+ *   speaks "desire decline / sexual desire decline" and the claim says
+ *   "attraction fades … renewed by shared novelty". Disjoint, synonym for
+ *   synonym. This is match-surface work, the same shape as the tranches.
+ *
+ *   ARTIFACT 3 — dd-28, still open, and it is a DOCTRINE gap. Nothing in the
+ *   canon is about conflict repair or contempt; the best of seventeen candidates
+ *   is `satisfaction-flywheel` at 0.232, under the weak floor. Checkpoint 01
+ *   already said why it is hard — C1a's empirical recurrence is one research
+ *   program — and that ruling stands.
+ *
+ * Both cases are `direct-domain` / `retain` in the domain benchmark, so the
+ * acceptance contract asserts this territory is in-domain canon material. The
+ * assertions below are the CONDITION, not the scores: retained, claim-like,
+ * unmapped. Either one closing is good news that has to be recorded.
+ */
+const RETENTION_FAMILY = [
+  'frameworks:retention-gap',
+  'frameworks:replaceability-asymmetry',
+  'frameworks:mate-retention-intensity',
+  'frameworks:desire-maintenance-split',
+  'frameworks:satisfaction-flywheel',
+];
+
+test('the retention tension has a rung to route to, and two claims still cannot find it', async () => {
+  const ids = new Set(canonIndex.entries.map((entry) => entry.id));
+  RETENTION_FAMILY.forEach((id) => {
+    assert.ok(ids.has(id),
+      `${id} left the canon. Checkpoint 01 recorded selection-retention-collapse as a tension `
+      + 'with no rung to route to; these six entries are what closed it. Removing one reopens '
+      + 'that finding and md/lab-retention-reachability.md has to say so.');
+  });
+
+  // Read out of the benchmark rather than retyped: these are the acceptance
+  // contract's own sentences, and a copy here could drift from the contract.
+  const benchmark = JSON.parse(readFileSync(
+    path.join(ROOT_DIR, 'tests', 'fixtures', 'domain-relevance-benchmark.json'), 'utf8'));
+  const cases = ['dd-05', 'dd-28'].map((id) => {
+    const found = benchmark.cases.find((row) => row.id === id);
+    assert.ok(found, `${id} left the domain benchmark; this test reasons about its exact sentence`);
+    assert.equal(found.expected, 'retain');
+    return found;
+  });
+
+  for (const row of cases) {
+    const result = await analyzeDocument(normalizeInput({
+      text: row.text,
+      source: { title: 'retention reachability probe' },
+      createdAt: '1970-01-01T00:00:00.000Z',
+    }), canonIndex);
+    const segment = result.segments[0];
+    assert.ok(segment, `${row.id} produced no segment at all`);
+    assert.notEqual(segment.unit.domainRelevance.status, 'irrelevant',
+      `${row.id} is now set aside by the gate. The benchmark says retain, so this is a gate `
+      + 'regression, not a mapping result.');
+    assert.equal(segment.unit.isClaimLike, true);
+    assert.equal(segment.mapped, false,
+      `${row.id} now MAPS, to ${segment.matches[0]?.canonId} at ${segment.matches[0]?.score}. `
+      + 'That is a retention gap closing and it is good news — record which of the two it was in '
+      + 'md/lab-retention-reachability.md (dd-05 is retrieval, dd-28 is doctrine) and update this '
+      + 'assertion to name the case that is still open.');
+  }
+});
+
+/*
  * The false positive typing `SMV` buys, frozen rather than hidden.
  *
  * A passage about an unrelated "SMV protocol" now names the SMV concept at 0.54.
