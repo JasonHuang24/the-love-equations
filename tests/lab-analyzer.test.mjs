@@ -248,6 +248,39 @@ test('independent mixed fixtures do not inherit SMV or gender signatures', async
     {
       known: 'All women always choose the highest-status man.',
       expectedCanonId: 'lexicon:term-awalt-all-women-are-like-that',
+      /*
+       * THIS ASSERTION IS RED ON PURPOSE. DO NOT REPAIR IT. Jason ruled it red
+       * on 2026-07-31 and the ruling holds until he adjudicates it; the reasoning
+       * is in the md/mission-notes.md row for `5726a2d`, and cb6625f reverted the
+       * reword that had briefly made it green.
+       *
+       * The probe below was authored to be unmappable and is not any more:
+       * statistics:stat-desire-prediction is about predicting which two people
+       * click, so this sentence maps to it at 0.476 Low (canon 529) / 0.475 Low
+       * (canon 532). Three sessions diagnosed it independently and agree — no
+       * over-broad alias, no authoring defect. The entry is legitimately dense in
+       * predict / romantic / date because that is its subject, and this probe was
+       * written from that vocabulary before any such entry existed. The
+       * misreadings added alongside it move the score 0.477 -> 0.476, so they are
+       * not the cause either.
+       *
+       * Offered (a) leave red for adjudication, (b) narrow the entry's match
+       * surface, (c) reword the probe and freeze it as an accepted cost, Jason
+       * chose (a) — twice, the second time after a (c) had already landed. A
+       * frozen benchmark's goalpost does not move without a ruling, and "the test
+       * went red so I refreshed the fixture" is exactly the move that rule exists
+       * to prevent. Two sessions have already tried to green this in good faith;
+       * this comment exists so a third reads the ruling first.
+       *
+       * Scope, measured: ONE probe, not a false-positive class. The Saturn-rings
+       * fixture above shares this test and stays unmapped at canon 532, and this
+       * is the only failing subtest in the file.
+       *
+       * Known cost, and part of what is being ruled on: `npm run test:lab` chains
+       * with `&&`, so this stops the run before the threshold and audit steps —
+       * which makes the suite uninformative about admission lines, not merely
+       * incomplete. Run those directly while this stands.
+       */
       novel: 'A new claim says volcanic ash predicts which romantic partner cancels a date.',
     },
   ];
