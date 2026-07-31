@@ -657,12 +657,14 @@ function extractSmvLevers(context) {
 function extractFrameworks(context) {
   const { page, document } = context;
   const entries = [];
+  const extractedAnchors = new Set();
   const groups = tocGroups(document);
 
   for (const block of allByClass(document, 'rf-entry')) {
     const anchor = block.attrs?.id;
     const title = nodeText(byClass(block, 'rf-title'));
     if (!anchor || !title) continue;
+    extractedAnchors.add(anchor);
     const links = linkData(block);
     const subcategory = groups.get(anchor) || 'Framework';
     const isTested = subcategory === 'Tested claims' || Boolean(byClass(block, 'claim-stamp'));
@@ -683,6 +685,7 @@ function extractFrameworks(context) {
     const subheads = directChildren(block, (node) => hasClass(node, 'smv-sub') && Boolean(node.attrs?.id));
     for (const subhead of subheads) {
       const subAnchor = subhead.attrs.id;
+      extractedAnchors.add(subAnchor);
       const segment = nodesFrom(block, subhead, (node) => hasClass(node, 'smv-sub'));
       const segmentLinks = linkData(segment);
       const stamp = byClass(segment, 'claim-stamp');
@@ -703,6 +706,32 @@ function extractFrameworks(context) {
       }));
     }
   }
+
+  // Maps and lifecycle continuations can remain first-class canon concepts
+  // without being presented as top-level framework entries on the page.
+  for (const block of allByClass(document, 'smv-sub')) {
+    const anchor = block.attrs?.id;
+    const parent = block.attrs?.['data-parent'];
+    if (!anchor || !parent || extractedAnchors.has(anchor)) continue;
+    const title = nodeText(byClass(block, 'smv-sub-title'));
+    if (!title) continue;
+    const links = linkData(block);
+    entries.push(createEntry({
+      id: `frameworks:${anchor}`,
+      title,
+      page,
+      anchor,
+      category: 'Rules & Frameworks',
+      subcategory: groups.get(anchor) || 'Framework component',
+      synopsis: nodeText(byClass(block, 'smv-sub-note')),
+      evidenceType: evidenceFromNode(block, 'Framework'),
+      contentType: block.attrs?.['data-content-type'] || 'Framework component',
+      dependencies: parent ? [`frameworks:${parent}`] : [],
+      sourceLinks: links.external,
+      internalHrefs: links.internal,
+    }));
+  }
+
   return entries;
 }
 
