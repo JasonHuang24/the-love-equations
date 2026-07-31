@@ -1,12 +1,12 @@
 {
   "schema": "le-lab.threshold-sweep/1.0",
-  "analyzer": "2.6.11",
+  "analyzer": "2.6.14",
   "scoringConfigHash": "bt0a7p",
-  "canonIndexVersion": "1.0.0+19b16e04659d",
+  "canonIndexVersion": "1.0.0+21e55026096b",
   "entries": 532,
-  "passages": 2448,
+  "passages": 2451,
   "population": "retained",
-  "scoredPairs": 1302336,
+  "scoredPairs": 1303932,
   "dumpFloor": 0.02,
   "thresholds": {
     "candidateScoreFloor": 0.08,
@@ -33,14 +33,14 @@
     }
   ],
   "counts": {
-    "candidateScoreFloor": 96706,
-    "minWeakScore": 19347,
-    "minCredibleScore": 563,
-    "pairs": 116616,
-    "rulings": 5427,
-    "pending": 4725,
+    "candidateScoreFloor": 96828,
+    "minWeakScore": 19381,
+    "minCredibleScore": 566,
+    "pairs": 116775,
+    "rulings": 5756,
+    "pending": 5009,
     "pendingByThreshold": {
-      "candidateScoreFloor": 4725,
+      "candidateScoreFloor": 5009,
       "minWeakScore": 0,
       "minCredibleScore": 0
     }
@@ -39868,6 +39868,2399 @@
       "after": 0.248,
       "ruledBy": "Claude",
       "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-remarriage-gap|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.468
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-casual-gap|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.419
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-never-married|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.407
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-remarriage-gap|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.404
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:why-game-became-a-whole-industry|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.396
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-female-approval-engine-mixed-signals:cosmetic-surgery-and-the-female-approval-engine|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.395
+    },
+    "seg-00037-1k67988.claim-02|deep-dive:what-the-wall-actually-is:band-18-25|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.393
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-never-married|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.379
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-marriage-market|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.356
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.348
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-35|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.348
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-marriage-market|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.342
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-marriage-age|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.336
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-cycling|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.332
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:punishing-honesty-filters-the-pool|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.324
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:stop-showing-women-the-watered-down-you|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.324
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:gd-drawn-to-chaos|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.323
+    },
+    "seg-00037-1k67988.claim-02|statistics:body-count|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.32
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-sex-recession|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.319
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-marriage-age|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.311
+    },
+    "seg-00037-1k67988.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:sold-a-fantasy-the-cost-of-a-decade-of-bad-advice|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.308
+    },
+    "seg-00037-1k67988.claim-02|frameworks:effective-ratio|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.306
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-16|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.301
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-35|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.299
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-sex-frequency|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.297
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-42|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.296
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:the-wingwoman-myth|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.294
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-53|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.294
+    },
+    "seg-00037-1k67988.claim-02|smv:looks:age|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.29
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-intermarriage|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.285
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-single-route|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.279
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:women-train-men-to-hide-their-intentions|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.275
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-cohab-timing|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.273
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:the-game-is-built-for-extroverts-the-introverts-who-won-opted-out-of-it|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.27
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:logic-feelings-the-cycle:decoding-just-be-nice-and-just-be-yourself|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.267
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-27|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.267
+    },
+    "seg-00025-1vi8yo0.claim-06|frameworks:effective-ratio|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.266
+    },
+    "seg-00037-1k67988.claim-02|gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.265
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-married-cohabiting|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.264
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:the-surplus|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.263
+    },
+    "seg-00037-1k67988.claim-02|frameworks:residual-pool|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.263
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-married-cohabiting|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.263
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-divorce|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.258
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-43|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.254
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-cohab-timing|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.249
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-80-20-rule|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.249
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-27|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.249
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-marriage-market|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.248
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-pairing|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.246
+    },
+    "seg-00025-1vi8yo0.claim-06|frameworks:residual-pool|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.245
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-51|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.241
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-26|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.24
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:stock-flow-error|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.239
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-6|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.238
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:sold-a-fantasy-the-cost-of-a-decade-of-bad-advice|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.235
+    },
+    "seg-00025-1vi8yo0.claim-06|deep-dive:single-parenthood:route-in-flips|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.23
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-wingwoman-tell-youre-genuinely-friend-zoned|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.227
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:stop-waiting-for-the-other-side-to-change|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.227
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:gd-social-approval|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.226
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:boldness-is-built-not-born|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.225
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-safety|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.224
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-21|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.223
+    },
+    "seg-00025-1vi8yo0.claim-06|smv:looks:age|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.223
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-57|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.22
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-25|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.219
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:the-approval-engine:the-pick-me-label-keeps-women-in-line|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.218
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-cycling|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.218
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-61|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.218
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-57|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.212
+    },
+    "seg-00037-1k67988.claim-02|deep-dive:third-spaces:golden-age-of-joining|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.209
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-39|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.209
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:how-you-choose-and-what-it-does:be-honest-about-your-emotional-harem|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.207
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:height-pref|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.207
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-cycling|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.207
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:timing-honesty-the-mirror:saving-face-vs-telling-yourself-the-truth|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.205
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-50|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.205
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-treat-her-like-a-person-trap|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.202
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:gen-z-has-it-even-worse|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.202
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-56|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.202
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-sex-recession|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.201
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:body-count|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.201
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-default-market:the-inversion-threshold|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.2
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:logic-feelings-the-cycle:cold-logic-keeps-reaching-the-same-place|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.2
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-never-married|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.2
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-6|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.2
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-single-ledger|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.199
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-sexual-communication|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.197
+    },
+    "seg-00055-1b1sm79.claim-03|deep-dive:single-parenthood:route-in-flips|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.197
+    },
+    "seg-00025-1vi8yo0.claim-06|deep-dive:what-the-wall-actually-is:band-26-31|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.197
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-6|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.196
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:game-is-a-scale-baseline-is-just-not-being-awkward|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.195
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-orgasm-gender|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.195
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-why-single|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.195
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-33|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.195
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-41|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.195
+    },
+    "seg-00025-1vi8yo0.claim-06|deep-dive:what-the-wall-actually-is:band-18-25|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.195
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:body-count|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.194
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-25|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.194
+    },
+    "seg-00055-1b1sm79.claim-03|deep-dive:single-parenthood:widows-house|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.194
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-orgasm-context|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.194
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-38|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.194
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:both-sides:standards-self-assessment-avoidance:the-grind-vs-date-answer-flips-with-age|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.193
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-app-reasons|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.192
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-intermarriage|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.192
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-19|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.192
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:the-macro-picture-why-dating-broke:sold-a-fantasy-the-cost-of-a-decade-of-bad-advice|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.192
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-remarriage-gap|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.191
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-59|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.19
+    },
+    "seg-00025-1vi8yo0.claim-06|hierarchy:a-generic-female-chatgpts-take:gate-1-desire:masculine-competence|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.189
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-sex-frequency|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.187
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-21|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.186
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-48|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.186
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-equal-earner-labor|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.186
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-17|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.185
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-28|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.185
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-65|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.184
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-child-marriage|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.181
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-single-route|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.181
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-single-ledger|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.181
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-cohabitation-outcomes|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.181
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-cohab-timing|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.181
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-40|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.18
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-61|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.179
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-married-cohabiting|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.177
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-pay-to-play|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.176
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:gd-emotional-harem|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.175
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:the-real-problem-isnt-being-quiet-its-being-quiet-and-disconnected|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.175
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-20|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.175
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:how-to-actually-build-a-social-circle|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.173
+    },
+    "seg-00037-1k67988.claim-02|lexicon:term-high-value-man|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.173
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:sixth-rung|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.172
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.172
+    },
+    "seg-00037-1k67988.claim-02|deep-dive:what-the-wall-actually-is:band-26-31|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.171
+    },
+    "seg-00037-1k67988.claim-02|deep-dive:what-the-wall-actually-is:band-50-plus|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.171
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:the-just-tell-me-what-you-want-trap|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.17
+    },
+    "seg-00037-1k67988.claim-02|gender-dynamics:male:selection-hypocrisy-how-guys-respond:its-conditioning-not-conspiracy|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.17
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:decoding-thats-hot-flirty-or-just-a-compliment|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.169
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:ill-know-it-when-i-see-it-is-an-escape-hatch|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.169
+    },
+    "seg-00037-1k67988.claim-02|smv:multiplier:clock|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.169
+    },
+    "seg-00037-1k67988.claim-02|frameworks:the-wall|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.169
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-safety|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.169
+    },
+    "seg-00025-1vi8yo0.claim-06|hierarchy:a-generic-male:gate-1-desire:low-friction-presence|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.169
+    },
+    "seg-00025-1vi8yo0.claim-06|deep-dive:relationships-by-country:latin-america|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.169
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-looks-first-reality:get-a-hobby-is-code-for-give-up|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.168
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-plausible-deniability-freeze|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.168
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:standards-self-assessment-avoidance:an-agreeable-yes-isnt-an-enthusiastic-yes|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.168
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-59|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.168
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:logic-feelings-the-cycle:saving-face-beats-telling-the-truth|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.167
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:the-pure-girl-filter-rejects-almost-everyone|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.167
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-honest-answer-is-i-dont-know-sit-in-it-without-coping|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.167
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-pay-to-play|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.167
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-childfree-intent|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.167
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:both-sides:meeting-people-the-odds:the-game-is-built-for-extroverts-the-introverts-who-won-opted-out-of-it|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.166
+    },
+    "seg-00025-1vi8yo0.claim-06|deep-dive:single-parenthood|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.166
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:the-shared-market:its-not-just-women-the-market-is-rough-for-them-too|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.164
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-awalt-all-women-are-like-that|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.163
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-65|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.162
+    },
+    "seg-00025-1vi8yo0.claim-06|smv:exposure:initiative|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.162
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-29|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.161
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:friendly-isnt-interested-and-men-over-read-it|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.16
+    },
+    "seg-00025-1vi8yo0.claim-06|smv:exposure|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.158
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:effective-ratio|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.157
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-marriage-age|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.157
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-locus-of-control-shift|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.153
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-orgasm-gender|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.152
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:mens-strike|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.151
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:calibration-error|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.149
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-18|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.149
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:height-pref|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.149
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-divorce|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.148
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:sex-ratio|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.147
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-why-single|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.147
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-62|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.146
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-50|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.143
+    },
+    "seg-00025-1vi8yo0.claim-06|deep-dive:third-spaces:golden-age-of-joining|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.142
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-default-market:commentary|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.14
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-2|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.14
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-5|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.138
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:the-choosing-the-window:when-the-dynamic-shifts|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.137
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:logic-feelings-the-cycle:most-dont-snap-out-of-it|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.135
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-looks-first-reality:what-the-research-actually-shows|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.135
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:be-yourself-and-invisible-or-play-and-resent-yourself|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.135
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:real-confidence-isnt-being-an-asshole|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.135
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:the-one-sided-commitment-frame|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.135
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:the-disconnect-breeds-resentment|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.134
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:logic-feelings-the-cycle:the-raw-deal-cycle|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.134
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:mens-main-character-syndrome|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.134
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.134
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:facing-reality-what-attracts:reality-vs-feelings|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.133
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:timing-honesty-the-mirror:dont-wait-for-the-wall-to-course-correct|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.133
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-double-standard|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.132
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-ipv-severity|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.132
+    },
+    "seg-00055-1b1sm79.claim-03|deep-dive:hub:what-the-wall-actually-is|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.132
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-39|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.131
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-44|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.131
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-emotional-harem|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.13
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-16|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.13
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:timing-honesty-the-mirror:there-are-no-good-men-left-turn-the-question-inward|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.129
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:no-good-men-left-dodges-the-real-question|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.128
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-female-approval-engine-mixed-signals:women-arent-a-monolith-is-a-weak-defense|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.127
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:the-pile-on-young-men-hit-from-every-side|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.127
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-single-route|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.127
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-option-pool|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.127
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-child-marriage|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.126
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-single-ledger|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.126
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-cohabitation-outcomes|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.126
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-post-wall|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.126
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-divorce|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.126
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-45|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.125
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-inversion|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.123
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-feminine-imperative|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.12
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-41|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.119
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-17|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.118
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-27|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.118
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-31|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.118
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-65|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.118
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-38|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.116
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-15|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.115
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-37|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.115
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-46|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.114
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-49|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.114
+    },
+    "seg-00025-1vi8yo0.claim-06|hierarchy:a-generic-female-chatgpts-take:gate-2-trust:consistency|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.112
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:logic-feelings-the-cycle:most-dont-snap-out-of-it|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.111
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:female:timing-honesty-the-mirror:dont-wait-for-the-wall-to-course-correct|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.11
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:the-what-about-kids-pressure-is-often-manipulation|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.109
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:make-peace-with-it-or-let-resentment-win|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.109
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:two-types-of-guys-left|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.108
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:blackpilled-before-they-start|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.108
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.108
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-child-marriage|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.108
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-cohabitation-outcomes|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.108
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.107
+    },
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-high-value-man|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.107
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:the-choosing-the-window:the-female-window|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.105
+    },
+    "seg-00025-1vi8yo0.claim-06|deep-dive:what-the-wall-actually-is:band-50-plus|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.105
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:the-wine-at-my-place-move|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.104
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:selection-hypocrisy-how-guys-respond:its-conditioning-not-conspiracy|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.104
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-default-market:the-climb-building-smv|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:its-not-what-you-want-its-how-you-frame-it|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:its-conditioning-not-conspiracy|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:gd-herd-script|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-mask-of-game|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:treat-it-as-practice-without-leading-anyone-on|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:game-is-like-learning-a-new-language|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:weak-signals-arent-your-fault-and-the-grey-zone-favors-the-bold|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-fear-of-being-that-guy|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:being-the-safe-guy-cuts-both-ways|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:the-high-standards-story-can-be-armor|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:going-high-value-flips-who-signals|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:a-relationship-is-a-bonus-not-a-necessity|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:the-social-cost-of-going-against-the-grain|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:the-internal-reward-paid-for-with-isolation|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-regret-that-hurts-most-real-chances-you-fumbled|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00025-1vi8yo0.claim-06|smv:multiplier:clock|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00025-1vi8yo0.claim-06|frameworks:the-wall|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-safety|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.103
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:the-transactional-attention-problem-is-real|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.102
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:read-the-mutual-effort-she-often-mirrors-your-energy|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.102
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:pickiness-is-earned|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.102
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.102
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:the-feminism-trade-off-freedoms-in-guardrails-out|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.102
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:its-not-just-feminism-apps-and-social-media-reshaped-everyone|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.102
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:the-cold-approach-tax|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.102
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-orgasm-context|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.101
+    },
+    "seg-00025-1vi8yo0.claim-06|smv:status:reputation|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.1
+    },
+    "seg-00025-1vi8yo0.claim-06|smv:status:leadership-network|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.1
+    },
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-the-inversion|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.1
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:directness-delivery-the-indirect-game:the-wine-at-my-place-move|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.099
+    },
+    "seg-00025-1vi8yo0.claim-06|hierarchy:a-generic-female-chatgpts-take:gate-1-desire:attraction|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|hierarchy:a-generic-female-chatgpts-take:gate-1-desire:safety-calibration|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:logic-feelings-the-cycle:the-raw-deal-cycle|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:gd-herd-script|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:standards-leverage-desperation:being-the-safe-guy-cuts-both-ways|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:standards-leverage-desperation:the-high-standards-story-can-be-armor|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-chad-stacy|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-feminization|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.098
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:facing-reality-what-attracts:reality-vs-feelings|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.097
+    },
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:game-the-mask-reading-signals:pickiness-is-earned|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.097
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-13|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.095
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-26|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.095
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-38|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.095
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-58|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.095
+    },
+    "seg-00055-1b1sm79.claim-03|lexicon:term-friend-zone|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.082
+    },
+    "seg-00037-1k67988.claim-02|frameworks:mate-retention-intensity|candidateScoreFloor": {
+      "ruling": "PENDING",
+      "threshold": "candidateScoreFloor",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.08
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-remarriage-gap|minCredibleScore": {
+      "ruling": "REJECT",
+      "threshold": "minCredibleScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.468,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-remarriage-gap|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.468,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-casual-gap|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.419,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-never-married|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.407,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-remarriage-gap|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.404,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:why-game-became-a-whole-industry|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.396,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-female-approval-engine-mixed-signals:cosmetic-surgery-and-the-female-approval-engine|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.395,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|deep-dive:what-the-wall-actually-is:band-18-25|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.393,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|statistics:stat-never-married|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.379,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-marriage-market|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.356,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.348,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-35|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.348,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-marriage-market|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.342,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-marriage-age|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.336,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-cycling|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.332,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:punishing-honesty-filters-the-pool|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.324,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:stop-showing-women-the-watered-down-you|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.324,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:gd-drawn-to-chaos|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.323,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:body-count|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.32,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-sex-recession|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.319,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-marriage-age|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.311,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:sold-a-fantasy-the-cost-of-a-decade-of-bad-advice|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.308,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|frameworks:effective-ratio|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.306,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-16|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.301,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|M-TBD-35|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.299,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-sex-frequency|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.297,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-42|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.296,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:the-wingwoman-myth|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.294,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-53|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.294,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|smv:looks:age|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.29,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-intermarriage|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.285,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-single-route|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.279,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:women-train-men-to-hide-their-intentions|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.275,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-cohab-timing|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.273,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:the-game-is-built-for-extroverts-the-introverts-who-won-opted-out-of-it|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.27,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:logic-feelings-the-cycle:decoding-just-be-nice-and-just-be-yourself|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.267,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|M-TBD-27|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.267,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|frameworks:effective-ratio|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.266,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.265,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-married-cohabiting|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.264,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00055-1b1sm79.claim-03|frameworks:the-surplus|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.263,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|frameworks:residual-pool|minWeakScore": {
+      "ruling": "ACCEPT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.263,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-married-cohabiting|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.263,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00037-1k67988.claim-02|statistics:stat-divorce|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.258,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
+    },
+    "seg-00025-1vi8yo0.claim-06|M-TBD-43|minWeakScore": {
+      "ruling": "REJECT",
+      "threshold": "minWeakScore",
+      "direction": "gain",
+      "before": 0,
+      "after": 0.254,
+      "ruledBy": "Claude",
+      "ruledAt": "2026-07-31"
     }
   },
   "scores": {
@@ -68952,6 +71345,53 @@
     "seg-00025-1vi8yo0.claim-05|statistics:stat-single-parent-world": 0.249,
     "seg-00025-1vi8yo0.claim-05|statistics:stat-single-route": 0.265,
     "seg-00025-1vi8yo0.claim-05|statistics:stat-wedding-hazard": 0.27,
+    "seg-00025-1vi8yo0.claim-06|deep-dive:hub:single-parenthood": 0.05,
+    "seg-00025-1vi8yo0.claim-06|deep-dive:relationships-throughout-history:early-modern": 0.067,
+    "seg-00025-1vi8yo0.claim-06|deep-dive:single-parenthood:route-in-flips": 0.23,
+    "seg-00025-1vi8yo0.claim-06|deep-dive:single-parenthood:worlds-highest": 0.07,
+    "seg-00025-1vi8yo0.claim-06|deep-dive:what-the-wall-actually-is:band-50-plus": 0.105,
+    "seg-00025-1vi8yo0.claim-06|frameworks:commitment-problem": 0.054,
+    "seg-00025-1vi8yo0.claim-06|frameworks:effective-ratio": 0.266,
+    "seg-00025-1vi8yo0.claim-06|frameworks:residual-pool": 0.245,
+    "seg-00025-1vi8yo0.claim-06|frameworks:the-wall": 0.103,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:female:timing-honesty-the-mirror:dont-wait-for-the-wall-to-course-correct": 0.11,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:gd-herd-script": 0.098,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:directness-delivery-the-indirect-game:the-wine-at-my-place-move": 0.099,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:facing-reality-what-attracts:reality-vs-feelings": 0.097,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:game-the-mask-reading-signals:pickiness-is-earned": 0.097,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:game-the-mask-reading-signals:read-the-room-and-flow-dont-prideful-double-down": 0.06,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:logic-feelings-the-cycle:the-raw-deal-cycle": 0.098,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:selection-hypocrisy-how-guys-respond:its-conditioning-not-conspiracy": 0.104,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:standards-leverage-desperation:being-the-safe-guy-cuts-both-ways": 0.098,
+    "seg-00025-1vi8yo0.claim-06|gender-dynamics:male:standards-leverage-desperation:the-high-standards-story-can-be-armor": 0.098,
+    "seg-00025-1vi8yo0.claim-06|hierarchy:a-generic-female-chatgpts-take:gate-1-desire:attraction": 0.098,
+    "seg-00025-1vi8yo0.claim-06|hierarchy:a-generic-female-chatgpts-take:gate-1-desire:safety-calibration": 0.098,
+    "seg-00025-1vi8yo0.claim-06|instrument:body-calculator": 0.056,
+    "seg-00025-1vi8yo0.claim-06|instrument:face-calculator": 0.055,
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-chad-stacy": 0.098,
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-feminization": 0.098,
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-high-value-man": 0.107,
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-the-height-pill": 0.058,
+    "seg-00025-1vi8yo0.claim-06|lexicon:term-the-inversion": 0.1,
+    "seg-00025-1vi8yo0.claim-06|M-TBD-10": 0.055,
+    "seg-00025-1vi8yo0.claim-06|M-TBD-13": 0.095,
+    "seg-00025-1vi8yo0.claim-06|M-TBD-26": 0.095,
+    "seg-00025-1vi8yo0.claim-06|M-TBD-38": 0.095,
+    "seg-00025-1vi8yo0.claim-06|M-TBD-43": 0.254,
+    "seg-00025-1vi8yo0.claim-06|M-TBD-54": 0.058,
+    "seg-00025-1vi8yo0.claim-06|M-TBD-58": 0.095,
+    "seg-00025-1vi8yo0.claim-06|smv:looks:age": 0.223,
+    "seg-00025-1vi8yo0.claim-06|smv:multiplier:clock": 0.103,
+    "seg-00025-1vi8yo0.claim-06|smv:status:leadership-network": 0.1,
+    "seg-00025-1vi8yo0.claim-06|smv:status:reputation": 0.1,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-child-marriage": 0.108,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-cohab-timing": 0.273,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-cohabitation-outcomes": 0.108,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-fertility-age": 0.052,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-married-cohabiting": 0.263,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-never-married": 0.407,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-safety": 0.103,
+    "seg-00025-1vi8yo0.claim-06|statistics:stat-single-route": 0.279,
     "seg-00025-1vi8yo0.claim-07|deep-dive:hub:relationships-by-country": 0.058,
     "seg-00025-1vi8yo0.claim-07|deep-dive:hub:relationships-throughout-history": 0.058,
     "seg-00025-1vi8yo0.claim-07|deep-dive:hub:single-parenthood": 0.057,
@@ -80929,6 +83369,39 @@
     "seg-00037-1enk8eq.claim-04|statistics:stat-relationship-quality": 0.26,
     "seg-00037-1enk8eq.claim-04|statistics:stat-single-ledger": 0.061,
     "seg-00037-1enk8eq.claim-04|statistics:stat-why-single": 0.063,
+    "seg-00037-1k67988.claim-02|deep-dive:single-parenthood": 0.072,
+    "seg-00037-1k67988.claim-02|deep-dive:single-parenthood:route-in-flips": 0.073,
+    "seg-00037-1k67988.claim-02|deep-dive:third-spaces": 0.068,
+    "seg-00037-1k67988.claim-02|deep-dive:what-the-wall-actually-is:band-32-37": 0.066,
+    "seg-00037-1k67988.claim-02|deep-dive:what-the-wall-actually-is:band-38-49": 0.067,
+    "seg-00037-1k67988.claim-02|frameworks:attention-to-alternatives": 0.079,
+    "seg-00037-1k67988.claim-02|frameworks:desire-maintenance-split": 0.065,
+    "seg-00037-1k67988.claim-02|frameworks:local-market": 0.065,
+    "seg-00037-1k67988.claim-02|frameworks:mate-retention-intensity": 0.08,
+    "seg-00037-1k67988.claim-02|frameworks:residual-pool": 0.263,
+    "seg-00037-1k67988.claim-02|frameworks:signal-cost-rule": 0.065,
+    "seg-00037-1k67988.claim-02|gender-dynamics:both-sides:meeting-people-the-odds:the-game-is-built-for-extroverts-the-introverts-who-won-opted-out-of-it": 0.072,
+    "seg-00037-1k67988.claim-02|gender-dynamics:both-sides:meeting-people-the-odds:why-just-go-to-meetups-is-empty-advice": 0.265,
+    "seg-00037-1k67988.claim-02|gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-deeper-regret-you-had-easy-mode-and-didnt-play-it": 0.066,
+    "seg-00037-1k67988.claim-02|gender-dynamics:both-sides:standards-self-assessment-avoidance:the-grind-vs-date-answer-flips-with-age": 0.076,
+    "seg-00037-1k67988.claim-02|gender-dynamics:male:the-macro-picture-why-dating-broke:gen-z-has-it-even-worse": 0.066,
+    "seg-00037-1k67988.claim-02|lexicon:term-body-count": 0.066,
+    "seg-00037-1k67988.claim-02|lexicon:term-no-good-men-left": 0.066,
+    "seg-00037-1k67988.claim-02|lexicon:term-post-wall": 0.066,
+    "seg-00037-1k67988.claim-02|lexicon:term-the-wall": 0.067,
+    "seg-00037-1k67988.claim-02|M-TBD-21": 0.223,
+    "seg-00037-1k67988.claim-02|M-TBD-27": 0.249,
+    "seg-00037-1k67988.claim-02|M-TBD-43": 0.071,
+    "seg-00037-1k67988.claim-02|smv:exposure": 0.065,
+    "seg-00037-1k67988.claim-02|smv:exposure:initiative": 0.066,
+    "seg-00037-1k67988.claim-02|smv:multiplier:market": 0.066,
+    "seg-00037-1k67988.claim-02|statistics:stat-desire-prediction": 0.079,
+    "seg-00037-1k67988.claim-02|statistics:stat-divorce": 0.258,
+    "seg-00037-1k67988.claim-02|statistics:stat-fertility-age": 0.074,
+    "seg-00037-1k67988.claim-02|statistics:stat-intermarriage": 0.072,
+    "seg-00037-1k67988.claim-02|statistics:stat-married-cohabiting": 0.264,
+    "seg-00037-1k67988.claim-02|statistics:stat-sexual-communication": 0.065,
+    "seg-00037-1k67988.claim-02|statistics:stat-wedding-hazard": 0.065,
     "seg-00037-1k67988.claim-04|frameworks:body-count": 0.05,
     "seg-00037-1k67988.claim-04|frameworks:commitment-problem": 0.109,
     "seg-00037-1k67988.claim-04|frameworks:looks-rating": 0.05,
@@ -100292,6 +102765,85 @@
     "seg-00055-0qpww09.claim-04|statistics:stat-sexual-communication": 0.25,
     "seg-00055-0qpww09.claim-04|statistics:stat-single-ledger": 0.085,
     "seg-00055-0qpww09.claim-04|statistics:stat-wedding-hazard": 0.222,
+    "seg-00055-1b1sm79.claim-03|deep-dive:hub:single-parenthood": 0.064,
+    "seg-00055-1b1sm79.claim-03|deep-dive:relationships-by-country:south-asia": 0.062,
+    "seg-00055-1b1sm79.claim-03|deep-dive:single-parenthood": 0.053,
+    "seg-00055-1b1sm79.claim-03|deep-dive:what-the-wall-actually-is": 0.05,
+    "seg-00055-1b1sm79.claim-03|frameworks:conversion-ladder": 0.05,
+    "seg-00055-1b1sm79.claim-03|frameworks:option-pool": 0.05,
+    "seg-00055-1b1sm79.claim-03|frameworks:residual-pool": 0.052,
+    "seg-00055-1b1sm79.claim-03|frameworks:stock-flow-error": 0.239,
+    "seg-00055-1b1sm79.claim-03|frameworks:the-surplus": 0.263,
+    "seg-00055-1b1sm79.claim-03|frameworks:third-party-layer": 0.05,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:its-not-just-feminism-apps-and-social-media-reshaped-everyone": 0.102,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:shame-the-exit-or-fix-the-offer": 0.107,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:how-these-conversations-get-distorted:the-cold-approach-tax": 0.102,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:meeting-people-the-odds:the-game-is-built-for-extroverts-the-introverts-who-won-opted-out-of-it": 0.27,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:stop-waiting-for-the-other-side-to-change": 0.227,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:both-sides:regret-the-missed-window-seeing-clearly:the-regret-that-hurts-most-real-chances-you-fumbled": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:looks-attraction-honestly:bending-reality-to-fit-your-feelings": 0.108,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:female:the-choosing-the-window:the-female-window": 0.105,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:gd-herd-script": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:gd-social-approval": 0.226,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:its-not-what-you-want-its-how-you-frame-it": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:the-transactional-attention-problem-is-real": 0.102,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:the-wine-at-my-place-move": 0.104,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:directness-delivery-the-indirect-game:women-train-men-to-hide-their-intentions": 0.275,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:boldness-is-built-not-born": 0.225,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:fantasy-talk-isnt-a-green-light-dont-leap": 0.102,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:game-is-like-learning-a-new-language": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:pickiness-is-earned": 0.102,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:read-the-mutual-effort-she-often-mirrors-your-energy": 0.102,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-fear-of-being-that-guy": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-mask-of-game": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:the-wingwoman-tell-youre-genuinely-friend-zoned": 0.227,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:treat-it-as-practice-without-leading-anyone-on": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:game-the-mask-reading-signals:weak-signals-arent-your-fault-and-the-grey-zone-favors-the-bold": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:logic-feelings-the-cycle:decoding-just-be-nice-and-just-be-yourself": 0.267,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:its-conditioning-not-conspiracy": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:selection-hypocrisy-how-guys-respond:two-types-of-guys-left": 0.108,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:being-the-safe-guy-cuts-both-ways": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:going-high-value-flips-who-signals": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:standards-leverage-desperation:the-high-standards-story-can-be-armor": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:a-relationship-is-a-bonus-not-a-necessity": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:make-peace-with-it-or-let-resentment-win": 0.109,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:the-internal-reward-paid-for-with-isolation": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:the-social-cost-of-going-against-the-grain": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-cost-of-staying-true:the-what-about-kids-pressure-is-often-manipulation": 0.109,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-default-market:the-climb-building-smv": 0.103,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:blackpilled-before-they-start": 0.108,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:sold-a-fantasy-the-cost-of-a-decade-of-bad-advice": 0.235,
+    "seg-00055-1b1sm79.claim-03|gender-dynamics:male:the-macro-picture-why-dating-broke:the-feminism-trade-off-freedoms-in-guardrails-out": 0.102,
+    "seg-00055-1b1sm79.claim-03|hierarchy:a-generic-male:gate-3-life-fit:shared-values-family": 0.05,
+    "seg-00055-1b1sm79.claim-03|lexicon:term-friend-zone": 0.082,
+    "seg-00055-1b1sm79.claim-03|lexicon:term-network-approval": 0.051,
+    "seg-00055-1b1sm79.claim-03|lexicon:term-pairing": 0.246,
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-80-20-rule": 0.249,
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-calibration-error": 0.062,
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-height-pill": 0.05,
+    "seg-00055-1b1sm79.claim-03|lexicon:term-the-parity-rule": 0.051,
+    "seg-00055-1b1sm79.claim-03|M-TBD-26": 0.24,
+    "seg-00055-1b1sm79.claim-03|M-TBD-27": 0.267,
+    "seg-00055-1b1sm79.claim-03|M-TBD-32": 0.05,
+    "seg-00055-1b1sm79.claim-03|M-TBD-35": 0.053,
+    "seg-00055-1b1sm79.claim-03|M-TBD-43": 0.052,
+    "seg-00055-1b1sm79.claim-03|M-TBD-51": 0.241,
+    "seg-00055-1b1sm79.claim-03|M-TBD-57": 0.22,
+    "seg-00055-1b1sm79.claim-03|M-TBD-6": 0.238,
+    "seg-00055-1b1sm79.claim-03|smv:money:provisioning-signal": 0.05,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-acquaintance-matching": 0.066,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-casual-gap": 0.419,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-childfree-intent": 0.056,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-cohab-timing": 0.249,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-couples-meet": 0.05,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-friend-time": 0.066,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-marriage-market": 0.248,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-orgasm-context": 0.101,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-relationship-quality": 0.063,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-remarriage-gap": 0.404,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-safety": 0.224,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-sex-frequency": 0.052,
+    "seg-00055-1b1sm79.claim-03|statistics:stat-single-parent-world": 0.061,
     "seg-00055-1pfklzc.claim-04|deep-dive:relationships-by-country:south-asia": 0.227,
     "seg-00055-1pfklzc.claim-04|gender-dynamics:both-sides:meeting-people-the-odds:asking-fast-filters-for-lukewarm-dates": 0.052,
     "seg-00055-1pfklzc.claim-04|gender-dynamics:both-sides:meeting-people-the-odds:your-social-circle-levels-you-up": 0.221,

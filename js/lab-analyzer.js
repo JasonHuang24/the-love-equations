@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.13';
+export const ANALYZER_VERSION = '2.6.14';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -443,8 +443,15 @@ const RELATIONAL_OUTCOME_FRAMES = Object.freeze([
     label: 'Human cross-sex preference or selection outcome',
     weight: 5,
     decisive: true,
-    test: (text) => /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b.{0,70}\b(?:men|women|man|woman|males|females)\b/i.test(text)
-      || /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry)\w*\b/i.test(text),
+    // `marry|marrie[sd]` and not `marry\w*` alone: "married" and "marries"
+    // never contain the literal stem "marry", so past and third-person forms
+    // were invisible here (crash-test finding 6B). `marr\w*` would be shorter
+    // and wrong — it admits "marred". The standalone marriage frame below
+    // keeps the narrow stem on purpose: without a participant noun anchoring
+    // the clause, "married" is where the metaphors live ("the merger married
+    // two incompatible corporate cultures", the pt-03 include fixture).
+    test: (text) => /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry|marrie[sd])\w*\b.{0,70}\b(?:men|women|man|woman|males|females)\b/i.test(text)
+      || /\b(?:men|women|man|woman|males|females)\b.{0,70}\b(?:prefer|want|choose|select|desire|attract|reject|date|marry|marrie[sd])\w*\b/i.test(text),
   },
   {
     id: 'couple-retention',
