@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.12';
+export const ANALYZER_VERSION = '2.6.13';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -810,6 +810,14 @@ export const MATCH_SURFACE_LABELS = Object.freeze({
  * came to be filed as contradicting LE.
  */
 const MISREADING_DENIAL_CUES = /\b(?:not|never|no|none|false|untrue|myth|mistaken|wrong|isn't|aren't|wasn't|weren't|doesn't|don't|didn't|cannot|can't|won't|nonsense|rarely|hardly)\b/i;
+
+/*
+ * The blanket all-women signature behind the AWALT hand ruling in stanceFor.
+ * Named because two call sites must agree on it: the test that enters the
+ * ruling, and the phrase whose tokens locate the assertion clause when the
+ * ruling is scoped.
+ */
+const AWALT_BLANKET_CUE = /\b(?:all women|women always|women never|every woman)\b/i;
 
 /*
  * Reported speech: the passage relays someone else's claim rather than making
@@ -2700,9 +2708,41 @@ function stanceFor(unit, match) {
     label = 'Context only';
     rationale = 'This passage supplies context or a question more than a testable claim.';
   } else if (match.canonId === 'lexicon:term-awalt-all-women-are-like-that'
-    && /\b(?:all women|women always|women never|every woman)\b/i.test(text)) {
-    label = 'Contradicts';
-    rationale = 'LE indexes AWALT as a blanket generalization that fails against individual variation; the source states that overreach directly.';
+    && AWALT_BLANKET_CUE.test(text)) {
+    /*
+     * Hand ruling, clause-scoped since v2.6.13 with the same machinery as the
+     * misreading branch below it. The sentence-wide form stamped Contradicts
+     * on the NEGATION of the blanket claim — "not an exceptionless rule that
+     * every woman must obey" carried the same label as asserting the rule
+     * (crash-test finding 3). The blanket phrase's own clause decides, through
+     * the identical decision grammar: qualification, then reported speech,
+     * then denial, then assertion.
+     */
+    const blanketPhrase = (text.match(AWALT_BLANKET_CUE) || [''])[0];
+    const blanketScope = misreadingScope(text, unique(tokenize(blanketPhrase)));
+    const { kind: blanketKind, cue: blanketCue } = blanketScope.followUp;
+    if (blanketKind === 'qualification') {
+      label = 'Challenges';
+      rationale = `The source states the blanket all-women generalization and then withdraws part of it (“${blanketCue}”), which is a scope limit rather than a claim or a denial.`;
+    } else if (blanketScope.reported) {
+      if (blanketKind === 'endorsement') {
+        label = 'Contradicts';
+        rationale = `The passage relays someone else's blanket all-women claim and then adopts it (“${blanketCue}”), making the overreach the passage's own.`;
+      } else if (blanketKind === 'rejection') {
+        label = 'Supports';
+        rationale = `The passage relays a blanket all-women claim and then rejects it (“${blanketCue}”), which is the correction the AWALT entry itself states.`;
+      } else {
+        label = 'Context only';
+        rationale = 'The passage relays someone else\'s blanket all-women claim rather than asserting one; the overreach belongs to the person being quoted.';
+      }
+    } else if (blanketKind === 'rejection'
+      || (blanketScope.denialParity && blanketKind !== 'endorsement')) {
+      label = 'Supports';
+      rationale = 'The source denies the blanket all-women generalization, which is the limit the AWALT entry itself states against individual variation.';
+    } else {
+      label = 'Contradicts';
+      rationale = 'LE indexes AWALT as a blanket generalization that fails against individual variation; the source states that overreach directly.';
+    }
   } else if (match.canonId === 'frameworks:conversion-ladder'
     && /\b(?:different|separate|another|not|only|does not|doesn't|fail|fails)\b/i.test(text)) {
     label = 'Supports';
