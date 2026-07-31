@@ -83,17 +83,69 @@ The magnet signature — many captures at ~one distinct score with a wide runner
 `stat-relationship-education` is the only one worth a second look (3 captures, 1 distinct score),
 but n = 3 is far too small to call a rate, and its margin is a healthy 0.058.
 
-## 4. Ten of the twenty are unvalidated against real text
+## 4. Fourteen of the twenty take no top slot — and that is not what it first looked like
 
-All eleven `pills:` entries and three statistics entries have **zero** captures. That is expected
-rather than alarming — the corpus is 21 academic and journalistic sources, and *shit test*,
-*dread*, *cope*, *LMS* and the Black Pill scoreboard do not appear in Pew reports or
-marriage-research papers.
+**This section was wrong twice in its first version and is corrected here rather than quietly
+edited.** It said "ten", and it read the number as evidence the entries were unvalidated. The
+count is **fourteen** (all eleven `pills:` entries plus `stat-marriage-market`,
+`stat-acquaintance-matching`, `stat-sex-frequency`), and the inference does not survive contact
+with the retrieval layer.
 
-But it means their misreadings have only ever fired on **synthetic self-tests**. They are
-verified to be authored correctly and are unverified against text a reader would actually paste.
-Closing that needs a corpus source in the manosphere register, which is the same gap
-`md/lab-hookup-transaction-layer.md` §6 flagged for the AI-companion material.
+**The instrument, not the entries.** §3 counted **top-slot** captures — the entry `analyzeDocument`
+ranks first. "Zero captures" was then read as "never surfaces to a reader", and those are not the
+same claim. Measured against the sweep dump, none of the fourteen is dark; every one is reachable,
+with **224 to 1,562** scored pairs each:
+
+| Entry | Pairs ≥0.02 | Best | ≥weak | ≥credible |
+| --- | --- | --- | --- | --- |
+| `stat-sex-frequency` | 1562 | 0.483 | 182 | 2 |
+| `stat-acquaintance-matching` | 1258 | 0.501 | 52 | 3 |
+| `stat-marriage-market` | 1104 | 0.424 | 61 | 0 |
+| `pills:page-rp:dread` | 549 | 0.617 | 8 | 1 |
+| `pills:page-bp:love-conquers-all` | 224 | 0.521 | 5 | 1 |
+| `pills:black-scoreboard` | 970 | 0.414 | 15 | 0 |
+| remaining eight `pills:` | 292–643 | 0.263–0.302 | 1–3 | 0 |
+
+**Case A — validated, just outranked.** `stat-sex-frequency` and `stat-acquaintance-matching` are
+credible matches on real corpus text, at ranks 3 and 4:
+
+- `stat-sex-frequency` **0.483 credible**, rank 3, on *"Mean Marital Satisfaction, Sexual
+  Satisfaction, Sexual Frequency, across Waves of Measurement…"*, behind `satisfaction-flywheel`
+  0.564 and `stat-sexual-communication` 0.494.
+- `stat-acquaintance-matching` **0.501 credible**, rank 4, on *"The search for a romantic partner:
+  the effects of self-esteem and physical attractiveness on romantic behavior."*, behind three
+  physical-attractiveness entries tied at 0.540.
+
+They reach readers. They are validated against real text. The earlier claim that they need a
+register this corpus does not contain was simply false for these two.
+
+**Case B — the admission gate refusing a coincidence, correctly.** The two highest scores any
+`pills:` entry achieves are both *rejected* by the shipped pipeline, and inspecting why is the
+most reassuring result in this document:
+
+- `pills:page-rp:dread` scores **0.617** on *"He also has to be your only romantic partner."* —
+  and lands in `weakMatches` with **no credible match on that unit at all**.
+- `pills:page-bp:love-conquers-all` scores **0.521** on *"I am someone who is looking for love."*
+  — also weak-only.
+
+`isCredibleCandidate` is `score >= minCredibleScore` **AND** `hasCredibleMatchEvidence`, which
+demands a signature hit, phrase hit, exact alias hit, or ≥2 admission-distinctive shared tokens.
+Both sentences clear the score and fail the evidence: they are topic-word coincidences —
+*romantic partner*, *love* — on entries about dread game and about love conquering practical
+disagreement. **A high score with thin evidence is exactly what that gate exists to refuse, and
+it refused it.** This is the gate working, not an entry failing.
+
+**What actually remains.** The eight `pills:` entries topping out at 0.263–0.302 never approach
+the credible line, and *shit test*, *cope*, *LMS* and the Black Pill scoreboard genuinely do not
+appear in Pew reports or marriage-research papers. Their misreadings have still only fired on
+synthetic self-tests. That residual is real and narrower than first stated, and closing it needs a
+corpus source in the manosphere register — the same gap `md/lab-hookup-transaction-layer.md` §6
+flagged for the AI-companion material. **No entry needs changing.**
+
+**The lesson, which is the third of its kind in this document:** a metric's definition is part of
+its claim. "Zero captures" meant zero *top slots*, and was read as zero *reach*. Same family as
+§1's `ok 3` (a skipped gate reads as a pass) and §5's absorbed crossings (a regenerated baseline
+reads as no change).
 
 ## 5. The confound that is now permanent, and worth stating once
 
@@ -127,7 +179,12 @@ removed. Every number here came from importing the shipped analyzer, not from a 
    over-broad, and narrowing it would have cost the correct capture. See §7.
 2. **The absorbed crossings** (§1) — unrecoverable; noted so no later reader mistakes `ok 3` for
    a statement about the 507 → 532 growth.
-3. **The ten unvalidated entries** (§4) — needs a register the current corpus does not contain.
+3. **The unvalidated entries** (§4) — **re-scoped after measurement, and it was never ten.** Of
+   the fourteen with no top slot, two are credible matches on real text and merely outranked, and
+   the two highest-scoring `pills:` matches are coincidences the admission gate correctly refuses.
+   The genuine residual is the **eight** `pills:` entries topping out at 0.263–0.302, which needs
+   a manosphere-register corpus source. That is a source-acquisition decision for Jason, not an
+   entry defect: **no entry needs changing.**
 
 ## 7. The ruling, and the selection rule it leaves behind
 
