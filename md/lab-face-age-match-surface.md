@@ -110,10 +110,42 @@ three (it took a probe 0.581 → 0.786) and it still costs this sentence.
 >
 > **The recommendation does not change** (nothing else measured is cheaper, and a
 > 0.002 margin was never a safety property) **but whoever applies it inherits a
-> zero-margin pair.** The next canon growth of any kind takes this sentence under
-> the line, including the concurrent session's own next batch. When it does, that
-> is a real `minCredibleScore` loss and not noise, and by standing rule it is
-> release-blocking and Jason's to rule.
+> zero-margin pair.** ~~The next canon growth of any kind takes this sentence
+> under the line, including the concurrent session's own next batch.~~ When it
+> goes under, that is a real `minCredibleScore` loss and not noise, and by
+> standing rule it is release-blocking and Jason's to rule.
+>
+> > **CORRECTION 2026-07-31, contested by the concurrent session and they are
+> > right. "Any canon growth" is the wrong variable.** Their advice-layer batch
+> > WAS canon growth — 488 → 491 — and it cost this pair **0.0000**. Verified
+> > independently here, same analyzer build with the canon index as the only
+> > variable:
+> >
+> > ```
+> > 1fc6553  canon 488, before their advice layer    0.4320   margin 0.0020
+> > 545b7e9  canon 491, after it, before mine        0.4320   margin 0.0020
+> > HEAD     canon 491, after my two misreadings     0.4300   margin 0.0000
+> > ```
+> >
+> > Three new entries moved it by nothing; two misreadings ON THE ENTRY ITSELF
+> > moved it by everything available. **The threat is topical vocabulary overlap
+> > plus entry-level edits, not headline `conceptCount`** — their entries were
+> > about saturation, survivorship and virality and share almost no tokens with
+> > fertility/youth/attractiveness, so they moved the IDF denominators this pair
+> > depends on not at all. A batch about age, looks, fertility or the Wall would
+> > be a completely different proposition.
+> >
+> > This matters because the wrong rule makes future authors defensive about the
+> > wrong thing. **Check topical overlap with the at-risk pair, not the concept
+> > count.** It is also the same asymmetry §4 already describes from the other
+> > side: a misreading raises the entry's OWN `canonCoverage` denominator and hits
+> > it directly, while canon growth dilutes IDF globally and barely touches any
+> > single pair.
+> >
+> > They also pulled the real archived sentence rather than a paraphrase and
+> > confirmed 0.430 exactly, having first reported 0.444 off a reconstruction and
+> > withdrawn it. Worth copying: when a number is quoted from an elided sentence,
+> > go and get the sentence.
 >
 > The frozen band pins the same pair at **0.432**, not 0.430, and that is not a
 > discrepancy: `tools/lab-threshold-sweep.mjs` dumps `scoreEntry().score` and is
