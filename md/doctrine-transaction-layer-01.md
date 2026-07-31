@@ -204,7 +204,42 @@ boundary count 464 → 470.
 - Network approval is correlational; approval may be an effect of relationship quality rather
   than a cause. Stated in the entry.
 
-## 6. Follow-up: the Lab pass (separate, not done here)
+## 6. Measured Lab effect of the merge
+
+Sheet: `md/lab-doctrine-transaction-layer-threshold-adjudication.md`, generated from a
+baseline reconstructed by restoring the pre-merge canon (2401 passages × 470 entries,
+canon `1.0.0+6cf046c1e769`) and re-sweeping. **`--neighbors` was regenerated before that
+baseline was captured**, which per the standing warning silently re-pins scores and
+absorbs crossings; the reconstruction is the recovery, and the sheet is the record.
+
+```
+canon      1.0.0+6cf046c1e769 -> 1.0.0+aa6cd85db4e5  (doctrine moved)
+population 2401 -> 2515 retained passages   (+114)
+changed    86901 pairs   42339 down / 44562 up
+candidateScoreFloor 0.08   5575 gain / 183 loss
+minWeakScore        0.25    604 gain / 122 loss
+minCredibleScore    0.43    153 gain /   3 loss
+```
+
+**The gate widened by 114 passages** because the shipped gate consumes canon surfaces
+(v2.6.6, option 2a) — new doctrine vocabulary rescues passages the gate previously set
+aside. This is the batch's most direct Lab capability gain and it was not designed for.
+
+**The 153 credible-line gains are concentrated where the gap was.** The archived
+AI-companion sources (`13-wheatley-counterfeit-connections`, `14-common-sense-ai-companions`)
+previously scored **zero** against the whole canon — the Checkpoint-01 C2 finding, still
+true at 470 concepts. They now land on `frameworks:substitution-layer` at 0.540–0.547.
+
+**Triage of the 3 credible-line losses** (all IDF dilution ≤ 0.03, none a doctrine
+conflict). Rulings are Jason's; this is the reading, not a verdict:
+
+| Passage | Lost pair | Still credible elsewhere? |
+| --- | --- | --- |
+| `seg-00090` Conroy-Beam | M-TBD-56 0.438 → 0.415 | **Yes** — holds 0.575 on `replaceability-asymmetry`, its correct primary home, unmoved. Immaterial. |
+| `seg-00037` Pew under-30 | GD *Gen Z has it even worse* 0.435 → 0.405 | **Yes** — holds 0.430 on M-TBD-59, though now sitting on the line. |
+| `seg-00036` Pew 42%-easier | `stat-app-reasons` 0.437 → 0.411 | **No** — this passage loses its only credible match. The one materially adverse crossing in the batch. Note `frameworks:search-cost` is its new second-ranked entry at 0.356: thematically the right home (the passage is about whether apps made searching easier), just not yet strong enough to take it. |
+
+## 7. Follow-up: the Lab pass (separate, not done here)
 
 1. **Lexicon terms** for the six new concepts — the Lexicon is the retrieval spine and six new
    frameworks with no glossary rows are under-reachable. Moves Lexicon counts and pins.
