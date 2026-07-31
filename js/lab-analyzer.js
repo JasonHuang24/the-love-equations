@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.11';
+export const ANALYZER_VERSION = '2.6.12';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1297,6 +1297,24 @@ function normalizeEntry(raw, index) {
     .map((misreading) => unique(tokenize(misreading)))
     .filter((tokens) => tokens.length);
   /*
+   * ...and, per rejected reading, the tokens the ENTRY'S OWN VOICE does not
+   * use. A misreading mis-states the entry's claim, so most of its tokens are
+   * necessarily the entry's; overlap on those says "same topic", not "asserts
+   * the rejected reading" — 54 entries fired Contradicts on their own synopsis
+   * through exactly that conflation (md/lab-live-crash-test-01.md). Only a
+   * token absent from every affirmative surface can evidence the misreading
+   * as opposed to the claim. A misreading with no such token (4 of 588 at the
+   * freeze) cannot be detected by this branch at all until it is authored one.
+   */
+  const affirmativeSurfaceTokens = new Set([
+    ...entry._surfaceTokens.title,
+    ...entry._surfaceTokens.alias,
+    ...entry._surfaceTokens.synopsis,
+    ...entry._surfaceTokens.boundaryCondition,
+  ]);
+  entry._misreadingDistinctiveSets = entry._misreadingTokenSets
+    .map((tokens) => tokens.filter((token) => !affirmativeSurfaceTokens.has(token)));
+  /*
    * Alias typing. A single word is insufficient evidence by default, which is
    * why the untyped path below still applies minSingleAliasLength and the
    * low-information filter. These two sets are the curated exceptions:
@@ -2360,11 +2378,27 @@ function scoreEntry(unit, entry, idf) {
    * than against the union, so an entry that rejects three readings detects each
    * one as well as an entry that rejects only that one.
    */
-  const misreadingOverlap = entry._misreadingTokenSets.length
-    ? Math.max(...entry._misreadingTokenSets.map((tokens) => (
-      tokens.filter((token) => querySet.has(token)).length / tokens.length
-    )))
+  const misreadingSignals = entry._misreadingTokenSets.map((tokens, index) => ({
+    share: tokens.filter((token) => querySet.has(token)).length / tokens.length,
+    distinctiveHits: entry._misreadingDistinctiveSets[index]
+      .filter((token) => querySet.has(token)),
+  }));
+  const misreadingOverlap = misreadingSignals.length
+    ? Math.max(...misreadingSignals.map((signal) => signal.share))
     : 0;
+  /*
+   * "Asserts the rejected reading" needs BOTH: enough of one misreading's
+   * vocabulary (the share threshold, unchanged) AND at least one token that
+   * belongs to the misreading and not to the entry's own affirmative surfaces.
+   * Share alone is topic evidence — a correct restatement of the entry clears
+   * it by construction, which is the crash-test's 54-entry defect. The
+   * strongest qualifying misreading speaks for the entry, mirroring the
+   * per-misreading share above.
+   */
+  const assertedMisreading = misreadingSignals
+    .filter((signal) => signal.share >= SCORING_CONFIG.misreadingContradictionShare
+      && signal.distinctiveHits.length)
+    .sort((a, b) => b.share - a.share)[0] || null;
 
   // Which surface supplied each shared token. Costs one set lookup per token
   // per surface and changes no score; the whole point is that stance can stop
@@ -2395,6 +2429,10 @@ function scoreEntry(unit, entry, idf) {
     distinctiveShared: distinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     admissionDistinctiveShared: admissionDistinctiveShared.slice(0, SCORING_CONFIG.maxDistinctiveSharedReported),
     misreadingOverlap: round(misreadingOverlap),
+    misreadingAsserted: Boolean(assertedMisreading),
+    misreadingDistinctiveHits: assertedMisreading
+      ? assertedMisreading.distinctiveHits.slice(0, SCORING_CONFIG.maxSharedTokensReported)
+      : [],
     components: {
       phraseStrength: round(phraseStrength),
       signatureStrength: round(signatureStrength),
@@ -2642,7 +2680,11 @@ function stanceFor(unit, match) {
   const text = unit.text;
   const rawScore = match._rawScore;
   const surfaces = rawScore.matchSurfaces || { hit: [], tokens: {}, misreadingOnly: false, boundaryOnly: false };
-  const commonMisreading = rawScore.misreadingOverlap >= SCORING_CONFIG.misreadingContradictionShare;
+  // Share of the misreading's vocabulary AND at least one token distinctive to
+  // it (absent from every affirmative entry surface) — computed in scoring,
+  // decided here. Share alone reads a correct restatement as the rejected
+  // reading; see the red manifest (md/lab-stance-distinctive-red-manifest.md).
+  const commonMisreading = rawScore.misreadingAsserted;
   // Clause-scoped from v2.5.0, and computed only when the misreading branch can
   // actually run. The two sentence-wide booleans are still derived and still
   // published, because they are what every previous export recorded and a
@@ -2725,6 +2767,10 @@ function stanceFor(unit, match) {
     evidence: {
       matchSurfaces: surfaces.hit,
       misreadingSurfaceOverlap: rawScore.misreadingOverlap,
+      // The tokens that carried the "asserts the rejected reading" decision —
+      // empty whenever the branch did not run, so a reader can see that a high
+      // overlap alone no longer decides anything.
+      misreadingDistinctiveHits: rawScore.misreadingDistinctiveHits || [],
       misreadingSurfaceOnly: surfaces.misreadingOnly,
       boundaryConditionOnly: surfaces.boundaryOnly,
       reportedSpeech: reported,
@@ -3479,6 +3525,8 @@ function diagnosticCandidate(candidate, displayedIds, weakIds, rank) {
       distinctiveShared: raw.distinctiveShared,
       admissionDistinctiveShared: raw.admissionDistinctiveShared,
       misreadingOverlap: raw.misreadingOverlap,
+      misreadingAsserted: raw.misreadingAsserted,
+      misreadingDistinctiveHits: raw.misreadingDistinctiveHits,
     },
     matchSurfaces: raw.matchSurfaces,
     admission: {
