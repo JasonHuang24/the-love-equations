@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+9ec38aa8423e",
-  "generatedAt": "2026-07-31T12:05:56.000Z",
+  "indexVersion": "1.0.0+19b16e04659d",
+  "generatedAt": "2026-07-31T12:18:09.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -89,8 +89,8 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "a4243b73db455b0ba7b0e9c3ab63a30dffd5aa791b447decee378188f6f9fe9c",
-      "conceptCount": 90
+      "sha256": "02f8d78b822631b1f20df118126c5a19e5108e1f59381af5a61ba17422d43132",
+      "conceptCount": 93
     },
     {
       "page": "deep-dive.html",
@@ -215,14 +215,14 @@
     }
   ],
   "stats": {
-    "conceptCount": 529,
+    "conceptCount": 532,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
       "Five Levers": 35,
       "Gender Dynamics": 133,
       "Instruments": 5,
-      "Lexicon": 90,
+      "Lexicon": 93,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
@@ -233,7 +233,7 @@
       "Definitional": 1,
       "Evidence-based": 36,
       "Framework": 74,
-      "Glossary": 90,
+      "Glossary": 93,
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
@@ -249,9 +249,9 @@
       "Tier 2": 13,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 438,
+    "anchoredConceptCount": 441,
     "conceptsWithExternalSources": 113,
-    "dependencyCount": 259,
+    "dependencyCount": 262,
     "relatedCount": 403
   },
   "entries": [
@@ -10151,7 +10151,9 @@
       "boundaryConditions": [
         "Method Two independent undergraduate samples (163 daters in 2005, 187 in 2007), each attending roughly twelve four-minute dates. Desire was split into actor, partner and relationship components with a social-relations model, then predicted by random forests trained on one sample and tested on the other (181 predictors in one, 112 in the other)."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A dating algorithm with enough data will predict which two people click before they meet."
+      ],
       "sourceLinks": [
         {
           "label": "Article →",
@@ -10186,7 +10188,9 @@
       "boundaryConditions": [
         "Method Pew analysis of the 1960–2000 decennial censuses and the 2010–2012 American Community Survey via IPUMS; figures shown are 2012. Bars use a 200-per-100 scale, so widths are half the printed values."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The dating pool follows the headcount, so a surplus of young men means women hold the advantage."
+      ],
       "sourceLinks": [
         {
           "label": "Report →",
@@ -10219,7 +10223,9 @@
       "boundaryConditions": [
         "Method Coder-rated physical attractiveness for both partners; acquaintance length computed as months known minus months romantically involved (mean 3.8, median 2.0), with 20 couples beyond Tukey’s outer fences excluded."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Couples always match on looks, so dating someone better looking than you is impossible."
+      ],
       "sourceLinks": [
         {
           "label": "Article →",
@@ -10250,7 +10256,9 @@
       "boundaryConditions": [
         "Method National sample of couples, both partners surveyed; retrospective reports of a breakup and renewal within the current relationship; dyadic regressions accounting for the non-independence of partners’ answers. Among married cyclers, 87% of the breakups happened while dating rather than while living together."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Getting back together after a breakup restores the romance completely, leaving the couple exactly as before."
+      ],
       "sourceLinks": [
         {
           "label": "Article →",
@@ -10283,7 +10291,9 @@
       "boundaryConditions": [
         "Method Random-digit telephone survey of men and women married within the past ten years; self-reported route and self-reported marital quality, measured at one point in time. Selection is the standing caveat — the survey did not assign anyone to a sequence, and people who wait for a commitment may differ from those who do not in ways no control variable…"
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Moving in early ruins a couple's odds, whatever they had intended about the wedding."
+      ],
       "sourceLinks": [
         {
           "label": "Article →",
@@ -10314,7 +10324,9 @@
       "boundaryConditions": [
         "Method Cox proportional-hazards model, population-weighted against the 2012 ACS, controlling for age, age at marriage, sex, race, education, employment, household income, region, religious attendance, spousal differences in age/race/education, and children."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Spending more on the wedding signals commitment, so an expensive celebration predicts a lasting marriage."
+      ],
       "sourceLinks": [
         {
           "label": "Article →",
@@ -10349,7 +10361,9 @@
       "boundaryConditions": [
         "Method Meta-analysis of 86 codable reports; bars show the midpoint of each published experimental range and are drawn on a 0–1.00 d scale, so they are standardized mean differences, not percentages. Quasi-experimental studies produced smaller effects, attributable to pretest group differences."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A communication course fixes a struggling marriage, because taught couples keep the gains permanently."
+      ],
       "sourceLinks": [
         {
           "label": "Abstract →",
@@ -10386,7 +10400,9 @@
       "boundaryConditions": [
         "Method Multilevel meta-analysis of individuals currently in a relationship, with moderators for age, relationship length, marital status, individualism and national gender inequality. Bars map r directly to width. Self-report on both sides of every correlation, and no study here randomly assigned couples to talk."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "How often a couple has sex decides romantic satisfaction, so talking about desire changes little."
+      ],
       "sourceLinks": [
         {
           "label": "Abstract →",
@@ -10417,7 +10433,9 @@
       "boundaryConditions": [
         "Method Study 1: 25,510 respondents across 14 waves of the nationally representative General Social Survey, 1989–2012. Study 2: 335 partnered adults, using the Satisfaction With Life Scale and the income benchmark quoted above. Study 3: the National Survey of Families and Households, 2,400 married couples across three waves spanning 14 years."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "More sex always means a happier romance, so couples should push frequency as high as possible."
+      ],
       "sourceLinks": [
         {
           "label": "Article →",
@@ -13481,7 +13499,9 @@
       "boundaryConditions": [
         "Read the scoreboard honestly in both directions. The Black Pill is not wrong about the world; it is wrong about the size of the world. It found four real effects and rounded every one of them up to infinity. And the fourth line is the reason the first three never get corrected from the inside: the lens ships with a clause that immunizes it. Take the effects."
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "The Black Pill gets its dating predictions right, so its whole model of attraction holds."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13542,7 +13562,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "A man below average in looks has his dating future closed permanently by that measurement."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13566,7 +13588,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Anyone disputing the looks verdict is coping, so disagreement itself proves the dating model correct."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13590,7 +13614,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Three fixed traits settle who gets picked, so a man's dating outcome is decided at birth."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13709,7 +13735,9 @@
       "boundaryConditions": [
         "The repair is not to become naive again. Keep every accurate observation and re-attach it to an action you could still respect if it failed. Contempt is what strategy decays into once it stops producing anything — and the honest question is not “am I bitter?” but “what has this analysis actually got me in the last six months?”"
       ],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Anyone who has turned contemptuous in a romance can feel it happening and self-correct."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13826,7 +13854,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Every argument a woman starts while dating is a covert test of your steadiness."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13850,7 +13880,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Making a romantic partner feel replaceable reliably restores their effort and strengthens the relationship."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -13874,7 +13906,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Performing abundance while dating attracts partners just as well as actually having options."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14088,7 +14122,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Instant chemistry on a date forecasts whether a romance will last for a decade."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14112,7 +14148,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Loving someone enough settles every practical disagreement, so a romance survives on strength of emotion."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -14136,7 +14174,9 @@
       ],
       "related": [],
       "boundaryConditions": [],
-      "commonMisreadings": [],
+      "commonMisreadings": [
+        "Holding out for a flawless partner is always right, so rejecting real dating prospects costs little."
+      ],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -16158,6 +16198,74 @@
       ]
     },
     {
+      "id": "lexicon:term-dread",
+      "title": "Dread",
+      "page": "lexicon.html",
+      "anchor": "term-dread",
+      "category": "Lexicon",
+      "subcategory": "Red Pill",
+      "synopsis": "Deliberately raising a partner’s fear of losing you so their effort returns. The diagnosis under it is sound — desire needs maintenance — but the tactic is one of the few here that has actually been measured, and jealousy induction tracks aggression, withdrawal, and partner violence.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "dread game",
+        "manufactured jealousy",
+        "jealousy induction"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:dread-pill"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The observation underneath it is sound and separable from the tactic: desire decays without maintenance, which argues for raising your own value rather than lowering their security."
+      ],
+      "commonMisreadings": [
+        "Manufactured jealousy is a legitimate repair tool, so a romantic partner should stay slightly afraid."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Does this move raise your value, or only their fear?"
+      ]
+    },
+    {
+      "id": "lexicon:term-shit-test",
+      "title": "Shit test",
+      "page": "lexicon.html",
+      "anchor": "term-shit-test",
+      "category": "Lexicon",
+      "subcategory": "Red Pill",
+      "synopsis": "A provocation read as a covert check on your steadiness. People genuinely do probe before trusting someone — but reading every friction as a rigged exam turns a partner into an examiner, which is the tell that the lens is running the relationship.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "shit test",
+        "compliance test",
+        "fitness test"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-rp"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Probing for steadiness before extending trust is ordinary and mostly unconscious; the doctrine's addition is that it is deliberate, constant, and scored."
+      ],
+      "commonMisreadings": [
+        "A woman's every complaint while dating is a covert exam, so calm defiance wins romance."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "Is there a reading on which the other person meant exactly what they said?"
+      ]
+    },
+    {
       "id": "lexicon:term-statusmaxxing",
       "title": "Statusmaxxing",
       "page": "lexicon.html",
@@ -16980,6 +17088,43 @@
       "sourceLinks": [],
       "pressureTests": [
         "Is the shortage in the population, or in the overlap between one person's standards and their reachable market?"
+      ]
+    },
+    {
+      "id": "lexicon:term-the-soulmate-pill",
+      "title": "The Soulmate Pill",
+      "page": "lexicon.html",
+      "anchor": "term-the-soulmate-pill",
+      "category": "Lexicon",
+      "subcategory": "Blue Pill",
+      "synopsis": "The belief that a relationship is settled by finding the right person rather than built with one. Measured for decades as destiny versus growth beliefs, and the finding is stranger than “soulmates aren’t real”: the belief is an amplifier whose sign is set by fit — it supercharges a good match and becomes a trapdoor in a bad one.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "Soulmate Pill",
+        "soulmate belief",
+        "destiny belief",
+        "growth belief",
+        "implicit theories of relationships",
+        "work-it-out theory"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:soulmate-pill"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The belief is an amplifier rather than an error: it raises satisfaction and commitment where perceived fit is good and accelerates exit where it is poor, so its sign is set by something outside itself."
+      ],
+      "commonMisreadings": [
+        "Conflict in a romance proves a mismatch, so the destined partner produces effortless compatibility instead."
+      ],
+      "sourceLinks": [],
+      "pressureTests": [
+        "When something goes wrong, does the belief generate a task or a verdict?"
       ]
     },
     {

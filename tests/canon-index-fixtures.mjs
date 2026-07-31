@@ -15,19 +15,19 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 507);
+assert.equal(index.stats.conceptCount, 532);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 35,
   'Five Levers': 35,
   'Gender Dynamics': 133,
   Instruments: 5,
-  Lexicon: 90,
+  Lexicon: 93,
   'Love Hierarchy': 41,
   Mythbuster: 65,
-  'Pill Dossiers': 15,
+  'Pill Dossiers': 28,
   'Rules & Frameworks': 47,
-  Statistics: 41,
+  Statistics: 50,
 });
 
 /*
@@ -67,11 +67,13 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 507);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 532);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
-// boundary would only add retrieval mass to the same entry.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 499);
+// boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
+// expansion widened the lag: 11 of its 13 new dossier entries took the misreading
+// alone, and the 9 new charts likewise, so the gap is 17 rather than 8.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 515);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');

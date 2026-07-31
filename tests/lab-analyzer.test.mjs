@@ -795,9 +795,17 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * honest summary of this pin's whole history is that canon growth moves it far
    * too little to matter, and it has never once come close to changing the
    * behaviour the test exists to check.
+   *
+   * 0.537 at 532, the largest single jump the pin has seen: 41 concepts arrived
+   * at once (13 pill-dossier entries, 9 charts, 3 Lexicon terms, plus the earlier
+   * batches' backlog) when the index was regenerated after drifting stale at 507.
+   * Nine moves, cumulative drift still 0.003, and the third visit to 0.537 by a
+   * third distinct route. Worth recording that the biggest population change in
+   * this log produced the same thousandth-scale step as a rewording did — the
+   * pin is measuring the corpus, and it is not sensitive to how the corpus grew.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.536);
+  assert.equal(weakPassage.weakMatches[0].score, 0.537);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
