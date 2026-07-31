@@ -202,8 +202,98 @@ local-market    analytic  0.598 -> 0.511   -0.087, DISAGREES with their 0.404 ->
 
 The `local-market` disagreement is a different probe, not a different answer —
 theirs scored 0.404 weak where mine maps at 0.598, so the two measurements are of
-different sentences and neither refutes the other. **Recorded as unresolved
-rather than averaged.**
+different sentences and neither refutes the other. ~~**Recorded as unresolved
+rather than averaged.**~~ **SETTLED — see §4b.**
+
+## 4b. Settling the reversal, and there are THREE registers, not two
+
+All four probes, both sessions', against one build. Nothing disagreed: every
+number reproduced exactly.
+
+```
+theirs  ordinary   MAPPED 0.645 rank 1     synopsis emptied ->  MAPPED 0.645
+theirs  analytic   weak   0.404            synopsis emptied ->  weak   0.408
+mine    ordinary   NO-UNIT                 synopsis emptied ->  NO-UNIT
+mine    analytic   MAPPED 0.598 rank 1     synopsis emptied ->  MAPPED 0.511
+```
+
+So there was never a conflict. What the two "analytic" probes are is **not the
+same register**, and that is the finding:
+
+```
+theirs   "Local marriage markets vary substantially, but migration does not
+          causally improve partnering outcomes."
+mine     "Participation happens in a metro or a campus rather than in a single
+          national dating market."
+```
+
+Where each probe's distinctive vocabulary lives on the entry's match surfaces:
+
+```
+migration   boundaryConditions only
+metro       synopsis · aliases · boundaryConditions
+market      synopsis · aliases · misreadings · boundaryConditions
+move        aliases          moving  misreadings        city  misreadings · boundaries
+```
+
+**Their probe is written in the register of the entry's SOURCES; mine in the
+register of its PAGE.** `migration`, `causally`, `partnering outcomes` are the
+literature's terms and reach the entry only through a boundary condition.
+`metro`, `campus`, `national dating market` are the page's terms and reach the
+synopsis directly — which is why removing the synopsis costs mine 0.087 and theirs
+0.004. Their hypothesis was right about the cause and slightly wrong about the
+mechanism: `migration` is not absent from the entry, it is present on a *thin*
+surface.
+
+So the picture has three registers, and only two were named:
+
+1. **Discourse register** — how the claim is made in the wild.
+2. **Page register** — the site's analytic prose. This is what the synopsis is.
+3. **Source register** — the cited literature's terms. This is what boundary
+   conditions often carry, since they are where caveats from papers land.
+
+The synopsis bridges (2) and nothing else. Boundary conditions partly bridge (3).
+**Nothing bridges (1) except authored misreadings and aliases**, which is the
+whole recommendation, arrived at from a third direction.
+
+### The "reversal" is the mechanism working, not a counterexample
+
+`local-market` reaches its ordinary probe at 0.645 rank 1 **and does not need its
+synopsis to do it** (0.645 → 0.645). Look at why: its aliases are
+`Local Market`, `market thickness`, `market density`, `metro sex ratio`,
+`geographic sorting`, **`just move`**. The last one is an ordinary-register
+alias — it is the sentence a person says, not a term an analyst uses. The
+neighbouring entries do the same: `too many women` on `sex-ratio`,
+`damaged goods` and `leftovers` on `residual-pool`.
+
+**The one pair that ran backwards is the one whose author gave it
+discourse-register aliases.** That is the strongest confirmation of the alias
+recommendation in either census, and it arrived disguised as a counterexample.
+
+### Are multi-word aliases safe? Not by being multi-word
+
+The standing remedy is now aliases, and the obvious worry is that
+`md/lab-generic-title-aliases.md` rejected four aliases for buying false
+positives. Those pull in opposite directions only if word count is the variable.
+From measurements this project has already made:
+
+```
+single token, typed      face · body · age · game     +75 credible, NONE right
+multi-word               younger women                 1 gain, WRONG (a harassment stat)
+multi-word               facial attractiveness         a lateral swap, buys nothing
+multi-word               cope with · is cope           3/4 intent, 0/3 false positives
+multi-word               just move                     reaches the ordinary claim, 0.645
+```
+
+**Multi-word is not the safety property.** `younger women` is multi-word and
+wrong. The distinguishing feature is what the phrase NAMES: `just move`,
+`damaged goods` and `cope with` name the CLAIM; `younger women` and `age` name
+the POPULATION OR TOPIC the claim is about. A phrase that names the population
+fires on every passage describing that population, which is the fourth failure
+shape whatever its length.
+
+That rule is stated from existing data and **has not been tested prospectively.**
+It is the obvious next measurement if anyone gets scope for it.
 
 What both censuses agree on is the shape: **the synopsis carries an entry only
 when the alias set does not already cover the claim's vocabulary.** Where it
@@ -235,6 +325,8 @@ synopsis-register-2.mjs  NO-UNIT split out from GATE-BINNED, the three published
                          pairs re-verified, the four-framing demonstration, and
                          four more entries
 overlap-vs-growth.mjs    the growth-versus-overlap check, three canon points
+local-market-settle.mjs  both sessions' probes on one build, plus which surface
+                         each probe's vocabulary lives on
 ```
 
 **Do not reuse `synopsis-register.mjs`.** It is kept only because §1–§3 were
