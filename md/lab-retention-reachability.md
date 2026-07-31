@@ -129,10 +129,67 @@ than the entry's research register:
 Exactly the split the diagnosis predicts: the retrieval gap closes on a match
 surface, the doctrine gap does not move.
 
-**NOT SHIPPED.** `data/canon-overlay.json` is held by a concurrent session for
-the whole of this run and Jason's standing ruling is that I do not operate on
-their files. The surface above is measured, authored and ready to apply; it
-joins docket item 2's face/age surfaces as one pending canon patch.
+**NOT SHIPPED**, and the reason changed during the run. It began as "a
+concurrent session holds `data/canon-overlay.json`". A window opened, item 2's
+face/age surfaces went in at `8232ed5` — and then measuring this one for COST
+rather than reach gave it a better reason to wait. See §7.
+
+## 7. Measured for cost, and stopped one step short
+
+Reach is not shippability. The face/age pass rejected nine of eleven candidates
+on cost alone, so this one was put through the same instrument: displayed
+credible **and** displayed weak across all 21 sources.
+
+**The first draft is the one §6 quotes, and it should not ship.**
+
+```
+"Attraction always fades in a long relationship, so couples who want desire
+ must keep chasing novelty."
+      credible  +1 / -1        weak  +13 / -11        dd-05 MAPPED 0.484
+```
+
+Its credible GAIN is *"Despite what people desire in a mate, they cannot always
+get what they want"* — the word `desire` in the wanting-a-partner sense, not the
+sexual-desire sense the entry is about. A sense error, and the same family as
+every alias the face/age pass rejected.
+
+**The second draft removes the ambiguous token and is materially better:**
+
+> Attraction fades once a couple gets comfortable, so a long relationship needs
+> constant novelty to stay alive.
+
+```
+      credible  +0 / -1        weak  +11 / -10        dd-05 MAPPED 0.484
+```
+
+Same reach, no wrong credible gain, and it picks up a genuinely right nearby
+concept the first draft did not: *"the frequency with which a couple has sex
+declines markedly over time in most long-term relationships"* → 0.357. That
+sentence is the entry's subject stated plainly.
+
+**Dropping the bare word `desire` from a misreading on the
+desire-maintenance entry is what fixed it** — the same rule the face/age
+survivors demonstrated, applied to a token instead of a register: write the
+claim in the words the claim is made in, and avoid a token whose ordinary sense
+lives in the same domain as the concept.
+
+**Why it still does not ship.** Its one credible LOSS is *"We predicted that
+mate retention behaviors would be positively related to relationship
+satisfaction"* at 0.431 — arguably a correct loss, since that sentence belongs to
+`frameworks:mate-retention-intensity` rather than here. But a `minCredibleScore`
+loss is a **blocking crossing** by standing rule, with no volume exception, and
+HEAD already carries one unruled crossing from `8232ed5` waiting on Jason.
+Stacking a second blocking verdict on an unruled first one is not a measurement
+problem, it is a scope problem — and the loop's stop condition is exactly *"needs
+scope only Jason has"*.
+
+So this closes as **measured, drafted, and one ruling away**. Apply the second
+draft to `frameworks:desire-maintenance-split` in `data/canon-overlay.json`,
+rebuild, sweep, and adjudicate the single expected credible loss. `conceptCount`
+does not move; the entry already carries two misreadings, so no fixture pin
+moves either.
+
+Reproduce: `dd05-cost.mjs`.
 
 The canon was mutated **in memory** for this check. That is legitimate here and
 would not be for `tests/canon-index-fixtures.mjs`, which calls
