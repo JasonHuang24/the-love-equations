@@ -90,8 +90,38 @@ raises the entry's `canonCoverage` denominator. A3 was the most tempting of the
 three (it took a probe 0.581 → 0.786) and it still costs this sentence.
 
 **One misreading on this entry is free; two are not.** Anyone extending
-`smv:looks:age` later should check this sentence first — it is the canary, and it
-has no margin at all.
+`smv:looks:age` later should check this sentence first — it is the canary.
+
+> **CORRECTION, same day, and it sharpens the recommendation rather than
+> withdrawing it.** The paragraph above says "@ 0.430" without saying which canon
+> that was measured on, and the two numbers in play differ by exactly the thing
+> being measured. Measured to four places:
+>
+> ```
+> BASE                        displayed 0.4320   margin over the line  0.0020
+> + face misreading           displayed 0.4320   margin               0.0020
+> + face AND age  (SHIPS)     displayed 0.4300   margin               0.0000
+> ```
+>
+> So the shipping pair is free on displayed matches **and it spends the entire
+> margin doing it**. The match survives only because admission compares `>=`. The
+> `+0 / -0` line in §1 is true and it is true on a knife edge, which a count
+> cannot show — this is the same lesson as §3 from the other direction.
+>
+> **The recommendation does not change** (nothing else measured is cheaper, and a
+> 0.002 margin was never a safety property) **but whoever applies it inherits a
+> zero-margin pair.** The next canon growth of any kind takes this sentence under
+> the line, including the concurrent session's own next batch. When it does, that
+> is a real `minCredibleScore` loss and not noise, and by standing rule it is
+> release-blocking and Jason's to rule.
+>
+> The frozen band pins the same pair at **0.432**, not 0.430, and that is not a
+> discrepancy: `tools/lab-threshold-sweep.mjs` dumps `scoreEntry().score` and is
+> retrieval-only by design — no bounded context, no display caps — so the two
+> instruments measure different quantities and neither is the other's check. It
+> does mean the pair sits inside the ±0.03 band and **the existing blocking
+> machinery already guards it**, so this needs no new guard. That is the whole
+> follow-on: nothing to change.
 
 ## 5. Rejected in round 2 as well
 
@@ -190,6 +220,7 @@ age-why.mjs             why the age null result was the PROBES, not the surface
 face-age-archive.mjs    displayed credible matches, 21 sources, every gain read
 face-age-bisect.mjs     the eight components one at a time — the table in §1
 face-age-round2.mjs     the three round-2 candidates, all rejected
+age-canary.mjs          the fertility sentence's margin, to four places
 ```
 
 `age-why.mjs` is worth keeping as the method: the first probe set returned "not
