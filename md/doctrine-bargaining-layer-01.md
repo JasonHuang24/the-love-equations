@@ -276,3 +276,40 @@ And the two large RCTs show you can raise marital happiness, lower distress and 
    as predicted — and this time it was measured rather than assumed.
 5. Splicing before `<!-- The Wall -->` rather than inside an entry meant **no ~30-char delta** on
    the preceding entry: 3 added, 0 removed, 0 existing entries touched.
+
+## 7. The measurement §3 promised, run late
+
+§3 said to run synopsis-emptying before committing. It was run **after** `c034013`, which
+changes when it informs rather than whether it is valid. Probe held constant, index varied.
+
+```
+the-surplus          analytic MAPPED 0.782 rank 1 -> synopsis emptied: MAPPED 0.694 rank 1
+outside-option       analytic MAPPED 0.540 rank 1 -> synopsis emptied: MAPPED 0.540 rank 1
+commitment-problem   analytic MAPPED 0.772 rank 1 -> synopsis emptied: MAPPED 0.775 rank 1
+```
+
+**None of the three is synopsis-carried.** All survive at rank 1 on their own authored
+aliases and phrases, which matters because synopsis rewriting is forbidden (refused at
+`eb0f6cd`) — an entry that collapsed here would have had no permitted remedy. Carry the other
+session's caveat with it: all three have 7 aliases, and on rich alias sets this probe looks
+good regardless, so read this as **"not obviously synopsis-carried"** rather than "reachable".
+
+**Ordinary register, and the honest count is 1 datum, not 3.**
+
+```
+the-surplus          ordinary  not reached (top: outside-option)
+outside-option       ordinary  NO UNIT
+commitment-problem   ordinary  NO UNIT
+```
+
+Only `the-surplus` is a reachability observation, and it lands on its own sibling rather than
+itself. The other two produced **no claim unit at all** — the same non-comparable outcome I
+nearly mis-published earlier tonight as `GATE-BINNED`. A bare conversational sentence of that
+shape forms no unit, so it cannot answer a reachability question in either direction. Dropping
+them is the rule from that mistake, not a convenience.
+
+That is a fourth independent argument for the discourse-register corpus: **every one of this
+batch's nine misreadings is an authored discourse-register surface, and there is no corpus in
+which to check whether anyone phrases the claim that way.** Misreadings are the only surface on
+the page that is *supposed* to be in the reader's register rather than ours, and it is the one
+surface we cannot test.

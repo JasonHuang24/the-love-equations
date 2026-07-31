@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.10';
+export const ANALYZER_VERSION = '2.6.11';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -2307,7 +2307,7 @@ function scoreEntry(unit, entry, idf) {
   // the final score is guesswork.
   const penaltiesApplied = [];
 
-  // The three penalties all ask the same question — "is there anything here
+  // The two OVERLAP penalties ask the same question — "is there anything here
   // beyond loose overlap?" — so a promoted alias answers it exactly as an exact
   // phrase does. Without this, phrase-class treatment would be granted and then
   // immediately taken back by the sparse-token penalty.
@@ -2323,7 +2323,34 @@ function scoreEntry(unit, entry, idf) {
     score *= SCORING_CONFIG.sparseSharePenalty;
     penaltiesApplied.push({ code: 'sparse-shared-tokens', factor: SCORING_CONFIG.sparseSharePenalty });
   }
-  if (unit.wordCount < SCORING_CONFIG.shortUnitWordCount && !exactLexicalHit && !signatureHits.length) {
+  /*
+   * The third penalty asks a DIFFERENT question — is the passage long enough
+   * for any score over it to mean something? — and until v2.6.11 it carried the
+   * other two's exemption verbatim. Precision does not answer length, and on
+   * short text the two correlate the wrong way: a three-word section heading
+   * that IS the canon title matches at 100% by construction, so the exemption
+   * fired hardest exactly where the passage was least able to support a
+   * reading. Measured over the 22-source archived corpus: of 788 mapped
+   * top-slots, 14 sat on units under this word count and 13 were units the
+   * claim detector had already rejected — "Mate guarding" 0.701, "Sexual
+   * Satisfaction" 0.718, both High, both matched against entries authored FROM
+   * those very papers.
+   *
+   * Dropping the exemption outright was the first fix and it was too broad. It
+   * failed ta-01, which asserts that a curated standalone alias carries its
+   * concept on its own: "Hypergamy shapes modern dating." is four words, and it
+   * is a CLAIM. That is the line, and the claim detector already draws it — a
+   * label names a topic, a short assertion asserts something. So the exemption
+   * survives, conditioned on the passage actually making a claim.
+   *
+   * Corpus effect, measured: zero of 1,188,070 swept pairs move. The exemption
+   * had never once fired on a claim-like unit in the archived corpus, which is
+   * why lab-threshold-sweep.mjs — which sweeps claims only — could not see this
+   * defect at all. Everything it was doing, it was doing to headings.
+   */
+  const shortUnitPrecise = exactLexicalHit || signatureHits.length;
+  if (unit.wordCount < SCORING_CONFIG.shortUnitWordCount
+    && !(unit.isClaimLike && shortUnitPrecise)) {
     score *= SCORING_CONFIG.shortUnitPenalty;
     penaltiesApplied.push({ code: 'short-unit', factor: SCORING_CONFIG.shortUnitPenalty });
   }

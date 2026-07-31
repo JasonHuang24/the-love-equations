@@ -150,18 +150,35 @@ function loadPassages(excerptChars, includeSetAside, canonSurfaces) {
       const status = unit.domainRelevance.status;
       if (status === 'irrelevant' && !includeSetAside) return;
       /*
-       * A unit the claim detector rejected is never mapped: analyzeDocument
-       * builds segments for claim-like units only, so retrieval never runs on it
-       * and any score this tool prints for it is measuring nothing.
+       * This skip narrows the sweep to CLAIMS. Read the next paragraph before
+       * reasoning from it, because until 2026-07-31 this comment justified the
+       * skip with something that was simply not true.
        *
-       * Skipping it is not a filter on top of the gate, it is the same
-       * population the analyzer works on. Before this line the sweep scored two
-       * section HEADINGS as passages — "Online Dating" and "Romance & Dating",
-       * both `isClaimLike: false` with `claimLikelihood: 0` — and because a
-       * two-token passage carries almost no query weight, any shared token
-       * produced a large coverage ratio. Three of the 29 minCredibleScore
-       * rulings a human was asked to make in July 2026 existed only for that
-       * reason, and none of the three could ever have reached a reader.
+       * It said: "a unit the claim detector rejected is never mapped —
+       * analyzeDocument builds segments for claim-like units only, so retrieval
+       * never runs on it." It does. `analyzeDocument` segments every unit the
+       * DOMAIN gate keeps, claim-like or not, and stance has an explicit branch
+       * for the rest (`Context only`, see lab-analyzer.js). Measured at canon
+       * 491: 23 of 788 mapped top-slots sat on `isClaimLike: false` units. So
+       * the closing claim that none "could ever have reached a reader" was
+       * wrong too — they reach one, labelled as context.
+       *
+       * What the old comment got RIGHT is the mechanism: a two-token passage
+       * carries almost no query weight, so any shared token produces a large
+       * coverage ratio. That is a passage-LENGTH defect, and excluding
+       * non-claim units here only ever hid it from this tool — the shipped
+       * analyzer went on scoring "Mate guarding" at 0.701 High. It was fixed at
+       * v2.6.11 where it lives, in the short-unit penalty, whose exemption for
+       * exact lexical hits was firing hardest on headings that match a canon
+       * title by construction.
+       *
+       * The skip therefore stays, but as a SCOPE choice and nothing more: this
+       * tool tunes the thresholds that govern claim mapping, which is also the
+       * population `analyzeDocument`'s own metrics count. The residual is real
+       * and worth stating — pairs on non-claim units are invisible to every
+       * frozen band and adjudication sheet this tool produces. Widening it is a
+       * governance decision, not a bug fix, because it re-bases every ruling
+       * already made.
        *
        * Unconditional, including under --include-set-aside: that flag widens the
        * population to passages the GATE set aside, which are still claims. A
