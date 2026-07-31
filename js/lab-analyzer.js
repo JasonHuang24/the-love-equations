@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.15';
+export const ANALYZER_VERSION = '2.6.16';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -2750,14 +2750,6 @@ function stanceFor(unit, match) {
       label = 'Contradicts';
       rationale = 'LE indexes AWALT as a blanket generalization that fails against individual variation; the source states that overreach directly.';
     }
-  } else if (match.canonId === 'frameworks:conversion-ladder'
-    && /\b(?:different|separate|another|not|only|does not|doesn't|fail|fails)\b/i.test(text)) {
-    label = 'Supports';
-    rationale = 'The source preserves the LE distinction between attention, attraction, selection, compatibility, and retention.';
-  } else if (match.canonId === 'smv:overview'
-    && /\b(?:not|does not|doesn't|is not|isn't)\b.*\b(?:moral worth|human worth|entitlement|consent)\b/i.test(text)) {
-    label = 'Supports';
-    rationale = 'The source affirms the LE boundary between descriptive dating-market leverage and moral worth, entitlement, or consent.';
   } else if (commonMisreading) {
     const { kind, cue } = scope.followUp;
     if (kind === 'qualification') {
