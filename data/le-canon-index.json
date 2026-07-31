@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+3c2f754dd49e",
-  "generatedAt": "2026-07-31T10:53:20.000Z",
+  "indexVersion": "1.0.0+a053084d41a3",
+  "generatedAt": "2026-07-31T12:05:56.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -55,8 +55,8 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "1c569674e359c161f5695877f46b1ce5fd2cbef2c05dc27b2cb12a36bb239265",
-      "conceptCount": 41
+      "sha256": "916616e589f320a92377551831abdf34b5f4910591585d6e7b5a831cc1ad2f65",
+      "conceptCount": 50
     },
     {
       "page": "mythbuster.html",
@@ -78,8 +78,8 @@
       "inputs": [
         "pills.html"
       ],
-      "sha256": "c81e37aad33ed526b8e6b97f8363b9f3583b1fcc0c565df6251062f6f6fda3da",
-      "conceptCount": 15
+      "sha256": "b800deddc9070c1afbc9f1eb09633e43088fca3ac2e04d9582fc995b4e730736",
+      "conceptCount": 28
     },
     {
       "page": "lexicon.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 507,
+    "conceptCount": 529,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -225,9 +225,9 @@
       "Lexicon": 90,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
-      "Pill Dossiers": 15,
+      "Pill Dossiers": 28,
       "Rules & Frameworks": 47,
-      "Statistics": 41
+      "Statistics": 50
     },
     "byEvidenceType": {
       "Definitional": 1,
@@ -237,7 +237,7 @@
       "Hard data": 28,
       "Instrument": 5,
       "LE framework": 1,
-      "Lens": 72,
+      "Lens": 85,
       "Long-form synthesis": 12,
       "Model": 34,
       "Observation": 46,
@@ -245,14 +245,14 @@
       "Record + framework": 13,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 39,
-      "Tier 2": 7,
+      "Tier 1": 43,
+      "Tier 2": 12,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 416,
-    "conceptsWithExternalSources": 104,
-    "dependencyCount": 242,
-    "relatedCount": 393
+    "anchoredConceptCount": 438,
+    "conceptsWithExternalSources": 113,
+    "dependencyCount": 255,
+    "relatedCount": 405
   },
   "entries": [
     {
@@ -10079,6 +10079,325 @@
       "pressureTests": []
     },
     {
+      "id": "statistics:stat-desire-prediction",
+      "title": "The part you most want predicted is the part nobody could predict",
+      "page": "statistics.html",
+      "anchor": "stat-desire-prediction",
+      "category": "Statistics",
+      "subcategory": "What the search can predict",
+      "synopsis": "Traits and preferences do predict something: who is broadly desirable, and who is broadly hard to please. What they do not predict is the thing every matching service sells — that two particular people will click. And this is not a case of a small target: unique, person-specific desire was the largest component of the outcome (about 35% of the variance in desire), which means the model had the most room to work…",
+      "evidenceType": "Tier 2",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [
+        "part you most want predicted is the part nobody could predict"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Share of romantic-desire variance a machine-learning model recovered from more than 100 self-report measures collected before the daters met — and, in the last row, from what they reported right after a four-minute date:"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-relationship-quality"
+      ],
+      "boundaryConditions": [
+        "Method Two independent undergraduate samples (163 daters in 2005, 187 in 2007), each attending roughly twelve four-minute dates. Desire was split into actor, partner and relationship components with a social-relations model, then predicted by random forests trained on one sample and tested on the other (181 predictors in one, 112 in the other)."
+      ],
+      "commonMisreadings": [
+        "A dating algorithm with enough data will predict which two people click before they meet."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1177/0956797617714580"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-marriage-market",
+      "title": "The pool is not the population",
+      "page": "statistics.html",
+      "anchor": "stat-marriage-market",
+      "category": "Statistics",
+      "subcategory": "What the search can predict",
+      "synopsis": "Headcount says there is a surplus of never-married young men — 126 for every 100 women. Apply one filter that most women say they care about, a job, and the surplus becomes a shortfall: 91. Then the ratio flips again by education, and it flips hard.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [
+        "pool is not the population"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Never-married men per 100 never-married women, ages 25–34 — all of them, and the employed subset:"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-never-married"
+      ],
+      "boundaryConditions": [
+        "Method Pew analysis of the 1960–2000 decennial censuses and the 2010–2012 American Community Survey via IPUMS; figures shown are 2012. Bars use a 200-per-100 scale, so widths are half the printed values."
+      ],
+      "commonMisreadings": [
+        "The dating pool follows the headcount, so a surplus of young men means women hold the advantage."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Report →",
+          "url": "https://www.pewresearch.org/social-trends/2014/09/24/chapter-4-never-married-young-adults-on-the-marriage-market/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-acquaintance-matching",
+      "title": "Being friends first changes who you can pair with",
+      "page": "statistics.html",
+      "anchor": "stat-acquaintance-matching",
+      "category": "Statistics",
+      "subcategory": "What the search can predict",
+      "synopsis": "Looks-matching is real, but its strength is not fixed — it depends on how the couple met. Strangers agree strongly about who is attractive, and where there is consensus there is a market, so couples who paired off quickly were tightly sorted by appearance.",
+      "evidenceType": "Tier 2",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Correlation between partners’ rated physical attractiveness, by whether they were platonic friends before dating (bar length shows the magnitude of r):"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-looks-matching"
+      ],
+      "boundaryConditions": [
+        "Method Coder-rated physical attractiveness for both partners; acquaintance length computed as months known minus months romantically involved (mean 3.8, median 2.0), with 20 couples beyond Tukey’s outer fences excluded."
+      ],
+      "commonMisreadings": [
+        "Couples always match on looks, so dating someone better looking than you is impossible."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1177/0956797615579273"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-cycling",
+      "title": "Getting back together is common, and it leaves a mark",
+      "page": "statistics.html",
+      "anchor": "stat-cycling",
+      "category": "Statistics",
+      "subcategory": "Decisions that stick",
+      "synopsis": "Reconciliation is not a rare event — more than a third of cohabiting couples and nearly a quarter of married ones had already ended the relationship at least once and restarted it. But cyclers looked different afterward, in the same direction on both sides of the couple and at both stages: more uncertainty about the relationship’s future, and lower satisfaction (cohabiting women averaged 14.98 versus 16.72 on the…",
+      "evidenceType": "Tier 2",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Share who report having broken up and reconciled with the partner they are currently with:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method National sample of couples, both partners surveyed; retrospective reports of a breakup and renewal within the current relationship; dyadic regressions accounting for the non-independence of partners’ answers. Among married cyclers, 87% of the breakups happened while dating rather than while living together."
+      ],
+      "commonMisreadings": [
+        "Getting back together after a breakup restores the romance completely, leaving the couple exactly as before."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1177/0265407513501987"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-cohab-timing",
+      "title": "When you moved in beat whether you moved in",
+      "page": "statistics.html",
+      "anchor": "stat-cohab-timing",
+      "category": "Statistics",
+      "subcategory": "Decisions that stick",
+      "synopsis": "The people who moved in together before making any commitment to marry later reported lower marital satisfaction, less dedication, less confidence in the marriage, more negative communication, and more proneness to divorce. The people who moved in after getting engaged looked no different from the people who never cohabited at all — which is why the finding is about sequence, not about living together.",
+      "evidenceType": "Tier 2",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Route into marriage, among adults married within the previous ten years:"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-cohabitation-outcomes"
+      ],
+      "boundaryConditions": [
+        "Method Random-digit telephone survey of men and women married within the past ten years; self-reported route and self-reported marital quality, measured at one point in time. Selection is the standing caveat — the survey did not assign anyone to a sequence, and people who wait for a commitment may differ from those who do not in ways no control variable…"
+      ],
+      "commonMisreadings": [
+        "Moving in early ruins a couple's odds, whatever they had intended about the wedding."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1037/a0014358"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-wedding-hazard",
+      "title": "What the wedding predicts about the marriage",
+      "page": "statistics.html",
+      "anchor": "stat-wedding-hazard",
+      "category": "Statistics",
+      "subcategory": "Decisions that stick",
+      "synopsis": "Every association here runs against the advertising. Spending less than $1,000 on the wedding went with a lower divorce hazard; spending $20,000 or more went with a higher one. Filling the room, on the other hand, went the industry’s way — 101 to 200 guests carried the lowest hazard on the board, and taking a honeymoon of any cost went with a lower one.",
+      "evidenceType": "Tier 2",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Hazard of divorce relative to the comparison group, from one multivariate survival model. Below 1.00 means a lower hazard; the bars run on a 0–1.60 scale:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Cox proportional-hazards model, population-weighted against the 2012 ACS, controlling for age, age at marriage, sex, race, education, employment, household income, region, religious attendance, spousal differences in age/race/education, and children."
+      ],
+      "commonMisreadings": [
+        "Spending more on the wedding signals commitment, so an expensive celebration predicts a lasting marriage."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1111/ecin.12206"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-relationship-education",
+      "title": "The skills are teachable, and the effect is real but modest",
+      "page": "statistics.html",
+      "anchor": "stat-relationship-education",
+      "category": "Statistics",
+      "subcategory": "The trainable part",
+      "synopsis": "This is the rare place in this literature with randomized trials behind it, and the answer is neither “communication fixes everything” nor “nothing works.” Taught couples ended up roughly a third to a half of a standard deviation ahead of untaught ones — a real, moderate shift, larger for observable skills than for how happy people felt. Dosage mattered: moderate-length programs beat short ones.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [
+        "skills are teachable, and the effect is real but modest"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Average effect of marriage and relationship education programs across experimental studies, in standard deviations (Cohen’s d):"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-demand-withdraw"
+      ],
+      "boundaryConditions": [
+        "Method Meta-analysis of 86 codable reports; bars show the midpoint of each published experimental range and are drawn on a 0–1.00 d scale, so they are standardized mean differences, not percentages. Quasi-experimental studies produced smaller effects, attributable to pretest group differences."
+      ],
+      "commonMisreadings": [
+        "A communication course fixes a struggling marriage, because taught couples keep the gains permanently."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Abstract →",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18837590/"
+        },
+        {
+          "label": "Open article →",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4461475/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-sexual-communication",
+      "title": "How well couples talk about sex outranks how often",
+      "page": "statistics.html",
+      "anchor": "stat-sexual-communication",
+      "category": "Statistics",
+      "subcategory": "The trainable part",
+      "synopsis": "Pooled across the whole literature, sexual communication correlated with sexual satisfaction at r =.43 and with relationship satisfaction at r =.37 — among the larger associations anything in this field posts. The internal ranking is the usable part: quality beat both frequency and raw disclosure on both outcomes. Bringing it up more often is not the lever; being able to have the conversation well is.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Pooled correlations between three dimensions of couples’ sexual communication and satisfaction (bar length shows the magnitude of r):"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-orgasm-gender"
+      ],
+      "boundaryConditions": [
+        "Method Multilevel meta-analysis of individuals currently in a relationship, with moderators for age, relationship length, marital status, individualism and national gender inequality. Bars map r directly to width. Self-report on both sides of every correlation, and no study here randomly assigned couples to talk."
+      ],
+      "commonMisreadings": [
+        "How often a couple has sex decides romantic satisfaction, so talking about desire changes little."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Abstract →",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34968095/"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "statistics:stat-sex-frequency",
+      "title": "More is not better past about once a week",
+      "page": "statistics.html",
+      "anchor": "stat-sex-frequency",
+      "category": "Statistics",
+      "subcategory": "The trainable part",
+      "synopsis": "A straight line fits the data at first glance, and that is the version that circulates. Add a squared term and the curve wins: well-being rises with frequency up to roughly once a week and stops rising after that. Two findings sharpen it.",
+      "evidenceType": "Tier 1",
+      "contentType": "Statistical chart",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "Across three samples totalling 30,645 people, the link between how often partnered people have sex and how well they report doing is curved, not straight — it climbs, then flattens:"
+      ],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [
+        "Method Study 1: 25,510 respondents across 14 waves of the nationally representative General Social Survey, 1989–2012. Study 2: 335 partnered adults, using the Satisfaction With Life Scale and the income benchmark quoted above. Study 3: the National Survey of Families and Households, 2,400 married couples across three waves spanning 14 years."
+      ],
+      "commonMisreadings": [
+        "More sex always means a happier romance, so couples should push frequency as high as possible."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Article →",
+          "url": "https://doi.org/10.1177/1948550615616462"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
       "id": "statistics:stat-mythbuster",
       "title": "Numbers carried by Mythbuster rulings",
       "page": "statistics.html",
@@ -13106,6 +13425,40 @@
       "pressureTests": []
     },
     {
+      "id": "pills:black-scoreboard",
+      "title": "The Black Pill makes predictions. Here is the scoreboard.",
+      "page": "pills.html",
+      "anchor": "black-scoreboard",
+      "category": "Pill Dossiers",
+      "subcategory": "Black Pill",
+      "synopsis": "A lens earns its authority by predicting things. The Black Pill does make claims specific enough to check — which is more than most dating advice manages, and worth crediting. So check them. Three of its four load-bearing claims land in the same place: the direction is right, the magnitude is inflated, and the fourth one is not a claim at all.",
+      "evidenceType": "Lens",
+      "contentType": "Pill case study",
+      "verdict": "",
+      "aliases": [
+        "Black Pill makes predictions. Here is the scoreboard."
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-blk"
+      ],
+      "related": [
+        "statistics:stat-never-married",
+        "statistics:stat-looks-matching",
+        "frameworks:bone-pill"
+      ],
+      "boundaryConditions": [
+        "Read the scoreboard honestly in both directions. The Black Pill is not wrong about the world; it is wrong about the size of the world. It found four real effects and rounded every one of them up to infinity. And the fourth line is the reason the first three never get corrected from the inside: the lens ships with a clause that immunizes it. Take the effects."
+      ],
+      "commonMisreadings": [
+        "The Black Pill gets its dating predictions right, so its whole model of attraction holds."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "pills:just-be-first",
       "title": "Just Be First",
       "page": "pills.html",
@@ -13143,6 +13496,84 @@
       ]
     },
     {
+      "id": "pills:page-blk:its-over",
+      "title": "“It’s over”",
+      "page": "pills.html",
+      "anchor": "page-blk",
+      "category": "Pill Dossiers",
+      "subcategory": "Black Pill · concepts",
+      "synopsis": "The verdict phrase. It converts a measured penalty into a finished sentence. Every study behind it reports a slope or a shifted distribution — never a closed door.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-blk"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "A man below average in looks has his dating future closed permanently by that measurement."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:page-blk:cope",
+      "title": "“Cope”",
+      "page": "pills.html",
+      "anchor": "page-blk",
+      "category": "Pill Dossiers",
+      "subcategory": "Black Pill · concepts",
+      "synopsis": "The thought-terminating rebuttal. Anything that contradicts the model gets reclassified as denial, which makes the model unfalsifiable — and an unfalsifiable model has stopped describing the world.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-blk"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Anyone disputing the looks verdict is coping, so disagreement itself proves the dating model correct."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:page-blk:lms",
+      "title": "LMS",
+      "page": "pills.html",
+      "anchor": "page-blk",
+      "category": "Pill Dossiers",
+      "subcategory": "Black Pill · concepts",
+      "synopsis": "Looks, Money, Status — attraction reduced to three things you supposedly cannot move. Two of the three are movable over a decade, and the reduction quietly deletes charm and exposure entirely.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-blk"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Three fixed traits settle who gets picked, so a man's dating outcome is decided at birth."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "pills:page-rp",
       "title": "The Red Pill",
       "page": "pills.html",
@@ -13176,6 +13607,40 @@
       ]
     },
     {
+      "id": "pills:dread-pill",
+      "title": "The Dread Pill",
+      "page": "pills.html",
+      "anchor": "dread-pill",
+      "category": "Pill Dossiers",
+      "subcategory": "Red Pill",
+      "synopsis": "Dread is the Red Pill’s most operational instruction: if your partner has stopped trying, make them feel replaceable and the effort comes back. It is worth taking seriously precisely because the observation underneath it is correct — comfort is not desire, and a partnership where one side has quietly stopped competing does decay. The failure is not the diagnosis.",
+      "evidenceType": "Lens",
+      "contentType": "Pill case study",
+      "verdict": "",
+      "aliases": [
+        "Dread Pill"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-rp"
+      ],
+      "related": [
+        "frameworks:retention-gap",
+        "frameworks:desire-maintenance-split",
+        "frameworks:outside-option"
+      ],
+      "boundaryConditions": [
+        "Operating rule: treat dread as a diagnostic, never a tactic. If the thought “they’d panic if I had options” is appealing, the real finding is that you have no options and have been coasting on their inertia. Fix that — honestly, out loud, and where they can see it."
+      ],
+      "commonMisreadings": [
+        "Engineering the fear is a measured tactic with a measured cost: Deliberate jealousy induction has its own research literature, and the results are not ambiguous. Fleischmann et al. (2005) found the tactic’s goals split into seeking rewards and seeking revenge, and that the partner responses it produces include aggression and withdrawal, not just renewed…"
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "pills:red-strategy-loop",
       "title": "Turn observation into an ethical loop",
       "page": "pills.html",
@@ -13197,6 +13662,34 @@
       "boundaryConditions": [],
       "commonMisreadings": [
         "Every conversation with a potential partner is a dominance test you either pass or fail."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:red-tells",
+      "title": "Six tells that clarity has turned into contempt",
+      "page": "pills.html",
+      "anchor": "red-tells",
+      "category": "Pill Dossiers",
+      "subcategory": "Red Pill",
+      "synopsis": "The dossier says the Red Pill’s failure mode is contempt dressed up as realism. That is easy to agree with and useless as a warning, because nobody experiences their own contempt as contempt — from the inside it feels like finally seeing straight. So here are the observable symptoms instead. These are behavioural tells, not thoughtcrimes: the test is what you do, not what you have read.",
+      "evidenceType": "Lens",
+      "contentType": "Pill case study",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-rp"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The repair is not to become naive again. Keep every accurate observation and re-attach it to an action you could still respect if it failed. Contempt is what strategy decays into once it stops producing anything — and the honest question is not “am I bitter?” but “what has this analysis actually got me in the last six months?”"
+      ],
+      "commonMisreadings": [
+        "Anyone who has turned contemptuous in a romance can feel it happening and self-correct."
       ],
       "sourceLinks": [],
       "pressureTests": []
@@ -13295,6 +13788,84 @@
       ]
     },
     {
+      "id": "pills:page-rp:shit-test",
+      "title": "Shit test",
+      "page": "pills.html",
+      "anchor": "page-rp",
+      "category": "Pill Dossiers",
+      "subcategory": "Red Pill · concepts",
+      "synopsis": "A provocation read as a covert stability check. People genuinely do probe for steadiness before trusting someone. Reading every friction as a rigged exam is how a partner stops being a person and becomes an examiner.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-rp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Every argument a woman starts while dating is a covert test of your steadiness."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:page-rp:dread",
+      "title": "Dread",
+      "page": "pills.html",
+      "anchor": "page-rp",
+      "category": "Pill Dossiers",
+      "subcategory": "Red Pill · concepts",
+      "synopsis": "Deliberately raising a partner’s fear of losing you to restore their effort. The most operational advice the lens gives, and the one that has actually been measured — badly. See the case below.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-rp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Making a romantic partner feel replaceable reliably restores their effort and strengthens the relationship."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:page-rp:abundance",
+      "title": "Abundance",
+      "page": "pills.html",
+      "anchor": "page-rp",
+      "category": "Pill Dossiers",
+      "subcategory": "Red Pill · concepts",
+      "synopsis": "Having enough going on that no single outcome owns you. Real as a life; fake as a posture. Built abundance changes your behaviour; performed abundance only changes your messaging.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-rp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Performing abundance while dating attracts partners just as well as actually having options."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "pills:page-bp",
       "title": "The Blue Pill",
       "page": "pills.html",
@@ -13326,6 +13897,36 @@
       "pressureTests": [
         "What observed rejection or selection pattern would the optimistic account need to explain rather than dismiss?"
       ]
+    },
+    {
+      "id": "pills:soulmate-pill",
+      "title": "The Soulmate Pill",
+      "page": "pills.html",
+      "anchor": "soulmate-pill",
+      "category": "Pill Dossiers",
+      "subcategory": "Blue Pill",
+      "synopsis": "The Blue Pill’s deepest article of faith is that somewhere there is the person, and that finding them is what a good relationship is made of. Psychologists have measured this belief for decades under two names — destiny beliefs, that a pairing either is right or is not, versus growth beliefs, that a relationship is built out of effort over time (Knee, 1998; Franiuk, Cohen & Pomerantz, 2002).",
+      "evidenceType": "Lens",
+      "contentType": "Pill case study",
+      "verdict": "",
+      "aliases": [
+        "Soulmate Pill"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-bp"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Operating rule: feel destiny, run growth. Let chosenness be the story you tell about your partner, and never the instrument you use to evaluate a bad week. The practical form is one substitution: when something goes wrong, the question is “what does this need?” — never “does this mean they’re not the one?”"
+      ],
+      "commonMisreadings": [
+        "Fit as a verdict instead of a project: The trapdoor is the theory of trouble, not the theory of love. Once difficulty counts as evidence against the match, every relationship reaches the point where the belief tells you to leave — and the searching it sends you back to is for a person with whom nothing goes wrong. Nobody has ever met them."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
     },
     {
       "id": "pills:blue-bond-path",
@@ -13450,6 +14051,84 @@
       ],
       "commonMisreadings": [
         "The right person arrives without being met, so a man who waits patiently will marry."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:page-bp:chemistry",
+      "title": "Chemistry",
+      "page": "pills.html",
+      "anchor": "page-bp",
+      "category": "Pill Dossiers",
+      "subcategory": "Blue Pill · concepts",
+      "synopsis": "Real, and a poor forecaster. It reports how the first hours felt, not whether two people can run a decade together. Treated as a verdict, it screens out slow-burn matches and waves through volatile ones.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-bp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Instant chemistry on a date forecasts whether a romance will last for a decade."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:page-bp:love-conquers-all",
+      "title": "“Love conquers all”",
+      "page": "pills.html",
+      "anchor": "page-bp",
+      "category": "Pill Dossiers",
+      "subcategory": "Blue Pill · concepts",
+      "synopsis": "Affection is not a solvent. It does not dissolve incompatible plans about children, money, geography, or faith. Feeling strongly about someone tells you the stakes, never the answer.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-bp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Loving someone enough settles every practical disagreement, so a romance survives on strength of emotion."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "pills:page-bp:dont-settle",
+      "title": "“Don’t settle”",
+      "page": "pills.html",
+      "anchor": "page-bp",
+      "category": "Pill Dossiers",
+      "subcategory": "Blue Pill · concepts",
+      "synopsis": "Sound as a floor, corrosive as a ceiling. It correctly refuses contempt and neglect; it wrongly licenses rejecting a real person for failing to match a composite who does not exist.",
+      "evidenceType": "Lens",
+      "contentType": "Pill concept",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "pills:page-bp"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [
+        "Holding out for a flawless partner is always right, so rejecting real dating prospects costs little."
       ],
       "sourceLinks": [],
       "pressureTests": []

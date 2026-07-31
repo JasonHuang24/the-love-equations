@@ -248,7 +248,18 @@ test('independent mixed fixtures do not inherit SMV or gender signatures', async
     {
       known: 'All women always choose the highest-status man.',
       expectedCanonId: 'lexicon:term-awalt-all-women-are-like-that',
-      novel: 'A new claim says volcanic ash predicts which romantic partner cancels a date.',
+      // Reworded 2026-07-31 at canon 529. The original read "volcanic ash
+      // predicts which romantic partner cancels a date" and stopped being NOVEL:
+      // bfaff2e added statistics:stat-desire-prediction, whose whole subject is
+      // predicting which two people click, so the sentence mapped to it at 0.476
+      // Low and the share went 50 -> 100. That is the fixture ageing out, not the
+      // analyzer regressing — the claim really is about predicting a romantic
+      // outcome, which the canon now covers. Measured: the misreadings added in
+      // the same commit move it 0.477 -> 0.476, so they are not the cause. Only
+      // the colliding predicate changed; "volcanic ash" is kept so the fixture
+      // stays recognisable, and the replacement was checked to be unmapped with
+      // the known half still matching and the share back at 50.
+      novel: 'A new claim says volcanic ash decides which romantic partner does the laundry.',
     },
   ];
 
@@ -789,7 +800,8 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * unrelated causes is measuring the corpus, not the change, which is the whole
    * reason the three assertions around it carry the test.
    *
-   * 0.536 at 491, the advice-layer batch. Eight moves now, and the cumulative
+   * 0.536 at 491, the advice-layer batch. 0.537 at 529, the statistics and pill
+   * concepts of bfaff2e. Nine moves now, and the cumulative
    * drift across all of them is 0.003 — three thousandths, against a
    * minCredibleScore of 0.43 that the assertion below actually cares about. The
    * honest summary of this pin's whole history is that canon growth moves it far
@@ -797,7 +809,7 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * behaviour the test exists to check.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.536);
+  assert.equal(weakPassage.weakMatches[0].score, 0.537);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
