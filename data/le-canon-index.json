@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+f09b1aa1430b",
-  "generatedAt": "2026-07-31T05:10:02.000Z",
+  "indexVersion": "1.0.0+7a8b16547d89",
+  "generatedAt": "2026-07-31T06:14:00.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -22,7 +22,7 @@
       "inputs": [
         "smvlevers.html"
       ],
-      "sha256": "48b4d28fca2cdd07f8decd5a135732de22925f5377e0c7ba703100aa5d981927",
+      "sha256": "fe9102f6fcbc90426e47d5c07530e6c5741c6b2ae84b33c569bac0e169d636ae",
       "conceptCount": 35
     },
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "a9587dda269aad99ce1ab94b38fe1bc78138f74ffea7976187d55b73cba8cf27",
-      "conceptCount": 38
+      "sha256": "c865baeda102763400669767fee11082ef189e4126475af506dbf975e5c47fd5",
+      "conceptCount": 41
     },
     {
       "page": "gender-dynamics.html",
@@ -215,7 +215,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 485,
+    "conceptCount": 488,
     "sourceCount": 19,
     "byCategory": {
       "Deep Dives": 35,
@@ -226,13 +226,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 12,
-      "Rules & Frameworks": 38,
+      "Rules & Frameworks": 41,
       "Statistics": 31
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 69,
+      "Framework": 72,
       "Glossary": 90,
       "Hard data": 28,
       "Instrument": 5,
@@ -245,14 +245,14 @@
       "Record + framework": 13,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 28,
-      "Tier 2": 8,
+      "Tier 1": 29,
+      "Tier 2": 7,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 394,
-    "conceptsWithExternalSources": 85,
+    "anchoredConceptCount": 397,
+    "conceptsWithExternalSources": 88,
     "dependencyCount": 239,
-    "relatedCount": 352
+    "relatedCount": 367
   },
   "entries": [
     {
@@ -2454,7 +2454,7 @@
       "anchor": "",
       "category": "Five Levers",
       "subcategory": "Exposure · subvariables",
-      "synopsis": "The local supply and demand you’re embedded in. Your value is relative to the ratio around you (Guttentag & Secord, 1983).",
+      "synopsis": "The local supply and demand you’re embedded in. Your value is relative to the ratio around you — though in the US that ratio sorts far harder by credential than by city (Angrist, 2002; ACS).",
       "evidenceType": "Model",
       "contentType": "SMV subvariable",
       "verdict": "",
@@ -2670,7 +2670,7 @@
       "category": "Five Levers",
       "subcategory": "Multipliers",
       "synopsis": "There is no absolute SMV. The same profile is a 6 in one city and an 8 in another, depending on the sex ratio, the age pool, and the competition around it. The market sets the exchange rate; you just hold the currency.",
-      "evidenceType": "Tier 2",
+      "evidenceType": "Tier 1",
       "contentType": "SMV multiplier",
       "verdict": "",
       "aliases": [
@@ -2687,11 +2687,13 @@
         "smv:overview"
       ],
       "related": [
+        "frameworks:sex-ratio",
+        "frameworks:local-market",
         "frameworks:attention-market",
         "frameworks:option-pool"
       ],
       "boundaryConditions": [
-        "A brutal local market is data, not a verdict. Sometimes the highest-return move isn't raising your score — it's changing the market you're scored in.",
+        "A brutal local market is data, not a verdict — but the exit is narrower than it looks. Across US metros the ratio barely moves (roughly 5 points either side of parity), and moving has been tested directly against marriage outcomes and came back null.",
         "The same profile can face different scarcity, competition, and norms in different markets."
       ],
       "commonMisreadings": [
@@ -4429,6 +4431,225 @@
       "pressureTests": [
         "Is this claim about the order in which people exit, or about how one person changes with age?",
         "Does the pool at this age differ in quality, or in how many have been married before?"
+      ]
+    },
+    {
+      "id": "frameworks:sex-ratio",
+      "title": "The Sex Ratio",
+      "page": "frameworks.html",
+      "anchor": "sex-ratio",
+      "category": "Rules & Frameworks",
+      "subcategory": "The market container",
+      "synopsis": "When one side of a market is scarcer, it can hold out for more and the abundant side concedes more — and nobody in the market chose any of it. Two identical people in two markets face different prices. This site has asserted that for years in a single sentence, sourced to a single book, tagged Mixed. The claim is real and better evidenced than we have been giving it credit for.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Sex Ratio",
+        "adult sex ratio",
+        "sex ratio imbalance",
+        "marriage squeeze",
+        "dyadic power",
+        "too many women"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "more single men than women",
+        "the ratio around you",
+        "scarce sex",
+        "men per 100 women",
+        "bargaining power in a market",
+        "terms of trade"
+      ],
+      "dependencies": [],
+      "related": [
+        "smv:overview",
+        "frameworks:effective-ratio",
+        "frameworks:local-market",
+        "smv:multiplier:market",
+        "smv:exposure"
+      ],
+      "boundaryConditions": [
+        "Sex-ratio effects are established by instrumented shocks; a correlation between a place’s ratio and its outcomes is unreliable and has been shown to produce significant results on randomly chosen variables.",
+        "The measured outcomes are marriage rates, spouse class, labour supply and fertility, so claims about dating etiquette or what either sex can demand have no support in this literature."
+      ],
+      "commonMisreadings": [
+        "A city with more single men gives every woman living there substantially better romantic bargaining power.",
+        "Sex ratios explain who pays for dates and what each sex can reasonably demand."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Angrist (2002), “How Do Sex Ratios Affect Marriage and Labor Markets?” Quarterly Journal of Economics 117(3):997–1038",
+          "url": "https://doi.org/10.1162/003355302760193940"
+        },
+        {
+          "label": "Abramitzky, Delavande & Vasconcelos (2011), American Economic Journal: Applied Economics 3(3):124–157",
+          "url": "https://doi.org/10.1257/app.3.3.124"
+        },
+        {
+          "label": "Brainerd (2017), Review of Economics and Statistics 99(2):229–242",
+          "url": "https://doi.org/10.1162/rest_a_00649"
+        },
+        {
+          "label": "Wei & Zhang (2011), Journal of Political Economy 119(3):511–564",
+          "url": "https://doi.org/10.1086/660887"
+        },
+        {
+          "label": "Pollet, Stoevenbelt & Kuppens (2017), Philosophical Transactions of the Royal Society B 372(1729):20160317",
+          "url": "https://doi.org/10.1098/rstb.2016.0317"
+        },
+        {
+          "label": "ACS 2024 1-year table B15001",
+          "url": "https://data.census.gov/table/ACSDT1Y2024.B15001"
+        }
+      ],
+      "pressureTests": [
+        "Was this ratio claim instrumented, or is it a correlation between a place and its outcomes?",
+        "Is the imbalance being described geographic, or is it a filter the person applied themselves?"
+      ]
+    },
+    {
+      "id": "frameworks:effective-ratio",
+      "title": "The Effective Ratio",
+      "page": "frameworks.html",
+      "anchor": "effective-ratio",
+      "category": "Rules & Frameworks",
+      "subcategory": "The market container",
+      "synopsis": "“There are more single men than single women” sounds like a headcount, and headcounts sound like facts. Underneath it sit two choices — which pool you count, and whether you count people who are actually in the market — and each one is large enough on its own to reverse the answer. Anyone quoting the single sex ratio without naming both is quoting a decision, not a measurement.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Effective Ratio",
+        "operational sex ratio",
+        "availability ratio",
+        "searching ratio",
+        "who is actually looking"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "not looking to date",
+        "single and looking",
+        "never married only",
+        "the unmarried population",
+        "which pool you count"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:stock-flow-error",
+        "frameworks:sex-ratio",
+        "frameworks:residual-pool",
+        "statistics:stat-why-single"
+      ],
+      "boundaryConditions": [
+        "The adjustment rests on self-reported search intent, measured on a narrower definition of single than the census uses and pooled across a fifty-year age span.",
+        "Crude sex ratios have once been shown to outpredict refined availability ratios, so refining a pool carries its own risk of predicting worse."
+      ],
+      "commonMisreadings": [
+        "Counting every unmarried adult gives the real ratio of men to women in a market.",
+        "Older single women face a market crowded with women and starved of available men."
+      ],
+      "sourceLinks": [
+        {
+          "label": "ACS 2024 1-year table B12002",
+          "url": "https://data.census.gov/table/ACSDT1Y2024.B12002"
+        },
+        {
+          "label": "Pew Research Center, “A Profile of Single Americans” (Aug 2020)",
+          "url": "https://www.pewresearch.org/social-trends/2020/08/20/a-profile-of-single-americans/"
+        },
+        {
+          "label": "Harknett (2008), Demography 45(3):555–571",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2831391/"
+        },
+        {
+          "label": "MacDonald et al. (2025), Personality and Social Psychology Bulletin",
+          "url": "https://journals.sagepub.com/doi/10.1177/01461672251331699"
+        }
+      ],
+      "pressureTests": [
+        "Which pool does this ratio count, and does it exclude the people who have stopped searching?",
+        "Would this number change sign if it counted only the never married, or only those still looking?"
+      ]
+    },
+    {
+      "id": "frameworks:local-market",
+      "title": "The Local Market",
+      "page": "frameworks.html",
+      "anchor": "local-market",
+      "category": "Rules & Frameworks",
+      "subcategory": "The market container",
+      "synopsis": "Nobody participates in “the dating market.” People participate in a metro, a campus, a workplace, a congregation — and those differ from each other far more than the national average differs from year to year. National statistics describe nobody’s actual market. This entry makes three claims that do not share a tier, and the one people most want to act on is the one that fails.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Local Market",
+        "market thickness",
+        "market density",
+        "metro sex ratio",
+        "geographic sorting",
+        "just move"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "the dating market",
+        "move to a different city",
+        "local supply and demand",
+        "national statistics",
+        "thicker market"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:abundance-trap",
+        "frameworks:sex-ratio",
+        "frameworks:effective-ratio",
+        "frameworks:search-cost"
+      ],
+      "boundaryConditions": [
+        "Metro-level ratios average over age, ethnicity and education submarkets whose own ratios differ widely from the city figure.",
+        "The migration result is a correlated-random-effects correction rather than an instrument, and it describes an average person rather than every person."
+      ],
+      "commonMisreadings": [
+        "Moving to a city with a better sex ratio measurably improves a person’s chances of marrying.",
+        "National dating statistics describe the market that an individual actually competes in."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Pew Research Center (Oct 2014)",
+          "url": "https://www.pewresearch.org/short-reads/2014/10/02/the-best-and-worst-cities-for-women-looking-to-marry/"
+        },
+        {
+          "label": "US Census Bureau (Sept 2023)",
+          "url": "https://www.census.gov/library/stories/2023/09/unmarried-women-men.html"
+        },
+        {
+          "label": "Bossard (1932), American Journal of Sociology 38(2):219–224",
+          "url": "https://www.journals.uchicago.edu/doi/abs/10.1086/216031"
+        },
+        {
+          "label": "Bruch & Newman (2019), “Structure of Online Dating Markets in U.S. Cities,” Sociological Science 6:219–234",
+          "url": "https://www.sociologicalscience.com/articles-v6-9-219/"
+        },
+        {
+          "label": "Jang, Casterline & Snyder (2014), “Migration and marriage: Modeling the joint process,” Demographic Research 30(47):1339–1366",
+          "url": "https://doi.org/10.4054/DemRes.2014.30.47"
+        },
+        {
+          "label": "Li & Netessine (2020), Management Science 66(1)",
+          "url": "https://doi.org/10.1287/mnsc.2018.3223"
+        },
+        {
+          "label": "Petrongolo & Pissarides (2006), The Economic Journal 116(508):21–44",
+          "url": "https://academic.oup.com/ej/article/116/508/21/5089376"
+        }
+      ],
+      "pressureTests": [
+        "Does this local statistic describe the submarket this person is in, or a city-wide average?",
+        "Did the apparent benefit of moving survive a correction for who chooses to move?"
       ]
     },
     {

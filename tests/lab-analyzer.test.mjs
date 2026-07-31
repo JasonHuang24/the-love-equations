@@ -781,9 +781,16 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * Substitution Layer's "AI companion" alias removed. Both move IDF, in opposite
    * directions, and the pin landed back where it started. Six round trips now on
    * a number that has never once been the assertion.
+   *
+   * 0.537 at 488, the market-container batch: three entries whose match surfaces
+   * are dense in market and ratio vocabulary. Note this is the SECOND time the pin
+   * has sat at 0.537 and the second time it got there by a different route — 476
+   * by rewording, 488 by growth. A pin that returns to the same value from
+   * unrelated causes is measuring the corpus, not the change, which is the whole
+   * reason the three assertions around it carry the test.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.538);
+  assert.equal(weakPassage.weakMatches[0].score, 0.537);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));

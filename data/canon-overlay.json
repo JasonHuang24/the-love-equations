@@ -1448,6 +1448,111 @@
         "Does the pool at this age differ in quality, or in how many have been married before?"
       ]
     },
+    "frameworks:sex-ratio": {
+      "aliases": [
+        "Sex Ratio",
+        "adult sex ratio",
+        "sex ratio imbalance",
+        "marriage squeeze",
+        "dyadic power",
+        "too many women"
+      ],
+      "phrases": [
+        "more single men than women",
+        "the ratio around you",
+        "scarce sex",
+        "men per 100 women",
+        "bargaining power in a market",
+        "terms of trade"
+      ],
+      "related": [
+        "frameworks:effective-ratio",
+        "frameworks:local-market",
+        "smv:multiplier:market",
+        "smv:exposure"
+      ],
+      "boundaryConditions": [
+        "Sex-ratio effects are established by instrumented shocks; a correlation between a place’s ratio and its outcomes is unreliable and has been shown to produce significant results on randomly chosen variables.",
+        "The measured outcomes are marriage rates, spouse class, labour supply and fertility, so claims about dating etiquette or what either sex can demand have no support in this literature."
+      ],
+      "commonMisreadings": [
+        "A city with more single men gives every woman living there substantially better romantic bargaining power.",
+        "Sex ratios explain who pays for dates and what each sex can reasonably demand."
+      ],
+      "pressureTests": [
+        "Was this ratio claim instrumented, or is it a correlation between a place and its outcomes?",
+        "Is the imbalance being described geographic, or is it a filter the person applied themselves?"
+      ]
+    },
+    "frameworks:effective-ratio": {
+      "aliases": [
+        "Effective Ratio",
+        "operational sex ratio",
+        "availability ratio",
+        "searching ratio",
+        "who is actually looking"
+      ],
+      "phrases": [
+        "not looking to date",
+        "single and looking",
+        "never married only",
+        "the unmarried population",
+        "which pool you count"
+      ],
+      "related": [
+        "frameworks:sex-ratio",
+        "frameworks:stock-flow-error",
+        "frameworks:residual-pool",
+        "statistics:stat-why-single"
+      ],
+      "boundaryConditions": [
+        "The adjustment rests on self-reported search intent, measured on a narrower definition of single than the census uses and pooled across a fifty-year age span.",
+        "Crude sex ratios have once been shown to outpredict refined availability ratios, so refining a pool carries its own risk of predicting worse."
+      ],
+      "commonMisreadings": [
+        "Counting every unmarried adult gives the real ratio of men to women in a market.",
+        "Older single women face a market crowded with women and starved of available men."
+      ],
+      "pressureTests": [
+        "Which pool does this ratio count, and does it exclude the people who have stopped searching?",
+        "Would this number change sign if it counted only the never married, or only those still looking?"
+      ]
+    },
+    "frameworks:local-market": {
+      "aliases": [
+        "Local Market",
+        "market thickness",
+        "market density",
+        "metro sex ratio",
+        "geographic sorting",
+        "just move"
+      ],
+      "phrases": [
+        "the dating market",
+        "move to a different city",
+        "local supply and demand",
+        "national statistics",
+        "thicker market"
+      ],
+      "related": [
+        "frameworks:sex-ratio",
+        "frameworks:effective-ratio",
+        "frameworks:abundance-trap",
+        "frameworks:search-cost"
+      ],
+      "boundaryConditions": [
+        "Metro-level ratios average over age, ethnicity and education submarkets whose own ratios differ widely from the city figure.",
+        "The migration result is a correlated-random-effects correction rather than an instrument, and it describes an average person rather than every person."
+      ],
+      "commonMisreadings": [
+        "Moving to a city with a better sex ratio measurably improves a person’s chances of marrying.",
+        "National dating statistics describe the market that an individual actually competes in."
+      ],
+      "pressureTests": [
+        "Does this local statistic describe the submarket this person is in, or a city-wide average?",
+        "Did the apparent benefit of moving survive a correction for who chooses to move?"
+      ]
+    },
     "lexicon:term-assortative-mating": {
       "aliases": [
         "assortative mating",
