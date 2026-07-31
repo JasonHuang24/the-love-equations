@@ -86,6 +86,20 @@ synopsis pasted verbatim renders `Supports · High · 81/100` against itself
   this release narrows when the branch may claim "asserts the rejected reading";
   it does not widen what the branch can catch.
 
+## Independent verification (added same day)
+
+The debt-cleanup session re-measured this release from a fresh harness written
+off the crash-test report's "Reproducing" section, engine-level at
+8eaa257+fa2ced1, without reading this session's instruments: **Contradicts 0 of
+532** (was 54), reached-self 376, gated 150, and the stat-double-standard screen
+case rendering Supports on its own entry at :8753 — all agreeing. Two apparent
+count differences reconcile to harness semantics, not behavior: their
+"Context only 3" counts claim-like self-matches where this record's 9 includes
+the 6 not-claim-like synopses `stanceFor` labels Context only by rule
+(3 + 6 = 9, populations 376 + 6); their reached-as-top 368 vs 373 differs by
+weak-band self-matches counted as reached-but-not-top. Neither implies any
+score movement, consistent with the census's zero.
+
 ## Verification
 
 - `npm run test:lab` on the working tree: 18/18, exit 0.
