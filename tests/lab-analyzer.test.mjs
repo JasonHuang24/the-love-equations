@@ -421,6 +421,35 @@ test('the generated canon index routes the demo through core LE rules without co
   assert.ok(awalt?.whyMatched.some((reason) => reason.startsWith('Concept signature:')));
 });
 
+test('the media-harvest doctrines retrieve from representative article claims', async () => {
+  const probes = [
+    {
+      text: 'Household mental load includes anticipating household needs, planning and assigning tasks, and monitoring household work.',
+      expected: 'frameworks:ownership-load',
+    },
+    {
+      text: 'Responsive sexual desire can emerge after willingness and rewarding stimulation begin.',
+      expected: 'frameworks:desire-state-split',
+    },
+    {
+      text: 'Some intimate partners maintain separate households in living apart together (LAT) relationships.',
+      expected: 'lexicon:term-living-apart-together-lat',
+    },
+  ];
+  const result = await analyzeDocument(normalizeInput({
+    text: probes.map((probe) => probe.text).join(' '),
+    source: { title: 'Retention media harvest probes' },
+  }), REAL_CANON);
+
+  assert.equal(result.segments.length, probes.length);
+  for (const probe of probes) {
+    const segment = result.segments.find((candidate) => candidate.unit.text === probe.text);
+    assert.equal(segment?.mapped, true);
+    assert.equal(segment?.matches[0]?.canonId, probe.expected);
+  }
+});
+
+
 test('Markdown and JSON exports carry provenance, schemas, citations, limitations, and inert hostile text', async () => {
   const document = normalizeInput({
     text: '<script>alert(1)</script> Attraction is not selection.',
@@ -868,9 +897,14 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * The largest population change in this log still produced the same
    * thousandth-scale step a rewording once did. The pin measures the corpus, and
    * it is not sensitive to how the corpus grew.
+   *
+   * 0.538 at 536 when the retention-media harvest added two frameworks and two
+   * Lexicon terms. Ten moves now; cumulative drift is 0.004 against a
+   * minCredibleScore of 0.43. The admission guard still blocks the passage, so
+   * the behavior this test protects is unchanged.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.537);
+  assert.equal(weakPassage.weakMatches[0].score, 0.538);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));

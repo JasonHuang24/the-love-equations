@@ -1105,6 +1105,69 @@
         "Which of the three sub-claims is being asserted, and does the citation offered actually test that one?"
       ]
     },
+    "frameworks:desire-state-split": {
+      "aliases": [
+        "Desire-State Split",
+        "responsive desire",
+        "spontaneous desire",
+        "sexual desire discrepancy"
+      ],
+      "phrases": [
+        "responsive sexual desire",
+        "dyadic sexual desire",
+        "desire discrepancy",
+        "sexual distress"
+      ],
+      "related": [
+        "frameworks:desire-maintenance-split",
+        "frameworks:satisfaction-flywheel",
+        "lexicon:term-desire"
+      ],
+      "boundaryConditions": [
+        "Responsive desire begins from genuine willingness and must leave room to stop; it is not consent created by persistence.",
+        "Basson's response cycle centres women, and the stress diary centres couples coping with sexual interest/arousal disorder; neither licenses a universal sequence or prevalence claim.",
+        "Desire discrepancy predicts distress in observational dyadic data; the lower-desire partner is not thereby identified as its cause."
+      ],
+      "commonMisreadings": [
+        "Responsive desire means a reluctant partner should agree to sex and wait for desire to appear.",
+        "The lower-desire partner causes a couple's desire discrepancy and needs to be fixed."
+      ],
+      "pressureTests": [
+        "Is there present willingness and a live option to stop, or is responsive desire being used to launder pressure?",
+        "Is the claim about one person's level of desire or the distance between two partners' levels?"
+      ]
+    },
+    "frameworks:ownership-load": {
+      "aliases": [
+        "Ownership Load",
+        "cognitive housework",
+        "household mental load"
+      ],
+      "phrases": [
+        "anticipating household needs",
+        "planning and assigning tasks",
+        "monitoring household work",
+        "perceiving a partner as dependent"
+      ],
+      "related": [
+        "statistics:stat-equal-earner-labor",
+        "frameworks:satisfaction-flywheel",
+        "frameworks:desire-state-split"
+      ],
+      "boundaryConditions": [
+        "The supporting studies are self-report and non-experimental, so unequal ownership is associated with satisfaction and desire rather than proven to cause either.",
+        "The samples are concentrated in different-gender parents and heterosexual cohabitors; the mechanism is not yet population-universal.",
+        "The 2026 dyadic study is published in an unedited early-access version and may change during final production.",
+        "Fairness and equality are not synonyms: a deliberately uneven arrangement can be experienced as fair when ownership is visible and agreed."
+      ],
+      "commonMisreadings": [
+        "A partner who completes assigned chores owns an equal share of the household work.",
+        "Every household task must be divided exactly fifty-fifty for a relationship to be fair."
+      ],
+      "pressureTests": [
+        "Who notices, decides, remembers and checks the task when nobody sends a reminder?"
+      ]
+    },
     "frameworks:satisfaction-flywheel": {
       "aliases": [
         "Satisfaction Flywheel",
@@ -2250,14 +2313,28 @@
     },
     "lexicon:term-desire": {
       "commonMisreadings": [
-        "A man she desires is a man she will choose, so desire and commitment are the same."
+        "A man she desires is a man she will choose, so desire and commitment are the same.",
+        "Responsive desire means willingness can be assumed before it appears."
       ],
       "boundaryConditions": [
         "Desire says nothing about long-term fit; the traits that spike the pull and those that sustain a bond are not the same list.",
-        "Desire is warmer and narrower than attention and does not aggregate into a market rate the way attention counts do."
+        "Desire is warmer and narrower than attention and does not aggregate into a market rate the way attention counts do.",
+        "Responsive describes the timing of desire inside a willing context; it does not turn reluctance into consent."
       ],
       "pressureTests": [
-        "Would the person doing the desiring actually pay an opportunity cost for it?"
+        "Would the person doing the desiring actually pay an opportunity cost for it?",
+        "Is there genuine willingness and room to stop before responsive desire is invoked?"
+      ]
+    },
+    "lexicon:term-the-ownership-load": {
+      "commonMisreadings": [
+        "Doing the chores a partner assigns means the ownership load is already equal."
+      ],
+      "boundaryConditions": [
+        "Execution and ownership can be divided differently; the term names the anticipating, deciding and monitoring layer, not every unpleasant feeling about housework."
+      ],
+      "pressureTests": [
+        "Would the task still be noticed and completed if the usual manager stopped reminding anyone?"
       ]
     },
     "lexicon:term-commitment": {
@@ -5073,10 +5150,24 @@
     },
     "lexicon:term-the-great-unbundling": {
       "commonMisreadings": [
-        "Marriage still bundles sex, children, money and adult standing, so couples who marry get all four."
+        "Marriage still bundles sex, children, money and adult standing, so couples who marry get all four.",
+        "Partners who do not share a household cannot be committed to each other."
       ],
       "boundaryConditions": [
-        "The functions came loose one at a time across two centuries, so which one is being counted decides the date."
+        "The functions came loose one at a time across two centuries, so which one is being counted decides the date.",
+        "Residence, property, care and commitment can move separately; one is not a safe proxy for the others."
+      ]
+    },
+    "lexicon:term-living-apart-together-lat": {
+      "commonMisreadings": [
+        "Partners who keep separate homes are casual, less committed or not a real couple."
+      ],
+      "boundaryConditions": [
+        "The mental-health evidence is longitudinal but specific to UK adults aged 60 to 85; it does not show that separate households are better for couples generally.",
+        "LAT separates partnership from residence; it does not by itself reveal commitment, exclusivity, care or financial integration."
+      ],
+      "pressureTests": [
+        "Is co-residence being used as a proxy for a relationship feature that was never measured?"
       ]
     },
     "lexicon:term-the-abundance-trap": {
