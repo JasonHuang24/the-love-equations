@@ -99,6 +99,13 @@ const SOURCE_SPECS = [
     sourceType: 'Long-form essay',
     extractor: extractDeepDiveEssay,
   },
+  { page: 'dd-the-red-pill.html', category: 'Deep Dives', sourceType: 'Long-form essay', extractor: extractDeepDiveEssay },
+  {
+    page: 'dd-competition-anxiety.html',
+    category: 'Deep Dives',
+    sourceType: 'Long-form essay',
+    extractor: extractDeepDiveEssay,
+  },
   { page: 'smvcalc.html', category: 'Instruments', sourceType: 'On-device instrument', extractor: extractInstrument },
   { page: 'compatibility.html', category: 'Instruments', sourceType: 'On-device instrument', extractor: extractInstrument },
   { page: 'face.html', category: 'Instruments', sourceType: 'On-device instrument', extractor: extractInstrument },

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+93e06ff160d9",
+  "indexVersion": "1.0.0+597ce6063be5",
   "generatedAt": "2026-08-01T04:04:39.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "fad66eac9683d9d9f20a97938b0c3c7041a19ca65678f1f800dabf044d7638ae",
-      "conceptCount": 52
+      "sha256": "e0ff178f0d331207fc5da3a2a6124b0713058b7a2967d87f1b773fbcc4d5c5a7",
+      "conceptCount": 53
     },
     {
       "page": "gender-dynamics.html",
@@ -89,8 +89,8 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "fa2f7efe4f0fab5d5b4b6dc44a9e1387d0f2522638b5ecf9431d705ead4cde23",
-      "conceptCount": 95
+      "sha256": "af3b9eeefaaf20f47ef369cac9dd2cb46aa56b15d64414d254b35c19d9a6d0a2",
+      "conceptCount": 98
     },
     {
       "page": "deep-dive.html",
@@ -100,8 +100,8 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "1d05f334cee607a4afd30699ad7eabb370147d0d1425611aaa00c7adb6d11ca2",
-      "conceptCount": 5
+      "sha256": "8b44017255227d174798e058020928b0aa93aa0244a616f0b334ac5faa25686a",
+      "conceptCount": 7
     },
     {
       "page": "dd-relationships-throughout-history.html",
@@ -157,6 +157,28 @@
       ],
       "sha256": "9a3d41e7de3c765eadfccc8e7dd8ca037dd0182b2d7643a1f890a24fff6192eb",
       "conceptCount": 6
+    },
+    {
+      "page": "dd-the-red-pill.html",
+      "title": "The Red Pill",
+      "category": "Deep Dives",
+      "sourceType": "Long-form essay",
+      "inputs": [
+        "dd-the-red-pill.html"
+      ],
+      "sha256": "dda9b38b73a715455b1b944f570a578bd44cd2ed19bf427b4f5c760352f77de8",
+      "conceptCount": 5
+    },
+    {
+      "page": "dd-competition-anxiety.html",
+      "title": "Competition Anxiety",
+      "category": "Deep Dives",
+      "sourceType": "Long-form essay",
+      "inputs": [
+        "dd-competition-anxiety.html"
+      ],
+      "sha256": "cb2f7fb424fd58ab0f4b4fb7b23c633fad518010f1d6b6473b0df4a4170802d2",
+      "conceptCount": 5
     },
     {
       "page": "smvcalc.html",
@@ -215,44 +237,44 @@
     }
   ],
   "stats": {
-    "conceptCount": 540,
-    "sourceCount": 19,
+    "conceptCount": 556,
+    "sourceCount": 21,
     "byCategory": {
-      "Deep Dives": 35,
+      "Deep Dives": 47,
       "Five Levers": 35,
       "Gender Dynamics": 133,
       "Instruments": 5,
-      "Lexicon": 95,
+      "Lexicon": 98,
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 52,
+      "Rules & Frameworks": 53,
       "Statistics": 51
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 79,
-      "Glossary": 95,
+      "Framework": 80,
+      "Glossary": 98,
       "Hard data": 28,
       "Instrument": 5,
-      "LE framework": 1,
+      "LE framework": 2,
       "Lens": 86,
-      "Long-form synthesis": 12,
+      "Long-form synthesis": 16,
       "Model": 34,
       "Observation": 46,
-      "Record": 9,
-      "Record + framework": 13,
+      "Record": 13,
+      "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
       "Tier 1": 45,
       "Tier 2": 14,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 449,
-    "conceptsWithExternalSources": 120,
-    "dependencyCount": 265,
-    "relatedCount": 421
+    "anchoredConceptCount": 461,
+    "conceptsWithExternalSources": 127,
+    "dependencyCount": 278,
+    "relatedCount": 430
   },
   "entries": [
     {
@@ -4656,6 +4678,51 @@
         "Is this claim about the order in which people exit, or about how one person changes with age?",
         "Does the pool at this age differ in quality, or in how many have been married before?"
       ]
+    },
+    {
+      "id": "frameworks:supply-demand-rule",
+      "title": "The Supply-and-Demand Rule",
+      "page": "frameworks.html",
+      "anchor": "supply-demand-rule",
+      "category": "Rules & Frameworks",
+      "subcategory": "The market container",
+      "synopsis": "When a defined dating pool contains more eligible, searching people on one side than the other, the scarcer side can be more selective and the more numerous side must compete harder. The imbalance changes bargaining conditions; it does not change human worth.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Supply-and-Demand Rule"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "ACS 2024 1-year table B12002",
+          "url": "https://data.census.gov/table/ACSDT1Y2024.B12002"
+        },
+        {
+          "label": "Angrist (2002), Quarterly Journal of Economics",
+          "url": "https://doi.org/10.1162/003355302760193940"
+        },
+        {
+          "label": "Abramitzky, Delavande & Vasconcelos (2011), AEJ: Applied Economics",
+          "url": "https://doi.org/10.1257/app.3.3.124"
+        },
+        {
+          "label": "Brainerd (2017), Review of Economics and Statistics",
+          "url": "https://doi.org/10.1162/rest_a_00649"
+        },
+        {
+          "label": "Wei & Zhang (2011), Journal of Political Economy",
+          "url": "https://doi.org/10.1086/660887"
+        }
+      ],
+      "pressureTests": []
     },
     {
       "id": "frameworks:sex-ratio",
@@ -14720,6 +14787,32 @@
       ]
     },
     {
+      "id": "lexicon:term-the-supply-and-demand-rule",
+      "title": "The Supply-and-Demand Rule",
+      "page": "lexicon.html",
+      "anchor": "term-the-supply-and-demand-rule",
+      "category": "Lexicon",
+      "subcategory": "Shared",
+      "synopsis": "When one side of a local dating pool is scarcer, that side can be more selective while the more numerous side competes harder. The rule changes bargaining conditions, not anyone’s worth — and it only works after age, place, eligibility, and who is actually searching are counted.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [
+        "Supply-and-Demand Rule"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "frameworks:supply-demand-rule"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "lexicon:term-conversion-ladder",
       "title": "Conversion Ladder",
       "page": "lexicon.html",
@@ -16424,7 +16517,7 @@
       "contextualAliases": [],
       "phrases": [],
       "dependencies": [
-        "pills:page-rp"
+        "deep-dive:the-red-pill"
       ],
       "related": [],
       "boundaryConditions": [
@@ -16433,6 +16526,54 @@
       "commonMisreadings": [
         "Reading incentives and leverage correctly requires treating women with contempt while dating them."
       ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-solipsism",
+      "title": "Solipsism",
+      "page": "lexicon.html",
+      "anchor": "term-solipsism",
+      "category": "Lexicon",
+      "subcategory": "Red Pill",
+      "synopsis": "Philosophically, the doubt that any mind beyond one’s own can be known. Red-pill usage turns it into a sexed accusation: treating one’s own feelings as the whole map. Perspective failure is real; assigning it to women as a class is the solipsistic move the label claims to diagnose.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:the-red-pill:the-sexed-theory"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "lexicon:term-competition-anxiety",
+      "title": "Competition anxiety",
+      "page": "lexicon.html",
+      "anchor": "term-competition-anxiety",
+      "category": "Lexicon",
+      "subcategory": "Red Pill",
+      "synopsis": "Manosphere shorthand for making a partner or prospect feel that rivals could replace them. It splices two real effects — social proof and jealousy — into one tactic. Visible desirability can shift a first impression; deliberately manufacturing insecurity has no evidence of building durable desire.",
+      "evidenceType": "Glossary",
+      "contentType": "Definition",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:competition-anxiety"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
       "sourceLinks": [],
       "pressureTests": []
     },
@@ -17735,6 +17876,56 @@
       "pressureTests": []
     },
     {
+      "id": "deep-dive:hub:the-red-pill",
+      "title": "The Red Pill",
+      "page": "deep-dive.html",
+      "anchor": "",
+      "category": "Deep Dives",
+      "subcategory": "Ideology",
+      "synopsis": "“The useful observations survive without the total theory. The contempt does not.”",
+      "evidenceType": "Long-form synthesis",
+      "contentType": "Essay guide",
+      "verdict": "",
+      "aliases": [
+        "Red Pill"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:the-red-pill"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:hub:competition-anxiety",
+      "title": "Competition Anxiety",
+      "page": "deep-dive.html",
+      "anchor": "",
+      "category": "Deep Dives",
+      "subcategory": "Tactic",
+      "synopsis": "“Social proof can change a first read. Manufactured insecurity changes the relationship.”",
+      "evidenceType": "Long-form synthesis",
+      "contentType": "Essay guide",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:competition-anxiety"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "deep-dive:relationships-throughout-history",
       "title": "Relationships Throughout History",
       "page": "dd-relationships-throughout-history.html",
@@ -18639,6 +18830,320 @@
       "commonMisreadings": [
         "For the children of a couple who marry, the poverty gap and the memes are equal."
       ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:the-red-pill",
+      "title": "The Red Pill",
+      "page": "dd-the-red-pill.html",
+      "anchor": "",
+      "category": "Deep Dives",
+      "subcategory": "Essay",
+      "synopsis": "A sourced Deep Dive into the Red Pill: where the ideology came from, which observations about dating markets survive scrutiny, where its sexed theory outruns the evidence, and why agency does not require contempt.",
+      "evidenceType": "Long-form synthesis",
+      "contentType": "Essay",
+      "verdict": "",
+      "aliases": [
+        "Red Pill"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [],
+      "related": [
+        "pills:page-rp",
+        "frameworks:status-trade",
+        "deep-dive:competition-anxiety"
+      ],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:the-red-pill:what-it-is",
+      "title": "What It Is: A Lens Sold as an Awakening",
+      "page": "dd-the-red-pill.html",
+      "anchor": "what-it-is",
+      "category": "Deep Dives",
+      "subcategory": "The Red Pill",
+      "synopsis": "The Red Pill borrows its name from The Matrix: swallow the pill and see the machinery hidden behind ordinary life. In its dating form, the hidden machinery is a sexual marketplace. Looks, status, scarcity, and leverage matter; stated ideals are treated as public relations; men are told to stop waiting to be chosen and improve the traits the market rewards. That package is why the label travels.",
+      "evidenceType": "Record",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:the-red-pill"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "Van Valkenburgh (2021), “Digesting the Red Pill: Masculinity and Neoliberalism in the Manosphere,” Men and Masculinities 24(1):84–103",
+          "url": "https://doi.org/10.1177/1097184X18816118"
+        },
+        {
+          "label": "Ribeiro et al. (2021), “The Evolution of the Manosphere Across the Web,” Proceedings of ICWSM 15",
+          "url": "https://arxiv.org/abs/2001.07600"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:the-red-pill:what-survives",
+      "title": "What Survives: Markets Are Uneven and Agency Matters",
+      "page": "dd-the-red-pill.html",
+      "anchor": "what-survives",
+      "category": "Deep Dives",
+      "subcategory": "The Red Pill",
+      "synopsis": "The Red Pill’s durable appeal is not mysterious. It names facts polite advice often evades. Attraction is not awarded for moral effort. Looks matter strongly in first impressions. Men still do most initiating in heterosexual markets. Women, on average, weight a partner’s resources and status more than men do. Online attention is sharply unequal. A person can be kind, sincere, and lonely at the same time.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:the-red-pill"
+      ],
+      "related": [
+        "frameworks:status-trade",
+        "frameworks:attention-market",
+        "frameworks:charm-ceiling"
+      ],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "Bruch & Newman (2018), Science Advances 4(8)",
+          "url": "https://doi.org/10.1126/sciadv.aap9815"
+        },
+        {
+          "label": "Walter et al. (2020), Psychological Science 31(4)",
+          "url": "https://doi.org/10.1177/0956797620904154"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:the-red-pill:the-sexed-theory",
+      "title": "The Leap: From Patterns to a Theory of Women",
+      "page": "dd-the-red-pill.html",
+      "anchor": "the-sexed-theory",
+      "category": "Deep Dives",
+      "subcategory": "The Red Pill",
+      "synopsis": "The break happens when a distribution becomes a personality. “Women weight status more on average” becomes “women are hypergamous.” “People protect their options” becomes “women always branch-swing.” A description of incentives becomes a claim that one sex is deceitful by nature and the other must manage it with permanent suspicion.",
+      "evidenceType": "Record",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [
+        "Leap: From Patterns to a Theory of Women"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:the-red-pill"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "Vallerga & Zurbriggen (2022), “Hegemonic masculinities in the Manosphere,” Analyses of Social Issues and Public Policy 22(2):602–625",
+          "url": "https://doi.org/10.1111/asap.12308"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:the-red-pill:the-verdict",
+      "title": "The Verdict: Keep the Agency, Drop the Total Theory",
+      "page": "dd-the-red-pill.html",
+      "anchor": "the-verdict",
+      "category": "Deep Dives",
+      "subcategory": "The Red Pill",
+      "synopsis": "The Red Pill solves a real emotional problem: it gives men who feel acted upon a sense that they can act. Train. Dress better. Earn more. Stop pleading with people who are not choosing you. Build enough of a life that rejection is information rather than annihilation. Those moves need no claim about women’s nature to work.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [
+        "Verdict: Keep the Agency, Drop the Total Theory"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:the-red-pill"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "Dignam & Rohlinger (2019), “Misogynistic Men Online: How the Red Pill Helped Elect Trump,” Signs 44(3):589–612",
+          "url": "https://doi.org/10.1086/701155"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:competition-anxiety",
+      "title": "Competition Anxiety",
+      "page": "dd-competition-anxiety.html",
+      "anchor": "",
+      "category": "Deep Dives",
+      "subcategory": "Essay",
+      "synopsis": "A sourced Deep Dive into competition anxiety: the manosphere term is not a validated construct, but its ingredients are studied as mate-choice copying, social proof, jealousy induction, and mate retention.",
+      "evidenceType": "Long-form synthesis",
+      "contentType": "Essay",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [],
+      "related": [
+        "deep-dive:the-red-pill",
+        "frameworks:signal-cost-rule",
+        "frameworks:readiness-gate"
+      ],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:competition-anxiety:name-the-term",
+      "title": "Name the Term Before Believing It",
+      "page": "dd-competition-anxiety.html",
+      "anchor": "name-the-term",
+      "category": "Deep Dives",
+      "subcategory": "Competition Anxiety",
+      "synopsis": "Competition anxiety is manosphere shorthand for making a romantic prospect or partner feel that other people want you and could replace them. The promised mechanism is urgency: perceived rivals certify your value, remove complacency, and make the other person invest. Sometimes the advice is passive — have a full social life and do not conceal that you have options.",
+      "evidenceType": "LE framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:competition-anxiety"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:competition-anxiety:social-proof",
+      "title": "Social Proof: A Real but Narrow First-Read Effect",
+      "page": "dd-competition-anxiety.html",
+      "anchor": "social-proof",
+      "category": "Deep Dives",
+      "subcategory": "Competition Anxiety",
+      "synopsis": "People do not evaluate potential partners independently of social information. Someone who appears accepted by desirable peers can look safer or more valuable than the same person shown alone. Relationship research calls this mate-choice copying. It is the strongest empirical piece beneath competition anxiety, and it is much narrower than the tactic built on top of it.",
+      "evidenceType": "Record",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:competition-anxiety"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "Gouda-Vossos, Nakagawa, Dixson & Brooks (2018), “Mate Choice Copying in Humans: a Systematic Review and Meta-Analysis,” Adaptive Human Behavior and Physiology 4:364–386",
+          "url": "https://doi.org/10.1007/s40750-018-0099-y"
+        },
+        {
+          "label": "Waynforth (2007), Human Nature 18:264–271",
+          "url": "https://doi.org/10.1007/s12110-007-9004-2"
+        },
+        {
+          "label": "Jones et al. (2010), PLOS ONE 5(2):e9115",
+          "url": "https://doi.org/10.1371/journal.pone.0009115"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:competition-anxiety:manufactured-threat",
+      "title": "Jealousy: The Tactic Works on Arousal, Not Necessarily the Bond",
+      "page": "dd-competition-anxiety.html",
+      "anchor": "manufactured-threat",
+      "category": "Deep Dives",
+      "subcategory": "Competition Anxiety",
+      "synopsis": "Once two people are involved, the mechanism changes. A visible alternative is no longer only information about desirability; it is information about possible loss. Jealousy can produce pursuit, reassurance, surveillance, anger, withdrawal, or exit. Counting only the extra attention and calling the tactic successful is outcome laundering.",
+      "evidenceType": "Record",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:competition-anxiety"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
+      "sourceLinks": [
+        {
+          "label": "Fleischmann, Spitzberg, Andersen & Roesch (2005), “Tickling the monster: Jealousy induction in relationships,” Journal of Social and Personal Relationships 22(1):49–73",
+          "url": "https://doi.org/10.1177/0265407505049321"
+        },
+        {
+          "label": "de Miguel & Buss (2011), “Mate retention tactics in Spain,” Journal of Personality 79(3):563–585",
+          "url": "https://doi.org/10.1111/j.1467-6494.2011.00698.x"
+        },
+        {
+          "label": "Tortoriello et al. (2017), Personality and Individual Differences 114:10–15",
+          "url": "https://doi.org/10.1016/j.paid.2017.03.052"
+        },
+        {
+          "label": "Degiuli, Andreis & Vucenovic (2023), European Journal of Investigation in Health, Psychology and Education 13:2877–2890",
+          "url": "https://doi.org/10.3390/ejihpe13120199"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:competition-anxiety:the-rule",
+      "title": "The Rule: Signal a Full Life; Do Not Manufacture a Threat",
+      "page": "dd-competition-anxiety.html",
+      "anchor": "the-rule",
+      "category": "Deep Dives",
+      "subcategory": "Competition Anxiety",
+      "synopsis": "There is a clean, non-manipulative kernel here. A person with friends, standards, purpose, and the willingness to leave a bad fit is more attractive than a person performing dependence. Real options matter because they make choice voluntary. Hiding a full life to appear harmless is not intimacy.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [
+        "Rule: Signal a Full Life; Do Not Manufacture a Threat"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:competition-anxiety"
+      ],
+      "related": [],
+      "boundaryConditions": [],
+      "commonMisreadings": [],
       "sourceLinks": [],
       "pressureTests": []
     },
