@@ -24,5 +24,843 @@
     "note": "Created empty, deliberately. The first case enters through md/FEEDBACK-PIPELINE.md, from a flag a human adjudicated — not from an author inventing sentences to fill a fixture. An empty benchmark that is structurally validated and wired into the suite is a functioning receptacle; a pre-populated one would be a set of guesses wearing evidence's clothes.",
     "firstInboxCase": "ds-13 (domain-gate-error) routed on 2026-07-29 to the domain benchmark, where it already exists. It is recorded in md/FEEDBACK-PIPELINE.md as the worked example and produced no case here, which is the correct outcome for a gate defect."
   },
-  "cases": []
+  "cases": [
+    {
+      "id": "fm-01",
+      "text": "I would've expected this effect to be stronger in couples reporting higher relationship satisfaction, she said.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-relationship-quality",
+          "lexicon:term-personality-matters",
+          "statistics:height-pref"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-01",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "02-greatergood",
+        "sourceInputSha256": "b2ba10305f7f42565ab8175c1f2995487a8a7322c586101da68c830e70a70756",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-relationship-quality",
+        "credibleCanonIds": [
+          "statistics:stat-relationship-quality",
+          "lexicon:term-personality-matters",
+          "statistics:height-pref"
+        ],
+        "scores": {
+          "statistics:stat-relationship-quality": 0.541,
+          "lexicon:term-personality-matters": 0.496,
+          "statistics:height-pref": 0.43
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-02",
+      "text": "A person's own personality predicts long-term relationship satisfaction.",
+      "expected": {
+        "absentCanonIds": [
+          "M-TBD-6"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-02",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "03-psypost",
+        "sourceInputSha256": "7585c4ddc348e4f58ccff2bab252a8cf23ae0cbbcf6c758f7bc46a4ffebdafae",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "lexicon:term-personality-matters",
+        "credibleCanonIds": [
+          "lexicon:term-personality-matters",
+          "M-TBD-6",
+          "statistics:stat-relationship-quality",
+          "hierarchy:overview"
+        ],
+        "scores": {
+          "lexicon:term-personality-matters": 0.648,
+          "M-TBD-6": 0.546,
+          "statistics:stat-relationship-quality": 0.53,
+          "hierarchy:overview": 0.457
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-03",
+      "text": "Learn what money secrets they're keeping and how to avoid roadblocks in your own relationship.",
+      "expected": {
+        "absentCanonIds": [
+          "M-TBD-17",
+          "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment",
+          "M-TBD-61"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-03",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "04-bankrate",
+        "sourceInputSha256": "708d49767f3b46e99bac1717cfa623cbbc3dea842d42bf280b5ccc2fb52ce3cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "M-TBD-17",
+        "credibleCanonIds": [
+          "M-TBD-17",
+          "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment",
+          "M-TBD-61"
+        ],
+        "scores": {
+          "M-TBD-17": 0.475,
+          "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment": 0.453,
+          "M-TBD-61": 0.441
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-04",
+      "text": "In a relationship, but not living together: 4 percent.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-cycling",
+          "lexicon:term-living-apart-together-lat",
+          "statistics:stat-single-parent-world",
+          "frameworks:stock-flow-error"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-04",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "04-bankrate",
+        "sourceInputSha256": "708d49767f3b46e99bac1717cfa623cbbc3dea842d42bf280b5ccc2fb52ce3cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-cycling",
+        "credibleCanonIds": [
+          "statistics:stat-cycling",
+          "lexicon:term-living-apart-together-lat",
+          "statistics:stat-single-parent-world",
+          "frameworks:stock-flow-error"
+        ],
+        "scores": {
+          "statistics:stat-cycling": 0.493,
+          "lexicon:term-living-apart-together-lat": 0.444,
+          "statistics:stat-single-parent-world": 0.439,
+          "frameworks:stock-flow-error": 0.438
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-05",
+      "text": "Most couples keep at least some of their money separate from their partners.",
+      "expected": {
+        "absentCanonIds": [
+          "lexicon:term-living-apart-together-lat",
+          "statistics:stat-cycling"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-05",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "04-bankrate",
+        "sourceInputSha256": "708d49767f3b46e99bac1717cfa623cbbc3dea842d42bf280b5ccc2fb52ce3cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "lexicon:term-the-great-unbundling",
+        "credibleCanonIds": [
+          "lexicon:term-the-great-unbundling",
+          "lexicon:term-living-apart-together-lat",
+          "statistics:stat-cycling"
+        ],
+        "scores": {
+          "lexicon:term-the-great-unbundling": 0.526,
+          "lexicon:term-living-apart-together-lat": 0.515,
+          "statistics:stat-cycling": 0.437
+        },
+        "candidateCount": 9
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-06",
+      "text": "It's worth noting that sometimes separate accounts can be a smart money move.",
+      "expected": {
+        "absentCanonIds": [
+          "gender-dynamics:both-sides:the-shared-market:the-problem-isnt-the-standards-its-the-dishonesty-about-them"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-06",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "04-bankrate",
+        "sourceInputSha256": "708d49767f3b46e99bac1717cfa623cbbc3dea842d42bf280b5ccc2fb52ce3cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "gender-dynamics:both-sides:the-shared-market:the-problem-isnt-the-standards-its-the-dishonesty-about-them",
+        "credibleCanonIds": [
+          "gender-dynamics:both-sides:the-shared-market:the-problem-isnt-the-standards-its-the-dishonesty-about-them"
+        ],
+        "scores": {
+          "gender-dynamics:both-sides:the-shared-market:the-problem-isnt-the-standards-its-the-dishonesty-about-them": 0.461
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-07",
+      "text": "There isn't a right and wrong in relationships, she said.",
+      "expected": {
+        "absentCanonIds": [
+          "M-TBD-11"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-07",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "05-ap-micro",
+        "sourceInputSha256": "4039a1a1d5d18083fd5e03a693db0eb6b715cecebe3536915a92647a4acaf024",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "M-TBD-11",
+        "credibleCanonIds": [
+          "M-TBD-11"
+        ],
+        "scores": {
+          "M-TBD-11": 0.475
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-08",
+      "text": "People may microcheat for many reasons, often because they want the spark of a new relationship.",
+      "expected": {
+        "absentCanonIds": [
+          "M-TBD-28"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-08",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "05-ap-micro",
+        "sourceInputSha256": "4039a1a1d5d18083fd5e03a693db0eb6b715cecebe3536915a92647a4acaf024",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "lexicon:term-the-spark",
+        "credibleCanonIds": [
+          "lexicon:term-the-spark",
+          "M-TBD-28"
+        ],
+        "scores": {
+          "lexicon:term-the-spark": 0.54,
+          "M-TBD-28": 0.441
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-09",
+      "text": "They might prioritize sexual intimacy at other times of the day, she says.",
+      "expected": {
+        "absentCanonIds": [
+          "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-09",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "06-abc-sleep",
+        "sourceInputSha256": "a2ab671d5c24c96232cd3b3d66e1d5b177c5e85e323d1e96ff4bfca51dfabd92",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment",
+        "credibleCanonIds": [
+          "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment"
+        ],
+        "scores": {
+          "gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment": 0.433
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-10",
+      "text": "Researchers found no significant gap in sexual satisfaction between monogamous and non-monogamous people.",
+      "expected": {
+        "absentCanonIds": [
+          "frameworks:satisfaction-flywheel"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-10",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "07-guardian-cnm",
+        "sourceInputSha256": "83fb98d3bcfd3ed6f5c417aaf41dff1214507ab29483d792090c38a6406129cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "frameworks:satisfaction-flywheel",
+        "credibleCanonIds": [
+          "frameworks:satisfaction-flywheel"
+        ],
+        "scores": {
+          "frameworks:satisfaction-flywheel": 0.54
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-11",
+      "text": "Non-monogamous people reported relationship and sexual satisfaction comparable to monogamous people, according to the study.",
+      "expected": {
+        "absentCanonIds": [
+          "frameworks:satisfaction-flywheel"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-11",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "07-guardian-cnm",
+        "sourceInputSha256": "83fb98d3bcfd3ed6f5c417aaf41dff1214507ab29483d792090c38a6406129cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "frameworks:satisfaction-flywheel",
+        "credibleCanonIds": [
+          "frameworks:satisfaction-flywheel",
+          "frameworks:agreement-surface"
+        ],
+        "scores": {
+          "frameworks:satisfaction-flywheel": 0.54,
+          "frameworks:agreement-surface": 0.478
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-12",
+      "text": "The team found similar results when it looked at studies exploring sexual satisfaction.",
+      "expected": {
+        "absentCanonIds": [
+          "frameworks:satisfaction-flywheel",
+          "lexicon:term-personality-matters"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-12",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "07-guardian-cnm",
+        "sourceInputSha256": "83fb98d3bcfd3ed6f5c417aaf41dff1214507ab29483d792090c38a6406129cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "frameworks:satisfaction-flywheel",
+        "credibleCanonIds": [
+          "frameworks:satisfaction-flywheel",
+          "lexicon:term-personality-matters"
+        ],
+        "scores": {
+          "frameworks:satisfaction-flywheel": 0.54,
+          "lexicon:term-personality-matters": 0.46
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-13",
+      "text": "Although some research linked polyamory to greater sexual satisfaction, the analysis found no overall difference from monogamous relationships.",
+      "expected": {
+        "absentCanonIds": [
+          "frameworks:satisfaction-flywheel"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-13",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "07-guardian-cnm",
+        "sourceInputSha256": "83fb98d3bcfd3ed6f5c417aaf41dff1214507ab29483d792090c38a6406129cb",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "frameworks:satisfaction-flywheel",
+        "credibleCanonIds": [
+          "frameworks:satisfaction-flywheel"
+        ],
+        "scores": {
+          "frameworks:satisfaction-flywheel": 0.54
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-14",
+      "text": "The first years of marriage are important to its success.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-marriage-age"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-14",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "08-kellogg",
+        "sourceInputSha256": "e0eeb14a84d74dca9e39403377b0c3a81249a580279648bbac72593a9ff43ba3",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-marriage-age",
+        "credibleCanonIds": [
+          "statistics:stat-marriage-age"
+        ],
+        "scores": {
+          "statistics:stat-marriage-age": 0.472
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-15",
+      "text": "Couples with a shared account might consider how a purchase will affect their partners or facilitate transparency around finances.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-shared-positive-affect"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-15",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "08-kellogg",
+        "sourceInputSha256": "e0eeb14a84d74dca9e39403377b0c3a81249a580279648bbac72593a9ff43ba3",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-shared-positive-affect",
+        "credibleCanonIds": [
+          "statistics:stat-shared-positive-affect"
+        ],
+        "scores": {
+          "statistics:stat-shared-positive-affect": 0.447
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-16",
+      "text": "At the start of the experiment, couples in all three groups reported similar relationship quality.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-shared-positive-affect"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-16",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "08-kellogg",
+        "sourceInputSha256": "e0eeb14a84d74dca9e39403377b0c3a81249a580279648bbac72593a9ff43ba3",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-sexual-communication",
+        "credibleCanonIds": [
+          "statistics:stat-sexual-communication",
+          "statistics:stat-shared-positive-affect"
+        ],
+        "scores": {
+          "statistics:stat-sexual-communication": 0.462,
+          "statistics:stat-shared-positive-affect": 0.44
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-17",
+      "text": "They maintained relationship quality and showed greater financial harmony than the other couples.",
+      "expected": {
+        "absentCanonIds": [
+          "lexicon:term-living-apart-together-lat"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-17",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "08-kellogg",
+        "sourceInputSha256": "e0eeb14a84d74dca9e39403377b0c3a81249a580279648bbac72593a9ff43ba3",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "lexicon:term-living-apart-together-lat",
+        "credibleCanonIds": [
+          "lexicon:term-living-apart-together-lat",
+          "frameworks:financial-architecture-split"
+        ],
+        "scores": {
+          "lexicon:term-living-apart-together-lat": 0.489,
+          "frameworks:financial-architecture-split": 0.444
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-18",
+      "text": "In other words, now that I'm a woman married to another woman, does that make me a lesbian?",
+      "expected": {
+        "absentCanonIds": [
+          "M-TBD-19"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-18",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "09-ap-transition",
+        "sourceInputSha256": "22f73e156a36c3103a02dc40603e173fe6386874b4a49e20d7d076a3d94faa14",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "M-TBD-19",
+        "credibleCanonIds": [
+          "M-TBD-19"
+        ],
+        "scores": {
+          "M-TBD-19": 0.46
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-19",
+      "text": "For people already in a same-sex relationship, a partner's gender transition can bring distress as well as self-discovery.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-sexual-communication"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-19",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "09-ap-transition",
+        "sourceInputSha256": "22f73e156a36c3103a02dc40603e173fe6386874b4a49e20d7d076a3d94faa14",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "frameworks:co-transition",
+        "credibleCanonIds": [
+          "frameworks:co-transition",
+          "statistics:stat-sexual-communication"
+        ],
+        "scores": {
+          "frameworks:co-transition": 0.476,
+          "statistics:stat-sexual-communication": 0.464
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-20",
+      "text": "Opening a relationship after one partner has had an affair, or to fix an existing problem, is cause for concern.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-relationship-quality"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-20",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "10-guardian-open",
+        "sourceInputSha256": "7d552ca01fed3a0c23c071cb2724b536ac182b41205fd2e45a23fcae3455f80b",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-relationship-quality",
+        "credibleCanonIds": [
+          "statistics:stat-relationship-quality"
+        ],
+        "scores": {
+          "statistics:stat-relationship-quality": 0.481
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-21",
+      "text": "The modern dating world and dating apps were also fueling the shift, she said.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-childfree-intent"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-21",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "10-guardian-open",
+        "sourceInputSha256": "7d552ca01fed3a0c23c071cb2724b536ac182b41205fd2e45a23fcae3455f80b",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-childfree-intent",
+        "credibleCanonIds": [
+          "statistics:stat-childfree-intent"
+        ],
+        "scores": {
+          "statistics:stat-childfree-intent": 0.448
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    },
+    {
+      "id": "fm-22",
+      "text": "One way to understand an open marriage is as a way of taking pressure off the couple.",
+      "expected": {
+        "absentCanonIds": [
+          "statistics:stat-wedding-hazard"
+        ]
+      },
+      "origin": {
+        "flagId": "media-false-mapping-20260731-fm-22",
+        "reviewDisposition": "false-positive",
+        "sourceRun": "md/doctrine-media-loop-03.md",
+        "sourcePass": "10-guardian-open",
+        "sourceInputSha256": "7d552ca01fed3a0c23c071cb2724b536ac182b41205fd2e45a23fcae3455f80b",
+        "adjudicatedOn": "2026-07-31",
+        "adjudicatedBy": "Codex, directed by Jason",
+        "build": {
+          "labRelease": "2.6.16",
+          "analyzer": "2.6.16",
+          "analysisSchema": "le-lab.analysis/2.6",
+          "canonIndex": "1.0.0+3443b0e6c087",
+          "scoringConfigHash": "bt0a7p"
+        }
+      },
+      "observedAtFreeze": {
+        "primaryCanonId": "statistics:stat-wedding-hazard",
+        "credibleCanonIds": [
+          "statistics:stat-wedding-hazard"
+        ],
+        "scores": {
+          "statistics:stat-wedding-hazard": 0.451
+        },
+        "candidateCount": 8
+      },
+      "note": "Copyright-safe paraphrase of a real media passage; verified to reproduce the displayed false positive before promotion."
+    }
+  ]
 }

@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url';
 
 import {
   analyzeDocument,
-  classifyDomainRelevance,
   detectClaimUnits,
 } from '../js/lab-analyzer.js';
 import { normalizeInput } from '../js/lab-intake.js';
@@ -54,17 +53,24 @@ function documentFor(text) {
 
 async function analyzeCase(text) {
   const documentValue = documentFor(text);
-  const [unit] = classifyDomainRelevance(detectClaimUnits(documentValue));
-  if (unit?.domainRelevance.status === 'irrelevant') {
-    return { gatedOut: true, reasonCode: unit.domainRelevance.reasonCode, matches: [], weakMatches: [] };
-  }
+  const [unit] = detectClaimUnits(documentValue);
   const result = await analyzeDocument(documentValue, canonIndex, {});
   const segment = result.segments.find((row) => row.unit.id === unit?.id) || result.segments[0];
+  if (!segment) {
+    const ignored = result.domainRelevance?.ignoredPassages
+      ?.find((row) => row.segmentId === unit?.id);
+    return {
+      gatedOut: true,
+      reasonCode: ignored?.reasonCode || 'not-retained',
+      matches: [],
+      weakMatches: [],
+    };
+  }
   return {
     gatedOut: false,
-    reasonCode: unit?.domainRelevance.reasonCode,
-    matches: segment?.matches || [],
-    weakMatches: segment?.weakMatches || [],
+    reasonCode: segment.unit.domainRelevance?.reasonCode,
+    matches: segment.matches || [],
+    weakMatches: segment.weakMatches || [],
   };
 }
 
