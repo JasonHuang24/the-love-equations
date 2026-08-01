@@ -1594,6 +1594,61 @@ test('the diagnostic trace is opt-in, derived, and changes no analysis', async (
   assert.equal(traced.diagnostics.scoringConfigHash, SCORING_CONFIG_HASH);
 });
 
+test('concept admission guards block topical overlap and publish their decision', async () => {
+  const falseDocument = normalizeInput({
+    text: 'The first years of marriage are important to its success.',
+    source: { title: 'Semantic-guard false-positive fixture' },
+    createdAt: '2026-07-31T12:00:00.000Z',
+  });
+  const blocked = await analyzeDocument(falseDocument, REAL_CANON, { diagnostics: true });
+  const blockedSegment = blocked.segments.find((segment) =>
+    segment.unit.text.includes('first years of marriage'));
+  assert.ok(blockedSegment, 'The passage remains visible after analysis.');
+  assert.equal(blockedSegment.matches.some((match) =>
+    match.canonId === 'statistics:stat-marriage-age'), false);
+
+  const traceUnit = blocked.diagnostics.claimUnits.find((row) =>
+    row.segmentId === blockedSegment.unit.id);
+  const guardedCandidate = traceUnit.candidates.find((candidate) =>
+    candidate.canonId === 'statistics:stat-marriage-age');
+  assert.ok(guardedCandidate, 'The trace retains the scored candidate the guard refused.');
+  assert.equal(guardedCandidate.admission.clearsCredibleScore, true,
+    'This regression exercises admission, not a score that fell below threshold.');
+  assert.deepEqual(guardedCandidate.admission.semanticGuard, {
+    required: true,
+    passed: false,
+    label: 'age-at-marriage evidence',
+  });
+  assert.equal(guardedCandidate.admission.credible, false);
+
+  const positiveDocument = normalizeInput({
+    text: 'The median age at first marriage in the U.S. reached record highs after the postwar 1956 low.',
+    source: { title: 'Semantic-guard positive control' },
+    createdAt: '2026-07-31T12:00:00.000Z',
+  });
+  const admitted = await analyzeDocument(positiveDocument, REAL_CANON, { diagnostics: true });
+  assert.ok(admitted.segments.some((segment) => segment.matches.some((match) =>
+    match.canonId === 'statistics:stat-marriage-age')));
+  const admittedCandidate = admitted.diagnostics.claimUnits
+    .flatMap((row) => row.candidates)
+    .find((candidate) => candidate.canonId === 'statistics:stat-marriage-age');
+  assert.deepEqual(admittedCandidate.admission.semanticGuard, {
+    required: true,
+    passed: true,
+    label: 'age-at-marriage evidence',
+  });
+
+  const acronymDocument = normalizeInput({
+    text: 'LAT is a relationship arrangement used by committed couples.',
+    source: { title: 'Lowercase normalization positive control' },
+    createdAt: '2026-07-31T12:00:00.000Z',
+  });
+  const acronymResult = await analyzeDocument(acronymDocument, REAL_CANON);
+  assert.ok(acronymResult.segments.some((segment) => segment.matches.some((match) =>
+    match.canonId === 'lexicon:term-living-apart-together-lat')),
+    'A lowercase-normalized LAT acronym still satisfies its concept guard.');
+});
+
 test('the scoring config is frozen, complete, and hashes stably', () => {
   assert.ok(Object.isFrozen(SCORING_CONFIG));
   // Guards the refactor contract: these values must not drift without an

@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.16';
+export const ANALYZER_VERSION = '2.6.17';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1021,6 +1021,37 @@ const DESTINATION_BY_CATEGORY = new Map([
 // These small, inspectable signatures cover LE concepts whose meaning is
 // distributed across a sentence or subtitle cue rather than repeated as a
 // title. They are deterministic retrieval rules, not a semantic-model claim.
+// Ten media-source replays exposed 31 false mappings across 22 passages:
+// generic topical overlap could clear the credible line without the concept's
+// defining semantic anchor. A guard never retrieves an entry, adds score, or
+// changes a threshold; it only refuses credible admission for that one concept
+// when its named anchor is absent. Exact evidence is intentionally still subject
+// to the guard. Broad generic-token suppression was measured and rejected after
+// losing eight correct mappings and creating eight new ones.
+const CONCEPT_ADMISSION_GUARDS = new Map([
+  { canonId: 'statistics:stat-relationship-quality', label: 'relationship-quality predictor or actor/partner evidence', test: (text) => /\b(?:personality|neurotic\w*|conscientious\w*|actor effects?|partner effects?|predictive models?|relationship predictors?|appreciation|perceived partner|conflict|pairfam|big five|longitudinal)\b/.test(text) },
+  { canonId: 'lexicon:term-personality-matters', label: 'personality trait or actor/partner evidence', test: (text) => /\b(?:personality|neurotic\w*|conscientious\w*|actor effects?|partner effects?|traits?)\b/.test(text) },
+  { canonId: 'statistics:height-pref', label: 'height-preference evidence', test: (text) => /\b(?:height|taller|shorter|centimet\w*|inches?|feet)\b/.test(text) },
+  { canonId: 'M-TBD-6', label: 'waiting or sexual-timing evidence', test: (text) => /\b(?:take it slow|takes it slow|wait\w*|sexual timing|make a move|made a move|friend[- ]?zon\w*|decisiv\w*|early sex|later sex\w*)\b/.test(text) },
+  { canonId: 'M-TBD-17', label: 'male dating-withdrawal evidence', test: (text) => /\b(?:men|male|guys?|single|dating|sexless\w*|checking out|check out|opt\w* out|monk mode|approach\w*)\b/.test(text) },
+  { canonId: 'gender-dynamics:female:timing-honesty-the-mirror:you-might-be-the-one-avoiding-commitment', label: 'female commitment-avoidance evidence', test: (text) => /\b(?:women|woman|commitment|situationship|better option|backup|lock it down|gray zone|grey zone|strung along)\b/.test(text) },
+  { canonId: 'M-TBD-61', label: 'sex-typed commitment-motive evidence', test: (text) => /\b(?:men|women|male|female|commitment|single|sociosexual\w*|variety|flirt\w*|family life|uncommitted)\b/.test(text) },
+  { canonId: 'statistics:stat-cycling', label: 'breakup-and-reconciliation evidence', test: (text) => /\b(?:break ?up|broke up|reconcil\w*|get back together|got back together|restart\w*|cycl\w*|ended the relationship)\b/.test(text) },
+  { canonId: 'lexicon:term-living-apart-together-lat', label: 'deliberately separate households or residences', test: (text) => /\b(?:living apart|live apart|lives apart|separate households?|separate homes?|separate residences?|residentially separate|lat)\b/.test(text) },
+  { canonId: 'statistics:stat-single-parent-world', label: 'single-parent household evidence', test: (text) => /\b(?:single[- ]parent|one[- ]parent|lone parent|solo parent|parent households?|children?\b.{0,35}\bone parent|one parent\b.{0,35}\bchildren?)\b/.test(text) },
+  { canonId: 'frameworks:stock-flow-error', label: 'stock-versus-flow measurement evidence', test: (text) => /\b(?:stock|flow|snapshot|cohort|period measure|state right now|enter\w*|leave\w* over time|right[- ]censor\w*|length[- ]bias\w*)\b/.test(text) },
+  { canonId: 'gender-dynamics:both-sides:the-shared-market:the-problem-isnt-the-standards-its-the-dishonesty-about-them', label: 'standards-versus-honesty evidence', test: (text) => /\b(?:standards?|dishonest\w*|honest\w*|accuracy of description|accurate description)\b/.test(text) },
+  { canonId: 'M-TBD-11', label: 'looks-preference evidence', test: (text) => /\b(?:looks?|attractiveness|earning prospects?|visual|speed[- ]dating|both sexes)\b/.test(text) || (/\bmen\b/.test(text) && /\bwomen\b/.test(text)) },
+  { canonId: 'M-TBD-28', label: 'safety-versus-excitement choice evidence', test: (text) => /\b(?:safe|safety|danger\w*|chaos|dark triad|nice guy|jerk|women|butterflies|stable\b.{0,20}\bbor\w*)\b/.test(text) },
+  { canonId: 'frameworks:satisfaction-flywheel', label: 'bidirectional satisfaction evidence', test: (text) => /\b(?:bidirection\w*|two[- ]way|both directions?|reciprocal|feedback loop|predicts? changes?|relationship satisfaction predicts?|sexual satisfaction predicts?|frequency of sex)\b/.test(text) },
+  { canonId: 'statistics:stat-marriage-age', label: 'age-at-marriage evidence', test: (text) => /\b(?:age|median|older|younger|twenties|thirties|years old|postwar|1950s|marry later|first marriage at)\b/.test(text) },
+  { canonId: 'statistics:stat-shared-positive-affect', label: 'shared positive emotion or cortisol evidence', test: (text) => /\b(?:positive emotions?|positive affect|shared positivity|happy|happiness|relax\w*|interest\w*|cortisol|saliva|moods?|moments?)\b/.test(text) },
+  { canonId: 'statistics:stat-sexual-communication', label: 'sexual-communication evidence', test: (text) => /\b(?:communicat\w*|talk\w*|conversation\w*|disclos\w*|bring it up)\b/.test(text) },
+  { canonId: 'statistics:stat-childfree-intent', label: 'childbearing-intention evidence', test: (text) => /\b(?:child\w*|parent\w*|nonparent\w*|fertil\w*|mother\w*|father\w*|birth\w*)\b/.test(text) },
+  { canonId: 'statistics:stat-wedding-hazard', label: 'wedding-cost or divorce-hazard evidence', test: (text) => /\b(?:wedding|honeymoon|guests?|spend\w*|spent|divorc\w*.{0,24}\bhazard|hazard.{0,24}\bdivorc\w*|ceremony)\b/.test(text) },
+  { canonId: 'M-TBD-19', label: 'charisma or first-impression red-flag evidence', test: (text) => /\b(?:charisma|charm\w*|narciss\w*|red flags?|first impressions?|untrust\w*|exploit\w*|entitled)\b/.test(text) },
+].map((guard) => [guard.canonId, guard]));
+
 const CONCEPT_SIGNATURES = [
   {
     canonId: 'frameworks:conversion-ladder',
@@ -2266,6 +2297,10 @@ function scoreEntry(unit, entry, idf) {
   // contain several independent claims, so sibling sentences cannot satisfy
   // one another's concept signatures.
   const signatureText = normalized;
+  const configuredAdmissionGuard = CONCEPT_ADMISSION_GUARDS.get(entry.id);
+  const admissionGuard = configuredAdmissionGuard
+    ? { required: true, passed: configuredAdmissionGuard.test(normalized), label: configuredAdmissionGuard.label }
+    : { required: false, passed: true, label: null };
   const signatureHits = CONCEPT_SIGNATURES
     .filter((signature) => signature.canonId === entry.id && signature.test(signatureText))
     .map((signature) => ({ label: signature.label, score: signature.score }));
@@ -2468,6 +2503,7 @@ function scoreEntry(unit, entry, idf) {
       boundaryOnly: surfacesHit.length === 1 && surfacesHit[0] === 'boundaryCondition',
     },
     weakGenericMatch,
+    admissionGuard,
   };
 }
 
@@ -2961,6 +2997,7 @@ function hasLocalConceptEvidence(candidate) {
 }
 
 function hasCredibleMatchEvidence(rawScore) {
+  if (rawScore.admissionGuard?.passed === false) return false;
   return Boolean(
     rawScore.signatureHits.length
     || rawScore.phraseHits.length
@@ -3584,6 +3621,7 @@ function diagnosticCandidate(candidate, displayedIds, weakIds, rank) {
       hasCredibleEvidence: hasCredibleMatchEvidence(raw),
       clearsCredibleScore: candidate.score >= SCORING_CONFIG.minCredibleScore,
       clearsWeakScore: candidate.score >= SCORING_CONFIG.minWeakScore,
+      semanticGuard: raw.admissionGuard,
     },
     contextAssistance: candidate.contextHelp,
     display,

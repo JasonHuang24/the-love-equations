@@ -274,6 +274,12 @@ evidence surfaces hit with their provenance types, the admission outcome, any
 context assistance, and whether it was displayed as a match, a weak match, or
 not at all.
 
+Admission may also carry `semanticGuard: { required, passed, label }`. It is a
+concept-specific credibility gate: it contributes no score and retrieves nothing,
+but a required guard that does not pass prevents a candidate from becoming a
+credible mapping. The label names the semantic anchor the passage needed. The field
+is derived and appears in diagnostics even when the candidate is refused.
+
 `fate` names the first thing that decided a candidate's visibility, in this
 order: `retained-after-prefix-cut` · `below-weak-threshold` · `credible-cap` ·
 `weak-cap` · `failed-admission` · `displayed`. Retention is reported separately
