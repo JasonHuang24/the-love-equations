@@ -902,9 +902,14 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * Lexicon terms. Ten moves now; cumulative drift is 0.004 against a
    * minCredibleScore of 0.43. The admission guard still blocks the passage, so
    * the behavior this test protects is unchanged.
+   *
+   * 0.537 at 540 when media loop 03 added three frameworks and one statistics
+   * card. Eleven moves; cumulative drift remains 0.003 against 0.43, and the
+   * admission guard still blocks the passage. This updates the corpus pin, not
+   * the behavior or any threshold.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.538);
+  assert.equal(weakPassage.weakMatches[0].score, 0.537);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));

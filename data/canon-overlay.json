@@ -828,6 +828,35 @@
         "Is an established-couple finding being used outside its sampled population or dating stage?"
       ]
     },
+    "statistics:stat-shared-positive-affect": {
+      "aliases": [
+        "Shared Positive Affect",
+        "Shared Positivity Dividend",
+        "coexperienced positive emotions"
+      ],
+      "phrases": [
+        "coexperienced positive emotions",
+        "shared positive affect",
+        "lower momentary cortisol"
+      ],
+      "related": [
+        "frameworks:satisfaction-flywheel",
+        "frameworks:good-news-rule",
+        "statistics:stat-relationship-quality"
+      ],
+      "boundaryConditions": [
+        "The evidence is observational and limited to older cohabiting couples in Germany and Canada; it does not establish that producing shared positivity lowers cortisol.",
+        "Cortisol is a proximal biomarker, not a direct measure of relationship quality, physical health or longevity.",
+        "The next-assessment result improves temporal ordering but does not eliminate time-varying confounding."
+      ],
+      "commonMisreadings": [
+        "Happy couples have lower cortisol because sharing positive emotion improves their health.",
+        "One partner feeling positive is physiologically equivalent to both partners sharing the same positive moment."
+      ],
+      "pressureTests": [
+        "Is the claim about a measured momentary biomarker association, or has it been promoted into a causal health or relationship benefit?"
+      ]
+    },
     "pills:page-blk": {
       "aliases": [
         "Black Pill",
@@ -1191,6 +1220,107 @@
       ],
       "pressureTests": [
         "Is the claimed direction the only one tested, or has the reverse path been modelled in the same data?"
+      ]
+    },
+    "frameworks:agreement-surface": {
+      "aliases": [
+        "Agreement Surface",
+        "relationship agreement surface",
+        "channel-level relationship boundaries"
+      ],
+      "phrases": [
+        "consent to a relationship structure",
+        "explicit and implicit relationship rules",
+        "relationship boundary violation",
+        "consensual non-monogamy maintenance"
+      ],
+      "related": [
+        "frameworks:good-news-rule",
+        "frameworks:commitment-problem",
+        "statistics:stat-relationship-quality"
+      ],
+      "boundaryConditions": [
+        "A relationship label is useful shorthand but does not specify every boundary concerning sex, romance, disclosure, hierarchy, time, resources, health or revision.",
+        "Changed boundaries apply prospectively and require genuine freedom to decline; they do not retroactively authorize a breach.",
+        "Agreement can still be coerced, and the framework does not require advance authorization for every ordinary act.",
+        "The satisfaction meta-analysis compares self-selected relationship structures and does not establish equivalence in causality, durability, coordination cost, parenting or health outcomes."
+      ],
+      "commonMisreadings": [
+        "Agreeing to an open or monogamous relationship gives blanket consent to every act normally associated with that label.",
+        "Monogamy is intrinsically more satisfying than consensual non-monogamy.",
+        "If a partner dislikes an act afterward, that retroactively makes the act a boundary violation."
+      ],
+      "pressureTests": [
+        "Which actual agreement was mutually legible before the act, and is a category label being substituted for it?",
+        "Is a structural comparison being turned into a claim about what causes satisfaction?"
+      ]
+    },
+    "frameworks:financial-architecture-split": {
+      "aliases": [
+        "Financial Architecture Split",
+        "account topology versus financial fidelity",
+        "financial pooling effect",
+        "privacy-secrecy split"
+      ],
+      "phrases": [
+        "joint bank account",
+        "separate bank accounts",
+        "financial infidelity",
+        "hidden debt",
+        "concealed spending"
+      ],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:ownership-load",
+        "frameworks:satisfaction-flywheel"
+      ],
+      "boundaryConditions": [
+        "The pooling trial sampled willing, mostly White, different-sex engaged or newlywed couples entering first marriages; it does not generalize to every couple or relationship stage.",
+        "Differential attrition was substantial, especially in the assigned-joint condition, and the outcome was self-reported relationship quality.",
+        "Separate, joint and hybrid accounts are topologies rather than fidelity grades; disclosure and compliance with the couple's actual agreement are separate variables.",
+        "Full access can be unsafe under coercive control, financial abuse, addiction, hidden debt or other conditions the pooling trial was not designed to evaluate."
+      ],
+      "commonMisreadings": [
+        "Separate accounts are financial infidelity.",
+        "A randomized newlywed study proves every committed couple should merge all money.",
+        "Joint accounts prevent hidden financial behavior."
+      ],
+      "pressureTests": [
+        "Is the claim measuring where money sits, or whether conduct was intentionally concealed outside an agreed rule?",
+        "Would greater access increase safety and trust in this couple, or increase exposure to coercion or loss?"
+      ]
+    },
+    "frameworks:co-transition": {
+      "aliases": [
+        "Co-Transition",
+        "relationship co-transition",
+        "partner gender transition process"
+      ],
+      "phrases": [
+        "gender transition in a relationship",
+        "partner identity exploration",
+        "relationship stabilization after transition",
+        "public and private intimacy after transition"
+      ],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:readiness-gate",
+        "frameworks:satisfaction-flywheel"
+      ],
+      "boundaryConditions": [
+        "The transitioning partner alone owns their gender identity, body and medical care; relationship impact does not grant a partner veto power over transition.",
+        "The other partner retains autonomy over consent, attraction and their own orientation label; acknowledging that process does not require the relationship to continue.",
+        "The evidence is qualitative, based on small convenience samples, and often selected couples that stayed together; it cannot estimate survival rates or identify a causal recipe.",
+        "This framework is specific to gender transition and should not be generalized to every major life change without evidence."
+      ],
+      "commonMisreadings": [
+        "If love is real, attraction, orientation labels and relationship terms should remain unchanged through a partner's gender transition.",
+        "Calling the process co-transition gives both partners equal authority over the transitioning person's identity or care.",
+        "Couples who communicate well are expected to stay together after transition."
+      ],
+      "pressureTests": [
+        "Which part belongs to individual self-determination, and which part can the couple legitimately decide together?",
+        "Is a survivor-selected qualitative finding being converted into a promise of relationship survival?"
       ]
     },
     "frameworks:operative-frame": {
@@ -2271,17 +2401,28 @@
     },
     "lexicon:term-personality-matters": {
       "aliases": [
-        "personality over looks"
+        "personality over looks",
+        "actor-trait asymmetry"
+      ],
+      "phrases": [
+        "actor effect of personality",
+        "partner effect of personality",
+        "neuroticism and relationship satisfaction",
+        "conscientiousness and relationship satisfaction"
       ],
       "commonMisreadings": [
-        "Personality matters more than looks, so a great personality is what makes women choose a man."
+        "Personality matters more than looks, so a great personality is what makes women choose a man.",
+        "A nine-year study found no partner effects, so a partner's personality cannot affect relationship satisfaction."
       ],
       "boundaryConditions": [
         "Personality's measured effect is largest on retention and satisfaction and smallest at the stranger market's first filter.",
-        "Ratings of personality taken after a face is visible are contaminated by the halo effect and overstate its independent contribution."
+        "Ratings of personality taken after a face is visible are contaminated by the halo effect and overstate its independent contribution.",
+        "The nine-year actor-partner result concerns 486 different-sex German couples in three survivor cohorts and uses brief self-report instruments; it is not a universal null for partner effects.",
+        "Actor effects are associations with a person's own satisfaction, not proof that changing a trait will produce the measured relationship outcome."
       ],
       "pressureTests": [
-        "Was personality measured before the first physical filter, or after it?"
+        "Was personality measured before the first physical filter, or after it?",
+        "Is an actor effect being confused with a partner effect, or a cohort-specific null being promoted into a universal law?"
       ]
     },
     "lexicon:term-no-good-men-left": {
@@ -5149,13 +5290,25 @@
       ]
     },
     "lexicon:term-the-great-unbundling": {
+      "phrases": [
+        "separate bedrooms",
+        "sleep divorce",
+        "bed-sharing couples",
+        "sleeping apart"
+      ],
       "commonMisreadings": [
         "Marriage still bundles sex, children, money and adult standing, so couples who marry get all four.",
-        "Partners who do not share a household cannot be committed to each other."
+        "Partners who do not share a household cannot be committed to each other.",
+        "Couples who sleep separately are less intimate, while couples who share a bed have healthier relationships."
       ],
       "boundaryConditions": [
         "The functions came loose one at a time across two centuries, so which one is being counted decides the date.",
-        "Residence, property, care and commitment can move separately; one is not a safe proxy for the others."
+        "Residence, property, care and commitment can move separately; one is not a safe proxy for the others.",
+        "Sleep and intimacy can be routed through different times or spaces, but the evidence does not rank separate or shared sleep for couples generally.",
+        "Separate sleep can solve a practical sleep conflict without solving relationship conflict; mutuality and a replacement channel for intimacy remain relevant."
+      ],
+      "pressureTests": [
+        "Is bed-sharing being used as a proxy for intimacy, commitment or relationship quality that the source did not measure?"
       ]
     },
     "lexicon:term-living-apart-together-lat": {

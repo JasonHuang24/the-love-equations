@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 536);
+assert.equal(index.stats.conceptCount, 540);
 assert.equal(index.stats.sourceCount, 19);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 35,
@@ -26,8 +26,8 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 49,
-  Statistics: 50,
+  'Rules & Frameworks': 52,
+  Statistics: 51,
 });
 
 /*
@@ -67,21 +67,22 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 536);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 540);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
 // expansion widened the lag: 11 of its 13 new dossier entries took the misreading
 // alone, and the 9 new charts likewise, so the gap is 17 rather than 8.
-// Harvest #2 added four concepts with both fields, preserving that gap.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 519);
+// Harvest #2 and media loop 03 each added four concepts with both fields,
+// preserving that gap.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 523);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
 assert.equal(required('frameworks:conversion-ladder').anchor, 'conversion-ladder');
 assert(required('frameworks:conversion-ladder').related.includes('frameworks:interaction-gate'));
 assert.equal(required('gender-dynamics:gd-hell-yes').anchor, 'gd-hell-yes');
-assert.equal(required('statistics:stat-relationship-quality').sourceLinks.length, 2);
+assert.equal(required('statistics:stat-relationship-quality').sourceLinks.length, 3);
 assert.equal(required('M-TBD-10').title, 'Never go to bed angry.');
 assert.match(required('pills:page-blk').synopsis, /constraint awareness/i);
 assert(required('lexicon:term-smv-sexual-market-value').aliases.includes('SMV'));
@@ -93,6 +94,13 @@ assert(required('lexicon:term-desire').dependencies.includes('frameworks:desire-
 assert(required('lexicon:term-the-ownership-load').dependencies.includes('frameworks:ownership-load'));
 assert(required('lexicon:term-living-apart-together-lat').aliases.includes('LAT'));
 assert(required('lexicon:term-living-apart-together-lat').dependencies.includes('deep-dive:relationships-throughout-history:great-unbundling'));
+assert.equal(required('frameworks:agreement-surface').sourceLinks.length, 3);
+assert(required('frameworks:agreement-surface').aliases.includes('relationship agreement surface'));
+assert.equal(required('frameworks:financial-architecture-split').sourceLinks.length, 2);
+assert(required('frameworks:financial-architecture-split').related.includes('frameworks:agreement-surface'));
+assert.equal(required('frameworks:co-transition').sourceLinks.length, 2);
+assert.equal(required('statistics:stat-shared-positive-affect').sourceLinks.length, 1);
+assert(required('statistics:stat-shared-positive-affect').aliases.includes('Shared Positivity Dividend'));
 
 // deep-dive.html wraps each hub card in `<a class="dd-feature" href=...>`, so the
 // href sits on the harvested node itself rather than under it. `linkData` walked

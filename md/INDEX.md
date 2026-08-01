@@ -113,6 +113,7 @@ record whose own headline was later corrected, with the correction recorded in-f
 - 2026-07-31 · [lab-synopsis-register.md](lab-synopsis-register.md) **HIST ★ ⚠** — synopsis-emptying mechanism holds; §1's outcome table WITHDRAWN in-file at §4c — three probe pairs, not entry facts; between-probe variance swamps the register difference at n≈4
 - 2026-07-31 · [lab-alias-naming-rule.md](lab-alias-naming-rule.md) **LIVE ★** — prospective test VOID for predicative aliases (1/32 fire — the archive has no discourse register); rule sharpened: an alias must name the CONCEPT, not a population it ranges over
 - 2026-07-31 ? [doctrine-retention-media-02.md](doctrine-retention-media-02.md) **HIST ?** ? 8-article media suite promoted Ownership Load and Desire-State Split, expanded Great Unbundling with LAT; canon 532?536, 0 credible/weak crossings, full site gate green
+- 2026-07-31 | [doctrine-media-loop-03.md](doctrine-media-loop-03.md) **HIST** -- 10-article suite promoted Agreement Surface, Financial Architecture Split, Co-Transition, and Shared Positive Affect; sleep/personality merged into existing doctrine; canon 536->540, 0 credible/weak crossings, full gate green
 
 ## Calculators
 
