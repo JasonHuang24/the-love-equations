@@ -667,6 +667,22 @@
 }
 .sd-bar.men { left: 50%; }
 .sd-bar.women { right: 50%; }
+.sd-filter-chart .sd-axis,
+.sd-filter-chart .sd-row { grid-template-columns: minmax(112px, 0.55fr) minmax(0, 1fr) 48px; }
+.sd-filter-chart .sd-plot { background: var(--surface); }
+.sd-filter-chart .sd-parity { left: 83.333%; }
+.sd-level {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  height: 7px;
+  width: var(--sd-level);
+  min-width: 3px;
+  border-radius: 4px;
+}
+.sd-swatch.baseline, .sd-level.baseline { background: #378ADD; }
+.sd-swatch.filtered, .sd-level.filtered { background: #BA7517; }
+.sd-swatch.place, .sd-level.place { background: var(--scarlet); }
 .sd-chart-note {
   margin: 0.75rem 0 0;
   color: var(--text-muted);
@@ -680,4 +696,6 @@
   .sd-chart-legend { justify-content: flex-start; flex-wrap: wrap; gap: 0.45rem 0.8rem; }
   .sd-axis,
   .sd-row { grid-template-columns: 52px minmax(0, 1fr) 42px; gap: 0.45rem; }
+  .sd-filter-chart .sd-axis,
+  .sd-filter-chart .sd-row { grid-template-columns: 96px minmax(0, 1fr) 36px; gap: 0.4rem; }
 }

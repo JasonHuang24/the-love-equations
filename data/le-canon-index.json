@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+597ce6063be5",
-  "generatedAt": "2026-08-01T04:04:39.000Z",
+  "indexVersion": "1.0.0+52688f77dd45",
+  "generatedAt": "2026-08-01T05:59:11.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -33,7 +33,7 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "e0ff178f0d331207fc5da3a2a6124b0713058b7a2967d87f1b773fbcc4d5c5a7",
+      "sha256": "ed987e3e66da045404303190125e52b6c9e0aab7fb8e7564c31ee1b49496605a",
       "conceptCount": 53
     },
     {
@@ -89,7 +89,7 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "af3b9eeefaaf20f47ef369cac9dd2cb46aa56b15d64414d254b35c19d9a6d0a2",
+      "sha256": "1c5432d745b648aeed0288bbc1e85f43ba0572ad26d5132a6ae1faf7581f2a03",
       "conceptCount": 98
     },
     {
@@ -4704,6 +4704,22 @@
         {
           "label": "ACS 2024 1-year table B12002",
           "url": "https://data.census.gov/table/ACSDT1Y2024.B12002"
+        },
+        {
+          "label": "Pew Research Center (2014), analysis of 2012 ACS data",
+          "url": "https://www.pewresearch.org/short-reads/2014/10/02/the-best-and-worst-cities-for-women-looking-to-marry/"
+        },
+        {
+          "label": "net worth as assets minus liabilities",
+          "url": "https://www.census.gov/library/stories/2022/08/wealth-inequality-by-household-type.html"
+        },
+        {
+          "label": "Kearney & Wilson (2018), Review of Economics and Statistics",
+          "url": "https://doi.org/10.1162/rest_a_00711"
+        },
+        {
+          "label": "Lafortune & Low (2023), AEJ: Applied Economics",
+          "url": "https://doi.org/10.1257/app.20210614"
         },
         {
           "label": "Angrist (2002), Quarterly Journal of Economics",
@@ -14793,7 +14809,7 @@
       "anchor": "term-the-supply-and-demand-rule",
       "category": "Lexicon",
       "subcategory": "Shared",
-      "synopsis": "When one side of a local dating pool is scarcer, that side can be more selective while the more numerous side competes harder. The rule changes bargaining conditions, not anyone’s worth — and it only works after age, place, eligibility, and who is actually searching are counted.",
+      "synopsis": "When one side of a local dating pool is scarcer, that side can be more selective while the more numerous side competes harder. The rule changes bargaining conditions, not anyone’s worth — and it only works after age, location, eligibility, economic filters, and who is actually searching are counted.",
       "evidenceType": "Glossary",
       "contentType": "Definition",
       "verdict": "",

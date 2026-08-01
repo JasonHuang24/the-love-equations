@@ -1731,17 +1731,65 @@
         </figure>
 
         <div class="reasoning-box">
+          <div class="box-header">The missing coordinates &mdash; place and economic status</div>
+          <div class="box-body">
+            <p><strong>Effective supply = local pool &times; age fit &times; availability &times; active search &times; accepted economic band.</strong> Every term is a filter. Change one and the apparent surplus can shrink, disappear, or reverse.</p>
+            <div class="reason-row"><i class="ti ti-map-pin reason-icon"></i><div class="reason-text"><strong>Location defines the market boundary.</strong> Countrywide counts do not describe a metro, and metro counts do not describe a neighborhood, workplace, faith community, or app radius. Geography matters most when people cannot or will not search across it; migration and remote matching make the boundary porous.</div></div>
+            <div class="reason-row"><i class="ti ti-wallet reason-icon"></i><div class="reason-text"><strong>Economic status defines an acceptance filter, not a new sex ratio.</strong> Requiring employment, a minimum income, homeownership, or a net-worth band removes different people from the count. Because those distributions differ by sex, age, and place, an economic floor can change which side is scarce.</div></div>
+            <div class="reason-row"><i class="ti ti-route reason-icon"></i><div class="reason-text"><strong>Place and resources interact.</strong> Transportation, relocation, travel, and paid access can widen a feasible search radius; their absence can make a citywide pool functionally local. Count the geography a person can actually search, not the geography printed in a profile.</div></div>
+            <div class="reason-row"><i class="ti ti-arrows-split reason-icon"></i><div class="reason-text"><strong>Do not collapse the measures.</strong> Employment is not income; income is not wealth; wealth is assets minus debts; education and occupation are only proxies. The chart below can demonstrate the filter with employment, but it cannot be relabeled as a chart of wealth.</div></div>
+            <div class="reason-row"><i class="ti ti-adjustments-horizontal reason-icon"></i><div class="reason-text"><strong>The filter must be applied from the chooser&rsquo;s side.</strong> &ldquo;Employed men per 100 single women&rdquo; answers a woman-seeking-men question with a job requirement. Reverse the sexes, change the requirement, or allow a wider income or wealth band and the denominator must be rebuilt. A one-sided filter is not a universal market fact.</div></div>
+          </div>
+        </div>
+
+        <figure class="sd-chart sd-filter-chart" aria-labelledby="sd-filter-title" aria-describedby="sd-filter-note">
+          <figcaption>
+            <strong id="sd-filter-title">Place and an economic floor change the count</strong>
+            <span>Single adults ages 25&ndash;34; Pew analysis of 2012 ACS</span>
+          </figcaption>
+          <div class="sd-chart-legend" aria-hidden="true">
+            <span><i class="sd-swatch baseline"></i> All single men</span>
+            <span><i class="sd-swatch filtered"></i> Employed-men filter</span>
+            <span><i class="sd-swatch place"></i> Same filter, different metro</span>
+          </div>
+          <div class="sd-axis" aria-hidden="true">
+            <span>0</span><span>Parity: 100</span><span>120</span>
+          </div>
+          <div class="sd-row" aria-label="United States, all single men: 115 men per 100 single women.">
+            <span class="sd-label">US &middot; all men</span>
+            <span class="sd-plot"><i class="sd-parity"></i><i class="sd-level baseline" style="--sd-level:95.83%;"></i></span>
+            <strong class="sd-value">115</strong>
+          </div>
+          <div class="sd-row pivot" aria-label="United States, employed single men only: 84 employed men per 100 single women.">
+            <span class="sd-label">US &middot; employed</span>
+            <span class="sd-plot"><i class="sd-parity"></i><i class="sd-level filtered" style="--sd-level:70%;"></i></span>
+            <strong class="sd-value">84</strong>
+          </div>
+          <div class="sd-row" aria-label="San Jose metro, employed single men only: 114 employed men per 100 single women.">
+            <span class="sd-label">San Jose &middot; employed</span>
+            <span class="sd-plot"><i class="sd-parity"></i><i class="sd-level place" style="--sd-level:95%;"></i></span>
+            <strong class="sd-value">114</strong>
+          </div>
+          <div class="sd-row" aria-label="Memphis metro, employed single men only: 59 employed men per 100 single women.">
+            <span class="sd-label">Memphis &middot; employed</span>
+            <span class="sd-plot"><i class="sd-parity"></i><i class="sd-level place" style="--sd-level:49.17%;"></i></span>
+            <strong class="sd-value">59</strong>
+          </div>
+          <p class="sd-chart-note" id="sd-filter-note"><strong>Illustration, not a current city ranking.</strong> These matched figures use 2012 ACS data and show why the definition matters: nationally, adding one employment requirement moves the count from a male surplus to a male shortage; holding that requirement constant, place moves it from 114 to 59. Employment is an economic screen, not a measure of income or net worth.</p>
+        </figure>
+
+        <div class="reasoning-box">
           <div class="box-header">What survives the evidence</div>
           <div class="box-body">
             <div class="reason-row"><i class="ti ti-scale reason-icon"></i><div class="reason-text"><strong>Scarcity moves real outcomes.</strong> Instrumented studies using immigration flows, war deaths, and sex-selective demographic shocks find changes in marriage probability, partner sorting, labor supply, non-marital births, and household saving. Four countries, four designs, one bargaining direction. <span class="smv-tag t1">Tier 1</span></div></div>
-            <div class="reason-row"><i class="ti ti-filter reason-icon"></i><div class="reason-text"><strong>The denominator is load-bearing.</strong> Age, geography, education, orientation, relationship goal, and willingness to search partition one population into many markets. A national ratio can be true and irrelevant to the pool a person can actually enter.</div></div>
+            <div class="reason-row"><i class="ti ti-filter reason-icon"></i><div class="reason-text"><strong>The denominator is load-bearing.</strong> Age, geography, education, economic filters, orientation, relationship goal, and willingness to search partition one population into many markets. A national ratio can be true and irrelevant to the pool a person can actually enter.</div></div>
             <div class="reason-row"><i class="ti ti-arrows-exchange reason-icon"></i><div class="reason-text"><strong>The rule is symmetric.</strong> A male surplus does not prove female superiority, and a female surplus does not prove male superiority. It predicts pressure on whichever side is more numerous in that particular pool. The chart&rsquo;s crossover is the correction in one glance.</div></div>
             <div class="reason-row"><i class="ti ti-alert-triangle reason-icon"></i><div class="reason-text"><strong>Do not promote the mechanism into a personality theory.</strong> The credible studies measure large outcomes under unusually strong shocks. They do not establish who pays for a date, how quickly somebody texts back, or what either sex &ldquo;is like.&rdquo;</div></div>
           </div>
         </div>
 
-        <div class="smv-callout"><strong>The verdict: scarcity has bargaining power, but the headcount is only the first draft.</strong> Use the rule to explain why otherwise similar people can face different markets, never to rank the people inside them. Then run the two corrections below: which population did you count, and which of those people are actually participating? <span class="smv-tag est">Lens</span></div>
-        <div class="smv-sub-note canon-sources">Sources &mdash; Chart: <strong>LE calculation</strong> from U.S. Census Bureau <a href="https://data.census.gov/table/ACSDT1Y2024.B12002">ACS 2024 1-year table B12002</a>, unmarried defined as never married plus divorced plus widowed; separated people remain in the married population under the table&rsquo;s classification. Causal foundation: <a href="https://doi.org/10.1162/003355302760193940">Angrist (2002), <em>Quarterly Journal of Economics</em></a>; <a href="https://doi.org/10.1257/app.3.3.124">Abramitzky, Delavande &amp; Vasconcelos (2011), <em>AEJ: Applied Economics</em></a>; <a href="https://doi.org/10.1162/rest_a_00649">Brainerd (2017), <em>Review of Economics and Statistics</em></a>; <a href="https://doi.org/10.1086/660887">Wei &amp; Zhang (2011), <em>Journal of Political Economy</em></a>. These establish bargaining responses to major demographic shocks, not everyday dating etiquette. The sex-ratio entry below carries the designs, coefficients, limitations, and counting correction in full.</div>
+        <div class="smv-callout"><strong>The verdict: scarcity has bargaining power, but the headcount is only the first draft.</strong> Use the rule to explain why otherwise similar people can face different markets, never to rank the people inside them. Then run four corrections: where is the market, which economic screen is being imposed, which population did you count, and which of those people are actually participating? <span class="smv-tag est">Lens</span></div>
+        <div class="smv-sub-note canon-sources">Sources &mdash; Age chart: <strong>LE calculation</strong> from U.S. Census Bureau <a href="https://data.census.gov/table/ACSDT1Y2024.B12002">ACS 2024 1-year table B12002</a>, unmarried defined as never married plus divorced plus widowed; separated people remain in the married population under the table&rsquo;s classification. Location and employment chart: <a href="https://www.pewresearch.org/short-reads/2014/10/02/the-best-and-worst-cities-for-women-looking-to-marry/">Pew Research Center (2014), analysis of 2012 ACS data</a>; the age, sex, marital-status and employment filters are stated in the chart note, and the figures are retained as a matched illustration rather than current city guidance. Measurement warning: the Census Bureau measures <a href="https://www.census.gov/library/stories/2022/08/wealth-inequality-by-household-type.html">net worth as assets minus liabilities</a>, which is why employment and income are not labeled wealth here. Economic evidence is not a single lever: <a href="https://doi.org/10.1162/rest_a_00711">Kearney &amp; Wilson (2018), <em>Review of Economics and Statistics</em></a>, found that a localized earnings and employment shock for non-college men did not increase marriage rates, while <a href="https://doi.org/10.1257/app.20210614">Lafortune &amp; Low (2023), <em>AEJ: Applied Economics</em></a>, find that access to homeownership increases household specialization and can operate as collateral within marriage. Causal foundation for demographic scarcity: <a href="https://doi.org/10.1162/003355302760193940">Angrist (2002), <em>Quarterly Journal of Economics</em></a>; <a href="https://doi.org/10.1257/app.3.3.124">Abramitzky, Delavande &amp; Vasconcelos (2011), <em>AEJ: Applied Economics</em></a>; <a href="https://doi.org/10.1162/rest_a_00649">Brainerd (2017), <em>Review of Economics and Statistics</em></a>; <a href="https://doi.org/10.1086/660887">Wei &amp; Zhang (2011), <em>Journal of Political Economy</em></a>. These establish bargaining responses to major demographic shocks, not everyday dating etiquette. The sex-ratio entry below carries the designs, coefficients, limitations, and counting correction in full.</div>
       </div>
 
       <!-- The Sex Ratio -->
