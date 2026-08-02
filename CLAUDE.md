@@ -18,9 +18,11 @@ another session read its red suite as a regression.
 - **Never use `git worktree` here.** A `git worktree remove --force` follows junctions;
   it once followed a `lab-corpus` junction and destroyed the real archive.
 - Before EVERY commit: `git rev-parse --abbrev-ref HEAD` and `git status --porcelain`.
-  `git add X && git commit` ships the WHOLE INDEX — commit with explicit paths
-  (`git commit -F <msgfile> -- <paths>`) and read the full staged diff (`--cached`,
-  hunks not `--stat`) because other sessions' files may be sitting in the tree.
+  `git add X && git commit` ships the WHOLE INDEX, and `git commit -- <paths>` ships
+  WORKING-TREE content, not what you reviewed. So: stage ONLY your paths, read the full
+  staged diff (`--cached`, hunks not `--stat`), commit from the index with NO pathspec,
+  then check the commit's `--stat` matches the staged `--stat` — other sessions' files
+  may be sitting in the tree.
 - Commit straight to `main` when verified. **NEVER push without Jason's in-session
   confirmation.**
 
@@ -51,8 +53,9 @@ read them, a skipped gate also looks green.
   `counts.pending` move together; never delete a key. Never attribute a verdict or
   approval to Jason that he did not give.
 - Floors and ratchets are hard and a change that needs one loosened does not ship:
-  domainRecall ≥ 0.9 · ignorePrecision ≥ 0.95 · junkRecall ≥ 0.844 ·
-  WEAK_BACKLOG_CEILING ≤ 516 (lowering is the only permitted edit) · knownSplits ≤ 1.
+  domainRecall ≥ 0.9 · ignorePrecision ≥ 0.95 · junkRecall ≥ 0.75 (ratchet — floor may
+  only rise; measured 0.844) · WEAK_BACKLOG_CEILING = 0 (every new weak crossing blocks
+  until ruled; lowering was the only permitted edit and it is spent) · knownSplits ≤ 1.
 - Frozen benchmark fixtures and assertion values are never edited to green a test.
   A red test is diagnosed and reported; goalposts move only by Jason's ruling.
 

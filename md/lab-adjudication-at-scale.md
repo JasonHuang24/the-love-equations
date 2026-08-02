@@ -114,3 +114,13 @@ without anybody re-asking whether it still meant what it said.
 Worth checking the same way on the other frozen instruments: the band width
 (±0.03), the `dumpFloor` (0.02) and the display caps were all chosen against a
 much smaller corpus too.
+
+## Addendum — 2026-07-31: the weak backlog no longer exists
+
+The 516 figures above are the state at ruling time and stay as written. The next
+day the backlog was cleared: the 91 readable crossings were ruled hand-entered
+(48 ACCEPT / 43 REJECT, `lab-weak-backlog-sitting-91.md`) and Jason ruled the
+425 epoch orphans RETIRED as a class (`lab-weak-orphan-retirement.md`).
+`WEAK_BACKLOG_CEILING` is now **0**: the ratchet's headroom is spent, and every
+future weak crossing blocks until ruled. The three-line governance itself —
+BLOCK / RATCHET / CENSUS — is unchanged and still operative.
