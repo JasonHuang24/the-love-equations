@@ -90,6 +90,7 @@ record whose own headline was later corrected, with the correction recorded in-f
 - 2026-07-31 · [lab-backlog-headroom.md](lab-backlog-headroom.md) **HIST ★** — 425 of the 516 pending weak crossings are keyed to passages the restored corpus no longer contains; 91 are readable (68 in one source); both recommendations carried out same day (next two rows)
 - 2026-07-31 · [lab-weak-backlog-sitting-91.md](lab-weak-backlog-sitting-91.md) **HIST** — all 91 readable weak crossings ruled hand-entered (48 ACCEPT / 43 REJECT, ruledBy Claude); ceiling ratcheted 516 → 425; every remaining pending weak row is known-unreadable; 2 losses REJECTed as real costs
 - 2026-07-31 · [lab-weak-orphan-retirement.md](lab-weak-orphan-retirement.md) **LIVE ★** — Jason RULED the 425 epoch orphans RETIRED as a class (a record that no verdict is possible, never ACCEPT/REJECT); ceiling ratcheted 425 → 0 — the weak backlog no longer exists and every future weak crossing blocks until ruled
+- 2026-08-02 · [lab-market-expansion-threshold-adjudication.md](lab-market-expansion-threshold-adjudication.md) **SUP → the fixture (snapshot)** — the 540→556 market/red-pill/competition-anxiety expansion swept against e348f9c: 418 adjudicable crossings all ruled same day (weak 191A/217R by Claude; 10 credible by Jason adopting Claude's recommendations — all 4 new-entry credible gains REJECTed as false mappings, C8's confidence-through-dating loss the named cost); 4,052 census rows recorded; 16 dark entries got contract-compliant misreadings, 16/16 fire Contradicts
 
 ## Doctrine
 
