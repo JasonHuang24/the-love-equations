@@ -122,6 +122,68 @@ article 7.7% → 15.4% (ghosting sentence reaches `costless-exit` at
 0.579/Medium), Groundwork 23.5% → 58.8% (thesis rows reach `market-maker-cut`
 0.43–0.61), LAT control unchanged at 38.9%.
 
+## Cycle 4 — lane H — Public Discourse: The Egg Freezing Industry's False Promises
+
+- URL: https://www.thepublicdiscourse.com/2025/07/98326/
+- Words: 1,700 · SHA-256: `30985d0069b3a66a9cf62b8c64842b461e7b4d8ca16bfbe93c82db2209272e87`
+- Analyzer: 83 passages · 6 claims retained · 0 mapped · mappedShare **0%** · 77 ignored
+
+**Reading.** The domain gate set aside 77 of 83 passages — the essay is
+workplace-benefits policy, bioethics, and meaning-of-life argument, and the
+gate is right that those are not dating-market claims (same register behavior
+as pt04's therapy-vignette finding, here operating correctly). The six
+retained rows are the essay's policy thesis (egg-freezing benefits as
+coercive family-unfriendly policy) and its Grant-Study/meaning claims — none
+is a market claim, and none has a canon home because none should.
+
+**Canon check.** Fertility timing itself is owned ground: `smv:multiplier:clock`
+(The Clock), `statistics:stat-fertility-age` ("a slope with two turns, not a
+cliff at 30"), `stat-childfree-intent`, and the Wall band structure. The
+essay never states the one market-relevant claim in this discourse (delay
+driven by partnerlessness rather than career — the Inhorn finding), so
+nothing here tests that surface.
+
+**Verdict: CORRECTLY UNMAPPED** — the pt04 age-gap outcome repeated: subject
+owned, essay out of domain, number correctly did not move. No doctrine
+authored. (A "buying time on the Clock" sub-entry remains a candidate if lane
+H later surfaces the partnerlessness-delay claim from an in-domain article;
+deliberately not implemented on this essay's evidence.)
+
+## Integration 2 (after cycle 4)
+
+Folded ChatGPT's `chatgpt-proposal-support-portfolio.md` — it clears the
+encompassing standard exactly the way the pt04 diagnostic-turn did: four
+lane-D articles (mankeeping, men-need-relationships-more, partner-as-best-
+friend, married-and-lonely) merged into one mechanism with the gendered
+instance held at its measured size. Verification before authoring: the ASC
+41%/21% friend-support stat and the Pew turn-to-spouse/partner parity stat
+verified VERBATIM against the corpus archive (15-asc, 16-pew); Mancini 2026
+(Sex Roles) and Ferrara & Vergara 2024 verified as real publications.
+
+- **17.2 The Support Portfolio** (`frameworks:support-portfolio`, under the
+  Third-Party Layer — sibling of 17.1: the layer's enforcement side and its
+  support side). ASC 2021 + Pew 2025 channel stats (Tier 1),
+  Marabel-Whitburn 2023 peer-network waves (Tier 2), Pennington 2025
+  best-friend-label study (Tier 2), Ferrara & Vergara 2024 theory (Lens),
+  Mancini 2026 scale (Tier 2 structure / Tier 3 consequences).
+
+Procedure: baseline `--dump` (1,363,412 pairs) at `d936d9d`; canon 562 → 563;
+suite-green with two demo-pin events handled (below); sweep ×1; **137
+crossings ruled** (2 credible: 1 REJECT gain — a questionnaire item — and 1
+loss-ACCEPT; 135 weak: 19 ACCEPT / 97 REJECT gains, all 18 losses ACCEPT as
+correct prunings), Claude recommendations FLAGGED FOR JASON; 3/3 misreadings
+contract-pass and fire Contradicts (0.74–0.80); magnet check clean
+("mankeeping" has zero corpus presence; the weak mass was spread-score
+vocabulary resonance, ruled through).
+
+**Demo-pin events (protocol's check-the-pins step, both diagnosed).** The
+first draft's overlay boundary ("romantic quality may drive…") pushed a
+novel-matrix demo sentence over the credible line at 0.434 via token
+coincidence (community/may/romantic/network). Fix: reworded the authored
+boundary (pt04's magnet-removal pattern applied to a boundary surface), NOT
+the test — the sentence returned to unmapped and the corpus pin returned to
+its committed 0.537. No test values moved in this integration.
+
 **Instrument notes from integration.** (1) The misreading-rewrite ripple: two
 rewritten tokens ("promising", "monthly") moved 5 weak corpus crossings —
 misreading text is live match surface; edits to it are scoring changes and get

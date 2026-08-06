@@ -1525,6 +1525,44 @@
         "Which side of the ledger is the claim on: the silent exit, or the option held open?"
       ]
     },
+    "frameworks:support-portfolio": {
+      "aliases": [
+        "Support Portfolio",
+        "support concentration",
+        "mankeeping",
+        "social coordination load",
+        "emotional support network"
+      ],
+      "phrases": [
+        "his only emotional outlet",
+        "my partner is my best friend",
+        "male friendship recession",
+        "carrying his social life",
+        "women do the emotional labor of friendship",
+        "men have fewer close friends"
+      ],
+      "related": [
+        "frameworks:third-party-layer",
+        "frameworks:ownership-load",
+        "frameworks:costless-exit",
+        "statistics:stat-friend-time"
+      ],
+      "boundaryConditions": [
+        "Channel count, support quality, concentration, reciprocity and coordination labor are separate measurements; ordinary partner care satisfies none of the burden mechanism by itself.",
+        "The mankeeping scale rests on same-reporter, cross-sectional samples of partnered women in the U.S. and U.K.; it validates a measurement, not a prevalence, a cause, or a general fact about men.",
+        "The friendship surveys establish sex differences in specific channels under specific wordings and recall windows; they do not measure a sole channel or show women repairing men's networks.",
+        "The peer-network and best-friend-label studies are observational and cross-sectional; relationship quality can drive friendship investment as readily as the reverse."
+      ],
+      "commonMisreadings": [
+        "A man's partner naturally becomes his whole support system once the relationship turns serious.",
+        "Women lose interest in dating because every man expects one partner to manage his friendships.",
+        "More friends always improve a man's relationship because outside support removes pressure from his partner."
+      ],
+      "pressureTests": [
+        "Is one couple's support split being read as a fact about all men?",
+        "Does the claim separate having few channels from burdening the one that remains?"
+      ]
+    },
     "frameworks:marriage-bar": {
       "aliases": [
         "Marriage Bar",

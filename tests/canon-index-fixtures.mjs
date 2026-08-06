@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 562);
+assert.equal(index.stats.conceptCount, 563);
 assert.equal(index.stats.sourceCount, 21);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 47,
@@ -26,7 +26,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 59,
+  'Rules & Frameworks': 60,
   Statistics: 51,
 });
 
@@ -67,7 +67,7 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 562);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 563);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
@@ -76,7 +76,7 @@ assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).len
 // Harvest #2 and media loop 03 each added four concepts with both fields,
 // preserving that gap, and the 2026-08-06 pressure-test batches (04 and 05)
 // added three more each with both fields.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 529);
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 530);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -131,6 +131,9 @@ assert(required('frameworks:costless-exit').dependencies.includes('frameworks:th
 assert(required('frameworks:costless-exit').aliases.includes('ghosting'));
 assert(required('frameworks:costless-exit').aliases.includes('breadcrumbing'));
 assert.equal(required('frameworks:costless-exit').sourceLinks.length, 2);
+assert(required('frameworks:support-portfolio').dependencies.includes('frameworks:third-party-layer'));
+assert(required('frameworks:support-portfolio').aliases.includes('mankeeping'));
+assert.equal(required('frameworks:support-portfolio').sourceLinks.length, 6);
 assert.equal(required('frameworks:co-transition').sourceLinks.length, 2);
 assert.equal(required('statistics:stat-shared-positive-affect').sourceLinks.length, 1);
 assert(required('statistics:stat-shared-positive-affect').aliases.includes('Shared Positivity Dividend'));

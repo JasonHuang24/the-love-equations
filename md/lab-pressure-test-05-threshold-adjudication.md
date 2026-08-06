@@ -67,6 +67,21 @@ the credible line let only the capstone sentence through. `ghosting` and
 corpus (academic prose does not use the terms; the discourse articles that do
 are exactly what the entry is for).
 
+## Integration 2 addendum (support portfolio, canon 562 → 563)
+
+Second baseline dump at `d936d9d` (1,363,412 pairs); one regen. **137 ruled:**
+credible line 1 REJECT gain (a van Lankveld questionnaire item — "My partner
+now gives me the emotional support I need" — junk, not a claim) and 1
+loss-ACCEPT (methods-replication prose); weak line 19 ACCEPT / 97 REJECT on
+gains (accepted: Finkel's concentration prose — "everything to one another",
+"matrix of relationships", emotionships, social-outlet narrowing — and the
+ASC/Pew channel stats; rejected: mate-preference research, sex-ratio
+methodology, sexual-satisfaction process rows, questionnaire items), all 18
+losses ACCEPT as correct prunings. A first-draft overlay boundary pushed a
+novel-matrix demo sentence over the credible line at 0.434; the boundary was
+reworded (authored-surface remedy) and both demo pins returned to committed
+values — no test value moved.
+
 ## Misreadings
 
 9/9 fire Contradicts end-to-end at High confidence (0.74–0.80) against their

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+75994c46f776",
+  "indexVersion": "1.0.0+608b9220122a",
   "generatedAt": "2026-08-06T14:48:57.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "a480fa07f43c224d75ad236ff7c9eea0fcd34492a1ca30c4af9185c251a690bc",
-      "conceptCount": 59
+      "sha256": "651e4ba2a7f255bba03dfe2e71b4a7184fb9e9c379694342a5a95c47c3bbc9a8",
+      "conceptCount": 60
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 562,
+    "conceptCount": 563,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 59,
+      "Rules & Frameworks": 60,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -267,14 +267,14 @@
       "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 48,
+      "Tier 1": 49,
       "Tier 2": 17,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 467,
-    "conceptsWithExternalSources": 133,
-    "dependencyCount": 284,
-    "relatedCount": 458
+    "anchoredConceptCount": 468,
+    "conceptsWithExternalSources": 134,
+    "dependencyCount": 285,
+    "relatedCount": 461
   },
   "entries": [
     {
@@ -4002,6 +4002,30 @@
         {
           "label": "Navarro, Larrañaga, Yubero & Víllora (2020), IJERPH 17(3):1116",
           "url": "https://doi.org/10.3390/ijerph17031116"
+        },
+        {
+          "label": "Survey Center on American Life (2021), The State of American Friendship",
+          "url": "https://www.americansurveycenter.org/research/the-state-of-american-friendship-change-challenges-and-loss/"
+        },
+        {
+          "label": "Pew Research Center (2025), Where men and women turn for emotional support",
+          "url": "https://www.pewresearch.org/social-trends/2025/01/16/where-men-and-women-turn-for-emotional-support-and-social-connection/"
+        },
+        {
+          "label": "Marabel-Whitburn et al. (2023), JSPR",
+          "url": "https://doi.org/10.1177/02654075231198441"
+        },
+        {
+          "label": "Pennington et al. (2025), JSPR",
+          "url": "https://doi.org/10.1177/02654075251336872"
+        },
+        {
+          "label": "Ferrara & Vergara (2024), Psychology of Men & Masculinities",
+          "url": "https://doi.org/10.1037/men0000494"
+        },
+        {
+          "label": "Mancini et al. (2026), Sex Roles",
+          "url": "https://doi.org/10.1007/s11199-026-01661-2"
         }
       ],
       "pressureTests": [
@@ -4069,6 +4093,84 @@
       "pressureTests": [
         "Is a price change in exit conduct being read as a character change in the people?",
         "Which side of the ledger is the claim on: the silent exit, or the option held open?"
+      ]
+    },
+    {
+      "id": "frameworks:support-portfolio",
+      "title": "The Support Portfolio",
+      "page": "frameworks.html",
+      "anchor": "support-portfolio",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "The parent entry prices what the network does to a pairing — verification, approval, enforcement. This entry prices what it provides for each partner: emotional support and social connection, held as a portfolio across a partner, friends, family, and community.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Support Portfolio",
+        "support concentration",
+        "mankeeping",
+        "social coordination load",
+        "emotional support network"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "his only emotional outlet",
+        "my partner is my best friend",
+        "male friendship recession",
+        "carrying his social life",
+        "women do the emotional labor of friendship",
+        "men have fewer close friends"
+      ],
+      "dependencies": [
+        "frameworks:third-party-layer"
+      ],
+      "related": [
+        "frameworks:ownership-load",
+        "frameworks:costless-exit",
+        "statistics:stat-friend-time"
+      ],
+      "boundaryConditions": [
+        "Channel count, support quality, concentration, reciprocity and coordination labor are separate measurements; ordinary partner care satisfies none of the burden mechanism by itself.",
+        "The mankeeping scale rests on same-reporter, cross-sectional samples of partnered women in the U.S. and U.K.; it validates a measurement, not a prevalence, a cause, or a general fact about men.",
+        "The friendship surveys establish sex differences in specific channels under specific wordings and recall windows; they do not measure a sole channel or show women repairing men's networks.",
+        "The peer-network and best-friend-label studies are observational and cross-sectional; relationship quality can drive friendship investment as readily as the reverse."
+      ],
+      "commonMisreadings": [
+        "A man's partner naturally becomes his whole support system once the relationship turns serious.",
+        "Women lose interest in dating because every man expects one partner to manage his friendships.",
+        "More friends always improve a man's relationship because outside support removes pressure from his partner."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Survey Center on American Life (2021), The State of American Friendship",
+          "url": "https://www.americansurveycenter.org/research/the-state-of-american-friendship-change-challenges-and-loss/"
+        },
+        {
+          "label": "Pew Research Center (2025), Where men and women turn for emotional support",
+          "url": "https://www.pewresearch.org/social-trends/2025/01/16/where-men-and-women-turn-for-emotional-support-and-social-connection/"
+        },
+        {
+          "label": "Marabel-Whitburn et al. (2023), JSPR",
+          "url": "https://doi.org/10.1177/02654075231198441"
+        },
+        {
+          "label": "Pennington et al. (2025), JSPR",
+          "url": "https://doi.org/10.1177/02654075251336872"
+        },
+        {
+          "label": "Ferrara & Vergara (2024), Psychology of Men & Masculinities",
+          "url": "https://doi.org/10.1037/men0000494"
+        },
+        {
+          "label": "Mancini et al. (2026), Sex Roles",
+          "url": "https://doi.org/10.1007/s11199-026-01661-2"
+        }
+      ],
+      "pressureTests": [
+        "Is one couple's support split being read as a fact about all men?",
+        "Does the claim separate having few channels from burdening the one that remains?"
       ]
     },
     {
