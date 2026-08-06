@@ -13,10 +13,12 @@ Two agents worked this checkout concurrently for a bit over an hour: ChatGPT in
 lanes A–D (jealousy, cohabitation/marriage, marriage economics, loneliness
 spillover), Claude in lanes E–H (exit conduct, app monetization, LAT, fertility
 timing), coordinating through the append-only claim ledger `md/pt05/CLAIMS.md`.
-Claim collisions observed: zero. ChatGPT analyzed 17 articles and filed two
-doctrine proposals; Claude analyzed 4, ran both integrations, ruled every
-crossing, and made all 4 commits. Raw source text stayed out of the repo;
-SHA-256s of analyzed bytes are in the two findings files.
+Claim collisions observed: zero. ChatGPT analyzed 19 articles (final closeout
+tally: 5 gap, 3 covered, 3 correctly unmapped, 8 instrument finding, plus one
+403-blocked fetch) and filed two doctrine proposals; Claude analyzed 4, ran
+both integrations, ruled every crossing, and made all commits. Raw source
+text stayed out of the repo; SHA-256s of analyzed bytes are in the two
+findings files.
 
 ## 2. Claude's source ledger (full detail in `md/pt05/claude-findings.md`)
 
@@ -27,10 +29,16 @@ SHA-256s of analyzed bytes are in the two findings files.
 | 3 | G | The Conversation — Why more couples choose to live apart | 928 | 38.9% | 38.9% | covered (control) |
 | 4 | H | Public Discourse — Egg freezing's false promises | 1,700 | 0% | 0% | correctly unmapped |
 
-ChatGPT's 17-article ledger (`md/pt05/chatgpt-findings.md`, uncommitted scout
-notes) contributed the two folded proposals plus a string of instrument
-findings in its own lanes; its jealousy article surfaced a retrieval miss
-(0 mappings against an on-topic existing entry) that is recorded there.
+ChatGPT's 19-article ledger (`md/pt05/chatgpt-findings.md`, committed at its
+closeout) contributed the two folded proposals plus the run's richest
+instrument-finding set: page furniture outranking article content, the domain
+gate marking explicit partner/marriage claims uncertain, retrieval collapsing
+roles and stages (friends-first formation vs friend-zone vs partner-as-best-
+friend; consensual non-monogamy vs an imposed rival), tensions inheriting
+wrong nearest matches, and numeral/DOI magnets. Its provenance caveat stands:
+the canon changed under the parallel run (four versions), so cross-cycle
+mapped percentages in its ledger are per-capture, not a fixed-baseline
+benchmark.
 
 ## 3. Implemented surfaces (canon 559 → 563, two integrations)
 
