@@ -1411,6 +1411,44 @@
         "Did this person's standards change, or did the search budget they had left change?"
       ]
     },
+    "frameworks:meeting-channel": {
+      "aliases": [
+        "Meeting Channel",
+        "meeting channels",
+        "how couples meet",
+        "meeting through friends",
+        "dating app exodus"
+      ],
+      "phrases": [
+        "where couples actually meet",
+        "quit the dating apps",
+        "deleted the dating apps",
+        "back to meeting in person",
+        "meet people in real life",
+        "introduced by friends"
+      ],
+      "related": [
+        "frameworks:search-cost",
+        "frameworks:third-party-layer",
+        "frameworks:attention-market",
+        "statistics:stat-app-reasons"
+      ],
+      "boundaryConditions": [
+        "The Ofcom reach decline is UK adults over a single year; reach is not engagement and the UK is not the US.",
+        "The channel screening-order comparison is LE's model and no study has tested per-contact outcomes across channels directly.",
+        "Commercial burnout percentages from opt-in industry panels are excluded as evidence throughout.",
+        "Channel shares describe where existing couples met, which lags where current searchers are searching."
+      ],
+      "commonMisreadings": [
+        "Dating apps are the only way anyone meets a partner anymore.",
+        "Deleting the dating apps means a man has given up on finding a relationship.",
+        "Everyone agrees the dating apps are dead and people all meet in person again."
+      ],
+      "pressureTests": [
+        "Is a channel-share statistic being read as a verdict on a channel's quality?",
+        "Does the claim separate the pool a channel draws from the order in which it screens?"
+      ]
+    },
     "frameworks:signal-cost-rule": {
       "aliases": [
         "Signal Cost Rule",
@@ -1710,6 +1748,45 @@
         "Would this number change sign if it counted only the never married, or only those still looking?"
       ]
     },
+    "frameworks:ideological-filter": {
+      "aliases": [
+        "Ideological Filter",
+        "political filter",
+        "political sorting",
+        "political homogamy",
+        "political dealbreaker",
+        "dating across politics",
+        "cross-partisan dating"
+      ],
+      "phrases": [
+        "shared political views in a partner",
+        "political divide between young men and women",
+        "young women are drifting left",
+        "date across party lines",
+        "politics as a dealbreaker"
+      ],
+      "related": [
+        "frameworks:sex-ratio",
+        "frameworks:effective-ratio",
+        "frameworks:local-market",
+        "frameworks:virality-filter"
+      ],
+      "boundaryConditions": [
+        "Gallup measures self-reported ideological identification, not party registration and not dating behaviour.",
+        "The filter rates come from a single IFS/YouGov survey of US 18-29 year olds read through a think-tank write-up.",
+        "A stated priority is not an enacted refusal; no study has measured the decline rate of actual cross-ideology introductions.",
+        "Political homogamy in settled couples predates the identification divergence and partly reflects sorting on religion, region and education."
+      ],
+      "commonMisreadings": [
+        "Every young woman now demands a partner who votes exactly the way she does.",
+        "A thirty point ideology gap has opened between the young men and women now dating.",
+        "Politics has made dating between young men and women impossible across party lines."
+      ],
+      "pressureTests": [
+        "Is an identification gap being quoted as if it measured dating behaviour?",
+        "Whose version of the filter is this claim about, and what share of their local pool does it delete?"
+      ]
+    },
     "frameworks:local-market": {
       "aliases": [
         "Local Market",
@@ -1848,6 +1925,46 @@
       "pressureTests": [
         "Was this claim selected for being accurate, or for being novel and naming an enemy?",
         "Can the audience for this advice ever observe whether it worked?"
+      ]
+    },
+    "frameworks:diagnostic-turn": {
+      "aliases": [
+        "Diagnostic Turn",
+        "attachment styles",
+        "attachment style",
+        "attachment theory",
+        "therapy speak",
+        "weaponized therapy language"
+      ],
+      "phrases": [
+        "diagnosing your partner",
+        "he is avoidant",
+        "she is anxiously attached",
+        "setting boundaries with a partner",
+        "my ex is a narcissist",
+        "is gaslighting me",
+        "labelled him avoidant"
+      ],
+      "related": [
+        "frameworks:virality-filter",
+        "frameworks:survivorship-channel",
+        "frameworks:agreement-surface",
+        "frameworks:desire-state-split"
+      ],
+      "boundaryConditions": [
+        "Adult attachment research is a legitimate literature with modest effect sizes; the entry targets its pop simplification, its fixity claim and its outward direction.",
+        "Attachment stability estimates are model-dependent, and a person's attachment behaviour differs across their own relationships.",
+        "The self-fulfilling labelling mechanics are practitioner observation rather than trial evidence.",
+        "No prevalence figure exists for weaponised use, and the observed sex skew in public deployment is an observation about discourse, not a law about people."
+      ],
+      "commonMisreadings": [
+        "A man who texts back slowly is avoidant and a woman should end the relationship.",
+        "Your attachment style is fixed for life and decides how every relationship will go.",
+        "Setting a boundary means telling your partner what he is allowed to do."
+      ],
+      "pressureTests": [
+        "Is the clinical term being used at its clinical meaning, or as leverage in a dispute?",
+        "Who is this diagnosis being run on, and would it survive being run on the speaker?"
       ]
     },
     "frameworks:the-surplus": {

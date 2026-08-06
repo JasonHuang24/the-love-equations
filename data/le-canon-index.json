@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+3b3901828bc0",
+  "indexVersion": "1.0.0+ac89d0f96ca5",
   "generatedAt": "2026-08-01T06:46:21.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "ed987e3e66da045404303190125e52b6c9e0aab7fb8e7564c31ee1b49496605a",
-      "conceptCount": 53
+      "sha256": "c98c2f29f580a2dc04b37ada3b201cacac712abc1067bf3d45897c62c13ff43a",
+      "conceptCount": 56
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 556,
+    "conceptCount": 559,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 53,
+      "Rules & Frameworks": 56,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -267,14 +267,14 @@
       "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 45,
-      "Tier 2": 14,
+      "Tier 1": 47,
+      "Tier 2": 15,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 461,
-    "conceptsWithExternalSources": 127,
-    "dependencyCount": 278,
-    "relatedCount": 430
+    "anchoredConceptCount": 464,
+    "conceptsWithExternalSources": 130,
+    "dependencyCount": 281,
+    "relatedCount": 445
   },
   "entries": [
     {
@@ -3626,7 +3626,10 @@
         "frameworks:third-party-layer",
         "frameworks:matching-curve",
         "statistics:stat-pay-to-play",
-        "frameworks:abundance-trap"
+        "frameworks:abundance-trap",
+        "frameworks:attention-market",
+        "statistics:stat-cutting-room",
+        "frameworks:sixth-rung"
       ],
       "boundaryConditions": [
         "Burdett and Coles shows only that a taste for similarity is unnecessary; it still requires a shared desirability ranking and mutual acceptance, and yields discrete classes rather than a smooth matching curve.",
@@ -3649,10 +3652,87 @@
         {
           "label": "Pew Research Center (Feb 2023)",
           "url": "https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/"
+        },
+        {
+          "label": "Rosenfeld, Thomas & Hausen (2019), “Disintermediating your friends,” PNAS 116(36):17753–17758",
+          "url": "https://www.pnas.org/doi/10.1073/pnas.1908630116"
+        },
+        {
+          "label": "Ofcom, Online Nation 2024",
+          "url": "https://www.ofcom.org.uk/media-use-and-attitudes/online-habits/appy-valentines-day-top-online-dating-trends-revealed"
         }
       ],
       "pressureTests": [
         "Did this person's standards change, or did the search budget they had left change?"
+      ]
+    },
+    {
+      "id": "frameworks:meeting-channel",
+      "title": "The Meeting Channel",
+      "page": "frameworks.html",
+      "anchor": "meeting-channel",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "The Search Cost prices the looking. This entry prices where the looking happens. A meeting channel — the apps, friends, work, school, a bar, a congregation, a hobby — is not a neutral pipe: each channel draws a different pool, runs a different screening order, and bills a different cost.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Meeting Channel",
+        "meeting channels",
+        "how couples meet",
+        "meeting through friends",
+        "dating app exodus"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "where couples actually meet",
+        "quit the dating apps",
+        "deleted the dating apps",
+        "back to meeting in person",
+        "meet people in real life",
+        "introduced by friends"
+      ],
+      "dependencies": [
+        "frameworks:search-cost"
+      ],
+      "related": [
+        "frameworks:third-party-layer",
+        "frameworks:signal-cost-rule",
+        "frameworks:attention-market",
+        "statistics:stat-cutting-room",
+        "frameworks:sixth-rung",
+        "statistics:stat-app-reasons"
+      ],
+      "boundaryConditions": [
+        "The Ofcom reach decline is UK adults over a single year; reach is not engagement and the UK is not the US.",
+        "The channel screening-order comparison is LE's model and no study has tested per-contact outcomes across channels directly.",
+        "Commercial burnout percentages from opt-in industry panels are excluded as evidence throughout.",
+        "Channel shares describe where existing couples met, which lags where current searchers are searching."
+      ],
+      "commonMisreadings": [
+        "Dating apps are the only way anyone meets a partner anymore.",
+        "Deleting the dating apps means a man has given up on finding a relationship.",
+        "Everyone agrees the dating apps are dead and people all meet in person again."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Rosenfeld, Thomas & Hausen (2019), “Disintermediating your friends,” PNAS 116(36):17753–17758",
+          "url": "https://www.pnas.org/doi/10.1073/pnas.1908630116"
+        },
+        {
+          "label": "Pew Research Center (Feb 2023), n = 6,034",
+          "url": "https://www.pewresearch.org/short-reads/2023/02/02/key-findings-about-online-dating-in-the-u-s/"
+        },
+        {
+          "label": "Ofcom, Online Nation 2024",
+          "url": "https://www.ofcom.org.uk/media-use-and-attitudes/online-habits/appy-valentines-day-top-online-dating-trends-revealed"
+        }
+      ],
+      "pressureTests": [
+        "Is a channel-share statistic being read as a verdict on a channel's quality?",
+        "Does the claim separate the pool a channel draws from the order in which it screens?"
       ]
     },
     {
@@ -4829,6 +4909,18 @@
         {
           "label": "MacDonald et al. (2025), Personality and Social Psychology Bulletin",
           "url": "https://journals.sagepub.com/doi/10.1177/01461672251331699"
+        },
+        {
+          "label": "Gallup, “Exploring Young Women’s Leftward Expansion” (2024)",
+          "url": "https://news.gallup.com/poll/649826/exploring-young-women-leftward-expansion.aspx"
+        },
+        {
+          "label": "IFS/YouGov Gen Z survey (fielded April 2025; ~2,000 men and ~1,000 women aged 18–29)",
+          "url": "https://ifstudies.org/blog/the-one-role-gen-z-women-still-want-men-to-play"
+        },
+        {
+          "label": "Winger (2026), AEIdeas, “The Ideological Filter in Gen Z Dating”",
+          "url": "https://www.aei.org/society-and-culture/the-ideological-filter-in-gen-z-dating/"
         }
       ],
       "pressureTests": [
@@ -4901,6 +4993,73 @@
       "pressureTests": [
         "Which pool does this ratio count, and does it exclude the people who have stopped searching?",
         "Would this number change sign if it counted only the never married, or only those still looking?"
+      ]
+    },
+    {
+      "id": "frameworks:ideological-filter",
+      "title": "The Ideological Filter",
+      "page": "frameworks.html",
+      "anchor": "ideological-filter",
+      "category": "Rules & Frameworks",
+      "subcategory": "The market container",
+      "synopsis": "Part 2 corrected the count for who is actually searching. This part corrects it for what the searchers will accept, because a screen applied before anything else is evaluated works exactly like a smaller pool. Political identity is the newest screen large enough to move the arithmetic: young men and women have drifted apart politically, part of the market now filters on politics first, and the filter is applied at…",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Ideological Filter",
+        "political filter",
+        "political sorting",
+        "political homogamy",
+        "political dealbreaker",
+        "dating across politics",
+        "cross-partisan dating"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "shared political views in a partner",
+        "political divide between young men and women",
+        "young women are drifting left",
+        "date across party lines",
+        "politics as a dealbreaker"
+      ],
+      "dependencies": [
+        "frameworks:sex-ratio"
+      ],
+      "related": [
+        "frameworks:effective-ratio",
+        "frameworks:local-market",
+        "frameworks:virality-filter"
+      ],
+      "boundaryConditions": [
+        "Gallup measures self-reported ideological identification, not party registration and not dating behaviour.",
+        "The filter rates come from a single IFS/YouGov survey of US 18-29 year olds read through a think-tank write-up.",
+        "A stated priority is not an enacted refusal; no study has measured the decline rate of actual cross-ideology introductions.",
+        "Political homogamy in settled couples predates the identification divergence and partly reflects sorting on religion, region and education."
+      ],
+      "commonMisreadings": [
+        "Every young woman now demands a partner who votes exactly the way she does.",
+        "A thirty point ideology gap has opened between the young men and women now dating.",
+        "Politics has made dating between young men and women impossible across party lines."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Gallup, “Exploring Young Women’s Leftward Expansion” (2024)",
+          "url": "https://news.gallup.com/poll/649826/exploring-young-women-leftward-expansion.aspx"
+        },
+        {
+          "label": "IFS/YouGov Gen Z survey (fielded April 2025; ~2,000 men and ~1,000 women aged 18–29)",
+          "url": "https://ifstudies.org/blog/the-one-role-gen-z-women-still-want-men-to-play"
+        },
+        {
+          "label": "Winger (2026), AEIdeas, “The Ideological Filter in Gen Z Dating”",
+          "url": "https://www.aei.org/society-and-culture/the-ideological-filter-in-gen-z-dating/"
+        }
+      ],
+      "pressureTests": [
+        "Is an identification gap being quoted as if it measured dating behaviour?",
+        "Whose version of the filter is this claim about, and what share of their local pool does it delete?"
       ]
     },
     {
@@ -5188,11 +5347,91 @@
         {
           "label": "Pennycook et al. (2021), Nature 592",
           "url": "https://doi.org/10.1038/s41586-021-03344-2"
+        },
+        {
+          "label": "Fraley (2002), “Attachment Stability From Infancy to Adulthood,” Personality and Social Psychology Review 6(2):123–151",
+          "url": "https://journals.sagepub.com/doi/10.1207/S15327957PSPR0602_03"
+        },
+        {
+          "label": "Spratt (2022, updated 2023), Refinery29",
+          "url": "https://www.refinery29.com/en-gb/2022/06/10771935/attachment-theory-problems"
+        },
+        {
+          "label": "Boardman, “How Therapy Speak Is Ruining Our Relationships” (Katie Couric Media)",
+          "url": "https://katiecouric.com/health/mental-health/therapy-speak-ruining-our-relationships/"
         }
       ],
       "pressureTests": [
         "Was this claim selected for being accurate, or for being novel and naming an enemy?",
         "Can the audience for this advice ever observe whether it worked?"
+      ]
+    },
+    {
+      "id": "frameworks:diagnostic-turn",
+      "title": "The Diagnostic Turn",
+      "page": "frameworks.html",
+      "anchor": "diagnostic-turn",
+      "category": "Rules & Frameworks",
+      "subcategory": "The advice layer",
+      "synopsis": "The filter above selects which advice reaches you. This entry is about what the winning genre does after it arrives. The highest-performing relationship content of the last decade is the shareable clinical label — attachment styles, boundaries, gaslighting, trauma, narcissist — and adopting it changes how people read their own relationships: a partner stops being described and starts being diagnosed, usually at a…",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Diagnostic Turn",
+        "attachment styles",
+        "attachment style",
+        "attachment theory",
+        "therapy speak",
+        "weaponized therapy language"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "diagnosing your partner",
+        "he is avoidant",
+        "she is anxiously attached",
+        "setting boundaries with a partner",
+        "my ex is a narcissist",
+        "is gaslighting me",
+        "labelled him avoidant"
+      ],
+      "dependencies": [
+        "frameworks:virality-filter"
+      ],
+      "related": [
+        "frameworks:survivorship-channel",
+        "frameworks:agreement-surface",
+        "frameworks:desire-state-split"
+      ],
+      "boundaryConditions": [
+        "Adult attachment research is a legitimate literature with modest effect sizes; the entry targets its pop simplification, its fixity claim and its outward direction.",
+        "Attachment stability estimates are model-dependent, and a person's attachment behaviour differs across their own relationships.",
+        "The self-fulfilling labelling mechanics are practitioner observation rather than trial evidence.",
+        "No prevalence figure exists for weaponised use, and the observed sex skew in public deployment is an observation about discourse, not a law about people."
+      ],
+      "commonMisreadings": [
+        "A man who texts back slowly is avoidant and a woman should end the relationship.",
+        "Your attachment style is fixed for life and decides how every relationship will go.",
+        "Setting a boundary means telling your partner what he is allowed to do."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Fraley (2002), “Attachment Stability From Infancy to Adulthood,” Personality and Social Psychology Review 6(2):123–151",
+          "url": "https://journals.sagepub.com/doi/10.1207/S15327957PSPR0602_03"
+        },
+        {
+          "label": "Spratt (2022, updated 2023), Refinery29",
+          "url": "https://www.refinery29.com/en-gb/2022/06/10771935/attachment-theory-problems"
+        },
+        {
+          "label": "Boardman, “How Therapy Speak Is Ruining Our Relationships” (Katie Couric Media)",
+          "url": "https://katiecouric.com/health/mental-health/therapy-speak-ruining-our-relationships/"
+        }
+      ],
+      "pressureTests": [
+        "Is the clinical term being used at its clinical meaning, or as leverage in a dispute?",
+        "Who is this diagnosis being run on, and would it survive being run on the speaker?"
       ]
     },
     {

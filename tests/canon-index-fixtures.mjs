@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 556);
+assert.equal(index.stats.conceptCount, 559);
 assert.equal(index.stats.sourceCount, 21);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 47,
@@ -26,7 +26,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 53,
+  'Rules & Frameworks': 56,
   Statistics: 51,
 });
 
@@ -67,15 +67,16 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 556);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 559);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
 // expansion widened the lag: 11 of its 13 new dossier entries took the misreading
 // alone, and the 9 new charts likewise, so the gap is 17 rather than 8.
 // Harvest #2 and media loop 03 each added four concepts with both fields,
-// preserving that gap.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 523);
+// preserving that gap, and the 2026-08-06 pressure-test batch added three more
+// with both fields.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 526);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -98,6 +99,25 @@ assert.equal(required('frameworks:agreement-surface').sourceLinks.length, 3);
 assert(required('frameworks:agreement-surface').aliases.includes('relationship agreement surface'));
 assert.equal(required('frameworks:financial-architecture-split').sourceLinks.length, 2);
 assert(required('frameworks:financial-architecture-split').related.includes('frameworks:agreement-surface'));
+// 2026-08-06 pressure-test batch: three sub-entries filling the gaps five fresh
+// articles exposed. Each must keep its parent dependency, its authored match
+// surface, and its primary sources.
+assert(required('frameworks:meeting-channel').dependencies.includes('frameworks:search-cost'));
+assert(required('frameworks:meeting-channel').aliases.includes('how couples meet'));
+assert.equal(required('frameworks:meeting-channel').sourceLinks.length, 3);
+assert(required('frameworks:ideological-filter').dependencies.includes('frameworks:sex-ratio'));
+assert(required('frameworks:ideological-filter').aliases.includes('political sorting'));
+assert.equal(required('frameworks:ideological-filter').sourceLinks.length, 3);
+assert(required('frameworks:diagnostic-turn').dependencies.includes('frameworks:virality-filter'));
+assert(required('frameworks:diagnostic-turn').aliases.includes('attachment styles'));
+// "therapy speak" carries the concept; the hyphenated "therapy-speak" is REFUSED
+// as a surface: normalizeText keeps the hyphen while tokenize splits it, so a
+// hyphenated alias is a dead single token and a hyphenated phrase can never
+// substring-match either spelling. Measured 2026-08-06 (pressure test 04); the
+// engine-side fix is a future task, not an authoring workaround.
+assert(required('frameworks:diagnostic-turn').aliases.includes('therapy speak'));
+assert(!required('frameworks:diagnostic-turn').aliases.includes('therapy-speak'));
+assert.equal(required('frameworks:diagnostic-turn').sourceLinks.length, 3);
 assert.equal(required('frameworks:co-transition').sourceLinks.length, 2);
 assert.equal(required('statistics:stat-shared-positive-affect').sourceLinks.length, 1);
 assert(required('statistics:stat-shared-positive-affect').aliases.includes('Shared Positivity Dividend'));
