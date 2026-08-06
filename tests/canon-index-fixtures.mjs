@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 559);
+assert.equal(index.stats.conceptCount, 562);
 assert.equal(index.stats.sourceCount, 21);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 47,
@@ -26,7 +26,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 56,
+  'Rules & Frameworks': 59,
   Statistics: 51,
 });
 
@@ -67,16 +67,16 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 559);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 562);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
 // expansion widened the lag: 11 of its 13 new dossier entries took the misreading
 // alone, and the 9 new charts likewise, so the gap is 17 rather than 8.
 // Harvest #2 and media loop 03 each added four concepts with both fields,
-// preserving that gap, and the 2026-08-06 pressure-test batch added three more
-// with both fields.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 526);
+// preserving that gap, and the 2026-08-06 pressure-test batches (04 and 05)
+// added three more each with both fields.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 529);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -118,6 +118,19 @@ assert(required('frameworks:diagnostic-turn').aliases.includes('attachment style
 assert(required('frameworks:diagnostic-turn').aliases.includes('therapy speak'));
 assert(!required('frameworks:diagnostic-turn').aliases.includes('therapy-speak'));
 assert.equal(required('frameworks:diagnostic-turn').sourceLinks.length, 3);
+// 2026-08-06 pressure-test 05 batch: three sub-entries from the parallel
+// Claude+ChatGPT run (md/pt05/). Same contract as the batch above: parent
+// dependency, authored match surface, primary sources.
+assert(required('frameworks:marriage-bar').dependencies.includes('frameworks:readiness-gate'));
+assert(required('frameworks:marriage-bar').aliases.includes('capstone marriage'));
+assert.equal(required('frameworks:marriage-bar').sourceLinks.length, 4);
+assert(required('frameworks:market-maker-cut').dependencies.includes('frameworks:search-cost'));
+assert(required('frameworks:market-maker-cut').aliases.includes('paywalled matches'));
+assert.equal(required('frameworks:market-maker-cut').sourceLinks.length, 1);
+assert(required('frameworks:costless-exit').dependencies.includes('frameworks:third-party-layer'));
+assert(required('frameworks:costless-exit').aliases.includes('ghosting'));
+assert(required('frameworks:costless-exit').aliases.includes('breadcrumbing'));
+assert.equal(required('frameworks:costless-exit').sourceLinks.length, 2);
 assert.equal(required('frameworks:co-transition').sourceLinks.length, 2);
 assert.equal(required('statistics:stat-shared-positive-affect').sourceLinks.length, 1);
 assert(required('statistics:stat-shared-positive-affect').aliases.includes('Shared Positivity Dividend'));

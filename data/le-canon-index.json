@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+ac89d0f96ca5",
+  "indexVersion": "1.0.0+75994c46f776",
   "generatedAt": "2026-08-06T11:16:30.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "c98c2f29f580a2dc04b37ada3b201cacac712abc1067bf3d45897c62c13ff43a",
-      "conceptCount": 56
+      "sha256": "a480fa07f43c224d75ad236ff7c9eea0fcd34492a1ca30c4af9185c251a690bc",
+      "conceptCount": 59
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 559,
+    "conceptCount": 562,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 56,
+      "Rules & Frameworks": 59,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -267,14 +267,14 @@
       "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 47,
-      "Tier 2": 15,
+      "Tier 1": 48,
+      "Tier 2": 17,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 464,
-    "conceptsWithExternalSources": 130,
-    "dependencyCount": 281,
-    "relatedCount": 445
+    "anchoredConceptCount": 467,
+    "conceptsWithExternalSources": 133,
+    "dependencyCount": 284,
+    "relatedCount": 458
   },
   "entries": [
     {
@@ -2958,10 +2958,95 @@
         {
           "label": "Hadden, Agnew & Tan (2018), Personality and Social Psychology Bulletin",
           "url": "https://doi.org/10.1177/0146167218764668"
+        },
+        {
+          "label": "Pew Research Center (2019), “Why people get married or move in with a partner”",
+          "url": "https://www.pewresearch.org/social-trends/2019/11/06/why-people-get-married-or-move-in-with-a-partner/"
+        },
+        {
+          "label": "Smock, Manning & Porter (2005), “Everything’s There Except Money,” JMF",
+          "url": "https://doi.org/10.1111/j.1741-3737.2005.00162.x"
+        },
+        {
+          "label": "Ishizuka (2018), Demography",
+          "url": "https://doi.org/10.1007/s13524-018-0651-1"
+        },
+        {
+          "label": "Kearney & Wilson (2018), REStat",
+          "url": "https://doi.org/10.1162/rest_a_00739"
         }
       ],
       "pressureTests": [
         "If attraction and compatibility are held constant, is there evidence of present capacity and reciprocal intent?"
+      ]
+    },
+    {
+      "id": "frameworks:marriage-bar",
+      "title": "The Marriage Bar",
+      "page": "frameworks.html",
+      "anchor": "marriage-bar",
+      "category": "Rules & Frameworks",
+      "subcategory": "Decision gates",
+      "synopsis": "The parent entry separates interest from willingness. This entry names a third gate that neither of those measures: a socially defined economic-readiness threshold for marriage specifically. A couple can want each other, want marriage, and already share a household — while the wedding waits on savings, debt, stable work, or the ability to stage a milestone.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Marriage Bar",
+        "economic bar to marriage",
+        "financial readiness threshold",
+        "capstone marriage",
+        "marriage as a capstone"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "can't afford to get married",
+        "not financially ready to marry",
+        "save up for the wedding",
+        "waiting until we're financially stable",
+        "marriage is a luxury"
+      ],
+      "dependencies": [
+        "frameworks:readiness-gate"
+      ],
+      "related": [
+        "statistics:stat-married-cohabiting",
+        "statistics:stat-cohabitation-outcomes",
+        "statistics:stat-cohab-timing"
+      ],
+      "boundaryConditions": [
+        "All core evidence is U.S.-specific; the bar's level and contents vary by class, culture, cohort, race, prior marriage, parenthood, housing market and legal regime.",
+        "Stated reasons are self-reports and can rationalize after the fact; the SIPP analysis is prospective but observational.",
+        "Economic readiness bundles earnings, assets, debt, housing and wedding affordability; they are empirically separable and not reducible to income.",
+        "The bar belongs to the couple and its context, not to one partner's earnings."
+      ],
+      "commonMisreadings": [
+        "Living with a partner means the relationship will naturally become marriage once love is strong.",
+        "Couples delay marriage because they want expensive weddings, while ordinary finances play little role.",
+        "An unemployed man is automatically unready for marriage regardless of his partner's resources."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Pew Research Center (2019), “Why people get married or move in with a partner”",
+          "url": "https://www.pewresearch.org/social-trends/2019/11/06/why-people-get-married-or-move-in-with-a-partner/"
+        },
+        {
+          "label": "Smock, Manning & Porter (2005), “Everything’s There Except Money,” JMF",
+          "url": "https://doi.org/10.1111/j.1741-3737.2005.00162.x"
+        },
+        {
+          "label": "Ishizuka (2018), Demography",
+          "url": "https://doi.org/10.1007/s13524-018-0651-1"
+        },
+        {
+          "label": "Kearney & Wilson (2018), REStat",
+          "url": "https://doi.org/10.1162/rest_a_00739"
+        }
+      ],
+      "pressureTests": [
+        "Is a stalled cohabitation being read against the willingness gate when it sits below the economic bar?",
+        "Would the claim survive the boom-town result, where earnings rose and marriage did not?"
       ]
     },
     {
@@ -3629,7 +3714,8 @@
         "frameworks:abundance-trap",
         "frameworks:attention-market",
         "statistics:stat-cutting-room",
-        "frameworks:sixth-rung"
+        "frameworks:sixth-rung",
+        "frameworks:meeting-channel"
       ],
       "boundaryConditions": [
         "Burdett and Coles shows only that a taste for similarity is unnecessary; it still requires a shared desirability ranking and mutual acceptance, and yields discrete classes rather than a smooth matching curve.",
@@ -3660,6 +3746,10 @@
         {
           "label": "Ofcom, Online Nation 2024",
           "url": "https://www.ofcom.org.uk/media-use-and-attitudes/online-habits/appy-valentines-day-top-online-dating-trends-revealed"
+        },
+        {
+          "label": "Groundwork Collaborative (Feb 2026), “Swipe Right to Pay” (DiVito, Chokrane & Abdelhamid)",
+          "url": "https://groundworkcollaborative.org/news/love-behind-the-paywall-new-groundwork-report-explores-how-dating-apps-turn-finding-love-into-a-monthly-charge/"
         }
       ],
       "pressureTests": [
@@ -3733,6 +3823,65 @@
       "pressureTests": [
         "Is a channel-share statistic being read as a verdict on a channel's quality?",
         "Does the claim separate the pool a channel draws from the order in which it screens?"
+      ]
+    },
+    {
+      "id": "frameworks:market-maker-cut",
+      "title": "The Market-Maker’s Cut",
+      "page": "frameworks.html",
+      "anchor": "market-maker-cut",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "The parent entry prices the search and 15.1 prices where it happens. This entry prices the fact that the dominant venue is a business, and the business is paid by the search, not the match. A subscription market-maker collects for every month a search continues and collects nothing extra when it succeeds.",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Market-Maker’s Cut",
+        "Market-Maker's Cut",
+        "paywalled matches",
+        "pay to unlock",
+        "dating app monetization",
+        "dating app paywall"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "designed to keep you single",
+        "apps profit from keeping you searching",
+        "hiding matches behind a paywall",
+        "pay to see who liked you",
+        "charging older users more",
+        "subscription tiers"
+      ],
+      "dependencies": [
+        "frameworks:search-cost"
+      ],
+      "related": [
+        "frameworks:meeting-channel",
+        "statistics:stat-pay-to-play",
+        "smv:exposure:the-online-funnel"
+      ],
+      "boundaryConditions": [
+        "The Groundwork report is advocacy work: its documentation of practices is cited, its policy conclusions are not.",
+        "The incentive misalignment is structural and one-directional, but whether it dominates feature design over churn pressure is unmeasured.",
+        "Opt-in burnout and exhaustion percentages are excluded as evidence, consistent with the Search Cost's standing refusal.",
+        "Pricing audits cover specific apps, tiers, countries and years; practices change under litigation and regulation."
+      ],
+      "commonMisreadings": [
+        "Dating apps deliberately keep every paying user single forever so the monthly subscription revenue continues.",
+        "Paying for the premium tier guarantees matching with a genuinely better class of partner.",
+        "Seeing few matches on a dating app proves your own market value is hopelessly low."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Groundwork Collaborative (Feb 2026), “Swipe Right to Pay” (DiVito, Chokrane & Abdelhamid)",
+          "url": "https://groundworkcollaborative.org/news/love-behind-the-paywall-new-groundwork-report-explores-how-dating-apps-turn-finding-love-into-a-monthly-charge/"
+        }
+      ],
+      "pressureTests": [
+        "Is a feature being read as a market verdict when it is a revenue decision?",
+        "Would this claim survive at a venue paid per success instead of per month?"
       ]
     },
     {
@@ -3828,7 +3977,9 @@
       "related": [
         "statistics:stat-couples-meet",
         "deep-dive:third-spaces",
-        "frameworks:signal-cost-rule"
+        "frameworks:signal-cost-rule",
+        "M-TBD-33",
+        "frameworks:search-cost"
       ],
       "boundaryConditions": [
         "The approval evidence is correlational and mostly measures perceived approval reported by one partner, so the causal direction stays open.",
@@ -3843,10 +3994,81 @@
         {
           "label": "Sinclair, Hood & Wright (2014), Social Psychology 45(3):170–178",
           "url": "https://econtent.hogrefe.com/doi/10.1027/1864-9335/a000181"
+        },
+        {
+          "label": "Freedman, Powell, Le & Williams (2019), Journal of Social and Personal Relationships",
+          "url": "https://doi.org/10.1177/0265407517748791"
+        },
+        {
+          "label": "Navarro, Larrañaga, Yubero & Víllora (2020), IJERPH 17(3):1116",
+          "url": "https://doi.org/10.3390/ijerph17031116"
         }
       ],
       "pressureTests": [
         "Is the approval predicting the relationship, or is the relationship producing the approval?"
+      ]
+    },
+    {
+      "id": "frameworks:costless-exit",
+      "title": "The Costless Exit",
+      "page": "frameworks.html",
+      "anchor": "costless-exit",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "The parent entry says it in one line: ghosting is nearly free in a market of strangers and was expensive in a market of neighbours. This entry gives that line its own ledger. When two people share no network, ending contact carries no reputational bill — and the same accounting that makes exit without notice (ghosting) nearly free also makes retention without intent (breadcrumbing: sporadic signals that keep an…",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Costless Exit",
+        "ghosting",
+        "breadcrumbing",
+        "silent exit",
+        "exit without notice"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "stopped replying out of nowhere",
+        "left on read for weeks",
+        "he just disappeared",
+        "she just disappeared",
+        "keeping you on the back burner",
+        "stringing you along"
+      ],
+      "dependencies": [
+        "frameworks:third-party-layer"
+      ],
+      "related": [
+        "M-TBD-33",
+        "frameworks:search-cost",
+        "frameworks:meeting-channel",
+        "lexicon:term-situationship"
+      ],
+      "boundaryConditions": [
+        "The ghosting null on life satisfaction, loneliness and helplessness is one cross-sectional Spanish sample's null, not an established absence of harm.",
+        "Prevalence figures come from convenience and single-country samples; none is a population estimate.",
+        "The shared-network price mechanism is LE's synthesis; the channel comparison it predicts has not been tested directly.",
+        "Harassment, stalking and abuse contexts are outside scope and change every calculus in the entry."
+      ],
+      "commonMisreadings": [
+        "Getting ghosted after a promising few weeks proves the other person was a heartless narcissist.",
+        "Sporadic flirty texts from a match mean the relationship is slowly moving toward real commitment.",
+        "Ghosting is harmless etiquette now because every online dater fully expects sudden silent disappearance."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Freedman, Powell, Le & Williams (2019), Journal of Social and Personal Relationships",
+          "url": "https://doi.org/10.1177/0265407517748791"
+        },
+        {
+          "label": "Navarro, Larrañaga, Yubero & Víllora (2020), IJERPH 17(3):1116",
+          "url": "https://doi.org/10.3390/ijerph17031116"
+        }
+      ],
+      "pressureTests": [
+        "Is a price change in exit conduct being read as a character change in the people?",
+        "Which side of the ledger is the claim on: the silent exit, or the option held open?"
       ]
     },
     {

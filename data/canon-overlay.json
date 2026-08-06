@@ -1449,6 +1449,119 @@
         "Does the claim separate the pool a channel draws from the order in which it screens?"
       ]
     },
+    "frameworks:market-maker-cut": {
+      "aliases": [
+        "Market-Maker's Cut",
+        "paywalled matches",
+        "pay to unlock",
+        "dating app monetization",
+        "dating app paywall"
+      ],
+      "phrases": [
+        "designed to keep you single",
+        "apps profit from keeping you searching",
+        "hiding matches behind a paywall",
+        "pay to see who liked you",
+        "charging older users more",
+        "subscription tiers"
+      ],
+      "related": [
+        "frameworks:search-cost",
+        "frameworks:meeting-channel",
+        "statistics:stat-pay-to-play",
+        "smv:exposure:the-online-funnel"
+      ],
+      "boundaryConditions": [
+        "The Groundwork report is advocacy work: its documentation of practices is cited, its policy conclusions are not.",
+        "The incentive misalignment is structural and one-directional, but whether it dominates feature design over churn pressure is unmeasured.",
+        "Opt-in burnout and exhaustion percentages are excluded as evidence, consistent with the Search Cost's standing refusal.",
+        "Pricing audits cover specific apps, tiers, countries and years; practices change under litigation and regulation."
+      ],
+      "commonMisreadings": [
+        "Dating apps deliberately keep every paying user single forever so the monthly subscription revenue continues.",
+        "Paying for the premium tier guarantees matching with a genuinely better class of partner.",
+        "Seeing few matches on a dating app proves your own market value is hopelessly low."
+      ],
+      "pressureTests": [
+        "Is a feature being read as a market verdict when it is a revenue decision?",
+        "Would this claim survive at a venue paid per success instead of per month?"
+      ]
+    },
+    "frameworks:costless-exit": {
+      "aliases": [
+        "Costless Exit",
+        "ghosting",
+        "breadcrumbing",
+        "silent exit",
+        "exit without notice"
+      ],
+      "phrases": [
+        "stopped replying out of nowhere",
+        "left on read for weeks",
+        "he just disappeared",
+        "she just disappeared",
+        "keeping you on the back burner",
+        "stringing you along"
+      ],
+      "related": [
+        "frameworks:third-party-layer",
+        "frameworks:meeting-channel",
+        "frameworks:search-cost",
+        "lexicon:term-situationship"
+      ],
+      "boundaryConditions": [
+        "The ghosting null on life satisfaction, loneliness and helplessness is one cross-sectional Spanish sample's null, not an established absence of harm.",
+        "Prevalence figures come from convenience and single-country samples; none is a population estimate.",
+        "The shared-network price mechanism is LE's synthesis; the channel comparison it predicts has not been tested directly.",
+        "Harassment, stalking and abuse contexts are outside scope and change every calculus in the entry."
+      ],
+      "commonMisreadings": [
+        "Getting ghosted after a promising few weeks proves the other person was a heartless narcissist.",
+        "Sporadic flirty texts from a match mean the relationship is slowly moving toward real commitment.",
+        "Ghosting is harmless etiquette now because every online dater fully expects sudden silent disappearance."
+      ],
+      "pressureTests": [
+        "Is a price change in exit conduct being read as a character change in the people?",
+        "Which side of the ledger is the claim on: the silent exit, or the option held open?"
+      ]
+    },
+    "frameworks:marriage-bar": {
+      "aliases": [
+        "Marriage Bar",
+        "economic bar to marriage",
+        "financial readiness threshold",
+        "capstone marriage",
+        "marriage as a capstone"
+      ],
+      "phrases": [
+        "can't afford to get married",
+        "not financially ready to marry",
+        "save up for the wedding",
+        "waiting until we're financially stable",
+        "marriage is a luxury"
+      ],
+      "related": [
+        "frameworks:readiness-gate",
+        "statistics:stat-married-cohabiting",
+        "statistics:stat-cohabitation-outcomes",
+        "statistics:stat-cohab-timing"
+      ],
+      "boundaryConditions": [
+        "All core evidence is U.S.-specific; the bar's level and contents vary by class, culture, cohort, race, prior marriage, parenthood, housing market and legal regime.",
+        "Stated reasons are self-reports and can rationalize after the fact; the SIPP analysis is prospective but observational.",
+        "Economic readiness bundles earnings, assets, debt, housing and wedding affordability; they are empirically separable and not reducible to income.",
+        "The bar belongs to the couple and its context, not to one partner's earnings."
+      ],
+      "commonMisreadings": [
+        "Living with a partner means the relationship will naturally become marriage once love is strong.",
+        "Couples delay marriage because they want expensive weddings, while ordinary finances play little role.",
+        "An unemployed man is automatically unready for marriage regardless of his partner's resources."
+      ],
+      "pressureTests": [
+        "Is a stalled cohabitation being read against the willingness gate when it sits below the economic bar?",
+        "Would the claim survive the boom-town result, where earnings rose and marriage did not?"
+      ]
+    },
     "frameworks:signal-cost-rule": {
       "aliases": [
         "Signal Cost Rule",

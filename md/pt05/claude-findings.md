@@ -1,0 +1,134 @@
+# PT05 — Claude findings (integrator lane)
+
+Run of 2026-08-06, start 08:04 MDT. Method: `md/doctrine-pressure-test-04.md`;
+contract: `md/pt05/PROTOCOL.md`. Canon at analysis time: `1.0.0+ac89d0f96ca5` (559).
+
+## Cycle 1 — lane E — The Conversation: Ghosting and 'breadcrumbing'
+
+- URL: https://theconversation.com/ghosting-and-breadcrumbing-the-psychological-impact-of-our-bad-behaviour-on-dating-apps-258087
+- Words: 922 · SHA-256: `b8d57f1f2f69a5ca3f34adef0c94918644e35f087078a0995e29e80ff09757df`
+- Analyzer: 28 passages · 26 claims · 2 mapped · mappedShare **7.7%** · 0 tensions
+
+**Reading.** The two mapped rows are defensible: the app-motives claim reaches
+`statistics:stat-app-reasons` (correct) and `M-TBD-31` (adjacent, Low); the
+fairy-tale "wolf" metaphor brushes `stat-casual-gap` at 0.441/Low (lexical
+coincidence, displayed as Low — acceptable). Everything the article is actually
+about is dark: breadcrumbing (35% perpetrator/victim; sustained breadcrumbing →
+lower life satisfaction), ghosting (~20%; expectation build-up then unilateral
+silent exit), deceptive self-presentation on apps, and the friends-first
+formation claim ("two thirds of young-adult romances begin as friendships").
+
+**Canon check.** `lexicon:term-situationship` (term entry) and `M-TBD-33`
+(situationships-dominant question) exist; "ghosting"/"breadcrumbing" appear only
+in synopsis prose of gender-dynamics entries — no entry owns unilateral exit
+conduct, no aliases reach it.
+
+**Verdict: GAP** — candidate subject: the exit side of app-mediated courtship
+(ghosting, breadcrumbing, silent de-escalation) as one mechanism: zero-cost
+unilateral exit in a channel with no shared social graph. Holding the proposal
+until 1–2 more lane-E cycles to apply the encompassing standard (merge with
+situationship-ambiguity phenomena if they share the mechanism).
+
+**Minor instrument note.** The Conversation's embedded "Read more:" promo links
+survive extraction and are counted as claim-like units (3 here). Deflates
+mappedShare slightly; a `--drop` pattern for promo blocks would fix it at the
+extraction layer. Not an analyzer defect.
+
+## Cycle 2 — lane F — Groundwork Collaborative: Love Behind the Paywall
+
+- URL: https://groundworkcollaborative.org/news/love-behind-the-paywall-new-groundwork-report-explores-how-dating-apps-turn-finding-love-into-a-monthly-charge/
+- Words: 621 · SHA-256: `5f479b35f471a24771fe25506d04192766c06e76791fe027fb22568266ec6157`
+- Analyzer: 18 passages · 17 claims · 4 mapped · mappedShare **23.5%** · 0 tensions
+
+**Reading.** The report-title claim reaches `smv:exposure:the-online-funnel`
+(0.540 Medium, correct) and the paywalled-matches claim reaches
+`statistics:stat-pay-to-play` (0.473 Low — right neighborhood: that entry owns
+who pays, not why the platform wants them paying). Dark: the platform-side
+incentive structure — revenue tied to users staying single, matches hidden to
+be sold back, price discrimination (older users charged more; personalized
+pricing), Match Group + Bumble duopoly, apps as data-mining operations, the
+78%-exhausted stat.
+
+**Canon check.** `search-cost` prices the search from the searcher's side;
+`stat-pay-to-play` prices the buyer; `the-online-funnel` prices the channel's
+sorting. No entry owns the market-maker itself: the platform whose revenue is
+maximized by search *continuing*, not concluding.
+
+**Verdict: GAP** — candidate subject: the platform's incentive (the market-maker
+takes its cut from the search, so it is structurally aligned with prolonging it).
+Encompasses: paywalled artificial scarcity, engagement-optimized matching,
+price discrimination, concentration. Natural parent: the Search Cost (sibling
+of pt04's 15.1 Meeting Channel).
+
+**Instrument findings (recorded).** Two Low-band false positives displayed:
+"one in ten met their match online" → `statistics:stat-child-marriage`
+(0.453/Low — no topical relation); "more than half of adults under 50 have
+used online dating" → `M-TBD-54` (0.464/Low — adoption stat mapped to an
+unrelated friendship-vs-romance question). Both are Low and capped, but both
+are the kind of adjacency the tranche work priced; noted, not fixed here.
+
+## Cycle 3 — lane G — The Conversation: Why more couples are choosing to live apart
+
+- URL: https://theconversation.com/why-more-couples-are-choosing-to-live-apart-124532
+- Words: 928 · SHA-256: `9a5e99eabea877a618a7536fcdc5454c318956c8cc3429c14738872eafc36844`
+- Analyzer: 37 passages · 36 claims · 14 mapped · mappedShare **38.9%** · 2 tensions
+
+**Reading.** `lexicon:term-living-apart-together-lat` absorbs the subject
+cleanly — 12 of 14 mapped rows land there at Medium (0.575–0.645), all
+Resembles. The cohabitation lead-in reaches `stat-cohabitation-outcomes` /
+`stat-cohab-timing`. Both tensions are the instrument working: one flags a
+Contradicts needing a boundary test, one flags stated-preference-as-revealed
+on the autonomy framing — a caveat the LAT entry itself already carries.
+Unmapped rows are respondent vignettes and quotes (correctly unmapped
+narrative) plus detail-level motivation taxonomy (constraint-LAT vs
+preference-LAT) that the encompassing standard says to skip.
+
+**Verdict: COVERED** — control-grade result on lane G ground. No doctrine
+needed.
+
+## Integration 1 (after cycles 1–3)
+
+Folded three entries through the full pt04 procedure — my two gaps plus
+ChatGPT's `chatgpt-proposal-marriage-bar.md`, which cleared the encompassing
+standard (one economic-threshold subject; four sourced claims; contract-shaped
+misreadings; the Pew numbers verified against the primary source before
+authoring: 29%/27% financial-unreadiness major-reason, 21% career major):
+
+- **4.1 The Marriage Bar** (`frameworks:marriage-bar`, under the Readiness
+  Gate) — Pew 2019 stated reasons (Tier 1), Smock–Manning–Porter 2005
+  qualitative mechanism (Tier 3), Ishizuka 2018 SIPP prospective transitions
+  (Tier 2), Kearney–Wilson 2018 fracking-boom boundary (Tier 2).
+- **15.2 The Market-Maker's Cut** (`frameworks:market-maker-cut`, under the
+  Search Cost) — duopoly + subscription revenue structure (Tier 2), Groundwork
+  2026 practices documentation (Tier 3, advocacy-bounded), pricing audits +
+  Candelore v. Tinder (Tier 2), incentive geometry as Lens with the churn
+  counterweight and a stated falsifier. The 78%-exhausted survey figure is
+  excluded, consistent with 15.1's standing refusal of opt-in panels.
+- **17.1 The Costless Exit** (`frameworks:costless-exit`, under the Third-Party
+  Layer) — Freedman 2019 prevalence + destiny-belief acceptability (Tier 2),
+  Navarro 2020 damage-localization (breadcrumbing, not ghosting, carries the
+  measured harm — the discourse's expectation inverted; Tier 2), price
+  mechanism as Lens with the shared-network falsifier. Numbers verified against
+  primary sources before authoring.
+
+Procedure: baseline `--dump` first (1,356,134 pairs); entries + overlay +
+rebuilt index (559 → 562) + moved pins in one pass, suite 18/18; sweep
+`--baseline --neighbors` onto the existing fixture ×2; **326 crossings ruled**
+(10 credible: 1 ACCEPT / 6 REJECT / 3 loss-ACCEPT; 316 weak: 45/271), all
+entered as Claude recommendations **FLAGGED FOR JASON**; 9/9 misreadings fire
+Contradicts end-to-end; magnet check clean (no flat-score clusters; details in
+`md/lab-pressure-test-05-threshold-adjudication.md`). Post-change: ghosting
+article 7.7% → 15.4% (ghosting sentence reaches `costless-exit` at
+0.579/Medium), Groundwork 23.5% → 58.8% (thesis rows reach `market-maker-cut`
+0.43–0.61), LAT control unchanged at 38.9%.
+
+**Instrument notes from integration.** (1) The misreading-rewrite ripple: two
+rewritten tokens ("promising", "monthly") moved 5 weak corpus crossings —
+misreading text is live match surface; edits to it are scoring changes and get
+the full sweep treatment. (2) The "one in ten met online" false positive
+migrated rather than died: `stat-child-marriage` (0.453) before the change,
+`stat-cohab-timing` (0.454) after. Same adjacency class the tranche work
+priced; recorded, not fixed. (3) `M-TBD-45` nearly absorbed
+`stat-pay-to-play`'s own 41%-vs-29% stat at the credible line via +0.001 IDF
+drift — rejected as wrong-owner; worth watching as canon growth keeps diluting
+IDF.
