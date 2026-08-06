@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+608b9220122a",
+  "indexVersion": "1.0.0+79158e0f6247",
   "generatedAt": "2026-08-06T15:07:30.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "651e4ba2a7f255bba03dfe2e71b4a7184fb9e9c379694342a5a95c47c3bbc9a8",
-      "conceptCount": 60
+      "sha256": "aef63669a62f0f71e0e3baac38b0442af77224e3db0b10670740ed6528071474",
+      "conceptCount": 61
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 563,
+    "conceptCount": 564,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 60,
+      "Rules & Frameworks": 61,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -267,14 +267,14 @@
       "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 49,
+      "Tier 1": 50,
       "Tier 2": 17,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 468,
-    "conceptsWithExternalSources": 134,
-    "dependencyCount": 285,
-    "relatedCount": 461
+    "anchoredConceptCount": 469,
+    "conceptsWithExternalSources": 135,
+    "dependencyCount": 286,
+    "relatedCount": 465
   },
   "entries": [
     {
@@ -4897,11 +4897,89 @@
         {
           "label": "Bruch & Newman (2018), Science Advances 4(8):eaap9815",
           "url": "https://doi.org/10.1126/sciadv.aap9815"
+        },
+        {
+          "label": "Brown & Lin (2012), “The Gray Divorce Revolution,” J. Gerontology B 67(6):731–741",
+          "url": "https://doi.org/10.1093/geronb/gbs089"
+        },
+        {
+          "label": "Pew Research Center (2017), Stepler",
+          "url": "https://www.pewresearch.org/short-reads/2017/03/09/led-by-baby-boomers-divorce-rates-climb-for-americas-50-population/"
+        },
+        {
+          "label": "Lin & Brown (2021), “The Economic Consequences of Gray Divorce,” J. Gerontology B 76(10)",
+          "url": "https://doi.org/10.1093/geronb/gbaa157"
         }
       ],
       "pressureTests": [
         "Is this number counting people in a state right now, or counting events over a period?",
         "Do the numerator and the denominator contain the same people?"
+      ]
+    },
+    {
+      "id": "frameworks:gray-divergence",
+      "title": "The Gray Divergence",
+      "page": "frameworks.html",
+      "anchor": "gray-divergence",
+      "category": "Rules & Frameworks",
+      "subcategory": "The population layer",
+      "synopsis": "The parent entry teaches the reading discipline: ask what “the divorce rate” is a rate of. This entry reports what the composition underneath it actually did. Since 1990 the aggregate U.S. divorce rate has fallen — and that fall is a composite of two opposite-moving components: divorce among adults past fifty roughly doubled while divorce among the young married fell by a fifth.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Gray Divergence",
+        "gray divorce",
+        "grey divorce",
+        "gray divorce revolution",
+        "silver splitters",
+        "later-life divorce"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "divorce rates climb for older adults",
+        "divorced after decades together",
+        "second marriages end more often",
+        "divorce rate has doubled for older couples",
+        "gray divorcees"
+      ],
+      "dependencies": [
+        "frameworks:stock-flow-error"
+      ],
+      "related": [
+        "statistics:stat-divorce",
+        "statistics:stat-remarriage-gap",
+        "statistics:stat-wedding-hazard",
+        "deep-dive:what-the-wall-actually-is:band-50-plus"
+      ],
+      "boundaryConditions": [
+        "All rates are U.S. period measures per 1,000 married persons from vital statistics and Census/ACS analysis; level comparisons inherit the parent entry's period-versus-cohort cautions.",
+        "The rise past fifty is dominated by the marital biography — remarriages and shorter durations — and the under-50 rate remains roughly double the over-50 rate.",
+        "The 45%/21% aftermath figures are income-to-needs changes around divorce in an observational U.S. panel, and the women's-side recovery runs through repartnering."
+      ],
+      "commonMisreadings": [
+        "Rising divorce among older couples proves marriage as an institution is collapsing everywhere.",
+        "A marriage that has survived thirty years is safe from divorce for good.",
+        "Older couples split up mainly because love quietly fades once the children leave home."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Brown & Lin (2012), “The Gray Divorce Revolution,” J. Gerontology B 67(6):731–741",
+          "url": "https://doi.org/10.1093/geronb/gbs089"
+        },
+        {
+          "label": "Pew Research Center (2017), Stepler",
+          "url": "https://www.pewresearch.org/short-reads/2017/03/09/led-by-baby-boomers-divorce-rates-climb-for-americas-50-population/"
+        },
+        {
+          "label": "Lin & Brown (2021), “The Economic Consequences of Gray Divorce,” J. Gerontology B 76(10)",
+          "url": "https://doi.org/10.1093/geronb/gbaa157"
+        }
+      ],
+      "pressureTests": [
+        "Is a rising over-50 rate being read as rising divorce overall, against the falling refined rate the parent carries?",
+        "Is a gray-divorce anecdote about a long first marriage standing in for a stock that is half remarriages?"
       ]
     },
     {
@@ -10828,7 +10906,8 @@
       "contentType": "Statistical chart",
       "verdict": "",
       "aliases": [
-        "demand-withdraw loop travels with worse outcomes"
+        "demand-withdraw loop travels with worse outcomes",
+        "walkaway wife syndrome"
       ],
       "standaloneAliases": [],
       "contextualAliases": [],
@@ -10841,7 +10920,8 @@
         "Method Meta-analysis of observed and self-reported demand, withdrawal, and demand-withdraw patterns. The published r =.36 is the average effect magnitude across coded outcomes; most links are reciprocal and observational, not causal."
       ],
       "commonMisreadings": [
-        "The partner who withdraws during conflict is the one driving the relationship downward."
+        "The partner who withdraws during conflict is the one driving the relationship downward.",
+        "Once a spouse quits complaining about the relationship, the marriage has finally found peace."
       ],
       "sourceLinks": [
         {

@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 563);
+assert.equal(index.stats.conceptCount, 564);
 assert.equal(index.stats.sourceCount, 21);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 47,
@@ -26,7 +26,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 60,
+  'Rules & Frameworks': 61,
   Statistics: 51,
 });
 
@@ -67,7 +67,7 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 563);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 564);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
@@ -75,8 +75,9 @@ assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).len
 // alone, and the 9 new charts likewise, so the gap is 17 rather than 8.
 // Harvest #2 and media loop 03 each added four concepts with both fields,
 // preserving that gap, and the 2026-08-06 pressure-test batches (04 and 05)
-// added three more each with both fields.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 530);
+// added three more each with both fields, and pressure test 06 added the gray
+// divergence with both.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 531);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
