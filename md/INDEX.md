@@ -3,17 +3,19 @@
 One line per record: date the file entered git (`git log --diff-filter=A`), status, and what it
 **ruled or measured** — not what it is "about". Grouped by lane, chronological within each.
 
-**2026-08-07 consolidation:** the shelf's 81 standalone record files were merged, byte-exact, into
+**2026-08-07 consolidation:** the shelf's 79 standalone record files were merged, byte-exact, into
 six volumes — `lab-operations.md` (LIVE protocols and standing rulings) · `lab-history.md` (closed
 engine/gate/adjudication records) · `doctrine-history.md` (closed doctrine work) ·
 `calculators.md` · `roster.md` · `site-conventions.md`. Each row below keeps its record's name;
 its link now points at the volume holding that record's `# <name>` section, and every section
 header carries a `git show 9109c97:md/<name>` pointer to the pre-merge file. Still standalone:
-`mission-notes.md` (Jason's), the pressure-test series (`doctrine-pressure-test-04..08.md`, the
-`pt05–pt08/` dirs, and the two LIVE adjudication sheets) — those fold into a `pressure-tests.md`
-volume when the pt series closes, not before, because active-run protocols cite their paths. New
-records are appended as sections to the right volume, never as new files (CLAUDE.md, "Record
-hygiene").
+`mission-notes.md` (Jason's) · `FEEDBACK-PIPELINE.md` and `limit-hit-ledger.md` (the suite reads
+both BY PATH at runtime — lab-feedback-integrity parses their routing tables, so they are
+instrument state, not records; they were merged, broke the suite, and were carved back out) · the
+pressure-test series (`doctrine-pressure-test-04..08.md`, the `pt05–pt08/` dirs, and the two LIVE
+adjudication sheets) — those fold into a `pressure-tests.md` volume when the pt series closes, not
+before, because active-run protocols cite their paths. New records are appended as sections to the
+right volume, never as new files (CLAUDE.md, "Record hygiene").
 
 Status tags: **LIVE** = still operative (a spec, convention, protocol, or open worksheet) ·
 **HIST** = accurate record of completed work, superseded by nothing · **SUP → x** = its claims were
@@ -37,7 +39,7 @@ record whose own headline was later corrected, with the correction recorded in-f
 - 2026-07-26 · [lab-schemas.md](lab-operations.md) **LIVE** — the versioned data contracts (normalized-document, analysis, queue, diagnostics, feedback); raw source text never persisted or uploaded
 - 2026-07-27 · [lab-loop-assignment-02.md](lab-history.md) **SUP → direct implementation (v=2.0, in-file)** — the ChatGPT loop never delivered; Claude shipped mergeSentenceSplitArtifacts directly
 - 2026-07-27 · [lab-pressure-test-brief.md](lab-history.md) **HIST** — loop re-roled to read-only adversarial pressure-testing of v=2.1 under a hard no-write fence; assignments 1–2 closed
-- 2026-07-29 · [FEEDBACK-PIPELINE.md](lab-operations.md) **LIVE** — flag-to-fixture path ruled: collect/redact/adjudicate/promote, every step human; a flag earns a frozen-benchmark seat by surviving adjudication, never by arriving
+- 2026-07-29 · [FEEDBACK-PIPELINE.md](FEEDBACK-PIPELINE.md) **LIVE** — flag-to-fixture path ruled: collect/redact/adjudicate/promote, every step human; a flag earns a frozen-benchmark seat by surviving adjudication, never by arriving
 - 2026-07-29 · [RERUN.md](lab-operations.md) **LIVE** — re-run protocol ruled: no archived raw text survives, so re-acquired reruns SUPERSEDE rather than reproduce; the archive makes only future reruns true reproductions
 - 2026-07-29 · [lab-canon-alias-pass-01.md](lab-history.md) **HIST** — verdict badges moved off the match surface (all 65 removals attributed to the fix) + 38 ratified aliases; analyzer untouched
 - 2026-07-29 · [lab-corpus-acquisition-01.md](lab-history.md) **HIST** — GO executed for Pew/Tomassi/Seresin with SHA-256 manifest chain; Gottman EXCLUDED — an un-reidentifiable revision would corrupt the 0/17 finding while looking like a reproduction
@@ -54,7 +56,7 @@ record whose own headline was later corrected, with the correction recorded in-f
 - 2026-07-29 · [lab-v2.6.1-sol-handover.md](lab-history.md) **HIST** — verification brief that names its own three attack surfaces (departure from Sol's literal ruling, a knowingly bought false positive, one past-minimum change)
 - 2026-07-29 · [lab-v2.6.1-record-pass-sol-handover.md](lab-history.md) **HIST** — fifth-pass brief, CLOSED by Jason: ~17 of 19 findings across passes 2–5 were defects introduced by the corrections — the loop was measuring the editing, not the release
 - 2026-07-29 · [lab-v2.6.2-scope.md](lab-operations.md) **LIVE** — four items carried out of the closed review loop, all ruled non-urgent (publish matchedBy, stale carries comment, stem generalization behind GENERIC_TERMS)
-- 2026-07-29 · [limit-hit-ledger.md](lab-operations.md) **LIVE** — empty by design: 17 documented limits, zero real-source hits — an empty ledger IS the finding; exact-comparison test found 2 unregistered families
+- 2026-07-29 · [limit-hit-ledger.md](limit-hit-ledger.md) **LIVE** — empty by design: 17 documented limits, zero real-source hits — an empty ledger IS the finding; exact-comparison test found 2 unregistered families
 - 2026-07-30 · [lab-adjudication-at-scale.md](lab-operations.md) **LIVE** — three lines, three treatments: minCredible BLOCKS, minWeak RATCHETS (backlog cleared 516 → 0 on 2026-07-31, see addendum), candidate-floor is CENSUS; the gate had self-disarmed
 - 2026-07-30 · [lab-calibration-audit.md](lab-history.md) **HIST ⚠** — band/dumpFloor/caps re-asked at 2,401 passages: all values kept; §C understated the screen defect by measuring the payload — corrected in-file, see lab-weak-band-label.md
 - 2026-07-30 · [lab-constants-audit.md](lab-history.md) **HIST ★ ⚠** — seven more constants: none moved; 3 true-by-luck relationships asserted; its slang grouping corrected in-file after ruling (see lab-slang-alias-typing.md)

@@ -66,12 +66,15 @@ read them, a skipped gate also looks green.
 - `md/INDEX.md` — one row per record: date, status (LIVE/HIST/SUPERSEDED), what it
   ruled or measured. Start there before re-deriving anything.
 - The shelf is SIX VOLUMES (2026-08-07 consolidation), each holding records as
-  `# <name>` sections: `md/lab-operations.md` (LIVE protocols — RERUN, the feedback
-  pipeline, adjudication-at-scale, schemas) · `md/lab-history.md` (closed engine/gate/
+  `# <name>` sections: `md/lab-operations.md` (LIVE protocols — RERUN,
+  adjudication-at-scale, schemas) · `md/lab-history.md` (closed engine/gate/
   adjudication records) · `md/doctrine-history.md` (closed doctrine work) ·
   `md/calculators.md` · `md/roster.md` · `md/site-conventions.md`. Plus
   `md/mission-notes.md` (Jason's: tone guardrails + the build-attribution ledger) and,
   until the pt series closes, the standalone pressure-test records and `pt0N/` dirs.
+- `md/FEEDBACK-PIPELINE.md` and `md/limit-hit-ledger.md` stay STANDALONE — the suite
+  reads both by path at runtime (lab-feedback-integrity parses their routing tables).
+  They are instrument state, not records; merging them turns the suite red.
 - Discipline that has paid for itself: measure before you change; attribute a zero to
   what the instrument could see before believing it; RED-first for new guards; report
   what you did NOT do as explicitly as what you did.
