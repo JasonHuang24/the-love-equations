@@ -445,3 +445,52 @@ demo collision had also removed the relational-frame word the domain gate
 needs, and "Two partners…" restored it. And a 7-token corpus sentence, "I am
 someone who is looking for love.", hit 0.452 credible: the short-unit hazard
 for the **third** time in this run, on a third unrelated entry.
+
+## Cycle 9 — lane F — VICE: Do You Believe in Love After Loss?
+
+- URL: https://www.vice.com/en/article/dating-grief-love-after-death/
+- Words: 5,584 · SHA-256: `a807b16d3ecad32b1ac3c8eb164fcfef02f0457150ab556de6fbf627648867ca`
+- Canon at capture: `1.0.0+c08dbe01725d` (569)
+- Analyzer: 84 passages · 83 claims · 10 mapped · mappedShare **12.0%** · 1 tension
+
+**Second lane-F capture, and it confirms cycle 6.** Ten mapped rows out of 83
+claims, and the unmapped remainder is the whole subject again: continuing
+bonds, the new partner's position relative to someone who cannot be argued
+with, the social licence question ("We celebrate when older couples find love
+again"), and the yibbum/levirate material — a *named institutional* answer to
+exactly the problem the entry would describe, which canon does not carry.
+`frameworks:readiness-gate` at 0.730 High on "Are you providing support, and
+how is that emerging, and what may happen…" is the one strong, correct row.
+`pills:face-pill` at 0.603 on "I never had to sit and explain my relationship
+to him" is a false positive at the capture's second-highest score.
+
+**The unsevered-bond proposal is now fold-ready** on two captures across two
+outlets. It still needs primary sources located and verified before authoring;
+neither capture supplies one that has been read at source.
+
+### Instrument finding — the 0.540 exact-phrase magnet, generalised
+
+`frameworks:the-wall` fired **twice at 0.540 Medium** here on sentences using
+*wall* in its ordinary sense — "He's not upset that I have pictures of him on
+the wall." Isolated and reproduced:
+
+> "She hung the photographs on the wall above the couch in the living room."
+> → `frameworks:the-wall` **0.540 Medium**, `whyMatched: Exact phrase: "the wall"`
+
+> "He painted the garden wall last summer with his brother."
+> → **no candidate at any score**
+
+So the trigger is precisely the bigram **"the wall"**, not the word. That is
+the *same mechanism and the same score* as this run's cycle-1/3 finding, where
+the alias `sexual desire decline` made `desire-maintenance-split` a magnet on
+"sexual desire" and pinned 17 of 21 rows at 0.540. And it subsumes pt06's
+"Wall Street Journal" observation, which was read then as a finance-adjacency
+artifact — it was not. It was this.
+
+**The generalisation, stated for a future measured pass:** *a canon entry whose
+title or alias is a common English bigram becomes an exact-phrase magnet,
+pinning every sentence containing that bigram at 0.540 Medium regardless of
+meaning.* Two confirmed instances (`the wall`, `sexual desire`) plus pt06's
+`dating coach`. The fix is authored-surface work with its own baseline and
+adjudication — an alias audit for common-bigram surfaces across the canon —
+and it is deliberately **not** attempted here.

@@ -43,9 +43,11 @@ closeout.
 | 6 | F | Psychology Today — Married to Two People: The Romantic Life of Widows | 1,362 | 16.4% | gap (the unsevered bond), **HELD** |
 | 7 | H | Psychology Today — Can Long-Distance Relationships Really Work? | 461 | **0.0%** | gap → **The Distance Discount** |
 | 8 | H | NPR Life Kit — Long-distance relationships are tough | 1,078 | 7.4% | gap (same subject, confirms) |
+| 9 | F | VICE — Do You Believe in Love After Loss? | 5,584 | 12.0% | gap (confirms cycle 6) + instrument |
 
 Captures 1–3 ran against canon `1.0.0+c4f092f8c7d3` (566); 4–5 against
-`1.0.0+7a2150b7a15f` (567); 6–8 against `1.0.0+48254605825a` (568). Raw source text stayed out of the repo; SHA-256s are
+`1.0.0+7a2150b7a15f` (567); 6–8 against `1.0.0+48254605825a` (568); 9 against
+`1.0.0+c08dbe01725d` (569). Raw source text stayed out of the repo; SHA-256s are
 in the findings file.
 
 ## 3. Implemented surfaces (canon 566 → 569, three integrations)
@@ -132,10 +134,13 @@ predicted three of them exactly:
 
 - **The lane-F entry.** *The unsevered bond* — an ending that removes a partner
   from the world without removing them from the relationship, where `sixth-rung`
-  owns exit and re-entry but assumes the prior bond is over. Drafted in the
-  findings file from one capture, **not implemented**: it wants a second capture
-  to clear the encompassing standard, and lane H was the stronger of the two
-  (a total coverage hole against a partial one) so it took the integration slot.
+  owns exit and re-entry but assumes the prior bond is over. Now carried by
+  **two captures across two outlets** (cycles 6 and 9) and drafted in the
+  findings file, but **not implemented**: neither capture supplies a primary
+  source that has been read at source, and authoring a doctrine entry on
+  media-reported evidence alone is what the pt04 verification step exists to
+  prevent. Lane H took the one remaining integration slot because it was the
+  stronger case — a total coverage hole against a partial one.
 - **Dargie et al. (2015)'s figures.** Its citation checks out at Crossref
   exactly as the capture reported; its abstract was unreadable at both the
   publisher and Semantic Scholar, and the PMID a search offered belongs to a
@@ -167,6 +172,19 @@ predicted three of them exactly:
 
 ## 6. Instrument findings (recorded, not fixed here)
 
+0. **The 0.540 exact-phrase magnet is a general defect class, not three
+   coincidences.** A canon entry whose title or alias is a common English
+   bigram becomes a magnet on that bigram, pinning any sentence containing it
+   at **exactly 0.540 Medium** regardless of meaning. Isolated and reproduced
+   for `frameworks:the-wall`: "She hung the photographs on the wall above the
+   couch in the living room" → 0.540, `whyMatched: Exact phrase: "the wall"`,
+   while "He painted the garden wall last summer" → **no candidate**, so the
+   trigger is the bigram and not the word. This subsumes pt06's "Wall Street
+   Journal" observation, which was recorded then as a finance-adjacency
+   artifact — it was not; it was this. Confirmed instances: `the wall`,
+   `sexual desire` (below), and pt06's `dating coach`. The remedy is an alias
+   audit for common-bigram surfaces with its own baseline and adjudication,
+   deliberately not attempted in this run.
 1. **The `sexual desire` exact-phrase magnet, measured across three captures.**
    `frameworks:desire-maintenance-split` carries the alias `sexual desire
    decline`, whose leading bigram is a generic domain term. Every sentence

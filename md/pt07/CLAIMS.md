@@ -56,3 +56,4 @@ Keep this file UTF-8.
 - chatgpt D https://journals.sagepub.com/doi/10.1177/0093650203260202 abandoned(bot-blocked)
 - chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC9768094/ claimed
 - chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC9768094/ verdict(gap)
+- claude F https://www.vice.com/en/article/dating-grief-love-after-death/ verdict(gap+instrument)
