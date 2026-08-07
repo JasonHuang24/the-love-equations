@@ -9224,3 +9224,25 @@ pending weak row is now known-unreadable, and their retirement remains Jason's
 explicit class decision (§5b), not made here. `minCredibleScore` stands at 0 pending.
 The candidate-floor census (4,725) is unchanged and not adjudicable.
 
+
+
+---
+
+# fixtures-demo-baselines — retired to git history
+
+(2026-08-07 cleanup sweep.) The six frozen demo captures — `fixtures/demo-v2.1.2.json`,
+`demo-v2.2.0.json`, `demo-v2.2.0-canon-62c5cb511433.json`, `demo-v2.3.0.json`,
+`demo-v2.4.0.json`, `demo-v2.6.0.json` (~1MB) — were deleted from the tree. They were the
+release-era freeze/diff baselines whose SHA-256s the release records in this volume cite;
+nothing reads them at runtime (verified: zero references outside record prose and one
+usage-example comment in `fixtures/run-analyzer.mjs`), and the newest is v2.6.0-era against
+a v2.6.17+ analyzer — historical evidence, not a live baseline. Per the record-hygiene rule,
+evidence bulk lives in git history:
+
+```
+git show f9c0feb:fixtures/demo-v2.6.0.json
+```
+
+`fixtures/run-analyzer.mjs` and `fixtures/diff-analysis.mjs` STAY — they are active
+instruments (every pt-run protocol calls run-analyzer; diff-analysis is the freeze/alias
+comparison tool). A future freeze comparison captures fresh baselines with run-analyzer.

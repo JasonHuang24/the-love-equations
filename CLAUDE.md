@@ -65,13 +65,14 @@ read them, a skipped gate also looks green.
 
 - `md/INDEX.md` — one row per record: date, status (LIVE/HIST/SUPERSEDED), what it
   ruled or measured. Start there before re-deriving anything.
-- The shelf is SIX VOLUMES (2026-08-07 consolidation), each holding records as
+- The shelf is SEVEN VOLUMES (2026-08-07 consolidation), each holding records as
   `# <name>` sections: `md/lab-operations.md` (LIVE protocols — RERUN,
   adjudication-at-scale, schemas) · `md/lab-history.md` (closed engine/gate/
   adjudication records) · `md/doctrine-history.md` (closed doctrine work) ·
+  `md/pressure-tests.md` (the pt series: run records + per-run working files) ·
   `md/calculators.md` · `md/roster.md` · `md/site-conventions.md`. Plus
-  `md/mission-notes.md` (Jason's: tone guardrails + the build-attribution ledger) and,
-  until the pt series closes, the standalone pressure-test records and `pt0N/` dirs.
+  `md/mission-notes.md` (Jason's: tone guardrails + the build-attribution ledger) and
+  any LIVE threshold-adjudication sheet with rulings still open.
 - `md/FEEDBACK-PIPELINE.md` and `md/limit-hit-ledger.md` stay STANDALONE — the suite
   reads both by path at runtime (lab-feedback-integrity parses their routing tables).
   They are instrument state, not records; merging them turns the suite red.
@@ -94,6 +95,6 @@ read them, a skipped gate also looks green.
   carries the one-line summary. LIVE records stay until superseded.
 - No scratch, temp, dump, or working files anywhere in the repo — session scratchpad
   only. The repo root holds site pages and config, nothing else.
-- When the pt series closes: fold `doctrine-pressure-test-04..08.md`, the `pt05–08/`
-  dirs, and the closed adjudication sheets into a new `md/pressure-tests.md` volume,
-  same byte-exact section pattern, and update this list.
+- A future pressure-test run gets its own `md/ptNN/` working dir during the run, and
+  it folds into `md/pressure-tests.md` (same byte-exact section pattern) at run close.
+  A threshold-adjudication sheet folds there when its last open ruling closes.
