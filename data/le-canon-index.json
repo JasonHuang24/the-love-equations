@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+9e24244bf93d",
+  "indexVersion": "1.0.0+d5cbf0d36468",
   "generatedAt": "2026-08-07T15:14:38.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "e7fdd8b462fe5cbe720f7f616206044c3f9b0808f016424df650f773ccef47c1",
-      "conceptCount": 70
+      "sha256": "c8974ce1fb616f29bb11a1553daa233cd89cac08c3c6844daf6d07fb3d500b8c",
+      "conceptCount": 71
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 573,
+    "conceptCount": 574,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,13 +248,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 70,
+      "Rules & Frameworks": 71,
       "Statistics": 51
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 80,
+      "Framework": 81,
       "Glossary": 98,
       "Hard data": 28,
       "Instrument": 5,
@@ -271,10 +271,10 @@
       "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 478,
-    "conceptsWithExternalSources": 144,
+    "anchoredConceptCount": 479,
+    "conceptsWithExternalSources": 145,
     "dependencyCount": 295,
-    "relatedCount": 487
+    "relatedCount": 494
   },
   "entries": [
     {
@@ -4149,6 +4149,7 @@
       "related": [
         "frameworks:ownership-load",
         "frameworks:costless-exit",
+        "frameworks:care-role-split",
         "statistics:stat-friend-time"
       ],
       "boundaryConditions": [
@@ -4626,7 +4627,8 @@
       "related": [
         "statistics:stat-equal-earner-labor",
         "frameworks:satisfaction-flywheel",
-        "frameworks:desire-state-split"
+        "frameworks:desire-state-split",
+        "frameworks:care-role-split"
       ],
       "boundaryConditions": [
         "The supporting studies are self-report and non-experimental, so unequal ownership is associated with satisfaction and desire rather than proven to cause either.",
@@ -4844,6 +4846,7 @@
       ],
       "dependencies": [],
       "related": [
+        "frameworks:care-role-split",
         "frameworks:agreement-surface",
         "frameworks:readiness-gate",
         "frameworks:satisfaction-flywheel"
@@ -4872,6 +4875,65 @@
       "pressureTests": [
         "Which part belongs to individual self-determination, and which part can the couple legitimately decide together?",
         "Is a survivor-selected qualitative finding being converted into a promise of relationship survival?"
+      ]
+    },
+    {
+      "id": "frameworks:care-role-split",
+      "title": "The Care Role Split",
+      "page": "frameworks.html",
+      "anchor": "care-role-split",
+      "category": "Rules & Frameworks",
+      "subcategory": "Retention & maintenance",
+      "synopsis": "Chronic illness can place two relationships inside one dyad: partners with a shared life, and caregiver with care receiver. The care role can organize medication, mobility, appointments, money and daily tasks while the couple role still carries reciprocity, privacy, desire, companionship and mutual choice.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Care Role Split",
+        "chronic illness caregiver role split",
+        "dyadic coping with chronic illness",
+        "shared illness appraisal"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "partner becomes an illness caregiver",
+        "couple relationship and chronic illness care relationship",
+        "illness related relationship talk",
+        "relationship centered chronic illness care",
+        "caregiving partner mourns intimacy after illness"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:ownership-load",
+        "frameworks:support-portfolio",
+        "frameworks:co-transition",
+        "frameworks:satisfaction-flywheel"
+      ],
+      "boundaryConditions": [
+        "The care role and the couple role can overlap without one fully replacing the other; the framework identifies a tension rather than an inevitable outcome.",
+        "The qualitative study contains 17 spouses from ten older heterosexual German couples who remained together, so it maps a process but cannot estimate prevalence or survival.",
+        "The three-wave dyadic study is observational, convenience-recruited and substantially attrited; within-person covariation does not establish that shared appraisal, communication or coping causes better relationship outcomes.",
+        "Shared appraisal means coordinating around an illness that affects both partners; it does not transfer authority over the patient's body, treatment or consent to the caregiver."
+      ],
+      "commonMisreadings": [
+        "A loving partner should absorb every caregiving duty while preserving the relationship unchanged.",
+        "One partner's chronic illness belongs outside the relationship's shared decisions.",
+        "When caregiving begins, devotion naturally preserves equal roles and sexual intimacy."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Niedling & H&auml;mel (2023), Frontiers in Public Health 11:1117786",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10064083/"
+        },
+        {
+          "label": "Shrout, Weigel & Laurenceau (2024), Journal of Family Psychology 38(1):136–148",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10843698/"
+        }
+      ],
+      "pressureTests": [
+        "Is caregiving being treated as proof that the couple relationship remains unchanged, or measured as a second role that can crowd it out?",
+        "Does shared illness appraisal mean coordinated coping, or has it been inflated into shared authority over the patient's body and treatment?"
       ]
     },
     {

@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 573);
+assert.equal(index.stats.conceptCount, 574);
 assert.equal(index.stats.sourceCount, 21);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 47,
@@ -26,7 +26,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 70,
+  'Rules & Frameworks': 71,
   Statistics: 51,
 });
 
@@ -67,7 +67,7 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 573);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 574);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
@@ -81,8 +81,9 @@ assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).len
 // distance discount, then folded the scout's courtship buffer and typology
 // shortcut, all five with both. Pressure test 08 folded two more from the
 // scout — the authority firewall and synthetic reciprocity — again with both,
-// so the gap of 35 is unchanged and only the totals move.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 540);
+// and pressure test 09 added the care role split with both, so the gap of 35 is
+// unchanged and only the totals move.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 541);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -141,6 +142,12 @@ assert(required('frameworks:support-portfolio').dependencies.includes('framework
 assert(required('frameworks:support-portfolio').aliases.includes('mankeeping'));
 assert.equal(required('frameworks:support-portfolio').sourceLinks.length, 6);
 assert.equal(required('frameworks:co-transition').sourceLinks.length, 2);
+assert.equal(required('frameworks:care-role-split').sourceLinks.length, 2);
+assert(required('frameworks:care-role-split').aliases.includes('dyadic coping with chronic illness'));
+assert(required('frameworks:care-role-split').related.includes('frameworks:co-transition'));
+assert(required('frameworks:co-transition').related.includes('frameworks:care-role-split'));
+assert(required('frameworks:ownership-load').related.includes('frameworks:care-role-split'));
+assert(required('frameworks:support-portfolio').related.includes('frameworks:care-role-split'));
 assert.equal(required('statistics:stat-shared-positive-affect').sourceLinks.length, 1);
 assert(required('statistics:stat-shared-positive-affect').aliases.includes('Shared Positivity Dividend'));
 

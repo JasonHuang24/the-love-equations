@@ -1365,7 +1365,8 @@
       "related": [
         "statistics:stat-equal-earner-labor",
         "frameworks:satisfaction-flywheel",
-        "frameworks:desire-state-split"
+        "frameworks:desire-state-split",
+        "frameworks:care-role-split"
       ],
       "boundaryConditions": [
         "The supporting studies are self-report and non-experimental, so unequal ownership is associated with satisfaction and desire rather than proven to cause either.",
@@ -1489,7 +1490,8 @@
       "related": [
         "frameworks:agreement-surface",
         "frameworks:readiness-gate",
-        "frameworks:satisfaction-flywheel"
+        "frameworks:satisfaction-flywheel",
+        "frameworks:care-role-split"
       ],
       "boundaryConditions": [
         "The transitioning partner alone owns their gender identity, body and medical care; relationship impact does not grant a partner veto power over transition.",
@@ -1505,6 +1507,42 @@
       "pressureTests": [
         "Which part belongs to individual self-determination, and which part can the couple legitimately decide together?",
         "Is a survivor-selected qualitative finding being converted into a promise of relationship survival?"
+      ]
+    },
+    "frameworks:care-role-split": {
+      "aliases": [
+        "Care Role Split",
+        "chronic illness caregiver role split",
+        "dyadic coping with chronic illness",
+        "shared illness appraisal"
+      ],
+      "phrases": [
+        "partner becomes an illness caregiver",
+        "couple relationship and chronic illness care relationship",
+        "illness related relationship talk",
+        "relationship centered chronic illness care",
+        "caregiving partner mourns intimacy after illness"
+      ],
+      "related": [
+        "frameworks:ownership-load",
+        "frameworks:support-portfolio",
+        "frameworks:co-transition",
+        "frameworks:satisfaction-flywheel"
+      ],
+      "boundaryConditions": [
+        "The care role and the couple role can overlap without one fully replacing the other; the framework identifies a tension rather than an inevitable outcome.",
+        "The qualitative study contains 17 spouses from ten older heterosexual German couples who remained together, so it maps a process but cannot estimate prevalence or survival.",
+        "The three-wave dyadic study is observational, convenience-recruited and substantially attrited; within-person covariation does not establish that shared appraisal, communication or coping causes better relationship outcomes.",
+        "Shared appraisal means coordinating around an illness that affects both partners; it does not transfer authority over the patient's body, treatment or consent to the caregiver."
+      ],
+      "commonMisreadings": [
+        "A loving partner should absorb every caregiving duty while preserving the relationship unchanged.",
+        "One partner's chronic illness belongs outside the relationship's shared decisions.",
+        "When caregiving begins, devotion naturally preserves equal roles and sexual intimacy."
+      ],
+      "pressureTests": [
+        "Is caregiving being treated as proof that the couple relationship remains unchanged, or measured as a second role that can crowd it out?",
+        "Does shared illness appraisal mean coordinated coping, or has it been inflated into shared authority over the patient's body and treatment?"
       ]
     },
     "frameworks:operative-frame": {
@@ -1730,6 +1768,7 @@
         "frameworks:third-party-layer",
         "frameworks:ownership-load",
         "frameworks:costless-exit",
+        "frameworks:care-role-split",
         "statistics:stat-friend-time"
       ],
       "boundaryConditions": [
