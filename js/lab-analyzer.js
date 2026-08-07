@@ -2891,12 +2891,23 @@ function genericCueGround(text, anchorTokens) {
  * reads only what precedes the MATCH, so `no evidence` and `not always`
  * still fire as the cues they are.
  */
-const CUE_NEGATOR_BEFORE = /\b(?:not|never|nor|neither|nothing|nobody|none|hardly|scarcely|barely|cannot|without|fails? to|failed to|far from)\b(?:\s+\S+){0,2}\s*$/i;
+/*
+ * What defeats a cue: the passage denying it, or the passage supposing it.
+ *
+ * Negation was the first half (see above). The second half is hypothetical
+ * framing, and it costs the same kind of error: measured against
+ * frameworks:conversion-ladder, "If it were true that <claim>, dating apps
+ * would be simpler" read Supports 0.668, "Suppose it is true that <claim>"
+ * read Supports 0.700, and "Unless the study is wrong, <claim>" read
+ * Supports 0.612. A supposition is not an endorsement, and a condition on a
+ * cue is not that cue.
+ */
+const CUE_DEFEATER_BEFORE = /\b(?:not|never|nor|neither|nothing|nobody|none|hardly|scarcely|barely|cannot|without|fails? to|failed to|far from|if|unless|whether|suppose|supposing|assuming|imagine|hypothetically|were)\b(?:\s+\S+){0,2}\s*$/i;
 
 function cueFires(ground, pattern) {
   const scan = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
   for (const hit of String(ground).matchAll(scan)) {
-    if (!CUE_NEGATOR_BEFORE.test(ground.slice(0, hit.index))) return true;
+    if (!CUE_DEFEATER_BEFORE.test(ground.slice(0, hit.index))) return true;
   }
   return false;
 }
@@ -3001,7 +3012,18 @@ function stanceFor(unit, match) {
     // Clause-scoped from v2.6.20: the four claim-directed cue families read
     // the assertion clause and its follow-up, not the whole passage. Evidence
     // register alone still reads passage-wide.
-    const cueGround = genericCueGround(text, rawScore.sharedTokens);
+    /*
+     * A question is not a verdict. "Is it true that <claim>?" and "It is true
+     * that <claim>." reached this ladder as the same string once punctuation
+     * was stripped, and both read Supports at 0.714 — the interrogative and
+     * its own assertion, indistinguishable. The four claim-directed families
+     * are withheld inside a question; EVIDENCE_CUES are not, because a
+     * question can still cite a study and the citation is a property of the
+     * passage. Rhetorical questions therefore under-claim rather than
+     * over-claim, which is the direction this instrument prefers.
+     */
+    const interrogative = /\?/.test(String(unit?.text || ''));
+    const cueGround = interrogative ? '' : genericCueGround(text, rawScore.sharedTokens);
     if (cueFires(cueGround, CONTRADICTION_CUES) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
       label = 'Challenges';
       rationale = 'The source uses explicit disagreement language around the matched concept.';
