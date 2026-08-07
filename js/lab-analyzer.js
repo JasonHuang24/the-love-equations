@@ -2854,6 +2854,40 @@ function genericCueGround(text, anchorTokens) {
   return [assertion.text, clauses[at + 1]?.text].filter(Boolean).join(' ');
 }
 
+/*
+ * A cue the passage has just denied is not that cue.
+ *
+ * The generic ladder tests four cue families as bare presence, and presence
+ * cannot tell "true that" from "not true that". Measured on crafted input
+ * against frameworks:conversion-ladder: "It is not true that <claim>" read
+ * Supports, "Nothing here confirms that <claim>" read Supports, "It is not
+ * consistent with <claim>" read Supports, and "<claim>; this is not wrong"
+ * read Challenges. Four inversions — the label pointing at the opposite of
+ * what the passage says, which is the most expensive error this instrument
+ * can make.
+ *
+ * The window is three words, and it is deliberately short. A cue counts unless
+ * a negator sits within three words in front of it, in the same ground. That
+ * is the distance an English negator actually reaches without a parser ("is
+ * not true", "does not appear to support", "nothing here confirms"); widening
+ * it starts catching negations that belong to a different proposition, which
+ * is the failure the documented-limits block already names for the misreading
+ * branch and which no cue-list edit can fix.
+ *
+ * The negator inside a cue's own text is untouched by construction — the guard
+ * reads only what precedes the MATCH, so `no evidence` and `not always`
+ * still fire as the cues they are.
+ */
+const CUE_NEGATOR_BEFORE = /\b(?:not|never|nor|neither|nothing|nobody|none|hardly|scarcely|barely|cannot|without|fails? to|failed to|far from)\b(?:\s+\S+){0,2}\s*$/i;
+
+function cueFires(ground, pattern) {
+  const scan = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
+  for (const hit of String(ground).matchAll(scan)) {
+    if (!CUE_NEGATOR_BEFORE.test(ground.slice(0, hit.index))) return true;
+  }
+  return false;
+}
+
 /**
  * What the source is doing with the matched concept.
  *
@@ -2955,16 +2989,16 @@ function stanceFor(unit, match) {
     // the assertion clause and its follow-up, not the whole passage. Evidence
     // register alone still reads passage-wide.
     const cueGround = genericCueGround(text, rawScore.sharedTokens);
-    if (CONTRADICTION_CUES.test(cueGround) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
+    if (cueFires(cueGround, CONTRADICTION_CUES) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
       label = 'Challenges';
       rationale = 'The source uses explicit disagreement language around the matched concept.';
-    } else if (CHALLENGE_CUES.test(cueGround)) {
+    } else if (cueFires(cueGround, CHALLENGE_CUES)) {
       label = 'Challenges';
       rationale = 'The source names an exception, dependency, or scope limit around the matched concept.';
-    } else if (EXTENSION_CUES.test(cueGround)) {
+    } else if (cueFires(cueGround, EXTENSION_CUES)) {
       label = 'Extends';
       rationale = 'The source proposes an additional mechanism, factor, or edge case around the matched concept.';
-    } else if (SUPPORT_CUES.test(cueGround) || EVIDENCE_CUES.test(text)) {
+    } else if (cueFires(cueGround, SUPPORT_CUES) || EVIDENCE_CUES.test(text)) {
       label = 'Supports';
       rationale = 'The source presents the matched concept affirmatively and includes support or evidence language.';
     }
