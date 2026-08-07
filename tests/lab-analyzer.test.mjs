@@ -1898,3 +1898,35 @@ test('the generic cue ladder reads the claim clause and its follow-up, not the w
   assert.equal(await ladderLabel(`${compact}; that model is wrong.`), 'Challenges',
     'a verdict in the claim\'s own follow-up clause must still land');
 });
+
+test('a token the entry uses only in its own pressure test is not evidence of the misreading', async () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface:
+   * misreading-firing-contract). The v2.5.0 distinctive-token guard exists so
+   * that a CORRECT restatement cannot read Contradicts — share alone is topic
+   * evidence, so a token has to be absent from the entry's own affirmative
+   * voice before it can evidence the rejected reading. That "own voice" was
+   * defined as title + aliases + synopsis + boundary conditions, and left out
+   * `pressureTests`, which is authored canon prose in exactly the same voice.
+   *
+   * Repro: "The Conversion Ladder separates exposure, attention, attraction,
+   * and selection." — a faithful restatement — read lexicon:term-conversion-
+   * ladder as Contradicts at 0.881. Its misreading conflates the rungs
+   * ("Attention is attraction, attraction is selection, so a woman who likes
+   * your photo has chosen you"); the passage does the opposite. The single
+   * distinctive hit was `selection`, a word the entry's synopsis happens to
+   * spell "chosen" and its own pressure test spells "selection".
+   */
+  const result = await analyzeDocument(normalizeInput({
+    text: 'The Conversion Ladder separates exposure, attention, attraction, and selection.',
+    source: { title: 'Misreading distinctive-token probe' },
+  }), REAL_CANON);
+  const match = result.segments
+    .flatMap((segment) => segment.matches)
+    .find((entry) => entry.canonId === 'lexicon:term-conversion-ladder');
+  assert.ok(match, 'the lexicon Conversion Ladder entry still matches its own definition');
+  assert.deepEqual(match.alignment.evidence.misreadingDistinctiveHits, [],
+    '`selection` is the entry\'s own pressure-test vocabulary, not the misreading\'s');
+  assert.notEqual(match.alignment.label, 'Contradicts',
+    'a faithful restatement of the entry must not read as asserting the reading it rejects');
+});
