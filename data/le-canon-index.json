@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+79158e0f6247",
+  "indexVersion": "1.0.0+c4f092f8c7d3",
   "generatedAt": "2026-08-06T23:38:53.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "aef63669a62f0f71e0e3baac38b0442af77224e3db0b10670740ed6528071474",
-      "conceptCount": 61
+      "sha256": "aac07c84d1028ed7aa74da005650476234728f3596ad652e69edf3064c548ac1",
+      "conceptCount": 63
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 564,
+    "conceptCount": 566,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 61,
+      "Rules & Frameworks": 63,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -267,14 +267,14 @@
       "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 50,
-      "Tier 2": 17,
+      "Tier 1": 51,
+      "Tier 2": 18,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 469,
-    "conceptsWithExternalSources": 135,
-    "dependencyCount": 286,
-    "relatedCount": 465
+    "anchoredConceptCount": 471,
+    "conceptsWithExternalSources": 137,
+    "dependencyCount": 288,
+    "relatedCount": 471
   },
   "entries": [
     {
@@ -4026,6 +4026,26 @@
         {
           "label": "Mancini et al. (2026), Sex Roles",
           "url": "https://doi.org/10.1007/s11199-026-01661-2"
+        },
+        {
+          "label": "Rochadiat, Tong, Hancock & Stuart-Ulin (2020), “The Outsourcing of Online Dating,” Social Media + Society",
+          "url": "https://doi.org/10.1177/2056305120957290"
+        },
+        {
+          "label": "CBS News",
+          "url": "https://www.cbsnews.com/news/turning-love-into-a-career/"
+        },
+        {
+          "label": "The Guardian (2025)",
+          "url": "https://www.theguardian.com/lifeandstyle/2025/mar/08/ai-wingmen-bots-to-write-profiles-and-flirt-on-dating-apps"
+        },
+        {
+          "label": "AP",
+          "url": "https://apnews.com/article/3c612af2284e85860927d95998750829"
+        },
+        {
+          "label": "The Guardian (2026)",
+          "url": "https://www.theguardian.com/technology/2026/feb/15/ai-dating-apps-personality-matchmaking"
         }
       ],
       "pressureTests": [
@@ -4171,6 +4191,81 @@
       "pressureTests": [
         "Is one couple's support split being read as a fact about all men?",
         "Does the claim separate having few channels from burdening the one that remains?"
+      ]
+    },
+    {
+      "id": "frameworks:delegation-boundary",
+      "title": "The Delegation Boundary",
+      "page": "frameworks.html",
+      "anchor": "delegation-boundary",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "The parent prices the third parties around a couple; the Costless Exit priced leaving; the Support Portfolio priced the load. This entry prices being represented. Courtship assistance transfers different amounts of agency: feedback leaves the seeker authoring and deciding; co-authorship shares the presentation; substitution lets a proxy present, screen, select, or converse as the seeker.",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Delegation Boundary",
+        "delegated courtship",
+        "courtship delegation",
+        "dating labor outsourcing",
+        "relationship ghostwriting",
+        "proxy messaging",
+        "romantic proxy",
+        "AI wingman"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "outsourcing the swiping",
+        "someone else writes their messages",
+        "hired a dating assistant",
+        "an AI writes the profile",
+        "flirting on their behalf"
+      ],
+      "dependencies": [
+        "frameworks:third-party-layer"
+      ],
+      "related": [
+        "frameworks:meeting-channel",
+        "frameworks:survivorship-channel",
+        "frameworks:market-maker-cut"
+      ],
+      "boundaryConditions": [
+        "Proofreading, accessibility support, advice, collaborative drafting, undisclosed impersonation, and autonomous selection transfer different decisions and stay distinct.",
+        "Platform ranking, seeker-set filters, and shortlists the seeker still reviews remain Meeting Channel mechanics; delegation begins when an assistant applies or invents preferences without the seeker's review.",
+        "The evidence base is descriptive and qualitative — no population prevalence, causal harm estimate, success rate, or human-versus-AI ranking exists."
+      ],
+      "commonMisreadings": [
+        "A polished profile proves the seeker will hold a first date conversation equally well.",
+        "Using any assistant makes every courtship deceptive from the first message onward.",
+        "An intermediary who finds a match can guarantee chemistry once the relationship moves offline."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Rochadiat, Tong, Hancock & Stuart-Ulin (2020), “The Outsourcing of Online Dating,” Social Media + Society",
+          "url": "https://doi.org/10.1177/2056305120957290"
+        },
+        {
+          "label": "CBS News",
+          "url": "https://www.cbsnews.com/news/turning-love-into-a-career/"
+        },
+        {
+          "label": "The Guardian (2025)",
+          "url": "https://www.theguardian.com/lifeandstyle/2025/mar/08/ai-wingmen-bots-to-write-profiles-and-flirt-on-dating-apps"
+        },
+        {
+          "label": "AP",
+          "url": "https://apnews.com/article/3c612af2284e85860927d95998750829"
+        },
+        {
+          "label": "The Guardian (2026)",
+          "url": "https://www.theguardian.com/technology/2026/feb/15/ai-dating-apps-personality-matchmaking"
+        }
+      ],
+      "pressureTests": [
+        "Which decision was transferred here — the wording, the screening, or the seeker's own judgment?",
+        "Would the assisted performance survive the first unassisted conversation?"
       ]
     },
     {
@@ -5535,11 +5630,98 @@
         {
           "label": "Petrongolo & Pissarides (2006), The Economic Journal 116(508):21–44",
           "url": "https://academic.oup.com/ej/article/116/508/21/5089376"
+        },
+        {
+          "label": "Adda, Pinotti & Tura (2025), “There’s More to Marriage Than Love,” Journal of Political Economy 133(4):1276–1333",
+          "url": "https://doi.org/10.1086/734093"
+        },
+        {
+          "label": "Chang (2016), “Marital Power Dynamics and Well-Being of Marriage Migrants,” Journal of Family Issues",
+          "url": "https://doi.org/10.1177/0192513X15570317"
+        },
+        {
+          "label": "Statham & Sunanta (2026), Annual Review of Sociology",
+          "url": "https://doi.org/10.1146/annurev-soc-011824-031039"
+        },
+        {
+          "label": "The Guardian (2016)",
+          "url": "https://www.theguardian.com/lifeandstyle/2016/jan/11/mail-order-marriage-brides-ukraine-america-romance"
         }
       ],
       "pressureTests": [
         "Does this local statistic describe the submarket this person is in, or a city-wide average?",
         "Did the apparent benefit of moving survive a correction for who chooses to move?"
+      ]
+    },
+    {
+      "id": "frameworks:border-bundle",
+      "title": "The Border Bundle",
+      "page": "frameworks.html",
+      "anchor": "border-bundle",
+      "category": "Rules & Frameworks",
+      "subcategory": "The market container",
+      "synopsis": "The parent entry prices the container you compete in. This one prices what happens when a pairing joins two containers: a cross-border relationship can bundle itself with mobility, legal status, language, employment, family separation, and access to another social network — resources that expand the migrating partner’s options and create leverage inside the relationship at the same time.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Border Bundle",
+        "cross-border intimacy",
+        "intimate mobility",
+        "marriage migration",
+        "partner migration",
+        "transnational courtship",
+        "international matchmaking",
+        "relocation bargain"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "moved countries for the relationship",
+        "visa depends on the marriage",
+        "met through an international agency",
+        "a better life abroad",
+        "mail-order bride"
+      ],
+      "dependencies": [
+        "frameworks:local-market"
+      ],
+      "related": [
+        "frameworks:sex-ratio",
+        "frameworks:search-cost",
+        "deep-dive:relationships-by-country"
+      ],
+      "boundaryConditions": [
+        "Dating abroad, nationality difference, and intercultural attraction alone do not establish the bundle; at least one mobility, legal-status, language, employment, network, or relocation channel must enter the pairing's bargaining conditions.",
+        "The 40%/20% legal-status estimates are bounded to the Italian EU-enlargement natural experiment and are not universal effect sizes.",
+        "The South Korean well-being result is observational and context-bound, and mixed economic, citizenship, family, and affection-driven motives neither prove fraud nor erase attachment."
+      ],
+      "commonMisreadings": [
+        "A foreign partner always gains equal leverage once the relationship crosses a national border.",
+        "International matchmaking proves each partner values romance above migration, money, and citizenship.",
+        "A larger global pool gives every couple better options than either local market."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Adda, Pinotti & Tura (2025), “There’s More to Marriage Than Love,” Journal of Political Economy 133(4):1276–1333",
+          "url": "https://doi.org/10.1086/734093"
+        },
+        {
+          "label": "Chang (2016), “Marital Power Dynamics and Well-Being of Marriage Migrants,” Journal of Family Issues",
+          "url": "https://doi.org/10.1177/0192513X15570317"
+        },
+        {
+          "label": "Statham & Sunanta (2026), Annual Review of Sociology",
+          "url": "https://doi.org/10.1146/annurev-soc-011824-031039"
+        },
+        {
+          "label": "The Guardian (2016)",
+          "url": "https://www.theguardian.com/lifeandstyle/2016/jan/11/mail-order-marriage-brides-ukraine-america-romance"
+        }
+      ],
+      "pressureTests": [
+        "Did a mobility, status, language, work, or network channel actually enter this pairing's terms, or is this just dating abroad?",
+        "Is an exploitation verdict or a pure-romance verdict being read off a case that carries both intimacy and material bargaining?"
       ]
     },
     {

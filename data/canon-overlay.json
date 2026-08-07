@@ -1662,6 +1662,45 @@
         "Is the approval predicting the relationship, or is the relationship producing the approval?"
       ]
     },
+    "frameworks:delegation-boundary": {
+      "aliases": [
+        "Delegation Boundary",
+        "delegated courtship",
+        "courtship delegation",
+        "dating labor outsourcing",
+        "relationship ghostwriting",
+        "proxy messaging",
+        "romantic proxy",
+        "AI wingman"
+      ],
+      "phrases": [
+        "outsourcing the swiping",
+        "someone else writes their messages",
+        "hired a dating assistant",
+        "an AI writes the profile",
+        "flirting on their behalf"
+      ],
+      "related": [
+        "frameworks:third-party-layer",
+        "frameworks:meeting-channel",
+        "frameworks:survivorship-channel",
+        "frameworks:market-maker-cut"
+      ],
+      "boundaryConditions": [
+        "Proofreading, accessibility support, advice, collaborative drafting, undisclosed impersonation, and autonomous selection transfer different decisions and stay distinct.",
+        "Platform ranking, seeker-set filters, and shortlists the seeker still reviews remain Meeting Channel mechanics; delegation begins when an assistant applies or invents preferences without the seeker's review.",
+        "The evidence base is descriptive and qualitative — no population prevalence, causal harm estimate, success rate, or human-versus-AI ranking exists."
+      ],
+      "commonMisreadings": [
+        "A polished profile proves the seeker will hold a first date conversation equally well.",
+        "Using any assistant makes every courtship deceptive from the first message onward.",
+        "An intermediary who finds a match can guarantee chemistry once the relationship moves offline."
+      ],
+      "pressureTests": [
+        "Which decision was transferred here — the wording, the screening, or the seeker's own judgment?",
+        "Would the assisted performance survive the first unassisted conversation?"
+      ]
+    },
     "frameworks:sixth-rung": {
       "aliases": [
         "Sixth Rung",
@@ -2009,6 +2048,45 @@
       "pressureTests": [
         "Does this local statistic describe the submarket this person is in, or a city-wide average?",
         "Did the apparent benefit of moving survive a correction for who chooses to move?"
+      ]
+    },
+    "frameworks:border-bundle": {
+      "aliases": [
+        "Border Bundle",
+        "cross-border intimacy",
+        "intimate mobility",
+        "marriage migration",
+        "partner migration",
+        "transnational courtship",
+        "international matchmaking",
+        "relocation bargain"
+      ],
+      "phrases": [
+        "moved countries for the relationship",
+        "visa depends on the marriage",
+        "met through an international agency",
+        "a better life abroad",
+        "mail-order bride"
+      ],
+      "related": [
+        "frameworks:local-market",
+        "frameworks:sex-ratio",
+        "frameworks:search-cost",
+        "deep-dive:relationships-by-country"
+      ],
+      "boundaryConditions": [
+        "Dating abroad, nationality difference, and intercultural attraction alone do not establish the bundle; at least one mobility, legal-status, language, employment, network, or relocation channel must enter the pairing's bargaining conditions.",
+        "The 40%/20% legal-status estimates are bounded to the Italian EU-enlargement natural experiment and are not universal effect sizes.",
+        "The South Korean well-being result is observational and context-bound, and mixed economic, citizenship, family, and affection-driven motives neither prove fraud nor erase attachment."
+      ],
+      "commonMisreadings": [
+        "A foreign partner always gains equal leverage once the relationship crosses a national border.",
+        "International matchmaking proves each partner values romance above migration, money, and citizenship.",
+        "A larger global pool gives every couple better options than either local market."
+      ],
+      "pressureTests": [
+        "Did a mobility, status, language, work, or network channel actually enter this pairing's terms, or is this just dating abroad?",
+        "Is an exploitation verdict or a pure-romance verdict being read off a case that carries both intimacy and material bargaining?"
       ]
     },
     "frameworks:saturation-rule": {
