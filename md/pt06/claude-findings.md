@@ -213,3 +213,31 @@ down" framing unless the two use "hypergamy" for different measures
 direction conventions). An entry authored before that reconciliation would
 risk enshrining the very measure confusion it should dissolve. Not shipped
 this run; the reconciliation is the named next step.
+
+## Integration 2 — commits `3439f66` (fold) + `3e38fc6` (stamp) + `cb816b1` (scout closeout)
+
+The scout closed at 18:05 with two proposals; both were independently
+re-verified before folding: Rochadiat 2020 (Crossref — ODAs assume clients'
+identities toward unsuspecting daters), Adda/Pinotti/Tura JPE (RePEc abstract
+verbatim: legal-status access → intermarriage −40%, intermarriage separation
+hazard +20%), Chang 2016 (Crossref verbatim: N = 64,972, marital power
+dynamics), Statham & Sunanta 2026 (title/venue/date). Shipped **17.3 The
+Delegation Boundary** and **35.1 The Border Bundle** (canon 564→566) through
+the full pt04 cycle: fresh baseline `--dump`; 227 rulings (220 weak 190R/30
+loss-A; 7 credible: 5 REJECT + 2 loss-ACCEPT, FLAGGED FOR JASON); band regen
+onto the existing fixture; 6/6 misreadings Contradicts 0.73–0.80.
+
+Two authored-surface over-reaches were caught and reworded (never a pin):
+my Border Bundle sub-note collided with the volcanic-ash probe's "A new
+claim says…" template ("says … says" + "a new social network" — reworded,
+probe returned to unmapped), and the 8-token Finkel sentence "He also has to
+be your only romantic partner." hit 0.608 credible on BOTH new entries via
+the short-unit coverage effect on the romantic+partner token pair (reworded
+P1's first misreading and P2's boundary text; both pairs fell below every
+line). Misreading and boundary text is live match surface — re-swept after
+each edit.
+
+Zero weak gains accepted in this integration, and that is the honest result:
+the corpus has no delegation-in-courtship or cross-border-pairing prose; the
+only genuinely adjacent passage (Trent's migration × marriage-markets
+future-work sentence) crosses nothing above the census floor.
