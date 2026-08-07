@@ -146,3 +146,14 @@ re-sweep after each edit. Census lane 14,354 recorded, unchanged.
 - Scout tallies and both proposals folded from `md/pt06/chatgpt-findings.md`
   after its 18:05 closeout; its recomputed hashes and QA block are in that
   file.
+
+## 8. Addendum — scout artifact tidied (2026-08-07)
+
+`md/pt06/chatgpt-findings.md` was deleted from the working tree in the repo
+cleanup sweep (the pt07 §7 pattern; `chatgpt-handoff.md` had already been
+tidied on 2026-08-06). It was committed at its closeout and is recoverable in
+full — including the recomputed hashes and QA block §7 cites:
+
+```
+git show cb816b1:md/pt06/chatgpt-findings.md
+```

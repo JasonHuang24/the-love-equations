@@ -124,3 +124,15 @@ their committed values.
   and TOC rows 4.1 / 15.2 / 17.1 / 17.2; zero console errors.
 - Commits: `9964610` (integration 1) · `d936d9d` (stamp) · `b85ed25`
   (integration 2) · `5666b97` (stamp) — all local, **no push without Jason**.
+
+## 8. Addendum — scout artifacts tidied (2026-08-07)
+
+The three scout files were deleted from the working tree in the repo cleanup
+sweep (the pt07 §7 pattern), their content folded here and into the shipped
+entries. All three were committed first and are recoverable in full:
+
+```
+git show 9962100:md/pt05/chatgpt-findings.md
+git show adebdb3:md/pt05/chatgpt-proposal-marriage-bar.md
+git show adebdb3:md/pt05/chatgpt-proposal-support-portfolio.md
+```
