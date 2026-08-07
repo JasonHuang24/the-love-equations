@@ -28,7 +28,8 @@ another session read its red suite as a regression.
 
 ## lab-corpus/
 
-Gitignored, third-party, and UNRECOVERABLE if destroyed (md/RERUN.md §1). Never commit
+Gitignored, third-party, and UNRECOVERABLE if destroyed (RERUN §1, in
+md/lab-operations.md). Never commit
 its text, never junction it anywhere — copy it. If it is absent, threshold tests SKIP
 and the adjudication tripwire silently disarms; the suite prints skipped assertions —
 read them, a skipped gate also looks green.
@@ -62,11 +63,34 @@ read them, a skipped gate also looks green.
 
 ## Where things are recorded
 
-- `md/INDEX.md` — every record file: date, status (LIVE/HIST/SUPERSEDED), what it
+- `md/INDEX.md` — one row per record: date, status (LIVE/HIST/SUPERSEDED), what it
   ruled or measured. Start there before re-deriving anything.
-- `md/RERUN.md` — corpus/re-run protocol. `md/lab-adjudication-at-scale.md` — how the
-  three threshold lines are governed. `md/mission-notes.md` — tone guardrails and the
-  build-attribution ledger (new md records go in `md/`).
+- The shelf is SIX VOLUMES (2026-08-07 consolidation), each holding records as
+  `# <name>` sections: `md/lab-operations.md` (LIVE protocols — RERUN, the feedback
+  pipeline, adjudication-at-scale, schemas) · `md/lab-history.md` (closed engine/gate/
+  adjudication records) · `md/doctrine-history.md` (closed doctrine work) ·
+  `md/calculators.md` · `md/roster.md` · `md/site-conventions.md`. Plus
+  `md/mission-notes.md` (Jason's: tone guardrails + the build-attribution ledger) and,
+  until the pt series closes, the standalone pressure-test records and `pt0N/` dirs.
 - Discipline that has paid for itself: measure before you change; attribute a zero to
   what the instrument could see before believing it; RED-first for new guards; report
   what you did NOT do as explicitly as what you did.
+
+## Record hygiene (keep the tree clean)
+
+- **Never create a new `md/*.md` file.** A new record is a new `# <name>` section
+  APPENDED to the right volume above, plus one INDEX row pointing at that volume.
+  The two standing exceptions: an active parallel-run dir (`md/ptNN/` — working space,
+  folded and deleted-with-pointer at run close, the pt07 §7 pattern) and a file Jason
+  rules into existence.
+- **Evidence bulk never lives in the tree.** Verification transcripts, SHA freeze
+  tables, fixture snapshots, scout captures: commit them if produced, then delete with
+  a `git show <hash>:<path>` pointer recorded where they were cited. Decisions,
+  rulings, costs, and corrections stay in the tree — small.
+- **Superseded (SUP) full texts get deleted-with-pointer** once their INDEX row
+  carries the one-line summary. LIVE records stay until superseded.
+- No scratch, temp, dump, or working files anywhere in the repo — session scratchpad
+  only. The repo root holds site pages and config, nothing else.
+- When the pt series closes: fold `doctrine-pressure-test-04..08.md`, the `pt05–08/`
+  dirs, and the closed adjudication sheets into a new `md/pressure-tests.md` volume,
+  same byte-exact section pattern, and update this list.
