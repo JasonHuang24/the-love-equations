@@ -2126,3 +2126,54 @@ test('a supposed cue and a questioned cue are not asserted cues', async () => {
   assert.equal(await label(`It is true that ${claim}.`), 'Supports');
   assert.equal(await label(`The Conversion Ladder separates exposure from attention and selection; that model is wrong.`), 'Challenges');
 });
+
+test('a decimal point and an abbreviation period do not end a clause', async () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: clause
+   * splitting). `clauseSegments` breaks on every one of `,;:.!?`, and it
+   * already knows the principle it needs — a hyphen ends a clause only when it
+   * is not joining two word characters — but applies it to the hyphen alone.
+   * So "3.5" is two clauses, "1,000" is two clauses, and "U.S." is two.
+   *
+   * That matters because every clause-scoped branch counts clauses forward
+   * from the assertion: a number or an abbreviation INSIDE the claim clause
+   * pushes the real next clause to position +2, where nothing reads it.
+   *
+   * Measured minimal pairs on the same claim and the same verdict:
+   *
+   *   "…in most markets; that model is wrong."         Challenges 0.697
+   *   "…in the U.S. market; that model is wrong."       Resembles  0.697
+   *   "…about three times out of four; …is wrong."      Challenges 0.619
+   *   "…about 3.5 times out of four; …is wrong."        Resembles  0.645
+   *   "…across 1,000 profiles; that model is wrong."    Resembles  0.604
+   *
+   * The U.S. pair is the sharpest: identical score, opposite label, and the
+   * only difference between the two sentences is an abbreviation.
+   *
+   * `clauseSegments` is shared by contextual co-fire and stance on purpose —
+   * "two that can drift apart" is what its own comment refuses — so this is one
+   * fix for both.
+   */
+  const label = async (text) => {
+    const result = await analyzeDocument(normalizeInput({
+      text, source: { title: 'Clause punctuation probe' },
+    }), REAL_CANON);
+    return result.segments
+      .flatMap((segment) => segment.matches)
+      .find((match) => match.canonId === 'frameworks:conversion-ladder')?.alignment?.label;
+  };
+  const claim = 'The Conversion Ladder separates exposure from attention and selection';
+
+  assert.equal(await label(`${claim} in most markets; that model is wrong.`), 'Challenges',
+    'the control: nothing between the claim and its verdict');
+  assert.equal(await label(`${claim} about 3.5 times out of four; that model is wrong.`), 'Challenges',
+    'a decimal point is part of a number, not a clause boundary');
+  assert.equal(await label(`${claim} across 1,000 profiles; that model is wrong.`), 'Challenges',
+    'a thousands separator is part of a number, not a clause boundary');
+  assert.equal(await label(`${claim} in the U.S. market; that model is wrong.`), 'Challenges',
+    'an abbreviation period is part of the abbreviation, not a clause boundary');
+
+  // A sentence-ending period still ends a clause, and so does an ordinary comma.
+  assert.equal(await label(`${claim}. That model is wrong.`), 'Resembles',
+    'a verdict in the NEXT SENTENCE is a different claim unit and does not reach back');
+});
