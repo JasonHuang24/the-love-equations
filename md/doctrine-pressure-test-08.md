@@ -3,16 +3,23 @@
 **Date:** 2026-08-07 · **Contract:** `md/pt08/PROTOCOL.md` · **Method:**
 `md/doctrine-pressure-test-04.md` as executed in pt05–pt07 · **Integrator
 model:** Claude Opus 5, high effort · **Scout:** ChatGPT/Codex, lanes A–D,
-running concurrently and **not yet closed out at the time of writing.**
+run concurrently, closed after 3:00:55 and **triaged in a second pass** —
+everything above the "Scout triage" divider was written before that closeout
+and is left as first-pass text; where it says the scout was not folded, read
+the divider.
 
 Baseline: `main` `f5ea75b`, tree clean, `test:lab` 18/18 ok with no skipped
 assertions (`lab-corpus/` present), canon 571 at `1.0.0+54d018bff967`.
 
 ## Headline
 
-This run shipped **no doctrine and one engine fix.** The gate defect it found
-is the kind the corpus could never have surfaced, and the doctrine gap it
-found is real but was deliberately left un-authored.
+The integrator's own lanes shipped **no doctrine and one engine fix.** The
+scout's lanes then shipped **two entries** (571 → 573) in a second pass after
+its closeout — see "Scout triage" at the foot of this record.
+
+The gate defect the integrator found is the kind the corpus could never have
+surfaced, and the doctrine gap it found is real but was deliberately left
+un-authored.
 
 **The domain gate could not read the word "date".** It trusted the gerund
 `dating` and nothing else, so the plain noun `dates` and the verb
@@ -121,10 +128,93 @@ proposal for pt09 rather than a half-integrated entry.
 3. **Instrument findings 2, 3 and 5** — all recorded, none fixed, each a
    scoring or precision change wider than this run could measure.
 
-## Not done
+## Not done (first pass)
 
 Lanes F, G and H unopened. No canon entry authored, no overlay edit, no index
 rebuild, no `generatedAt` stamp commit — none were needed, because nothing in
-this run touched canon. **Nothing was pushed.** The scout's lane A–D findings
-were not folded: it had not closed out, and the protocol folds a scout file
-only after its closeout.
+the first pass touched canon. **Nothing was pushed.** The scout's lane A–D
+findings were not folded: it had not closed out, and the protocol folds a
+scout file only after its closeout. *(The second pass below did all of the
+canon work, and the scout's files were folded at `bc41bdb` with the stamp at
+`21b52d7`. Lanes F, G and H remain unopened. Nothing has been pushed.)*
+
+---
+
+# Scout triage (second pass, after the scout's 3:00:55 closeout)
+
+The ChatGPT scout closed with 26 analyzed captures, 4 abandoned fetches, and
+verdicts of 19 gap / 5 covered / 2 correctly unmapped. Three proposals were
+triaged independently. **A scout "gap" verdict was not treated as authorization
+to author**: every load-bearing figure was re-verified at primary source first,
+and that caught two defects the scout's own QA had not.
+
+| proposal | ruling |
+|---|---|
+| **Synthetic Reciprocity** → `substitution-layer` | **integrated**, re-scoped |
+| **The Authority Firewall** → `meeting-channel` | **integrated**, attribution corrected |
+| **The Parenthood Fork** → `deep-dive:single-parenthood` | **deferred intact to PT09** |
+
+## What re-verification caught
+
+**The Authority Firewall cited the wrong author, twice.** Claims 1 and 3 credit
+"Horan & Chory's 2022 nationwide survey." DOI `10.3390/bs12080278` is
+**La France, B. H. (2022)**, *Behavioral Sciences* 12(8):278. Every figure
+verified exactly — N=259, 3.64/1.97 vs 5.31/1.81, t(257)=−15.39, d=−0.96,
+policy d=1.16, reports-to-you d=0.70 — so the evidence was sound and only the
+attribution was wrong. Corrected before authoring.
+
+**The Parenthood Fork's claim 2 inverts its source.** It states that "parenting
+stress and financial difficulty were associated with adjustment problems."
+Golombok et al. (2020) found financial difficulties **did not** predict child
+adjustment at Phase 2; the predictors were parenting stress and prior
+adjustment difficulties. Combined with a structural problem —
+`deep-dive:single-parenthood` is an `Essay` whose 33 children are
+`Essay section`s, and the proposal declares no content type at all — this is
+deferred rather than patched. The parent choice is a design call, not a typo.
+
+Everything else verified exactly: Folk/Heine/Dunn 2025 (N=1,274, Study 2
+preregistered, B=.100 p=.013), Ta et al. 2020 (1,854 reviews, 66 users, no
+tangible support), Smith/Bradbury/Karney 2025, Fang et al. 2025 (N=981,
+non-causal), the NIH and UNC Charlotte policies verbatim, Zamora-Martínez 2025
+(26 studies), Zadeh 2017 (19 children, 8/4/3/4), HFEA 1-in-6, and Golombok 2023
+(30/30, 80%/60% power).
+
+## Re-scoping, not just folding
+
+Synthetic Reciprocity was **narrowed**. The proposal's analytical point 3 —
+supplement versus displacement — is already owned by the parent's own boundary
+("substitution and complementarity are observationally identical in
+cross-section"). Restating it would have duplicated canon. The component keeps
+what is genuinely new: which functions perceived responsiveness supplies, and
+which need a second party with something at stake. The parent had also
+deliberately published **no figure** on synthetic companionship for want of
+verified evidence; that blank is what this fills.
+
+**Lane B preserved as no-new-doctrine.** `agreement-surface`'s synopsis already
+names "monogamous," "open" and "polyamorous" and owns the operating contract.
+No mechanism outside it was found.
+
+## The cost that was recorded rather than paid
+
+`M-TBD-53` lost its mapping on *"Nearly 1 in 3 young adult men and 1 in 4 young
+adult women have chatted with an AI simulated romantic partner"* (0.464 →
+0.419), and **Synthetic Reciprocity did not pick it up** — it scores below 0.30
+there. This is the measured price of the anti-magnet constraint: the entry
+carries no `AI companion` / `AI girlfriend` / `chatbot partner` / `Replika`
+surface, so it cannot reach the most literal AI-partner sentence in the corpus.
+The constraint was kept and the coverage hole recorded. Closing it would mean
+restoring exactly the magnet pt07 removed.
+
+Full adjudication: `md/lab-pressure-test-08-threshold-adjudication.md` — 219
+crossings ruled same day (105 ACCEPT / 114 REJECT, ruledBy Claude), weak and
+credible pending both 0, **the 9 credible rulings flagged for Jason** because
+no pt08 delegation was given.
+
+## Still open for Jason after this pass
+
+1. **Proposed benchmark append #5** (unchanged from the first pass) — the gate
+   fix at `959d32c` still ships without its guard.
+2. **The Parenthood Fork** — pick a parent and content type, and correct
+   claim 2, or rule no-doctrine-needed.
+3. **The 9 credible rulings above**, including the two REJECTed losses.
+4. **The purchased-trait gap** from the integrator's lane E — still unauthored.
