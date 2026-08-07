@@ -2,8 +2,8 @@
 
 **Run date:** 2026-08-06. Main run **19:44–20:44 MDT (60 minutes)**, extended
 from 20:58 at Jason's request. Times are from the commit timestamps, not
-estimated. (Claude integrator lane; the scout was still working its lanes
-throughout and has **not** closed out.)
+estimated. (Claude integrator lane. The scout closed out after **2h01m**; its findings,
+proposals and ledger were folded in a fourth integration at Jason's request.)
 
 **Correction, recorded rather than quietly fixed:** the first version of this
 record dated the main run 19:44–21:50 and reported it as meeting the protocol's
@@ -50,8 +50,30 @@ Captures 1–3 ran against canon `1.0.0+c4f092f8c7d3` (566); 4–5 against
 `1.0.0+c08dbe01725d` (569). Raw source text stayed out of the repo; SHA-256s are
 in the findings file.
 
-## 3. Implemented surfaces (canon 566 → 569, three integrations)
+## 3. Implemented surfaces (canon 566 → 571, four integrations)
 
+- **1.1 The Courtship Buffer** (under the Conversion Ladder; **folded from the
+  scout's P3**) — alcohol's measured effects are real, small and land on
+  different rungs, while the discourse treats its removal as a reveal. Sayette
+  et al. (2012, *Psychological Science* 23(8):869–878; 720 social drinkers,
+  360/360, three-stranger groups, alcohol/placebo/control over 36 minutes,
+  FACS-coded — the placebo arm is what makes it a pharmacological result);
+  Bowdring & Sayette (2018, *Addiction* 113(9):1585–1597; k = 16, n = 1,811,
+  **d = 0.19** overall, **d = 0.30** opposite-sex, **d = 0.04** same-sex and not
+  significant); Hamilton, Armeli & Tennen (2022, *Journal of American College
+  Health*; 540 undergraduates — a drink **offer** related to the odds of sex
+  controlling for drinking level, while accepted drinks were not, so the signal
+  is a cue rather than a dose).
+- **3.2 The Typology Shortcut** (under the Interaction Gate; **folded from the
+  scout's P2**) — a folk type becomes an instrument the moment it ranks or
+  deletes somebody. Chopik et al. (2025, *Innovation in Aging* 9(Suppl 1):1395;
+  954 couples, mean age 55.4 — virtually no evidence that love-language matching
+  predicts outcomes beyond personality and attachment); Mostova, Stolarski &
+  Matthews (2022, *PLOS ONE* 17(6):e0269429; 100 couples across 31
+  nationalities — what tracks satisfaction is the **continuous item-level gap**
+  between preferred and felt expression, i.e. responsive behaviour rather than a
+  shared category); Pittenger (1993, *RER* 63(4):467–488) on the MBTI's warrant,
+  with its 1993 scope stated on the page.
 - **3.1 The Ambiguity Tax** (under the Interaction Gate, `frameworks.html`) —
   running an interaction has an interpretive price: catching hints, weighing
   tone, grading a soft answer, deciding whether a refusal happened. Canon
@@ -151,23 +173,30 @@ predicted three of them exactly:
     not reached." That was true then. The one lane-H URL abandoned during the
     main run was constructed rather than found and 404'd; the capture that
     eventually ran came from a searched URL.
-- **The scout's three proposals** (`chatgpt-proposal-verification-stack`,
-  `-typology-shortcut`, `-courtship-buffer`). All three arrived well-formed
-  against the encompassing standard, and one of them (the Typology Shortcut)
-  parents onto the same Interaction Gate this run extended. None was folded: the
-  scout had not closed out, and the protocol requires the integrator to
-  re-verify every load-bearing figure at its primary source before folding — six
-  DOIs and four agency documents across the three, which the remaining run time
-  could not cover honestly. They are the first thing a follow-up run should do,
-  and `md/pt07/claude-verification-notes.md` now carries a partial pass so that
-  fold does not start from zero: **all seven DOIs resolve to real papers whose
-  titles match the proposals** — no fabricated citation in the set — and
-  Sayette et al. (2012)'s N = 720 three-arm design is verified verbatim. One
-  thing that pass surfaced needs naming here: **P1's only Tier 1 leg, Ofcom's
-  4,201-adult RCT, is a source the scout recorded in the claims ledger as
-  `abandoned(bot-blocked)` and then cited figures from anyway.** The numbers may
-  be accurate, but the chain of custody is broken and a Tier 1 label cannot
-  stand on an unfetched source. Repair or re-tier that leg before folding P1.
+- **P1, the Verification Stack — DEFERRED, not rejected.** Jason's fold
+  instruction set an explicit precondition: re-read *both full Whitty papers and
+  Ofcom's technical report* before adding named stages, accuracy rates,
+  predictor sizes or efficacy estimates. That precondition is unmet. The Whitty
+  2019 abstract verifies cleanly (261 participants; several correlates of
+  accuracy; detection was difficult; the paper itself proposes adding a "human
+  detection of scam versus genuine profiles" stage) but neither full paper is
+  readable, and Ofcom's technical report is bot-walled — the same wall the scout
+  logged as `abandoned(bot-blocked)` in the ledger before citing the RCT's
+  figures anyway. **The entry's whole substance is the staged model, which is
+  exactly what the precondition gates**, so folding a version stripped of stages
+  and rates would ship the shell and lose the point. The proposal is good and
+  should be folded when someone can read those three documents. Its **only
+  Tier 1 leg cannot stand on an unfetched source** and must be repaired or
+  re-tiered first.
+- **Lane A, dating and matchmaking television — the scout's "no doctrine
+  needed" verdict is preserved.** The Meeting Channel already owns pool
+  composition and screening order; the Third-Party Layer is an adjacent analogy
+  only, since its evidence concerns social-network approval rather than
+  commercial producers. A critic's review, a confounded 169-season
+  reconstruction and attributed lawsuit allegations do not create or extend
+  doctrine. Production control, casting, compensation, editing, participant
+  safety and observed outcomes stay separate variables. **No canon change**, and
+  that is the correct outcome rather than a shortfall.
 - **The `sexual desire` alias magnet** (see §6.1). It is an authored-surface
   defect with a clean measured fix available — the alias `sexual desire decline`
   on `desire-maintenance-split` — but changing it is a scoring change to an
