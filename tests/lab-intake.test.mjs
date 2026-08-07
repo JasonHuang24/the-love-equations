@@ -14,6 +14,7 @@ import {
   createNormalizedDocument,
   detectTextFormat,
   extractTextFromHtml,
+  extractTextFromRtf,
   normalizeInput,
   parseCsvTranscript,
   parseJsonTranscript,
@@ -603,4 +604,42 @@ test('format characters that carry no text are removed at intake', () => {
     `no zero-width or bidi format character survives intake: ${JSON.stringify(text)}`);
   assert.match(text, /Hypergamy is not the same as hypergamy or hypergamy or hypergamy\./);
   assert.match(text, /A right-to-left run ends here\./);
+});
+
+test('an RTF header table is not transcript text', () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: intake format
+   * edges). RTF is an advertised intake format and `extractTextFromRtf` strips
+   * control words and braces without ever recognising a DESTINATION group — the
+   * sub-documents an RTF carries that are not the document. Every real
+   * Word-generated file opens with several.
+   *
+   * Repro, a Word 2019 file's own preamble:
+   *
+   *   {\\rtf1\\ansi…{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}{\\f1…Symbol;}}
+   *   {\\colortbl ;\\red0\\green0\\blue255;}{\\*\\generator Riched20 10.0.19041;}…
+   *
+   * extracted as: "Calibri;Symbol;;;\\*Riched20 10.0.19041;She wanted a
+   * provider who could support a household." — four junk tokens in front of the
+   * first sentence, an inflated word count, and a corrupted excerpt for every
+   * passage a reader is shown.
+   *
+   * Only the non-prose destinations are dropped. Headers, footers and footnotes
+   * hold text a reader wrote and stay in.
+   */
+  const word = String.raw`{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset2 Symbol;}}{\colortbl ;\red0\green0\blue255;}{\*\generator Riched20 10.0.19041;}\viewkind4\uc1\pard\sa200\sl276\slmult1\f0\fs22\lang9 She wanted a provider who could support a household.\par}`;
+  assert.equal(
+    extractTextFromRtf(word),
+    'She wanted a provider who could support a household.',
+  );
+  // A nested group that is NOT a destination keeps its text.
+  assert.equal(
+    extractTextFromRtf(String.raw`{\rtf1\ansi {\b She} wanted a provider.\par}`),
+    'She wanted a provider.',
+  );
+  // Escaped braces are literal text, not group boundaries.
+  assert.equal(
+    extractTextFromRtf(String.raw`{\rtf1\ansi She wanted \{a provider\}.\par}`),
+    'She wanted {a provider}.',
+  );
 });
