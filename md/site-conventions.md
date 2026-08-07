@@ -1,3 +1,19 @@
+# Site conventions
+
+A volume of the record shelf (`md/INDEX.md` is the table of contents; one row per section).
+Append new records as new `# <name>` sections at the END of the right volume — never as new
+md/ files (see "Record hygiene" in CLAUDE.md). Every section below is a byte-exact merge of a
+former standalone md/ file; in-text references to `md/<name>.md` resolve to the section of that
+name in this or a sibling volume, or to the pre-merge file via the `git show` pointer on the
+section header line.
+
+
+---
+
+# gender-dynamics-conventions.md
+
+> Merged verbatim 2026-08-07 · pre-merge file: `git show 9109c97:md/gender-dynamics-conventions.md`
+
 # Conventions — the Dynamics cards
 
 Card conventions and invariants for `gender-dynamics.html` (the "Male & Female
@@ -108,3 +124,4 @@ whether cards are in the right tab/section.
 - Branch: develop on a feature branch, commit with clear messages, push. Do NOT
   open a PR unless explicitly asked.
 - After any card change, re-run the inventory + balance checks above before committing.
+
