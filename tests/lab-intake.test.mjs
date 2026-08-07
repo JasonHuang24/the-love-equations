@@ -539,3 +539,68 @@ test('system clipboard adapter fails soft outside a browser', async () => {
       && error.code === 'CLIPBOARD_API_UNAVAILABLE'
   );
 });
+
+test('the no-DOM HTML fallback decodes the same typographic entities the corpus extractor does', () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: intake
+   * normalization). `htmlToTextWithDom` runs in the browser and a DOM decodes
+   * every HTML entity there is. `htmlToTextFallback` runs everywhere else —
+   * the headless harness, this suite, every corpus capture — and its
+   * `decodeEntities` knew six names: amp, apos, gt, lt, nbsp, quot.
+   *
+   * So the Lab and its own measuring instrument read different text. Measured
+   * over the 13 archived sources that keep their raw HTML, 89 named entities
+   * survive extraction in the Node path and none survive in the browser:
+   * &rsquo; x19, &ldquo; x17, &rdquo; x17, &hellip; x13, &raquo; x13,
+   * &laquo; x3, &mdash; x3, &copy; x2, &larr;, &rarr;.
+   *
+   * `doesn&rsquo;t` is the one that matters most: it tokenizes to
+   * doesn / rsquo / t, so the passage stops containing the contradiction cue
+   * `doesn't` at all, and an entity name enters the token stream as a word.
+   *
+   * The floor asserted here is the repo's own: `tools/extract-source-text.mjs`
+   * already decodes this exact set, because the corpus archive could not be
+   * read without it.
+   */
+  const decoded = extractTextFromHtml(
+    '<p>She &ldquo;doesn&rsquo;t&rdquo; date up &mdash; or down &ndash; anymore&hellip;</p>'
+    + '<p>&laquo;Nope&raquo; &copy; 2026 &larr; &rarr; &lsquo;quoted&rsquo;</p>'
+  );
+  assert.equal(/&[a-z]+;/i.test(decoded), false, `no named entity survives extraction: ${decoded}`);
+  assert.match(decoded, /“doesn’t”/);
+  assert.match(decoded, /date up — or down – anymore…/);
+  assert.match(decoded, /«Nope» © 2026 ← → ‘quoted’/);
+});
+
+test('format characters that carry no text are removed at intake', () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: zero-width
+   * and format characters). `cleanControlCharacters` removed C0 and DEL and
+   * stripped a LEADING U+FEFF, and nothing removed the Unicode format
+   * characters that a real paste carries: the soft hyphen a justified page
+   * emits (`&shy;`), a zero-width space from a CMS, a word joiner, a BOM that
+   * is not at position 0, and the bidi isolates a right-to-left quotation
+   * leaves behind.
+   *
+   * They are invisible to a reader and load-bearing to the tokenizer: the
+   * token regex is `[\p{L}\p{N}]+`, so one of them inside a word splits it in
+   * two. "hypergamy" with a U+200B in the middle scored 0.562 against
+   * pills:page-rp:hypergamy where the clean form scored 0.747 — a silent
+   * degradation with nothing in the output saying a character did it.
+   *
+   * ZWNJ and ZWJ (U+200C/U+200D) are deliberately kept: they are orthographic
+   * in Persian and several Indic scripts and structural inside emoji
+   * sequences, so removing them would corrupt text a reader can see. Inside a
+   * Latin word they remain a way to hide from the matcher, and that is
+   * recorded rather than fixed.
+   */
+  const parsed = parsePlainText(
+    'Hyper\u00adgamy is not the same as hyper\u200bgamy or hyper\u2060gamy or hyper\ufeffgamy.\n'
+    + '\u202bA right-to-left run\u202c ends here.'
+  );
+  const text = parsed.segments.map((segment) => segment.text).join('\n');
+  assert.equal(/[\u00ad\u200b\u2060\ufeff\u202a-\u202e\u200e\u200f\u2066-\u2069]/.test(text), false,
+    `no zero-width or bidi format character survives intake: ${JSON.stringify(text)}`);
+  assert.match(text, /Hypergamy is not the same as hypergamy or hypergamy or hypergamy\./);
+  assert.match(text, /A right-to-left run ends here\./);
+});
