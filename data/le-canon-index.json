@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+c08dbe01725d",
+  "indexVersion": "1.0.0+54d018bff967",
   "generatedAt": "2026-08-07T03:32:01.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "1684cd41937a3789ec83b1ccdc955e33c8b0eae7a674314058a075453787bd5c",
-      "conceptCount": 66
+      "sha256": "58721f4cd14ad6d72d215d3e82706bf84e232ebbafa318caa5fcd29888d3edd4",
+      "conceptCount": 68
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 569,
+    "conceptCount": 571,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 66,
+      "Rules & Frameworks": 68,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -267,14 +267,14 @@
       "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 51,
-      "Tier 2": 21,
+      "Tier 1": 52,
+      "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 474,
-    "conceptsWithExternalSources": 140,
-    "dependencyCount": 291,
-    "relatedCount": 478
+    "anchoredConceptCount": 476,
+    "conceptsWithExternalSources": 142,
+    "dependencyCount": 293,
+    "relatedCount": 483
   },
   "entries": [
     {
@@ -6411,6 +6411,72 @@
       "pressureTests": []
     },
     {
+      "id": "frameworks:courtship-buffer",
+      "title": "The Courtship Buffer",
+      "page": "frameworks.html",
+      "anchor": "courtship-buffer",
+      "category": "Rules & Frameworks",
+      "subcategory": "Orientation",
+      "synopsis": "Alcohol sits underneath a great deal of early courtship, and the discourse treats its removal as a reveal: meet without it and you finally see what a person is really like. The measured effects are real, small, and land on different rungs of the ladder above. Naming the rung, and naming the state actually observed, is the whole discipline here.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Courtship Buffer",
+        "liquid courage",
+        "sober dating",
+        "alcohol free dating",
+        "sober first meeting"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "meeting for a drink",
+        "offering a drink at a bar",
+        "drinking to loosen up",
+        "beer goggles"
+      ],
+      "dependencies": [
+        "frameworks:conversion-ladder"
+      ],
+      "related": [
+        "deep-dive:third-spaces",
+        "frameworks:interaction-gate",
+        "gender-dynamics:both-sides:meeting-people-the-odds:third-spaces-have-disappeared"
+      ],
+      "boundaryConditions": [
+        "The group experiment measured how three unacquainted people behaved together, which is not pair-specific attraction, mutual interest, consent or relationship formation.",
+        "The perception synthesis covers ratings of how attractive others look, its overall estimate is small, and its same-sex estimate did not reach significance.",
+        "The diary result is observational and cannot identify who made the offer, with whom sex occurred, or the timing, so it points at a social cue rather than a dose.",
+        "A state-dependent social experience can be genuine in that state, and removing the state does not expose a fixed authentic self.",
+        "Sobriety can be a substantive personal value rather than an interaction variable, and that screen is a separate question from the acute mechanism.",
+        "Venue supply and the disappearance of third places stay outside this entry.",
+        "The experiments cover young adult social drinkers at controlled doses and say nothing about recovery populations or alcohol-use disorder."
+      ],
+      "commonMisreadings": [
+        "Alcohol reveals courtship chemistry by showing how easily two people bond and approach each other.",
+        "A sober encounter exposes a partner's authentic personality and lasting character.",
+        "Liquid courage makes courtship conversation easier and a person's intentions seem clearer."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Sayette et al. (2012), “Alcohol and Group Formation,” Psychological Science 23(8):869–878",
+          "url": "https://doi.org/10.1177/0956797611435134"
+        },
+        {
+          "label": "Bowdring & Sayette (2018), Addiction 113(9):1585–1597",
+          "url": "https://doi.org/10.1111/add.14227"
+        },
+        {
+          "label": "Hamilton, Armeli & Tennen (2022), Journal of American College Health",
+          "url": "https://doi.org/10.1080/07448481.2022.2086435"
+        }
+      ],
+      "pressureTests": [
+        "Which rung is this evidence on: a rating, a group behaviour, an attempted approach, or an outcome?"
+      ]
+    },
+    {
       "id": "frameworks:ambiguity-tax",
       "title": "The Ambiguity Tax",
       "page": "frameworks.html",
@@ -6473,6 +6539,73 @@
       ],
       "pressureTests": [
         "Is this difficulty being priced to one participant, or to the channel and the pairing that produced it?"
+      ]
+    },
+    {
+      "id": "frameworks:typology-shortcut",
+      "title": "The Typology Shortcut",
+      "page": "frameworks.html",
+      "anchor": "typology-shortcut",
+      "category": "Rules & Frameworks",
+      "subcategory": "Decision gates",
+      "synopsis": "A folk type — a star sign, a four-letter code, a love language — begins as vocabulary and becomes an instrument the moment it is used to rank or delete somebody. The gate above reserves positive compatibility for real interaction. This entry asks the prior question: was the mismatch a type implies ever actually known, or only inferred from the category?",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Typology Shortcut",
+        "folk typology",
+        "love language matching",
+        "MBTI matching",
+        "zodiac filter",
+        "personality type filter",
+        "categorical compatibility"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "what is your sign",
+        "filtering by star sign",
+        "our types are incompatible",
+        "sorting people by category"
+      ],
+      "dependencies": [
+        "frameworks:interaction-gate"
+      ],
+      "related": [
+        "frameworks:diagnostic-turn",
+        "frameworks:meeting-channel"
+      ],
+      "boundaryConditions": [
+        "A folk type can work as an icebreaker, a vocabulary, an identity or a ritual without functioning as a compatibility score.",
+        "A stated preference can carry information even when the category system containing it lacks predictive validity, and responding to an expressed need differs from matching labels.",
+        "A label can surface a genuine value mismatch about how much astrology or personality systems matter, and that mismatch belongs to the expressed value rather than to the chart.",
+        "The love-language matching result is a conference abstract whose methods are unpublished, and its sample is established partners in later life rather than forming pairs.",
+        "The Myers-Briggs review dates from 1993, evaluates the instrument in general rather than any application to courtship, and does not speak to later revisions.",
+        "A profile filter changes who receives consideration and does not establish that the excluded category would have produced a worse interaction.",
+        "Pop-clinical labels such as attachment, trauma, narcissism and therapy-speak stay with the Diagnostic Turn."
+      ],
+      "commonMisreadings": [
+        "Matching folk types predicts easier communication and lasting harmony for prospective partners.",
+        "An incompatible zodiac sign reveals how a partner will behave after commitment.",
+        "A common love language label forecasts pair compatibility better than steady responsiveness does."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Chopik et al. (2025), Innovation in Aging 9(Suppl 1):1395",
+          "url": "https://doi.org/10.1093/geroni/igaf122.1395"
+        },
+        {
+          "label": "Mostova, Stolarski & Matthews (2022), PLOS ONE 17(6):e0269429",
+          "url": "https://doi.org/10.1371/journal.pone.0269429"
+        },
+        {
+          "label": "Pittenger (1993), “The Utility of the Myers-Briggs Type Indicator,” Review of Educational Research 63(4):467–488",
+          "url": "https://doi.org/10.3102/00346543063004467"
+        }
+      ],
+      "pressureTests": [
+        "What person-level claim is this type supposed to predict, and has anything tested that prediction at this stage?"
       ]
     },
     {

@@ -1199,6 +1199,82 @@
         "Is this a judgement about the arrangement, or about the bond that happens to be inside it?"
       ]
     },
+    "frameworks:courtship-buffer": {
+      "aliases": [
+        "Courtship Buffer",
+        "liquid courage",
+        "sober dating",
+        "alcohol free dating",
+        "sober first meeting"
+      ],
+      "phrases": [
+        "meeting for a drink",
+        "offering a drink at a bar",
+        "drinking to loosen up",
+        "beer goggles"
+      ],
+      "related": [
+        "frameworks:conversion-ladder",
+        "frameworks:interaction-gate",
+        "gender-dynamics:both-sides:meeting-people-the-odds:third-spaces-have-disappeared"
+      ],
+      "boundaryConditions": [
+        "The group experiment measured how three unacquainted people behaved together, which is not pair-specific attraction, mutual interest, consent or relationship formation.",
+        "The perception synthesis covers ratings of how attractive others look, its overall estimate is small, and its same-sex estimate did not reach significance.",
+        "The diary result is observational and cannot identify who made the offer, with whom sex occurred, or the timing, so it points at a social cue rather than a dose.",
+        "A state-dependent social experience can be genuine in that state, and removing the state does not expose a fixed authentic self.",
+        "Sobriety can be a substantive personal value rather than an interaction variable, and that screen is a separate question from the acute mechanism.",
+        "Venue supply and the disappearance of third places stay outside this entry.",
+        "The experiments cover young adult social drinkers at controlled doses and say nothing about recovery populations or alcohol-use disorder."
+      ],
+      "commonMisreadings": [
+        "Alcohol reveals courtship chemistry by showing how easily two people bond and approach each other.",
+        "A sober encounter exposes a partner's authentic personality and lasting character.",
+        "Liquid courage makes courtship conversation easier and a person's intentions seem clearer."
+      ],
+      "pressureTests": [
+        "Which rung is this evidence on: a rating, a group behaviour, an attempted approach, or an outcome?"
+      ]
+    },
+    "frameworks:typology-shortcut": {
+      "aliases": [
+        "Typology Shortcut",
+        "folk typology",
+        "love language matching",
+        "MBTI matching",
+        "zodiac filter",
+        "personality type filter",
+        "categorical compatibility"
+      ],
+      "phrases": [
+        "what is your sign",
+        "filtering by star sign",
+        "our types are incompatible",
+        "sorting people by category"
+      ],
+      "related": [
+        "frameworks:interaction-gate",
+        "frameworks:diagnostic-turn",
+        "frameworks:meeting-channel"
+      ],
+      "boundaryConditions": [
+        "A folk type can work as an icebreaker, a vocabulary, an identity or a ritual without functioning as a compatibility score.",
+        "A stated preference can carry information even when the category system containing it lacks predictive validity, and responding to an expressed need differs from matching labels.",
+        "A label can surface a genuine value mismatch about how much astrology or personality systems matter, and that mismatch belongs to the expressed value rather than to the chart.",
+        "The love-language matching result is a conference abstract whose methods are unpublished, and its sample is established partners in later life rather than forming pairs.",
+        "The Myers-Briggs review dates from 1993, evaluates the instrument in general rather than any application to courtship, and does not speak to later revisions.",
+        "A profile filter changes who receives consideration and does not establish that the excluded category would have produced a worse interaction.",
+        "Pop-clinical labels such as attachment, trauma, narcissism and therapy-speak stay with the Diagnostic Turn."
+      ],
+      "commonMisreadings": [
+        "Matching folk types predicts easier communication and lasting harmony for prospective partners.",
+        "An incompatible zodiac sign reveals how a partner will behave after commitment.",
+        "A common love language label forecasts pair compatibility better than steady responsiveness does."
+      ],
+      "pressureTests": [
+        "What person-level claim is this type supposed to predict, and has anything tested that prediction at this stage?"
+      ]
+    },
     "frameworks:ambiguity-tax": {
       "aliases": [
         "Ambiguity Tax",

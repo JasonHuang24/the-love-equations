@@ -235,3 +235,59 @@ it.
   `geographically close` 1, `closing the distance` 0 — no magnet shape.
 - Pins moved: 568 → 569 concepts, 65 → 66 Rules & Frameworks, 568 → 569
   misreadings, 535 → 536 boundaries.
+
+## Integration 4 — the scout fold: Courtship Buffer + Typology Shortcut (569 → 571)
+
+Baseline `--dump` at `1.0.0+c08dbe01725d` before any edit. Two entries folded
+from the ChatGPT scout's closed proposals; **P1 the Verification Stack was
+deferred, not folded** (see the run record §5).
+
+```
+canon      1.0.0+c08dbe01725d -> 1.0.0+54d018bff967  (doctrine moved)
+population 2426 retained passages x 571 entries = 1385246 pairs
+minWeakScore         0.25  340 gain / 99 loss
+minCredibleScore     0.43    0 gain /  4 loss
+```
+
+**385 verdicts entered** (311 weak REJECT, 71 loss ACCEPT, 3 credible
+loss-ACCEPT). **Zero credible gains** — two entries, twelve aliases and six
+misreadings added without a single credible false positive surviving to the
+ruling stage. That is the first integration in this run to reach the sweep
+clean on the credible line, and it took three rounds of surface work to get
+there.
+
+### The credible line was cleared by rewording, in three rounds
+
+Round 1 produced **six** credible gains. Round 2 cut them to one, round 3 to
+zero. Every fix was to authored surface; no pin and no threshold moved.
+
+1. **The short-unit hazard, fourth appearance this run.** "He also has to be
+   your only romantic partner." (8 tokens) hit `typology-shortcut` at 0.607,
+   and the 4-token fragment "romantic interactions or are" hit *both* new
+   entries at 0.470. Cause: `romantic` sat in a boundary on each entry
+   alongside `partner`/`partners`. Removing `romantic` from both — "any
+   application to courtship", "mutual interest" — killed all three crossings.
+2. `10-miller-alternatives` on attentiveness and replaceability hit
+   `typology-shortcut` at 0.451 through the word **attentive** in a misreading.
+   Changed to "steady responsiveness".
+3. "I am someone who is looking for love." (8 tokens) hit `courtship-buffer` at
+   0.452 through the generic **someone**, which sat in both a phrase and the
+   synopsis. Removed from both.
+4. **The demo pin tripped again, on the same residue claim as integration 3.**
+   `mappedClaimSegments` 6 → 7: `typology-shortcut` captured "Did it show
+   causation, or did compatible couples simply report more shared…" on the trio
+   **show / couples / report / shared**, all four of which had landed across its
+   synopsis, a misreading and two boundaries. Reworded; pin restored to
+   6 / 5 / 54.5% exactly. This is now **two integrations in a row** where a new
+   Interaction-Gate-adjacent entry ate that one demo sentence — worth treating
+   as a standing check rather than a surprise.
+
+### Verification
+
+- `npm run test:lab` exit **0**.
+- 6/6 misreadings fire **Contradicts** at High (0.732–0.799).
+- Analyzer-demo pins restored by rewording, never moved.
+- Magnet audit: all **12** authored aliases have **zero** verbatim occurrences
+  across `lab-corpus/`.
+- Pins moved: 569 → 571 concepts, 66 → 68 Rules & Frameworks, 569 → 571
+  misreadings, 536 → 538 boundaries.
