@@ -175,3 +175,63 @@ Each edit was followed by a fixture restore and a full re-sweep.
   1, neither in a magnet shape.
 - Pins moved: 567 → 568 concepts, 64 → 65 Rules & Frameworks, 567 → 568
   misreadings, 534 → 535 boundaries.
+
+## Integration 3 — The Distance Discount (canon 568 → 569)
+
+Baseline `--dump` captured at `1.0.0+48254605825a` before any edit.
+
+```
+canon      1.0.0+48254605825a -> 1.0.0+c08dbe01725d  (doctrine moved)
+population 2426 retained passages x 569 entries = 1380394 pairs
+minWeakScore         0.25  123 gain / 56 loss
+minCredibleScore     0.43    1 gain /  3 loss
+```
+
+**143 verdicts entered** (108 weak REJECT, 33 loss ACCEPT, 1 credible REJECT,
+1 credible loss-ACCEPT), all under Jason's delegation of pt07's credible line.
+
+### Credible line — 1 gain, REJECT
+
+`frameworks:distance-discount` · `22-finkel-suffocation · 475` · 0.000 →
+**0.540** — "With regard to the emotional quality of living apart together
+relationships…". A genuine near-neighbour and still the wrong owner:
+`lexicon:term-living-apart-together-lat` owns chosen separate households in one
+locality, which is not the distance case. **REJECT.** The three credible losses
+are ACCEPT (all fragments resting just above the line).
+
+### This integration was authored twice
+
+The first attempt was **reverted in full** rather than committed part-done, and
+the second reached green. Four authored-surface defects, each fixed in the
+surface and never in a pin:
+
+1. `trust and satisfaction` in the synopsis reached a corpus sentence about
+   trust versus satisfaction at 0.435 credible.
+2. The alias `living far apart` collided with the corpus's living-apart-together
+   passage. Dropped.
+3. A 7-token corpus sentence — "I am someone who is looking for love." — hit
+   0.452. The short-unit hazard, for the **third** time in this run.
+4. **The demo-routing pin tripped**: `mappedClaimSegments` 6 → 7. The entry was
+   capturing the demo transcript's research-residue claim *"Did it show
+   causation, or did compatible couples simply report more shared…"* on the
+   trio **couples / report / share**, all three of which sat in the synopsis
+   ("couples separated by geography report as much closeness as couples who
+   share an address"). Rewritten to "people separated by geography rate their
+   bonds at least as warmly as those living at one address" — pin restored at
+   6 / 5 / 54.5% exactly.
+
+A fifth defect was caught by `tools/check-mis.mjs` before it ever reached a
+sweep: two successive drafts of the first misreading were **GATE SET ASIDE**,
+forming no domain-relevant claim unit. Removing "couple" to dodge defect 4 had
+also removed the relational-frame word the gate needs; "Two partners…" restored
+it.
+
+### Verification
+
+- `npm run test:lab` exit **0**.
+- 3/3 misreadings fire **Contradicts** at High (0.736–0.740).
+- Demo pins restored by rewording, never moved.
+- Magnet check: `long-distance relationship` 1 corpus occurrence,
+  `geographically close` 1, `closing the distance` 0 — no magnet shape.
+- Pins moved: 568 → 569 concepts, 65 → 66 Rules & Frameworks, 568 → 569
+  misreadings, 535 → 536 boundaries.

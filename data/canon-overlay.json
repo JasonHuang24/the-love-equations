@@ -1166,6 +1166,39 @@
         "Is the claim about one person's level of desire or the distance between two partners' levels?"
       ]
     },
+    "frameworks:distance-discount": {
+      "aliases": [
+        "Distance Discount",
+        "long-distance relationship",
+        "geographically close relationship"
+      ],
+      "phrases": [
+        "seeing each other on weekends",
+        "closing the distance",
+        "moving to the same city",
+        "separated by miles"
+      ],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:sixth-rung",
+        "lexicon:term-living-apart-together-lat"
+      ],
+      "boundaryConditions": [
+        "Both supporting studies are observational and centre young dating couples in North America, so separation is associated with these patterns rather than shown to produce them.",
+        "Nothing here covers separation imposed by deployment, incarceration, migration or caregiving, where the constraint and the stakes are different.",
+        "High marks during separation and a high reunion failure rate describe different phases of one arrangement and are not in tension.",
+        "Idealisation is named as a mechanism rather than a verdict, and the closeness reported during separation is not thereby counterfeit.",
+        "The same-direction replication is cited without any figure, because its abstract could not be read at source."
+      ],
+      "commonMisreadings": [
+        "Two partners living far apart have a weaker bond than two who live at one address.",
+        "A separated couple who finally live in one place will find that things get easier.",
+        "A couple who live in different cities are simply waiting for their real relationship to start."
+      ],
+      "pressureTests": [
+        "Is this a judgement about the arrangement, or about the bond that happens to be inside it?"
+      ]
+    },
     "frameworks:ambiguity-tax": {
       "aliases": [
         "Ambiguity Tax",

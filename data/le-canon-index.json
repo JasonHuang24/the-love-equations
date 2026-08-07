@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+ee63aeceed4c",
+  "indexVersion": "1.0.0+c08dbe01725d",
   "generatedAt": "2026-08-07T02:41:15.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "df1735422c46d57e15fdf29f418b0749615a5be3d01241d9fe8c947ae73bb292",
-      "conceptCount": 65
+      "sha256": "1684cd41937a3789ec83b1ccdc955e33c8b0eae7a674314058a075453787bd5c",
+      "conceptCount": 66
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 568,
+    "conceptCount": 569,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 65,
+      "Rules & Frameworks": 66,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -268,13 +268,13 @@
       "Strategy": 29,
       "Tested claim": 6,
       "Tier 1": 51,
-      "Tier 2": 20,
+      "Tier 2": 21,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 473,
-    "conceptsWithExternalSources": 139,
-    "dependencyCount": 290,
-    "relatedCount": 476
+    "anchoredConceptCount": 474,
+    "conceptsWithExternalSources": 140,
+    "dependencyCount": 291,
+    "relatedCount": 478
   },
   "entries": [
     {
@@ -6584,6 +6584,63 @@
       ],
       "pressureTests": [
         "Which of the four locations is this explanation choosing, and was the other partner present when it was chosen?"
+      ]
+    },
+    {
+      "id": "frameworks:distance-discount",
+      "title": "The Distance Discount",
+      "page": "frameworks.html",
+      "anchor": "distance-discount",
+      "category": "Rules & Frameworks",
+      "subcategory": "Retention & maintenance",
+      "synopsis": "Separation gets read as a defect in a bond rather than a feature of its arrangement, and the discount is applied before anyone looks at the bond. The measured picture declines to cooperate: people separated by geography rate their bonds at least as warmly as those living at one address. What the separation changes is the machinery, not the grade — and that machinery has a bill that comes due if the gap ever closes.",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Distance Discount",
+        "long-distance relationship",
+        "geographically close relationship"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "seeing each other on weekends",
+        "closing the distance",
+        "moving to the same city",
+        "separated by miles"
+      ],
+      "dependencies": [
+        "frameworks:agreement-surface"
+      ],
+      "related": [
+        "frameworks:sixth-rung",
+        "lexicon:term-living-apart-together-lat"
+      ],
+      "boundaryConditions": [
+        "Both supporting studies are observational and centre young dating couples in North America, so separation is associated with these patterns rather than shown to produce them.",
+        "Nothing here covers separation imposed by deployment, incarceration, migration or caregiving, where the constraint and the stakes are different.",
+        "High marks during separation and a high reunion failure rate describe different phases of one arrangement and are not in tension.",
+        "Idealisation is named as a mechanism rather than a verdict, and the closeness reported during separation is not thereby counterfeit.",
+        "The same-direction replication is cited without any figure, because its abstract could not be read at source."
+      ],
+      "commonMisreadings": [
+        "Two partners living far apart have a weaker bond than two who live at one address.",
+        "A separated couple who finally live in one place will find that things get easier.",
+        "A couple who live in different cities are simply waiting for their real relationship to start."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Jiang & Hancock (2013), “Absence Makes the Communication Grow Fonder,” Journal of Communication 63(3):556–577",
+          "url": "https://doi.org/10.1111/jcom.12029"
+        },
+        {
+          "label": "Stafford, Merolla & Castle (2006), “When long-distance dating partners become geographically close,” Journal of Social and Personal Relationships 23(6):901–919",
+          "url": "https://doi.org/10.1177/0265407506070472"
+        }
+      ],
+      "pressureTests": [
+        "Is this a judgement about the arrangement, or about the bond that happens to be inside it?"
       ]
     },
     {
