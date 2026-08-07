@@ -1422,7 +1422,8 @@
       "related": [
         "frameworks:good-news-rule",
         "frameworks:commitment-problem",
-        "statistics:stat-relationship-quality"
+        "statistics:stat-relationship-quality",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "A relationship label is useful shorthand but does not specify every boundary concerning sex, romance, disclosure, hierarchy, time, resources, health or revision.",
@@ -1457,7 +1458,8 @@
       "related": [
         "frameworks:agreement-surface",
         "frameworks:ownership-load",
-        "frameworks:satisfaction-flywheel"
+        "frameworks:satisfaction-flywheel",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "The pooling trial sampled willing, mostly White, different-sex engaged or newlywed couples entering first marriages; it does not generalize to every couple or relationship stage.",
@@ -2515,7 +2517,8 @@
         "frameworks:the-surplus",
         "frameworks:commitment-problem",
         "frameworks:sex-ratio",
-        "frameworks:replaceability-asymmetry"
+        "frameworks:replaceability-asymmetry",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "The measured improvement in treatment depends on exit being both credible and enforced, and the protective effect disappears where enforcement is absent.",
@@ -2552,7 +2555,8 @@
         "frameworks:signal-cost-rule",
         "frameworks:the-surplus",
         "frameworks:outside-option",
-        "frameworks:sixth-rung"
+        "frameworks:sixth-rung",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "A signal carries information in proportion to what sending it forecloses, so a scarce free signal can outperform an unlimited costly one.",
@@ -6189,6 +6193,9 @@
     "statistics:stat-cohab-timing": {
       "commonMisreadings": [
         "Moving in early ruins a couple's odds, whatever they had intended about the wedding."
+      ],
+      "related": [
+        "frameworks:constraint-dedication-split"
       ]
     },
     "statistics:stat-wedding-hazard": {
@@ -6463,6 +6470,44 @@
       ],
       "pressureTests": [
         "Does the function under discussion need a second party with needs of their own, or only attention?"
+      ]
+    },
+    "frameworks:constraint-dedication-split": {
+      "aliases": [
+        "Constraint–Dedication Split",
+        "relationship dedication and constraints",
+        "cohabitation commitment inertia",
+        "material relationship constraints"
+      ],
+      "phrases": [
+        "desire to stay and cost of leaving",
+        "cohabitation increases constraints without dedication",
+        "relationship continues despite low dedication",
+        "dedication and constraint commitment"
+      ],
+      "related": [
+        "statistics:stat-cohab-timing",
+        "frameworks:agreement-surface",
+        "frameworks:financial-architecture-split",
+        "frameworks:outside-option",
+        "frameworks:commitment-problem"
+      ],
+      "boundaryConditions": [
+        "Dedication and constraint are separate ledgers that can rise, fall or diverge; persistence alone does not reveal which ledger is active.",
+        "The supporting samples concern U.S. different-sex cohabiting relationships, mostly among adults ages 18–35, and do not establish a population-universal transition pattern.",
+        "Both studies are observational and self-report; within-person change around a move does not show that cohabitation causes later relationship quality, breakup or divorce.",
+        "The dyadic study measured perceived likelihood of dissolution and relationship adjustment over eight months rather than observed breakup or marriage outcomes.",
+        "Constraints are neither uniformly protective nor uniformly harmful; leases, shared assets, children and dependency have different meanings under mutual dedication, ambivalence, coercion and abuse."
+      ],
+      "commonMisreadings": [
+        "A continuing relationship always proves that both partners feel equally dedicated.",
+        "Sharing a lease naturally turns practical constraint into mutual relationship devotion.",
+        "A costly breakup means each partner freely wants the relationship to continue."
+      ],
+      "pressureTests": [
+        "Is persistence being treated as evidence of desire even though leaving carries material, social or perceived costs?",
+        "Did the transition change dedication, constraints or both, and were those constructs measured separately?",
+        "Would the same constraint protect a valued investment here, or make an unwanted or unsafe relationship harder to exit?"
       ]
     }
   }

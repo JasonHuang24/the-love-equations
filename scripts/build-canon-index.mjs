@@ -1355,7 +1355,7 @@ export async function buildCanonIndex(options = {}) {
   const sourcePages = contexts.map((context) => {
     const inputs = [context.page, ...(context.dataFiles || [])];
     const combined = inputs.map((file) =>
-      file === context.page ? context.source : context.dataSources.get(file)).join('\n');
+      file === context.page ? context.source : context.dataSources.get(file)).join('\n').replace(/\r\n?/g, '\n');
     const title = nodeText(byClass(context.document, 'page-title'))
       || nodeText(byClass(context.document, 'dd-essay-title'))
       || nodeText(byTag(context.document, 'title'));

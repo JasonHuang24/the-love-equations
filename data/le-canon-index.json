@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+d5cbf0d36468",
+  "indexVersion": "1.0.0+81059814070a",
   "generatedAt": "2026-08-07T22:29:01.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "c8974ce1fb616f29bb11a1553daa233cd89cac08c3c6844daf6d07fb3d500b8c",
-      "conceptCount": 71
+      "sha256": "737669434d5a62122c187832f42462a48b46bb27952315a7be12ca20512215e2",
+      "conceptCount": 72
     },
     {
       "page": "gender-dynamics.html",
@@ -55,7 +55,7 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "e645143d37574172b86662e9f0b9c0e1d21c12f2793de585879e5413803834e3",
+      "sha256": "37944d09f6f010e2e9b1fcce608d679589adfe2b3a8e7efd8fb9b391c0ef80e6",
       "conceptCount": 51
     },
     {
@@ -89,7 +89,7 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "1c5432d745b648aeed0288bbc1e85f43ba0572ad26d5132a6ae1faf7581f2a03",
+      "sha256": "ab779d5acb183128240c225a842f8a5ac96eaf0b948d38baae8a7995484daa51",
       "conceptCount": 98
     },
     {
@@ -100,7 +100,7 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "8b44017255227d174798e058020928b0aa93aa0244a616f0b334ac5faa25686a",
+      "sha256": "371b7878a8a68d7ba1bff72a7e01eaf05435129cd6ef7b9d2774f4e74f8fed49",
       "conceptCount": 7
     },
     {
@@ -111,7 +111,7 @@
       "inputs": [
         "dd-relationships-throughout-history.html"
       ],
-      "sha256": "148891a72cc95c9feeb2746e5af271555a38b6a16f48570ac6766799249e9265",
+      "sha256": "9569037a22785fd93244238e9fd08ac558b110d50dd59bd59cbcf95e70aed840",
       "conceptCount": 6
     },
     {
@@ -177,7 +177,7 @@
       "inputs": [
         "dd-competition-anxiety.html"
       ],
-      "sha256": "cb2f7fb424fd58ab0f4b4fb7b23c633fad518010f1d6b6473b0df4a4170802d2",
+      "sha256": "755f7d575711df532c1f5d42d25c474f6f72af0c6364c05a2175710b62371098",
       "conceptCount": 5
     },
     {
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 574,
+    "conceptCount": 575,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,13 +248,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 71,
+      "Rules & Frameworks": 72,
       "Statistics": 51
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 81,
+      "Framework": 82,
       "Glossary": 98,
       "Hard data": 28,
       "Instrument": 5,
@@ -271,10 +271,10 @@
       "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 479,
-    "conceptsWithExternalSources": 145,
+    "anchoredConceptCount": 480,
+    "conceptsWithExternalSources": 146,
     "dependencyCount": 295,
-    "relatedCount": 494
+    "relatedCount": 504
   },
   "entries": [
     {
@@ -4730,7 +4730,8 @@
       "related": [
         "frameworks:good-news-rule",
         "frameworks:commitment-problem",
-        "statistics:stat-relationship-quality"
+        "statistics:stat-relationship-quality",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "A relationship label is useful shorthand but does not specify every boundary concerning sex, romance, disclosure, hierarchy, time, resources, health or revision.",
@@ -4792,7 +4793,8 @@
       "related": [
         "frameworks:agreement-surface",
         "frameworks:ownership-load",
-        "frameworks:satisfaction-flywheel"
+        "frameworks:satisfaction-flywheel",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "The pooling trial sampled willing, mostly White, different-sex engaged or newlywed couples entering first marriages; it does not generalize to every couple or relationship stage.",
@@ -4934,6 +4936,67 @@
       "pressureTests": [
         "Is caregiving being treated as proof that the couple relationship remains unchanged, or measured as a second role that can crowd it out?",
         "Does shared illness appraisal mean coordinated coping, or has it been inflated into shared authority over the patient's body and treatment?"
+      ]
+    },
+    {
+      "id": "frameworks:constraint-dedication-split",
+      "title": "The Constraint–Dedication Split",
+      "page": "frameworks.html",
+      "anchor": "constraint-dedication-split",
+      "category": "Rules & Frameworks",
+      "subcategory": "Retention & maintenance",
+      "synopsis": "A relationship can continue because the people in it want it to continue, because leaving has become costly or difficult, or because both are true. Commitment research calls the first ledger dedication: desire for a future together, couple identity and willingness to prioritize the bond.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Constraint–Dedication Split",
+        "relationship dedication and constraints",
+        "cohabitation commitment inertia",
+        "material relationship constraints"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "desire to stay and cost of leaving",
+        "cohabitation increases constraints without dedication",
+        "relationship continues despite low dedication",
+        "dedication and constraint commitment"
+      ],
+      "dependencies": [],
+      "related": [
+        "statistics:stat-cohab-timing",
+        "frameworks:agreement-surface",
+        "frameworks:financial-architecture-split",
+        "frameworks:outside-option",
+        "frameworks:commitment-problem"
+      ],
+      "boundaryConditions": [
+        "Dedication and constraint are separate ledgers that can rise, fall or diverge; persistence alone does not reveal which ledger is active.",
+        "The supporting samples concern U.S. different-sex cohabiting relationships, mostly among adults ages 18–35, and do not establish a population-universal transition pattern.",
+        "Both studies are observational and self-report; within-person change around a move does not show that cohabitation causes later relationship quality, breakup or divorce.",
+        "The dyadic study measured perceived likelihood of dissolution and relationship adjustment over eight months rather than observed breakup or marriage outcomes.",
+        "Constraints are neither uniformly protective nor uniformly harmful; leases, shared assets, children and dependency have different meanings under mutual dedication, ambivalence, coercion and abuse."
+      ],
+      "commonMisreadings": [
+        "A continuing relationship always proves that both partners feel equally dedicated.",
+        "Sharing a lease naturally turns practical constraint into mutual relationship devotion.",
+        "A costly breakup means each partner freely wants the relationship to continue."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Rhoades, Stanley & Markman (2012), Journal of Family Issues 33(3):369–390",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3377181/"
+        },
+        {
+          "label": "Rhoades, Stanley & Markman (2012), Journal of Family Psychology 26(3):348–358",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5956859/"
+        }
+      ],
+      "pressureTests": [
+        "Is persistence being treated as evidence of desire even though leaving carries material, social or perceived costs?",
+        "Did the transition change dedication, constraints or both, and were those constructs measured separately?",
+        "Would the same constraint protect a valued investment here, or make an unwanted or unsafe relationship harder to exit?"
       ]
     },
     {
@@ -6200,7 +6263,8 @@
         "frameworks:the-surplus",
         "frameworks:commitment-problem",
         "frameworks:sex-ratio",
-        "frameworks:replaceability-asymmetry"
+        "frameworks:replaceability-asymmetry",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "The measured improvement in treatment depends on exit being both credible and enforced, and the protective effect disappears where enforcement is absent.",
@@ -6309,7 +6373,8 @@
         "frameworks:signal-cost-rule",
         "frameworks:the-surplus",
         "frameworks:outside-option",
-        "frameworks:sixth-rung"
+        "frameworks:sixth-rung",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "A signal carries information in proportion to what sending it forecloses, so a scarce free signal can outperform an unlimited costly one.",
@@ -12058,7 +12123,8 @@
       ],
       "dependencies": [],
       "related": [
-        "statistics:stat-cohabitation-outcomes"
+        "statistics:stat-cohabitation-outcomes",
+        "frameworks:constraint-dedication-split"
       ],
       "boundaryConditions": [
         "Method Random-digit telephone survey of men and women married within the past ten years; self-reported route and self-reported marital quality, measured at one point in time. Selection is the standing caveat — the survey did not assign anyone to a sequence, and people who wait for a commitment may differ from those who do not in ways no control variable…"
