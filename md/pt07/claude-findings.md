@@ -145,3 +145,102 @@ gap gets *located* or what each location licenses.
 
 **Verdict: GAP — proposal ready** (see integration 1) **+ instrument finding**
 (the "sexual desire" exact-phrase magnet, now measured across three captures).
+
+---
+
+## Integration 1 shipped between cycles 3 and 4
+
+`4b12d36` (The Attribution Fork, canon 566 → 567) + `cb253ea` (stamp). Details
+in `md/lab-pressure-test-07-threshold-adjudication.md`. Captures from cycle 4
+onward run against `1.0.0+7a2150b7a15f`.
+
+---
+
+## Cycle 4 — lane G — The Conversation: Why dating can be tough for autistic people
+
+- URL: https://theconversation.com/why-dating-can-be-tough-for-autistic-people-and-what-may-make-it-easier-257534
+- Words: 724 · SHA-256: `ceb12694f21b4c11e35e182569440a6e62fff0c1d77837acb0d838fdbda7e654`
+- Canon at capture: `1.0.0+7a2150b7a15f` (567)
+- Analyzer: 26 passages · 23 claims · 4 mapped · mappedShare **17.4%** · 0 tensions
+- Extraction: same container as cycle 3; cut at the newsletter pitch. Residue:
+  The Conversation's inline "Love IRL / Quarter Life" series-promo block sits
+  *inside* the article body and produced 3 claim-like units ("Love IRL is the
+  latest series from Quarter Life that explores it all"). Recorded as an
+  extraction-layer offender to add to the protocol's drop list.
+
+**Domain-gate result — the stress test passes.** 20 relevant · 6 uncertain · 22
+ignored. The gate did **not** bin autism-and-dating material the way pt04's
+therapy vignettes and pt06's step-parenting register were binned: it reads this
+as relationship-formation discourse and lets it through. That is the answer to
+the lane's second question, and it is a clean negative result.
+
+**Reading.** One genuinely good row: "hard to strike a balance between fitting
+into those unspoken norms and being authentically themselves" →
+`pills:page-bp:just-be-yourself` (0.540) — the bluepill dossier earning its
+keep on exactly-in-scope material. `deep-dive:third-spaces` at 0.500 on "online
+dating could offer a helpful alternative" is a defensible neighbour. The other
+three are lexical: "Studies show that autistic people often communicate well
+with each other" → `survivorship-channel` (0.540, wrong); "Studies on autism
+and dating remain limited" → `saturation-rule` (0.507, wrong); and the
+capture's **highest score, 0.654 Medium**, goes to the four-word transitional
+sentence "Online dating has its own set of challenges" →
+`frameworks:signal-cost-rule` — a short-unit false positive at the top of the
+list.
+
+**Canon check.** Canon's formation machinery — the Interaction Gate, the
+Signal-Cost Rule, the Hell Yes filter, the Conversion Ladder — all *presuppose*
+a reader who can decode implicit signalling. Nothing owns the presupposition
+itself. Dark here: the unwritten rules as an interface with a legibility cost;
+venue *fit* as distinct from venue loss (the third-spaces deep-dive owns the
+disappearance of third places, not the sensory load of the ones that remain);
+platforms "designed around neurotypical expectations"; masking as a courtship
+tax; and the assortative claim that same-neurotype pairs communicate more
+easily.
+
+**Verdict: GAP candidate, HELD** for a second lane-G capture (the ADHD side).
+Candidate subject: **the courtship protocol as an interface** — everyone pays a
+legibility cost to run it, and the cost is not evenly distributed.
+
+## Cycle 5 — lane G — Psychology Today: When Rejection Sensitivity Meets the Dating Scene
+
+- URL: https://www.psychologytoday.com/us/blog/beyond-mental-health/202406/when-rejection-sensitivity-meets-the-dating-scene
+- Words: 697 · SHA-256: `fc3564a5ada1a1826fbbba3f3438f6f8ee8108dc60931322ee79e77685666ddc`
+- Canon at capture: `1.0.0+7a2150b7a15f` (567)
+- Analyzer: 28 passages · 28 claims · 0 mapped · mappedShare **0.0%** · 0 tensions
+- Extraction: same recipe as cycle 1. Residue: PT's "Rejection Sensitivity
+  Essential Reads" inline recirculation block survived the `card-group` drop
+  and contributed 3 claim-like units — a second PT widget to add to the drop
+  list alongside `pathways_card`.
+
+**Attributing the zero before believing it.** 0% mapped, and it is real, not a
+display artifact: **not one of the 28 claim units produced a single candidate
+at any score** — `adjacentDoctrine` is empty and `matches` is empty on every
+segment. Re-run in isolation, "The pain of rejection, a breakup, and unrequited
+love are usually some of the most memorable hurts of a lifetime" and "Young
+adults with ADHD may need extra support as they enter the dating scene where
+rejection is significant" both classify **relevant** at the domain gate and
+still reach nothing. So the gate is not the cause — the gate passed this
+material, exactly as it did in cycle 4. The canon has no surface in this
+neighbourhood at all.
+
+**What the neighbourhood is.** Canon carries 22 entries that mention rejection,
+and all of them are about *delivering* an approach and reading the answer — the
+Plausible Deniability Freeze, "Weak signals aren't your fault," "A safe answer
+buys you no information," M-TBD-3 on taking rejection gracefully. What none of
+them touch is the receiving side's *interpretive* cost: how much work it takes
+to decide whether a rejection happened, and what a person concludes about
+themselves once they decide it did.
+
+**The two lane-G captures converge, and not on what cycle 4 suggested.** Cycle
+4 is the cost of encoding and decoding signals (unwritten rules, ambiguous body
+language, platform defaults built around one neurotype, masking). Cycle 5 is the
+cost of interpreting outcomes. Both are the same underlying fact: **courtship
+runs on deliberate ambiguity, and ambiguity has a price that is not the same
+for everyone.** Canon already owns ambiguity as a *tactic* (the whole indirect-
+game group in Gender Dynamics) and as a *protection* (plausible deniability).
+It does not own the ambiguity as a **cost with a distribution** — cheap for
+some, and for others the binding constraint on participating at all.
+
+**Verdict: GAP** — proposal drafted as **The Ambiguity Tax** (integration 2).
+**+ instrument finding** (a reproducible whole-capture zero with the gate
+passing; canon's rejection doctrine is entirely sender-side).

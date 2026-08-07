@@ -98,3 +98,65 @@ lesson that misreading and boundary text is live match surface.
 - Floors, ratchets and frozen benchmarks untouched. Four authored count pins
   moved: 566 → 567 concepts, 63 → 64 Rules & Frameworks, 566 → 567 misreadings,
   533 → 534 boundaries.
+
+## Integration 2 — The Ambiguity Tax (canon 567 → 568)
+
+Baseline `--dump` captured at `1.0.0+7a2150b7a15f` **before** any edit.
+
+```
+canon      1.0.0+7a2150b7a15f -> 1.0.0+48254605825a  (doctrine moved)
+population 2426 retained passages x 568 entries = 1377968 pairs
+changed    28895   11501 down / 17394 up
+candidateScoreFloor  0.08  791 gain / 35 loss   (census lane, not adjudicable)
+minWeakScore         0.25   98 gain / 31 loss
+minCredibleScore     0.43    2 gain /  0 loss
+```
+
+**97 verdicts entered** (2 weak ACCEPT, 81 weak REJECT, 13 loss ACCEPT, 1
+credible REJECT). Same rule as integration 1. The two ACCEPTs are
+`07-van-lankveld-desire` 49 and 52 — the partner-responsiveness finding and the
+Birnbaum & Reis randomly-paired-strangers study, both of which are about what
+one person manages to read off another. Everything else is a methods line, a
+scale item, a table caption or a passage about a different mechanism.
+
+### Credible line — 1 crossing, REJECT (recommendation, FLAGGED FOR JASON)
+
+`…|hierarchy:jasons-hierarchy:secondary-factors:purity-lack-of-baggage|minCredibleScore`
+· `09-conroy-beam-discrepancies · 188` · 0.429 → **0.432**
+
+> "Participants were all in ongoing, long-term committed relationships."
+
+A +0.003 IDF drift on a methods sentence that was already sitting a thousandth
+under the line, pushed over by one added entry. It is not a pair either side
+should want. **Recommended REJECT.** (The second credible row,
+`stat-sexual-communication` at +0.001, already carries Jason's ACCEPT from an
+earlier epoch and stands.)
+
+### Three false positives removed before shipping — including the pt06 hazard, live
+
+1. **The short-unit token pair, exactly as pt06 predicted.** The 8-token corpus
+   sentence "He also has to be your only romantic partner." hit
+   `frameworks:ambiguity-tax` at **0.608 credible** because two of the entry's
+   misreadings carried *romantic* and *partner* across its surfaces. Rewriting
+   them to carry only one of the pair ("drawing a partner in", "early courtship
+   signalling") dropped that crossing entirely: weak gains 158 → 104, credible
+   5 → 3. The pt06 lesson paid for itself on its first live test.
+2. `13-wheatley-counterfeit-connections · 40` ("romantic interactions or are")
+   at 0.470 died with the same edit.
+3. `07-van-lankveld-desire · 53` ("This effect was most prominent in
+   participants with low avoidant attachment") reached 0.454 off the boundary
+   phrase *five participants … no effect size*. Reworded to "five people … no
+   magnitude estimate"; the crossing disappeared and the credible count fell
+   3 → 2, neither of them on the new entry.
+
+Each edit was followed by a fixture restore and a full re-sweep.
+
+### Verification
+
+- `npm run test:lab` exit **0**.
+- 3/3 misreadings fire **Contradicts** at High (0.734–0.738).
+- Magnet check: `ambiguity tax`, `double empathy`, `camouflag`, `neurotype`,
+  `unwritten rules` — **zero** corpus occurrences; `masking` 3 and `legibility`
+  1, neither in a magnet shape.
+- Pins moved: 567 → 568 concepts, 64 → 65 Rules & Frameworks, 567 → 568
+  misreadings, 534 → 535 boundaries.

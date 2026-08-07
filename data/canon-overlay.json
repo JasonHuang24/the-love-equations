@@ -1166,6 +1166,42 @@
         "Is the claim about one person's level of desire or the distance between two partners' levels?"
       ]
     },
+    "frameworks:ambiguity-tax": {
+      "aliases": [
+        "Ambiguity Tax",
+        "double empathy problem",
+        "unwritten rules of dating",
+        "neurotype mismatch",
+        "social camouflaging"
+      ],
+      "phrases": [
+        "reading between the lines",
+        "picking up on hints",
+        "masking while flirting",
+        "sensory load of a venue",
+        "grading a soft answer"
+      ],
+      "related": [
+        "frameworks:interaction-gate",
+        "frameworks:search-cost",
+        "frameworks:signal-cost-rule"
+      ],
+      "boundaryConditions": [
+        "The diffusion-chain result is a laboratory task among strangers, so it supports a pairing-level account of communication difficulty and predicts nothing about courtship outcomes.",
+        "The camouflaging and rejection-sensitivity legs are qualitative accounts, one of them from five people in two focus groups, so they carry no prevalence figure and no magnitude estimate.",
+        "A high bill is a property of a channel and a pairing rather than a score attached to one participant, and the same person can find one venue unreadable and another easy.",
+        "Making a courtship protocol fully explicit relocates the cost onto whoever must refuse in plain words; it does not remove it.",
+        "Neurodivergent courtship is the case that makes the distribution visible, not the only place the cost falls."
+      ],
+      "commonMisreadings": [
+        "Someone who misses a flirting hint is simply worse at drawing a partner in.",
+        "Direct plain communication between two people removes the difficulty from early courtship signalling.",
+        "A person who hides their natural reactions while flirting will build a stronger connection."
+      ],
+      "pressureTests": [
+        "Is this difficulty being priced to one participant, or to the channel and the pairing that produced it?"
+      ]
+    },
     "frameworks:attribution-fork": {
       "aliases": [
         "Attribution Fork",

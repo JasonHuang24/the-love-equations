@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+7a2150b7a15f",
+  "indexVersion": "1.0.0+48254605825a",
   "generatedAt": "2026-08-07T02:22:07.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "fb556838bb8d03a4a903ec7d02a9377b8851d24596157ff0c54be0e079f7d87a",
-      "conceptCount": 64
+      "sha256": "80f1be6a0bbd8d07bf937c5893aa03c01aafb5d6b75a23b60a2b5e079efe1d36",
+      "conceptCount": 65
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 567,
+    "conceptCount": 568,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 64,
+      "Rules & Frameworks": 65,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -268,13 +268,13 @@
       "Strategy": 29,
       "Tested claim": 6,
       "Tier 1": 51,
-      "Tier 2": 19,
+      "Tier 2": 20,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 472,
-    "conceptsWithExternalSources": 138,
-    "dependencyCount": 289,
-    "relatedCount": 473
+    "anchoredConceptCount": 473,
+    "conceptsWithExternalSources": 139,
+    "dependencyCount": 290,
+    "relatedCount": 476
   },
   "entries": [
     {
@@ -6409,6 +6409,71 @@
       ],
       "sourceLinks": [],
       "pressureTests": []
+    },
+    {
+      "id": "frameworks:ambiguity-tax",
+      "title": "The Ambiguity Tax",
+      "page": "frameworks.html",
+      "anchor": "ambiguity-tax",
+      "category": "Rules & Frameworks",
+      "subcategory": "Decision gates",
+      "synopsis": "The gate above holds that interaction, and only interaction, selects people in. Running that interaction has a price, and the price is interpretive: hints have to be caught, tone has to be weighed, a soft answer has to be graded, and an outcome has to be classified as a refusal or as nothing much. This site already treats courtship vagueness as a tactic and as a shield.",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Ambiguity Tax",
+        "double empathy problem",
+        "unwritten rules of dating",
+        "neurotype mismatch",
+        "social camouflaging"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "reading between the lines",
+        "picking up on hints",
+        "masking while flirting",
+        "sensory load of a venue",
+        "grading a soft answer"
+      ],
+      "dependencies": [
+        "frameworks:interaction-gate"
+      ],
+      "related": [
+        "gender-dynamics:male:the-default-market:the-climb-building-smv",
+        "frameworks:search-cost",
+        "frameworks:signal-cost-rule"
+      ],
+      "boundaryConditions": [
+        "The diffusion-chain result is a laboratory task among strangers, so it supports a pairing-level account of communication difficulty and predicts nothing about courtship outcomes.",
+        "The camouflaging and rejection-sensitivity legs are qualitative accounts, one of them from five people in two focus groups, so they carry no prevalence figure and no magnitude estimate.",
+        "A high bill is a property of a channel and a pairing rather than a score attached to one participant, and the same person can find one venue unreadable and another easy.",
+        "Making a courtship protocol fully explicit relocates the cost onto whoever must refuse in plain words; it does not remove it.",
+        "Neurodivergent courtship is the case that makes the distribution visible, not the only place the cost falls."
+      ],
+      "commonMisreadings": [
+        "Someone who misses a flirting hint is simply worse at drawing a partner in.",
+        "Direct plain communication between two people removes the difficulty from early courtship signalling.",
+        "A person who hides their natural reactions while flirting will build a stronger connection."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Crompton, Ropar, Evans-Williams, Flynn & Fletcher-Watson (2020), Autism 24(7):1704–1712",
+          "url": "https://doi.org/10.1177/1362361320919286"
+        },
+        {
+          "label": "Hull, Petrides, Allison, Smith, Baron-Cohen, Lai & Mandy (2017), Journal of Autism and Developmental Disorders 47(8):2519–2534",
+          "url": "https://doi.org/10.1007/s10803-017-3166-5"
+        },
+        {
+          "label": "Rowney-Smith, Sutton, Quadt & Eccles (2026), PLoS One 21(1):e0314669",
+          "url": "https://doi.org/10.1371/journal.pone.0314669"
+        }
+      ],
+      "pressureTests": [
+        "Is this difficulty being priced to one participant, or to the channel and the pairing that produced it?"
+      ]
     },
     {
       "id": "frameworks:retention-gap",
