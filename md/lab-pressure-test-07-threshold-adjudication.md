@@ -1,8 +1,17 @@
 # LE Lab — pressure test 07 threshold adjudication
 
-**Status:** LIVE. Rulings entered in `tests/fixtures/threshold-neighbors.json`;
-suite green (exit 0). Credible-line verdicts are **recommendations FLAGGED FOR
-JASON**, not his rulings.
+**Status:** LIVE and CLOSED. Rulings entered in
+`tests/fixtures/threshold-neighbors.json`; suite green (exit 0).
+
+**Credible-line authority for this run:** on 2026-08-06, after the two
+integrations were reported to him with both credible verdicts held as
+recommendations, **Jason delegated pt07's credible-line adjudication to
+Claude in session** ("You do the adjudication please."). The two verdicts below
+are therefore entered as **rulings, not recommendations**, and nothing here is
+waiting on him. `ruledBy` stays `Claude` in the fixture, which is the accurate
+record: Jason delegated the call, he did not make it, and no verdict is
+attributed to him. The delegation covers pressure test 07 only — the credible
+recommendations standing from pt05 and pt06 are unaffected and remain flagged.
 
 ## Integration 1 — The Attribution Fork (canon 566 → 567)
 
@@ -56,18 +65,21 @@ that engages the attribution mechanism itself. The entry's evidence came from
 the analyzed media captures and from primary sources, not from the corpus, and
 the 130 REJECTs record exactly that.
 
-### Credible line — 1 crossing, REJECT (recommendation, FLAGGED FOR JASON)
+### Credible line — 1 crossing, **REJECT** (ruled, under Jason's delegation)
 
-`seg-…|frameworks:attribution-fork|minCredibleScore` ·
+`seg-00041-07zafuy.claim-08|frameworks:attribution-fork|minCredibleScore` ·
 `08-mcnulty-early-marriage · 31` · 0.000 → **0.433**
 
 > "As Byers stated, 'Relationship satisfaction at Time 1 was not associated with
 > the change in sexu[al satisfaction]…'"
 
 A quoted null result about the satisfaction loop, sitting three thousandths
-above the line. It carries no attribution content, and `satisfaction-flywheel`
-is the entry that owns the bidirectional loop. **Recommended REJECT.** Jason's
-ruling replaces this one if it differs.
+above the line. It carries no attribution content — nothing in it locates a
+desire gap anywhere — and `satisfaction-flywheel` is the entry that owns the
+bidirectional loop. **REJECT:** the pair belonged at 0.000 and the crossing was
+not earned. No targeted fixture pin follows, because there is no prior good
+behaviour to preserve: the pair has never been one the canon wants at any
+threshold, and the regenerated band already records the correct side.
 
 ### Two credible false positives removed before shipping, not ruled around
 
@@ -119,18 +131,21 @@ Birnbaum & Reis randomly-paired-strangers study, both of which are about what
 one person manages to read off another. Everything else is a methods line, a
 scale item, a table caption or a passage about a different mechanism.
 
-### Credible line — 1 crossing, REJECT (recommendation, FLAGGED FOR JASON)
+### Credible line — 1 crossing, **REJECT** (ruled, under Jason's delegation)
 
-`…|hierarchy:jasons-hierarchy:secondary-factors:purity-lack-of-baggage|minCredibleScore`
+`seg-00093-12c1gq5.claim-03|hierarchy:jasons-hierarchy:secondary-factors:purity-lack-of-baggage|minCredibleScore`
 · `09-conroy-beam-discrepancies · 188` · 0.429 → **0.432**
 
 > "Participants were all in ongoing, long-term committed relationships."
 
 A +0.003 IDF drift on a methods sentence that was already sitting a thousandth
-under the line, pushed over by one added entry. It is not a pair either side
-should want. **Recommended REJECT.** (The second credible row,
-`stat-sexual-communication` at +0.001, already carries Jason's ACCEPT from an
-earlier epoch and stands.)
+under the line, pushed over by one added entry. A participant-description
+sentence reaching a hierarchy factor about baggage is wrong at any score.
+**REJECT**, and again no targeted pin: the pre-change side was 0.429, itself
+only a thousandth below the line, so pinning it would freeze noise rather than
+a behaviour worth defending. (The second credible row,
+`stat-sexual-communication` at +0.001, already carries Jason's own ACCEPT from
+an earlier epoch and stands untouched.)
 
 ### Three false positives removed before shipping — including the pt06 hazard, live
 

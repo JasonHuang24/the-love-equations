@@ -244,3 +244,115 @@ some, and for others the binding constraint on participating at all.
 **Verdict: GAP** — proposal drafted as **The Ambiguity Tax** (integration 2).
 **+ instrument finding** (a reproducible whole-capture zero with the gate
 passing; canon's rejection doctrine is entirely sender-side).
+
+---
+
+## Extension: lanes F and H, worked after the two-hour close
+
+Jason asked for another hour and delegated pt07's credible-line adjudication to
+Claude in the same message. The adjudication was closed first (see
+`md/lab-pressure-test-07-threshold-adjudication.md`), then the two unreached
+lanes were worked. Both captures run against `1.0.0+48254605825a` (568).
+
+## Cycle 6 — lane F — Psychology Today: Married to Two People: The Romantic Life of Widows
+
+- URL: https://www.psychologytoday.com/us/blog/in-the-name-of-love/202405/married-to-two-people-the-romantic-life-of-widows
+- Words: 1,362 · SHA-256: `e3925c6db56b79f7c4a76a14d1f4b2faa139ef5e0e99a3477411970fb158325a`
+- Canon at capture: `1.0.0+48254605825a` (568)
+- Analyzer: 56 passages · 55 claims · 9 mapped · mappedShare **16.4%** · 3 tensions
+- Extraction: the `card-group` drop had to be widened to `card-group[^"]*` —
+  Psychology Today's "Relationships Essential Reads" widget carries the
+  modifier classes `card-group--condensed card-group--border-bottom d-lg-none`,
+  so the exact-class drop used in cycles 1 and 5 missed it. Widening removed 19
+  words of recirculation furniture. **This closes the extraction offender
+  recorded in cycle 5** — it was never a separate widget, just a drop pattern
+  that was too narrow.
+
+**Reading.** Nine mapped rows, eight of them Low and none of them owning the
+article. The only Medium (0.534) lands on a **section heading** — "Can a Widow
+Love Two People at Once?" → `frameworks:residual-pool`, which is about who is
+left in a market, not about loving two people. `smv:looks` at 0.437 on "Second
+love is different, but it's very good" and
+`game-is-like-learning-a-new-language` at 0.434 on a sentence about crying for
+a late husband are pure lexical noise. `frameworks:sixth-rung` at 0.486 on
+"bereaved and nonbereaved women when they enter new relationships" is the one
+defensible neighbour — Ended does own exit and re-entry.
+
+**A false neighbour on this run's own new entry.** `frameworks:ambiguity-tax`
+took 0.438 Low on "we can love one person, then shortly after fall in love with
+another." Wrong neighbourhood — nothing there is about interpretive cost.
+Recorded rather than authored around: it is a Low row, it displaces nothing,
+and one Low false neighbour is the expected price of any added entry.
+
+**Canon check.** `sixth-rung` owns exit and the re-entry discount; it assumes
+the prior bond is **over**. `term-the-re-entry-discount` prices the market you
+return to. `widows-house` is historical (1900–1959 single motherhood).
+`stat-remarriage-gap` owns who re-partners. What none of them own is the
+article's whole subject: a bond that ended **physically but not
+psychologically**. "Most widows maintained continuing bonds with their deceased
+husbands, whereas few of them severed these bonds"; the "three hearts
+relationship" where one partner is "physically absent, but psychologically
+present"; "love toward the deceased spouse can in fact increase, challenging
+the strength of love toward the current partner"; the new partner's own account
+("The hardest thing to understand was how the widow I'm dating could still love
+him and start to love me"); and the social rule that a widow is expected to be
+"above suspicion." All unmapped.
+
+**Verdict: GAP.** Candidate subject — **the unsevered bond**: an ending that
+removes a partner from the world without removing them from the relationship,
+so re-entry is negotiated with a third party who cannot be negotiated with, and
+the ordinary exit doctrine (initiation, asymmetry, the re-entry discount) does
+not describe it. Distinct from the divorced case in its *starting point*, which
+the article names directly. **HELD** — one capture is not the encompassing
+standard, and integration 3 was not started (see below).
+
+## Cycle 7 — lane H — Psychology Today: Can Long-Distance Relationships Really Work?
+
+- URL: https://www.psychologytoday.com/us/blog/meet-catch-and-keep/201505/can-long-distance-relationships-really-work
+- Words: 461 · SHA-256: `5d6d4036a53da1522b75908f251231acd4ea0614f7edcff8dbab6a5b3942bc39`
+- Canon at capture: `1.0.0+48254605825a` (568)
+- Analyzer: 16 passages · 13 claims · 0 mapped · mappedShare **0.0%** · 0 tensions
+- Extraction: as cycle 6, plus a cut at the "Other Reads" list — an inline
+  `<ul>` of author self-links inside the body, not a card widget, so no drop
+  pattern reaches it. Third distinct furniture shape on this one outlet.
+
+**The second whole-capture zero of the run, and the cleanest.** Not one of the
+13 claim units produced a candidate at any score. Re-tested in isolation,
+"Long-distance couples report as much intimacy and commitment as couples who
+live near each other" and "About half of people assume a long-distance
+relationship is less satisfying than a nearby one" both reach **nothing**.
+
+**And the reason is not subtle.** A verbatim scan of the built index returns
+**zero entries containing "long-distance" or "long distance"** — not an alias,
+not a phrase, not a synopsis, not a boundary. `term-living-apart-together-lat`
+owns LAT (separate households, same locality) and the protocol already flagged
+that LAT is not LDR. The canon has no surface for distance at all.
+
+What the capture surfaces: 56.6% of people perceive LDRs as less happy and
+satisfying; Dargie, Blair, Goldfinger & Pukall (2015, *Journal of Sex & Marital
+Therapy* 41(2):181–202, N = 1,142) found few differences from geographically
+close relationships across intimacy, satisfaction and commitment; the
+moderators that do predict quality are psychological distress, relationship
+certainty and — notably — *beliefs about LDRs themselves*; and greater distance
+predicting **more** positive evaluation, which the authors read as possible
+cognitive dissonance.
+
+**Verdict: GAP, and a coverage hole rather than a doctrine subtlety.**
+Candidate subject — **the distance discount**: a widely-held penalty belief
+about a relationship structure that the measured evidence does not support,
+where the belief itself is one of the moderators. That shape rhymes with
+`stock-flow-error` and the Mythbuster docket, and the stereotype-versus-measure
+gap is exactly the site's genre. **HELD** for the same reason as cycle 6.
+
+## Why no integration 3
+
+Both gaps are real and both proposals are drafted above. Neither was
+implemented. A full pt04 cycle — baseline `--dump`, authoring, rebuild, pins,
+sweep, rule every crossing, suite, two commits — has taken 35–45 minutes each
+time in this run, and starting one inside the last fifteen minutes of a
+timeboxed hour would have left a half-integrated canon and an unruled fixture
+in a checkout a second agent is actively working. Each candidate also wants a
+second capture before it clears the encompassing standard. The load-bearing
+figures above are **as reported by the captures and not yet re-verified at
+primary source** — Dargie et al. 2015 in particular must be checked before any
+of its numbers reach a page.

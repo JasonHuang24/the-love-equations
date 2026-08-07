@@ -39,3 +39,12 @@ Keep this file UTF-8.
 - chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC5462438/ verdict(gap)
 - chatgpt A https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1219915/full claimed
 - chatgpt A https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1219915/full verdict(instrument)
+- chatgpt C https://pmc.ncbi.nlm.nih.gov/articles/PMC9216579/ claimed
+- chatgpt C https://pmc.ncbi.nlm.nih.gov/articles/PMC9216579/ verdict(gap)
+- chatgpt B https://wrap.warwick.ac.uk/id/eprint/108466/ claimed
+- chatgpt B https://wrap.warwick.ac.uk/id/eprint/108466/ verdict(gap)
+- claude F https://www.psychologytoday.com/us/blog/in-the-name-of-love/202405/married-to-two-people-the-romantic-life-of-widows verdict(gap)
+- claude H https://www.psychologytoday.com/us/blog/meet-catch-and-keep/201505/can-long-distance-relationships-really-work verdict(gap)
+- chatgpt B https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1118741/full claimed
+- chatgpt B https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1118741/full verdict(covered)
+- chatgpt A https://time.com/6323622/love-is-blind-season-5-finale/ claimed

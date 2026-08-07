@@ -1,7 +1,8 @@
 # Doctrine pressure test 07 — third parallel Claude + ChatGPT run
 
-**Run date:** 2026-08-06, 19:44–21:50 MDT (Claude integrator lane; the scout
-was still working its lanes at the time of writing and has **not** closed out)
+**Run date:** 2026-08-06, 19:44–21:50 MDT, extended to 22:00 at Jason's request
+(Claude integrator lane; the scout was still working its lanes throughout and
+has **not** closed out)
 **Status:** Implemented and verified; commits local, **no push without Jason**.
 **Lane:** Parallel pressure test under `md/pt07/PROTOCOL.md` — Claude as
 integrator/sole committer (**Opus 5, high effort** — pt04–06 ran Fable),
@@ -14,8 +15,10 @@ Third two-agent run on one checkout, coordinated through the append-only ledger
 `md/pt07/CLAIMS.md`. Claim collisions observed: zero. Claude worked lane E
 (desire-discrepancy discourse, 3 captures) and lane G (neurodivergence and
 dating, 2 captures), analyzed 5 articles, ran two full integrations, ruled every
-adjudicable crossing, and made all commits. **Lanes F (dating after loss) and H
-(long-distance and digital-first) were not reached** — see §5. The scout worked
+adjudicable crossing, and made all commits. In an extension hour after the
+two-hour close, Jason delegated the credible-line adjudication to Claude (§4)
+and the two unreached lanes were worked: **lanes F (dating after loss) and H
+(long-distance) each produced one capture and one gap, both HELD** — see §5. The scout worked
 lanes A–D and had filed 12 claim lines and three proposals by 21:40; its
 findings file and proposals stay uncommitted, per the protocol, until its
 closeout.
@@ -29,9 +32,11 @@ closeout.
 | 3 | E | The Conversation — Women's sexual desire often goes undiscussed | 908 | 60.0% | gap → **The Attribution Fork** + instrument |
 | 4 | G | The Conversation — Why dating can be tough for autistic people | 724 | 17.4% | gap candidate + instrument |
 | 5 | G | Psychology Today — When Rejection Sensitivity Meets the Dating Scene | 697 | **0.0%** | gap → **The Ambiguity Tax** + instrument |
+| 6 | F | Psychology Today — Married to Two People: The Romantic Life of Widows | 1,362 | 16.4% | gap (the unsevered bond), **HELD** |
+| 7 | H | Psychology Today — Can Long-Distance Relationships Really Work? | 461 | **0.0%** | gap (the distance discount), **HELD** |
 
 Captures 1–3 ran against canon `1.0.0+c4f092f8c7d3` (566); 4–5 against
-`1.0.0+7a2150b7a15f` (567). Raw source text stayed out of the repo; SHA-256s are
+`1.0.0+7a2150b7a15f` (567); 6–7 against `1.0.0+48254605825a` (568). Raw source text stayed out of the repo; SHA-256s are
 in the findings file.
 
 ## 3. Implemented surfaces (canon 566 → 568, two integrations)
@@ -74,7 +79,13 @@ its own `--neighbors` regen onto the existing fixture, with the fixture restored
 from a pre-sweep copy before every re-sweep. **262 rulings entered** (integration
 1: 165 — 11 weak A / 130 weak R / 23 loss-A / 1 credible REJECT; integration 2:
 97 — 2 weak A / 81 weak R / 13 loss-A / 1 credible REJECT). **Both credible
-rulings are recommendations FLAGGED FOR JASON.** 6/6 new misreadings fire
+verdicts were held as recommendations at first report; Jason then delegated
+pt07's credible-line adjudication to Claude in session, so they are entered as
+rulings and nothing is outstanding.** `ruledBy` stays `Claude` — the delegation
+is recorded in the adjudication sheet rather than by attributing a verdict to
+Jason that he did not personally make. Neither REJECT triggers a targeted
+fixture pin: neither pair is one the canon wants at any threshold, so there is
+no prior behaviour to preserve. 6/6 new misreadings fire
 Contradicts end-to-end at High (0.733–0.739). Magnet check: zero verbatim corpus
 occurrences for every new alias. Census lane grew 14,354 → 16,181, recorded.
 
@@ -98,13 +109,23 @@ predicted three of them exactly:
 
 ## 5. Deliberately NOT implemented
 
-- **Lanes F and H were not reached.** Two lanes of four went unclaimed: dating
-  after loss (widowhood re-entry) and long-distance/digital-first relationships.
-  One lane-H URL was claimed and immediately abandoned — the URL was constructed
-  rather than found, returned 404, and no capture was ever made. The lane-E and
-  lane-G work each produced a full encompassing entry, and two integrations plus
-  262 rulings consumed the run. Both lanes remain open with nothing spent on
-  them.
+- **The lane-F and lane-H entries.** Both lanes were reached in the extension
+  hour and both produced a real gap, drafted in the findings file and **not
+  implemented**: *the unsevered bond* (an ending that removes a partner from the
+  world without removing them from the relationship — `sixth-rung` owns exit and
+  re-entry but assumes the prior bond is over) and *the distance discount* (a
+  penalty belief about a relationship structure that the measured evidence does
+  not support, with the belief itself among the moderators). Each wants a second
+  capture to clear the encompassing standard, and starting a 35–45-minute pt04
+  cycle inside the last fifteen minutes of a timebox would have left a
+  half-integrated canon and an unruled fixture in a checkout a second agent is
+  actively working. Their load-bearing figures — Dargie et al. 2015 in
+  particular — are **as reported by the captures and not yet re-verified at
+  primary source**.
+  - Superseded note: at the two-hour close this section read "lanes F and H were
+    not reached." That was true then. The one lane-H URL abandoned during the
+    main run was constructed rather than found and 404'd; the capture that
+    eventually ran came from a searched URL.
 - **The scout's three proposals** (`chatgpt-proposal-verification-stack`,
   `-typology-shortcut`, `-courtship-buffer`). All three arrived well-formed
   against the encompassing standard, and one of them (the Typology Shortcut)
@@ -156,11 +177,15 @@ predicted three of them exactly:
    of life*). Plus a four-word transition, "Online dating has its own set of
    challenges," taking the **top** score of its capture at 0.654 on
    `signal-cost-rule`.
-5. **Two more extraction offenders for the protocol's drop list:** Psychology
-   Today's "Essential Reads" inline recirculation block (distinct from the
-   already-known `pathways_card`, which renders twice), and The Conversation's
-   inline "Love IRL / Quarter Life" series-promo block, which sits *inside* the
-   article body and produced 3 claim-like units in cycle 4.
+5. **Extraction offenders for the protocol's drop list.** The Conversation's
+   inline "Love IRL / Quarter Life" series-promo block sits *inside* the article
+   body and produced 3 claim-like units in cycle 4. Psychology Today needs three
+   separate handles on one outlet: `pathways_card` (renders **twice**, top and
+   foot), `card-group[^"]*` — **the modifier classes matter**, cycle 5's
+   "Essential Reads" residue was not a second widget but a drop pattern too
+   narrow to match `card-group--condensed card-group--border-bottom d-lg-none` —
+   and a cut at an inline "Other Reads" `<ul>` of author self-links, which no
+   drop pattern reaches because it is not a container at all.
 
 ## 7. Verification
 
@@ -169,4 +194,9 @@ predicted three of them exactly:
   value moved except the four authored count pins, twice (566 → 568 concepts,
   63 → 65 Rules & Frameworks, 566 → 568 misreadings, 533 → 535 boundaries).
 - Commits: `4b12d36` (integration 1) · `cb253ea` (stamp) · `e2d215c`
-  (integration 2) · `154935a` (stamp) — all local only, **not pushed**.
+  (integration 2) · `154935a` (stamp) · `60b5dc3` (run record) plus the
+  extension-hour commit carrying the closed adjudication and cycles 6–7 — all
+  local only, **not pushed**.
+- The extension hour changed no canon surface, no test and no fixture: it closed
+  the adjudication as documentation and added two analyzed captures. Canon
+  stands at 568 and the suite at 18/18, exit 0.
