@@ -54,7 +54,8 @@ read them, a skipped gate also looks green.
   approval to Jason that he did not give.
 - Floors and ratchets are hard and a change that needs one loosened does not ship:
   domainRecall ≥ 0.9 · ignorePrecision ≥ 0.95 · junkRecall ≥ 0.75 (ratchet — floor may
-  only rise; measured 0.844) · WEAK_BACKLOG_CEILING = 0 (every new weak crossing blocks
+  only rise; measured 0.853 over 191 cases since pt08 append #5, was 0.844 over 180) ·
+  WEAK_BACKLOG_CEILING = 0 (every new weak crossing blocks
   until ruled; lowering was the only permitted edit and it is spent) · knownSplits ≤ 1.
 - Frozen benchmark fixtures and assertion values are never edited to green a test.
   A red test is diagnosed and reported; goalposts move only by Jason's ruling.
