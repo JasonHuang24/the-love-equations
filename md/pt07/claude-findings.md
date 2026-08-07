@@ -494,3 +494,42 @@ meaning.* Two confirmed instances (`the wall`, `sexual desire`) plus pt06's
 `dating coach`. The fix is authored-surface work with its own baseline and
 adjudication — an alias audit for common-bigram surfaces across the canon —
 and it is deliberately **not** attempted here.
+
+### Sizing the magnet class — a census, with its own limits stated
+
+A measurement, not a change. Every bigram inside every canon title and alias
+(2,399 distinct) was counted verbatim against `lab-corpus/`. Two things came
+out, and the second matters more than the first.
+
+**What it found.** Content-word bigrams carried by canon surfaces with heavy
+corpus exposure, i.e. the candidates that would behave like `sexual desire`:
+
+| corpus hits | bigram | entries carrying it |
+|--:|---|--:|
+| 156 | `mate value` | 2 |
+| 116 | `sex ratio` | 4 |
+| 97 | `sexual desire` | 2 (**confirmed magnet**) |
+| 87 | `physical attractiveness` | 4 |
+| 53 | `potential mate` | 1 |
+| 40 | `attention to alternatives` | 1 |
+| 39 | `mate retention` | 1 |
+| 34 | `positive affect` | 1 |
+| 25 | `assortative mating` | 1 |
+
+**Two limits that stop this being a worklist.** First, the raw census is noisy:
+the highest-frequency results are function-word pairs from long titles ("of
+the" at 844, "in the" at 719), which the observed magnets suggest do *not*
+drive the exact-phrase bonus — every confirmed magnet has been a content
+bigram. Separating those cleanly needs the scorer's own rule for which phrases
+earn the bonus, which I did not read.
+
+Second and more important: **the corpus is the wrong population for this risk.**
+`the wall` has **zero** corpus occurrences and is nonetheless a live magnet
+against analyzed media — which is exactly where readers' text comes from. A
+corpus census measures adjudication exposure; it cannot see the risk that
+matters most. Sizing that properly wants a general-English frequency list, not
+`lab-corpus/`.
+
+So: the class is real, three instances are confirmed, and the candidates above
+are worth *checking* rather than treating as findings. Recorded as the starting
+point for the alias audit, not as its result.
