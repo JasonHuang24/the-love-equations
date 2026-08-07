@@ -1868,3 +1868,33 @@ test('a canon phrase inside a longer word is not a phrase hit', async () => {
     .find((match) => (match.whyMatched || []).some((line) => /market value/i.test(line)));
   assert.ok(boundedHit, 'a token-bounded "market value" no longer matches anything');
 });
+
+test('the generic cue ladder reads the claim clause and its follow-up, not the whole passage', async () => {
+  /*
+   * Red until v2.6.20 (GPT-5.6 review, finding 4): the generic cue families
+   * were tested against the whole passage, so disagreement wording in an
+   * unrelated leading clause flipped a matched claim's stance —
+   * frameworks:conversion-ladder went Resembles 0.731 → Challenges 0.610
+   * under a prefix about the weather. The ladder now reads the assertion
+   * clause plus its follow-up, the same two-clause ground as misreadingScope.
+   */
+  const ladderLabel = async (text) => {
+    const result = await analyzeDocument(normalizeInput({
+      text, source: { title: 'Stance scope probe' },
+    }), REAL_CANON);
+    return result.segments
+      .flatMap((segment) => segment.matches)
+      .find((match) => match.canonId === 'frameworks:conversion-ladder')?.alignment?.label;
+  };
+  const claim = 'The Conversion Ladder separates exposure, attention, attraction, and selection';
+  assert.equal(await ladderLabel(`${claim}.`), 'Resembles');
+  assert.equal(await ladderLabel(`The weather forecast was wrong; ${claim.toLowerCase()}.`), 'Resembles',
+    'disagreement about the weather is not disagreement about the claim');
+  // Comma-free claim, because clause boundaries are punctuation-approximated:
+  // in the list form above, "the claim's next clause" is the list item
+  // "attention", not the verdict — the same granularity every clause-scoped
+  // branch already lives with.
+  const compact = 'The Conversion Ladder separates exposure from attention and selection';
+  assert.equal(await ladderLabel(`${compact}; that model is wrong.`), 'Challenges',
+    'a verdict in the claim\'s own follow-up clause must still land');
+});

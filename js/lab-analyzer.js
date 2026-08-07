@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.19';
+export const ANALYZER_VERSION = '2.6.20';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -2784,6 +2784,40 @@ function misreadingScope(text, misreadingTokens) {
   };
 }
 
+/*
+ * The ground the GENERIC cue ladder reads (v2.6.20): the clause that carries
+ * the match, plus the clause immediately after it — the same two-clause shape
+ * `misreadingScope` has used since v2.5.0/v2.6.0. Until now the ladder read
+ * the WHOLE passage, so "The weather forecast was wrong; the Conversion
+ * Ladder separates exposure, attention, attraction, and selection." flipped
+ * the ladder match Resembles → Challenges on wording about the weather
+ * (GPT-5.6 review, finding 4). The assertion clause is the one sharing the
+ * most retrieval tokens with the match; ties go to the earliest.
+ *
+ * Two costs, named: a verdict in a PRECEDING clause ("That is wrong: X…") no
+ * longer reaches the claim — the same forward-only shape the misreading
+ * branch's follow-up has; and EVIDENCE_CUES deliberately stay passage-wide,
+ * because citing data is a property of the passage, not a verdict aimed at
+ * one clause.
+ */
+function genericCueGround(text, anchorTokens) {
+  const clauses = clauseSegments(normalizeForClauses(text)).clauses
+    .filter((clause) => clause.text);
+  if (clauses.length < 2) return normalizeText(text);
+  const wanted = new Set(anchorTokens || []);
+  let assertion = clauses[0];
+  let best = -1;
+  clauses.forEach((clause) => {
+    const overlap = unique(tokenize(clause.text)).filter((token) => wanted.has(token)).length;
+    if (overlap > best) {
+      best = overlap;
+      assertion = clause;
+    }
+  });
+  const at = clauses.indexOf(assertion);
+  return [assertion.text, clauses[at + 1]?.text].filter(Boolean).join(' ');
+}
+
 /**
  * What the source is doing with the matched concept.
  *
@@ -2880,18 +2914,24 @@ function stanceFor(unit, match) {
       label = 'Contradicts';
       rationale = 'The source asserts a reading that the canon entry explicitly limits or rejects.';
     }
-  } else if (CONTRADICTION_CUES.test(text) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
-    label = 'Challenges';
-    rationale = 'The source uses explicit disagreement language around the matched concept.';
-  } else if (CHALLENGE_CUES.test(text)) {
-    label = 'Challenges';
-    rationale = 'The source names an exception, dependency, or scope limit around the matched concept.';
-  } else if (EXTENSION_CUES.test(text)) {
-    label = 'Extends';
-    rationale = 'The source proposes an additional mechanism, factor, or edge case around the matched concept.';
-  } else if (SUPPORT_CUES.test(text) || EVIDENCE_CUES.test(text)) {
-    label = 'Supports';
-    rationale = 'The source presents the matched concept affirmatively and includes support or evidence language.';
+  } else {
+    // Clause-scoped from v2.6.20: the four claim-directed cue families read
+    // the assertion clause and its follow-up, not the whole passage. Evidence
+    // register alone still reads passage-wide.
+    const cueGround = genericCueGround(text, rawScore.sharedTokens);
+    if (CONTRADICTION_CUES.test(cueGround) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
+      label = 'Challenges';
+      rationale = 'The source uses explicit disagreement language around the matched concept.';
+    } else if (CHALLENGE_CUES.test(cueGround)) {
+      label = 'Challenges';
+      rationale = 'The source names an exception, dependency, or scope limit around the matched concept.';
+    } else if (EXTENSION_CUES.test(cueGround)) {
+      label = 'Extends';
+      rationale = 'The source proposes an additional mechanism, factor, or edge case around the matched concept.';
+    } else if (SUPPORT_CUES.test(cueGround) || EVIDENCE_CUES.test(text)) {
+      label = 'Supports';
+      rationale = 'The source presents the matched concept affirmatively and includes support or evidence language.';
+    }
   }
 
   // A caveat is not the claim. If every shared token came from the entry's
@@ -2919,9 +2959,9 @@ function stanceFor(unit, match) {
       reportedSpeech: reported,
       denial: denied,
       // Which spans, cues, and scopes produced the label. Present only when the
-      // misreading branch ran, because it is the only branch that scopes; the
-      // generic cue ladder below is still sentence-wide and says so by having
-      // nothing to show here.
+      // misreading branch ran, because its scope machinery is the richest; the
+      // generic cue ladder reads its own two-clause ground from v2.6.20
+      // (genericCueGround) and publishes nothing here.
       scope: scope ? scope.trace : null,
     },
   };
@@ -4035,7 +4075,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       'The relevance gate is lexical triage and can misclassify unseen phrasings in either direction; every ignored passage is listed with its decision evidence and any passage can be re-triaged with a per-passage visitor override.',
       'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
-      'Alignment reads negation parity, quotation, attribution, endorsement, rejection, and qualification within the clause that carries the claim. The generic agreement and disagreement cues that decide the remaining labels are still read across the whole passage, so disagreement wording in a neighbouring clause can change the stance of a claim it is not about. It cannot detect irony, so a passage that mocks a reading by stating it is recorded as stating it; labels should also be reviewed when a claim is highly implicit or depends on context outside the passage.',
+      'Alignment reads negation parity, quotation, attribution, endorsement, rejection, and qualification within the clause that carries the claim, and the generic agreement and disagreement cues that decide the remaining labels read the claim\'s clause and the clause that follows it (evidence-citation language still counts from anywhere in the passage; a verdict stated in an earlier clause does not reach forward). It cannot detect irony, so a passage that mocks a reading by stating it is recorded as stating it; labels should also be reviewed when a claim is highly implicit or depends on context outside the passage.',
       'Clause boundaries are approximated from punctuation, not parsed. Stance scoping and contextual-alias evidence both depend on that approximation, so coordination without a comma, negation inside a subordinate clause, appositive and relative clauses, and chains of attribution can each attach a word to the wrong claim.',
       'External sources listed by LE are carried through as citations; this analysis does not re-fetch or re-verify them.',
       'No source text or media was uploaded by this analyzer.',
