@@ -95,10 +95,34 @@ export class LabIntakeError extends Error {
   }
 }
 
+/*
+ * Characters a reader cannot see and the tokenizer cannot ignore.
+ *
+ * The C0 range and DEL were always removed here. The Unicode FORMAT
+ * characters were not, and they are the ones a real paste actually carries:
+ * a soft hyphen from a justified page (`&shy;`), a zero-width space from a
+ * CMS, a word joiner, a BOM anywhere but position 0, and the bidi embedding
+ * and isolate controls a right-to-left quotation leaves behind. None of them
+ * is text, and every one of them splits a word, because the token regex is
+ * `[\p{L}\p{N}]+`: "hypergamy" with one U+200B in the middle scored 0.562
+ * against pills:page-rp:hypergamy where the clean form scores 0.747, and
+ * nothing in the output said a character had done it.
+ *
+ * ZWNJ and ZWJ (U+200C/U+200D) are deliberately NOT in this class. They are
+ * orthographic in Persian and several Indic scripts and structural inside
+ * emoji sequences, so removing them would corrupt text a reader can see.
+ * Inside a Latin word they stay a way to hide from the matcher; that residual
+ * is recorded rather than paid for with someone else's spelling.
+ */
+// U+2028 and U+2029 are absent on purpose: they are line breaks, not
+// invisible padding, and normalizeLineEndings is where a line break belongs.
+
+const FORMAT_CHARACTERS = /[\u00ad\u200b\u200e\u200f\u202a-\u202e\u2060-\u2064\u2066-\u206f\ufeff]/g;
 function cleanControlCharacters(value) {
   return String(value ?? '')
     .replace(/\u0000/g, '')
-    .replace(/[\u0001-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '');
+    .replace(/[\u0001-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '')
+    .replace(FORMAT_CHARACTERS, '');
 }
 
 export function normalizeLineEndings(value) {
@@ -251,15 +275,60 @@ function parseFlexibleTime(value, fieldName = '') {
   return parseTimestamp(value);
 }
 
+/*
+ * The named entities the no-DOM path has to know.
+ *
+ * In the browser `htmlToTextWithDom` runs and a DOM decodes everything. This
+ * table is what the FALLBACK knows, and the fallback is what the headless
+ * harness, the test suite and every corpus capture run on — so a name missing
+ * here means the Lab and its own measuring instrument read different text.
+ *
+ * The set is not a guess. `tools/extract-source-text.mjs` already decodes the
+ * typographic half of it, because the corpus archive could not be read
+ * without it; the rest are the names measured surviving extraction across the
+ * archived raw HTML (&raquo;, &laquo;, &copy;, &larr;, &rarr;) plus the
+ * Latin-1 letters, which any article carrying a European name will contain.
+ * `doesn&rsquo;t` was the expensive one: undecoded it tokenizes to
+ * doesn/rsquo/t, so the passage stops containing the contradiction cue
+ * `doesn't` and an entity name enters the token stream as a word.
+ */
+const HTML_NAMED_ENTITIES = Object.freeze({
+  amp: '&', apos: "'", gt: '>', lt: '<', nbsp: ' ', quot: '"',
+  // Typography — the set tools/extract-source-text.mjs already required.
+  lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”',
+  sbquo: '‚', bdquo: '„', ndash: '–', mdash: '—',
+  hellip: '…', prime: '′', Prime: '″', bull: '•',
+  middot: '·', dagger: '†', Dagger: '‡', permil: '‰',
+  laquo: '«', raquo: '»', lsaquo: '‹', rsaquo: '›',
+  ensp: ' ', emsp: ' ', thinsp: ' ', shy: '­', zwnj: '‌', zwj: '‍',
+  // Symbols that appear in prose and in the recirculation furniture around it.
+  copy: '©', reg: '®', trade: '™', deg: '°', sect: '§',
+  para: '¶', plusmn: '±', times: '×', divide: '÷',
+  minus: '−', ne: '≠', le: '≤', ge: '≥',
+  frac12: '½', frac14: '¼', frac34: '¾',
+  larr: '←', uarr: '↑', rarr: '→', darr: '↓', harr: '↔',
+  euro: '€', pound: '£', yen: '¥', cent: '¢',
+  // Latin-1 letters, so a name keeps its shape and its tokens.
+  Aacute: 'Á', aacute: 'á', Agrave: 'À', agrave: 'à',
+  Acirc: 'Â', acirc: 'â', Atilde: 'Ã', atilde: 'ã',
+  Auml: 'Ä', auml: 'ä', Aring: 'Å', aring: 'å',
+  AElig: 'Æ', aelig: 'æ', Ccedil: 'Ç', ccedil: 'ç',
+  Eacute: 'É', eacute: 'é', Egrave: 'È', egrave: 'è',
+  Ecirc: 'Ê', ecirc: 'ê', Euml: 'Ë', euml: 'ë',
+  Iacute: 'Í', iacute: 'í', Igrave: 'Ì', igrave: 'ì',
+  Icirc: 'Î', icirc: 'î', Iuml: 'Ï', iuml: 'ï',
+  Ntilde: 'Ñ', ntilde: 'ñ', Oacute: 'Ó', oacute: 'ó',
+  Ograve: 'Ò', ograve: 'ò', Ocirc: 'Ô', ocirc: 'ô',
+  Otilde: 'Õ', otilde: 'õ', Ouml: 'Ö', ouml: 'ö',
+  Oslash: 'Ø', oslash: 'ø', Uacute: 'Ú', uacute: 'ú',
+  Ugrave: 'Ù', ugrave: 'ù', Ucirc: 'Û', ucirc: 'û',
+  Uuml: 'Ü', uuml: 'ü', Yacute: 'Ý', yacute: 'ý',
+  yuml: 'ÿ', szlig: 'ß', THORN: 'Þ', thorn: 'þ',
+  ETH: 'Ð', eth: 'ð', iexcl: '¡', iquest: '¿',
+});
+
 function decodeEntities(value) {
-  const named = {
-    amp: '&',
-    apos: "'",
-    gt: '>',
-    lt: '<',
-    nbsp: ' ',
-    quot: '"'
-  };
+  const named = HTML_NAMED_ENTITIES;
   return String(value)
     .replace(/&#(\d+);?/g, (_, number) => {
       const point = Number(number);
@@ -273,7 +342,11 @@ function decodeEntities(value) {
         ? String.fromCodePoint(point)
         : '';
     })
-    .replace(/&([a-z]+);/gi, (match, name) => named[name.toLowerCase()] ?? match);
+    // Exact case first: HTML entity names are case-sensitive, and `&Prime;`,
+    // `&Dagger;` and every Latin-1 capital differ from their lower-case twin
+    // by nothing else. The lower-case fallback keeps `&AMP;`-style shouting
+    // working, which is what the table did before it had any capitals in it.
+    .replace(/&([a-z]+);/gi, (match, name) => named[name] ?? named[name.toLowerCase()] ?? match);
 }
 
 function stripCueMarkup(value) {
