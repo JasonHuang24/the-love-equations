@@ -2084,3 +2084,45 @@ test('the mate-value-mismatch idiom conjugates date and marry, not only two of t
   assert.equal(retained('The invoice was dated up to the last quarter of the year.'), false);
   assert.equal(retained('The paint on the north wall was marred up near the ceiling.'), false);
 });
+
+test('a supposed cue and a questioned cue are not asserted cues', async () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: stance-cue
+   * clause scoping, second pass). The negation guard closed one half of the
+   * ladder's polarity blindness. This is the other half: a cue the passage
+   * SUPPOSES rather than asserts, and a cue inside a question.
+   *
+   * Measured against frameworks:conversion-ladder:
+   *
+   *   "If it were true that <claim>, dating apps would be simpler."  Supports 0.668
+   *   "Suppose it is true that <claim>."                             Supports 0.700
+   *   "Is it true that <claim>?"                                     Supports 0.714
+   *   "It is true that <claim>."                                     Supports 0.714
+   *
+   * The last two are the sharpest: a question and its own assertion reach this
+   * ladder as the same string, because clause splitting drops the punctuation
+   * that is the entire difference between them, and they were scored and
+   * labelled identically.
+   *
+   * As with negation, the guard withholds the cue rather than inverting the
+   * label: all three land on Resembles. A rhetorical question therefore
+   * under-claims, which is the direction this instrument prefers.
+   */
+  const label = async (text) => {
+    const result = await analyzeDocument(normalizeInput({
+      text, source: { title: 'Hypothetical cue probe' },
+    }), REAL_CANON);
+    return result.segments
+      .flatMap((segment) => segment.matches)
+      .find((match) => match.canonId === 'frameworks:conversion-ladder')?.alignment?.label;
+  };
+  const claim = 'the Conversion Ladder separates exposure from attention and selection';
+
+  assert.equal(await label(`If it were true that ${claim}, dating apps would be simpler.`), 'Resembles');
+  assert.equal(await label(`Suppose it is true that ${claim}.`), 'Resembles');
+  assert.equal(await label(`Is it true that ${claim}?`), 'Resembles');
+
+  // The assertion the question was indistinguishable from still reads Supports.
+  assert.equal(await label(`It is true that ${claim}.`), 'Supports');
+  assert.equal(await label(`The Conversion Ladder separates exposure from attention and selection; that model is wrong.`), 'Challenges');
+});
