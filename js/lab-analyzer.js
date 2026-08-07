@@ -1779,7 +1779,27 @@ function namesCanonSurface(text, canonSurfaces) {
 }
 
 function localDomainRelevance(unit, canonSurfaces = null) {
-  const text = String(unit?.text || '').trim();
+  /*
+   * Normalized, not raw, from v2.6.21. Retrieval, clause splitting,
+   * stance and `namesCanonSurface` (five lines up, inside this same gate) all
+   * read `normalizeText` output; only the four frame families read the raw
+   * bytes, and that asymmetry was invisible because the frames are written in
+   * lower case with `/i` anyway. What it cost was every multi-word pattern
+   * spanning a space: one U+00A0 — the character an HTML paste yields from
+   * `&nbsp;` — turned "a provider" into a string `provisioning-role` cannot
+   * see, and "He wanted a provider who could support a household while he
+   * raised their children." went from retained to set aside
+   * `no-human-relational-frame`. Same for U+202F, U+3000, a curly apostrophe
+   * in a pattern spelled with a straight one, and an en dash where a pattern
+   * spells a hyphen.
+   *
+   * Measured: 0 of the 191 frozen benchmark cases move and 0 of the 1,298
+   * corpus matches move, because neither instrument holds a non-ASCII space.
+   * Insert one U+00A0 into those same benchmark cases and 5 of the 89
+   * expected-retain ones flip to ignore. That is the finding as much as the
+   * fix is.
+   */
+  const text = normalizeText(unit?.text || '');
   const participantEvidence = collectFrameEvidence(
     HUMAN_PARTICIPANT_FRAMES, text, 'domain', 'participant',
   );
