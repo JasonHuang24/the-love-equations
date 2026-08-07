@@ -484,7 +484,30 @@ const RELATIONAL_OUTCOME_FRAMES = Object.freeze([
       || /\b(?:partners?|mates?|dates?|singles?|spouses?)\b.{0,65}\b(?:meet|met|choose|chose|select|seek|attract|reject|date|pair|match)\w*\b/i.test(text)
       || /\b(?:mate|partner) selection\b|\bpair formation\b|\b(?:future|potential|romantic) partners?\b|\bromantic networks?\b/i.test(text)
       || /\b(?:meet|met|meeting)\b.{0,40}\bsome(?:one|body)\b/i.test(text)
-      || /\b(?:first|second|third|blind|next|another)\s+dates?\b|\bdate nights?\b/i.test(text),
+      || /\b(?:first|second|third|blind|next|another)\s+dates?\b|\bdate nights?\b/i.test(text)
+      // The gate trusted the gerund `dating` and nothing else, so the plain noun
+      // "dates" (romantic outings, or the people one goes on them with) and the
+      // verb `date`/`dated` were invisible: "how people date and connect",
+      // "going on more dates", "would not date someone", "her dates" were all
+      // binned no-human-relational-frame. Same defect SHAPE as the `marry\w*`
+      // morphology bug of v2.6.14 — one inflection named, the rest missed
+      // (pt08 cycles 1 and 3, two independent captures, with a natural minimal
+      // pair: "12% said they were going on more dates" binned while "men were
+      // twice as likely to say they were going on more dates" passed on `men`).
+      //
+      // These are POSITIVE shapes, not `dates?` with calendar senses excluded.
+      // A bare `dates?` frame would admit "the release date of the report",
+      // "dated 1997", "up to date", "the dates of the conference sessions" —
+      // and ignorePrecision has a hard 0.95 floor. Each shape below requires a
+      // courtship-specific structure a calendar sense does not take.
+      || /\b(?:go|goes|going|went|gone)\s+on\s+(?:\w+\s+){0,3}dates?\b/i.test(text)
+      || /\bdate\s+(?:someone|somebody|anyone|anybody|people|him|her|them|men|women|a\s+(?:man|woman|guy|girl))\b/i.test(text)
+      || /\b(?:people|men|women|singles|adults|teens|users|respondents|participants|couples|guys|girls)\s+(?:date|dates|dated)\b/i.test(text)
+      || /\b(?:his|her|their|my|your|our)\s+dates\b/i.test(text)
+      || /\bdated\s+(?:\w+\s+){0,2}(?:men|women|guys|girls|people)\b/i.test(text)
+      // Survey register, straight from the pt08 capture: "Seventy-four per cent
+      // dated while using the medication". No calendar sense takes this shape.
+      || /\b(?:per\s?cent|percent|%)\s+dated\b/i.test(text),
   },
   {
     id: 'relationship-maintenance',
