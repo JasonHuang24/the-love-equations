@@ -152,9 +152,14 @@ predicted three of them exactly:
    sentence at 0.454. Reworded to *five people … no magnitude estimate*;
    credible 3 → 2, neither remaining row on a new entry.
 
-## 5. Deliberately NOT implemented
+## 5. Deliberately NOT implemented — and Jason's rulings on each
 
-- **The lane-F entry.** *The unsevered bond* — an ending that removes a partner
+**Jason ruled on all three open items on 2026-08-06, approving the recommended
+disposition for each.** They are therefore settled decisions, not integrator
+recommendations awaiting review. The rulings are recorded inline below.
+
+
+- **The lane-F entry. RULED: Jason approved holding it (2026-08-06)** — it stays HELD until a primary source is read at source; media-reported figures do not license authoring. *The unsevered bond* — an ending that removes a partner
   from the world without removing them from the relationship, where `sixth-rung`
   owns exit and re-entry but assumes the prior bond is over. Now carried by
   **two captures across two outlets** (cycles 6 and 9) and drafted in the
@@ -173,7 +178,7 @@ predicted three of them exactly:
     not reached." That was true then. The one lane-H URL abandoned during the
     main run was constructed rather than found and 404'd; the capture that
     eventually ran came from a searched URL.
-- **P1, the Verification Stack — DEFERRED, not rejected.** Jason's fold
+- **P1, the Verification Stack — DEFERRED, not rejected. RULED: Jason approved the deferral (2026-08-06).** It stays deferred until the three gating documents can be read at source, and its Tier 1 leg is repaired or re-tiered before any fold. Jason's fold
   instruction set an explicit precondition: re-read *both full Whitty papers and
   Ofcom's technical report* before adding named stages, accuracy rates,
   predictor sizes or efficacy estimates. That precondition is unmet. The Whitty
@@ -197,7 +202,7 @@ predicted three of them exactly:
   doctrine. Production control, casting, compensation, editing, participant
   safety and observed outcomes stay separate variables. **No canon change**, and
   that is the correct outcome rather than a shortfall.
-- **The `sexual desire` alias magnet** (see §6.1). It is an authored-surface
+- **The common-bigram magnet class. RULED: Jason approved a dedicated measured pass (2026-08-06)** — the alias audit gets its own baseline, sweep and adjudication rather than riding on a doctrine commit. Starting point in `md/pt07/claude-findings.md`, with the caveat recorded there that `lab-corpus/` is the wrong population for the media-facing risk. The `sexual desire` alias magnet (see §6.1) is the first target. It is an authored-surface
   defect with a clean measured fix available — the alias `sexual desire decline`
   on `desire-maintenance-split` — but changing it is a scoring change to an
   entry this run did not otherwise touch, and it deserves its own baseline,
@@ -269,10 +274,17 @@ predicted three of them exactly:
   the real exit code. Floors, ratchets and frozen benchmarks untouched; no test
   value moved except the four authored count pins, twice (566 → 568 concepts,
   63 → 65 Rules & Frameworks, 566 → 568 misreadings, 533 → 535 boundaries).
-- Commits: `4b12d36` (integration 1) · `cb253ea` (stamp) · `e2d215c`
-  (integration 2) · `154935a` (stamp) · `60b5dc3` (run record) plus the
-  extension-hour commit carrying the closed adjudication and cycles 6–7 — all
-  local only, **not pushed**.
+- Commits: `4b12d36`+`cb253ea` (integration 1) · `e2d215c`+`154935a`
+  (integration 2) · `dbdf21b`+`745eaf7` (integration 3) · `47788f9`+`c3bbf65`
+  (the scout fold) plus the record commits. **Pushed to `origin/main` at
+  `fa8b140` on Jason's explicit in-session approval**, suite 18/18 exit 0
+  against the exact tree that went up.
+- `md/pt06/chatgpt-handoff.md` deleted at Jason's instruction — its purpose was
+  served and its source of truth, `md/pt06/chatgpt-findings.md`, is tracked and
+  already folded into pt06's run record. The pt07 scout findings and the three
+  proposals are **kept**: they are the committed record, and P1 is still live
+  work. `md/doctrine-distillation-handoff.md` is not a scout artifact and is
+  linked from `md/INDEX.md`, so it also stays.
 - The extension hour changed no canon surface, no test and no fixture: it closed
   the adjudication as documentation and added two analyzed captures. Canon
   stands at 568 and the suite at 18/18, exit 0.
