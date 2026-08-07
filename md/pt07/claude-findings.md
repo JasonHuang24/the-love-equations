@@ -356,3 +356,26 @@ second capture before it clears the encompassing standard. The load-bearing
 figures above are **as reported by the captures and not yet re-verified at
 primary source** — Dargie et al. 2015 in particular must be checked before any
 of its numbers reach a page.
+
+### Partial discharge of the lane-H verification commitment
+
+Dargie, Blair, Goldfinger & Pukall (2015) was chased at source in the last
+minutes of the extension hour. Result, stated exactly:
+
+- **Citation VERIFIED at Crossref** — "Go Long! Predictors of Positive
+  Relationship Outcomes in Long-Distance Dating Relationships," *Journal of Sex
+  & Marital Therapy* 41(2):181–202, DOI `10.1080/0092623x.2013.864367`, four
+  authors in the order the capture reported. The capture's bibliography line was
+  accurate.
+- **Figures NOT verified.** Semantic Scholar holds no abstract for the DOI, and
+  the paper is not retrievable under the PMID a search suggested (that PMID is a
+  different 2015 *JSMT* article on pregnancy and sexual function — a near-miss
+  worth naming, because it would have been an easy wrong citation to accept).
+  So **N = 1,142, the 56.6% stereotype figure, and the "few differences from
+  geographically close relationships" finding all remain capture-reported
+  only.** None may reach a page until read at source.
+
+That is the whole point of the pt04 re-verification step: the citation was
+sound and the numbers are still unconfirmed, and those are two different
+states. The distance-discount proposal stays HELD with its evidence marked
+accordingly.
