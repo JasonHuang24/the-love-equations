@@ -1,16 +1,24 @@
 # Proposed append #5 to `tests/fixtures/domain-relevance-benchmark.json`
 
-**Status: PROPOSED — awaiting Jason's agreement. Not applied.**
+**Status: ADOPTED and applied at `c520776`** (2026-08-07). Jason delegated the
+outstanding PT08 calls to Claude in session and closed the run; this was
+adopted under that delegation, in a commit touching no classifier code, per the
+policy quoted below.
+
+Re-measured on the tree it landed on rather than on the figure quoted when it
+was proposed — the canon is part of the gate as of v2.6.6 and had since moved
+571 → 573. The numbers came out identical: 0.8438 → **0.8529**, misses 15.
 
 The fixture's policy says cases "enter only by explicit agreement between the
 maintainer and the reviewer, in a commit that changes no classifier code."
 The classifier change (the `date`/`dated`/`dates` gate shapes, pt08 cycles 1
-and 3) shipped separately for that reason. These cases are the guard for it
-and should land in their own commit.
+and 3) shipped separately at `959d32c` for that reason. These cases are the
+guard for it, and they landed in their own commit at `c520776`.
 
-## Measured, then reverted
+## Measured
 
-Applied to the fixture and measured, with the classifier fix in the tree:
+Measured with the classifier fix in the tree, first at proposal time and again
+on the tree it was applied to:
 
 | metric | 180 cases | 191 cases | floor |
 |---|---|---|---|
@@ -19,8 +27,9 @@ Applied to the fixture and measured, with the classifier fix in the tree:
 | junkRecall | 0.8438 | **0.8529** | 0.75 ratchet — this RAISES it |
 | fixture misses | 15 | 15 | — |
 
-All 11 pass. `junkRecall` moves in the permitted direction only. If these are
-adopted, the ratchet in `CLAUDE.md` should read 0.853, not 0.844.
+All 11 pass. `junkRecall` moves in the permitted direction only. `CLAUDE.md`'s
+measured note now reads 0.853 over 191 cases; the declared 0.75 minimum was
+left alone, as every prior append left it.
 
 ## The cases
 
@@ -46,12 +55,16 @@ compact style:
 {"id": "dt-11", "family": "polysemous-trap", "expected": "ignore", "register": "calendar-date-traps", "text": "The expiry dates printed on the packaging were illegible after the shipment got wet.", "note": "Append #5 (pt08, 2026-08-07): calendar sense — the ignorePrecision cost the courtship shapes must not buy."}
 ```
 
-Write the fixture by appending these LINES, not by re-serialising the JSON —
+Written by appending these LINES, not by re-serialising the JSON —
 `JSON.stringify(…, null, 2)` reformats every existing case and turns an
 11-case append into a 1,330-line diff nobody can review. I made that mistake
-and reverted it.
+once, reverted it, and the applied commit is 12 insertions.
 
-## The twelfth case, deliberately NOT proposed
+(The `note` strings as applied carry the full append-#5 preamble on every row
+rather than the shortened form shown above; the ids, families, expectations,
+registers and texts are as listed.)
+
+## The twelfth case, deliberately NOT proposed and NOT adopted
 
 > "The carbon dating of the sediment layer places the deposit in the late
 > Holocene."

@@ -116,7 +116,7 @@ had the discovery but not the adjudication budget, and rushed rulings are the
 failure mode `--rule` is forbidden to prevent. It is a clean, well-evidenced
 proposal for pt09 rather than a half-integrated entry.
 
-## Open for Jason
+## Open for Jason (first pass — all now closed, see the closeout)
 
 1. **Proposed benchmark append #5** — `md/pt08/proposed-benchmark-append-05.md`.
    11 cases, measured at domainRecall 1.0000 / ignorePrecision 1.0000 /
@@ -218,3 +218,68 @@ no pt08 delegation was given.
    claim 2, or rule no-doctrine-needed.
 3. **The 9 credible rulings above**, including the two REJECTed losses.
 4. **The purchased-trait gap** from the integrator's lane E — still unauthored.
+
+---
+
+# Closeout — 2026-08-07
+
+**Jason delegated the outstanding PT08 calls to Claude in session and closed
+the run.** The five dispositions below are Claude's under that delegation.
+Nothing in this run is attributed to Jason as his own verdict.
+
+| # | item | disposition |
+|---|---|---|
+| 1 | Benchmark append #5 | **ADOPTED** — `c520776` |
+| 2 | The 9 credible rulings | **CLOSED as ruled** (`ruledBy: Claude`) |
+| 3 | The Parenthood Fork | **DEFERRED to PT09** |
+| 4 | The purchased-trait gap | **DEFERRED to PT09** |
+| 5 | Instrument findings 2, 3, 5 | **LEFT UNFIXED**, carried to PT09 |
+
+**1 — Append #5 adopted.** The gate fix at `959d32c` had been shipping without
+its guard, which was the one thing in this run that could silently regress. It
+was re-measured on the tree it landed on rather than on the figure quoted when
+it was proposed, because the canon is part of the gate as of v2.6.6 and had
+moved 571 → 573 in between; the numbers were unchanged. `junkRecall` 0.8438 →
+**0.8529**, the only permitted direction. The declared 0.75 minimum was left
+alone, as every prior append left it. The twelfth case — "carbon dating" —
+stays out, because appending a knowingly-red case would put the suite in the
+red for a pre-existing defect this run neither caused nor fixed.
+
+**2 — The credible line closed as ruled.** 7 ACCEPT / 2 REJECT, all
+`ruledBy: Claude`. The two REJECTs are recorded as costs, not un-crossed; a
+REJECT is never a threshold change.
+
+**3 — The Parenthood Fork deferred, not patched.** Two independent reasons, and
+either alone would be enough: its claim 2 **inverts its source** (Golombok 2020
+found financial difficulty did *not* predict child adjustment at Phase 2), and
+its proposed parent structurally cannot host it — `deep-dive:single-parenthood`
+is an `Essay` whose 33 children are `Essay section`s, while the proposal
+declares no content type at all. Choosing a parent is a design decision, not a
+correction, so it goes to PT09 intact rather than being silently re-homed at
+close.
+
+**4 — The purchased-trait gap deferred.** It is well evidenced and the run
+record above states the mechanism, the parent analysis and the sources in full.
+Authoring it means an overlay edit, a rebuilt index, a fresh sweep and a ruling
+on every weak crossing it opens — the same 219-crossing sequence the scout fold
+just took. Starting that at close is exactly the rushed-adjudication failure
+`--rule` exists to prevent. It is a clean PT09 proposal.
+
+**5 — Instrument findings 2, 3 and 5 left unfixed, deliberately.** Each is a
+whole-corpus scoring or precision change, none is caused by this run, and none
+can be measured inside it: the generic-token credible false positive
+(`change/yourself/self/thing` at 0.430), bare numerals and truncated stems
+counted as "distinctive" (`14`, `dat`), and the gerund leak on "carbon dating".
+Finding 4 — pt07's common-bigram magnet reproducing on a fresh source — also
+stands unfixed and is now confirmed across two runs.
+
+## Final state
+
+Canon **573** at `1.0.0+903fb1917167`. `npm run test:lab` 18/18, exit 0, no
+skipped assertions. Working tree clean. **Nothing was pushed.**
+
+Commits, in order: `283f95b` protocol · `959d32c` gate fix · `0b9c3e3`
+first-pass records · `bc41bdb` scout fold · `21b52d7` index stamp · `9b7dcf7`
+triage records · `c520776` append #5.
+
+Lanes F, G and H were never opened, and no later pass changed that.

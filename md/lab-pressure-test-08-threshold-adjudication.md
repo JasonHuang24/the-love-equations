@@ -30,10 +30,13 @@ REJECT. Weak pending 0, credible pending 0. The candidate-floor line
 | minCredibleScore | 6 | 3 | 7 ACCEPT / 2 REJECT |
 | minWeakScore | 155 | 55 | 98 ACCEPT / 112 REJECT |
 
-**The 9 credible rulings are Claude's recommendations and are FLAGGED FOR
-JASON.** Jason gave no pt08 delegation of the credible line; the suite blocks
-on unruled credible crossings, so they are entered rather than left PENDING,
-and they are attributed to Claude. Nothing here is attributed to Jason.
+**The 9 credible rulings are Claude's, and they are now CLOSED.** They were
+first entered and reported as recommendations flagged for Jason, because no
+pt08 delegation of the credible line had been given and the suite blocks on
+unruled credible crossings. Jason then **delegated the outstanding PT08 calls
+to Claude in session on 2026-08-07 and closed the run**, which is the authority
+these stand on. `ruledBy` remains `Claude`; no verdict here is attributed to
+Jason.
 
 ## The credible line, row by row
 
