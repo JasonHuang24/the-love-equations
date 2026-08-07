@@ -158,7 +158,16 @@ predicted three of them exactly:
   scout had not closed out, and the protocol requires the integrator to
   re-verify every load-bearing figure at its primary source before folding — six
   DOIs and four agency documents across the three, which the remaining run time
-  could not cover honestly. They are the first thing a follow-up run should do.
+  could not cover honestly. They are the first thing a follow-up run should do,
+  and `md/pt07/claude-verification-notes.md` now carries a partial pass so that
+  fold does not start from zero: **all seven DOIs resolve to real papers whose
+  titles match the proposals** — no fabricated citation in the set — and
+  Sayette et al. (2012)'s N = 720 three-arm design is verified verbatim. One
+  thing that pass surfaced needs naming here: **P1's only Tier 1 leg, Ofcom's
+  4,201-adult RCT, is a source the scout recorded in the claims ledger as
+  `abandoned(bot-blocked)` and then cited figures from anyway.** The numbers may
+  be accurate, but the chain of custody is broken and a Tier 1 label cannot
+  stand on an unfetched source. Repair or re-tier that leg before folding P1.
 - **The `sexual desire` alias magnet** (see §6.1). It is an authored-surface
   defect with a clean measured fix available — the alias `sexual desire decline`
   on `desire-maintenance-split` — but changing it is a scoring change to an
