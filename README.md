@@ -121,7 +121,9 @@ images/           roster photos (manifest.json is generated — don't hand-edit)
 models/           ONNX models + training/calibration docs
 tests/            deterministic Lab/canon fixtures plus the standing SMV panel harness
 tools/            Python maintenance scripts, integrity audits, and requirements.txt
-md/               project ledger (mission-notes.md — read this first for history), specs, briefs
+md/               the record shelf — INDEX.md (start here; one row per record) + seven
+                  consolidated volumes + mission-notes.md (the build ledger) + the two
+                  routing files the test suite reads by path
 ```
 
 The build ledger in `md/mission-notes.md` records every substantive work batch — what changed, why, and
