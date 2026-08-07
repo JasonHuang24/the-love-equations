@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -316,4 +317,27 @@ test('no corpus pair crosses an admission line without a ruling', { skip: corpus
     + '  node tools/lab-threshold-sweep.mjs --baseline <dump> \\\n'
     + '      --neighbors tests/fixtures/threshold-neighbors.json --excerpt-chars 0 \\\n'
     + `      --md md/lab-v2.6.0-threshold-adjudication.md\n${unrecorded.slice(0, 20).join('\n')}`);
+});
+
+test('the sweep refuses --rule: bulk adjudication stays impossible, not just forbidden', () => {
+  /*
+   * Jason declined bulk rulings on 2026-07-30 and CLAUDE.md records `--rule` as
+   * forbidden in any form — it stamped every outstanding crossing with one
+   * unread decision and one author. Until 2026-08-07 the prohibition lived only
+   * in prose while the code path stayed executable (a GPT-5.6 review flagged
+   * it). This pins the tool's refusal: the flag dies at argument parsing,
+   * before the corpus is read or any fixture is opened.
+   */
+  for (const argv of [
+    ['--rule', 'ACCEPT', '--ruled-by', 'Nobody'],
+    ['--ruled-by', 'Nobody'],
+    ['--ruled-at', '2026-08-07'],
+  ]) {
+    const run = spawnSync(process.execPath, [path.join(ROOT_DIR, 'tools', 'lab-threshold-sweep.mjs'), ...argv], {
+      encoding: 'utf8',
+      timeout: 30000,
+    });
+    assert.notEqual(run.status, 0, `the sweep accepted ${argv[0]}`);
+    assert.match(String(run.stderr), /forbidden/i, `the refusal for ${argv[0]} does not say why`);
+  }
 });

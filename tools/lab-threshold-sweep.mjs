@@ -86,9 +86,6 @@ function parseArgs(argv) {
     dumpFloor: 0.02,
     excerptChars: 96,
     includeSetAside: false,
-    rule: null,
-    ruledBy: null,
-    ruledAt: null,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const flag = argv[index];
@@ -97,9 +94,14 @@ function parseArgs(argv) {
     else if (flag === '--baseline') options.baseline = next();
     else if (flag === '--neighbors') options.neighbors = next();
     else if (flag === '--md') options.md = next();
-    else if (flag === '--rule') options.rule = next();
-    else if (flag === '--ruled-by') options.ruledBy = next();
-    else if (flag === '--ruled-at') options.ruledAt = next();
+    else if (['--rule', '--ruled-by', '--ruled-at'].includes(flag)) {
+      // Bulk adjudication was declined by Jason on 2026-07-30 and CLAUDE.md
+      // forbids `--rule` in any form: it stamps every outstanding crossing
+      // with one unread decision. A verdict is entered by hand, per row, in
+      // tests/fixtures/threshold-neighbors.json — never synthesized here.
+      throw new Error(`${flag} is forbidden: bulk rulings were declined on 2026-07-30 (CLAUDE.md). `
+        + 'Enter verdicts by hand in the neighbors fixture, one crossing at a time.');
+    }
     else if (flag === '--include-set-aside') options.includeSetAside = true;
     else if (flag === '--band') options.band = Number(next());
     else if (flag === '--dump-floor') options.dumpFloor = Number(next());
@@ -336,27 +338,6 @@ function main() {
         before: crossing.before,
         after: crossing.after,
       };
-    }
-    /*
-     * Transcribing a human's verdict, not making one.
-     *
-     * `--rule` stamps every OUTSTANDING crossing with one decision, which is
-     * the shape a real adjudication usually takes ("accept all", "reject these
-     * three and accept the rest" after the three are recorded by hand). It
-     * touches nothing already answered, and it demands `--ruled-by`, because a
-     * verdict with no name on it is indistinguishable from a default.
-     */
-    if (options.rule) {
-      if (!['ACCEPT', 'REJECT'].includes(options.rule)) {
-        throw new Error(`--rule must be ACCEPT or REJECT, not ${options.rule}`);
-      }
-      if (!options.ruledBy) throw new Error('--rule requires --ruled-by: a verdict needs an author.');
-      Object.values(rulings).forEach((row) => {
-        if (row.ruling !== 'PENDING') return;
-        row.ruling = options.rule;
-        row.ruledBy = options.ruledBy;
-        if (options.ruledAt) row.ruledAt = options.ruledAt;
-      });
     }
     const pending = Object.values(rulings).filter((row) => row.ruling === 'PENDING').length;
     /*
