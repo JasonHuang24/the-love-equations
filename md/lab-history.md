@@ -9246,3 +9246,137 @@ git show f9c0feb:fixtures/demo-v2.6.0.json
 `fixtures/run-analyzer.mjs` and `fixtures/diff-analysis.mjs` STAY — they are active
 instruments (every pt-run protocol calls run-analyzer; diff-analysis is the freeze/alias
 comparison tool). A future freeze comparison captures fresh baselines with run-analyzer.
+
+
+---
+
+# lab-cold-review-gpt56-02 — adversarial-review triage, second GPT-5.6 cold pass
+
+(2026-08-07, Claude Fable 5 maintainer lane, high effort.) A cold GPT-5.6
+code-quality review delivered 7 findings across the analyzer, tools, tests, and
+schema contracts. Per standing calibration (the v2.6.1 five-pass loop produced
+~17/19 artifacts of its own reviewing), every finding was independently
+reproduced before being believed and "no change needed" was treated as a valid
+verdict. Outcome: two engine releases (v2.6.18 at d6c6fdc, v2.6.19 at 50c6421),
+one tool hardening (db0997b), one LIVE-record repair, two findings closed with
+no change. This review was GOOD: 5 of 7 findings survived reproduction in some
+form — the opposite calibration result from the v2.6.1 loop.
+
+## Scoring the reviewer first
+
+The repo carries four KNOWN recorded-unfixed engine defects (pt08 sections,
+`md/pressure-tests.md`): the generic-token credible FP at 0.430, bare numeral
+`14` / truncated stem `dat` as "distinctive", the 0.540 common-bigram magnet
+CLASS, and "carbon dating" retained by the gerund. **The review found 0 of 4.**
+None of its findings duplicates them either (finding 3 is the same morphology
+FAMILY as the `dat` stem but a distinct, previously unrecorded asymmetry), so
+nothing was double-recorded. The review reached genuinely new territory —
+substring boundaries, stance scope, guard coverage — and its 0/4 recall
+measures how much of this engine's known defect surface a cold reader does not
+reach on their own.
+
+## Findings and verdicts
+
+| # | Claim | Verdict | Disposition |
+|---|---|---|---|
+| 1 | `--rule` bulk adjudication remains executable | **CONFIRMED** (static; deliberately never executed) | db0997b: the flag and its companions die at argument parsing; a guard test pins the refusal |
+| 2 | Multiword canon phrases match across token boundaries | **CONFIRMED** ("supermarket values" → `smv:overview@0.54`, reproduced headless) | d6c6fdc (v2.6.18): shared bounded comparator at both sites; cost measured and adjudicated (below) |
+| 3 | Stemmer splits s-final singulars from their plurals | **CONFIRMED** (`status→statu` vs `statuses→status`) | 50c6421 (v2.6.19): `(?<![us])s` — after the review's own proposed direction was measured and REFUTED (below) |
+| 4 | Unrelated disagreement language flips a matched claim's stance | **CONFIRMED** — the exact pair reproduces: `frameworks:conversion-ladder` 0.731 Resembles → 0.610 Challenges under a "the weather forecast was wrong;" prefix (the review had cited the second-ranked match; the top match is decided by the misreading branch either way) | Recorded-not-fixed. The limitation string that overclaimed clause scoping was corrected in v2.6.19; the engine fix — scoping the generic cue ladder (`CONTRADICTION_CUES` at score ≥ 0.58 and its siblings) to the assertion clause plus its follow-up, the way `misreadingScope` already works — is a v2.5.0-class stance release needing its own red manifest, stance census, and benchmark cases. Queued, not rushed |
+| 5 | Sweep silently excludes non-claim mappings the product displays | **NO CHANGE NEEDED** | Reproduced ("Mate guarding" displays `mate-retention-intensity@0.505 Context only`; the sweep skips it) — but the skip is an adjudicated SCOPE choice documented at length in the sweep source with its own measurement (23/788 top slots), and the comment already states the residual. Widening re-bases every ruling ever made; that is Jason's governance call, not a bug fix |
+| 6 | Neighbor guard cannot detect crossings by unrecorded pairs | **NO CHANGE NEEDED** (documented, quantified design property) | True and already measured: the fixture's own note records the band alone catches 36% (829/2,304) of real drift crossings and names `--baseline` as the primary instrument. The review re-derived a documented property as a defect. A full-population membership check would cost a full sweep inside the suite; not worth it while the --baseline discipline holds |
+| 7 | Research-queue doc two revisions stale; export tests reinforce 2.0 | **CONFIRMED for the doc, NOT REPRODUCED for the tests** | `md/lab-operations.md` heading updated 2.0 → 2.2 (the analysis/2.6 and diagnostics/1.1 headings were already current — one heading drifted). The test half is wrong: `tests/lab-analyzer.test.mjs:1055` already asserts the live analyzer export against the constant — a fix this volume records being made once before — and the export-format fixture tests pass-through semantics, which is correct behavior for a formatter |
+
+## v2.6.18 — bounded phrase matching, measured
+
+The comparator is asymmetric ON MEASUREMENT, not on principle: a fully strict
+trailing edge threw away 27 correctly-admitted corpus passages that name a
+concept in the plural ("sex ratios" ×21, "social skills" ×6), so the trailing
+edge admits `s`/`es` and nothing else; the leading edge is strict because every
+embedded false hit found grows the phrase leftward into a different word
+("supermarket values", "inattention to alternatives").
+
+Sweep against a fresh clean-tree dump: 1,387,233 pairs, 745 moved, all down.
+Population 2,426 → 2,421. The five passages lost, read individually: a "Sexual
+desirea" table-artifact row (junk, good riddance), "frequency of sex[ual]" ×3
+(two of them the SAME Wheatley sentence about AI-companion sexual
+conversations — a real domain-adjacent claim now binned, the one population
+loss with content; it sits in M-TBD-53's territory, which pt08 already
+recorded as owned by nothing), and Miller's "If inattention to alternatives is
+a desired end…". Crossings: 11 credible + 29 weak, all losses, ruled 33 ACCEPT
+/ 3 REJECT (Claude, hand-entered). The 3 REJECTs are one fact: the
+`attention-to-alternatives` entry loses its own source literature (Miller)
+because "inattention to X" lexically is not "attention to X". Real cost,
+recorded, no pin — a pin would freeze substring matching.
+
+**Reversal that needs Jason's eyes:** the fix un-does two credible
+`lexicon:term-the-operative-frame` mappings he personally ruled ACCEPT in the
+retention-merge adjudication ("the operative frameWORK" no longer matches;
+0.575 → 0.324/0.265). Because the sweep's rulings ledger keys by
+pair+threshold and never reopens an answered key, these reversals never
+entered PENDING — they are recorded here instead, which is worth knowing about
+the instrument: an opposite-direction re-crossing of a ruled key is invisible
+to the blocking machinery.
+
+**Recommended to Jason (authored-surface remedies, the permitted kind):**
+`operative framework` as an alias on term-the-operative-frame; `inattention to
+alternatives` on attention-to-alternatives; `frequency of sexual activity` on
+satisfaction-flywheel (its McNulty·46 mapping demoted credible→weak, 0.575 →
+0.355, because the phrase "frequency of sex" is lexically absent from
+"frequency of sexual activity"). None applied this pass — alias work is a
+canon edit with its own index rebuild and sweep.
+
+## v2.6.19 — the stemmer fix, and the refutation that preceded it
+
+The review's direction ("make suffix normalization idempotent") was measured
+first and REFUTED: a fixpoint stemmer over the 176,207-token canon+corpus
+vocabulary moves 432 tokens and re-manufactures exactly the v2.6.0 fragment
+class (`pass→pas`, `access→acc`, `class→cla`, `assessments→ass`). The shipped
+fix is one lookbehind — the bare-`s` alternative does not fire after `u` or
+`s` — measured at 36 real inflection families unified (status/statuses,
+focus/focuses, process/processes, discuss/discusses, address/addresses…), two
+false unions dead (possible↮poses, impossible↮imposed — and the
+consensus↮consensually collision, which had been carrying two M-TBD-27 weak
+rows on Finkel's "consensually nonmonogamous" prose: a conformity myth fed by
+consent vocabulary), one real loss (menu/menus).
+
+Sweep against a fresh v2.6.18 dump: 18,080 pairs moved, balanced (8,910 down /
+9,170 up). Crossings: 1 credible loss + 132 weak, ruled same day (65 ACCEPT /
+50 REJECT, Claude, hand-entered). The 50 REJECTs are ONE named class: methods-
+and statistical-register sentences ("Relationship status was assessed by
+separation at T2.") riding the newly-unified assess/status/process/discuss/
+census stems into the weak band of entries whose claims they do not touch —
+M-TBD-56 ("self-assessed value") and the self-assessment gender-dynamics cards
+are the biggest magnets. That class is the fix's measured cost, recorded
+without pins; it is weak-band-only noise of the same register family the entry-
+side asymmetry work (v2.6.8) fought on the other side. The single credible
+crossing (stat-cycling on a sample-composition sentence, 0.443 → 0.424) was a
+marginal token coincidence and its loss is ACCEPTed. Genuine gains ACCEPTed
+include the heteropessimism essay finally reaching `term-heteropessimism`
+(embarrass/embarrassed unified) and Chinese sex-ratio census prose reaching
+`effective-ratio` and `relationships-by-country`.
+
+The match-behavior census extractor (which reads `stemToken`'s source as data)
+was taught to read through a lookbehind; the suffix inventory it extracts is
+unchanged, so no census verdict moved.
+
+## Credible-line verdicts flagged for Jason
+
+Per standing protocol, every credible-line verdict this pass entered (9 from
+v2.6.18, 1 from v2.6.19, ruledBy Claude) is a recommendation flagged for
+Jason's review pre-push, alongside the operative-frame reversal above and the
+three authored-surface recommendations. NOTHING WAS PUSHED.
+
+## What was NOT done
+
+- No benchmark fixture case was appended anywhere — the frozen fixtures' policy
+  requires Jason's explicit agreement. The supermarket regression lives in
+  `tests/lab-analyzer.test.mjs`, which is not a frozen fixture.
+- Finding 4's engine fix was not attempted. Finding 5 and 6 changed nothing.
+- The export-test fixture strings (research-queue/2.0) were left alone — they
+  test pass-through, and "modernizing" them would weaken that.
+- No canon source page, alias, or misreading was edited; no threshold moved; no
+  floor or ratchet touched; `--rule` was never executed in any form.
+- The candidate-floor census (20,796 → 21,151 PENDING) is census, not backlog.
+- The two probe corpora dumps and both adjudication sheets are session
+  scratchpad artifacts, deliberately not committed; the fixture is the record.

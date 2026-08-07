@@ -444,7 +444,7 @@ failure layer, checks both frozen benchmarks for the same passage, and drafts
 the fixture stub a human would commit. It refuses to write into
 `tests/fixtures/`.
 
-## Research queue — `le-lab.research-queue/2.0`
+## Research queue — `le-lab.research-queue/2.2`
 
 The standalone queue export references its parent analysis, source, extraction
 warnings, analyzer mode, and canon version. Each candidate keeps its source
@@ -453,6 +453,17 @@ destination, empirical question, suggested search terms, falsifier, and risk
 flags. Every item is labeled **research candidate — not LE doctrine**.
 Research Queue v2 follows the analysis-v2 domain-filtered population and cannot
 be interpreted as a v1 queue with merely additive metadata.
+
+Two revisions after this section was first written, both recorded in the
+constant's own comment (`js/lab-analyzer.js`, `RESEARCH_QUEUE_SCHEMA_VERSION`):
+2.1 (v2.2.0) put a provenance block on the queue object itself, so a queue
+lifted out of an analysis is self-describing on its own; 2.2 (v2.6.10) changed
+the item shape — `scoredConceptTotal` and `nearbyBandTotal` say what the three
+nearest concepts are three OF. This heading sat at 2.0 while production shipped
+both; the drift was caught by the 2026-08-07 cold review (finding 7) and the
+analyzer's live export version is asserted against the constant in
+`tests/lab-analyzer.test.mjs`, so the contract a consumer receives is the
+constant, not this heading — but the heading now agrees.
 
 ## Adapter boundary
 
