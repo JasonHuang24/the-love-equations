@@ -279,12 +279,25 @@ recommendations awaiting review. The rulings are recorded inline below.
   (the scout fold) plus the record commits. **Pushed to `origin/main` at
   `fa8b140` on Jason's explicit in-session approval**, suite 18/18 exit 0
   against the exact tree that went up.
-- `md/pt06/chatgpt-handoff.md` deleted at Jason's instruction — its purpose was
-  served and its source of truth, `md/pt06/chatgpt-findings.md`, is tracked and
-  already folded into pt06's run record. The pt07 scout findings and the three
-  proposals are **kept**: they are the committed record, and P1 is still live
-  work. `md/doctrine-distillation-handoff.md` is not a scout artifact and is
-  linked from `md/INDEX.md`, so it also stays.
+- **Scout artifacts deleted from the working tree at Jason's instruction**
+  (2026-08-06), their purpose served: `md/pt06/chatgpt-handoff.md` and all four
+  pt07 scout files — `md/pt07/chatgpt-findings.md` and the three
+  `chatgpt-proposal-*.md`. The four pt07 files were committed first and are
+  therefore **recoverable in full from git history**, which is the point of
+  having folded them before tidying:
+
+  ```
+  git show 47788f9:md/pt07/chatgpt-findings.md
+  git show 47788f9:md/pt07/chatgpt-proposal-verification-stack.md
+  git show 47788f9:md/pt07/chatgpt-proposal-typology-shortcut.md
+  git show 47788f9:md/pt07/chatgpt-proposal-courtship-buffer.md
+  ```
+
+  That matters most for **P1**, which is deferred rather than finished: whoever
+  folds it should restore the proposal from `47788f9` rather than rebuild it.
+  Everything load-bearing from P2 and P3 already lives on the page and in §3.
+  `md/doctrine-distillation-handoff.md` is not a scout artifact and is linked
+  from `md/INDEX.md`, so it stays.
 - The extension hour changed no canon surface, no test and no fixture: it closed
   the adjudication as documentation and added two analyzed captures. Canon
   stands at 568 and the suite at 18/18, exit 0.
