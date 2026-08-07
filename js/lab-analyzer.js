@@ -3417,13 +3417,50 @@ function applyBoundedContext(results, entriesById) {
   }
 }
 
+/*
+ * The shapes a stated quantity takes in this corpus: the percent symbol, the
+ * word in either register, a digit ratio, and a ratio spelled out in words.
+ * One expression, used both to detect a quantity and to remove it before
+ * asking whether the passage cites anything else.
+ *
+ * Built with `new RegExp` and reset before each use, because a `g` regex
+ * carries `lastIndex` between calls and `.test()` would otherwise answer
+ * differently on the same string depending on what was asked before it.
+ */
+const SPELLED_SMALL_NUMBER = '(?:one|two|three|four|five|six|seven|eight|nine|ten)';
+const STATISTIC_SHAPES = new RegExp([
+  '\\d+(?:\\.\\d+)?\\s*%',
+  '\\b\\d+(?:\\.\\d+)?\\s*per\\s?cent\\w*',
+  '\\b\\d+\\s+(?:out of|in)\\s+\\d+\\b',
+  `\\b${SPELLED_SMALL_NUMBER}\\s+(?:out of|in)\\s+${SPELLED_SMALL_NUMBER}\\b`,
+].join('|'), 'gi');
+
+/** A `g` regex is stateful; every read of the shared one starts from zero. */
+function statisticShapes() {
+  STATISTIC_SHAPES.lastIndex = 0;
+  return STATISTIC_SHAPES;
+}
+
 function classifyRiskFlags(text) {
   const flags = [];
   if (/\b(?:should|ought|deserve|wrong|immoral|good person|bad person|worthless)\b/i.test(text)) flags.push('moral claim');
   if (/\b(?:cause|causes|caused|because|leads? to|drives?|results? in)\b/i.test(text)) flags.push('causal claim');
   if (/\b(?:men|women|male|female|all men|all women)\b/i.test(text)) flags.push('gender generalization');
   if (/\b(?:i knew|my friend|one time|in my experience|someone i know|a guy i know)\b/i.test(text)) flags.push('anecdote');
-  if (/(?:\d+(?:\.\d+)?\s*%|\b\d+\s+(?:out of|in)\s+\d+\b)/i.test(text) && !EVIDENCE_CUES.test(text.replace(/\d+(?:\.\d+)?\s*%/g, ''))) {
+  /*
+   * A quantity is a quantity however it is spelled. The detector read the
+   * percent SYMBOL and a digit ratio and nothing else, so a word-form
+   * percentage and a spelled-out ratio raised no warning at all — 127
+   * word-form percentages and 14 spelled ratios against 665 symbol forms in
+   * the archived corpus, and the British-register sources are almost
+   * entirely word form. `chooseDestination`, one function away, already
+   * routes on the word.
+   *
+   * The strip inside the guard grows with the detector, for the reason it
+   * existed: a bare quantity must not count as its own evidence that the
+   * quantity is sourced.
+   */
+  if (statisticShapes().test(text) && !EVIDENCE_CUES.test(text.replace(statisticShapes(), ' '))) {
     flags.push('unsupported statistic');
   }
   return unique(flags);
