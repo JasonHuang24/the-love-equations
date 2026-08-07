@@ -121,6 +121,29 @@ test('stemming never produces a fragment shorter than the concept', () => {
     `${failures.length} token(s) do not survive stemming as themselves:\n${failures.join('\n')}`);
 });
 
+test('an s-final singular shares a stem with its regular plural', () => {
+  /*
+   * Red until v2.6.19 (GPT-5.6 review, finding 3): the bare-`s` strip fired
+   * after `u` and `s`, so `status` became `statu` while `statuses` became
+   * `status` — a singular incompatible with its own regular plural, for every
+   * -us/-ss noun and every -ss verb. The final `s` of those words is spelling,
+   * not inflection.
+   */
+  for (const [singular, plural] of [
+    ['status', 'statuses'],
+    ['focus', 'focuses'],
+    ['process', 'processes'],
+    ['discuss', 'discusses'],
+    ['success', 'successes'],
+  ]) {
+    assert.deepEqual(tokenize(singular), tokenize(plural),
+      `"${singular}" and "${plural}" must share a stem`);
+  }
+  // The floor-protected families the fix must not disturb.
+  assert.deepEqual(tokenize('users'), ['users'], 'users stays floor-protected');
+  assert.deepEqual(tokenize('boss bosses'), ['boss', 'boss'], 'boss/bosses unify');
+});
+
 test('a valid three-character stem keeps its whole inflection family', () => {
   for (const family of benchmark.blocks.degeneracy.families) {
     for (const member of family.members) {

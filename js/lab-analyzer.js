@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.18';
+export const ANALYZER_VERSION = '2.6.19';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1189,6 +1189,17 @@ function normalizeText(value) {
  * The cost, accepted and recorded: `moment`/`moments` and `peer`/`peers` stop
  * unifying, because they only ever unified by collapsing onto a fragment that
  * also swallowed everything else ending the same way.
+ *
+ * The bare-`s` alternative does not fire after `u` or `s` (v2.6.19). Stripping
+ * it there split every s-final singular from its own regular plural: `status`
+ * lost its `s` (→ `statu`) while `statuses` lost only `es` (→ `status`), so
+ * the two never unified — same for focus/focuses, process/processes,
+ * discuss/discusses, boss/bosses (a GPT-5.6 review found the class). A final
+ * `s` after `u`/`s` is part of the word, not an inflection: no English plural
+ * ends in `ss`, and the `-us`/`-ous` words end that way in the singular.
+ * Measured over the 176,207-token canon+corpus vocabulary before shipping:
+ * 36 real inflection families unify, 2 false unions die (possible↮poses,
+ * impossible↮imposed), and the one real loss is menu/menus.
  */
 function stemToken(token) {
   if (token.length < SCORING_CONFIG.minStemmableLength) return token;
@@ -1196,7 +1207,7 @@ function stemToken(token) {
     .replace(/(?:ization|ational|fulness|iveness|ously)$/u, '')
     .replace(/(?:ments|ment|ness|able|ible|ally|edly|ingly)$/u, '')
     .replace(/(?:ies)$/u, 'y')
-    .replace(/(?:ing|ers|ed|es|s)$/u, '');
+    .replace(/(?:ing|ers|ed|es|(?<![us])s)$/u, '');
   // A stem that survived unchanged is at least minStemmableLength long, so this
   // rejects only results the stripper actually shortened past the floor.
   return stem.length >= SCORING_CONFIG.minDerivedStemLength ? stem : token;
@@ -4024,7 +4035,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       'The relevance gate is lexical triage and can misclassify unseen phrasings in either direction; every ignored passage is listed with its decision evidence and any passage can be re-triaged with a per-passage visitor override.',
       'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
-      'Alignment reads negation parity, quotation, attribution, endorsement, rejection, and qualification within the clause that carries the claim. It cannot detect irony, so a passage that mocks a reading by stating it is recorded as stating it; labels should also be reviewed when a claim is highly implicit or depends on context outside the passage.',
+      'Alignment reads negation parity, quotation, attribution, endorsement, rejection, and qualification within the clause that carries the claim. The generic agreement and disagreement cues that decide the remaining labels are still read across the whole passage, so disagreement wording in a neighbouring clause can change the stance of a claim it is not about. It cannot detect irony, so a passage that mocks a reading by stating it is recorded as stating it; labels should also be reviewed when a claim is highly implicit or depends on context outside the passage.',
       'Clause boundaries are approximated from punctuation, not parsed. Stance scoping and contextual-alias evidence both depend on that approximation, so coordination without a comma, negation inside a subordinate clause, appositive and relative clauses, and chains of attribution can each attach a word to the wrong claim.',
       'External sources listed by LE are carried through as citations; this analysis does not re-fetch or re-verify them.',
       'No source text or media was uploaded by this analyzer.',

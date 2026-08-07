@@ -820,12 +820,20 @@ function stemmerSuffixInventory() {
   const opens = source.indexOf('function stemToken(');
   assert.notEqual(opens, -1, 'js/lab-analyzer.js no longer defines stemToken.');
   const body = source.slice(opens, source.indexOf('\n}', opens));
-  const groups = [...body.matchAll(/\.replace\(\/\(\?:([^)]+)\)\$\/u/gu)];
+  // Non-greedy up to the closing `)$/u` of the replace pattern, so an
+  // alternative carrying its own group — v2.6.19's `(?<![us])s` lookbehind —
+  // stays inside the alternation instead of truncating it.
+  const groups = [...body.matchAll(/\.replace\(\/\(\?:(.+?)\)\$\/u/gu)];
   assert.ok(groups.length >= 4,
     `Expected stemToken's suffix-stripping chain, found ${groups.length} alternation groups. If the `
     + 'stemmer has been rewritten in another shape, this extraction is stale and the census generator '
     + 'is no longer linked to it.');
-  return groups.flatMap((group) => group[1].split('|'));
+  // A guard on an alternative narrows WHEN the suffix is stripped, not WHICH
+  // suffix it is: the census still owes a verdict to every candidate the
+  // suffix could build, and stemOf() applies the guard when the space is
+  // regenerated. Strip assertions, keep the literal.
+  return groups.flatMap((group) => group[1].split('|'))
+    .map((alternative) => alternative.replace(/^\(\?<?[!=][^)]*\)/u, ''));
 }
 
 /** The candidate space, regenerated from the stemmer's rules rather than stored. */
