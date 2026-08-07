@@ -1385,12 +1385,28 @@ function normalizeEntry(raw, index) {
    * token absent from every affirmative surface can evidence the misreading
    * as opposed to the claim. A misreading with no such token (4 of 588 at the
    * freeze) cannot be detected by this branch at all until it is authored one.
+   *
+   * `pressureTests` joins that affirmative voice at v2.6.21 (pt09
+   * adversarial lane). It is authored canon prose about the entry's own claim,
+   * written in the entry's own vocabulary; it was omitted here only because it
+   * is not a MATCH_SURFACE — it feeds no retrieval text and no score, so it had
+   * never needed a token set. Leaving it out left the guard one-sided: a word
+   * the synopsis happens to spell differently ("chosen") but the pressure test
+   * spells plainly ("selection") counted as evidence of the rejected reading,
+   * so "The Conversion Ladder separates exposure, attention, attraction, and
+   * selection." — the concept restated correctly — read Contradicts at 0.881
+   * against lexicon:term-conversion-ladder, whose misreading CONFLATES the
+   * rungs the passage separates. Measured over the 677 authored misreadings in
+   * the index: no misreading loses its last distinctive token (5 have none
+   * either way), 38 lose some and keep at least one. Labels can move; scores
+   * cannot, because nothing here reaches the score.
    */
   const affirmativeSurfaceTokens = new Set([
     ...entry._surfaceTokens.title,
     ...entry._surfaceTokens.alias,
     ...entry._surfaceTokens.synopsis,
     ...entry._surfaceTokens.boundaryCondition,
+    ...tokenize(entry.pressureTests.join(' ')),
   ]);
   entry._misreadingDistinctiveSets = entry._misreadingTokenSets
     .map((tokens) => tokens.filter((token) => !affirmativeSurfaceTokens.has(token)));
