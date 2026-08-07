@@ -16,6 +16,7 @@ import {
   SCORING_CONFIG_HASH,
   analyzeDocument,
   analyzerInternals,
+  canonAdmissionSurfaces,
   classifyDomainRelevance,
   detectClaimUnits,
   prepareCanonIndex,
@@ -1929,4 +1930,51 @@ test('a token the entry uses only in its own pressure test is not evidence of th
     '`selection` is the entry\'s own pressure-test vocabulary, not the misreading\'s');
   assert.notEqual(match.alignment.label, 'Contradicts',
     'a faithful restatement of the entry must not read as asserting the reading it rejects');
+});
+
+test('the relevance gate reads the same normalized text every other stage reads', async () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: intake
+   * normalization × gate morphology). `localDomainRelevance` handed the four
+   * frame families the RAW passage bytes while every other stage — retrieval,
+   * clause splitting, stance, and `namesCanonSurface` inside the gate itself —
+   * read `normalizeText` output. So a no-break space, the character an HTML
+   * paste produces from `&nbsp;`, broke every multi-word frame pattern that
+   * spans a space.
+   *
+   * Repro: "He wanted a provider who could support a household while he raised
+   * their children." is retained `plausible-human-relational-frame` on the
+   * `provisioning-role` frame. Put ONE U+00A0 between "a" and "provider" and
+   * that frame stops firing, participant evidence alone is not enough, and the
+   * gate bins the passage `no-human-relational-frame` — silently, in the one
+   * direction the gate is built never to fail.
+   *
+   * The exposure is not one sentence: inserting a single U+00A0 at some space
+   * flips 5 of the 89 expected-retain cases in the frozen gate benchmark from
+   * retain to ignore. No case in that benchmark, and no passage in the 42-source
+   * archived corpus, holds a non-ASCII space — which is why both instruments
+   * read green through this.
+   */
+  const gate = (text) => classifyDomainRelevance([{
+    id: 'nbsp-probe',
+    parentSegmentId: 'nbsp-probe',
+    segmentIndex: 0,
+    text,
+    wordCount: text.split(/\s+/).length,
+    isClaimLike: true,
+    boundedContext: null,
+  }], new Map(), canonAdmissionSurfaces(prepareCanonIndex(REAL_CANON)))[0].domainRelevance;
+
+  const plain = 'He wanted a provider who could support a household while he raised their children.';
+  assert.equal(gate(plain).status, 'uncertain');
+  assert.equal(gate(plain).reasonCode, 'plausible-human-relational-frame');
+  for (const [name, spaced] of [
+    ['no-break space', plain.replace('a provider', 'a\u00a0provider')],
+    ['narrow no-break space', plain.replace('a provider', 'a\u202fprovider')],
+    ['ideographic space', plain.replace('a provider', 'a\u3000provider')],
+  ]) {
+    assert.equal(gate(spaced).status, gate(plain).status,
+      `a ${name} between two words is still a space to the gate`);
+    assert.equal(gate(spaced).reasonCode, gate(plain).reasonCode, name);
+  }
 });
