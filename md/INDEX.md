@@ -5,9 +5,12 @@ One line per record: date the file entered git (`git log --diff-filter=A`), stat
 
 Status tags: **LIVE** = still operative (a spec, convention, protocol, or open worksheet) ·
 **HIST** = accurate record of completed work, superseded by nothing · **SUP → x** = its claims were
-replaced; x is the replacement. The 13 `*-threshold-adjudication.md` sheets are rendered snapshots
-of `tests/fixtures/threshold-neighbors.json` (each now carries an in-file stamp saying so; the
-fixture is the source of truth). **★** marks a record that measured something real and closed
+replaced; x is the replacement. The `*-threshold-adjudication.md` sheets are rendered snapshots
+of `tests/fixtures/threshold-neighbors.json`; the fixture is the source of truth. The 19 sheets
+marked **SUP → the fixture** were deleted from the tree in the 2026-08-07 cleanup sweep — their
+rows below stay as the summaries, and each file remains readable in full via
+`git show c520776:md/<name>.md`. Sheets marked LIVE stay in the tree until superseded.
+**★** marks a record that measured something real and closed
 WITHOUT shipping a change — the most valuable kind to find later, and the hardest. **⚠** marks a
 record whose own headline was later corrected, with the correction recorded in-file.
 
