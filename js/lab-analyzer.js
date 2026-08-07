@@ -579,13 +579,26 @@ const RELATIONAL_OUTCOME_FRAMES = Object.freeze([
     },
   },
   {
+    /*
+     * `dated`, `married` and `marries` at v2.6.21: the third copy of
+     * the inflection defect v2.6.14 fixed in cross-sex-selection and 959d32c
+     * fixed in partner-access-formation. Neither of those touched this idiom
+     * list, which kept its own half-conjugated verbs — and no archived corpus
+     * source contains `dated up`, `married up` or `marries up`, which is why
+     * two rounds of fixing this shape left this copy standing.
+     *
+     * The forms are named rather than stemmed, on v2.6.14's precedent:
+     * `marr\w*` is shorter and wrong, because it admits "marred". The
+     * directional particle and this frame's relational-object co-requirement
+     * both still hold, so no calendar `dated` can reach it.
+     */
     id: 'mate-value-mismatch',
     label: 'Mate-value mismatch idiom (league, weight class, settling)',
     weight: 2.5,
     decisive: false,
     test: (text) => frameHas(
       text,
-      /\b(?:out of (?:his|her|their|my|your) league|in (?:his|her|their|my) league|punch(?:ing|es|ed)? (?:above|below) (?:his|her|their|my|your) weight|settl(?:e|es|ed|ing) for\b|dat(?:e|es|ing) (?:across|up|down)\b|marry(?:ing)? (?:up|down)\b)/i,
+      /\b(?:out of (?:his|her|their|my|your) league|in (?:his|her|their|my) league|punch(?:ing|es|ed)? (?:above|below) (?:his|her|their|my|your) weight|settl(?:e|es|ed|ing) for\b|dat(?:e|es|ed|ing) (?:across|up|down)\b|marr(?:y|ies|ied|ying) (?:up|down)\b)/i,
       /\b(?:women|woman|men|man|girls?|guys?|dating|dates?|marri\w*|attract\w*|boyfriends?|girlfriends?|partners?|hotter|taller|shorter|richer)\b/i,
     ),
   },
