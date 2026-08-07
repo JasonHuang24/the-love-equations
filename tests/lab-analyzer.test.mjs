@@ -2177,3 +2177,59 @@ test('a decimal point and an abbreviation period do not end a clause', async () 
   assert.equal(await label(`${claim}. That model is wrong.`), 'Resembles',
     'a verdict in the NEXT SENTENCE is a different claim unit and does not reach back');
 });
+
+test('an unsupported statistic is flagged however the number is spelled', async () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: risk-flag
+   * detectors). `classifyRiskFlags` recognises a statistic as `\d+\s*%` or
+   * `\d+ (out of|in) \d+` — the symbol and the digit ratio, nothing else. The
+   * word form is invisible, so "80 per cent of women say they prefer taller
+   * partners." carries no `unsupported statistic` flag and its research-queue
+   * question falls back to the generic one.
+   *
+   * The same file already knows better in a neighbouring function:
+   * `chooseDestination` routes on `/\b(?:percent|study|data|rate|survey|
+   * sample)\b/` and sends a word-form percentage to Statistics. One function
+   * reads the word, the one that raises the warning does not.
+   *
+   * Corpus census: 665 symbol-form percentages, 127 word-form ("per cent" and
+   * "percent"), and 14 spelled-out ratios ("more than one in five"). About one
+   * statistic in six in the archive is spelled in a way the detector cannot
+   * see, and British-register sources are almost entirely word form.
+   */
+  // The detector directly, because routing through the research queue would
+  // conflate "was this flagged" with "did this passage happen to stay unmapped".
+  const flags = (text) => analyzerInternals.classifyRiskFlags(text);
+  const claim = 'women in this cohort say they would relocate for a partner';
+
+  assert.ok(flags(`80% of ${claim}.`).includes('unsupported statistic'),
+    'the form that already worked still works');
+  assert.ok(flags(`80 per cent of ${claim}.`).includes('unsupported statistic'),
+    'British register spells it in words');
+  assert.ok(flags(`80 percent of ${claim}.`).includes('unsupported statistic'),
+    'American register spells it in one word');
+  assert.ok(flags(`More than one in five of ${claim}.`).includes('unsupported statistic'),
+    'a ratio spelled out is still a ratio');
+  assert.ok(flags(`8 out of 10 of ${claim}.`).includes('unsupported statistic'),
+    'the digit ratio that already worked still works');
+
+  // A sourced statistic is still not flagged, in every spelling.
+  assert.equal(flags(`A 2019 Pew study found that 80 per cent of ${claim}.`)
+    .includes('unsupported statistic'), false);
+  assert.equal(flags(`A 2019 Pew study found that 80% of ${claim}.`)
+    .includes('unsupported statistic'), false);
+  // And a passage with no quantity at all is not flagged.
+  assert.equal(flags(`Most of ${claim}.`).includes('unsupported statistic'), false);
+
+  // The shared detector regex is global; two reads of the same string must
+  // agree, whatever was asked of it before.
+  const twice = `80 per cent of ${claim}.`;
+  assert.deepEqual(flags(twice), flags(twice));
+
+  // End to end, one case, so the flag is known to reach the research queue.
+  const result = await analyzeDocument(normalizeInput({
+    text: `80 per cent of ${claim}.`, source: { title: 'Risk flag probe' },
+  }), REAL_CANON);
+  assert.ok((result.researchQueue?.items || [])
+    .flatMap((item) => item.riskFlags || []).includes('unsupported statistic'));
+});
