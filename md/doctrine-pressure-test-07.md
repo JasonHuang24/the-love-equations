@@ -41,13 +41,14 @@ closeout.
 | 4 | G | The Conversation — Why dating can be tough for autistic people | 724 | 17.4% | gap candidate + instrument |
 | 5 | G | Psychology Today — When Rejection Sensitivity Meets the Dating Scene | 697 | **0.0%** | gap → **The Ambiguity Tax** + instrument |
 | 6 | F | Psychology Today — Married to Two People: The Romantic Life of Widows | 1,362 | 16.4% | gap (the unsevered bond), **HELD** |
-| 7 | H | Psychology Today — Can Long-Distance Relationships Really Work? | 461 | **0.0%** | gap (the distance discount), **HELD** |
+| 7 | H | Psychology Today — Can Long-Distance Relationships Really Work? | 461 | **0.0%** | gap → **The Distance Discount** |
+| 8 | H | NPR Life Kit — Long-distance relationships are tough | 1,078 | 7.4% | gap (same subject, confirms) |
 
 Captures 1–3 ran against canon `1.0.0+c4f092f8c7d3` (566); 4–5 against
-`1.0.0+7a2150b7a15f` (567); 6–7 against `1.0.0+48254605825a` (568). Raw source text stayed out of the repo; SHA-256s are
+`1.0.0+7a2150b7a15f` (567); 6–8 against `1.0.0+48254605825a` (568). Raw source text stayed out of the repo; SHA-256s are
 in the findings file.
 
-## 3. Implemented surfaces (canon 566 → 568, two integrations)
+## 3. Implemented surfaces (canon 566 → 569, three integrations)
 
 - **3.1 The Ambiguity Tax** (under the Interaction Gate, `frameworks.html`) —
   running an interaction has an interpretive price: catching hints, weighing
@@ -63,6 +64,17 @@ in the findings file.
   anticipated refusal costing more than refusal. Scope stated on the page:
   neurodivergent courtship is the case that makes the distribution visible, not
   the only place the cost falls.
+- **27.1 The Distance Discount** (under the Agreement Surface) — separation read
+  as a defect in a bond rather than a feature of its arrangement, discounted
+  before anyone looks at the bond. The parent already records a
+  structure–satisfaction separation from its CNM meta-analysis; this is the same
+  shape from another direction. Jiang & Hancock (2013, *Journal of
+  Communication* 63(3):556–577) name the belief in their own abstract and report
+  equal-or-greater trust and satisfaction via more adaptive self-disclosure and
+  more idealized perceptions; Stafford, Merolla & Castle (2006, *JSPR*
+  23(6):901–919) supply the counterweight — about half of separated couples
+  reach proximity, the other half end during separation, and **a third of those
+  who reunite end within three months**. Both abstracts read verbatim at source.
 - **24.1 The Attribution Fork** (under the Desire-State Split) — the Desire-State
   Split establishes that a desire gap belongs to the pair; this entry is about
   the move that comes next. A gap gets located in a body, a person, the
@@ -84,9 +96,10 @@ the pin.
 
 Two full pt04 cycles, each with its own baseline `--dump` before any edit and
 its own `--neighbors` regen onto the existing fixture, with the fixture restored
-from a pre-sweep copy before every re-sweep. **262 rulings entered** (integration
+from a pre-sweep copy before every re-sweep. **405 rulings entered** (integration
 1: 165 — 11 weak A / 130 weak R / 23 loss-A / 1 credible REJECT; integration 2:
-97 — 2 weak A / 81 weak R / 13 loss-A / 1 credible REJECT). **Both credible
+97 — 2 weak A / 81 weak R / 13 loss-A / 1 credible REJECT; integration 3: 143 —
+108 weak R / 33 loss-A / 1 credible REJECT / 1 credible loss-A). **Both credible
 verdicts were held as recommendations at first report; Jason then delegated
 pt07's credible-line adjudication to Claude in session, so they are entered as
 rulings and nothing is outstanding.** `ruledBy` stays `Claude` — the delegation
@@ -117,19 +130,18 @@ predicted three of them exactly:
 
 ## 5. Deliberately NOT implemented
 
-- **The lane-F and lane-H entries.** Both lanes were reached in the extension
-  hour and both produced a real gap, drafted in the findings file and **not
-  implemented**: *the unsevered bond* (an ending that removes a partner from the
-  world without removing them from the relationship — `sixth-rung` owns exit and
-  re-entry but assumes the prior bond is over) and *the distance discount* (a
-  penalty belief about a relationship structure that the measured evidence does
-  not support, with the belief itself among the moderators). Each wants a second
-  capture to clear the encompassing standard, and starting a 35–45-minute pt04
-  cycle inside the last fifteen minutes of a timebox would have left a
-  half-integrated canon and an unruled fixture in a checkout a second agent is
-  actively working. Their load-bearing figures — Dargie et al. 2015 in
-  particular — are **as reported by the captures and not yet re-verified at
-  primary source**.
+- **The lane-F entry.** *The unsevered bond* — an ending that removes a partner
+  from the world without removing them from the relationship, where `sixth-rung`
+  owns exit and re-entry but assumes the prior bond is over. Drafted in the
+  findings file from one capture, **not implemented**: it wants a second capture
+  to clear the encompassing standard, and lane H was the stronger of the two
+  (a total coverage hole against a partial one) so it took the integration slot.
+- **Dargie et al. (2015)'s figures.** Its citation checks out at Crossref
+  exactly as the capture reported; its abstract was unreadable at both the
+  publisher and Semantic Scholar, and the PMID a search offered belongs to a
+  different 2015 *JSMT* article. So N = 1,142, the 56.6% stereotype figure and
+  the "few differences" finding stayed capture-reported, and **no number from it
+  appears on the page** — it is named as a same-direction replication only.
   - Superseded note: at the two-hour close this section read "lanes F and H were
     not reached." That was true then. The one lane-H URL abandoned during the
     main run was constructed rather than found and 404'd; the capture that

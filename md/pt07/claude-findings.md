@@ -395,7 +395,7 @@ on `M-TBD-27` for a bare quotation fragment, and — the notable one —
 to think about long-distance relationships at all," which is a **false positive
 whose only real overlap is the phrase the canon has no entry for.**
 
-## Integration 3 — attempted, REVERTED, nothing shipped
+## Integration 3 — attempted, REVERTED, then finished and SHIPPED
 
 With two lane-H captures and two primary sources verified verbatim at source
 — Jiang & Hancock (2013, *Journal of Communication* 63(3):556–577,
@@ -431,10 +431,17 @@ checkout the scout is still working. So the whole integration was reverted:
 `git checkout --` on the five integrator paths, index rebuilt, **suite 18/18
 exit 0, canon back to 568**.
 
-**The entry is worth finishing.** Both sources are verified verbatim, the
-counterweight is strong (about half of separated couples reach proximity, and a
-third of those end within three months of reuniting — the discount is wrong
-about the separation and the reunion is where the bill lands), and the parent
-link to the structure–satisfaction separation is the right one. What it needs
-is the demo-pin diagnosis the timebox could not hold: which residue claim the
-entry captures, and which surface to narrow so it stops.
+**Then the timebox turned out to have more room than I had estimated**, and the
+entry was finished on the second attempt — `dbdf21b` + `745eaf7`, canon 569,
+suite 18/18 exit 0. The demo-pin diagnosis took one run of the demo transcript:
+the entry was capturing the residue claim *"Did it show causation, or did
+compatible couples simply report more shared…"* on the trio
+**couples / report / share**, all three of which sat in the synopsis. Rewriting
+that one sentence restored the pin to 6 / 5 / 54.5% exactly.
+
+Two things this cost, worth recording. `tools/check-mis.mjs` then caught the
+first misreading twice as **GATE SET ASIDE** — removing "couple" to dodge the
+demo collision had also removed the relational-frame word the domain gate
+needs, and "Two partners…" restored it. And a 7-token corpus sentence, "I am
+someone who is looking for love.", hit 0.452 credible: the short-unit hazard
+for the **third** time in this run, on a third unrelated entry.
