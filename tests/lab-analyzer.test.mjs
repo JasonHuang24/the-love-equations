@@ -2028,3 +2028,59 @@ test('a generic cue the passage has just denied does not decide the stance', asy
   // A negator that is part of the cue's OWN text still fires it.
   assert.equal(await label(`The Conversion Ladder separates exposure from attention and selection, but it is not always the exception.`), 'Challenges');
 });
+
+test('the mate-value-mismatch idiom conjugates date and marry, not only two of their forms', async () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: gate
+   * morphology inflections). Third instance of one defect SHAPE: an
+   * inflection list that names some forms and misses the rest.
+   * v2.6.14 fixed it in cross-sex-selection (`marry` -> `marry|marrie[sd]`);
+   * 959d32c fixed it in partner-access-formation (`dating` -> also date,
+   * dated, dates). Neither touched `mate-value-mismatch`, which still carries
+   * its own copy: `dat(?:e|es|ing)` has no `dated`, and `marry(?:ing)?` has
+   * neither `married` nor `marries`.
+   *
+   * Measured minimal pairs — same sentence, one inflection apart:
+   *
+   *   "She dates up and he settles."                  uncertain / plausible…
+   *   "She dated up and ended up with a richer man."  irrelevant / no-human-frame
+   *   "He is marrying up."                            relevant  / explicit…
+   *   "He married up last year."                      irrelevant / no-human-frame
+   *
+   * Found by a degenerate-input probe rather than by a corpus source: there is
+   * not one occurrence of `dated up`, `married up` or `marries up` in any of
+   * the 42 archived sources, which is exactly why two rounds of fixing this
+   * defect shape left this copy of it standing.
+   *
+   * `marr(?:y|ies|ied|ying)` and not `marr\w*`, on v2.6.14's precedent: the
+   * short form admits "marred".
+   *
+   * The frame's second requirement — an ordinary relational object beside the
+   * idiom — is deliberately NOT widened. It lists `dates?` and not `dated`,
+   * and it stays that way, because `dated` standing as its own evidence would
+   * admit "the invoice was dated up to the last quarter": the calendar sense
+   * 959d32c refused for the same reason, against a hard 0.95 ignorePrecision
+   * floor. So the past-tense case here carries a relational object of its own,
+   * as real prose does, and the two negative pins below hold the line.
+   */
+  const gate = (text) => classifyDomainRelevance([{
+    id: 'inflection-probe',
+    parentSegmentId: 'inflection-probe',
+    segmentIndex: 0,
+    text,
+    wordCount: text.split(/\s+/).length,
+    isClaimLike: true,
+    boundedContext: null,
+  }], new Map(), canonAdmissionSurfaces(prepareCanonIndex(REAL_CANON)))[0].domainRelevance;
+
+  const retained = (text) => gate(text).status !== 'irrelevant';
+  assert.equal(retained('She dates up and he settles.'), true, 'the form that already worked still works');
+  assert.equal(retained('She dated up and ended up with a richer man.'), true, 'past tense of the same idiom');
+  assert.equal(retained('He is marrying up.'), true, 'the form that already worked still works');
+  assert.equal(retained('He married up last year.'), true, 'past tense of the same idiom');
+  assert.equal(retained('She marries down and stays.'), true, 'third person of the same idiom');
+  // The widening does not reach a calendar sense: no directional particle, and
+  // no relational object.
+  assert.equal(retained('The invoice was dated up to the last quarter of the year.'), false);
+  assert.equal(retained('The paint on the north wall was marred up near the ceiling.'), false);
+});
