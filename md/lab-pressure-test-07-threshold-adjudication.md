@@ -3,7 +3,7 @@
 **Status:** LIVE and CLOSED. Rulings entered in
 `tests/fixtures/threshold-neighbors.json`; suite green (exit 0).
 
-**Credible-line authority for this run:** on 2026-08-06, after the two
+**Credible-line authority for this run:** on 2026-08-06 at 20:58, after the two
 integrations were reported to him with both credible verdicts held as
 recommendations, **Jason delegated pt07's credible-line adjudication to
 Claude in session** ("You do the adjudication please."). The two verdicts below

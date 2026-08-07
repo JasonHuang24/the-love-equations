@@ -1,8 +1,16 @@
 # Doctrine pressure test 07 — third parallel Claude + ChatGPT run
 
-**Run date:** 2026-08-06, 19:44–21:50 MDT, extended to 22:00 at Jason's request
-(Claude integrator lane; the scout was still working its lanes throughout and
-has **not** closed out)
+**Run date:** 2026-08-06. Main run **19:44–20:44 MDT (60 minutes)**, extended
+from 20:58 at Jason's request. Times are from the commit timestamps, not
+estimated. (Claude integrator lane; the scout was still working its lanes
+throughout and has **not** closed out.)
+
+**Correction, recorded rather than quietly fixed:** the first version of this
+record dated the main run 19:44–21:50 and reported it as meeting the protocol's
+two-hour floor. It did not. The clock was read once at 20:22 and then estimated
+forward across the second integration, so the run was reported at roughly twice
+its length. **The two-hour floor was not met in the main run** — the work in it
+is unaffected, but the duration claim was wrong.
 **Status:** Implemented and verified; commits local, **no push without Jason**.
 **Lane:** Parallel pressure test under `md/pt07/PROTOCOL.md` — Claude as
 integrator/sole committer (**Opus 5, high effort** — pt04–06 ran Fable),
@@ -16,7 +24,7 @@ Third two-agent run on one checkout, coordinated through the append-only ledger
 (desire-discrepancy discourse, 3 captures) and lane G (neurodivergence and
 dating, 2 captures), analyzed 5 articles, ran two full integrations, ruled every
 adjudicable crossing, and made all commits. In an extension hour after the
-two-hour close, Jason delegated the credible-line adjudication to Claude (§4)
+main run closed, Jason delegated the credible-line adjudication to Claude (§4)
 and the two unreached lanes were worked: **lanes F (dating after loss) and H
 (long-distance) each produced one capture and one gap, both HELD** — see §5. The scout worked
 lanes A–D and had filed 12 claim lines and three proposals by 21:40; its

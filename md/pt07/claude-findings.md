@@ -247,7 +247,7 @@ passing; canon's rejection doctrine is entirely sender-side).
 
 ---
 
-## Extension: lanes F and H, worked after the two-hour close
+## Extension: lanes F and H, worked after the main run closed at 20:44
 
 Jason asked for another hour and delegated pt07's credible-line adjudication to
 Claude in the same message. The adjudication was closed first (see
