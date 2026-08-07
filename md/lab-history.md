@@ -9415,3 +9415,60 @@ as its cost.
 were adopted by Jason's in-session ruling. Finding 4's engine fix stays
 queued — adoption covered the recommended dispositions, and that one's
 recommendation was to queue. Pushed to origin with this closeout.
+
+
+---
+
+# lab-v2.6.20-release — the generic cue ladder gets its clause ground
+
+(2026-08-07, same session, on Jason's instruction: "do the queued stance
+ladder fix next and ship it.") Closes lab-cold-review-gpt56-02 finding 4 —
+the last open item of the review arc.
+
+**The change.** The four claim-directed generic cue families (contradiction,
+challenge, extension, support) now read a two-clause ground: the assertion
+clause sharing the most retrieval tokens with the match, plus the clause
+immediately after it — `genericCueGround`, the same shape `misreadingScope`
+has used since v2.5.0. EVIDENCE_CUES stay passage-wide on purpose (citing
+data is a passage property, not a verdict aimed at one clause). No score can
+move by construction; only labels can.
+
+**RED frozen first.** "The weather forecast was wrong; the Conversion Ladder
+separates exposure, attention, attraction, and selection." flipped
+`frameworks:conversion-ladder` Resembles 0.731 → Challenges 0.610 on wording
+about the weather. Both directions are now pinned in
+`tests/lab-analyzer.test.mjs`: the unrelated prefix no longer flips, and a
+verdict in the claim's own follow-up clause ("…; that model is wrong.") still
+lands as Challenges.
+
+**Cost, measured by corpus stance census** (1,298 displayed labels, before →
+after): 10 moved. Two spurious Challenges corrected — "the following
+question" (a definitional note) and "The exception is liberal young women…"
+(which if anything supports the ideological-filter entry it was labelled as
+challenging) were register noise, not verdicts. Eight Supports → Resembles
+under-claims, all one shape: a "Consistent with X," sentence-adverbial in a
+LEADING clause, which the forward-only ground cannot see — the same
+forward-only trade the misreading branch's follow-up made, landing on
+neutral Resembles rather than anything wrong. That sentence-adverbial
+pattern ("Consistent with…," governing forward like attribution does) is the
+named follow-on candidate if the under-claims ever matter.
+
+**Granularity, named.** Clause boundaries are still punctuation-approximated,
+so in a comma-listed claim the "next clause" is the next list item, not the
+trailing verdict — the regression test documents this by using a comma-free
+claim for its follow-up case. Same documented limitation every clause-scoped
+branch shares.
+
+**Also in this session's shipping run:** the first v2.6.20 bump attempt
+corrupted js/lab-analyzer.js's UTF-8 (PowerShell 5.1 `Get-Content`/
+`Set-Content` ANSI default — the exact trap `md/windows-crlf-gitattributes`
+lane warns about); the threshold tripwire caught it instantly as 1,383
+phantom crossings and a mojibake'd export string. The file was restored from
+HEAD and the edits re-applied cleanly; the tripwire's silence afterwards is
+the proof the scores came back byte-identical. Recorded because the
+instrument catching an ENCODING accident as phantom crossings within one
+suite run is worth knowing.
+
+Suite 18/18 green before commit; frozen stance benchmark unchanged;
+limitation string updated to describe the scoped behavior. Shipped at
+4418758 and pushed with this record under the same in-session confirmation.
