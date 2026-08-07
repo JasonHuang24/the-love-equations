@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+c4f092f8c7d3",
+  "indexVersion": "1.0.0+7a2150b7a15f",
   "generatedAt": "2026-08-07T00:28:09.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "aac07c84d1028ed7aa74da005650476234728f3596ad652e69edf3064c548ac1",
-      "conceptCount": 63
+      "sha256": "fb556838bb8d03a4a903ec7d02a9377b8851d24596157ff0c54be0e079f7d87a",
+      "conceptCount": 64
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 566,
+    "conceptCount": 567,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 63,
+      "Rules & Frameworks": 64,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -268,13 +268,13 @@
       "Strategy": 29,
       "Tested claim": 6,
       "Tier 1": 51,
-      "Tier 2": 18,
+      "Tier 2": 19,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 471,
-    "conceptsWithExternalSources": 137,
-    "dependencyCount": 288,
-    "relatedCount": 471
+    "anchoredConceptCount": 472,
+    "conceptsWithExternalSources": 138,
+    "dependencyCount": 289,
+    "relatedCount": 473
   },
   "entries": [
     {
@@ -6454,6 +6454,71 @@
       ],
       "pressureTests": [
         "Which Kept-rung claim on this site rests on a primary source rather than on inference from formation-side doctrine?"
+      ]
+    },
+    {
+      "id": "frameworks:attribution-fork",
+      "title": "The Attribution Fork",
+      "page": "frameworks.html",
+      "anchor": "attribution-fork",
+      "category": "Rules & Frameworks",
+      "subcategory": "Retention & maintenance",
+      "synopsis": "The entry above establishes that a desire gap belongs to the pair. This one is about the move that comes next. Before anyone acts on a gap, somebody decides where it lives — in a body, in a person, in the relationship, or in the situation. Those four locations are rarely exclusive.",
+      "evidenceType": "Tier 2",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Attribution Fork",
+        "dead bedroom",
+        "sexless relationship",
+        "mismatched libidos",
+        "desire attribution"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "where low desire comes from",
+        "libido mismatch",
+        "blaming a partner's libido",
+        "medical explanation for low desire",
+        "sexual growth beliefs",
+        "sexual destiny beliefs"
+      ],
+      "dependencies": [
+        "frameworks:desire-state-split"
+      ],
+      "related": [
+        "frameworks:diagnostic-turn",
+        "frameworks:ownership-load"
+      ],
+      "boundaryConditions": [
+        "The four locations are not exclusive: a desire gap can carry somatic, personal, relational and situational components at once, and the fork is about which one gets acted on rather than which one is true.",
+        "A somatic cause remains a live possibility throughout: medication effects, endocrine conditions and post-partum recovery are documented contributors with real treatments.",
+        "The belief-outcome evidence is self-report and largely cross-sectional with one experimental leg, so an attribution style is associated with outcomes rather than shown to produce them.",
+        "The critical-scholarship leg argues about a diagnostic category and states one side of a live disagreement, carrying no effect size of its own.",
+        "The DSM-5 criteria described here were corroborated at two independent restatements rather than read in the manual, so the wording is a paraphrase."
+      ],
+      "commonMisreadings": [
+        "Low desire in one partner becomes a medical condition as soon as the couple feels distress.",
+        "Sexual compatibility is something a couple discovers early rather than something two partners keep building.",
+        "A count of how often two partners have sex identifies why their desire diverged."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Maxwell, Muise, MacDonald, Day, Rosen & Impett (2017), Journal of Personality and Social Psychology 112(2):238–279",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/27808534/"
+        },
+        {
+          "label": "Thomas & Gurevich (2021), Feminism & Psychology 31(1):81–98",
+          "url": "https://doi.org/10.1177/0959353521989536"
+        },
+        {
+          "label": "Donnelly (1993), “Sexually inactive marriages,” The Journal of Sex Research 30(2):171–179",
+          "url": "https://doi.org/10.1080/00224499309551698"
+        }
+      ],
+      "pressureTests": [
+        "Which of the four locations is this explanation choosing, and was the other partner present when it was chosen?"
       ]
     },
     {

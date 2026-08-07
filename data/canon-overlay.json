@@ -1166,6 +1166,43 @@
         "Is the claim about one person's level of desire or the distance between two partners' levels?"
       ]
     },
+    "frameworks:attribution-fork": {
+      "aliases": [
+        "Attribution Fork",
+        "dead bedroom",
+        "sexless relationship",
+        "mismatched libidos",
+        "desire attribution"
+      ],
+      "phrases": [
+        "where low desire comes from",
+        "libido mismatch",
+        "blaming a partner's libido",
+        "medical explanation for low desire",
+        "sexual growth beliefs",
+        "sexual destiny beliefs"
+      ],
+      "related": [
+        "frameworks:desire-state-split",
+        "frameworks:diagnostic-turn",
+        "frameworks:ownership-load"
+      ],
+      "boundaryConditions": [
+        "The four locations are not exclusive: a desire gap can carry somatic, personal, relational and situational components at once, and the fork is about which one gets acted on rather than which one is true.",
+        "A somatic cause remains a live possibility throughout: medication effects, endocrine conditions and post-partum recovery are documented contributors with real treatments.",
+        "The belief-outcome evidence is self-report and largely cross-sectional with one experimental leg, so an attribution style is associated with outcomes rather than shown to produce them.",
+        "The critical-scholarship leg argues about a diagnostic category and states one side of a live disagreement, carrying no effect size of its own.",
+        "The DSM-5 criteria described here were corroborated at two independent restatements rather than read in the manual, so the wording is a paraphrase."
+      ],
+      "commonMisreadings": [
+        "Low desire in one partner becomes a medical condition as soon as the couple feels distress.",
+        "Sexual compatibility is something a couple discovers early rather than something two partners keep building.",
+        "A count of how often two partners have sex identifies why their desire diverged."
+      ],
+      "pressureTests": [
+        "Which of the four locations is this explanation choosing, and was the other partner present when it was chosen?"
+      ]
+    },
     "frameworks:ownership-load": {
       "aliases": [
         "Ownership Load",
