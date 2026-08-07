@@ -1839,3 +1839,32 @@ test('each rejected reading is detected on its own, not diluted by its siblings'
     `overlap ${withSiblings.overlap} must still clear ${SCORING_CONFIG.misreadingContradictionShare} `
     + 'when the entry rejects more than one reading');
 });
+
+test('a canon phrase inside a longer word is not a phrase hit', async () => {
+  /*
+   * Red until 2026-08-07 (GPT-5.6 review, finding 2): phrase comparison used
+   * String.includes, so "supermarket values" contained "market value" — the
+   * passage was admitted through the gate as NAMING the concept and scored the
+   * exact-phrase bonus, mapping smv:overview at 0.54 with zero relationship
+   * content. Both admission and scoring now demand token boundaries.
+   */
+  const embedded = await analyzeDocument(normalizeInput({
+    text: 'The supermarket values efficiency above all else.',
+    source: { title: 'Embedded phrase probe' },
+  }), REAL_CANON);
+  const embeddedHits = embedded.segments
+    .flatMap((segment) => [...segment.matches, ...segment.weakMatches]);
+  assert.equal(embeddedHits.length, 0,
+    `an embedded substring produced ${embeddedHits.length} match(es): `
+    + embeddedHits.map((match) => `${match.canonId}@${match.score}`).join(', '));
+
+  // The boundary test must not cost the real hit, punctuation included.
+  const bounded = await analyzeDocument(normalizeInput({
+    text: 'Your market value, in this framing, decides who pursues whom in dating.',
+    source: { title: 'Bounded phrase control' },
+  }), REAL_CANON);
+  const boundedHit = bounded.segments
+    .flatMap((segment) => [...segment.matches, ...segment.weakMatches])
+    .find((match) => (match.whyMatched || []).some((line) => /market value/i.test(line)));
+  assert.ok(boundedHit, 'a token-bounded "market value" no longer matches anything');
+});

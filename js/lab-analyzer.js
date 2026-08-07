@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.17';
+export const ANALYZER_VERSION = '2.6.18';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1708,11 +1708,45 @@ export function canonAdmissionSurfaces(prepared) {
   return surfaces;
 }
 
+/*
+ * Phrase presence, at token boundaries. `String.includes` alone admitted any
+ * substring occurrence, so "the supermarket values efficiency" NAMED the canon
+ * concept "market value" and scored its exact-phrase bonus — one character of
+ * neighbouring word on either side, and the phrase was never in the text at
+ * all.
+ *
+ * The boundary is asymmetric, and the asymmetry was measured before it was
+ * chosen (2026-08-07): the LEADING edge is strict, because every embedded
+ * false hit found — "supermarket values", "inattention to alternatives" —
+ * grows the phrase leftward into a different word. The TRAILING edge admits a
+ * plural tail (`s`/`es`) and nothing else, because a strict trailing edge
+ * measured against the corpus threw away 27 correctly-admitted passages that
+ * name a concept in the plural ("sex ratios" ×21, "social skills" ×6) while
+ * the arbitrary-tail hits it exists to kill ("the wallpaper", "sexual desirea"
+ * table junk, "frequency of sex[ual]") share no plural shape. A pluralized
+ * phrase names the concept; a phrase swallowed by a longer word does not.
+ */
+const PHRASE_BOUNDARY_CHAR = /[\p{L}\p{N}]/u;
+const PHRASE_PLURAL_TAIL = /^(?:s|es)(?![\p{L}\p{N}])/u;
+
+function containsBoundedPhrase(normalized, phrase) {
+  let from = 0;
+  while (true) {
+    const at = normalized.indexOf(phrase, from);
+    if (at === -1) return false;
+    const before = at === 0 ? '' : normalized[at - 1];
+    const tail = normalized.slice(at + phrase.length);
+    const boundedAfter = !PHRASE_BOUNDARY_CHAR.test(tail[0] || '') || PHRASE_PLURAL_TAIL.test(tail);
+    if (!PHRASE_BOUNDARY_CHAR.test(before) && boundedAfter) return true;
+    from = at + 1;
+  }
+}
+
 function namesCanonSurface(text, canonSurfaces) {
   if (!canonSurfaces?.size) return null;
   const normalized = normalizeText(text);
   for (const phrase of canonSurfaces) {
-    if (normalized.includes(phrase)) return phrase;
+    if (containsBoundedPhrase(normalized, phrase)) return phrase;
   }
   return null;
 }
@@ -2343,7 +2377,7 @@ function scoreEntry(unit, entry, idf) {
   const canonCoverage = sharedWeight / entryWeight;
 
   const phraseHits = entry._phrases
-    .filter((phrase) => phrase.includes(' ') && normalized.includes(phrase))
+    .filter((phrase) => phrase.includes(' ') && containsBoundedPhrase(normalized, phrase))
     .sort((a, b) => b.length - a.length);
   const aliasTokensPresent = aliasLookupTokens(normalized);
   const singleAliasHits = entry._phrases
