@@ -983,8 +983,59 @@ export function parseHtmlDocument(html) {
   return parsed;
 }
 
+/*
+ * The RTF sub-documents that are not the document.
+ *
+ * An RTF group whose first control word is a DESTINATION carries something
+ * other than the text: the font table, the colour table, the stylesheet, the
+ * generator string, an embedded picture. `extractTextFromRtf` stripped control
+ * words and braces and never looked at destinations, so every real
+ * Word-generated file delivered its preamble as transcript — "Calibri;Symbol;;;
+ * \\*Riched20 10.0.19041;" in front of the first sentence, in the token stream
+ * and in the excerpt a reader is shown.
+ *
+ * The list is the non-prose half only. Headers, footers, footnotes and
+ * annotations are destinations too and they hold text a person wrote, so they
+ * stay in; `\\upr` stays in for the same reason, since dropping it would take
+ * the ANSI copy of real text with it. `{\\*` covers every ignorable
+ * destination a future writer invents, which is what that marker is for.
+ */
+const RTF_DROPPED_DESTINATIONS = /^\\(?:\*|(?:fonttbl|colortbl|stylesheet|listtable|listoverridetable|listtext|rsidtbl|generator|info|pict|object|objdata|result|themedata|colorschememapping|latentstyles|datastore|xmlnstbl|filetbl|revtbl|fldinst|nonshppict)\b)/i;
+
+/** Remove destination groups, brace-balanced, before any other RTF stripping. */
+function stripRtfDestinations(value) {
+  let out = '';
+  let depth = 0;
+  let dropDepth = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index];
+    // An escaped brace or backslash is text; it never changes group depth.
+    if (character === '\\' && '{}\\'.includes(value[index + 1] || '')) {
+      if (!dropDepth) out += character + value[index + 1];
+      index += 1;
+      continue;
+    }
+    if (character === '{') {
+      depth += 1;
+      if (!dropDepth && RTF_DROPPED_DESTINATIONS.test(value.slice(index + 1, index + 32))) {
+        dropDepth = depth;
+      }
+      if (!dropDepth) out += character;
+      continue;
+    }
+    if (character === '}') {
+      if (dropDepth === depth) dropDepth = 0;
+      else if (!dropDepth) out += character;
+      depth -= 1;
+      continue;
+    }
+    if (!dropDepth) out += character;
+  }
+  return out;
+}
+
 export function extractTextFromRtf(rtf) {
-  return normalizeLineEndings(rtf)
+  return stripRtfDestinations(normalizeLineEndings(rtf))
     .replace(/\\'[0-9a-f]{2}/gi, (match) => {
       const code = Number.parseInt(match.slice(2), 16);
       return String.fromCharCode(code);
@@ -996,8 +1047,9 @@ export function extractTextFromRtf(rtf) {
     .replace(/\\(?:par|line)\b/g, '\n')
     .replace(/\\tab\b/g, '\t')
     .replace(/\\[a-z]+-?\d* ?/gi, '')
-    .replace(/\\[{}\\]/g, (match) => match.slice(1))
-    .replace(/[{}]/g, '')
+    // One pass, because two could not work: unescaping `\\{` to `{` and then
+    // stripping every `{` deleted exactly the braces the escape was protecting.
+    .replace(/\\([{}\\])|[{}]/g, (match, escaped) => escaped || '')
     .replace(/[ \t]+/g, ' ')
     .replace(/ *\n */g, '\n')
     .replace(/\n{3,}/g, '\n\n')
