@@ -18,3 +18,54 @@ Keep this file UTF-8.
 - chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC12574156/ claimed
 - chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC12574156/ verdict(gap+instrument)
 - chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC12540830/ claimed
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC12540830/ verdict(gap+instrument)
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC7084290/ claimed
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC7084290/ verdict(gap+instrument)
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC8054653/ claimed
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC8054653/ verdict(gap+instrument)
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC5400065/ claimed
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC5400065/ verdict(gap+instrument)
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC5436896/ claimed
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC5436896/ verdict(covered+instrument)
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC9428597/ claimed
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC9428597/ verdict(gap+instrument)
+- chatgpt C https://legal.charlotte.edu/policies/up-101-3/ claimed
+- chatgpt C https://legal.charlotte.edu/policies/up-101-3/ verdict(gap+instrument)
+- chatgpt D https://www.hfea.gov.uk/about-us/publications/research-and-data/family-formations-in-fertility-treatment-2022/ claimed
+- chatgpt D https://www.hfea.gov.uk/about-us/publications/research-and-data/family-formations-in-fertility-treatment-2022/ verdict(gap+instrument; egg-storage correctly-unmapped)
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC13171570/ claimed
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC13171570/ verdict(correctly-unmapped+instrument; no-doctrine-needed)
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC8023325/ claimed
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC8023325/ verdict(covered+instrument; prevalence correctly-unmapped)
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC5084687/ claimed
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC5084687/ verdict(gap+instrument)
+- chatgpt C https://journal.binus.ac.id/index.php/Humaniora/article/view/8419 claimed
+- chatgpt C https://journal.binus.ac.id/index.php/Humaniora/article/view/8419 abandoned(no-full-text-html; abstract-page-plus-pdf-only)
+- chatgpt C https://journals.sagepub.com/doi/full/10.1177/23780231241290545 claimed
+- chatgpt C https://journals.sagepub.com/doi/full/10.1177/23780231241290545 abandoned(bot-blocked-403)
+- chatgpt C https://sage.cnpereading.com/doi/10.1177/23780231241290545 claimed
+
+- chatgpt C https://sage.cnpereading.com/doi/10.1177/23780231241290545 verdict(gap+instrument)
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC12928748/ claimed
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC12928748/ verdict(gap+instrument; proposal-reinforcing-boundary)
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC6970610/ claimed
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC6970610/ verdict(gap+instrument; proposal-reinforcing-boundary)
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC12910326/ claimed
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC12910326/ verdict(covered+instrument; no-doctrine-needed)
+- chatgpt C https://adminguide.stanford.edu/chapters/guiding-policies-and-principles/harassment-discrimination/consensual-sexual-or-romantic claimed
+- chatgpt C https://adminguide.stanford.edu/chapters/guiding-policies-and-principles/harassment-discrimination/consensual-sexual-or-romantic verdict(gap+instrument; proposal-reinforcing-policy-replication)
+- chatgpt A https://arxiv.org/html/2503.17473 claimed
+- chatgpt A https://arxiv.org/html/2503.17473 verdict(gap+instrument; proposal-upgrade-noncausal-boundary)
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC10152163/ claimed
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC10152163/ verdict(gap+instrument; proposal-upgrade-role-outcome-boundary)
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC8213580/ claimed
+- chatgpt B https://pmc.ncbi.nlm.nih.gov/articles/PMC8213580/ verdict(covered+instrument; external-plural-parent-recognition correctly-unmapped)
+- chatgpt A https://journals.sagepub.com/doi/full/10.1177/09567976261427747 claimed
+- chatgpt A https://journals.sagepub.com/doi/full/10.1177/09567976261427747 abandoned(bot-blocked-403)
+- chatgpt A https://sage.cnpereading.com/doi/10.1177/09567976261427747 claimed
+- chatgpt A https://sage.cnpereading.com/doi/10.1177/09567976261427747 verdict(gap+instrument; proposal-reinforcing-longitudinal-boundary)
+- chatgpt A https://arxiv.org/html/2407.19096 claimed
+- chatgpt A https://arxiv.org/html/2407.19096 abandoned(no-full-text-html; publisher-fallback-is-pdf-only)
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC12309430/ claimed
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC12309430/ verdict(gap+instrument; proposal-reinforcing-message-moderator-boundary)
+- chatgpt A https://pmc.ncbi.nlm.nih.gov/articles/PMC12309430/ verdict(correctly-unmapped+instrument; corrected-after-boundary-check; no-doctrine-needed)

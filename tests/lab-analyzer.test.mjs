@@ -907,9 +907,18 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * card. Eleven moves; cumulative drift remains 0.003 against 0.43, and the
    * admission guard still blocks the passage. This updates the corpus pin, not
    * the behavior or any threshold.
+   *
+   * 0.536 at 573 when pressure test 08 folded two scout proposals into
+   * frameworks.html — the Authority Firewall under the Meeting Channel and
+   * Synthetic Reciprocity under the Substitution Layer. Twelve moves; cumulative
+   * drift is back to 0.002 against a minCredibleScore of 0.43. Neither new entry
+   * is a candidate for this passage; the movement is IDF alone, which is the
+   * same mechanism every prior entry in this log describes. The admission guard
+   * still blocks the passage and the two assertions below it still hold, so
+   * again this updates the corpus pin and nothing about the behavior.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.537);
+  assert.equal(weakPassage.weakMatches[0].score, 0.536);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));

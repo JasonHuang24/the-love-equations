@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+54d018bff967",
+  "indexVersion": "1.0.0+903fb1917167",
   "generatedAt": "2026-08-07T06:43:43.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "58721f4cd14ad6d72d215d3e82706bf84e232ebbafa318caa5fcd29888d3edd4",
-      "conceptCount": 68
+      "sha256": "e7fdd8b462fe5cbe720f7f616206044c3f9b0808f016424df650f773ccef47c1",
+      "conceptCount": 70
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 571,
+    "conceptCount": 573,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,7 +248,7 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 68,
+      "Rules & Frameworks": 70,
       "Statistics": 51
     },
     "byEvidenceType": {
@@ -267,14 +267,14 @@
       "Record + framework": 16,
       "Strategy": 29,
       "Tested claim": 6,
-      "Tier 1": 52,
+      "Tier 1": 54,
       "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 476,
-    "conceptsWithExternalSources": 142,
-    "dependencyCount": 293,
-    "relatedCount": 483
+    "anchoredConceptCount": 478,
+    "conceptsWithExternalSources": 144,
+    "dependencyCount": 295,
+    "relatedCount": 487
   },
   "entries": [
     {
@@ -6609,6 +6609,72 @@
       ]
     },
     {
+      "id": "frameworks:authority-firewall",
+      "title": "The Authority Firewall",
+      "page": "frameworks.html",
+      "anchor": "authority-firewall",
+      "category": "Rules & Frameworks",
+      "subcategory": "The transaction layer",
+      "synopsis": "Where two people met and whether the institution will tolerate the pairing are separate questions, and the second one has an owner. Once a supervisor, principal investigator, instructor, evaluator or coach enters the pairing, agreement between the two of them coexists with one of them holding the other’s assignments, pay, references, funding or promotion.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Authority Firewall",
+        "institutional relationship prohibition",
+        "relationship conflict recusal"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "disclose a supervisory romance",
+        "recuse evaluative authority after disclosure",
+        "workplace relationship conflict of interest"
+      ],
+      "dependencies": [
+        "frameworks:meeting-channel"
+      ],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:third-party-layer"
+      ],
+      "boundaryConditions": [
+        "Peer pairings carrying no evaluative authority sit outside the core rule unless some separate conflict exists.",
+        "Consent, disclosure, recusal and prohibition are four distinct institutional responses, and adopting one does not imply the others.",
+        "That an institution wrote a rule is evidence it is managing a conflict of interest, not evidence that any covered pairing caused harm.",
+        "Employee attitudes about hierarchy record opinion, not harassment, favouritism, productivity or how a pairing turned out.",
+        "Policy scope varies by institution, jurisdiction, role and chain of command; NIH and UNC Charlotte are worked examples rather than a general law.",
+        "Some policies extend beyond current authority to earlier relationships and to authority a person is expected to acquire later; Stanford supplies one such example.",
+        "Pool composition, repeated exposure and screening order stay with the parent entry; this one begins at authority after contact."
+      ],
+      "commonMisreadings": [
+        "Any romance between coworkers creates coercion and favoritism throughout the workplace.",
+        "Hierarchy becomes harmless whenever workplace romance receives voluntary approval from both people involved.",
+        "Institutional disclosure fully neutralizes supervisory power across every workplace relationship."
+      ],
+      "sourceLinks": [
+        {
+          "label": "La France (2022), “Don’t Get Your Meat Where You Get Your Bread”: Beliefs and Advice about Workplace Romance, Behavioral Sciences 12(8):278",
+          "url": "https://doi.org/10.3390/bs12080278"
+        },
+        {
+          "label": "NIH Relationship Policy",
+          "url": "https://www.training.nih.gov/fellows-handbook/policies/nih-relationship-policy/"
+        },
+        {
+          "label": "UNC Charlotte University Policy 101.3",
+          "url": "https://legal.charlotte.edu/policies/up-101-3/"
+        },
+        {
+          "label": "Stanford Administrative Guide",
+          "url": "https://adminguide.stanford.edu/chapters/guiding-policies-and-principles/harassment-discrimination/consensual-sexual-or-romantic"
+        }
+      ],
+      "pressureTests": [
+        "Does one of these two people hold the other’s evaluation, pay, references or advancement?"
+      ]
+    },
+    {
       "id": "frameworks:retention-gap",
       "title": "The Retention Gap",
       "page": "frameworks.html",
@@ -6823,6 +6889,73 @@
       "sourceLinks": [],
       "pressureTests": [
         "Is the exit pattern being explained by a trait, when the data localises it to marriage?"
+      ]
+    },
+    {
+      "id": "frameworks:synthetic-reciprocity",
+      "title": "Synthetic Reciprocity",
+      "page": "frameworks.html",
+      "anchor": "synthetic-reciprocity",
+      "category": "Rules & Frameworks",
+      "subcategory": "Exit & re-entry",
+      "synopsis": "A companion chatbot can be attentive, validating and always available while the party on the other side has no needs, no welfare and no independent claim on the user. That combination is not a smaller version of a human bond; it is a bond with one side of the ledger removed.",
+      "evidenceType": "Tier 1",
+      "contentType": "Framework component",
+      "verdict": "",
+      "aliases": [
+        "Synthetic Reciprocity",
+        "simulated responsiveness",
+        "one-sided interdependence"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "chatbot bond without reciprocal needs",
+        "companionship without interpersonal demands",
+        "chatbot responsiveness without reciprocal stake"
+      ],
+      "dependencies": [
+        "frameworks:substitution-layer"
+      ],
+      "related": [
+        "frameworks:support-portfolio",
+        "frameworks:signal-cost-rule"
+      ],
+      "boundaryConditions": [
+        "Felt connection is an outcome measured in a person and establishes nothing about machine feeling, care, consciousness or moral standing.",
+        "Connection recorded immediately after a single session is not durable well-being, a strong bond, or improved social skill.",
+        "Supplement, rehearsal and displacement are three separate states and must be measured apart rather than inferred from how much someone uses a product.",
+        "Companion products are distinct from task assistants, scripted clinical tools, static parasocial media and human-mediated telehealth.",
+        "Brief ratings of noninteractive synthetic characters, and one-off scripted-message experiments, fall outside this standard because neither supplies repeated contingent interaction.",
+        "Adolescent use changes the safety, agency and skill-transfer stakes, and current reviews describe competing hypotheses rather than settled effects.",
+        "Longitudinal work must separate who selects into heavy use from what use later does, and keep emotional isolation distinct from broader social connection.",
+        "Whether substitutes begin a withdrawal, prolong one, or occupy time it had already freed stays an open question held by the parent entry."
+      ],
+      "commonMisreadings": [
+        "Simulated responsiveness guarantees reciprocal sacrifice and accountability within every chatbot relationship.",
+        "Synthetic reciprocity inevitably displaces offline relationships whenever chatbot companionship feels emotionally responsive.",
+        "Artificial empathy proves bilateral agency and welfare inside every chatbot relationship."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Folk, Heine & Dunn (2025), “Individual differences in anthropomorphism help explain social connection to AI companions,” Scientific Reports",
+          "url": "https://doi.org/10.1038/s41598-025-19212-2"
+        },
+        {
+          "label": "Ta et al. (2020), Journal of Medical Internet Research",
+          "url": "https://doi.org/10.2196/16235"
+        },
+        {
+          "label": "Smith, Bradbury & Karney (2025), Perspectives on Psychological Science",
+          "url": "https://doi.org/10.1177/17456916251351306"
+        },
+        {
+          "label": "Fang et al. (2025)",
+          "url": "https://arxiv.org/abs/2503.17473"
+        }
+      ],
+      "pressureTests": [
+        "Does the function under discussion need a second party with needs of their own, or only attention?"
       ]
     },
     {

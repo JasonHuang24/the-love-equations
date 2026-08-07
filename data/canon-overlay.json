@@ -6347,6 +6347,75 @@
       "commonMisreadings": [
         "Flaunting invented rivals keeps a partner anxious enough to treat the relationship seriously."
       ]
+    },
+    "frameworks:authority-firewall": {
+      "aliases": [
+        "Authority Firewall",
+        "institutional relationship prohibition",
+        "relationship conflict recusal"
+      ],
+      "phrases": [
+        "disclose a supervisory romance",
+        "recuse evaluative authority after disclosure",
+        "workplace relationship conflict of interest"
+      ],
+      "related": [
+        "frameworks:meeting-channel",
+        "frameworks:agreement-surface",
+        "frameworks:third-party-layer"
+      ],
+      "boundaryConditions": [
+        "Peer pairings carrying no evaluative authority sit outside the core rule unless some separate conflict exists.",
+        "Consent, disclosure, recusal and prohibition are four distinct institutional responses, and adopting one does not imply the others.",
+        "That an institution wrote a rule is evidence it is managing a conflict of interest, not evidence that any covered pairing caused harm.",
+        "Employee attitudes about hierarchy record opinion, not harassment, favouritism, productivity or how a pairing turned out.",
+        "Policy scope varies by institution, jurisdiction, role and chain of command; NIH and UNC Charlotte are worked examples rather than a general law.",
+        "Some policies extend beyond current authority to earlier relationships and to authority a person is expected to acquire later; Stanford supplies one such example.",
+        "Pool composition, repeated exposure and screening order stay with the parent entry; this one begins at authority after contact."
+      ],
+      "commonMisreadings": [
+        "Any romance between coworkers creates coercion and favoritism throughout the workplace.",
+        "Hierarchy becomes harmless whenever workplace romance receives voluntary approval from both people involved.",
+        "Institutional disclosure fully neutralizes supervisory power across every workplace relationship."
+      ],
+      "pressureTests": [
+        "Does one of these two people hold the other’s evaluation, pay, references or advancement?"
+      ]
+    },
+    "frameworks:synthetic-reciprocity": {
+      "aliases": [
+        "Synthetic Reciprocity",
+        "simulated responsiveness",
+        "one-sided interdependence"
+      ],
+      "phrases": [
+        "chatbot bond without reciprocal needs",
+        "companionship without interpersonal demands",
+        "chatbot responsiveness without reciprocal stake"
+      ],
+      "related": [
+        "frameworks:substitution-layer",
+        "frameworks:support-portfolio",
+        "frameworks:signal-cost-rule"
+      ],
+      "boundaryConditions": [
+        "Felt connection is an outcome measured in a person and establishes nothing about machine feeling, care, consciousness or moral standing.",
+        "Connection recorded immediately after a single session is not durable well-being, a strong bond, or improved social skill.",
+        "Supplement, rehearsal and displacement are three separate states and must be measured apart rather than inferred from how much someone uses a product.",
+        "Companion products are distinct from task assistants, scripted clinical tools, static parasocial media and human-mediated telehealth.",
+        "Brief ratings of noninteractive synthetic characters, and one-off scripted-message experiments, fall outside this standard because neither supplies repeated contingent interaction.",
+        "Adolescent use changes the safety, agency and skill-transfer stakes, and current reviews describe competing hypotheses rather than settled effects.",
+        "Longitudinal work must separate who selects into heavy use from what use later does, and keep emotional isolation distinct from broader social connection.",
+        "Whether substitutes begin a withdrawal, prolong one, or occupy time it had already freed stays an open question held by the parent entry."
+      ],
+      "commonMisreadings": [
+        "Simulated responsiveness guarantees reciprocal sacrifice and accountability within every chatbot relationship.",
+        "Synthetic reciprocity inevitably displaces offline relationships whenever chatbot companionship feels emotionally responsive.",
+        "Artificial empathy proves bilateral agency and welfare inside every chatbot relationship."
+      ],
+      "pressureTests": [
+        "Does the function under discussion need a second party with needs of their own, or only attention?"
+      ]
     }
   }
 }

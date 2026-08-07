@@ -15,7 +15,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 571);
+assert.equal(index.stats.conceptCount, 573);
 assert.equal(index.stats.sourceCount, 21);
 assert.deepEqual(index.stats.byCategory, {
   'Deep Dives': 47,
@@ -26,7 +26,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 68,
+  'Rules & Frameworks': 70,
   Statistics: 51,
 });
 
@@ -67,7 +67,7 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 571);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 573);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
@@ -79,8 +79,10 @@ assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).len
 // divergence, the delegation boundary, and the border bundle, each with both,
 // and pressure test 07 added the attribution fork, the ambiguity tax and the
 // distance discount, then folded the scout's courtship buffer and typology
-// shortcut, all five with both.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 538);
+// shortcut, all five with both. Pressure test 08 folded two more from the
+// scout — the authority firewall and synthetic reciprocity — again with both,
+// so the gap of 35 is unchanged and only the totals move.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 540);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
