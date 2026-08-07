@@ -48,3 +48,11 @@ Keep this file UTF-8.
 - chatgpt B https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1118741/full claimed
 - chatgpt B https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1118741/full verdict(covered)
 - chatgpt A https://time.com/6323622/love-is-blind-season-5-finale/ claimed
+- chatgpt A https://time.com/6323622/love-is-blind-season-5-finale/ abandoned(http-406)
+- chatgpt A https://www.theguardian.com/tv-and-radio/2024/jan/03/love-is-blind-netflix-dating-show-lawsuit-renee-poche claimed
+- chatgpt A https://www.theguardian.com/tv-and-radio/2024/jan/03/love-is-blind-netflix-dating-show-lawsuit-renee-poche verdict(instrument)
+- claude H https://www.npr.org/2020/08/26/906236738/long-distance-relationships-are-tough-heres-advice-for-making-them-work verdict(gap)
+- chatgpt D https://journals.sagepub.com/doi/10.1177/0093650203260202 claimed
+- chatgpt D https://journals.sagepub.com/doi/10.1177/0093650203260202 abandoned(bot-blocked)
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC9768094/ claimed
+- chatgpt D https://pmc.ncbi.nlm.nih.gov/articles/PMC9768094/ verdict(gap)

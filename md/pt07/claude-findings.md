@@ -379,3 +379,62 @@ That is the whole point of the pt04 re-verification step: the citation was
 sound and the numbers are still unconfirmed, and those are two different
 states. The distance-discount proposal stays HELD with its evidence marked
 accordingly.
+
+## Cycle 8 — lane H — NPR Life Kit: Long-distance relationships are tough
+
+- URL: https://www.npr.org/2020/08/26/906236738/long-distance-relationships-are-tough-heres-advice-for-making-them-work
+- Words: 1,078 · SHA-256: `90e14c3242914a94ed2dd6fe8557d69bc49e63d85f5b1c4d7419271bc0a4b42c`
+- Canon at capture: `1.0.0+48254605825a` (568)
+- Analyzer: 28 passages · 27 claims · 2 mapped · mappedShare **7.4%** · 0 tensions
+- Extraction: `storytext` container; dropped image/ad buckets, cut at the
+  voicemail solicitation.
+
+Second lane-H capture, same verdict. Both mapped rows are wrong: 0.576 Medium
+on `M-TBD-27` for a bare quotation fragment, and — the notable one —
+`get-a-hobby-is-code-for-give-up` at 0.476 on "But Jackson says that's no way
+to think about long-distance relationships at all," which is a **false positive
+whose only real overlap is the phrase the canon has no entry for.**
+
+## Integration 3 — attempted, REVERTED, nothing shipped
+
+With two lane-H captures and two primary sources verified verbatim at source
+— Jiang & Hancock (2013, *Journal of Communication* 63(3):556–577,
+DOI `10.1111/jcom.12029`) and Stafford, Merolla & Castle (2006, *JSPR*
+23(6):901–919, DOI `10.1177/0265407506070472`) — **The Distance Discount** was
+authored as a sub-entry of the Agreement Surface, whose CNM meta-analysis
+already records a structure–satisfaction separation of exactly the same shape.
+Canon reached 569, and the work is **not in the tree**.
+
+What happened, in order:
+
+1. First sweep: **3 credible-line false positives**, all from authored surface —
+   a `trust and satisfaction` pair in the synopsis, the alias `living far
+   apart` colliding with the corpus's living-apart-together passage, and a
+   7-token sentence ("I am someone who is looking for love.") at 0.452, the
+   short-unit hazard for the third time this run.
+2. One misreading also failed the contract check outright — **GATE SET ASIDE**,
+   the failure mode `tools/check-mis.mjs` exists to catch: the sentence never
+   formed a domain-relevant claim unit, so it could not have fired in either
+   direction.
+3. Surfaces revised, re-swept: credible gains fell 3 → 1, misreading replaced
+   and passing. 126 crossings ruled.
+4. Then `tests/lab-analyzer.test.mjs` subtest 12 failed — the demo-routing pin,
+   `mappedClaimSegments` 6 → 7. **The new entry was consuming one of the demo
+   transcript's research-residue claims**, which is precisely what that pin
+   exists to prevent.
+
+The pt06 rule is that a tripped demo pin is fixed in the authored surface and
+never in the pin. That is a diagnose-reword-resweep-rerule cycle, and roughly
+five minutes of the timebox remained. Committing a red suite was not an option,
+and neither was leaving a half-integrated canon and a part-ruled fixture in a
+checkout the scout is still working. So the whole integration was reverted:
+`git checkout --` on the five integrator paths, index rebuilt, **suite 18/18
+exit 0, canon back to 568**.
+
+**The entry is worth finishing.** Both sources are verified verbatim, the
+counterweight is strong (about half of separated couples reach proximity, and a
+third of those end within three months of reuniting — the discount is wrong
+about the separation and the reunion is where the bill lands), and the parent
+link to the structure–satisfaction separation is the right one. What it needs
+is the demo-pin diagnosis the timebox could not hold: which residue claim the
+entry captures, and which surface to narrow so it stops.
