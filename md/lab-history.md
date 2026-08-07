@@ -9375,8 +9375,43 @@ three authored-surface recommendations. NOTHING WAS PUSHED.
 - Finding 4's engine fix was not attempted. Finding 5 and 6 changed nothing.
 - The export-test fixture strings (research-queue/2.0) were left alone — they
   test pass-through, and "modernizing" them would weaken that.
-- No canon source page, alias, or misreading was edited; no threshold moved; no
-  floor or ratchet touched; `--rule` was never executed in any form.
+- No canon source page, alias, or misreading was edited in the triage pass
+  itself; no threshold moved; no floor or ratchet touched; `--rule` was never
+  executed in any form.
 - The candidate-floor census (20,796 → 21,151 PENDING) is census, not backlog.
 - The two probe corpora dumps and both adjudication sheets are session
   scratchpad artifacts, deliberately not committed; the fixture is the record.
+
+## Closeout — 2026-08-07, ruled by Jason in session
+
+Jason ruled the same day: **all recommendations adopted, arc approved for
+push.** That closed the flagged items as follows.
+
+**The three authored surfaces shipped** (overlay-only edit, rebuilt index
+`1.0.0+9e24244bf93d`, 573 entries unchanged in count): alias+phrase
+`operative framework` on term-the-operative-frame, alias+phrase `inattention
+to alternatives` on attention-to-alternatives, phrase `frequency of sexual
+activity` on satisfaction-flywheel. Canon-delta sweep against a fresh
+pre-edit dump at 97d131e: 1,436 pairs moved (615 down / 821 up), population
+2,421 → 2,423 — the two Miller "inattention" passages re-admitted, exactly
+the v2.6.18 population cost being repaid. Crossings: 6 credible gains, 8 weak
+gains, 1 weak loss (plus 42 floor census rows).
+
+**All six credible gains landed on already-ruled keys**, and this time the
+never-reopens semantics worked FOR the record: the two operative-frame rows
+carry Jason's original retention-merge ACCEPTs (his ruled mappings are
+restored at 0.540, so the reversal this record flagged is REMEDIED); the two
+McNulty flywheel rows carry this pass's loss-ACCEPTs, and the mapping now
+stands at 0.610 on the lexically-present phrase; the two Miller
+attention-to-alternatives rows still carry this pass's REJECT-as-cost
+verdicts — those rows now describe a cost that no longer exists, which is
+recorded here rather than by rewriting a ruled row. The 5 PENDING weak rows
+were ruled 3 ACCEPT / 2 REJECT (Claude, hand-entered, under the in-session
+adoption): the two REJECTs are IDF-shift noise the new phrase buys (a no-kids
+anecdote and a sex-ratio bargaining sentence reaching the flywheel), recorded
+as its cost.
+
+**The 10 credible-line verdicts** entered ruledBy Claude in the two releases
+were adopted by Jason's in-session ruling. Finding 4's engine fix stays
+queued — adoption covered the recommended dispositions, and that one's
+recommendation was to queue. Pushed to origin with this closeout.

@@ -1055,12 +1055,14 @@
       "aliases": [
         "Attention to Alternatives",
         "comparison level for alternatives",
-        "attentiveness to alternatives"
+        "attentiveness to alternatives",
+        "inattention to alternatives"
       ],
       "phrases": [
         "attention to alternatives",
         "comparison level for alternatives",
-        "attentiveness to alternatives"
+        "attentiveness to alternatives",
+        "inattention to alternatives"
       ],
       "related": [
         "frameworks:abundance-trap",
@@ -1386,7 +1388,8 @@
       ],
       "phrases": [
         "bidirectional association",
-        "frequency of sex"
+        "frequency of sex",
+        "frequency of sexual activity"
       ],
       "related": [
         "frameworks:good-news-rule",
@@ -6013,6 +6016,12 @@
       ]
     },
     "lexicon:term-the-operative-frame": {
+      "aliases": [
+        "operative framework"
+      ],
+      "phrases": [
+        "operative framework"
+      ],
       "commonMisreadings": [
         "Whoever holds formal power sets the default, so courtship norms follow whichever side writes the laws."
       ],

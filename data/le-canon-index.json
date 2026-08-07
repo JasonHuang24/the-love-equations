@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+903fb1917167",
+  "indexVersion": "1.0.0+9e24244bf93d",
   "generatedAt": "2026-08-07T15:14:38.000Z",
   "sourcePages": [
     {
@@ -4407,14 +4407,16 @@
       "aliases": [
         "Attention to Alternatives",
         "comparison level for alternatives",
-        "attentiveness to alternatives"
+        "attentiveness to alternatives",
+        "inattention to alternatives"
       ],
       "standaloneAliases": [],
       "contextualAliases": [],
       "phrases": [
         "attention to alternatives",
         "comparison level for alternatives",
-        "attentiveness to alternatives"
+        "attentiveness to alternatives",
+        "inattention to alternatives"
       ],
       "dependencies": [],
       "related": [
@@ -4673,7 +4675,8 @@
       "contextualAliases": [],
       "phrases": [
         "bidirectional association",
-        "frequency of sex"
+        "frequency of sex",
+        "frequency of sexual activity"
       ],
       "dependencies": [],
       "related": [
@@ -18626,11 +18629,14 @@
       "contentType": "Definition",
       "verdict": "",
       "aliases": [
-        "Operative Frame"
+        "Operative Frame",
+        "operative framework"
       ],
       "standaloneAliases": [],
       "contextualAliases": [],
-      "phrases": [],
+      "phrases": [
+        "operative framework"
+      ],
       "dependencies": [
         "frameworks:operative-frame"
       ],
