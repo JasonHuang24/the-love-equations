@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+81059814070a",
+  "indexVersion": "1.0.0+34637a842a72",
   "generatedAt": "2026-08-07T23:17:32.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "737669434d5a62122c187832f42462a48b46bb27952315a7be12ca20512215e2",
-      "conceptCount": 72
+      "sha256": "9295d1fe7d96d9ab8c0f4642126df39a3fe655f1592241cd29a3c0517acf95c8",
+      "conceptCount": 73
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 575,
+    "conceptCount": 576,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,13 +248,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 72,
+      "Rules & Frameworks": 73,
       "Statistics": 51
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 82,
+      "Framework": 83,
       "Glossary": 98,
       "Hard data": 28,
       "Instrument": 5,
@@ -271,10 +271,10 @@
       "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 480,
-    "conceptsWithExternalSources": 146,
+    "anchoredConceptCount": 481,
+    "conceptsWithExternalSources": 147,
     "dependencyCount": 295,
-    "relatedCount": 504
+    "relatedCount": 512
   },
   "entries": [
     {
@@ -4292,7 +4292,8 @@
         "statistics:stat-relationship-quality"
       ],
       "related": [
-        "lexicon:term-the-good-news-rule"
+        "lexicon:term-the-good-news-rule",
+        "frameworks:attention-boundary"
       ],
       "boundaryConditions": [
         "The cited relationship-quality finding applies inside an existing relationship and does not erase selection-stage constraints."
@@ -4683,7 +4684,8 @@
       "dependencies": [],
       "related": [
         "frameworks:good-news-rule",
-        "frameworks:conversion-ladder"
+        "frameworks:conversion-ladder",
+        "frameworks:attention-boundary"
       ],
       "boundaryConditions": [
         "Demonstrated in newlywed couples in the first four to five years; the one located longer-marriage comparison found only one of the two directions.",
@@ -4731,7 +4733,8 @@
         "frameworks:good-news-rule",
         "frameworks:commitment-problem",
         "statistics:stat-relationship-quality",
-        "frameworks:constraint-dedication-split"
+        "frameworks:constraint-dedication-split",
+        "frameworks:attention-boundary"
       ],
       "boundaryConditions": [
         "A relationship label is useful shorthand but does not specify every boundary concerning sex, romance, disclosure, hierarchy, time, resources, health or revision.",
@@ -5000,6 +5003,73 @@
       ]
     },
     {
+      "id": "frameworks:attention-boundary",
+      "title": "The Attention Boundary",
+      "page": "frameworks.html",
+      "anchor": "attention-boundary",
+      "category": "Rules & Frameworks",
+      "subcategory": "Retention & maintenance",
+      "synopsis": "Technoference is technology use that interrupts a shared conversation or activity; partner phubbing is the phone-specific case in which a partner experiences the device as receiving attention that the interaction was supposed to receive. The relationship variable is not device ownership or total screen minutes.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Attention Boundary",
+        "technoference",
+        "partner phubbing",
+        "phone snubbing in relationships",
+        "device interruption during shared interaction"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "phone interrupts a conversation with a partner",
+        "device use displaces partner attention",
+        "smartphone interference in relationship",
+        "ignored by partner using phone",
+        "conflict over technology use"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:good-news-rule",
+        "frameworks:satisfaction-flywheel",
+        "frameworks:substitution-layer"
+      ],
+      "boundaryConditions": [
+        "Technoference is an interruption of expected shared attention, not a synonym for device ownership, total device minutes or every visible phone.",
+        "The meta-analytic associations are predominantly cross-sectional and heterogeneous, so relationship distress may increase phubbing as well as follow it.",
+        "The daily-diary comparison narrows stable person differences but remains contemporaneous self-report in mostly White, different-sex parents of young children.",
+        "The controlled evidence concerns brief conversations with strangers and immediate ostracism, politeness, attentiveness and trust-game outcomes rather than sustained romantic satisfaction.",
+        "Emergency, work, caregiving, accessibility, navigation, translation and jointly integrated device use can carry different meanings from unexplained disengagement.",
+        "An attention boundary must preserve privacy, autonomy and reasonable unavailability; it does not authorize device surveillance, password demands or continuous access to a partner."
+      ],
+      "commonMisreadings": [
+        "A partner checking a phone always means the relationship matters less than the device.",
+        "Every shared moment requires both partners to keep every device completely out of sight.",
+        "Matching device-use totals guarantee that both partners receive equal attention during conversations."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Ni, Ahrari, Zaremohzzabieh, Zarean & Roslan (2025), Frontiers in Psychology 16:1561159",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12106345/"
+        },
+        {
+          "label": "McDaniel & Drouin (2019), Computers in Human Behavior 99",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7430699/"
+        },
+        {
+          "label": "Knausenberger, Giesen-Leuchter & Echterhoff (2022), Frontiers in Psychology 13:883901",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9285876/"
+        }
+      ],
+      "pressureTests": [
+        "Did device use actually displace attention the partners expected to share, or is harm being inferred from minutes or presence alone?",
+        "Was the use unexplained disengagement, a communicated necessity, or technology integrated into the couple’s shared interaction?",
+        "Do the partners disagree about an attention boundary, and can they renegotiate it without surveillance or continuous-availability demands?"
+      ]
+    },
+    {
       "id": "frameworks:substitution-layer",
       "title": "The Substitution Layer",
       "page": "frameworks.html",
@@ -5033,7 +5103,8 @@
       "dependencies": [],
       "related": [
         "frameworks:mens-strike",
-        "statistics:stat-sex-recession"
+        "statistics:stat-sex-recession",
+        "frameworks:attention-boundary"
       ],
       "boundaryConditions": [
         "The leisure-luxury result covers labour supply among young men under an identifying assumption rather than an instrument, contains no dating outcome, and the extension to dating is an inference.",

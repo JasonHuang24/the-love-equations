@@ -16,7 +16,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 575);
+assert.equal(index.stats.conceptCount, 576);
 assert.equal(index.stats.sourceCount, 21);
 
 // Source hashes describe repository content, not checkout-specific line endings.
@@ -40,7 +40,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 72,
+  'Rules & Frameworks': 73,
   Statistics: 51,
 });
 
@@ -81,7 +81,7 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 575);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 576);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
@@ -95,9 +95,9 @@ assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).len
 // distance discount, then folded the scout's courtship buffer and typology
 // shortcut, all five with both. Pressure test 08 folded two more from the
 // scout — the authority firewall and synthetic reciprocity — again with both,
-// and pressure test 09 added the care role split and constraint–dedication split
-// with both, so the gap of 35 is unchanged and only the totals move.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 542);
+// and pressure test 09 added the care role split, constraint–dedication split
+// and attention boundary with both. The boundary gap is 33.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 543);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -170,6 +170,14 @@ assert(required('frameworks:agreement-surface').related.includes('frameworks:con
 assert(required('frameworks:financial-architecture-split').related.includes('frameworks:constraint-dedication-split'));
 assert(required('frameworks:outside-option').related.includes('frameworks:constraint-dedication-split'));
 assert(required('frameworks:commitment-problem').related.includes('frameworks:constraint-dedication-split'));
+assert.equal(required('frameworks:attention-boundary').sourceLinks.length, 3);
+assert(required('frameworks:attention-boundary').aliases.includes('partner phubbing'));
+assert(required('frameworks:attention-boundary').phrases.includes('conflict over technology use'));
+assert(required('frameworks:attention-boundary').related.includes('frameworks:agreement-surface'));
+assert(required('frameworks:agreement-surface').related.includes('frameworks:attention-boundary'));
+assert(required('frameworks:good-news-rule').related.includes('frameworks:attention-boundary'));
+assert(required('frameworks:satisfaction-flywheel').related.includes('frameworks:attention-boundary'));
+assert(required('frameworks:substitution-layer').related.includes('frameworks:attention-boundary'));
 assert.equal(required('statistics:stat-shared-positive-affect').sourceLinks.length, 1);
 assert(required('statistics:stat-shared-positive-affect').aliases.includes('Shared Positivity Dividend'));
 

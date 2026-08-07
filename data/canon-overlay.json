@@ -665,7 +665,8 @@
         "statistics:stat-relationship-quality"
       ],
       "related": [
-        "lexicon:term-the-good-news-rule"
+        "lexicon:term-the-good-news-rule",
+        "frameworks:attention-boundary"
       ],
       "boundaryConditions": [
         "The cited relationship-quality finding applies inside an existing relationship and does not erase selection-stage constraints."
@@ -1394,7 +1395,8 @@
       ],
       "related": [
         "frameworks:good-news-rule",
-        "frameworks:conversion-ladder"
+        "frameworks:conversion-ladder",
+        "frameworks:attention-boundary"
       ],
       "boundaryConditions": [
         "Demonstrated in newlywed couples in the first four to five years; the one located longer-marriage comparison found only one of the two directions.",
@@ -1423,7 +1425,8 @@
         "frameworks:good-news-rule",
         "frameworks:commitment-problem",
         "statistics:stat-relationship-quality",
-        "frameworks:constraint-dedication-split"
+        "frameworks:constraint-dedication-split",
+        "frameworks:attention-boundary"
       ],
       "boundaryConditions": [
         "A relationship label is useful shorthand but does not specify every boundary concerning sex, romance, disclosure, hierarchy, time, resources, health or revision.",
@@ -1985,6 +1988,9 @@
       ],
       "pressureTests": [
         "Does the substitute cause the withdrawal, or absorb time freed by a withdrawal that already happened?"
+      ],
+      "related": [
+        "frameworks:attention-boundary"
       ]
     },
     "frameworks:stock-flow-error": {
@@ -6508,6 +6514,46 @@
         "Is persistence being treated as evidence of desire even though leaving carries material, social or perceived costs?",
         "Did the transition change dedication, constraints or both, and were those constructs measured separately?",
         "Would the same constraint protect a valued investment here, or make an unwanted or unsafe relationship harder to exit?"
+      ]
+    },
+    "frameworks:attention-boundary": {
+      "aliases": [
+        "Attention Boundary",
+        "technoference",
+        "partner phubbing",
+        "phone snubbing in relationships",
+        "device interruption during shared interaction"
+      ],
+      "phrases": [
+        "phone interrupts a conversation with a partner",
+        "device use displaces partner attention",
+        "smartphone interference in relationship",
+        "ignored by partner using phone",
+        "conflict over technology use"
+      ],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:good-news-rule",
+        "frameworks:satisfaction-flywheel",
+        "frameworks:substitution-layer"
+      ],
+      "boundaryConditions": [
+        "Technoference is an interruption of expected shared attention, not a synonym for device ownership, total device minutes or every visible phone.",
+        "The meta-analytic associations are predominantly cross-sectional and heterogeneous, so relationship distress may increase phubbing as well as follow it.",
+        "The daily-diary comparison narrows stable person differences but remains contemporaneous self-report in mostly White, different-sex parents of young children.",
+        "The controlled evidence concerns brief conversations with strangers and immediate ostracism, politeness, attentiveness and trust-game outcomes rather than sustained romantic satisfaction.",
+        "Emergency, work, caregiving, accessibility, navigation, translation and jointly integrated device use can carry different meanings from unexplained disengagement.",
+        "An attention boundary must preserve privacy, autonomy and reasonable unavailability; it does not authorize device surveillance, password demands or continuous access to a partner."
+      ],
+      "commonMisreadings": [
+        "A partner checking a phone always means the relationship matters less than the device.",
+        "Every shared moment requires both partners to keep every device completely out of sight.",
+        "Matching device-use totals guarantee that both partners receive equal attention during conversations."
+      ],
+      "pressureTests": [
+        "Did device use actually displace attention the partners expected to share, or is harm being inferred from minutes or presence alone?",
+        "Was the use unexplained disengagement, a communicated necessity, or technology integrated into the couple’s shared interaction?",
+        "Do the partners disagree about an attention boundary, and can they renegotiate it without surveillance or continuous-availability demands?"
       ]
     }
   }
