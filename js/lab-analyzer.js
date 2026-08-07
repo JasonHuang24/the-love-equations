@@ -2084,6 +2084,17 @@ export function classifyDomainRelevance(units, overrides = new Map(), canonSurfa
  * too — see that function for why the distinction has to be made before this
  * point rather than inside it.
  */
+/*
+ * The abbreviations whose period is part of the word.
+ *
+ * The same set the sentence merger keeps in MERGE_ALWAYS_ABBREVIATION and
+ * MERGE_CONTINUATION_ABBREVIATION, case-folded because this splitter reads
+ * normalizeText output. A bare "no." is deliberately absent: at clause granularity
+ * it cannot be told from the ordinary word "no" ending a clause, and a
+ * numbering abbreviation is not worth that trade.
+ */
+const CLAUSE_ABBREVIATION_TAIL = /(?:\bvs|\be\.g|\bi\.e|\bapprox|\bu\.s|\betc|\ba\.m|\bp\.m)$/i;
+
 function clauseSegments(normalized) {
   const words = [];
   const clauses = [];
@@ -2106,7 +2117,29 @@ function clauseSegments(normalized) {
     const character = normalized[position];
     const joinsWords = /[a-z0-9]/.test(normalized[position - 1] || '')
       && /[a-z0-9]/.test(normalized[position + 1] || '');
-    if (',;:.!?'.includes(character) || (character === '-' && !joinsWords)) {
+    /*
+     * The hyphen rule, extended to the other two characters that are not
+     * always punctuation. A PERIOD joining two word characters is part of what
+     * it joins ("3.5", "u.s", "e.g"); a COMMA between two digits is part of the
+     * number ("1,000"); and a period closing a known abbreviation is part of
+     * the abbreviation, which is the case the joining rule cannot see because
+     * a space follows it ("the u.s. market").
+     *
+     * All three used to end a clause, and every clause-scoped branch counts
+     * forward from the assertion clause, so each of them pushed the claim's
+     * real next clause to +2 where nothing reads it. Measured on one claim and
+     * one verdict: "…in most markets; that model is wrong." read Challenges
+     * 0.697 while "…in the U.S. market; that model is wrong." read Resembles
+     * at the same 0.697 — identical score, opposite label, one abbreviation
+     * between them.
+     */
+    const joinsDigits = /[0-9]/.test(normalized[position - 1] || '')
+      && /[0-9]/.test(normalized[position + 1] || '');
+    const insideNumberOrWord = (character === '.' && joinsWords)
+      || (character === ',' && joinsDigits);
+    const insideAbbreviation = character === '.' && CLAUSE_ABBREVIATION_TAIL.test(buffer);
+    if ((',;:.!?'.includes(character) && !insideNumberOrWord && !insideAbbreviation)
+      || (character === '-' && !joinsWords)) {
       flushClause();
       continue;
     }
