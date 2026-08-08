@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.23';
+export const ANALYZER_VERSION = '2.6.24';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -1247,11 +1247,41 @@ function stemToken(token) {
  * deletion is a loss rather than a fix. That is a real defect of its own shape
  * and it is written up rather than smuggled in here.
  */
+/*
+ * The possessive of a noun is the same noun (pt09 finding 10, v2.6.24).
+ * Without this, `women's` reaches stemToken whole, the trailing `s` is
+ * stripped, and the token that enters the index is `women'` — a string that
+ * can never unify with `women`. The length floor is not decoration: without
+ * it the strip re-creates the defect the v2.6.0 floor exists to prevent
+ * (`le's` -> `le`, a two-character fragment carrying an IDF it has not
+ * earned).
+ */
+/*
+ * Indefinite-pronoun possessives are excluded from the strip on measurement:
+ * `one's` (73 corpus occurrences) unifies into `one`, a function word whose
+ * new-found overlap lifted a generic authored sentence over the credible line
+ * (the bounded-context fixture caught it: "mean, one, stage, retention" read
+ * as distinctive overlap). A content noun's possessive is the noun; a
+ * pronoun's possessive is noise either way — before the strip it was an
+ * unmatchable `one'`, which is the harmless form.
+ */
+const PRONOUN_POSSESSIVES = new Set([
+  "one's", "other's", "another's", "someone's", "anyone's", "everyone's",
+  "nobody's", "somebody's", "everybody's", "oneself's",
+]);
+
+function stripPossessive(token) {
+  if (!token.endsWith("'s")) return token;
+  if (PRONOUN_POSSESSIVES.has(token)) return token;
+  const bare = token.slice(0, -2);
+  return bare.length >= SCORING_CONFIG.minDerivedStemLength ? bare : token;
+}
+
 export function tokenize(value, { keepGeneric = true } = {}) {
   const normalized = normalizeText(value);
   const raw = normalized.match(/[\p{L}\p{N}]+(?:'[\p{L}]+)?/gu) || [];
   return raw
-    .map((token) => token.replace(/^'|'$/g, ''))
+    .map((token) => stripPossessive(token.replace(/^'|'$/g, '')))
     .filter((token) => token.length > 1 && !STOP_WORDS.has(token))
     .map(stemToken)
     .filter((token) => keepGeneric || !GENERIC_TERMS.has(token));

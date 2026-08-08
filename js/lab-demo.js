@@ -1,4 +1,4 @@
-import { normalizeInput } from './lab-intake.js?v=2.6.23';
+import { normalizeInput } from './lab-intake.js?v=2.6.24';
 
 /**
  * Original demonstration written for LE Lab. It is deliberately mixed:
