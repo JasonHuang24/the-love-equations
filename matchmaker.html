@@ -5752,7 +5752,7 @@
   //  overall. Self-contained: never writes matchmaker state.
   // ════════════════════════════════════════════════════════════════════
   const PW_MIN_KEY = 'loveEquations.matchmaker.pwMin';
-  let pwStandard = null, pwSlug = null, pwExportJSON = '';
+  let pwStandard = null, pwSlug = null, pwExportJSON = '', pwLocked = false;
   const pwSc = s => s>=7.5 ? 'hi' : s>=5 ? 'mid' : 'lo';
 
   function pwViewFor(prof, key){
@@ -5879,18 +5879,22 @@
     const keys = pyramidsForTarget();
     if (!keys.includes(pwStandard)) pwStandard = (PYRAMIDS[pyramid] && PYRAMIDS[pyramid].describes===targetSex()) ? pyramid : keys[0];
     // drop any selected person who no longer matches the current target sex
-    if (pwSlug){ const c = ROSTER.find(x => x.slug===pwSlug); if (!c || c.g !== targetSex()) pwSlug = null; }
-    renderPwSeg(); renderPwCard();
+    if (pwSlug){ const c = ROSTER.find(x => x.slug===pwSlug); if (!c || c.g !== targetSex()){ pwSlug = null; pwLocked = false; } }
+    renderPwSeg(); renderPwCard(); syncPwLock();
   }
 
-  // Called from a match card click — load that person and pop the widget open.
+  // Called from a match card click. Preserve the widget's current minimized/expanded state.
   function openProfileFor(slug){
     const c = ROSTER.find(x => x.slug===slug); if (!c) return;
+    if (pwLocked && pwSlug && slug !== pwSlug){
+      const lock = document.querySelector('#mmw .mmw-lock');
+      if (lock){ lock.classList.remove('is-blocking'); void lock.offsetWidth; lock.classList.add('is-blocking'); setTimeout(()=>lock.classList.remove('is-blocking'), 800); }
+      return;
+    }
     pwSlug = slug;
     const keys = pyramidsForTarget();
     if (!keys.includes(pwStandard)) pwStandard = keys[0];
-    setPwMin(false);
-    renderPwSeg(); renderPwCard();
+    renderPwSeg(); renderPwCard(); syncPwLock();
     const w = document.getElementById('mmw');
     if (w){ w.classList.remove('is-updating'); void w.offsetWidth; w.classList.add('is-updating'); setTimeout(()=>w.classList.remove('is-updating'), 650); }
   }
@@ -5903,6 +5907,24 @@
     try { localStorage.setItem(PW_MIN_KEY, String(min)); } catch(e){}
   }
 
+  function syncPwLock(){
+    const w = document.getElementById('mmw'); if (!w) return;
+    const lock = w.querySelector('.mmw-lock'); if (!lock) return;
+    if (!pwSlug) pwLocked = false;
+    lock.disabled = !pwSlug;
+    lock.setAttribute('aria-pressed', pwLocked ? 'true' : 'false');
+    lock.setAttribute('aria-label', pwLocked ? 'Unlock roster profile' : 'Lock roster profile');
+    lock.title = pwLocked ? 'Unlock profile' : 'Lock profile';
+    lock.innerHTML = `<i class="ti ${pwLocked?'ti-lock':'ti-lock-open'}" aria-hidden="true"></i>`;
+    w.classList.toggle('is-locked', pwLocked);
+  }
+
+  function setPwLock(locked){
+    if (locked && !pwSlug) return;
+    pwLocked = Boolean(locked);
+    syncPwLock();
+  }
+
   function initProfilesWidget(){
     if (document.getElementById('mmw')) return;
     const w = document.createElement('aside');
@@ -5910,7 +5932,10 @@
     w.innerHTML = `
       <div class="mmw-top">
         <span class="mmw-kicker"><i class="ti ti-id-badge-2" aria-hidden="true"></i> Roster profile</span>
-        <button class="mmw-toggle" type="button" aria-expanded="true" aria-label="Minimize roster profile">−</button>
+        <span class="mmw-top-actions">
+          <button class="mmw-lock" type="button" aria-label="Lock roster profile" aria-pressed="false" title="Lock profile" disabled><i class="ti ti-lock-open" aria-hidden="true"></i></button>
+          <button class="mmw-toggle" type="button" aria-expanded="true" aria-label="Minimize roster profile">−</button>
+        </span>
       </div>
       <div class="mmw-bodywrap">
         <div class="mmw-controls">
@@ -5921,10 +5946,11 @@
       </div>`;
     document.body.appendChild(w);
     w.querySelector('.mmw-toggle').addEventListener('click', () => setPwMin(!w.classList.contains('is-minimized')));
-    w.querySelector('.mmw-top').addEventListener('click', e => { if (e.target.closest('.mmw-toggle')) return; if (w.classList.contains('is-minimized')) setPwMin(false); });
+    w.querySelector('.mmw-lock').addEventListener('click', () => setPwLock(!pwLocked));
+    w.querySelector('.mmw-top').addEventListener('click', e => { if (e.target.closest('.mmw-toggle, .mmw-lock')) return; if (w.classList.contains('is-minimized')) setPwMin(false); });
     renderProfilesWidget();
     const pref = localStorage.getItem(PW_MIN_KEY);
-    if (pref !== null) setPwMin(pref === 'true'); else setPwMin(true);   // click-driven: start collapsed, opens on first match click
+    if (pref !== null) setPwMin(pref === 'true'); else setPwMin(true);   // start collapsed; roster clicks preserve the visitor's chosen state
   }
 
   // bfcache: a Back-restored page revives pre-Reset JS state, and the next interaction would

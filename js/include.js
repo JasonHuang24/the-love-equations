@@ -1,4 +1,13 @@
 (async () => {
+  const WIDTH_KEY = 'le-content-width';
+  const root = document.documentElement;
+  let widthMode = 'wide';
+  try {
+    if (localStorage.getItem(WIDTH_KEY) === 'original') widthMode = 'original';
+  } catch (e) {
+    // Storage can be unavailable in privacy-restricted contexts; the toggle still works for this page.
+  }
+  root.dataset.contentWidth = widthMode;
   const placeholders = document.querySelectorAll('[data-include]');
   await Promise.all([...placeholders].map(async el => {
     const name = el.dataset.include;
@@ -20,6 +29,26 @@
     if (link) { link.classList.add('active'); link.setAttribute('aria-current', 'page'); }
   }
 
+  const widthToggle = document.querySelector('.width-toggle');
+  if (widthToggle) {
+    const renderWidthToggle = () => {
+      const isWide = widthMode === 'wide';
+      const nextLabel = isWide ? 'original' : 'wide';
+      widthToggle.setAttribute('aria-pressed', isWide ? 'true' : 'false');
+      widthToggle.setAttribute('aria-label', `Switch to ${nextLabel} content width`);
+      widthToggle.title = `Switch to ${nextLabel} width`;
+      const icon = widthToggle.querySelector('i');
+      if (icon) icon.className = `ti ${isWide ? 'ti-arrows-minimize' : 'ti-arrows-maximize'}`;
+    };
+
+    widthToggle.addEventListener('click', () => {
+      widthMode = widthMode === 'wide' ? 'original' : 'wide';
+      root.dataset.contentWidth = widthMode;
+      try { localStorage.setItem(WIDTH_KEY, widthMode); } catch (e) { /* page-only fallback */ }
+      renderWidthToggle();
+    });
+    renderWidthToggle();
+  }
   // Mobile hamburger toggle
   const toggle = document.querySelector('.nav-toggle');
   const links = document.getElementById('nav-links');

@@ -699,3 +699,13 @@
   .sd-filter-chart .sd-axis,
   .sd-filter-chart .sd-row { grid-template-columns: 96px minmax(0, 1fr) 36px; gap: 0.4rem; }
 }
+/* Keep data graphics readable inside the wider desktop shell. */
+@media (min-width: 981px) {
+  html[data-content-width="wide"] .ladder-graph,
+  html[data-content-width="wide"] .cc-map-wrap,
+  html[data-content-width="wide"] .sd-chart {
+    width: min(100%, 30vw, 83vh);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

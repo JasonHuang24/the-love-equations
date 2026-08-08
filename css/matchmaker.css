@@ -327,8 +327,16 @@
 .mmw-top { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .65rem .85rem; border-bottom: 0.5px solid var(--border); }
 .mmw-kicker { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--scarlet); font-weight: 700; display: inline-flex; align-items: center; gap: .4rem; }
 .mmw-kicker i { font-size: 15px; }
-.mmw-toggle { font-family: inherit; width: 26px; height: 26px; flex-shrink: 0; border: 0.5px solid var(--border); background: var(--bg); color: var(--text-dim); border-radius: 8px; cursor: pointer; font-size: 17px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; transition: all .12s; }
-.mmw-toggle:hover { color: var(--scarlet); border-color: var(--scarlet); }
+.mmw-top-actions { display: inline-flex; align-items: center; gap: .4rem; flex-shrink: 0; }
+.mmw-toggle,
+.mmw-lock { font-family: inherit; width: 26px; height: 26px; flex-shrink: 0; border: 0.5px solid var(--border); background: var(--bg); color: var(--text-dim); border-radius: 8px; cursor: pointer; font-size: 17px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; transition: all .12s; }
+.mmw-lock { font-size: 14px; }
+.mmw-toggle:hover,
+.mmw-lock:hover:not(:disabled) { color: var(--scarlet); border-color: var(--scarlet); }
+.mmw-lock[aria-pressed="true"] { color: #fffaf3; background: var(--scarlet); border-color: var(--scarlet); }
+.mmw-lock:disabled { opacity: .38; cursor: not-allowed; }
+.mmw-lock.is-blocking { animation: mmwLockCue .36s ease 2; }
+@keyframes mmwLockCue { 50% { transform: scale(1.14); box-shadow: 0 0 0 4px rgba(196,30,58,.14); } }
 
 .mmw-bodywrap { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
 .mmw-controls { padding: .7rem .85rem .55rem; border-bottom: 0.5px solid var(--border); }
