@@ -2233,3 +2233,44 @@ test('an unsupported statistic is flagged however the number is spelled', async 
   assert.ok((result.researchQueue?.items || [])
     .flatMap((item) => item.riskFlags || []).includes('unsupported statistic'));
 });
+
+test('claim detection knows the verb this site is about', async () => {
+  /*
+   * Red before v2.6.21 (pt09 adversarial lane, surface: gate
+   * morphology inflections, upstream of the gate). Fourth copy of one defect
+   * shape, and the earliest one in the pipeline: `CLAIM_CUES` lists
+   * prefer, choose, reject, attract, desire, commit, marry, divorce, retain
+   * and leave — and not `date`. Claim detection runs BEFORE the relevance
+   * gate and decides what is a claim at all, so a short declarative sentence
+   * about dating never reached the gate that v2.6.14 and 959d32c both taught
+   * to read the word.
+   *
+   * Measured minimal pairs, one verb apart:
+   *
+   *   "Women marry up in status."   0.30  claim-like
+   *   "Women date up in status."    0.16  not claim-like
+   *
+   * and the same for "Men date down in status.", "People date within their
+   * own league.", "She dated him for two years." — all 0.16.
+   *
+   * The false positive this buys, frozen: "Issue date 2016 Jan." — a journal
+   * citation header in the archived corpus — becomes claim-like at 0.30. The
+   * relevance gate bins it as non-domain, so nothing downstream moves, and it
+   * is recorded here rather than left to be discovered.
+   */
+  const unitFor = (text) => detectClaimUnits(normalizeInput({
+    text, source: { title: 'Claim cue probe' },
+  }))[0];
+
+  assert.equal(unitFor('Women marry up in status.').isClaimLike, true,
+    'the verb that already worked still works');
+  assert.equal(unitFor('Women date up in status.').isClaimLike, true);
+  assert.equal(unitFor('Men date down in status.').isClaimLike, true);
+  assert.equal(unitFor('People date within their own league.').isClaimLike, true);
+  assert.equal(unitFor('She dated him for two years.').isClaimLike, true);
+
+  // Claim GRAMMAR is not domain relevance: the calendar sense clears this
+  // step and is stopped by the gate, which is the division of labour the two
+  // steps are built on.
+  assert.equal(unitFor('Issue date 2016 Jan.').isClaimLike, true);
+});
