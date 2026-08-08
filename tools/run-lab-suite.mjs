@@ -68,6 +68,7 @@ const STEPS = [
   ['node', 'tests/lab-tokenizer.test.mjs'],
   ['node', 'tests/lab-threshold-neighbors.test.mjs'],
   ['node', 'tests/lab-gate-register.test.mjs'],
+  ['node', 'tests/lab-corpus-extractor.test.mjs'],
   ['node', 'tests/canon-index-fixtures.mjs'],
   ['node', 'scripts/validate-canon-index.mjs'],
   ['python', 'tools/lab_release_audit.py'],
