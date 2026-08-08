@@ -338,7 +338,7 @@ const ENTRY_ARTIFACT_TERMS = new Set([
 
 const CLAIM_CUES = [
   /\b(?:is|are|was|were|means?|shows?|proves?|predicts?|causes?|creates?|drives?|leads?)\b/i,
-  /\b(?:can|could|may|might|should|must|will|cannot|can't|won't|need to|have to|tend to|more likely|less likely)\b/i,
+  /\b(?:can|could|may|might|should|must|will|cannot|can['’]t|won['’]t|need to|have to|tend to|more likely|less likely)\b/i,
   /\b(?:always|never|everyone|nobody|all men|all women|most men|most women)\b/i,
   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
@@ -852,7 +852,7 @@ export const MATCH_SURFACE_LABELS = Object.freeze({
  * to answer this one — which is how a verbatim restatement of an LE boundary
  * came to be filed as contradicting LE.
  */
-const MISREADING_DENIAL_CUES = /\b(?:not|never|no|none|false|untrue|myth|mistaken|wrong|isn't|aren't|wasn't|weren't|doesn't|don't|didn't|cannot|can't|won't|nonsense|rarely|hardly)\b/i;
+const MISREADING_DENIAL_CUES = /\b(?:not|never|no|none|false|untrue|myth|mistaken|wrong|isn['’]t|aren['’]t|wasn['’]t|weren['’]t|doesn['’]t|don['’]t|didn['’]t|cannot|can['’]t|won['’]t|nonsense|rarely|hardly)\b/i;
 
 /*
  * The blanket all-women signature behind the AWALT hand ruling in stanceFor.
@@ -904,11 +904,11 @@ const QUALIFICATION_CUES = /\b(?:overstated|overstates|overstating|oversimplif\w
  * and belongs to the editor, from sc-07, where the quotes decorate a bare noun
  * phrase inside the speaker's own sentence and the speaker still owns the claim.
  */
-const QUOTED_ASSERTION_VERBS = /\b(?:is|are|was|were|isn't|aren't|wasn't|weren't|means|equals|proves|creates|makes|shows|becomes|remains)\b/i;
+const QUOTED_ASSERTION_VERBS = /\b(?:is|are|was|were|isn['’]t|aren['’]t|wasn['’]t|weren['’]t|means|equals|proves|creates|makes|shows|becomes|remains)\b/i;
 
 const SUPPORT_CUES = /\b(?:supports?|confirms?|consistent with|backs? up|holds up|evidence for|exactly right|true that)\b/i;
 const CHALLENGE_CUES = /\b(?:challenges?|questions?|overstates?|too simple|not always|depends on|exception|fails? when|weakens?)\b/i;
-const CONTRADICTION_CUES = /\b(?:contradicts?|false|wrong|myth|backwards|no evidence|does not|doesn't|isn't|aren't|cannot|can't)\b/i;
+const CONTRADICTION_CUES = /\b(?:contradicts?|false|wrong|myth|backwards|no evidence|does not|doesn['’]t|isn['’]t|aren['’]t|cannot|can['’]t)\b/i;
 const EXTENSION_CUES = /\b(?:extends?|adds?|missing|overlooks?|also matters?|new factor|beyond|mechanism|edge case)\b/i;
 const EVIDENCE_CUES = /\b(?:study|studies|research|data|survey|sample|experiment|longitudinal|meta-analysis|doi|according to)\b|(?:\d+(?:\.\d+)?\s*%)/i;
 
@@ -976,7 +976,7 @@ const PRESSURE_PATTERNS = [
     title: 'An average sex difference is being universalized',
     severity: 3,
     test: (text) => /\b(?:men|women|males|females)\b/i.test(text)
-      && /\b(?:all|always|never|are wired|by nature|biologically|every|cannot|can't)\b/i.test(text),
+      && /\b(?:all|always|never|are wired|by nature|biologically|every|cannot|can['’]t)\b/i.test(text),
     risk: 'gender generalization',
     strain: 'Examine the overlap between male and female distributions and the contexts where the mean difference shrinks or reverses.',
     evidence: 'Effect sizes, within-group variance, overlapping distributions, population definition, and replication across contexts.',
@@ -1013,7 +1013,7 @@ const PRESSURE_PATTERNS = [
     id: 'consent-safety',
     title: 'Consent or safety boundaries may be overridden',
     severity: 5,
-    test: (text) => /\b(?:ignore (?:her|his|their) no|keep pushing|won't take no|resistance means|force|coerce|pressure (?:her|him|them)|doesn't need consent|unsafe)\b/i.test(text),
+    test: (text) => /\b(?:ignore (?:her|his|their) no|keep pushing|won['’]t take no|resistance means|force|coerce|pressure (?:her|him|them)|doesn['’]t need consent|unsafe)\b/i.test(text),
     risk: 'consent/safety boundary',
     strain: 'Treat a clear refusal, discomfort cue, or safety concern as dispositive and stop the strategy.',
     evidence: 'No dating framework overrides consent or safety; the needed change is to the claim, not more proof.',
@@ -1103,7 +1103,7 @@ const CONCEPT_SIGNATURES = [
       ];
       const stageCount = stages.filter((pattern) => pattern.test(text)).length;
       return stageCount >= 2
-        && /\b(?:different|separate|another|not|only|does not|doesn't|fail|fails)\b/.test(text);
+        && /\b(?:different|separate|another|not|only|does not|doesn['’]t|fail|fails)\b/.test(text);
     },
   },
   {
