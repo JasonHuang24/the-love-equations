@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-lab.corpus-manifest/1.0",
-  "updatedAt": "2026-07-31T12:00:00.000Z",
+  "updatedAt": "2026-08-08T00:00:00.000Z",
   "archive": {
     "root": "lab-corpus/",
     "published": false,
@@ -9,7 +9,7 @@
       "sources": "lab-corpus/sources/<NN>-<slug>.<ext> plus <NN>-<slug>.source.json sidecar and the raw capture it was extracted from (<NN>-<slug>.raw.html, or <NN>-<slug>.raw.pdf where the publisher ships no HTML full text)",
       "exports": "lab-corpus/exports/<NN>-<slug>-<analyzer-version>.json"
     },
-    "state": "populated: 21 of 22 sources acquired and analyzed (01, 02, 04 at v2.6.0; 05-22 at v2.6.1); 03 excluded by decision"
+    "state": "populated: 29 of 30 sources acquired and analyzable (01, 02, 04 at v2.6.0; 05-22 at v2.6.1; the pt10 tranche 23-30 archived but not yet re-analyzed into exports/); 03 excluded by decision"
   },
   "singleVersionStatus": {
     "isSingleVersion": false,
@@ -47,7 +47,13 @@
           "16-pew-emotional-support",
           "17-trent-south-sex-ratios",
           "19-zhang-preference-replication",
-          "20-marzoli-mate-preferences"
+          "20-marzoli-mate-preferences",
+          "23-slate-prudence-chat",
+          "24-guardian-ask-philippa",
+          "26-captain-awkward-1455",
+          "27-loveshack-defensive-partner",
+          "28-loveshack-always-the-dumpee",
+          "29-dearwendy-too-much-messaging"
         ],
         "chain": "archived raw HTML -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
         "extractor": "tools/extract-source-text.mjs",
@@ -59,12 +65,23 @@
         "applies": [
           "18-li-necessities-luxuries",
           "21-hirschl-assortative-mating",
-          "22-finkel-suffocation"
+          "22-finkel-suffocation",
+          "30-alabama-marriage-handbook"
         ],
         "chain": "archived raw PDF -> pdftotext 4.00 with recorded flags -> recorded awk anchor truncation -> the .txt whose SHA-256 is recorded here",
         "extractor": "pdftotext (poppler / Glyph & Cog) version 4.00, external binary",
         "extractorSha256": null,
         "note": "STRICTLY WEAKER THAN GRADE A and used only where the publisher ships no HTML full text. The chain is reproducible — same PDF bytes, same tool version, same recorded command, same output — but it depends on an external tool version rather than on a hashed file in this repository, so it cannot be verified from the repo alone. Each sidecar records the full command including the -nopgbrk flag (without it pdftotext injects page-break form feeds that defeat the line anchors) and the start/stop anchors used. No committed repo script reads PDFs; adding one was out of scope for this run."
+      },
+      {
+        "grade": "A-",
+        "applies": [
+          "25-guardian-philippa-comments"
+        ],
+        "chain": "archived raw discussion-API JSON (2 pages) -> a recorded body-concatenation one-liner -> tools/extract-source-text.mjs -> the .txt whose SHA-256 is recorded here",
+        "extractor": "tools/extract-source-text.mjs, preceded by the inline node command recorded in this source’s acquisition.method",
+        "extractorSha256": "6f3373b0c12145f9b57af26c9eb6d3bf5ee69a0a34d600e61c1c229c1321aa43",
+        "note": "WEAKER THAN GRADE A in exactly one respect: the pre-step that flattens the API’s comment tree into HTML is recorded verbatim in the source entry rather than committed as a repo script, so a re-runner retypes it instead of hashing it. Everything else is the grade-A chain. The pre-step keeps comment BODIES only, in thread order with replies inline after their parent, and deliberately archives no usernames, timestamps or scores — the archive keeps what was said, not who said it."
       }
     ],
     "scoutCaptureRule": "Research scouts are model-mediated and their captures are therefore NEVER the archived artifact. Every source above was independently re-fetched and re-extracted by the orchestrator. Each entry records acquisition.scoutCrossCheck: 8-word shingle overlap between the scout capture and the deterministic extraction, which detects a scout that paraphrased, truncated, or invented prose. Overlap is corroboration of the scout, not provenance for the text."
@@ -132,6 +149,22 @@
         ],
         "authorization": "Jason's single front-loaded GO for the full three-batch scout plan.",
         "note": "Sources returned by research scouts S-A (Gottman primary and critique), S-B (desire-decay empirical leg), and S-C (mate-value discrepancy x alternatives). All URLs were scout-returned; all captures were independently re-fetched and re-extracted by the orchestrator before archiving. Source 08 is a SUBSTITUTED rendition: the scout read an FSU repository PDF that returned HTTP 403 on independent re-fetch, so the PMC author manuscript of the same paper was archived instead and the cross-check measures agreement between the two renditions."
+      },
+      {
+        "batch": "pt10 corpus widening — reader-shaped registers",
+        "date": "2026-08-08",
+        "added": [
+          "23-slate-prudence-chat",
+          "24-guardian-ask-philippa",
+          "25-guardian-philippa-comments",
+          "26-captain-awkward-1455",
+          "27-loveshack-defensive-partner",
+          "28-loveshack-always-the-dumpee",
+          "29-dearwendy-too-much-messaging",
+          "30-alabama-marriage-handbook"
+        ],
+        "authorization": "pt10 run brief: widen lab-corpus/ toward reader-shaped text (forum threads, advice-column letters and replies, chat-style discourse, comment sections, word-processor-authored essays) after pt09 §6 measured the archive unable to exercise the surfaces v2.6.21-24 fixed.",
+        "note": "Eight sources, 47,082 words, five registers, chosen for balance rather than volume. No scout: every URL was found and fetched by the run itself, so acquisition.scoutCrossCheck does not apply. The widening was proved additive before and after — 0 of 481,851 pre-existing pairs moved — and the neighbour band was regenerated with --neighbors and no --baseline, producing 0 crossings and 0 new rulings. Full record: md/pressure-tests.md, # corpus-pressure-test-10.md."
       }
     ]
   },
@@ -2077,6 +2110,230 @@
         "rawHtmlReproduced": false,
         "note": "Re-fetched 2026-07-31 after the archive was destroyed. Raw bytes could not be reproduced because the original was a live fetch; word count is the corroborator. Treat as a NEW measurement superseding the July one, per md/RERUN.md section 0."
       }
+    },
+    {
+      "id": "23-slate-prudence-chat",
+      "title": "My Life Seriously Changed After a Medical Diagnosis. My Best Friend’s Reaction Has Been … Bizarre.",
+      "author": "Jenée Desmond-Harris and Paola de Varona",
+      "publication": "Slate (Dear Prudence)",
+      "year": 2026,
+      "url": "https://slate.com/advice/2026/08/dear-prudence-chat-medical-diagnosis-best-friend-bizarre.html",
+      "urlProvenance": "captured-live",
+      "publishedAt": "2026-08-06",
+      "register": "advice chat transcript — a reader letter discussed turn-by-turn by two named columnists",
+      "sourceFile": "lab-corpus/sources/23-slate-prudence-chat.txt",
+      "sourceSha256": "1b8d433dd2e0e4d6ca6e09411e2d47850f278d7d370794113a22ba795310b024",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 1386,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "node tools/extract-source-text.mjs <raw> '<div class=\"article__content' --drop '<div[^>]*class=\"[^\"]*article-cta' --drop '<div[^>]*class=\"[^\"]*slate-ad' --drop '<div[^>]*class=\"[^\"]*newsletter' --cut 'class=\"social-share'",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureFile": "lab-corpus/sources/23-slate-prudence-chat.raw.html",
+      "rawCaptureSha256": "c8784ad01819621352de239a45df98c803ecc2fca6a3d5be79b832b97e43ce6c"
+    },
+    {
+      "id": "24-guardian-ask-philippa",
+      "title": "My partner blames a ‘lack of attraction’ for not wanting sex",
+      "author": "Philippa Perry",
+      "publication": "The Observer / The Guardian (Ask Philippa)",
+      "year": 2025,
+      "url": "https://www.theguardian.com/lifeandstyle/2025/jan/12/my-partner-blames-a-lack-of-attraction-for-not-wanting-sex",
+      "urlProvenance": "captured-live",
+      "publishedAt": "2025-01-12",
+      "register": "advice column — a reader’s letter plus a psychotherapist’s reply, sub-edited broadsheet prose",
+      "sourceFile": "lab-corpus/sources/24-guardian-ask-philippa.txt",
+      "sourceSha256": "26c6cf8987b11480eebeb2be2ccba6fbb19bbcc7528f83492785ea850d6a8c45",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 858,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "node tools/extract-source-text.mjs <raw> '<div data-gu-name=\"body\"' --cut 'Every week Philippa Perry addresses'",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureFile": "lab-corpus/sources/24-guardian-ask-philippa.raw.html",
+      "rawCaptureSha256": "4547225eeb231ab8f93d62812cf5e3e5105251cebfd7527fde449121d725d0ce"
+    },
+    {
+      "id": "25-guardian-philippa-comments",
+      "title": "Reader comments on “My partner blames a ‘lack of attraction’ for not wanting sex” (251 comments)",
+      "author": "Guardian readers (251 commenters, attribution deliberately not archived)",
+      "publication": "The Guardian discussion",
+      "year": 2025,
+      "url": "https://discussion.theguardian.com/discussion-api/discussion/p/xvqn6x?orderBy=oldest&pageSize=100",
+      "urlProvenance": "captured-live",
+      "publishedAt": "2025-01-12",
+      "register": "comment section — unedited reader discourse replying to source 24 and to each other",
+      "sourceFile": "lab-corpus/sources/25-guardian-philippa-comments.txt",
+      "sourceSha256": "f27b6fa2fcf5301d3bb218ea319342dd5e517e194345af9911508c9f57ad2048",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 17899,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "A-",
+        "method": "node -e 'const fs=require(\"fs\");const out=[];for(const f of process.argv.slice(1)){const walk=(c)=>{out.push(c.body);(c.responses||[]).forEach(walk);};JSON.parse(fs.readFileSync(f,\"utf8\")).discussion.comments.forEach(walk);}process.stdout.write(\"<div id=\\\"comments\\\">\"+out.join(\"\\n\")+\"</div>\");' <raw.p1> <raw.p2> > <bodies.html>  then  node tools/extract-source-text.mjs <bodies.html> '<div id=\"comments\">'",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureParts": [
+        {
+          "file": "lab-corpus/sources/25-guardian-philippa-comments.raw.p1.json",
+          "sha256": "a23640dc622916d77f87c0145f67f21b2c348d84314d8ec9a264ad1776152e0f"
+        },
+        {
+          "file": "lab-corpus/sources/25-guardian-philippa-comments.raw.p2.json",
+          "sha256": "4d73e38399e97ae859499bfe69083d2905db9a9a35551bc46699f82b21307632"
+        }
+      ]
+    },
+    {
+      "id": "26-captain-awkward-1455",
+      "title": "#1455: “Single friend scorns the coupled. How can I have her meet my soon-to-be fiance without hurting anyone’s feelings?”",
+      "author": "Jennifer Peepas (Captain Awkward)",
+      "publication": "CaptainAwkward.com",
+      "year": 2025,
+      "url": "https://captainawkward.com/2025/01/17/1455-single-friend-scorns-the-coupled-how-can-i-have-her-meet-my-soon-to-be-fiance-without-hurting-anyones-feelings/",
+      "urlProvenance": "captured-live",
+      "publishedAt": "2025-01-17",
+      "register": "advice blog — letter plus a long second-person reply in conversational blog register",
+      "sourceFile": "lab-corpus/sources/26-captain-awkward-1455.txt",
+      "sourceSha256": "5da04dc82b90a24527e92a0df1a89a3474d1a5834532049f841a5e3619e4b9a2",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 1216,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "node tools/extract-source-text.mjs <raw> '<div class=\"entry-content\">' --cut 'Share this:'",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureFile": "lab-corpus/sources/26-captain-awkward-1455.raw.html",
+      "rawCaptureSha256": "81a1212842a5f9713a59ad0f9f1a0ef3703fe80d9794af75491a6b970680219c"
+    },
+    {
+      "id": "27-loveshack-defensive-partner",
+      "title": "How to deal with a boyfriend who gets extremely defensive and upset when I try to express my feelings",
+      "author": "LoveShack.org forum members (handles dropped with the author panes)",
+      "publication": "LoveShack.org — Dating forum",
+      "year": 2026,
+      "url": "https://www.loveshack.org/forums/topic/668737-how-to-deal-with-a-boyfriend-who-gets-extremely-defensive-and-upset-when-i-try-to-express-my-feelings/",
+      "urlProvenance": "captured-live",
+      "publishedAt": "2026-06-21",
+      "register": "forum thread — an opening post and multi-poster replies, unedited",
+      "sourceFile": "lab-corpus/sources/27-loveshack-defensive-partner.txt",
+      "sourceSha256": "79637b0cd8788e9f9f6b8d06578b623fca993d07ee5b036224f39e3fe160e131",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 4299,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "node tools/extract-source-text.mjs <raw> '<div id=\"comments\"' --drop '<aside[^>]*class=\"[^\"]*ipsComment_author' --drop '<div[^>]*class=\"[^\"]*cAuthorPane_mobile' --drop '<div[^>]*class=\"[^\"]*ipsComment_meta' --drop '<div[^>]*class=\"[^\"]*ipsComment_toolWrap'",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureFile": "lab-corpus/sources/27-loveshack-defensive-partner.raw.html",
+      "rawCaptureSha256": "5c3e3281ad5877f9e588bfe5988a0ccdf318d664ae7521113615b599ee8ec368"
+    },
+    {
+      "id": "28-loveshack-always-the-dumpee",
+      "title": "Always the dumpee. What am I doing wrong?",
+      "author": "LoveShack.org forum members (handles dropped with the author panes)",
+      "publication": "LoveShack.org — Dating forum",
+      "year": 2026,
+      "url": "https://www.loveshack.org/forums/topic/668760-always-the-dumpee-what-am-i-doing-wrong/",
+      "urlProvenance": "captured-live",
+      "publishedAt": "2026-06-29",
+      "register": "forum thread — mate-value self-diagnosis, multi-poster; page 1 of 2 captured",
+      "sourceFile": "lab-corpus/sources/28-loveshack-always-the-dumpee.txt",
+      "sourceSha256": "38d41335b7fd6b75c40e179315018b88fc02413675a9f53addcb11e243f99267",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 4498,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "node tools/extract-source-text.mjs <raw> '<div id=\"comments\"' --drop '<aside[^>]*class=\"[^\"]*ipsComment_author' --drop '<div[^>]*class=\"[^\"]*cAuthorPane_mobile' --drop '<div[^>]*class=\"[^\"]*ipsComment_meta' --drop '<div[^>]*class=\"[^\"]*ipsComment_toolWrap'",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureFile": "lab-corpus/sources/28-loveshack-always-the-dumpee.raw.html",
+      "rawCaptureSha256": "beed270068785c5242bf45b01b30d3863b0fcba7fd9d64f945ebf62d665a1b81"
+    },
+    {
+      "id": "29-dearwendy-too-much-messaging",
+      "title": "Too Much Messaging!",
+      "author": "Wendy Atterberry",
+      "publication": "DearWendy.com",
+      "year": 2026,
+      "url": "https://dearwendy.com/too-much-messaging/",
+      "urlProvenance": "captured-live",
+      "publishedAt": "2026-07-13",
+      "register": "advice column — letter plus reply, informal US dating-advice register",
+      "sourceFile": "lab-corpus/sources/29-dearwendy-too-much-messaging.txt",
+      "sourceSha256": "ac42edfa4f6c503e233ed86b37938257f8cb517366b1109952a8205ae7ebca01",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 1036,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "A",
+        "method": "node tools/extract-source-text.mjs <raw> '<div class=\"entry-content-wrap\">'",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureFile": "lab-corpus/sources/29-dearwendy-too-much-messaging.raw.html",
+      "rawCaptureSha256": "ea47a3b9fc82d308cc976e3aece65c810b603be729c5e68a32e394b4bef427e5"
+    },
+    {
+      "id": "30-alabama-marriage-handbook",
+      "title": "The Healthy Marriage Handbook: Keys to a Successful Marriage (HE-0858)",
+      "author": "Alabama Cooperative Extension System",
+      "publication": "Alabama Cooperative Extension System / National Stepfamily Resource Center",
+      "year": 2008,
+      "url": "https://www.stepfamilies.info/assets/uploads/2020/03/HE-0858_archive_web.pdf",
+      "urlProvenance": "captured-live",
+      "publishedAt": null,
+      "register": "word-processor / print-authored reader handbook — second person throughout, numbered exercises, true/false quizzes",
+      "sourceFile": "lab-corpus/sources/30-alabama-marriage-handbook.txt",
+      "sourceSha256": "08625251bbae24484d5a83721c7a9636edbde83fe8b97dddde22d7d64632e494",
+      "capturedBy": "original",
+      "capturedAt": "2026-08-08T00:00:00.000Z",
+      "words": 15890,
+      "addedIn": "pt10",
+      "acquisition": {
+        "provenanceGrade": "B",
+        "method": "pdftotext -enc UTF-8 -nopgbrk <raw> <txt>, then CRLF -> LF",
+        "reacquirable": "likely",
+        "confidence": "high",
+        "licensing": "Publicly readable third-party text. Archived locally only; lab-corpus/ is gitignored and this manifest publishes identity and hashes, never content.",
+        "notes": null
+      },
+      "rawCaptureFile": "lab-corpus/sources/30-alabama-marriage-handbook.raw.pdf",
+      "rawCaptureSha256": "375c4ff25ee32d91ff8b222930123a505eb3972ecdb3d5da84480737d0ae8741"
     }
   ],
   "epochHistory": [
