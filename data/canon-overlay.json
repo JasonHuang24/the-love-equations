@@ -1396,7 +1396,8 @@
       "related": [
         "frameworks:good-news-rule",
         "frameworks:conversion-ladder",
-        "frameworks:attention-boundary"
+        "frameworks:attention-boundary",
+        "frameworks:sleep-interaction-loop"
       ],
       "boundaryConditions": [
         "Demonstrated in newlywed couples in the first four to five years; the one located longer-marriage comparison found only one of the two directions.",
@@ -6553,7 +6554,8 @@
       "related": [
         "frameworks:agreement-surface",
         "frameworks:commitment-problem",
-        "frameworks:sixth-rung"
+        "frameworks:sixth-rung",
+        "frameworks:sleep-interaction-loop"
       ],
       "boundaryConditions": [
         "The four-state sequence is an LE synthesis; no source measured acknowledgement, amends, changed conduct, forgiveness and reconciliation together or established one required order.",
@@ -6638,7 +6640,8 @@
       "related": [
         "frameworks:attention-boundary",
         "frameworks:care-role-split",
-        "frameworks:support-portfolio"
+        "frameworks:support-portfolio",
+        "frameworks:sleep-interaction-loop"
       ],
       "boundaryConditions": [
         "The three-route split is an LE synthesis; no source measured spillover, crossover, shared exposure, recovery and support matching in one design.",
@@ -6658,6 +6661,51 @@
         "Where did the strain originate, which person carried or absorbed it, and over what recovery window?",
         "Did both partners face one shared stressor, or did load spill across a domain or cross between partners?",
         "Was support matched to the recipient's needs, and which measured path did it actually moderate?"
+      ]
+    },
+    "frameworks:sleep-interaction-loop": {
+      "aliases": [
+        "Sleep-Interaction Loop",
+        "dyadic sleep and relationship functioning",
+        "couple sleep interaction loop",
+        "nightly sleep and next-day couple conflict",
+        "sleep as a dyadic relationship process",
+        "partner sleep and marital quality",
+        "sleep-wake concordance in couples"
+      ],
+      "phrases": [
+        "poor sleep predicts negative partner interaction",
+        "daytime interaction predicts nighttime sleep",
+        "sleep onset concordance and partner interaction",
+        "total sleep deprivation before couple conflict",
+        "marital strain predicts later insomnia",
+        "spousal support predicts partner sleep quality",
+        "sleep efficiency actor and partner effects",
+        "acute sleep loss reduces positive affect"
+      ],
+      "related": [
+        "frameworks:stress-transmission-split",
+        "frameworks:satisfaction-flywheel",
+        "frameworks:repair-sequence"
+      ],
+      "boundaryConditions": [
+        "The four-label rule is an LE synthesis; no source jointly estimates direction, actor and partner paths, multiple sleep measures and acute-to-multiyear time scales in a single design.",
+        "The seven-day study includes 29 mostly young, happy, different-sex co-sleeping couples; its sex-specific diary and actigraphy paths are preliminary and observational.",
+        "The randomized study assigned 30 unusually satisfied young couples to total deprivation or normal sleep, and found affect and cortisol effects while agreement, discussion satisfaction, conflict severity, negative affect and emotion recognition remained null.",
+        "Total sleep deprivation in a supervised laboratory is not ordinary short sleep, shift work, infant waking, insomnia or a diagnosed sleep disorder.",
+        "The eight-year age-50-plus English result is captured here only as an abstract; coefficient detail, attrition, missing-data handling and robustness specifications were not audited.",
+        "Sleep efficiency, subjective sleep quality, insomnia symptoms, onset concordance and offset concordance are separate measures and must not be substituted for one another.",
+        "Fatigue can be a temporary sleep-linked state rather than evidence of durable incompatibility; responsibility for aggression, coercion, contempt, repair, medical care and safety remains intact."
+      ],
+      "commonMisreadings": [
+        "A poor night's sleep proves the romantic relationship has become permanently incompatible.",
+        "Matching bedtimes always improves every couple's intimacy and prevents future relationship conflict.",
+        "A sleep-deprived discussion reveals each partner's normal conflict skills inside the relationship."
+      ],
+      "pressureTests": [
+        "Which direction is claimed: sleep to interaction, interaction to sleep, or both across separate lags?",
+        "Whose outcome moved, and was it an actor path, partner path or couple-level concordance measure?",
+        "Was sleep measured by diary, actigraphy, symptoms, timing or an experimental manipulation, and over what interval?"
       ]
     }
   }
