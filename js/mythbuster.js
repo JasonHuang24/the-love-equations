@@ -2544,6 +2544,15 @@
     applyFilters();
     setExpandAllLabel();
     scrollToHashCard();
+    /* Same-page hash moves need this too, and they are the COMMON case here:
+       the on-page TOC and every in-card "Related" link resolve to #M-TBD-*, and
+       a browser treats those as same-document navigation — no reload, so init()
+       never runs again. The id sits on the .mb-card wrapper while the fold is a
+       CHILD of it, so the browser's own details-auto-expand does not apply and
+       the target stays closed. Without this listener a TOC click scrolls to a
+       collapsed headline, which is the one thing folding the cards must not
+       cost. */
+    window.addEventListener('hashchange', scrollToHashCard);
   }
 
   if (document.readyState === 'loading') {
