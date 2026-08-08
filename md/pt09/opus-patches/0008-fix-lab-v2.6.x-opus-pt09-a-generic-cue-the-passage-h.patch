@@ -1,0 +1,116 @@
+From a095d523404525e3b95de606bfbd14490503ad87 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 16:26:58 -0600
+Subject: [PATCH 08/22] =?UTF-8?q?fix(lab):=20v2.6.x-opus-pt09=20=E2=80=94?=
+ =?UTF-8?q?=20a=20generic=20cue=20the=20passage=20has=20just=20denied=20do?=
+ =?UTF-8?q?es=20not=20decide=20the=20stance?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: stance-cue clause scoping. Greens the RED
+frozen in the previous commit.
+
+`cueFires` replaces bare `.test()` for the four claim-directed cue families:
+a cue counts unless a negator sits within three words in front of it, in the
+same ground. The window is deliberately short — three words is the distance an
+English negator reaches without a parser ("is not true", "does not appear to
+support", "nothing here confirms"), and widening it starts catching negations
+that belong to a different proposition, which is the failure the
+documented-limits block already names and which no cue-list edit can fix.
+
+The guard withholds the cue; it does not invert the label. All four inversions
+land on Resembles, the neutral reading, because turning a denial into the
+opposite verdict requires knowing WHAT is denied, and that is the parser this
+instrument has repeatedly declined to become.
+
+Two things are untouched by construction: a negator that is part of a cue's
+own text (`no evidence`, `not always`) still fires that cue, because the guard
+reads only what precedes the match; and EVIDENCE_CUES stays a bare
+passage-wide test, because citing data is a property of the passage, not a
+verdict aimed at a clause — that was v2.6.20's ruling and this does not
+reopen it.
+
+Cost, measured: 0 of 1,298 corpus labels move and no score moves; gate floors
+191/1.0000/1.0000/0.8529 unchanged; the frozen match-behavior benchmark
+including its stanceComposition and documentedLimits blocks is green
+untouched. Every negation composition in that fixture carries an asserted
+misreading, so all of them route through the parity branch and none reaches
+this ladder — which is why the class was invisible.
+
+All 18 suite steps green.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ js/lab-analyzer.js | 42 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
+
+diff --git a/js/lab-analyzer.js b/js/lab-analyzer.js
+index 7c67dd2..584625c 100644
+--- a/js/lab-analyzer.js
++++ b/js/lab-analyzer.js
+@@ -2854,6 +2854,40 @@ function genericCueGround(text, anchorTokens) {
+   return [assertion.text, clauses[at + 1]?.text].filter(Boolean).join(' ');
+ }
+ 
++/*
++ * A cue the passage has just denied is not that cue.
++ *
++ * The generic ladder tests four cue families as bare presence, and presence
++ * cannot tell "true that" from "not true that". Measured on crafted input
++ * against frameworks:conversion-ladder: "It is not true that <claim>" read
++ * Supports, "Nothing here confirms that <claim>" read Supports, "It is not
++ * consistent with <claim>" read Supports, and "<claim>; this is not wrong"
++ * read Challenges. Four inversions — the label pointing at the opposite of
++ * what the passage says, which is the most expensive error this instrument
++ * can make.
++ *
++ * The window is three words, and it is deliberately short. A cue counts unless
++ * a negator sits within three words in front of it, in the same ground. That
++ * is the distance an English negator actually reaches without a parser ("is
++ * not true", "does not appear to support", "nothing here confirms"); widening
++ * it starts catching negations that belong to a different proposition, which
++ * is the failure the documented-limits block already names for the misreading
++ * branch and which no cue-list edit can fix.
++ *
++ * The negator inside a cue's own text is untouched by construction — the guard
++ * reads only what precedes the MATCH, so `no evidence` and `not always`
++ * still fire as the cues they are.
++ */
++const CUE_NEGATOR_BEFORE = /\b(?:not|never|nor|neither|nothing|nobody|none|hardly|scarcely|barely|cannot|without|fails? to|failed to|far from)\b(?:\s+\S+){0,2}\s*$/i;
++
++function cueFires(ground, pattern) {
++  const scan = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
++  for (const hit of String(ground).matchAll(scan)) {
++    if (!CUE_NEGATOR_BEFORE.test(ground.slice(0, hit.index))) return true;
++  }
++  return false;
++}
++
+ /**
+  * What the source is doing with the matched concept.
+  *
+@@ -2955,16 +2989,16 @@ function stanceFor(unit, match) {
+     // the assertion clause and its follow-up, not the whole passage. Evidence
+     // register alone still reads passage-wide.
+     const cueGround = genericCueGround(text, rawScore.sharedTokens);
+-    if (CONTRADICTION_CUES.test(cueGround) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
++    if (cueFires(cueGround, CONTRADICTION_CUES) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
+       label = 'Challenges';
+       rationale = 'The source uses explicit disagreement language around the matched concept.';
+-    } else if (CHALLENGE_CUES.test(cueGround)) {
++    } else if (cueFires(cueGround, CHALLENGE_CUES)) {
+       label = 'Challenges';
+       rationale = 'The source names an exception, dependency, or scope limit around the matched concept.';
+-    } else if (EXTENSION_CUES.test(cueGround)) {
++    } else if (cueFires(cueGround, EXTENSION_CUES)) {
+       label = 'Extends';
+       rationale = 'The source proposes an additional mechanism, factor, or edge case around the matched concept.';
+-    } else if (SUPPORT_CUES.test(cueGround) || EVIDENCE_CUES.test(text)) {
++    } else if (cueFires(cueGround, SUPPORT_CUES) || EVIDENCE_CUES.test(text)) {
+       label = 'Supports';
+       rationale = 'The source presents the matched concept affirmatively and includes support or evidence language.';
+     }
+-- 
+2.38.0.windows.1
+

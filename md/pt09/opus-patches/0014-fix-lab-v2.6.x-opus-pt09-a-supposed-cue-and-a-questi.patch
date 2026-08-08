@@ -1,0 +1,103 @@
+From 59273aa49191fcdac81159b2006e8ec92ff4c33e Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 16:57:39 -0600
+Subject: [PATCH 14/22] =?UTF-8?q?fix(lab):=20v2.6.x-opus-pt09=20=E2=80=94?=
+ =?UTF-8?q?=20a=20supposed=20cue=20and=20a=20questioned=20cue=20do=20not?=
+ =?UTF-8?q?=20decide=20the=20stance?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: stance-cue clause scoping. Greens the RED
+frozen in the previous commit.
+
+Two changes, one idea: bare presence cannot tell an asserted cue from a cue
+the passage is only entertaining.
+
+- `CUE_NEGATOR_BEFORE` becomes `CUE_DEFEATER_BEFORE` and gains the
+  hypothetical subordinators (if, unless, whether, suppose, supposing,
+  assuming, imagine, hypothetically, were) beside the negators it already
+  held, in the same three-word window.
+- A passage whose unit text is a question withholds the four claim-directed
+  families entirely. EVIDENCE_CUES are deliberately not withheld: a question
+  can still cite a study, and citation is a property of the passage — that was
+  v2.6.20's ruling and this does not reopen it.
+
+Cost, named: a rhetorical question now under-claims. That is the direction
+this instrument prefers, and it is the same choice the negation guard made —
+withhold the cue, never invert the label, because inverting requires knowing
+WHAT is supposed or asked, which is the parser this instrument has declined to
+become.
+
+Two cases deliberately NOT changed, because they are the documented
+passage-wide evidence register rather than this defect: "If the data supports
+this, <claim>." and "Unless the study is wrong, <claim>." still read Supports,
+on `data` and `study` reaching EVIDENCE_CUES from anywhere in the passage.
+
+Cost, measured: 0 of 1,300 corpus labels move and no score moves. The zero is
+attributed, not assumed: the corpus holds 47 question-form claim units of
+which 11 carry matches, and 83 matched units containing a hypothetical
+subordinator — the guard is reachable there and simply changes nothing,
+because in every one of those the cue was already outside the clause-scoped
+ground or the label was already decided elsewhere.
+
+Gate floors untouched (nothing here reaches a score). All 18 suite steps green.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ js/lab-analyzer.js | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/js/lab-analyzer.js b/js/lab-analyzer.js
+index 206d51a..930c87c 100644
+--- a/js/lab-analyzer.js
++++ b/js/lab-analyzer.js
+@@ -2891,12 +2891,23 @@ function genericCueGround(text, anchorTokens) {
+  * reads only what precedes the MATCH, so `no evidence` and `not always`
+  * still fire as the cues they are.
+  */
+-const CUE_NEGATOR_BEFORE = /\b(?:not|never|nor|neither|nothing|nobody|none|hardly|scarcely|barely|cannot|without|fails? to|failed to|far from)\b(?:\s+\S+){0,2}\s*$/i;
++/*
++ * What defeats a cue: the passage denying it, or the passage supposing it.
++ *
++ * Negation was the first half (see above). The second half is hypothetical
++ * framing, and it costs the same kind of error: measured against
++ * frameworks:conversion-ladder, "If it were true that <claim>, dating apps
++ * would be simpler" read Supports 0.668, "Suppose it is true that <claim>"
++ * read Supports 0.700, and "Unless the study is wrong, <claim>" read
++ * Supports 0.612. A supposition is not an endorsement, and a condition on a
++ * cue is not that cue.
++ */
++const CUE_DEFEATER_BEFORE = /\b(?:not|never|nor|neither|nothing|nobody|none|hardly|scarcely|barely|cannot|without|fails? to|failed to|far from|if|unless|whether|suppose|supposing|assuming|imagine|hypothetically|were)\b(?:\s+\S+){0,2}\s*$/i;
+ 
+ function cueFires(ground, pattern) {
+   const scan = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
+   for (const hit of String(ground).matchAll(scan)) {
+-    if (!CUE_NEGATOR_BEFORE.test(ground.slice(0, hit.index))) return true;
++    if (!CUE_DEFEATER_BEFORE.test(ground.slice(0, hit.index))) return true;
+   }
+   return false;
+ }
+@@ -3001,7 +3012,18 @@ function stanceFor(unit, match) {
+     // Clause-scoped from v2.6.20: the four claim-directed cue families read
+     // the assertion clause and its follow-up, not the whole passage. Evidence
+     // register alone still reads passage-wide.
+-    const cueGround = genericCueGround(text, rawScore.sharedTokens);
++    /*
++     * A question is not a verdict. "Is it true that <claim>?" and "It is true
++     * that <claim>." reached this ladder as the same string once punctuation
++     * was stripped, and both read Supports at 0.714 — the interrogative and
++     * its own assertion, indistinguishable. The four claim-directed families
++     * are withheld inside a question; EVIDENCE_CUES are not, because a
++     * question can still cite a study and the citation is a property of the
++     * passage. Rhetorical questions therefore under-claim rather than
++     * over-claim, which is the direction this instrument prefers.
++     */
++    const interrogative = /\?/.test(String(unit?.text || ''));
++    const cueGround = interrogative ? '' : genericCueGround(text, rawScore.sharedTokens);
+     if (cueFires(cueGround, CONTRADICTION_CUES) && match.score >= SCORING_CONFIG.contradictionScoreFloor) {
+       label = 'Challenges';
+       rationale = 'The source uses explicit disagreement language around the matched concept.';
+-- 
+2.38.0.windows.1
+

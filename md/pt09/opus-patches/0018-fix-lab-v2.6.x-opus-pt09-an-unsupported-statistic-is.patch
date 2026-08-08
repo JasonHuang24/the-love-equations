@@ -1,0 +1,107 @@
+From 9d48f1602b31d8ac20cf7f1eceb820e8ba669ef5 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 17:54:23 -0600
+Subject: [PATCH 18/22] =?UTF-8?q?fix(lab):=20v2.6.x-opus-pt09=20=E2=80=94?=
+ =?UTF-8?q?=20an=20unsupported=20statistic=20is=20flagged=20however=20the?=
+ =?UTF-8?q?=20number=20is=20spelled?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: risk-flag detectors. Greens the RED frozen in
+the previous commit.
+
+`STATISTIC_SHAPES` replaces the inline pattern and adds the two forms the
+detector could not see: a word-form percentage in either register
+("80 per cent", "80 percent") and a ratio spelled out ("more than one in
+five"). The strip inside the guard grows with the detector, for the reason it
+existed — a bare quantity must not count as its own evidence that the quantity
+is sourced.
+
+The regex is `g` and therefore stateful, so both reads go through
+`statisticShapes()`, which resets `lastIndex` first. Without that, `.test()`
+answers differently on the same string depending on what was asked of it
+before, and the test pins that two reads agree.
+
+Corpus census that motivated it: 665 symbol-form percentages, 127 word-form,
+14 spelled ratios. About one statistic in six in the archive was spelled in a
+way the detector could not see, and the British-register sources are almost
+entirely word form. `chooseDestination`, one function away in the same file,
+already routed on the word.
+
+Cost, measured — and this is the first fix in this run that moves anything:
+
+- 6 research-queue items across 2 sources gain `unsupported statistic`
+  (04-heteropessimism x1, 15-asc-american-friendship x5). No item loses a
+  flag, and no destination changes.
+- 0 of 1,299 corpus stance rows move; no score moves; no label moves.
+  `classifyRiskFlags` runs only for unmapped residue and reaches nothing that
+  scores, so there is no threshold crossing to rule.
+- Gate floors identical: 191 · 1.0000 · 1.0000 · 0.8529.
+
+All 18 suite steps green.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ js/lab-analyzer.js | 39 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/js/lab-analyzer.js b/js/lab-analyzer.js
+index 794875a..aedff74 100644
+--- a/js/lab-analyzer.js
++++ b/js/lab-analyzer.js
+@@ -3417,13 +3417,50 @@ function applyBoundedContext(results, entriesById) {
+   }
+ }
+ 
++/*
++ * The shapes a stated quantity takes in this corpus: the percent symbol, the
++ * word in either register, a digit ratio, and a ratio spelled out in words.
++ * One expression, used both to detect a quantity and to remove it before
++ * asking whether the passage cites anything else.
++ *
++ * Built with `new RegExp` and reset before each use, because a `g` regex
++ * carries `lastIndex` between calls and `.test()` would otherwise answer
++ * differently on the same string depending on what was asked before it.
++ */
++const SPELLED_SMALL_NUMBER = '(?:one|two|three|four|five|six|seven|eight|nine|ten)';
++const STATISTIC_SHAPES = new RegExp([
++  '\\d+(?:\\.\\d+)?\\s*%',
++  '\\b\\d+(?:\\.\\d+)?\\s*per\\s?cent\\w*',
++  '\\b\\d+\\s+(?:out of|in)\\s+\\d+\\b',
++  `\\b${SPELLED_SMALL_NUMBER}\\s+(?:out of|in)\\s+${SPELLED_SMALL_NUMBER}\\b`,
++].join('|'), 'gi');
++
++/** A `g` regex is stateful; every read of the shared one starts from zero. */
++function statisticShapes() {
++  STATISTIC_SHAPES.lastIndex = 0;
++  return STATISTIC_SHAPES;
++}
++
+ function classifyRiskFlags(text) {
+   const flags = [];
+   if (/\b(?:should|ought|deserve|wrong|immoral|good person|bad person|worthless)\b/i.test(text)) flags.push('moral claim');
+   if (/\b(?:cause|causes|caused|because|leads? to|drives?|results? in)\b/i.test(text)) flags.push('causal claim');
+   if (/\b(?:men|women|male|female|all men|all women)\b/i.test(text)) flags.push('gender generalization');
+   if (/\b(?:i knew|my friend|one time|in my experience|someone i know|a guy i know)\b/i.test(text)) flags.push('anecdote');
+-  if (/(?:\d+(?:\.\d+)?\s*%|\b\d+\s+(?:out of|in)\s+\d+\b)/i.test(text) && !EVIDENCE_CUES.test(text.replace(/\d+(?:\.\d+)?\s*%/g, ''))) {
++  /*
++   * A quantity is a quantity however it is spelled. The detector read the
++   * percent SYMBOL and a digit ratio and nothing else, so a word-form
++   * percentage and a spelled-out ratio raised no warning at all — 127
++   * word-form percentages and 14 spelled ratios against 665 symbol forms in
++   * the archived corpus, and the British-register sources are almost
++   * entirely word form. `chooseDestination`, one function away, already
++   * routes on the word.
++   *
++   * The strip inside the guard grows with the detector, for the reason it
++   * existed: a bare quantity must not count as its own evidence that the
++   * quantity is sourced.
++   */
++  if (statisticShapes().test(text) && !EVIDENCE_CUES.test(text.replace(statisticShapes(), ' '))) {
+     flags.push('unsupported statistic');
+   }
+   return unique(flags);
+-- 
+2.38.0.windows.1
+

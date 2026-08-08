@@ -1,0 +1,75 @@
+From e6309a042706d508522084228a4f8702bdb91826 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 15:48:43 -0600
+Subject: [PATCH 01/22] =?UTF-8?q?test(lab):=20RED=20=E2=80=94=20a=20faithf?=
+ =?UTF-8?q?ul=20restatement=20reads=20Contradicts=20on=20its=20own=20press?=
+ =?UTF-8?q?ure-test=20vocabulary?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: misreading-firing contract.
+
+Repro: "The Conversion Ladder separates exposure, attention, attraction, and
+selection." — a faithful restatement of the entry — reads
+lexicon:term-conversion-ladder as Contradicts at 0.881.
+
+The v2.5.0 distinctive-token guard is what stops a correct restatement from
+reading Contradicts: share alone is topic evidence, so a token must be absent
+from the entry's own affirmative voice before it can evidence the rejected
+reading. That voice was defined as title + aliases + synopsis + boundary
+conditions and left out `pressureTests`, which is authored canon prose in the
+same voice. The entry's misreading conflates the rungs; this passage separates
+them. The one distinctive hit is `selection` — a word the synopsis spells
+"chosen" and the entry's own pressure test spells "selection".
+
+Fails at HEAD; the fix follows in the next commit.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ tests/lab-analyzer.test.mjs | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/tests/lab-analyzer.test.mjs b/tests/lab-analyzer.test.mjs
+index bb95a32..20f4eb2 100644
+--- a/tests/lab-analyzer.test.mjs
++++ b/tests/lab-analyzer.test.mjs
+@@ -1898,3 +1898,35 @@ test('the generic cue ladder reads the claim clause and its follow-up, not the w
+   assert.equal(await ladderLabel(`${compact}; that model is wrong.`), 'Challenges',
+     'a verdict in the claim\'s own follow-up clause must still land');
+ });
++
++test('a token the entry uses only in its own pressure test is not evidence of the misreading', async () => {
++  /*
++   * Red before v2.6.x-opus-pt09 (pt09 adversarial lane, surface:
++   * misreading-firing-contract). The v2.5.0 distinctive-token guard exists so
++   * that a CORRECT restatement cannot read Contradicts — share alone is topic
++   * evidence, so a token has to be absent from the entry's own affirmative
++   * voice before it can evidence the rejected reading. That "own voice" was
++   * defined as title + aliases + synopsis + boundary conditions, and left out
++   * `pressureTests`, which is authored canon prose in exactly the same voice.
++   *
++   * Repro: "The Conversion Ladder separates exposure, attention, attraction,
++   * and selection." — a faithful restatement — read lexicon:term-conversion-
++   * ladder as Contradicts at 0.881. Its misreading conflates the rungs
++   * ("Attention is attraction, attraction is selection, so a woman who likes
++   * your photo has chosen you"); the passage does the opposite. The single
++   * distinctive hit was `selection`, a word the entry's synopsis happens to
++   * spell "chosen" and its own pressure test spells "selection".
++   */
++  const result = await analyzeDocument(normalizeInput({
++    text: 'The Conversion Ladder separates exposure, attention, attraction, and selection.',
++    source: { title: 'Misreading distinctive-token probe' },
++  }), REAL_CANON);
++  const match = result.segments
++    .flatMap((segment) => segment.matches)
++    .find((entry) => entry.canonId === 'lexicon:term-conversion-ladder');
++  assert.ok(match, 'the lexicon Conversion Ladder entry still matches its own definition');
++  assert.deepEqual(match.alignment.evidence.misreadingDistinctiveHits, [],
++    '`selection` is the entry\'s own pressure-test vocabulary, not the misreading\'s');
++  assert.notEqual(match.alignment.label, 'Contradicts',
++    'a faithful restatement of the entry must not read as asserting the reading it rejects');
++});
+-- 
+2.38.0.windows.1
+

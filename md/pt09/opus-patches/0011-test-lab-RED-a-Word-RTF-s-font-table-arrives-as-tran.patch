@@ -1,0 +1,93 @@
+From b796f3895e66d9cbe66057d779ab2ae4485bbd56 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 16:43:28 -0600
+Subject: [PATCH 11/22] =?UTF-8?q?test(lab):=20RED=20=E2=80=94=20a=20Word?=
+ =?UTF-8?q?=20RTF's=20font=20table=20arrives=20as=20transcript=20text?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: intake format edges.
+
+RTF is an advertised intake format, and `extractTextFromRtf` strips control
+words and braces without ever recognising a DESTINATION group — the
+sub-documents an RTF carries that are not the document. Every real
+Word-generated file opens with several of them.
+
+Repro, a Word 2019 preamble verbatim, extracts as:
+
+  "Calibri;Symbol;;;\*Riched20 10.0.19041;She wanted a provider who could
+   support a household."
+
+Four junk tokens in front of the first sentence, an inflated word count, and a
+corrupted excerpt for every passage a reader is shown. The junk also reaches
+retrieval: `calibri`, `symbol`, `riched` and `generator` enter the token
+stream as words.
+
+The test also pins what must NOT be dropped: a non-destination group keeps its
+text, and an escaped brace is literal text rather than a group boundary.
+
+Fails at HEAD; the fix follows in the next commit.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ tests/lab-intake.test.mjs | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/tests/lab-intake.test.mjs b/tests/lab-intake.test.mjs
+index 7a61e8a..a60b46a 100644
+--- a/tests/lab-intake.test.mjs
++++ b/tests/lab-intake.test.mjs
+@@ -14,6 +14,7 @@ import {
+   createNormalizedDocument,
+   detectTextFormat,
+   extractTextFromHtml,
++  extractTextFromRtf,
+   normalizeInput,
+   parseCsvTranscript,
+   parseJsonTranscript,
+@@ -604,3 +605,41 @@ test('format characters that carry no text are removed at intake', () => {
+   assert.match(text, /Hypergamy is not the same as hypergamy or hypergamy or hypergamy\./);
+   assert.match(text, /A right-to-left run ends here\./);
+ });
++
++test('an RTF header table is not transcript text', () => {
++  /*
++   * Red before v2.6.x-opus-pt09 (pt09 adversarial lane, surface: intake format
++   * edges). RTF is an advertised intake format and `extractTextFromRtf` strips
++   * control words and braces without ever recognising a DESTINATION group — the
++   * sub-documents an RTF carries that are not the document. Every real
++   * Word-generated file opens with several.
++   *
++   * Repro, a Word 2019 file's own preamble:
++   *
++   *   {\\rtf1\\ansi…{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}{\\f1…Symbol;}}
++   *   {\\colortbl ;\\red0\\green0\\blue255;}{\\*\\generator Riched20 10.0.19041;}…
++   *
++   * extracted as: "Calibri;Symbol;;;\\*Riched20 10.0.19041;She wanted a
++   * provider who could support a household." — four junk tokens in front of the
++   * first sentence, an inflated word count, and a corrupted excerpt for every
++   * passage a reader is shown.
++   *
++   * Only the non-prose destinations are dropped. Headers, footers and footnotes
++   * hold text a reader wrote and stay in.
++   */
++  const word = String.raw`{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset2 Symbol;}}{\colortbl ;\red0\green0\blue255;}{\*\generator Riched20 10.0.19041;}\viewkind4\uc1\pard\sa200\sl276\slmult1\f0\fs22\lang9 She wanted a provider who could support a household.\par}`;
++  assert.equal(
++    extractTextFromRtf(word),
++    'She wanted a provider who could support a household.',
++  );
++  // A nested group that is NOT a destination keeps its text.
++  assert.equal(
++    extractTextFromRtf(String.raw`{\rtf1\ansi {\b She} wanted a provider.\par}`),
++    'She wanted a provider.',
++  );
++  // Escaped braces are literal text, not group boundaries.
++  assert.equal(
++    extractTextFromRtf(String.raw`{\rtf1\ansi She wanted \{a provider\}.\par}`),
++    'She wanted {a provider}.',
++  );
++});
+-- 
+2.38.0.windows.1
+

@@ -1,0 +1,78 @@
+From a267bd9a7eb89d7f445581fdacafe77eb196d481 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 16:09:00 -0600
+Subject: [PATCH 04/22] =?UTF-8?q?fix(lab):=20v2.6.x-opus-pt09=20=E2=80=94?=
+ =?UTF-8?q?=20the=20relevance=20gate=20reads=20the=20same=20normalized=20t?=
+ =?UTF-8?q?ext=20every=20other=20stage=20reads?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: intake normalization x gate morphology.
+Greens the RED frozen in the previous commit.
+
+`localDomainRelevance` was the only stage in the pipeline reading raw passage
+bytes. Retrieval, clause splitting, stance, and `namesCanonSurface` — five
+lines above, inside this same function — all read `normalizeText` output. The
+asymmetry hid because the frame patterns are written lower-case with `/i`, so
+case never exposed it; what it cost was every multi-word pattern spanning a
+space. One U+00A0, the character an HTML paste yields from `&nbsp;`, turned
+"a provider" into a string `provisioning-role` cannot see and the passage was
+set aside `no-human-relational-frame`.
+
+Same class, now also closed: U+202F, U+3000 and every other Unicode space
+separator; a curly apostrophe where a pattern spells a straight one; an en or
+em dash where a pattern spells a hyphen; a combining accent where a pattern
+spells the bare letter.
+
+Floors: domainRecall 1.0000, ignorePrecision 1.0000, junkRecall 0.8529 over
+191 cases — identical before and after, and every one of the 191 verdicts and
+reason codes is byte-identical. Corpus stance census: 0 of 1,298 matches move.
+Neither instrument holds a non-ASCII space, which is the finding as much as
+the fix is: the class is invisible to both, and reachable from the Lab's
+primary intake path, since `decodeEntities` turns `&nbsp;` into U+00A0 and
+nothing downstream of intake removed it.
+
+All 18 suite steps green. No floor moved and none needed to.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ js/lab-analyzer.js | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/js/lab-analyzer.js b/js/lab-analyzer.js
+index 9c078a8..7c67dd2 100644
+--- a/js/lab-analyzer.js
++++ b/js/lab-analyzer.js
+@@ -1779,7 +1779,27 @@ function namesCanonSurface(text, canonSurfaces) {
+ }
+ 
+ function localDomainRelevance(unit, canonSurfaces = null) {
+-  const text = String(unit?.text || '').trim();
++  /*
++   * Normalized, not raw, from v2.6.x-opus-pt09. Retrieval, clause splitting,
++   * stance and `namesCanonSurface` (five lines up, inside this same gate) all
++   * read `normalizeText` output; only the four frame families read the raw
++   * bytes, and that asymmetry was invisible because the frames are written in
++   * lower case with `/i` anyway. What it cost was every multi-word pattern
++   * spanning a space: one U+00A0 — the character an HTML paste yields from
++   * `&nbsp;` — turned "a provider" into a string `provisioning-role` cannot
++   * see, and "He wanted a provider who could support a household while he
++   * raised their children." went from retained to set aside
++   * `no-human-relational-frame`. Same for U+202F, U+3000, a curly apostrophe
++   * in a pattern spelled with a straight one, and an en dash where a pattern
++   * spells a hyphen.
++   *
++   * Measured: 0 of the 191 frozen benchmark cases move and 0 of the 1,298
++   * corpus matches move, because neither instrument holds a non-ASCII space.
++   * Insert one U+00A0 into those same benchmark cases and 5 of the 89
++   * expected-retain ones flip to ignore. That is the finding as much as the
++   * fix is.
++   */
++  const text = normalizeText(unit?.text || '');
+   const participantEvidence = collectFrameEvidence(
+     HUMAN_PARTICIPANT_FRAMES, text, 'domain', 'participant',
+   );
+-- 
+2.38.0.windows.1
+

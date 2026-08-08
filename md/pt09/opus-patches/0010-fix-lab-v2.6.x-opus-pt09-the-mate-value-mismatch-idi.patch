@@ -1,0 +1,79 @@
+From a4fe5d183d183455f188e8c35417a2f7f8abade3 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 16:38:15 -0600
+Subject: [PATCH 10/22] =?UTF-8?q?fix(lab):=20v2.6.x-opus-pt09=20=E2=80=94?=
+ =?UTF-8?q?=20the=20mate-value-mismatch=20idiom=20conjugates=20date=20and?=
+ =?UTF-8?q?=20marry?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: gate morphology inflections. Greens the RED
+frozen in the previous commit. Third and last known copy of the defect shape
+v2.6.14 and 959d32c each fixed once elsewhere: an inflection list that names
+some forms of a verb and misses the rest.
+
+  dat(?:e|es|ing) (?:across|up|down)  ->  dat(?:e|es|ed|ing) …
+  marry(?:ing)?   (?:up|down)         ->  marr(?:y|ies|ied|ying) …
+
+Named forms rather than a stem, on v2.6.14's precedent: `marr\w*` is shorter
+and admits "marred". The frame's second requirement — an ordinary relational
+noun beside the idiom — is untouched, so no calendar sense can reach this:
+"the invoice was dated up to the last quarter" and "the paint was marred up
+near the ceiling" both stay binned, and the test pins both.
+
+Measured:
+- frozen gate benchmark IDENTICAL — 191 cases, domainRecall 1.0000,
+  ignorePrecision 1.0000, junkRecall 0.8529, every verdict and reason code
+  byte-for-byte the same before and after. The widening is free on all 191.
+- corpus stance census IDENTICAL — 0 of 1,298 matches move, and the zero is
+  attributed rather than assumed: `dated up`, `married up` and `marries up`
+  occur zero times across all 42 archived sources. No score moves, so there is
+  no threshold crossing to rule.
+- the residual, named: a passage whose only relational evidence is `dated`
+  itself still bins ("She dated up and he settled."). Fixing that means
+  widening the co-requirement to bare `dated`, which buys the calendar false
+  positives 959d32c refused, so it is recorded rather than shipped.
+
+All 18 suite steps green.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ js/lab-analyzer.js | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/js/lab-analyzer.js b/js/lab-analyzer.js
+index 584625c..206d51a 100644
+--- a/js/lab-analyzer.js
++++ b/js/lab-analyzer.js
+@@ -579,13 +579,26 @@ const RELATIONAL_OUTCOME_FRAMES = Object.freeze([
+     },
+   },
+   {
++    /*
++     * `dated`, `married` and `marries` at v2.6.x-opus-pt09: the third copy of
++     * the inflection defect v2.6.14 fixed in cross-sex-selection and 959d32c
++     * fixed in partner-access-formation. Neither of those touched this idiom
++     * list, which kept its own half-conjugated verbs — and no archived corpus
++     * source contains `dated up`, `married up` or `marries up`, which is why
++     * two rounds of fixing this shape left this copy standing.
++     *
++     * The forms are named rather than stemmed, on v2.6.14's precedent:
++     * `marr\w*` is shorter and wrong, because it admits "marred". The
++     * directional particle and this frame's relational-object co-requirement
++     * both still hold, so no calendar `dated` can reach it.
++     */
+     id: 'mate-value-mismatch',
+     label: 'Mate-value mismatch idiom (league, weight class, settling)',
+     weight: 2.5,
+     decisive: false,
+     test: (text) => frameHas(
+       text,
+-      /\b(?:out of (?:his|her|their|my|your) league|in (?:his|her|their|my) league|punch(?:ing|es|ed)? (?:above|below) (?:his|her|their|my|your) weight|settl(?:e|es|ed|ing) for\b|dat(?:e|es|ing) (?:across|up|down)\b|marry(?:ing)? (?:up|down)\b)/i,
++      /\b(?:out of (?:his|her|their|my|your) league|in (?:his|her|their|my) league|punch(?:ing|es|ed)? (?:above|below) (?:his|her|their|my|your) weight|settl(?:e|es|ed|ing) for\b|dat(?:e|es|ed|ing) (?:across|up|down)\b|marr(?:y|ies|ied|ying) (?:up|down)\b)/i,
+       /\b(?:women|woman|men|man|girls?|guys?|dating|dates?|marri\w*|attract\w*|boyfriends?|girlfriends?|partners?|hotter|taller|shorter|richer)\b/i,
+     ),
+   },
+-- 
+2.38.0.windows.1
+

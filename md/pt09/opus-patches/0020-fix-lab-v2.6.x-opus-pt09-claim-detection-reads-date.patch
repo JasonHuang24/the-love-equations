@@ -1,0 +1,62 @@
+From 968ccc065aba6341380fdc4aea03e4ef9e2f1202 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 18:23:59 -0600
+Subject: [PATCH 20/22] =?UTF-8?q?fix(lab):=20v2.6.x-opus-pt09=20=E2=80=94?=
+ =?UTF-8?q?=20claim=20detection=20reads=20`date`?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: gate morphology inflections, upstream of the
+gate. Greens the RED frozen in the previous commit.
+
+One word added to the CLAIM_CUES verb list. `date` was the only central verb
+of this site's subject matter missing from the step that decides what is a
+claim at all — so "Women date up in status." scored 0.16 and was not a claim,
+while "Women marry up in status." scored 0.30 and was.
+
+Cost, measured:
+- gate floors identical: 191 · 1.0000 · 1.0000 · 0.8529.
+- corpus stance census identical: 0 of 1,303 rows move, no score, no label.
+  Attributed rather than assumed: 20 corpus units gain claim-likelihood score
+  (all already above the threshold), and exactly ONE unit crosses it —
+  "Issue date 2016 Jan.", a journal citation header, which the relevance gate
+  then bins as non-domain. That is the false positive this buys, frozen in the
+  test.
+- The class it rescues is short declarative dating sentences, which is forum
+  and transcript register. The archive is journalism, whose sentences are long
+  enough to clear the threshold on other cues, which is why the corpus cannot
+  see this either.
+
+NOT shipped, and recorded as a finding instead: the same line's `marry` still
+cannot reach "married" or "marries" — the v2.6.14 trap, alive here too, so
+"Women married up in status." remains not claim-like. Fixing it turns
+"The merger married two incompatible corporate cultures." claim-like, and that
+sentence is the include-override test's deliberate trap (frozen benchmark case
+pt-03). Greening that test would mean editing an assertion, so the half that
+collides is left for Jason rather than smuggled in beside the half that does
+not.
+
+All 18 suite steps green.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ js/lab-analyzer.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/js/lab-analyzer.js b/js/lab-analyzer.js
+index aedff74..c1dde27 100644
+--- a/js/lab-analyzer.js
++++ b/js/lab-analyzer.js
+@@ -342,7 +342,7 @@ const CLAIM_CUES = [
+   /\b(?:always|never|everyone|nobody|all men|all women|most men|most women)\b/i,
+   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
+   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
+-  /\b(?:prefer|choose|reject|attract|desire|commit|marry|divorce|retain|leave)\w*\b/i,
++  /\b(?:prefer|choose|reject|attract|desire|commit|date|marry|divorce|retain|leave)\w*\b/i,
+   /\b(?:meet|make|put|leave|change|matter|narrow|prolong|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence|sustain|tolerate)\w*\b/i,
+ ];
+ 
+-- 
+2.38.0.windows.1
+

@@ -1,0 +1,102 @@
+From f7115ac49f35f2c53c4cbd39f7b084975cd4716c Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 16:25:32 -0600
+Subject: [PATCH 07/22] =?UTF-8?q?test(lab):=20RED=20=E2=80=94=20the=20gene?=
+ =?UTF-8?q?ric=20cue=20ladder=20is=20polarity-blind=20and=20reads=20four?=
+ =?UTF-8?q?=20denials=20as=20their=20opposite?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane, surface: stance-cue clause scoping.
+
+v2.6.20 narrowed the GROUND the four generic cue families read; it did not
+change how they read it, which is bare presence. Presence cannot tell
+"true that" from "not true that", and the misreading branch's negation parity
+never runs for a match with no asserted misreading — so the whole generic
+ladder has no polarity at all.
+
+Four measured inversions against frameworks:conversion-ladder, each the label
+pointing at the opposite of what the passage says:
+
+  "It is not true that <claim>."             Supports   0.760
+  "Nothing here confirms that <claim>."      Supports   0.664
+  "It is not consistent with <claim>."       Supports   0.760
+  "<claim>; this is not wrong."              Challenges 0.760
+
+None of the 17 documented-limit families in the frozen match-behavior
+benchmark covers this. Every one of those is punctuation asked for something
+it cannot see; here the negator sits in the same clause, three words in front
+of the cue, where the clause model sees it perfectly well. The stanceComposition
+block does test negation compositions, but every case there carries an
+asserted misreading, so all of them route through the parity branch and none
+reaches the generic ladder.
+
+Fails at HEAD; the fix follows in the next commit.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ tests/lab-analyzer.test.mjs | 50 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+
+diff --git a/tests/lab-analyzer.test.mjs b/tests/lab-analyzer.test.mjs
+index 3228e6d..e4f72b9 100644
+--- a/tests/lab-analyzer.test.mjs
++++ b/tests/lab-analyzer.test.mjs
+@@ -1978,3 +1978,53 @@ test('the relevance gate reads the same normalized text every other stage reads'
+     assert.equal(gate(spaced).reasonCode, gate(plain).reasonCode, name);
+   }
+ });
++
++test('a generic cue the passage has just denied does not decide the stance', async () => {
++  /*
++   * Red before v2.6.x-opus-pt09 (pt09 adversarial lane, surface: stance-cue
++   * clause scoping). v2.6.20 narrowed the GROUND the four generic cue families
++   * read; it did not change how they read it, which is bare presence. Presence
++   * cannot tell "true that" from "not true that", and the misreading branch's
++   * negation parity never runs for a match with no asserted misreading — so
++   * the whole generic ladder is polarity-blind.
++   *
++   * Four measured inversions against frameworks:conversion-ladder, each one
++   * the label pointing at the opposite of what the passage says:
++   *
++   *   "It is not true that <claim>."            Supports   0.760
++   *   "Nothing here confirms that <claim>."     Supports   0.664
++   *   "It is not consistent with <claim>."      Supports   0.760
++   *   "<claim>; this is not wrong."             Challenges 0.760
++   *
++   * The fix withholds the cue, it does not invert the label: all four land on
++   * Resembles, the neutral reading. Turning a denial into the opposite verdict
++   * would need to know WHAT is denied, and that is the parser this instrument
++   * has repeatedly declined to become (match-behavior benchmark,
++   * documentedLimits ruling).
++   *
++   * None of the 17 documented-limit families covers this: the negator here
++   * sits inside the same clause, three words in front of the cue, where the
++   * clause model can see it perfectly well.
++   */
++  const label = async (text) => {
++    const result = await analyzeDocument(normalizeInput({
++      text, source: { title: 'Negated cue probe' },
++    }), REAL_CANON);
++    return result.segments
++      .flatMap((segment) => segment.matches)
++      .find((match) => match.canonId === 'frameworks:conversion-ladder')?.alignment?.label;
++  };
++  const claim = 'the Conversion Ladder separates exposure from attention and selection';
++
++  assert.equal(await label(`It is not true that ${claim}.`), 'Resembles');
++  assert.equal(await label(`Nothing here confirms that ${claim}.`), 'Resembles');
++  assert.equal(await label(`It is not consistent with ${claim}.`), 'Resembles');
++  assert.equal(await label(`The Conversion Ladder separates exposure from attention and selection; this is not wrong.`), 'Resembles');
++
++  // The un-negated forms are untouched: a guard that swallowed these would be
++  // buying the four above with the whole ladder.
++  assert.equal(await label(`The Conversion Ladder separates exposure from attention and selection; that model is wrong.`), 'Challenges');
++  assert.equal(await label(`The Conversion Ladder separates exposure from attention and selection; the data supports this.`), 'Supports');
++  // A negator that is part of the cue's OWN text still fires it.
++  assert.equal(await label(`The Conversion Ladder separates exposure from attention and selection, but it is not always the exception.`), 'Challenges');
++});
+-- 
+2.38.0.windows.1
+

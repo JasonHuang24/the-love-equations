@@ -1,0 +1,110 @@
+From 3dabb016703ba9068ddac9a8ffb7e38c964d2559 Mon Sep 17 00:00:00 2001
+From: Jason <33882681+JasonHuang24@users.noreply.github.com>
+Date: Fri, 7 Aug 2026 19:05:54 -0600
+Subject: [PATCH 22/22] =?UTF-8?q?fix(lab):=20v2.6.x-opus-pt09=20=E2=80=94?=
+ =?UTF-8?q?=20a=20contraction=20is=20the=20same=20cue=20in=20either=20apos?=
+ =?UTF-8?q?trophe?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+pt09 adversarial lane. Surface: intake normalization / cue morphology.
+RED: the preceding commit.
+
+Seven regex literals across the engine spelled a contraction with the ASCII
+apostrophe alone, and all seven are matched against `unit.text` — the reader's
+own bytes, which intake deliberately does not rewrite. `normalizeText` and
+`tokenize` both fold U+2019, so retrieval was never affected and no benchmark
+could see it; only the cue layer reads raw text, and only the cue layer broke.
+
+Each `'` joining two letters INSIDE a regex literal becomes ['|U+2019]. The
+substitution is length-neutral in the text it matches and touches no quote
+delimiter and no prose, so every index-based clause slice downstream is
+unchanged.
+
+The seven: MODAL cues (341), MISREADING_DENIAL_CUES (855),
+QUOTED_ASSERTION_VERBS (907), CONTRADICTION_CUES (911), the sex-binary
+overreach rule (979), the consent-safety overreach rule (1016), and the
+retrieval disqualifier at 1106. The consent rule is the one worth naming:
+`doesn't need consent` did not fire on the spelling most word processors emit.
+
+Measured on the archived corpus: 0 of 1,039 segments move. The 17 curly
+negation contractions present never sit where a cue decides a label — the
+zero is what the corpus is, not evidence the engine was right. The test
+guards the source, not one label, so the next cue written in ASCII alone
+fails here.
+
+Floors unchanged: domainRecall, ignorePrecision, junkRecall, knownSplits all
+unmoved; no threshold crossings, so no rulings entered.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ js/lab-analyzer.js | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/js/lab-analyzer.js b/js/lab-analyzer.js
+index c1dde27..6acc115 100644
+--- a/js/lab-analyzer.js
++++ b/js/lab-analyzer.js
+@@ -338,7 +338,7 @@ const ENTRY_ARTIFACT_TERMS = new Set([
+ 
+ const CLAIM_CUES = [
+   /\b(?:is|are|was|were|means?|shows?|proves?|predicts?|causes?|creates?|drives?|leads?)\b/i,
+-  /\b(?:can|could|may|might|should|must|will|cannot|can't|won't|need to|have to|tend to|more likely|less likely)\b/i,
++  /\b(?:can|could|may|might|should|must|will|cannot|can['’]t|won['’]t|need to|have to|tend to|more likely|less likely)\b/i,
+   /\b(?:always|never|everyone|nobody|all men|all women|most men|most women)\b/i,
+   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
+   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
+@@ -852,7 +852,7 @@ export const MATCH_SURFACE_LABELS = Object.freeze({
+  * to answer this one — which is how a verbatim restatement of an LE boundary
+  * came to be filed as contradicting LE.
+  */
+-const MISREADING_DENIAL_CUES = /\b(?:not|never|no|none|false|untrue|myth|mistaken|wrong|isn't|aren't|wasn't|weren't|doesn't|don't|didn't|cannot|can't|won't|nonsense|rarely|hardly)\b/i;
++const MISREADING_DENIAL_CUES = /\b(?:not|never|no|none|false|untrue|myth|mistaken|wrong|isn['’]t|aren['’]t|wasn['’]t|weren['’]t|doesn['’]t|don['’]t|didn['’]t|cannot|can['’]t|won['’]t|nonsense|rarely|hardly)\b/i;
+ 
+ /*
+  * The blanket all-women signature behind the AWALT hand ruling in stanceFor.
+@@ -904,11 +904,11 @@ const QUALIFICATION_CUES = /\b(?:overstated|overstates|overstating|oversimplif\w
+  * and belongs to the editor, from sc-07, where the quotes decorate a bare noun
+  * phrase inside the speaker's own sentence and the speaker still owns the claim.
+  */
+-const QUOTED_ASSERTION_VERBS = /\b(?:is|are|was|were|isn't|aren't|wasn't|weren't|means|equals|proves|creates|makes|shows|becomes|remains)\b/i;
++const QUOTED_ASSERTION_VERBS = /\b(?:is|are|was|were|isn['’]t|aren['’]t|wasn['’]t|weren['’]t|means|equals|proves|creates|makes|shows|becomes|remains)\b/i;
+ 
+ const SUPPORT_CUES = /\b(?:supports?|confirms?|consistent with|backs? up|holds up|evidence for|exactly right|true that)\b/i;
+ const CHALLENGE_CUES = /\b(?:challenges?|questions?|overstates?|too simple|not always|depends on|exception|fails? when|weakens?)\b/i;
+-const CONTRADICTION_CUES = /\b(?:contradicts?|false|wrong|myth|backwards|no evidence|does not|doesn't|isn't|aren't|cannot|can't)\b/i;
++const CONTRADICTION_CUES = /\b(?:contradicts?|false|wrong|myth|backwards|no evidence|does not|doesn['’]t|isn['’]t|aren['’]t|cannot|can['’]t)\b/i;
+ const EXTENSION_CUES = /\b(?:extends?|adds?|missing|overlooks?|also matters?|new factor|beyond|mechanism|edge case)\b/i;
+ const EVIDENCE_CUES = /\b(?:study|studies|research|data|survey|sample|experiment|longitudinal|meta-analysis|doi|according to)\b|(?:\d+(?:\.\d+)?\s*%)/i;
+ 
+@@ -976,7 +976,7 @@ const PRESSURE_PATTERNS = [
+     title: 'An average sex difference is being universalized',
+     severity: 3,
+     test: (text) => /\b(?:men|women|males|females)\b/i.test(text)
+-      && /\b(?:all|always|never|are wired|by nature|biologically|every|cannot|can't)\b/i.test(text),
++      && /\b(?:all|always|never|are wired|by nature|biologically|every|cannot|can['’]t)\b/i.test(text),
+     risk: 'gender generalization',
+     strain: 'Examine the overlap between male and female distributions and the contexts where the mean difference shrinks or reverses.',
+     evidence: 'Effect sizes, within-group variance, overlapping distributions, population definition, and replication across contexts.',
+@@ -1013,7 +1013,7 @@ const PRESSURE_PATTERNS = [
+     id: 'consent-safety',
+     title: 'Consent or safety boundaries may be overridden',
+     severity: 5,
+-    test: (text) => /\b(?:ignore (?:her|his|their) no|keep pushing|won't take no|resistance means|force|coerce|pressure (?:her|him|them)|doesn't need consent|unsafe)\b/i.test(text),
++    test: (text) => /\b(?:ignore (?:her|his|their) no|keep pushing|won['’]t take no|resistance means|force|coerce|pressure (?:her|him|them)|doesn['’]t need consent|unsafe)\b/i.test(text),
+     risk: 'consent/safety boundary',
+     strain: 'Treat a clear refusal, discomfort cue, or safety concern as dispositive and stop the strategy.',
+     evidence: 'No dating framework overrides consent or safety; the needed change is to the claim, not more proof.',
+@@ -1103,7 +1103,7 @@ const CONCEPT_SIGNATURES = [
+       ];
+       const stageCount = stages.filter((pattern) => pattern.test(text)).length;
+       return stageCount >= 2
+-        && /\b(?:different|separate|another|not|only|does not|doesn't|fail|fails)\b/.test(text);
++        && /\b(?:different|separate|another|not|only|does not|doesn['’]t|fail|fails)\b/.test(text);
+     },
+   },
+   {
+-- 
+2.38.0.windows.1
+
