@@ -2397,3 +2397,48 @@ test('claim detection conjugates marry, the verb it already lists', async () => 
   assert.equal(gated.domainRelevance.status, 'irrelevant',
     'the polysemous trap still stops at the gate');
 });
+
+test('a bare list marker never reaches the set-aside ledger', async () => {
+  /*
+   * Red before v2.6.23 (pt09 finding 14, the reporting-layer option, chosen
+   * under Jason's 2026-08-08 ruling). Both sentence-split paths end a
+   * sentence at the period of "1.", and mergeSentenceSplitArtifacts folds
+   * only backwards, so a bare enumerator stands alone as a unit — then
+   * reaches the reader in the set-aside ledger as
+   * `no-human-relational-frame`, a substantive-looking judgement about a
+   * list number, and inflates ignoredDomainSegments.
+   *
+   * Segmentation is DELIBERATELY untouched: the forward-fold fix works but
+   * renumbers every later claim-NN, retiring 3,363 frozen band pairs by ID
+   * (finding 14's measurement). Suppression happens at the reporting layer
+   * only — no unit ID changes, no score changes, no band regeneration. The
+   * cost is that a suppressed marker has no include-override row, which for
+   * a bare "2." is nothing.
+   *
+   * Residuals stay on record, not chased: "a) X. b) Y." is one unit (the
+   * splitter never breaks at a closing parenthesis), and in "i. X. ii. Y."
+   * the splitter attaches "ii." to the first sentence.
+   */
+  const document = normalizeInput({
+    text: '1. Women value status in a partner. 2. Men value looks in a partner. 3. Couples argue about money constantly.',
+    source: { title: 'Ordered list fixture' },
+  });
+  const result = await analyzeDocument(document, REAL_CANON);
+  const ledger = result.domainRelevance.ignoredPassages;
+
+  const markerRows = ledger.filter((passage) =>
+    /^\(?(?:\d{1,3}|[a-z]|[ivxlcdm]{1,5})[.)]$/i.test((passage.excerpt || '').trim()));
+  assert.deepEqual(markerRows.map((passage) => passage.excerpt), [],
+    'a list number is not a passage the reader must adjudicate');
+
+  // The three counts the ledger publishes agree with the ledger itself.
+  assert.equal(result.metrics.ignoredDomainSegments, ledger.length);
+  assert.equal(result.domainRelevance.ignoredSegments, ledger.length);
+  assert.equal(result.domainRelevance.ignoredWords,
+    ledger.reduce((sum, passage) => sum + passage.wordCount, 0));
+
+  // The zero-cost promise, pinned: the list items themselves still analyze
+  // under stable IDs — three claim-like sentences, all reaching the claim
+  // population, none displaced by the suppression.
+  assert.equal(result.metrics.claimLikeSegments, 3);
+});
