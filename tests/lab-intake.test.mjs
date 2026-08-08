@@ -490,6 +490,47 @@ test('format and local-file classifiers cover required intake families', () => {
   assert.equal(classifyLocalFile({ name: 'notes.docx', type: '' }).kind, 'unsupported-document');
 });
 
+/*
+ * RTF has to be recognisable from its BYTES, not only from a filename.
+ *
+ * pt10 finding F2. `detectTextFormat` sniffed VTT, SRT and JSON from content
+ * but knew RTF only by extension or MIME, and `{\rtf1…` starts with a brace, so
+ * it fell through the JSON branch (JSON.parse throws) and came back 'text'.
+ * That is not a hypothetical: every caller that hands over raw bytes with no
+ * filename hits it — `tools/lab-threshold-sweep.mjs` and this suite's own
+ * `tests/lab-threshold-neighbors.test.mjs` both call `normalizeInput` with
+ * `format: 'auto'` and no `fileName`/`mimeType`, so an RTF archived as a corpus
+ * source would have been swept as prose with its control words as tokens, and
+ * `parseRtfDocument` — the v2.6.21 destination-group fix — would never run on
+ * it. The pasted-text path in the UI has the same shape.
+ */
+test('RTF is detected from its content, not only from a filename or MIME type', () => {
+  const rtf = '{\\rtf1\\ansi\\deff0 {\\fonttbl{\\f0 Times;}}\\viewkind4 '
+    + 'Marriage is a market.\\par }';
+
+  assert.equal(detectTextFormat({ text: rtf }), 'rtf');
+  // The two ways it was already known stay known.
+  assert.equal(detectTextFormat({ fileName: 'notes.rtf', text: rtf }), 'rtf');
+  assert.equal(detectTextFormat({ mimeType: 'application/rtf', text: rtf }), 'rtf');
+  // A leading brace alone is still not RTF, and JSON still wins its own case.
+  assert.equal(detectTextFormat({ text: '{"segments":[]}' }), 'json');
+  assert.equal(detectTextFormat({ text: '{not rtf, not json}' }), 'text');
+  // `\rtf` in the middle of prose is prose.
+  assert.equal(detectTextFormat({ text: 'The file began {\\rtf1 and confused it.' }), 'text');
+
+  // End to end: the sniff has to reach the RTF parser, or it changes nothing.
+  const document = normalizeInput({
+    text: rtf,
+    format: 'auto',
+    source: { title: 'rtf-sniff', type: 'corpus-file', url: null },
+    extraction: { method: 'test', warnings: [] },
+    createdAt: '1970-01-01T00:00:00.000Z',
+  });
+  assert.equal(document.format, 'rtf');
+  assert.match(document.text, /Marriage is a market\./);
+  assert.doesNotMatch(document.text, /\\rtf1|fonttbl|viewkind/);
+});
+
 test('timestamps distinguish seconds, minute clocks, and full clocks', () => {
   assert.equal(parseTimestamp(2.5), 2_500);
   assert.equal(parseTimestamp('01:02'), 62_000);
