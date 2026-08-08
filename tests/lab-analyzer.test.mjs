@@ -2334,3 +2334,58 @@ test('a typographic apostrophe is the same word to every cue that reads it', asy
   assert.deepEqual(asciiOnly, [],
     'a cue regex spells a contraction with the ASCII apostrophe alone');
 });
+
+test('claim detection conjugates marry, the verb it already lists', async () => {
+  /*
+   * Red before v2.6.22 (pt09 deferred decision 13b, adopted by Jason's
+   * in-session ruling 2026-08-08). Fifth copy of the one defect shape pt09
+   * kept finding: `CLAIM_CUES` spelled `marry\w*`, and "married"/"marries"
+   * do not contain the stem `marry` — the same inflection blindness v2.6.14
+   * fixed in the gate's cross-sex-selection frame, now fixed in the cue the
+   * same way (`marry|marrie[sd]`).
+   *
+   * Measured minimal pairs, one inflection apart (pre-fix):
+   *
+   *   "Women marry up in status."    claim-like
+   *   "Women married up in status."  not claim-like
+   *   "She marries for money."       not claim-like
+   *
+   * The false positive this buys, frozen: "The merger married two
+   * incompatible corporate cultures." — gate benchmark case pt-03, the
+   * deliberate polysemous trap — becomes claim-like. The relevance gate
+   * still bins it as non-domain (the gate's standalone marriage frame keeps
+   * its narrow stem on purpose, and pt-03's benchmark expectation is
+   * untouched), so nothing downstream moves. The include-override scenario
+   * above, which used this sentence for its machineClaimLike:false premise,
+   * uses a cue-free sentence instead from v2.6.22.
+   *
+   * Corpus ceiling, measured pre-fix: 7,512 units, 5,024 claim-like, and
+   * exactly 4 non-claim units contain a marry conjugation — one headline,
+   * one clause fragment, two table rows under minClaimWords that cannot
+   * flip on any cue.
+   */
+  const unitFor = (text) => detectClaimUnits(normalizeInput({
+    text, source: { title: 'Marry conjugation probe' },
+  }))[0];
+
+  assert.equal(unitFor('Women marry up in status.').isClaimLike, true,
+    'the base form already worked');
+  assert.equal(unitFor('Women married up in status.').isClaimLike, true);
+  assert.equal(unitFor('She marries for money.').isClaimLike, true);
+  assert.equal(unitFor('They divorced after he married his coworker.').isClaimLike, true);
+
+  // The frozen cost: claim GRAMMAR admits the metaphor, the gate bins it.
+  const merger = unitFor('The merger married two incompatible corporate cultures.');
+  assert.equal(merger.isClaimLike, true);
+  const [gated] = classifyDomainRelevance([{
+    id: 'pt-03-unit',
+    parentSegmentId: 'bench-pt-03',
+    segmentIndex: 0,
+    text: 'The merger married two incompatible corporate cultures.',
+    wordCount: 7,
+    isClaimLike: true,
+    boundedContext: null,
+  }]);
+  assert.equal(gated.domainRelevance.status, 'irrelevant',
+    'the polysemous trap still stops at the gate');
+});
