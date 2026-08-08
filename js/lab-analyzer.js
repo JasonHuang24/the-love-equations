@@ -342,7 +342,7 @@ const CLAIM_CUES = [
   /\b(?:always|never|everyone|nobody|all men|all women|most men|most women)\b/i,
   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
-  /\b(?:prefer|choose|reject|attract|desire|commit|marry|divorce|retain|leave)\w*\b/i,
+  /\b(?:prefer|choose|reject|attract|desire|commit|date|marry|divorce|retain|leave)\w*\b/i,
   /\b(?:meet|make|put|leave|change|matter|narrow|prolong|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence|sustain|tolerate)\w*\b/i,
 ];
 
