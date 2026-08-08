@@ -1,6 +1,8 @@
 (async () => {
   const WIDTH_KEY = 'le-content-width';
   const root = document.documentElement;
+  // Each page head stamps this same value before styles.css paints, so a stored
+  // preference cannot flash. Keep the two rules identical — change both together.
   let widthMode = 'original';
   try {
     if (localStorage.getItem(WIDTH_KEY) === 'wide') widthMode = 'wide';
