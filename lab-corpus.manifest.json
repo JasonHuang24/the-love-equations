@@ -13,7 +13,7 @@
   },
   "singleVersionStatus": {
     "isSingleVersion": false,
-    "reason": "Two distinct exclusions, neither of them drift. (1) Source 03 is excluded from re-acquisition by explicit decision and carries no export at any version; it remains a v2.1.2 artifact and any comparison including it is within-version only. (2) Sources 01, 02 and 04 sit at analyzer 2.6.0 while the eighteen sources added by the doctrine combo run (05-22) sit at 2.6.1, because the v2.6.1 patch was proven unable to move those three sources and re-running them was declined. md/RERUN.md section 6 defines completion as every source carrying a current export at the epoch version, so by that literal test the corpus is not single-version. What matters for the distillation lane is weaker and is satisfied: all 21 analyzed sources share one analysis schema, one analyzer mode, one scoring configuration, and one canon snapshot (canonIndex.conceptCount 450 and provenance.identity.canonSnapshotHash 1v8z11a1xzrjgp are invariant across all 21 exports), so their claim surfaces are directly comparable.",
+    "reason": "Three distinct exclusions, none of them drift. (1) Source 03 is excluded from re-acquisition by explicit decision and carries no export at any version; it remains a v2.1.2 artifact and any comparison including it is within-version only. (2) Sources 01, 02 and 04 sit at analyzer 2.6.0 while the eighteen sources added by the doctrine combo run (05-22) sit at 2.6.1, because the v2.6.1 patch was proven unable to move those three sources and re-running them was declined. (3) The pt10 tranche (23-30, added 2026-08-08) carries NO export at any version: it was archived to widen what the threshold sweep can see, and the sweep reads the .txt directly, so the eight sources entered the swept population without ever entering the export set. md/RERUN.md section 6 defines completion as every source carrying a current export at the epoch version, so by that literal test the corpus is not single-version and pt10 moved it further away rather than closer. What matters for the distillation lane is weaker and is still satisfied for the sources that have exports: all 21 analyzed sources share one analysis schema, one analyzer mode, one scoring configuration, and one canon snapshot (canonIndex.conceptCount 450 and provenance.identity.canonSnapshotHash 1v8z11a1xzrjgp are invariant across all 21 exports), so their claim surfaces are directly comparable. The pt10 eight are comparable to nothing yet, and analyzing them at today's v2.6.24 would put a THIRD analyzer version in the archive while the other 21 stay at 2.6.0/2.6.1 — which is a RERUN section 6 decision about the whole archive, not a step pt10 could take on its own.",
     "comparabilityBasis": {
       "analysisSchemaVersion": "le-lab.analysis/2.6",
       "scoringConfigHash": "bt0a7p",
@@ -23,6 +23,22 @@
         "2.6.1"
       ],
       "behavioralEquivalenceEvidence": "md/lab-v2.6.1-release.md and md/lab-v2.6.1-sol-handover.md: threshold sweep 0 changed of 46,350 pairs, 0 crossings; demo capture byte-identical at the pre-bump commit."
+    },
+    "population": {
+      "sourcesTotal": 30,
+      "swept": 29,
+      "analyzedWithExport": 21,
+      "archivedWithoutExport": [
+        "23-slate-prudence-chat",
+        "24-guardian-ask-philippa",
+        "25-guardian-philippa-comments",
+        "26-captain-awkward-1455",
+        "27-loveshack-defensive-partner",
+        "28-loveshack-always-the-dumpee",
+        "29-dearwendy-too-much-messaging",
+        "30-alabama-marriage-handbook"
+      ],
+      "note": "SWEPT and ANALYZED are two different populations and have been since 2026-08-08. tools/lab-corpus-sources.mjs derives the sweep from sourceFile alone, so a source with no export is swept normally; anything reading exports/ sees a smaller corpus than the band does. Counted here so the gap cannot be inferred wrongly from either number."
     }
   },
   "reproducibility": {

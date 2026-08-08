@@ -6284,7 +6284,13 @@ assertion value was edited.
   sources carry export JSON at v2.6.0/v2.6.1; these eight carry none, so the
   archive is not single-version by the RERUN §6 test — it already was not, and
   this run widened the gap rather than closing it. Recorded here rather than
-  half-done.
+  half-done, because analyzing them at today's v2.6.24 would put a **third**
+  analyzer version in the archive while the other 21 stay at 2.6.0/2.6.1: that
+  is a RERUN §6 decision about the whole archive, not a step pt10 could take on
+  its own. **SWEPT and ANALYZED are now two different populations** — 29 and 21
+  — and `lab-corpus.manifest.json` `singleVersionStatus.population` counts both
+  so the gap cannot be inferred wrongly from either number. Anything that reads
+  `exports/` sees a smaller corpus than the band does.
 
 
 ---
