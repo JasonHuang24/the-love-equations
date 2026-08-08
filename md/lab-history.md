@@ -9528,3 +9528,66 @@ reporting-layer alternative) · the P3 fixture appends (Jason-owned). Full run
 record: `# doctrine-pressure-test-09.md` in `md/pressure-tests.md`.
 
 Suite 18/18 green before and after the bump; frozen fixtures untouched.
+
+
+---
+
+# lab-v2.6.22-24-releases — the four pt09 deferred decisions, shipped on Jason's ruling
+
+(2026-08-08, same session as the pt09 integration. Jason: "Yes to all fixes
+and push it" — resolving all four deferred decisions from
+`# doctrine-pressure-test-09.md` §5 in `md/pressure-tests.md`.)
+
+**v2.6.22 — claim detection conjugates `marry` (603ef1a).** The pt-03 collision
+resolved by re-choosing the include-override scenario's input (a cue-free
+audit sentence), not by weakening an assertion: the scenario needs
+`machineClaimLike: false`, which pt-03's sentence can no longer supply, and
+pt-03's own claim/gate behavior is pinned in the new conjugation test with the
+polysemous trap still stopping at the gate. Cost measured: corpus claim-like
+5,024 → 5,026 of 7,512 (a hologram headline enters the research queue — a
+gain; a Hirschl sample-description fragment displays a 0.564
+stress-transmission-split FP — the methods-fragment class). The swept
+population moved 2,423 → 2,425 — the tripwire caught it, the first proof that
+the neighbor fixture's population pin also guards CLAIM detection — and the
+band regenerated with zero new adjudicable pendings.
+
+**v2.6.23 — a list number is not a passage (13fb159).** Finding 14's
+reporting-layer option: bare enumerators suppressed from
+`domainRelevance.ignoredPassages` and every count the ledger publishes; no
+unit ID, no score, no band impact. 153 enumerator rows across 11 corpus
+sources stop being reported as `no-human-relational-frame`. The segmentation
+forward-fold stays unshipped with its measured 3,363-pair cost on record.
+
+**Fixture appends (a24c146, no classifier code).** Gate benchmark append #6:
+NBSP, soft-hyphen, the dated-up/married-up pair, and the calendar trap —
+191 → 196 cases at 1.000 / 1.000 / 0.854 (junkRecall up from 0.853, ratchet
+direction). Match behavior gains its eighth adjudicated block,
+`genericCuePolarity`: ten cases varying the wrapper around one CLAIM with no
+misreading in it — because every prior stance case carries an asserted
+misreading, which is how a polarity-blind ladder shipped green — with three
+controls pinning the un-guarded forms.
+
+**v2.6.24 — the possessive strip (fc1d893, the scheduled adjudication
+window).** `stripPossessive` with two measured boundaries: the
+minDerivedStemLength floor, and an indefinite-pronoun exclusion added when
+the bounded-context fixture caught `one's` → `one` lifting a generic authored
+sentence over the credible line. The adjudication: 1,034 crossings read
+individually (full-strip pass) + 3 (exclusion pass), ruled 24 gain-ACCEPT /
+782 gain-REJECT / 231 loss-ACCEPT, ruledBy Claude under the standing
+delegation. The 24 accepts are the fix's real yield — passages that always
+said `partner's income` or `one's alternatives` finally reaching the entries
+about them. The 782 rejects are one class: methods/survey/table fragments
+sharing tokens without constructs. Band: 130,744 pairs, 36,320 rulings,
+weak/credible pending 0. Floors untouched at every step.
+
+**Named residual costs, all recorded in rulings or tests:** the two authored
+FPs above (Hirschl fragment at v2.6.22, the bounded-context sentence's 0.47
+stress-transmission-split row at v2.6.24) · 8 loss-side coverage costs noted
+in the fixture (the sharpest: a stated tall-preference passage departing
+`statistics:height-pref`, and a local-mate-pool passage departing
+`frameworks:local-market` — both retain candidate visibility) · the author-bio
+first-name magnetism ("Jason Carroll" → Jason's Hierarchy, rejected twice) is
+a new instrument-finding shape worth remembering when authoring
+person-named entries.
+
+Suite 18/18 green at 603ef1a, 13fb159, a24c146, and fc1d893.
