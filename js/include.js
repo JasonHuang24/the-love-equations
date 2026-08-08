@@ -1,9 +1,9 @@
 (async () => {
   const WIDTH_KEY = 'le-content-width';
   const root = document.documentElement;
-  let widthMode = 'wide';
+  let widthMode = 'original';
   try {
-    if (localStorage.getItem(WIDTH_KEY) === 'original') widthMode = 'original';
+    if (localStorage.getItem(WIDTH_KEY) === 'wide') widthMode = 'wide';
   } catch (e) {
     // Storage can be unavailable in privacy-restricted contexts; the toggle still works for this page.
   }

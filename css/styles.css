@@ -393,7 +393,7 @@ input[type=range] {
   --radius-lg: 28px;
   --container-original: 1120px;
   --container-wide: 60vw;
-  --container: var(--container-wide);
+  --container: var(--container-original);
 }
 
 html[data-content-width="original"] { --container: var(--container-original); }

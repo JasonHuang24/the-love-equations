@@ -358,6 +358,12 @@
 @media (max-width: 1599px) and (min-width: 981px) {
   html[data-content-width="wide"] .inst-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+/* Original width restores the pre-toggle grid: the fixed 5 columns exist to stop
+   auto-fit fanning out across the 60vw shell, and below ~1200px they force cards
+   under their 200px floor. Scoped above 980px so the mobile steps still win. */
+@media (min-width: 981px) {
+  html[data-content-width="original"] .inst-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+}
 /* ── Responsive ── */
 @media (max-width: 980px) {
   .inst-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

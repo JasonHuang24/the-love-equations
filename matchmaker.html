@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Matchmaker &mdash; The Love Equations</title>
-  <link rel="stylesheet" href="css/styles.css?v=2.5" />
+  <link rel="stylesheet" href="css/styles.css?v=2.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js" defer></script>
-  <link rel="stylesheet" href="css/matchmaker.css?v=8.5" />
+  <link rel="stylesheet" href="css/matchmaker.css?v=8.6" />
 </head>
 <body data-page="matchmaker">
   <div data-include="navigation-bar"></div>
@@ -5916,7 +5916,6 @@
     lock.setAttribute('aria-label', pwLocked ? 'Unlock roster profile' : 'Lock roster profile');
     lock.title = pwLocked ? 'Unlock profile' : 'Lock profile';
     lock.innerHTML = `<i class="ti ${pwLocked?'ti-lock':'ti-lock-open'}" aria-hidden="true"></i>`;
-    w.classList.toggle('is-locked', pwLocked);
   }
 
   function setPwLock(locked){
