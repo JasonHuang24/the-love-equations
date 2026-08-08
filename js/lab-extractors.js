@@ -24,7 +24,7 @@ import {
   detectTextFormat,
   normalizeInput,
   stableHash
-} from './lab-intake.js?v=2.6.20';
+} from './lab-intake.js?v=2.6.21';
 
 export const EXTRACTOR_DEPENDENCIES = Object.freeze({
   pdfjs: Object.freeze({

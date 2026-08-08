@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.6.20';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=2.6.20';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.6.21';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=2.6.21';
 
 /*
  * LE Lab export adapters.

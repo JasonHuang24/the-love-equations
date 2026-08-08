@@ -34,7 +34,7 @@
 // The one thing this module borrows from the analyzer rather than restating:
 // what "the same published row" means. A second implementation of that would be
 // a second opinion, and the guard below is worthless unless there is only one.
-import { claimUnitRowDigest } from './lab-analyzer.js?v=2.6.20';
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.6.21';
 
 export const MAPPING_FEEDBACK_SCHEMA = 'le-lab.mapping-feedback';
 export const MAPPING_FEEDBACK_SCHEMA_VERSION = '1.1';
