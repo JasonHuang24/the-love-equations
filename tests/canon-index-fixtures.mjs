@@ -16,7 +16,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 577);
+assert.equal(index.stats.conceptCount, 578);
 assert.equal(index.stats.sourceCount, 21);
 
 // Source hashes describe repository content, not checkout-specific line endings.
@@ -40,7 +40,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
-  'Rules & Frameworks': 74,
+  'Rules & Frameworks': 75,
   Statistics: 51,
 });
 
@@ -81,7 +81,7 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 577);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 578);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
@@ -96,9 +96,9 @@ assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).len
 // shortcut, all five with both. Pressure test 08 folded two more from the
 // scout — the authority firewall and synthetic reciprocity — again with both,
 // and pressure test 09 added the care role split, constraint–dedication split
-// and attention boundary with both, then the repair sequence with both. The
-// boundary gap remains 33.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 544);
+// and attention boundary with both, then the repair sequence and stress
+// transmission split with both. The boundary gap remains 33.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 545);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');
@@ -188,6 +188,13 @@ assert(required('frameworks:repair-sequence').related.includes('frameworks:agree
 assert(required('frameworks:agreement-surface').related.includes('frameworks:repair-sequence'));
 assert(required('frameworks:sixth-rung').related.includes('frameworks:repair-sequence'));
 assert(required('frameworks:commitment-problem').related.includes('frameworks:repair-sequence'));
+assert.equal(required('frameworks:stress-transmission-split').sourceLinks.length, 3);
+assert(required('frameworks:stress-transmission-split').aliases.includes('relationship stress spillover and crossover'));
+assert(required('frameworks:stress-transmission-split').phrases.includes('partner workload predicts marital satisfaction decline'));
+assert(required('frameworks:stress-transmission-split').related.includes('frameworks:care-role-split'));
+assert(required('frameworks:care-role-split').related.includes('frameworks:stress-transmission-split'));
+assert(required('frameworks:attention-boundary').related.includes('frameworks:stress-transmission-split'));
+assert(required('frameworks:support-portfolio').related.includes('frameworks:stress-transmission-split'));
 
 // deep-dive.html wraps each hub card in `<a class="dd-feature" href=...>`, so the
 // href sits on the harvested node itself rather than under it. `linkData` walked

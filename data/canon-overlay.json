@@ -1533,7 +1533,8 @@
         "frameworks:ownership-load",
         "frameworks:support-portfolio",
         "frameworks:co-transition",
-        "frameworks:satisfaction-flywheel"
+        "frameworks:satisfaction-flywheel",
+        "frameworks:stress-transmission-split"
       ],
       "boundaryConditions": [
         "The care role and the couple role can overlap without one fully replacing the other; the framework identifies a tension rather than an inevitable outcome.",
@@ -1775,7 +1776,8 @@
         "frameworks:ownership-load",
         "frameworks:costless-exit",
         "frameworks:care-role-split",
-        "statistics:stat-friend-time"
+        "statistics:stat-friend-time",
+        "frameworks:stress-transmission-split"
       ],
       "boundaryConditions": [
         "Channel count, support quality, concentration, reciprocity and coordination labor are separate measurements; ordinary partner care satisfies none of the burden mechanism by itself.",
@@ -6591,7 +6593,8 @@
         "frameworks:agreement-surface",
         "frameworks:good-news-rule",
         "frameworks:satisfaction-flywheel",
-        "frameworks:substitution-layer"
+        "frameworks:substitution-layer",
+        "frameworks:stress-transmission-split"
       ],
       "boundaryConditions": [
         "Technoference is an interruption of expected shared attention, not a synonym for device ownership, total device minutes or every visible phone.",
@@ -6610,6 +6613,51 @@
         "Did device use actually displace attention the partners expected to share, or is harm being inferred from minutes or presence alone?",
         "Was the use unexplained disengagement, a communicated necessity, or technology integrated into the couple’s shared interaction?",
         "Do the partners disagree about an attention boundary, and can they renegotiate it without surveillance or continuous-availability demands?"
+      ]
+    },
+    "frameworks:stress-transmission-split": {
+      "aliases": [
+        "Stress Transmission Split",
+        "relationship stress spillover and crossover",
+        "external stress in romantic relationships",
+        "dyadic stress transmission",
+        "partner workload crossover",
+        "stress spillover in marriage",
+        "spousal support adequacy"
+      ],
+      "phrases": [
+        "stress crosses from work into relationship conflict",
+        "partner workload predicts marital satisfaction decline",
+        "both partners stressed same-day conflict",
+        "external role strain and marital satisfaction",
+        "support matched to partner needs",
+        "failure to recover from daily stress",
+        "spillover crossover and shared stress exposure",
+        "partner stress predicts relationship satisfaction"
+      ],
+      "related": [
+        "frameworks:attention-boundary",
+        "frameworks:care-role-split",
+        "frameworks:support-portfolio"
+      ],
+      "boundaryConditions": [
+        "The three-route split is an LE synthesis; no source measured spillover, crossover, shared exposure, recovery and support matching in one design.",
+        "The paired daily-diary study contains 114 long-married urban U.S. parents of adolescents and cannot order stress and conflict within the same day.",
+        "Average next-day paths were null in the daily study; persistence appeared only in high-aggression couples and one high family-of-origin-aggression subgroup.",
+        "The workload study follows 172 different-sex first-marriage newlyweds recruited from 1993-1994 Los Angeles licenses; six-month lagged associations do not establish causation or mechanism.",
+        "The support study contains 101 mostly White, satisfied, low-strain Iowa newlywed couples; its asymmetric and counterintuitive moderation paths require replication and are not gender laws.",
+        "Support adequacy compares the recipient's desired frequency with perceived provision; it does not establish support quality, reciprocity, safety or a universal buffering effect.",
+        "External stress can explain a shift while responsibility for contempt, coercion, aggression, boundary violations and unrepaired harm remains intact."
+      ],
+      "commonMisreadings": [
+        "A stressful workday proves both romantic partners share a permanently incompatible relationship.",
+        "One partner's overload always damages both partners equally across every relationship stage.",
+        "More support automatically buffers every partner from external stress inside the relationship."
+      ],
+      "pressureTests": [
+        "Where did the strain originate, which person carried or absorbed it, and over what recovery window?",
+        "Did both partners face one shared stressor, or did load spill across a domain or cross between partners?",
+        "Was support matched to the recipient's needs, and which measured path did it actually moderate?"
       ]
     }
   }

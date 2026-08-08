@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+22716b67fb37",
+  "indexVersion": "1.0.0+ffa47876a969",
   "generatedAt": "2026-08-08T00:54:08.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "3379265c8a22bde0b437a60bc6a063a9bb9491781ae10f51e287653ea22785b0",
-      "conceptCount": 74
+      "sha256": "634d6d13fd8d6ff5090fcb532ac546c40be0a5b2fa5c4ac2a8a85f8814c802fc",
+      "conceptCount": 75
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 577,
+    "conceptCount": 578,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,13 +248,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 74,
+      "Rules & Frameworks": 75,
       "Statistics": 51
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 84,
+      "Framework": 85,
       "Glossary": 98,
       "Hard data": 28,
       "Instrument": 5,
@@ -271,10 +271,10 @@
       "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 482,
-    "conceptsWithExternalSources": 148,
+    "anchoredConceptCount": 483,
+    "conceptsWithExternalSources": 149,
     "dependencyCount": 295,
-    "relatedCount": 518
+    "relatedCount": 524
   },
   "entries": [
     {
@@ -4150,7 +4150,8 @@
         "frameworks:ownership-load",
         "frameworks:costless-exit",
         "frameworks:care-role-split",
-        "statistics:stat-friend-time"
+        "statistics:stat-friend-time",
+        "frameworks:stress-transmission-split"
       ],
       "boundaryConditions": [
         "Channel count, support quality, concentration, reciprocity and coordination labor are separate measurements; ordinary partner care satisfies none of the burden mechanism by itself.",
@@ -4914,7 +4915,8 @@
         "frameworks:ownership-load",
         "frameworks:support-portfolio",
         "frameworks:co-transition",
-        "frameworks:satisfaction-flywheel"
+        "frameworks:satisfaction-flywheel",
+        "frameworks:stress-transmission-split"
       ],
       "boundaryConditions": [
         "The care role and the couple role can overlap without one fully replacing the other; the framework identifies a tension rather than an inevitable outcome.",
@@ -5035,7 +5037,8 @@
         "frameworks:agreement-surface",
         "frameworks:good-news-rule",
         "frameworks:satisfaction-flywheel",
-        "frameworks:substitution-layer"
+        "frameworks:substitution-layer",
+        "frameworks:stress-transmission-split"
       ],
       "boundaryConditions": [
         "Technoference is an interruption of expected shared attention, not a synonym for device ownership, total device minutes or every visible phone.",
@@ -5147,6 +5150,78 @@
         "What did the person who caused harm acknowledge, restore and change in future conduct, apart from the apology wording?",
         "Is the injured partner's forgiveness being treated as consent to resume contact, trust or the relationship?",
         "Does the evidence measure apology, restitution, behavior change, forgiveness or reconciliation, and which links remain untested?"
+      ]
+    },
+    {
+      "id": "frameworks:stress-transmission-split",
+      "title": "The Stress Transmission Split",
+      "page": "frameworks.html",
+      "anchor": "stress-transmission-split",
+      "category": "Rules & Frameworks",
+      "subcategory": "Retention & maintenance",
+      "synopsis": "External stress can enter a relationship by different routes. Spillover carries one person’s load from work, health, money or another role into that person’s behavior at home. Crossover is the cross-partner path: one person’s load changes the other person’s stress or relationship experience. Shared exposure means both partners face the same event or are strained at once.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Stress Transmission Split",
+        "relationship stress spillover and crossover",
+        "external stress in romantic relationships",
+        "dyadic stress transmission",
+        "partner workload crossover",
+        "stress spillover in marriage",
+        "spousal support adequacy"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "stress crosses from work into relationship conflict",
+        "partner workload predicts marital satisfaction decline",
+        "both partners stressed same-day conflict",
+        "external role strain and marital satisfaction",
+        "support matched to partner needs",
+        "failure to recover from daily stress",
+        "spillover crossover and shared stress exposure",
+        "partner stress predicts relationship satisfaction"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:care-role-split",
+        "frameworks:attention-boundary",
+        "frameworks:support-portfolio"
+      ],
+      "boundaryConditions": [
+        "The three-route split is an LE synthesis; no source measured spillover, crossover, shared exposure, recovery and support matching in one design.",
+        "The paired daily-diary study contains 114 long-married urban U.S. parents of adolescents and cannot order stress and conflict within the same day.",
+        "Average next-day paths were null in the daily study; persistence appeared only in high-aggression couples and one high family-of-origin-aggression subgroup.",
+        "The workload study follows 172 different-sex first-marriage newlyweds recruited from 1993-1994 Los Angeles licenses; six-month lagged associations do not establish causation or mechanism.",
+        "The support study contains 101 mostly White, satisfied, low-strain Iowa newlywed couples; its asymmetric and counterintuitive moderation paths require replication and are not gender laws.",
+        "Support adequacy compares the recipient's desired frequency with perceived provision; it does not establish support quality, reciprocity, safety or a universal buffering effect.",
+        "External stress can explain a shift while responsibility for contempt, coercion, aggression, boundary violations and unrepaired harm remains intact."
+      ],
+      "commonMisreadings": [
+        "A stressful workday proves both romantic partners share a permanently incompatible relationship.",
+        "One partner's overload always damages both partners equally across every relationship stage.",
+        "More support automatically buffers every partner from external stress inside the relationship."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Timmons, Arbel & Margolin (2017), Journal of Family Psychology 31(1):93–104",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5293605/"
+        },
+        {
+          "label": "Neff & Karney (2017), Journal of Family Psychology 31(6):780–790",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658017/"
+        },
+        {
+          "label": "Brock & Lawrence (2008), Journal of Family Psychology 22(1):11–20",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2366194/"
+        }
+      ],
+      "pressureTests": [
+        "Where did the strain originate, which person carried or absorbed it, and over what recovery window?",
+        "Did both partners face one shared stressor, or did load spill across a domain or cross between partners?",
+        "Was support matched to the recipient's needs, and which measured path did it actually moderate?"
       ]
     },
     {
