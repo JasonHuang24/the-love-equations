@@ -231,3 +231,46 @@ test('the collision dies and the concepts do not', () => {
   assert.equal(failures.length, 0,
     `${failures.length} retrieval guard(s) disagree with the ruling:\n${failures.join('\n')}`);
 });
+
+test('a possessive contributes the noun it possesses', () => {
+  /*
+   * Red before v2.6.24 (pt09 finding 10, the largest of the run and the only
+   * one the archived corpus can see; shipped in its own adjudication window
+   * under Jason's 2026-08-08 ruling). `tokenize` keeps `women's` whole, then
+   * `stemToken` strips the trailing `s` and leaves the apostrophe: the token
+   * that enters the index is `women'` — a string that can never unify with
+   * `women`. Same for every possessive: partner's -> partner', men's -> men',
+   * wife's -> wife'. Those are canon vocabulary — a passage that writes
+   * "a partner's income" contributed no `partner` token at all.
+   *
+   * Corpus census: 239 possessives across the 42 archived sources (one's x73,
+   * women's x17, partner's x14, men's x14, ...).
+   *
+   * The length floor is not decoration: without it the strip re-creates the
+   * defect the v2.6.0 floor exists to prevent — le's -> le and li's -> li,
+   * two-character fragments carrying an IDF they have not earned. The floor
+   * cases are pinned below.
+   */
+  const tokens = (text) => tokenize(text);
+
+  assert.ok(tokens("a partner's income").includes('partner'),
+    "partner's contributes partner");
+  assert.ok(tokens("women's choices in the market").includes('women'),
+    "women's contributes women");
+  assert.ok(tokens("her husband's attention").includes('husband'),
+    "husband's contributes husband");
+  // No apostrophe-bearing fragment survives where the strip applies.
+  assert.equal(tokens("a partner's income and women's choices")
+    .filter((token) => token.includes("'")).length, 0,
+    'no stranded-apostrophe token remains');
+
+  // The floor: a bare stem shorter than minDerivedStemLength is not created.
+  assert.ok(!tokens("le's fragment here").includes('le'),
+    "le's does not become a two-character token");
+  assert.ok(!tokens("li's fragment here").includes('li'),
+    "li's does not become a two-character token");
+
+  // Non-possessive apostrophe forms are untouched by the strip.
+  assert.ok(tokens("the couples' shared plans").length > 0,
+    'plural-possessive text still tokenizes');
+});
