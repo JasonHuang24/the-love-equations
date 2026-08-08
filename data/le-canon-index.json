@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+a87ca9f599a9",
+  "indexVersion": "1.0.0+86c83e547e4d",
   "generatedAt": "2026-08-08T02:05:16.000Z",
   "sourcePages": [
     {
@@ -33,7 +33,7 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "4e2b3109032b4fa65c7a9b352b65689080dba57cfd4d867723608c21b30faffd",
+      "sha256": "43b9e5576f3cc4da24a77b827ce00220d987e5f2a4ef80d0dd01c806c47929de",
       "conceptCount": 76
     },
     {
@@ -274,7 +274,7 @@
     "anchoredConceptCount": 484,
     "conceptsWithExternalSources": 150,
     "dependencyCount": 295,
-    "relatedCount": 530
+    "relatedCount": 531
   },
   "entries": [
     {
@@ -4684,6 +4684,7 @@
       ],
       "dependencies": [],
       "related": [
+        "frameworks:care-role-split",
         "frameworks:good-news-rule",
         "frameworks:conversion-ladder",
         "frameworks:attention-boundary",
