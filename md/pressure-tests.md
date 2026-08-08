@@ -6271,7 +6271,11 @@ assertion value was edited.
 
 - **No engine edit.** F1 and F2 both have obvious one-line fixes; neither was
   written. A corpus run that also patches the engine cannot report a clean
-  additivity measurement.
+  additivity measurement. *(Both were fixed later the same day, in a separate
+  session after the widening had been pushed — `e5c421b`+`f330e18` for F2,
+  `c299c06`+`2441320` for F1 — each RED-first and each measured at 0 changed /
+  0 crossings against a pre-change dump. Holding them out of this run was what
+  let the widening report a clean zero; see the CLOSED notes on F1 and F2.)*
 - **No `--keep-nbsp` flag on the extractor**, though it was the first instinct:
   measured first, and the NBSPs a real forum page carries are blank-line
   spacers, so the flag would have bought noise and called it coverage.
@@ -6497,6 +6501,24 @@ session, with the repro that produced it.
 
 ## F1 — no HTML-sourced corpus text can ever carry an NBSP
 
+> **CLOSED 2026-08-08, same day, at `c299c06` (RED) + `2441320` (fix)** — and it
+> found this section HALF WRONG while closing it. There are **two** destruction
+> sites, not one. Step 1's `.replace(/\s+/g, ' ')` is the other, and it is the
+> worse of the two: **`\s` matches U+00A0 in JavaScript**, so the literal form
+> died before any entity had been decoded. That is why source 27's 136 literal
+> NBSPs vanished while the analysis below blamed the `&nbsp;` replacement and
+> the horizontal-whitespace collapse alone. Both sites now branch on an opt-in
+> `--keep-nbsp`; the default path is byte-identical, verified by re-running the
+> recorded command for all 8 pt10 sources and reproducing all 8 recorded
+> SHA-256s. The "do not simply add `--keep-nbsp`" paragraph below still stands
+> and shaped the fix: the flag also drops a block whose whole content is a
+> non-breaking space, so a `<p>&nbsp;</p>` spacer buys nothing. What remains
+> open is the corpus half — no archived text carries an NBSP yet, because
+> re-extracting an existing source would change its content-derived unit IDs and
+> orphan rulings keyed to them. A new capture taken with the flag is the way in.
+> `tools/extract-source-text.mjs` also gained its first test
+> (`tests/lab-corpus-extractor.test.mjs`, suite step 19).
+
 **The acquisition chain erases the surface, not the sources.** pt09 §6 recorded
 the corpus as unable to exercise "Unicode spacing" and attributed it to the
 academic register. That is only half true: a reader-shaped page *does* carry
@@ -6530,6 +6552,15 @@ wanted, it has to come from a source archived off the HTML path — a Word/RTF
 document, or a paste captured as-is — not from a flag.
 
 ## F2 — the sweep cannot detect RTF, so the RTF fix is unreachable by design
+
+> **CLOSED 2026-08-08, same day, at `e5c421b` (RED) + `f330e18` (fix)** —
+> `detectTextFormat` gained a `{\rtf<digit>` content sniff, placed before the
+> JSON branch because both start with `{`. The recommendation below named
+> exactly this remedy and it is the one taken. Corpus sweep against the
+> pre-change dump over 1,866,117 pairs: 0 changed, 0 crossings — no archived
+> source begins with an RTF header, so the sniff reaches none of them. An RTF
+> archived from here on is swept as its extracted prose rather than as control
+> words, which is what makes v2.6.21 #8 reachable from the corpus at all.
 
 `js/lab-intake.js` `detectTextFormat` (lines 188–215) sniffs VTT, SRT and JSON
 from content, but RTF is recognised **only** by file extension or MIME type.
