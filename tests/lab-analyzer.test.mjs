@@ -2420,7 +2420,7 @@ test('a bare list marker never reaches the set-aside ledger', async () => {
    * the splitter attaches "ii." to the first sentence.
    */
   const document = normalizeInput({
-    text: '1. Women value status in a partner. 2. Men value looks in a partner. 3. Couples argue about money constantly.',
+    text: '1. Women prefer status in a partner. 2. Men prefer looks in a partner. 3. Couples are more likely to argue about money.',
     source: { title: 'Ordered list fixture' },
   });
   const result = await analyzeDocument(document, REAL_CANON);

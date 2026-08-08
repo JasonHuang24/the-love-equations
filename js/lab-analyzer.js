@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.22';
+export const ANALYZER_VERSION = '2.6.23';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -4057,7 +4057,21 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   const ignoredUnits = classifiedUnits.filter((unit) => unit.domainRelevance.status === 'irrelevant');
   const relevantUnits = classifiedUnits.filter((unit) => unit.domainRelevance.status === 'relevant');
   const uncertainUnits = classifiedUnits.filter((unit) => unit.domainRelevance.status === 'uncertain');
-  const ignoredWords = ignoredUnits.reduce((sum, unit) => sum + unit.wordCount, 0);
+  /*
+   * A bare enumerator ("1.", "b)", "iv.") is a segmentation artifact, not a
+   * passage — both split paths end a sentence at its period and the merge
+   * fold only looks backwards, so it stands alone (pt09 finding 14). It is
+   * suppressed from the set-aside REPORT only, from v2.6.23: reporting a
+   * list number as `no-human-relational-frame` reads as a substantive
+   * judgement about nothing, and it inflates the ignored counts. The unit
+   * itself keeps its ID and its scores untouched — the segmentation fold
+   * that would remove it renumbers every later claim-NN and retires 3,363
+   * frozen band pairs by ID, a trade refused on measurement.
+   */
+  const reportedIgnoredUnits = ignoredUnits.filter(
+    (unit) => !/^\(?(?:\d{1,3}|[a-z]|[ivxlcdm]{1,5})[.)]$/i.test((unit.text || '').trim()),
+  );
+  const ignoredWords = reportedIgnoredUnits.reduce((sum, unit) => sum + unit.wordCount, 0);
   if (isCancelled()) throw new DOMException('Analysis cancelled', 'AbortError');
 
   const entriesById = new Map(prepared.entries.map((entry) => [entry.id, entry]));
@@ -4182,7 +4196,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       analyzedPassages: units.length,
       relevantDomainSegments: relevantUnits.length,
       uncertainDomainSegments: uncertainUnits.length,
-      ignoredDomainSegments: ignoredUnits.length,
+      ignoredDomainSegments: reportedIgnoredUnits.length,
       ignoredDomainWords: ignoredWords,
       claimLikeSegments: claimResults.length,
       mappedClaimSegments: mappedClaims.length,
@@ -4192,9 +4206,9 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       policy: 'deterministic-relational-frames-v2',
       relevantSegments: relevantUnits.length,
       uncertainRetainedSegments: uncertainUnits.length,
-      ignoredSegments: ignoredUnits.length,
+      ignoredSegments: reportedIgnoredUnits.length,
       ignoredWords,
-      ignoredPassages: ignoredUnits.map(ignoredPassageRecord),
+      ignoredPassages: reportedIgnoredUnits.map(ignoredPassageRecord),
       overrides: {
         applied: appliedOverrides,
         unmatchedIds: unmatchedOverrideIds,
