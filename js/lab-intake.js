@@ -201,6 +201,16 @@ export function detectTextFormat({ fileName = '', mimeType = '', text = '' } = {
   const sample = normalizeLineEndings(text).slice(0, 2_000).trimStart();
   if (/^WEBVTT(?:\s|$)/i.test(sample)) return 'vtt';
   if (/^\d+\s*\n\d\d?:\d\d(?::\d\d)?[,.]\d{1,3}\s+-->/m.test(sample)) return 'srt';
+  /*
+   * RTF, from its bytes. It has to be tested BEFORE the JSON branch because
+   * both start with `{`: an RTF document fails JSON.parse and used to fall
+   * through to 'text', so every caller that passes raw bytes with no filename
+   * — the corpus sweep and its fixture test do exactly that — got RTF control
+   * words as prose and never reached `parseRtfDocument`. The version digit is
+   * required by the spec's own header (`\rtf1`) and is what keeps this from
+   * firing on a brace followed by an escaped word in ordinary text.
+   */
+  if (/^\{\\rtf\d/.test(sample)) return 'rtf';
   if (/^[\[{]/.test(sample)) {
     try {
       JSON.parse(sample.length === normalizeLineEndings(text).trim().length

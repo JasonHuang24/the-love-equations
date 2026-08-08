@@ -526,9 +526,11 @@ test('RTF is detected from its content, not only from a filename or MIME type', 
     extraction: { method: 'test', warnings: [] },
     createdAt: '1970-01-01T00:00:00.000Z',
   });
-  assert.equal(document.format, 'rtf');
-  assert.match(document.text, /Marriage is a market\./);
-  assert.doesNotMatch(document.text, /\\rtf1|fonttbl|viewkind/);
+  assert.equal(document.text, 'Marriage is a market.');
+  assert.doesNotMatch(document.text, /rtf1|fonttbl|viewkind|par/);
+  assert.ok(document.extraction.warnings.some((row) => row.code === 'RTF_BASIC_EXTRACTION'),
+    'the RTF parser did not run — the sniff routed the bytes somewhere else');
+  assert.equal(document.segments[0].original.source, 'extracted-text');
 });
 
 test('timestamps distinguish seconds, minute clocks, and full clocks', () => {
