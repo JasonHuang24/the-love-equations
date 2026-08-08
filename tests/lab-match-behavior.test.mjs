@@ -96,7 +96,10 @@ test('match-behavior fixture is structurally sound', () => {
   assert.equal(benchmark.schema, 'le-lab.match-behavior/1.0');
   const ids = new Set();
   const blocks = Object.entries(benchmark.blocks);
-  assert.equal(blocks.length, 7, 'The fixture holds the seven adjudicated blocks.');
+  // Eighth block genericCuePolarity adopted by Jason's 2026-08-08 in-session
+  // ruling (pt09 P3): every stance case in the first seven carries an asserted
+  // misreading, so none of them ever reached the generic cue ladder.
+  assert.equal(blocks.length, 8, 'The fixture holds the eight adjudicated blocks.');
   blocks.forEach(([name, block]) => {
     assert.ok(block.question && block.ruling, `${name} states its question and its ruling.`);
     assert.ok(Array.isArray(block.cases) && block.cases.length, `${name} holds cases.`);
@@ -120,6 +123,17 @@ test('match-behavior fixture is structurally sound', () => {
     assert.ok(
       normalizeForCompare(entry.text).includes(normalizeForCompare(benchmark.blocks.stanceComposition.misreading)),
       `${entry.id} carries the block's misreading verbatim.`,
+    );
+  });
+  benchmark.blocks.genericCuePolarity.cases.forEach((entry) => {
+    assert.ok(STANCE_LABELS.has(entry.expected.stance), `${entry.id} expects a real stance label.`);
+    assert.ok(entry.wrapper, `${entry.id} declares its wrapper.`);
+    // Same discipline as stanceComposition, inverted subject: every case
+    // varies the wrapper around the block's one CLAIM (no misreading anywhere
+    // in it), so the only variable is how the cue is framed.
+    assert.ok(
+      normalizeForCompare(entry.text).includes(normalizeForCompare(benchmark.blocks.genericCuePolarity.claim)),
+      `${entry.id} carries the block's claim verbatim.`,
     );
   });
   benchmark.blocks.contextualCoFire.cases.forEach((entry) => {
@@ -363,6 +377,27 @@ test('stance survives negation scope, quotation, attribution, and their composit
   }
   assert.equal(failures.length, 0,
     `${failures.length} stance-composition case(s) mislabel who is claiming what:\n${failures.join('\n')}`);
+});
+
+test('a denied, supposed, or questioned cue never decides the stance', async () => {
+  const failures = [];
+  for (const entry of benchmark.blocks.genericCuePolarity.cases) {
+    const { matches, gatedOut } = await analyzeCase(entry.text);
+    const match = matches.find((row) => row.canonId === entry.canonId);
+    if (entry.expected.mapped && !match) {
+      failures.push(`  [${entry.id}] ${entry.canonId} did not map at all (gatedOut=${gatedOut}) — ${entry.text}`);
+      continue;
+    }
+    const stance = match?.alignment?.label;
+    if (stance !== entry.expected.stance) {
+      failures.push(
+        `  [${entry.id}] ${entry.wrapper}: expected ${entry.expected.stance}, got ${stance} `
+        + `(score ${match?.score}) — ${entry.text}`,
+      );
+    }
+  }
+  assert.equal(failures.length, 0,
+    `${failures.length} generic-cue polarity case(s) let a framed cue decide the stance:\n${failures.join('\n')}`);
 });
 
 test('a clause boundary is where the writer put one, and a comment attaches to what it is about', async () => {

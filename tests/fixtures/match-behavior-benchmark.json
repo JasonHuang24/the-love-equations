@@ -997,6 +997,101 @@
           "note": "GUARD, and the measurement that makes the bl-17/bl-18 fix safe to attempt. This is the case a reader assumes the substring test is protecting, and it is not: with the substring test gone, the contiguous stem run still matches `health care` here directly, and `care` and `service` both still match literally. Any fix that drops the substring test must keep this green, and if it does not, the fix disqualified nothing it was supposed to keep."
         }
       ]
+    },
+    "genericCuePolarity": {
+      "question": "When a match carries NO asserted misreading and the stance falls to the generic cue ladder, does the label survive negating, supposing, or questioning the cue?",
+      "ruling": "A cue the passage denies, supposes, or questions is WITHHELD, never inverted: every guarded form lands on Resembles, the neutral reading. Inverting would require knowing WHAT is denied - the parser this instrument declines to become (documentedLimits ruling). A rhetorical question therefore under-claims, which is the direction this instrument prefers. Guards shipped in v2.6.21 (pt09 findings 6 and 9); adopted as a fixture block by Jason's 2026-08-08 in-session ruling (pt09 proposal P3), because every stance case in the prior blocks carries an asserted misreading - the whole fixture exercised the negation-parity branch, and the generic ladder shipped polarity-blind while staying green.",
+      "frozenAgainst": { "analyzer": "2.6.23", "analysisSchema": "le-lab.analysis/2.6", "canonIndex": "1.0.0+86c83e547e4d", "scoringConfigHash": "bt0a7p" },
+      "provenance": "pt09 opus lane findings 6 (negated cues) and 9 (supposed/questioned cues). Probe sentences verbatim from the v2.6.21 regression tests in tests/lab-analyzer.test.mjs; labels and scores re-measured at freeze against the current tree. Pre-v2.6.21 observations, for the record: gcp-01/02/03 read Supports (0.760/0.664/0.760), gcp-04 Challenges 0.760, gcp-05/06/07 Supports (0.668/0.700/0.714) - a question and its own assertion reached the ladder as the same string.",
+      "claim": "the Conversion Ladder separates exposure from attention and selection",
+      "cases": [
+        {
+          "id": "gcp-01",
+          "wrapper": "negated-external",
+          "text": "It is not true that the Conversion Ladder separates exposure from attention and selection.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Resembles" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.760 },
+          "note": "Presence cannot tell 'true that' from 'not true that'; before the guard this denial read as agreement."
+        },
+        {
+          "id": "gcp-02",
+          "wrapper": "negated-confirm",
+          "text": "Nothing here confirms that the Conversion Ladder separates exposure from attention and selection.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Resembles" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.665 }
+        },
+        {
+          "id": "gcp-03",
+          "wrapper": "negated-consistency",
+          "text": "It is not consistent with the Conversion Ladder separates exposure from attention and selection.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Resembles" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.760 }
+        },
+        {
+          "id": "gcp-04",
+          "wrapper": "trailing-denial",
+          "text": "The Conversion Ladder separates exposure from attention and selection; this is not wrong.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Resembles" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.760 },
+          "note": "A negated verdict in the follow-up clause: 'not wrong' fired Challenges before the guard, the label pointing at the opposite of what the passage says."
+        },
+        {
+          "id": "gcp-05",
+          "wrapper": "hypothetical",
+          "text": "If it were true that the Conversion Ladder separates exposure from attention and selection, dating apps would be simpler.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Resembles" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.669 }
+        },
+        {
+          "id": "gcp-06",
+          "wrapper": "supposition",
+          "text": "Suppose it is true that the Conversion Ladder separates exposure from attention and selection.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Resembles" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.701 }
+        },
+        {
+          "id": "gcp-07",
+          "wrapper": "question",
+          "text": "Is it true that the Conversion Ladder separates exposure from attention and selection?",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Resembles" },
+          "observedAtFreeze": { "mapped": true, "stance": "Resembles", "score": 0.715 },
+          "note": "The sharpest pair, with gcp-08: clause splitting drops the punctuation that is the entire difference between a question and its own assertion, and before the guard both scored and labelled identically."
+        },
+        {
+          "id": "gcp-08",
+          "wrapper": "assertion-control",
+          "text": "It is true that the Conversion Ladder separates exposure from attention and selection.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Supports" },
+          "observedAtFreeze": { "mapped": true, "stance": "Supports", "score": 0.715 },
+          "note": "CONTROL: the assertion gcp-07 was indistinguishable from must keep reading Supports, or the guard bought the question by swallowing the ladder."
+        },
+        {
+          "id": "gcp-09",
+          "wrapper": "verdict-control",
+          "text": "The Conversion Ladder separates exposure from attention and selection; that model is wrong.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Challenges" },
+          "observedAtFreeze": { "mapped": true, "stance": "Challenges", "score": 0.727 },
+          "note": "CONTROL: an un-negated verdict in the follow-up clause still lands."
+        },
+        {
+          "id": "gcp-10",
+          "wrapper": "cue-own-negator",
+          "text": "The Conversion Ladder separates exposure from attention and selection, but it is not always the exception.",
+          "canonId": "frameworks:conversion-ladder",
+          "expected": { "mapped": true, "stance": "Challenges" },
+          "observedAtFreeze": { "mapped": true, "stance": "Challenges", "score": 0.760 },
+          "note": "CONTROL: a negator that is part of the cue's OWN text ('not always the exception') still fires it - the guard reads the negator's target, not its mere presence."
+        }
+      ]
     }
   }
 }
