@@ -1,4 +1,4 @@
-# Pressure tests — the pt series, closed runs 04-08
+# Pressure tests — the pt series, closed runs 04-10
 
 A volume of the record shelf (`md/INDEX.md` is the table of contents). Run records and the
 per-run working files (protocols, claim ledgers, kickoffs, findings), folded after pt08 closed
@@ -6143,3 +6143,460 @@ Recorded because they were measured, with no action requested.
   still producing a Context-only match. Whether a lower-case, unpunctuated
   forum assertion should count as a claim is a doctrine question, not an
   engine one.
+
+---
+
+# corpus-pressure-test-10.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 16f4854:md/pt10/corpus-pressure-test-10.md`
+
+# Corpus pressure test 10 — widening the instrument toward reader-shaped text
+
+**Lane:** single-session run (Claude Opus 5, reasoning high), this checkout on
+`main`. Baseline `main` @ 7d41254 (v2.6.24), suite 18/18, canon 579, 21 swept
+corpus sources, everything pushed. **No engine edit, no canon edit, no
+threshold change, no ruling entered.**
+
+**Why:** pt09 §6. Eleven engine bugs were fixed across v2.6.21–v2.6.24 and
+every one of them moved zero corpus rows, because a 21-source archive of
+clean-ASCII academic and newsroom prose cannot exercise the surfaces readers
+actually type. The corpus is the site's eyes, and it was blind exactly where
+readers live.
+
+## 1. What was added — eight sources, ids 23–30
+
+47,082 words across five registers, chosen for balance rather than volume; the
+largest is 34% of the tranche and smaller than the corpus's existing largest
+source. Per-source provenance, SHA-256s and the verbatim extraction command are
+in `lab-corpus.manifest.json` (committed; the text is not, per RERUN §1).
+
+| id | register | words | grade |
+|---|---|---:|---|
+| 23-slate-prudence-chat | advice **chat transcript**, two columnists | 1,386 | A |
+| 24-guardian-ask-philippa | **advice column**, sub-edited broadsheet | 858 | A |
+| 25-guardian-philippa-comments | **comment section**, 251 comments on 24 | 17,899 | A− |
+| 26-captain-awkward-1455 | **advice blog**, long second-person reply | 1,216 | A |
+| 27-loveshack-defensive-partner | **forum thread**, multi-poster | 4,299 | A |
+| 28-loveshack-always-the-dumpee | **forum thread**, multi-poster | 4,498 | A |
+| 29-dearwendy-too-much-messaging | **advice column**, informal US | 1,036 | A |
+| 30-alabama-marriage-handbook | **word-processor / print reader handbook** | 15,890 | B |
+
+Sources 24 and 25 are deliberately paired: the same letter, once in sub-edited
+broadsheet register and once in 251 readers' unedited replies to it.
+
+Chains, all reproducible from the raw capture plus the recorded command:
+grade **A** = archived raw HTML → `tools/extract-source-text.mjs` with recorded
+container/`--drop`/`--cut` arguments. Grade **A−** = source 25 only: the
+Guardian discussion API's two JSON pages → a body-concatenation one-liner
+recorded verbatim in the manifest (bodies only, in thread order, replies inline
+after their parent — **no usernames, no timestamps, no scores**) → the same
+committed extractor. Grade **B** = archived raw PDF → `pdftotext -enc UTF-8
+-nopgbrk` → CRLF→LF, the house PDF chain.
+
+`CLAIMS.md` records every candidate that was rejected and why — eleven of them,
+seven bot-walled.
+
+## 2. The measurement — a widening is additive, and it was proved twice
+
+- **Source 23 alone, first, as the stop condition.** Dump-to-dump against the
+  pre-change baseline: 481,851 pre-existing pairs, **0 moved, 0 disappeared**;
+  1,756 new pairs. IDF is derived from the canon, not the corpus, so adding
+  sources cannot move an existing pair — verified rather than assumed before
+  the other seven were archived.
+- **All eight.** 2,425 → 3,223 swept passages (+32.9%); pre-existing pairs
+  **0 moved, 0 disappeared**; 140,774 new pairs.
+- **The band**, regenerated with `--neighbors` and **no `--baseline`** (the
+  2026-07-30 widening's precedent — a pair absent from a baseline was never
+  measured, not scored zero): 130,744 → 187,919 pairs, and of the 130,744
+  previously frozen pairs **0 moved, 0 lost**. Rulings byte-identical at
+  36,320: **0 added, 0 changed**. Pending unchanged at 0 credible / 0 weak /
+  29,242 candidate-floor census. The retired epoch `421b1f5b859073c1` went into
+  `corpusEpochHistory` carrying 36,320 rulings; the corpus is now
+  `9429b35a081698e6`, 29 sources.
+
+**Nothing is awaiting Jason.** No weak or credible crossing was produced, so no
+verdict was needed and none was entered.
+
+## 3. The acceptance test — which fixes the corpus can now see
+
+Full tables in `census.md`. Density per 10,000 words, old corpus vs the pt10
+tranche:
+
+**Newly exercised** — U+2019 in the seven cue regexes 1.4 → **45.5** (the
+v2.6.21 headline, the curly apostrophe that flipped "source overreach" to "LE
+limitation"); denial cues for the polarity-blind ladder 7.3 → **84.3**;
+questions for the interrogative-cue guard 7.7 → **68.6**; possessives 59 →
+**106**; bare list markers 5.0 → **9.8**; the `date` inflections 1.6 → **3.2**.
+Second person — the register itself — 6.8 → **397**, a 58× shift on a 37.6%
+increase in words.
+
+**Already covered, so pt09 §6 needs narrowing** (finding F3): decimals and
+abbreviation periods (138/10k), word-spelled statistics (19/10k) and the
+`marry` conjugation (12/10k) were all *denser in the academic corpus*. Three of
+the eleven zeroes have some cause other than blindness.
+
+**Still uncovered:** NBSP, zero-width and format characters, RTF destination
+groups — and in both cases the cause is the acquisition chain, not the sources
+(findings F1 and F2). The extractor deletes every NBSP a page carries (source
+27: 136 in the raw capture, 0 in the archived text), and the sweep's
+`format: 'auto'` cannot sniff `{\rtf`, so an archived RTF would be swept as
+prose and never reach the fix.
+
+## 4. Findings recorded, not fixed
+
+Six, with repros, in `findings.md`: **F1** the extractor erases NBSP (and a
+`--keep-nbsp` flag would archive blank-line noise, not the defect — measured
+before recommending) · **F2** `detectTextFormat` has no `{\rtf` content sniff,
+so the RTF fix is unreachable from any corpus source · **F3** three of pt09's
+eleven zeroes are not corpus blindness · **F4** the gate keeps 34.1% of
+reader-shaped claim-like units against 48.2% of academic ones, and spot-checks
+say it is right to · **F5** Reddit, Ask MetaFilter and five more are bot-walled
+from this environment — a standing constraint on the corpus programme, not a
+one-run accident · **F6** the chat register is the least canon-legible thing in
+the tranche at 13.3% retention, and it is what a live Lab user is most likely
+to paste.
+
+## 5. Verification
+
+Suite **18/18, exit code 0** (read, not grepped) on the final tree; the runner
+banner named `main 7d41254 · dirty`. The threshold test ran with **0 skipped**
+— corpus present, all four assertions live — and printed
+`adjudication: 0 credible (blocking) · 0/0 weak (ratchet) · 29242
+candidate-floor (census, not adjudicable)`. The gate benchmark is unmoved at
+196 cases · domainRecall 1.000 · ignorePrecision 1.000 · junkRecall 0.854, and
+knownSplits and WEAK_BACKLOG_CEILING 0 both stand — no benchmark fixture and no
+assertion value was edited.
+
+## 6. What this run deliberately did NOT do
+
+- **No engine edit.** F1 and F2 both have obvious one-line fixes; neither was
+  written. A corpus run that also patches the engine cannot report a clean
+  additivity measurement.
+- **No `--keep-nbsp` flag on the extractor**, though it was the first instinct:
+  measured first, and the NBSPs a real forum page carries are blank-line
+  spacers, so the flag would have bought noise and called it coverage.
+- **No canon, doctrine, overlay or site-page edit**, and no rewording of
+  anything for matcher score.
+- **No ruling, and no `--baseline` on the regeneration** — the alternative was
+  available and would have entered ~64,000 fictional crossings.
+- **No push.** Awaits Jason's in-session confirmation.
+- **No re-analysis of the eight sources into `lab-corpus/exports/`.** The older
+  sources carry export JSON at v2.6.0/v2.6.1; these eight carry none, so the
+  archive is not single-version by the RERUN §6 test — it already was not, and
+  this run widened the gap rather than closing it. Recorded here rather than
+  half-done.
+
+
+---
+
+# pt10/CLAIMS.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 16f4854:md/pt10/CLAIMS.md`
+
+# PT10 claims ledger
+
+One line per candidate source considered, kept or rejected, with the reason.
+Statuses: `kept` (archived and swept) · `rejected` (named cause). Rejections are
+recorded because "we could not reach it" and "we chose not to" are different
+facts, and the next widening run should not re-spend the hour.
+
+## Kept — the tranche, ids 23–30
+
+- [23-slate-prudence-chat] [kept] advice **chat transcript** — a reader letter
+  discussed turn-by-turn by two named columnists; 1,386 words; the only
+  two-voice speaker-turn register in the tranche.
+- [24-guardian-ask-philippa] [kept] **advice column**, sub-edited broadsheet —
+  reader letter + psychotherapist reply; 858 words; typographic punctuation
+  throughout (33 U+2019 in 858 words).
+- [25-guardian-philippa-comments] [kept] **comment section** — all 251 comments
+  on source 24, bodies only, replies inline after their parent; 17,899 words.
+  Deliberately paired with 24: the same subject in edited and unedited register.
+- [26-captain-awkward-1455] [kept] **advice blog** — letter + long second-person
+  reply; 1,216 words; conversational blog register with heavy contractions.
+- [27-loveshack-defensive-partner] [kept] **forum thread** (Dating) — opening
+  post + multi-poster replies; 4,299 words.
+- [28-loveshack-always-the-dumpee] [kept] **forum thread** (Dating) — mate-value
+  self-diagnosis, multi-poster; 4,498 words; page 1 of 2 captured, recorded.
+  Replaced an earlier pick (`667622-what-is-the-likelihood-he-is-thinking-marriage`)
+  that extracted to 659 words — too thin to carry a register.
+- [29-dearwendy-too-much-messaging] [kept] **advice column**, informal US dating
+  register; 1,036 words.
+- [30-alabama-marriage-handbook] [kept] **word-processor / print-authored reader
+  handbook** (Alabama Cooperative Extension, HE-0858); 15,890 words; second
+  person throughout, numbered exercises, true/false quizzes — the tranche's only
+  source of bare list markers at scale (22).
+
+## Rejected — bot-walled (the instrument never got to judge the text)
+
+- [old.reddit.com/r/relationship_advice] [rejected] the subreddit and every
+  thread URL return the "Welcome to Reddit" login wall to a plain UA; the
+  `.json` API returns 403. **The largest single reservoir of reader-shaped
+  relationship discourse is unreachable from this environment** — recorded as
+  finding F5 rather than worked around.
+- [ask.metafilter.com] [rejected] 403 to a plain UA and to a UA with
+  Accept/Accept-Language headers.
+- [forums.thebump.com] [rejected] 403. · [enotalone.com] [rejected] 403. ·
+  [askamanager.org] [rejected] 403. · [datingadvice.com] [rejected] 403.
+- [talkaboutmarriage.com] [rejected] HTTP 202 challenge page (Cloudflare).
+- [forum.marriagebuilders.com] [rejected] 307 redirect chain, no thread HTML.
+- [mumsnet.com/talk/relationships] [rejected] reachable (200) but the listing
+  renders thread links client-side; no thread URL is present in the served HTML.
+
+## Rejected — reachable but wrong for this tranche
+
+- [csueastbay.edu counseling handout PDF] [rejected] scanned images; pdftotext
+  yields 0 words.
+- [healthymarriageinfo.org 2797.pdf — MRE Program Development and Management
+  Manual] [rejected] 59,527 words in **program-administration** register, not
+  reader discourse; would have been 38% of the tranche's words on its own and
+  unbalanced it. Its 80 soft hyphens were the tranche's only candidate
+  format-character surface — see finding F1.
+- [fcs.uga.edu NERMEM.pdf] [rejected] academic model paper; the register the
+  corpus already has 21 sources of.
+
+
+---
+
+# pt10/census.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 16f4854:md/pt10/census.md`
+
+# PT10 census — what the archive could see, before and after
+
+Two instruments, both run over the manifest's own swept population
+(`sourceFile != null`), so "the corpus" here is exactly what
+`tools/lab-threshold-sweep.mjs` sweeps.
+
+## 1. Whole-archive surface counts
+
+21 sources / 125,345 words → 29 sources / 172,427 words (+37.6% words).
+`srcs` is how many sources carry a nonzero count.
+
+| surface | before | after | Δ | srcs before → after |
+|---|---:|---:|---:|---|
+| U+2019 (typographic apostrophe) | 602 | 1,369 | +767 | 12/21 → 20/29 |
+| curly quotes ‘ “ ” | 272 | 520 | +248 | 12/21 → 19/29 |
+| – — … | 189 | 424 | +235 | 12/21 → 18/29 |
+| contractions, ASCII `'` | 329 | 871 | +542 | 14/21 → 17/29 |
+| contractions, curly `’` | 486 | 1,241 | +755 | 12/21 → 20/29 |
+| negated contractions, ASCII | 18 | 231 | +213 | 4/21 → 7/29 |
+| negated contractions, curly | 17 | 231 | +214 | 6/21 → 14/29 |
+| questions (`?`) | 97 | 420 | +323 | 17/21 → 25/29 |
+| bare numeric list markers | 63 | 109 | +46 | 7/21 → 10/29 |
+| bullet list markers | 13 | 81 | +68 | 4/21 → 6/29 |
+| **NBSP (U+00A0)** | **0** | **0** | **0** | **0/21 → 0/29** |
+| **format chars (ZW*, SHY, WJ, BOM)** | **0** | **0** | **0** | **0/21 → 0/29** |
+| second person | 85 | 1,955 | +1,870 | 13/21 → 21/29 |
+| first person singular | 225 | 1,455 | +1,230 | 11/21 → 19/29 |
+| marry/married/marries/marrying | 189 | 210 | +21 | 15/21 → 19/29 |
+| date/dated/dates/dating | 148 | 175 | +27 | 17/21 → 24/29 |
+| possessives | 739 | 1,240 | +501 | 21/21 → 29/29 |
+| word-spelled statistics | 306 | 376 | +70 | 19/21 → 24/29 |
+| **RTF preamble** | **0** | **0** | **0** | **0/21 → 0/29** |
+
+## 2. The acceptance test — density, per 10,000 words
+
+Raw counts flatter a bigger corpus. This is the honest form: the same surface
+per 10k words in the old corpus (01–22, 125,345 words) and in the pt10 tranche
+alone (23–30, 47,082 words), with the surface forms copied from the fix sites
+in `js/lab-analyzer.js` rather than invented.
+
+| pt09 fix / surface | old | /10k | pt10 | /10k | pt10 srcs |
+|---|---:|---:|---:|---:|---:|
+| v2.6.21 #15 seven cue regexes admit U+2019 | 17 | 1.4 | 214 | **45.5** | 8/8 |
+| v2.6.21 #6 generic cue ladder polarity (denials) | 92 | 7.3 | 397 | **84.3** | 8/8 |
+| v2.6.21 #9 hypothetical / interrogative cues | 97 | 7.7 | 323 | **68.6** | 8/8 |
+| v2.6.24 possessives contribute their noun | 739 | 59.0 | 501 | **106.4** | 8/8 |
+| v2.6.23 bare list markers open a unit | 63 | 5.0 | 46 | **9.8** | 3/8 |
+| v2.6.14 / 959d32c gate inflections (date family) | 20 | 1.6 | 15 | **3.2** | 3/8 |
+| reader register — second person | 85 | 6.8 | 1,870 | **397.2** | 8/8 |
+| v2.6.21 #11 decimals + abbreviation periods | 1,735 | **138.4** | 10 | 2.1 | 4/8 |
+| v2.6.21 #12 statistics spelled in words | 243 | **19.4** | 17 | 3.6 | 3/8 |
+| v2.6.22 marry conjugation in CLAIM_CUES | 149 | **11.9** | 19 | 4.0 | 4/8 |
+| v2.6.21 #3/#5 NBSP + format characters | 0 | 0.0 | 0 | **0.0** | 0/8 |
+| v2.6.21 #8 RTF destination groups | 0 | 0.0 | 0 | **0.0** | 0/8 |
+
+**Newly exercised** (the corpus would now see the defect): U+2019 in cue
+regexes (32× denser), cue-ladder polarity (11.6×), interrogative cues (8.9×),
+possessives (1.8×), list markers (2×), the date inflections (2×) — and the
+register shift itself, second person at 58× density.
+
+**Already covered, and the pt09 §6 blanket needs narrowing:** decimals and
+abbreviation periods (138/10k), word-spelled statistics (19/10k) and the marry
+inflections (12/10k) were all *denser in the academic corpus than in reader
+text*. Those three fixes moved zero corpus rows for some other reason than
+blindness — a future engine session should not spend its budget re-widening for
+them.
+
+**Still uncovered:** NBSP, zero-width and other format characters, and RTF
+destination groups. Both have causes in the acquisition chain rather than in
+the sources — findings F1 and F2.
+
+## 3. What the gate does with reader-shaped text
+
+Same population construction as the sweep (shipped gate, canon admission
+surfaces). `claim%` = claim-like ÷ units; `keep%` = swept ÷ claim-like.
+
+| | units | claim-like | binned | swept | claim% | keep% |
+|---|---:|---:|---:|---:|---:|---:|
+| OLD 01–22 (academic + newsroom) | 7,512 | 5,026 | 2,601 | 2,425 | 66.9 | **48.2** |
+| PT10 23–30 (reader-shaped) | 3,863 | 2,342 | 1,544 | 798 | 60.6 | **34.1** |
+
+Per source, the tranche ranges from 13.3% (Slate chat) to 44.2% (LoveShack
+"always the dumpee"). Spot-checked against source 27's binned units: the
+binning is **correct**, not a defect — reader discourse is mostly narrated
+particulars ("We both go to the gym 4–5 times per week", "This was on Friday
+night"), which is exactly what the gate exists to set aside. The number to
+carry forward is that a reader's paste yields roughly two thirds set-aside
+where a research paper yields half.
+
+## 4. Population and band
+
+| | before | after |
+|---|---:|---:|
+| swept sources | 21 | 29 |
+| swept passages | 2,425 | 3,223 (+798, +32.9%) |
+| dump pairs ≥ 0.02 | 481,851 | 622,625 |
+| frozen band pairs | 130,744 | 187,919 |
+| rulings | 36,320 | 36,320 (0 added, 0 changed) |
+| pending — credible / weak / candidate-floor | 0 / 0 / 29,242 | 0 / 0 / 29,242 |
+| corpus epoch | `421b1f5b859073c1` | `9429b35a081698e6` |
+
+**Additivity, measured not assumed.** Dump-to-dump over all 481,851
+pre-existing pairs: **0 moved, 0 disappeared**, 140,774 new. Over the 130,744
+previously frozen band pairs: **0 moved, 0 lost**. `prepareCanonIndex` derives
+IDF from the canon, so adding sources cannot move an existing pair — verified
+first on source 23 alone (0 moved) before the other seven were added, per the
+run's stop condition. Of the new pairs, 56,378 sit above `candidateScoreFloor`,
+7,573 above `minWeakScore`, 337 above `minCredibleScore`; none is a crossing —
+a pair from a source that was never swept was never measured, and absence from
+a baseline means "never measured", not "scored zero" (`md/lab-history.md`,
+`# lab-threshold-sweep-widening.md`). The band was therefore regenerated with
+`--neighbors` and **no** `--baseline`, exactly as the 2026-07-30 widening was.
+
+
+---
+
+# pt10/findings.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 16f4854:md/pt10/findings.md`
+
+# PT10 findings — recorded, not fixed
+
+This run widens the instrument. It changes no engine code, no canon, no
+threshold. Everything below is a finding for a future engine or doctrine
+session, with the repro that produced it.
+
+---
+
+## F1 — no HTML-sourced corpus text can ever carry an NBSP
+
+**The acquisition chain erases the surface, not the sources.** pt09 §6 recorded
+the corpus as unable to exercise "Unicode spacing" and attributed it to the
+academic register. That is only half true: a reader-shaped page *does* carry
+U+00A0, and the committed extractor removes it.
+
+Repro, on the archived pair:
+
+```
+raw    lab-corpus/sources/27-loveshack-defensive-partner.raw.html : 136 × U+00A0, 2 × &nbsp;
+text   lab-corpus/sources/27-loveshack-defensive-partner.txt      :   0 × U+00A0
+```
+
+Cause, both in `tools/extract-source-text.mjs`:
+
+- line 99 — `.replace(/&nbsp;/g, ' ')` turns the entity into a plain space
+- line 113 — `.replace(/[ \t ]+/g, ' ')` collapses any surviving literal
+
+Consequence: `v2.6.21 #3` (the relevance gate reads `normalizeText`, and one
+non-ASCII space binned a passage) is unreachable from every corpus source whose
+text came through this extractor — **20 of the 29** (19 archived `.raw.html`
+plus source 25's comment bodies). The other nine come through `pdftotext`,
+which emits no NBSP either.
+
+**Do not simply add `--keep-nbsp`.** Measured before recommending it: all 136
+literal NBSPs in source 27's raw capture are empty-paragraph spacers
+(`<p>\n\t&nbsp;\n</p>` — the forum editor's blank line), not NBSP inside a
+sentence. Preserving them would archive blank-line noise and *still* not
+exercise the defect. Across the 15 reader-shaped pages captured or examined
+this run, **NBSP inside a sentence did not occur once**. If the surface is
+wanted, it has to come from a source archived off the HTML path — a Word/RTF
+document, or a paste captured as-is — not from a flag.
+
+## F2 — the sweep cannot detect RTF, so the RTF fix is unreachable by design
+
+`js/lab-intake.js` `detectTextFormat` (lines 188–215) sniffs VTT, SRT and JSON
+from content, but RTF is recognised **only** by file extension or MIME type.
+A `{\rtf1…` document with neither falls through the JSON branch (the leading
+brace fails `JSON.parse`) and returns `'text'`:
+
+```js
+detectTextFormat({ text: '{\\rtf1\\ansi… }' })                    // 'text'
+detectTextFormat({ fileName: 'x.rtf', text: '{\\rtf1…' })         // 'rtf'
+detectTextFormat({ mimeType: 'application/rtf', text: '{\\rtf1…' })// 'rtf'
+```
+
+Both `tools/lab-threshold-sweep.mjs:117` and
+`tests/lab-threshold-neighbors.test.mjs:94` call `normalizeInput` with
+`format: 'auto'` and no `fileName`/`mimeType`. So an `.rtf` archived as a corpus
+source would be swept as **plain text with the control words as prose**, and
+`parseRtfDocument` — the `v2.6.21 #8` fix site — would never run.
+
+The fix class is therefore not "acquire an RTF source": it is either a content
+sniff for `{\rtf` in `detectTextFormat`, or a manifest-declared `format` the
+sweep passes through. Recorded for the engine session; **not built here.**
+
+## F3 — pt09 §6's blanket is too broad in three places
+
+pt09 concluded that all eleven v2.6.21 fixes moved zero corpus rows *because
+the corpus cannot see these defects*. Measured per surface (census §2), three
+of them were already denser in the old corpus than in reader text:
+
+| surface | old /10k | pt10 /10k |
+|---|---:|---:|
+| decimals + abbreviation periods (`#11`) | 138.4 | 2.1 |
+| statistics spelled in words (`#12`) | 19.4 | 3.6 |
+| marry conjugation in CLAIM_CUES (`v2.6.22`) | 11.9 | 4.0 |
+
+Their zero has a different cause — the fix is real but the corpus passages that
+carry the surface do not sit near a threshold. A future session should not
+spend budget widening the corpus for these three; the pt09 finding stands for
+the other eight.
+
+## F4 — the domain gate keeps a third of reader discourse, and it is right to
+
+`keep%` (swept ÷ claim-like): **48.2% academic/newsroom → 34.1% reader-shaped**
+(census §3). Spot-checked against source 27's binned claim-like units, the
+binning is correct: reader discourse is mostly narrated particulars ("We both
+go to the gym 4–5 times per week", "This was on Friday night") which the gate
+exists to set aside. No fix is implied. The number is the one to plan with —
+a reader's paste yields roughly two thirds set-aside where a paper yields half,
+so a coverage percentage measured on this corpus is not comparable across the
+two registers without saying which one it was measured on.
+
+## F5 — the largest reservoir of reader discourse is bot-walled
+
+Reddit (`old.reddit.com` HTML and the `.json` API), Ask MetaFilter, The Bump,
+enotalone, Ask a Manager and datingadvice.com all refuse a plain browser UA
+from this environment (403, or Reddit's login wall); talkaboutmarriage returns
+a Cloudflare challenge; Mumsnet renders thread links client-side. See
+`CLAIMS.md` for the full rejection list.
+
+This is a **standing constraint on the corpus programme**, not a one-run
+accident: the registers reachable by `curl` are publisher-side (advice columns,
+moderated comment sections, older forum software). Genuinely peer-to-peer
+platform discourse is not reachable, and no amount of widening from this
+environment will make it so. If that register matters, it needs a different
+acquisition route and Jason's decision — recorded, not solved.
+
+## F6 — the chat register is the least canon-legible thing in the tranche
+
+Source 23 (Slate's two-columnist chat) retains **13.3%** of its claim-like
+units, the lowest in the tranche and below every source in the old corpus
+except four that are near-zero by topic (12-nep 0.0%, 16-pew-emotional-support
+7.3%, 15-asc-american-friendship 7.7%, 14-common-sense 10.3%). Speaker-turn
+discourse ("Jenée:
+Right! I think I have mentioned this in a column before…") is claim-like by the
+detector and off-domain by the gate. Not investigated further this run; flagged
+because it is the register a live Lab user is most likely to paste and the one
+the corpus is now least able to speak for.
