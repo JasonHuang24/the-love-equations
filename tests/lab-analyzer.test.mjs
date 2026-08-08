@@ -1161,13 +1161,21 @@ test('dating-app interaction mechanics are retained through the agreed append-1 
 });
 
 test('an include override admits a context-only set-aside as an analyzable claim', async () => {
-  // Reviewer contract-violation reproduction (benchmark case pt-03): a passage
-  // whose machine isClaimLike is false was included, echoed, but never entered
-  // claims, coverage, or the queue, and lost its Undo surface. A locked
-  // visitor input must be honored through every analytical population.
+  // Reviewer contract-violation reproduction: a passage whose machine
+  // isClaimLike is false was included, echoed, but never entered claims,
+  // coverage, or the queue, and lost its Undo surface. A locked visitor
+  // input must be honored through every analytical population.
+  //
+  // The scenario used benchmark case pt-03 ("The merger married two
+  // incompatible corporate cultures.") until v2.6.22, when the marry
+  // conjugation entered CLAIM_CUES by Jason's ruling and that sentence
+  // became machine-claim-like — which this scenario's premise cannot
+  // survive. The input is re-chosen, not the assertions weakened: it needs
+  // any cue-free non-domain sentence, and pt-03's own claim/gate behavior
+  // stays pinned in the marry-conjugation test below.
   const document = normalizeInput({
-    text: 'The merger married two incompatible corporate cultures.',
-    source: { title: 'pt-03 include fixture' },
+    text: 'The quarterly audit reconciled the vendor ledger totals.',
+    source: { title: 'include-override fixture' },
   });
   const baseline = await analyzeDocument(document, REAL_CANON);
   assert.equal(baseline.metrics.claimLikeSegments, 0);

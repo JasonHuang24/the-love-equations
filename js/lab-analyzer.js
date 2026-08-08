@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.21';
+export const ANALYZER_VERSION = '2.6.22';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -342,7 +342,9 @@ const CLAIM_CUES = [
   /\b(?:always|never|everyone|nobody|all men|all women|most men|most women)\b/i,
   /\b(?:because|therefore|so that|as a result|the reason)\b/i,
   /\b(?:\d+(?:\.\d+)?\s*%|\b(?:study|studies|research|data|survey|sample)\b)\b/i,
-  /\b(?:prefer|choose|reject|attract|desire|commit|date|marry|divorce|retain|leave)\w*\b/i,
+  // `marry|marrie[sd]`, not `marry\w*` alone: "married"/"marries" never
+  // contain the stem `marry` (the v2.6.14 defect shape; ruled in 2026-08-08).
+  /\b(?:prefer|choose|reject|attract|desire|commit|date|marry|marrie[sd]|divorce|retain|leave)\w*\b/i,
   /\b(?:meet|make|put|leave|change|matter|narrow|prolong|reward|encourage|discourage|increase|decrease|reduce|delay|shape|affect|influence|sustain|tolerate)\w*\b/i,
 ];
 
