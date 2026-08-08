@@ -1426,7 +1426,8 @@
         "frameworks:commitment-problem",
         "statistics:stat-relationship-quality",
         "frameworks:constraint-dedication-split",
-        "frameworks:attention-boundary"
+        "frameworks:attention-boundary",
+        "frameworks:repair-sequence"
       ],
       "boundaryConditions": [
         "A relationship label is useful shorthand but does not specify every boundary concerning sex, romance, disclosure, hierarchy, time, resources, health or revision.",
@@ -1944,6 +1945,9 @@
         "back on the market",
         "re-enter the market",
         "post-divorce dating"
+      ],
+      "related": [
+        "frameworks:repair-sequence"
       ],
       "boundaryConditions": [
         "Ended is a state with a base rate of one hundred percent over a long horizon, so reaching it grades where a bond stopped rather than whether it was worthwhile.",
@@ -2562,7 +2566,8 @@
         "frameworks:the-surplus",
         "frameworks:outside-option",
         "frameworks:sixth-rung",
-        "frameworks:constraint-dedication-split"
+        "frameworks:constraint-dedication-split",
+        "frameworks:repair-sequence"
       ],
       "boundaryConditions": [
         "A signal carries information in proportion to what sending it forecloses, so a scarce free signal can outperform an unlimited costly one.",
@@ -6514,6 +6519,57 @@
         "Is persistence being treated as evidence of desire even though leaving carries material, social or perceived costs?",
         "Did the transition change dedication, constraints or both, and were those constructs measured separately?",
         "Would the same constraint protect a valued investment here, or make an unwanted or unsafe relationship harder to exit?"
+      ]
+    },
+    "frameworks:repair-sequence": {
+      "aliases": [
+        "The Repair Sequence",
+        "relationship repair sequence",
+        "accountable relationship repair",
+        "forgiveness and reconciliation split",
+        "apology restitution and behavior change",
+        "interpersonal forgiveness after harm",
+        "relationship forgiveness"
+      ],
+      "phrases": [
+        "acknowledge relationship harm and make amends",
+        "forgiveness does not require reconciliation",
+        "apology changes future relationship value",
+        "repair requires changed future conduct",
+        "separate forgiveness from staying together",
+        "forgiveness and relationship satisfaction",
+        "forgiveness predicts relationship effort",
+        "forgiveness and negative conflict tactics",
+        "apology increases relationship value",
+        "apology forgiveness relationship value pathway",
+        "apologies increase perceived relationship value",
+        "apologies cause forgiveness through relationship value",
+        "apology-forgiveness relationship value pathway",
+        "transgressor relationship value and forgiveness",
+        "forgiveness remains separate from reconciliation"
+      ],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:commitment-problem",
+        "frameworks:sixth-rung"
+      ],
+      "boundaryConditions": [
+        "The four-state sequence is an LE synthesis; no source measured acknowledgement, amends, changed conduct, forgiveness and reconciliation together or established one required order.",
+        "The romantic evidence is observational self-report from unusually young, mostly female samples and does not show that forgiveness causes effort, satisfaction or retention.",
+        "The randomized apology experiment bundled verbal apology with a one-dollar transfer after a modest online insult between novel strangers.",
+        "The apology-versus-restitution experiment used repeated hypothetical burglary imagery in 61 undergraduates and did not observe partner conduct, relationship repair or health outcomes.",
+        "Forgiveness describes a motivational shift away from revenge and avoidance; it does not itself restore trust, access, contact or a relationship.",
+        "Under coercion, abuse, stalking, repeated harm or credible danger, safety and exit outrank apology, amends, forgiveness and completion of any repair sequence."
+      ],
+      "commonMisreadings": [
+        "A sincere apology automatically restores trust and completes repair between romantic partners.",
+        "Forgiving a partner requires reopening the relationship and resuming the previous level of access.",
+        "Remaining together proves both partners completed accountability, forgiveness, trust, and reconciliation."
+      ],
+      "pressureTests": [
+        "What did the person who caused harm acknowledge, restore and change in future conduct, apart from the apology wording?",
+        "Is the injured partner's forgiveness being treated as consent to resume contact, trust or the relationship?",
+        "Does the evidence measure apology, restitution, behavior change, forgiveness or reconciliation, and which links remain untested?"
       ]
     },
     "frameworks:attention-boundary": {

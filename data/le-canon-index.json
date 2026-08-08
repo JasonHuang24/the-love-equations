@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+34637a842a72",
+  "indexVersion": "1.0.0+22716b67fb37",
   "generatedAt": "2026-08-07T23:59:31.000Z",
   "sourcePages": [
     {
@@ -33,8 +33,8 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "9295d1fe7d96d9ab8c0f4642126df39a3fe655f1592241cd29a3c0517acf95c8",
-      "conceptCount": 73
+      "sha256": "3379265c8a22bde0b437a60bc6a063a9bb9491781ae10f51e287653ea22785b0",
+      "conceptCount": 74
     },
     {
       "page": "gender-dynamics.html",
@@ -237,7 +237,7 @@
     }
   ],
   "stats": {
-    "conceptCount": 576,
+    "conceptCount": 577,
     "sourceCount": 21,
     "byCategory": {
       "Deep Dives": 47,
@@ -248,13 +248,13 @@
       "Love Hierarchy": 41,
       "Mythbuster": 65,
       "Pill Dossiers": 28,
-      "Rules & Frameworks": 73,
+      "Rules & Frameworks": 74,
       "Statistics": 51
     },
     "byEvidenceType": {
       "Definitional": 1,
       "Evidence-based": 36,
-      "Framework": 83,
+      "Framework": 84,
       "Glossary": 98,
       "Hard data": 28,
       "Instrument": 5,
@@ -271,10 +271,10 @@
       "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 481,
-    "conceptsWithExternalSources": 147,
+    "anchoredConceptCount": 482,
+    "conceptsWithExternalSources": 148,
     "dependencyCount": 295,
-    "relatedCount": 512
+    "relatedCount": 518
   },
   "entries": [
     {
@@ -4730,6 +4730,7 @@
       ],
       "dependencies": [],
       "related": [
+        "frameworks:repair-sequence",
         "frameworks:good-news-rule",
         "frameworks:commitment-problem",
         "statistics:stat-relationship-quality",
@@ -5067,6 +5068,85 @@
         "Did device use actually displace attention the partners expected to share, or is harm being inferred from minutes or presence alone?",
         "Was the use unexplained disengagement, a communicated necessity, or technology integrated into the couple’s shared interaction?",
         "Do the partners disagree about an attention boundary, and can they renegotiate it without surveillance or continuous-availability demands?"
+      ]
+    },
+    {
+      "id": "frameworks:repair-sequence",
+      "title": "The Repair Sequence",
+      "page": "frameworks.html",
+      "anchor": "repair-sequence",
+      "category": "Rules & Frameworks",
+      "subcategory": "Retention & maintenance",
+      "synopsis": "After harm, four different states are often compressed into “forgive and move on.” The person who caused the harm can acknowledge it, make proportionate amends, and change future conduct. The injured partner can become less retaliatory or avoidant, which forgiveness research treats as a motivational shift. Whether the pair restores trust, access or the relationship is a further decision.",
+      "evidenceType": "Framework",
+      "contentType": "Framework",
+      "verdict": "",
+      "aliases": [
+        "Repair Sequence",
+        "The Repair Sequence",
+        "relationship repair sequence",
+        "accountable relationship repair",
+        "forgiveness and reconciliation split",
+        "apology restitution and behavior change",
+        "interpersonal forgiveness after harm",
+        "relationship forgiveness"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [
+        "acknowledge relationship harm and make amends",
+        "forgiveness does not require reconciliation",
+        "apology changes future relationship value",
+        "repair requires changed future conduct",
+        "separate forgiveness from staying together",
+        "forgiveness and relationship satisfaction",
+        "forgiveness predicts relationship effort",
+        "forgiveness and negative conflict tactics",
+        "apology increases relationship value",
+        "apology forgiveness relationship value pathway",
+        "apologies increase perceived relationship value",
+        "apologies cause forgiveness through relationship value",
+        "apology-forgiveness relationship value pathway",
+        "transgressor relationship value and forgiveness",
+        "forgiveness remains separate from reconciliation"
+      ],
+      "dependencies": [],
+      "related": [
+        "frameworks:agreement-surface",
+        "frameworks:commitment-problem",
+        "frameworks:sixth-rung"
+      ],
+      "boundaryConditions": [
+        "The four-state sequence is an LE synthesis; no source measured acknowledgement, amends, changed conduct, forgiveness and reconciliation together or established one required order.",
+        "The romantic evidence is observational self-report from unusually young, mostly female samples and does not show that forgiveness causes effort, satisfaction or retention.",
+        "The randomized apology experiment bundled verbal apology with a one-dollar transfer after a modest online insult between novel strangers.",
+        "The apology-versus-restitution experiment used repeated hypothetical burglary imagery in 61 undergraduates and did not observe partner conduct, relationship repair or health outcomes.",
+        "Forgiveness describes a motivational shift away from revenge and avoidance; it does not itself restore trust, access, contact or a relationship.",
+        "Under coercion, abuse, stalking, repeated harm or credible danger, safety and exit outrank apology, amends, forgiveness and completion of any repair sequence."
+      ],
+      "commonMisreadings": [
+        "A sincere apology automatically restores trust and completes repair between romantic partners.",
+        "Forgiving a partner requires reopening the relationship and resuming the previous level of access.",
+        "Remaining together proves both partners completed accountability, forgiveness, trust, and reconciliation."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Braithwaite, Selby & Fincham (2011), Journal of Family Psychology 25(4):551–559",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3156929/"
+        },
+        {
+          "label": "Forster et al. (2021), Scientific Reports 11:13107",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8222305/"
+        },
+        {
+          "label": "Witvliet et al. (2020), Frontiers in Psychology 11:284",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7082420/"
+        }
+      ],
+      "pressureTests": [
+        "What did the person who caused harm acknowledge, restore and change in future conduct, apart from the apology wording?",
+        "Is the injured partner's forgiveness being treated as consent to resume contact, trust or the relationship?",
+        "Does the evidence measure apology, restitution, behavior change, forgiveness or reconciliation, and which links remain untested?"
       ]
     },
     {
@@ -6442,6 +6522,7 @@
       "dependencies": [],
       "related": [
         "frameworks:signal-cost-rule",
+        "frameworks:repair-sequence",
         "frameworks:the-surplus",
         "frameworks:outside-option",
         "frameworks:sixth-rung",
@@ -7076,7 +7157,8 @@
       "related": [
         "statistics:stat-divorce",
         "frameworks:search-cost",
-        "frameworks:substitution-layer"
+        "frameworks:substitution-layer",
+        "frameworks:repair-sequence"
       ],
       "boundaryConditions": [
         "Ended is a state with a base rate of one hundred percent over a long horizon, so reaching it grades where a bond stopped rather than whether it was worthwhile.",
