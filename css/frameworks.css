@@ -713,7 +713,7 @@
   html[data-content-width="wide"] .ladder-graph,
   html[data-content-width="wide"] .cc-map-wrap,
   html[data-content-width="wide"] .sd-chart {
-    width: min(100%, 30vw, 83vh);
+    width: min(100%, 1120px, 83vh);
     margin-left: auto;
     margin-right: auto;
   }

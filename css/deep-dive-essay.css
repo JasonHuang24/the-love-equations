@@ -292,7 +292,9 @@ body[data-page="deep-dive"] {
 }
 .dd-callout-label {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  max-width: 100%;
   gap: 7px;
   font-family: Inter, system-ui, sans-serif;
   font-size: 10.5px;

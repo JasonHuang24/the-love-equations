@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+86c83e547e4d",
-  "generatedAt": "2026-08-08T02:27:04.000Z",
+  "indexVersion": "1.0.0+5c6627b8bac3",
+  "generatedAt": "2026-08-08T07:59:38.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -11,7 +11,7 @@
       "inputs": [
         "hierarchy.html"
       ],
-      "sha256": "c355ccb8ac83c0286cbdd0790038e2493de079193ae2f2b97f9425013547a26a",
+      "sha256": "342f278f32d0e9c28e9c6eeee57742cd75f6be4d7967e34937aec36fbe9fcca4",
       "conceptCount": 41
     },
     {
@@ -22,7 +22,7 @@
       "inputs": [
         "smvlevers.html"
       ],
-      "sha256": "fe9102f6fcbc90426e47d5c07530e6c5741c6b2ae84b33c569bac0e169d636ae",
+      "sha256": "3a4497f80b1cbd2ed13acf863c63fd505929962f890ff33961f5b764c5e7454f",
       "conceptCount": 35
     },
     {
@@ -33,7 +33,7 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "43b9e5576f3cc4da24a77b827ce00220d987e5f2a4ef80d0dd01c806c47929de",
+      "sha256": "c8a79847fd450c91b7e48d803130ee045c88b3475cae841145f8e5a88d5c597a",
       "conceptCount": 76
     },
     {
@@ -44,7 +44,7 @@
       "inputs": [
         "gender-dynamics.html"
       ],
-      "sha256": "8bb0253338c3f7f0e1b6531a39858ea23663e45849bbeb59dfb144d68f76688e",
+      "sha256": "8ba2b1695d08a5fd59fa832ed615432e4ea020781501bcfb117bb04b8aaf014d",
       "conceptCount": 133
     },
     {
@@ -55,7 +55,7 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "37944d09f6f010e2e9b1fcce608d679589adfe2b3a8e7efd8fb9b391c0ef80e6",
+      "sha256": "1984109ed240231ca97617af802c3e3dc8ec3f8fc1f111a4bf0230aeabe3d015",
       "conceptCount": 51
     },
     {
@@ -67,7 +67,7 @@
         "mythbuster.html",
         "js/mythbuster.js"
       ],
-      "sha256": "b17d955feca72acf4883339b43876865f98d894a5036f7abce371d5013111a14",
+      "sha256": "086bee181485ce9af89d6ad311d1feb1a61545c3584ea7736f0e1e0b641a3092",
       "conceptCount": 65
     },
     {
@@ -78,7 +78,7 @@
       "inputs": [
         "pills.html"
       ],
-      "sha256": "b800deddc9070c1afbc9f1eb09633e43088fca3ac2e04d9582fc995b4e730736",
+      "sha256": "6056f471bd8af9360dbdf9598add324c002c1817ca603d6e08872d0347be26a8",
       "conceptCount": 28
     },
     {
@@ -89,7 +89,7 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "ab779d5acb183128240c225a842f8a5ac96eaf0b948d38baae8a7995484daa51",
+      "sha256": "b88650210482268c8c39cf9e4286483c637bd2db931664196eabe3651dbc49dc",
       "conceptCount": 98
     },
     {
@@ -100,7 +100,7 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "371b7878a8a68d7ba1bff72a7e01eaf05435129cd6ef7b9d2774f4e74f8fed49",
+      "sha256": "20ef11e1a05a77ae7df7ba48f09f8b65d904f1341a5931c3862441d7f998540c",
       "conceptCount": 7
     },
     {
@@ -111,7 +111,7 @@
       "inputs": [
         "dd-relationships-throughout-history.html"
       ],
-      "sha256": "9569037a22785fd93244238e9fd08ac558b110d50dd59bd59cbcf95e70aed840",
+      "sha256": "b887444ebd2e9eacf28683798f0dc6d6de09c7f3481e34e2085adb900d04c8e9",
       "conceptCount": 6
     },
     {
@@ -122,7 +122,7 @@
       "inputs": [
         "dd-third-spaces.html"
       ],
-      "sha256": "ce96b91b10eb2bb4bf687bea26805650ceb066f7215122ebb6f384e07f6a2805",
+      "sha256": "987c48293515122cc9d99239eb93b926f5c534c1d5cd53b20416f2858c98cfaf",
       "conceptCount": 6
     },
     {
@@ -133,7 +133,7 @@
       "inputs": [
         "dd-relationships-by-country.html"
       ],
-      "sha256": "84e225719073f97ddb7d5e21c44f12f816d9cc3e4fa3b88d36c5f50ddcc6ab5d",
+      "sha256": "01e31134ce98686ffa5a89ba2e7ce33f4f57c37717c910c358c3378a48f18f51",
       "conceptCount": 6
     },
     {
@@ -144,7 +144,7 @@
       "inputs": [
         "dd-what-the-wall-actually-is.html"
       ],
-      "sha256": "d0c5edf7ee28e314dffe6e36fdd80b81c2e7411e00f53d7820f4381d447633ae",
+      "sha256": "b9500af4b37a590a0348001d6289d86054df693475208074fa812c8e772f11c8",
       "conceptCount": 6
     },
     {
@@ -155,7 +155,7 @@
       "inputs": [
         "dd-single-parenthood.html"
       ],
-      "sha256": "9a3d41e7de3c765eadfccc8e7dd8ca037dd0182b2d7643a1f890a24fff6192eb",
+      "sha256": "88f0269c0d6793f0a8b6c028a86e6c4f31cb9fe64ef51822ed2597787bb03182",
       "conceptCount": 6
     },
     {
@@ -166,7 +166,7 @@
       "inputs": [
         "dd-the-red-pill.html"
       ],
-      "sha256": "dda9b38b73a715455b1b944f570a578bd44cd2ed19bf427b4f5c760352f77de8",
+      "sha256": "97b08db85fbff5473ab53cc33fc8f4c6cf75c64f7ab7cdcaf5055477a8891c27",
       "conceptCount": 5
     },
     {
@@ -177,7 +177,7 @@
       "inputs": [
         "dd-competition-anxiety.html"
       ],
-      "sha256": "755f7d575711df532c1f5d42d25c474f6f72af0c6364c05a2175710b62371098",
+      "sha256": "fb32605346eac2d2061f5c6b3a8b476bd9e70c40a7e6894fa6d7935218b38b2f",
       "conceptCount": 5
     },
     {
@@ -188,7 +188,7 @@
       "inputs": [
         "smvcalc.html"
       ],
-      "sha256": "8544a60a19eca0dd340c4979173da4318a212a73c577e51c902e6ab58fb6174e",
+      "sha256": "9507e0be8cef3ac997f7e356e88054e762ddb502abbfdc322152be2e442d98cd",
       "conceptCount": 1
     },
     {
@@ -199,7 +199,7 @@
       "inputs": [
         "compatibility.html"
       ],
-      "sha256": "1e1a138c9bcf9d44a420edcc3be1dd19735db90ea3a1ee75dc765f109805e6c0",
+      "sha256": "d803a56b9dd5590295028a1105572ea4b535099936923f7f893861924600bbe0",
       "conceptCount": 1
     },
     {
@@ -210,7 +210,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "50f4046b6bc6a42b4a5428eca958add0d95e3492e9b203e7beaa42fba3e1d03c",
+      "sha256": "9fd08a5095d05a0fa7af7eb04ded3e8bf73724ed43f8f88b42a26703c21f3c46",
       "conceptCount": 1
     },
     {
@@ -221,7 +221,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "18048e0c25ddfe2a3ae8433957b97409d3cda58a7ad4a276f37d148a5a9a8b52",
+      "sha256": "a986f46a90a3008b21fcdbb35e94490260880229becddf629a9d014d6eff77b4",
       "conceptCount": 1
     },
     {
@@ -232,7 +232,7 @@
       "inputs": [
         "matchmaker.html"
       ],
-      "sha256": "2090162d7d6efd363d4bb4a533b9e3473376b5d8af187d4d8c77c71cb928b5b9",
+      "sha256": "b74fa9380270565997bf5a92cf7f9a40ca1f157c074c3e80a513e9f82a7c5f84",
       "conceptCount": 1
     }
   ],

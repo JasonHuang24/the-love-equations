@@ -1089,3 +1089,6 @@ body {
 .lab-stamp .ti { font-size: 11px; color: var(--scarlet-dim); }
 .lab-stamp svg { width: 11px; height: 11px; color: var(--scarlet-dim); flex-shrink: 0; }
 a.lab-stamp:hover, a.lab-stamp:focus-visible { border-color: var(--scarlet-dim); color: var(--scarlet-dim); border-style: solid; }
+@media (max-width: 560px) {
+  .lab-stamp { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+}
