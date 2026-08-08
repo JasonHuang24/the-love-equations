@@ -16,7 +16,7 @@ function required(id) {
 }
 
 assert.equal(index.schemaVersion, 'le-canon-index/1.1');
-assert.equal(index.stats.conceptCount, 579);
+assert.equal(index.stats.conceptCount, 707);
 assert.equal(index.stats.sourceCount, 21);
 
 // Source hashes describe repository content, not checkout-specific line endings.
@@ -36,7 +36,7 @@ assert.deepEqual(index.stats.byCategory, {
   'Five Levers': 35,
   'Gender Dynamics': 133,
   Instruments: 5,
-  Lexicon: 98,
+  Lexicon: 226,
   'Love Hierarchy': 41,
   Mythbuster: 65,
   'Pill Dossiers': 28,
@@ -81,7 +81,7 @@ assert.equal(index.entries.filter((entry) => !entry.commonMisreadings.length).le
   'Every canon entry must be able to disagree with a reader. An entry with no '
   + 'commonMisreading has a dark Contradicts branch; author one, per the contract in '
   + 'md/lab-overlay-tranche3.md.');
-assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 579);
+assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).length, 707);
 // Boundaries lag misreadings by design: 12 tranche-3 targets already carried a
 // hand-authored boundary, and 6 entries carry a misreading alone because a second
 // boundary would only add retrieval mass to the same entry. The 2026-07-31 pills
@@ -97,8 +97,11 @@ assert.equal(index.entries.filter((entry) => entry.commonMisreadings.length).len
 // scout — the authority firewall and synthetic reciprocity — again with both,
 // and pressure test 09 added the care role split, constraint–dedication split
 // and attention boundary with both, then the repair sequence and stress
-// transmission split and sleep-interaction loop with both. The boundary gap remains 33.
-assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 546);
+// transmission split and sleep-interaction loop with both. The 2026-08-08 Lexicon
+// crawl added 128 terms — every uncovered framework, the Love Hierarchy, Exposure,
+// and the jargon the pages define in prose — each authored with both fields, so the
+// boundary gap remains 33.
+assert.equal(index.entries.filter((entry) => entry.boundaryConditions.length).length, 674);
 
 assert.match(required('hierarchy:overview').synopsis, /three-tier funnel/i);
 assert.equal(required('smv:looks').title, 'Looks');

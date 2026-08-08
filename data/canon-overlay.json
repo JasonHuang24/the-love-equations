@@ -6708,6 +6708,1196 @@
         "Whose outcome moved, and was it an actor path, partner path or couple-level concordance measure?",
         "Was sleep measured by diary, actigraphy, symptoms, timing or an experimental manipulation, and over what interval?"
       ]
+    },
+    "lexicon:term-the-marriage-bar": {
+      "commonMisreadings": [
+        "If two people actually wanted to be married they would be — an unmarried couple that has been together for years is telling you one of them isn't interested.",
+        "Money is an excuse people give; the real gate is always commitment."
+      ],
+      "boundaryConditions": [
+        "The figures describe U.S. cohabiters who say they want to marry someday, not all unmarried couples.",
+        "About three-in-ten name a partner's (29%) or their own (27%) financial readiness as a major reason they are not engaged, which leaves it unnamed by most of that sample; the household-already-working picture comes from interview work, not a rate."
+      ]
+    },
+    "lexicon:term-the-meeting-channel": {
+      "commonMisreadings": [
+        "Where you meet is just weather — it has no bearing on who you end up with or what it costs you.",
+        "Everyone meets online now, so the apps simply are the dating market."
+      ],
+      "boundaryConditions": [
+        "The roughly 39% figure is U.S. heterosexual couples as of 2017, with online passing friends around 2013 — it is a share of couples formed, not a share of people searching.",
+        "The entry names what each channel draws, reads first and bills; it does not rank the channels against each other."
+      ]
+    },
+    "lexicon:term-the-market-maker-s-cut": {
+      "commonMisreadings": [
+        "The apps are paid to pair people off, so their incentives point the same way yours do — a happy couple is their best advertising.",
+        "Pricing on a dating app is one published number and everybody pays it."
+      ],
+      "boundaryConditions": [
+        "The incentive claim rests on the subscription model: Match Group and Bumble clear most of the U.S. market on subscription revenue, where the fee recurs for every month a search continues.",
+        "The price findings are consumer-group audits in several countries showing the same tier priced differently by age, on no disclosed basis — the audits establish the variation, not the reason for it."
+      ]
+    },
+    "lexicon:term-the-costless-exit": {
+      "commonMisreadings": [
+        "Everyone ghosts now — it is simply what dating is, so there is no point reading anything into it.",
+        "Ghosting is the harm and breadcrumbing is the harmless version, since at least the person is still around."
+      ],
+      "boundaryConditions": [
+        "Roughly a fifth to a quarter report each, which is well short of the universal the discourse claims.",
+        "The comparison between them comes from the one located sample that separated the two behaviours, where breadcrumbing predicted lower life satisfaction and more loneliness — an association within that sample."
+      ]
+    },
+    "lexicon:term-the-support-portfolio": {
+      "commonMisreadings": [
+        "Your partner should be your best friend and your whole support system; needing anyone else means the relationship is falling short."
+      ],
+      "boundaryConditions": [
+        "The entry separates three variables — how many channels exist, how concentrated support is in the relationship, and who maintains the other channels — and does not set a correct number or concentration for any couple.",
+        "It describes the shape of a support portfolio, not what any given distribution produces."
+      ]
+    },
+    "lexicon:term-the-delegation-boundary": {
+      "commonMisreadings": [
+        "Help is help — having a friend read your profile and having someone else run your conversations are the same thing with different labels."
+      ],
+      "boundaryConditions": [
+        "The gradient is defined by transferred agency — whether the seeker still authors and decides — not by how well the assistance works.",
+        "It names three positions (feedback, co-authorship, substitution) and does not rule on which of them succeeds."
+      ]
+    },
+    "lexicon:term-the-replaceability-asymmetry": {
+      "commonMisreadings": [
+        "Find someone who matches your list and satisfaction follows — how closely a partner fits your stated ideals is what keeps you happy with them."
+      ],
+      "boundaryConditions": [
+        "The finding is about satisfaction with the partner someone already has, not about who they select in the first place.",
+        "It comes from three studies in which ideal-partner fulfilment barely moved satisfaction once mate value discrepancy entered the model."
+      ]
+    },
+    "lexicon:term-attention-to-alternatives": {
+      "commonMisreadings": [
+        "Noticing anyone else means you are already halfway out — a committed person does not see other candidates at all."
+      ],
+      "boundaryConditions": [
+        "Interdependence theory supplies only the comparison level for alternatives, the running estimate of how you would do if you left; the addition here is treating attention to that comparison as its own variable.",
+        "The entry defines that variable — noticing, seeking out, being distracted — and does not state how much of it predicts what."
+      ]
+    },
+    "lexicon:term-mate-retention-intensity": {
+      "commonMisreadings": [
+        "Retention effort is a mood, and more of it means more love — a partner who guards and checks is a partner who cares."
+      ],
+      "boundaryConditions": [
+        "The paths come from the source dataset: mate value discrepancies moved satisfaction, and satisfaction predicted retention effort.",
+        "The same discrepancies also moved trust, which predicted retention behaviour in the opposite direction, so a single intensity score does not carry one sign."
+      ]
+    },
+    "lexicon:term-the-desire-maintenance-split": {
+      "commonMisreadings": [
+        "Desire fades with familiarity, and your attachment style is what decides how fast it goes."
+      ],
+      "boundaryConditions": [
+        "Only part of the compound claim carries prospective support: that desire, sexual satisfaction and frequency decline over relationship duration.",
+        "The regulation claim failed the only located instrumented test — anxious attachment-related needs correlated positively with desire and neither orientation moderated the decline — which is one test, not a settled negative."
+      ]
+    },
+    "lexicon:term-the-satisfaction-flywheel": {
+      "commonMisreadings": [
+        "Sex is downstream of the relationship — fix how the couple is doing and the sex takes care of itself."
+      ],
+      "boundaryConditions": [
+        "The two-way loop is measured across eight waves of 207 newlywed marriages, so it describes early marriage rather than long-duration or non-marital relationships.",
+        "The two directions ran at roughly equal strength in that sample, with frequency of sex sitting inside the loop."
+      ]
+    },
+    "lexicon:term-the-agreement-surface": {
+      "commonMisreadings": [
+        "Once you have both said 'monogamous', the rules are settled and both of you know what they are."
+      ],
+      "boundaryConditions": [
+        "The surface is only what two people have actually made mutually legible; the label on the relationship is a separate thing and does not stand in for it.",
+        "The entry lists the material questions — what counts as sex or romance, what is disclosed and when, whether any bond has priority, how time and money are allocated, how an agreement gets revised — without saying which answers are correct."
+      ]
+    },
+    "lexicon:term-the-financial-architecture-split": {
+      "commonMisreadings": [
+        "A joint account means nothing is hidden, and keeping separate accounts means somebody is hiding something."
+      ],
+      "boundaryConditions": [
+        "Account topology and financial fidelity are separate variables: separate accounts can be fully transparent and a joint account can coexist with hidden debt, income, spending or transfers.",
+        "Fidelity here means conduct staying inside the couple's own disclosed and accepted rules, so it is defined against those rules rather than a general standard."
+      ]
+    },
+    "lexicon:term-co-transition": {
+      "commonMisreadings": [
+        "The transition belongs to one person, so nothing about it is the partner's to work through.",
+        "If the relationship changes at all, the partner was never really committed."
+      ],
+      "boundaryConditions": [
+        "The identity and the body belong to the person transitioning; what the entry adds is that the relationship changes for everyone inside it.",
+        "It names the domains a partner may have to revisit — attraction, orientation language, intimacy, public presentation, family roles, the expected future — and does not predict how any particular relationship resolves."
+      ]
+    },
+    "lexicon:term-the-care-role-split": {
+      "commonMisreadings": [
+        "When a partner gets sick you become their caregiver, and the couple part waits until they are better."
+      ],
+      "boundaryConditions": [
+        "The split applies where chronic illness places a care role alongside the couple role in one dyad — the care role organizing medication, mobility, appointments, money and daily tasks while the couple role still carries reciprocity, privacy, desire and mutual choice.",
+        "The entry names the failure mode as one ledger silently consuming the other; it gives no rate at which that happens."
+      ]
+    },
+    "lexicon:term-the-constraint-dedication-split": {
+      "commonMisreadings": [
+        "They are still together, so they must want to be — a relationship that lasts is a relationship that is chosen."
+      ],
+      "boundaryConditions": [
+        "Persistence by itself identifies neither dedication nor constraint, and the entry allows for both being present at once.",
+        "It names examples of constraints — a lease, shared possessions, financial dependence, children, lost alternatives — without ruling on what any of them should mean for a decision."
+      ]
+    },
+    "lexicon:term-the-attention-boundary": {
+      "commonMisreadings": [
+        "Phones are the problem — cut the screen time and the relationship problem goes with it."
+      ],
+      "boundaryConditions": [
+        "The relationship variable is not device ownership or total screen minutes; it is whether use displaced expected partner attention and what meaning the pair assigned to it.",
+        "Technoference covers interruption of a shared conversation or activity generally, while partner phubbing is the phone-specific case where the partner experiences the device as taking the attention."
+      ]
+    },
+    "lexicon:term-the-repair-sequence": {
+      "commonMisreadings": [
+        "Once you have forgiven them it is settled — forgiveness means the trust is back and the relationship carries on as before."
+      ],
+      "boundaryConditions": [
+        "Forgiveness research treats the injured partner's change as a motivational shift, becoming less retaliatory or avoidant — that is a different state from the other person acknowledging, making amends, or changing future conduct.",
+        "Whether the pair restores trust, access or the relationship is a further and separate decision the sequence does not settle."
+      ]
+    },
+    "lexicon:term-the-stress-transmission-split": {
+      "commonMisreadings": [
+        "Stress is stress — outside pressure hits a relationship the same way no matter where it came from or who is carrying it."
+      ],
+      "boundaryConditions": [
+        "The entry distinguishes three routes: spillover carrying one person's load into their own behavior at home, crossover where one person's load changes the other's experience, and shared exposure where both face the same event at once.",
+        "It states that the route decides what the evidence means; it does not attach effect sizes to any route."
+      ]
+    },
+    "lexicon:term-the-sleep-interaction-loop": {
+      "commonMisreadings": [
+        "Bad sleep makes couples fight, so sleeping better is what fixes the conflict."
+      ],
+      "boundaryConditions": [
+        "The experimental evidence covers one manipulation: randomizing couples to a night of total sleep deprivation before a recurrent-conflict discussion, which lowered positive affect and raised cortisol yet produced no difference in agreement reached or discussion satisfaction.",
+        "Because the arrows run both ways, the direction, the person, the sleep measure and the time scale have to be named before any result is interpreted."
+      ]
+    },
+    "lexicon:term-the-stock-flow-error": {
+      "commonMisreadings": [
+        "Half of marriages end in divorce — that is the number, everybody knows it."
+      ],
+      "boundaryConditions": [
+        "The famous ratio divides this year's divorces by this year's marriages, two groups that by construction share no members, so it is a stock read as a flow.",
+        "The cohort figure of 46% is a different quantity, drawn from people who have already married rather than from one year's counts."
+      ]
+    },
+    "lexicon:term-the-gray-divergence": {
+      "commonMisreadings": [
+        "The divorce rate has been falling since 1990, so marriages are getting more durable across the board."
+      ],
+      "boundaryConditions": [
+        "The composition is U.S. and dated from 1990: divorce among married adults past fifty roughly doubled, from 4.9 to about 10 per 1,000 married, while the rate for 25-39s fell from 30 to 24.",
+        "The aggregate fall is the net of those two components, so it describes neither group on its own."
+      ]
+    },
+    "lexicon:term-residual-pool-dynamics": {
+      "commonMisreadings": [
+        "The people still single at that age are what is left over, and the falling average of the pool tells you what is wrong with them."
+      ],
+      "boundaryConditions": [
+        "The composition effect means a group's average can fall while every person in it improves, purely from who left — it explains a moving average, not any individual.",
+        "The entry establishes that the pool is not a fixed urn, since people pair off and leave and others divorce and return; it does not size the effect in any particular pool."
+      ]
+    },
+    "lexicon:term-the-clearing-order": {
+      "commonMisreadings": [
+        "The best partners get taken first, so the longer you wait the more you are picking through what nobody else wanted."
+      ],
+      "boundaryConditions": [
+        "For the first decade the order runs the other way: 27% of women without a high-school diploma had married by 20 against 3% of graduates.",
+        "The order flips around 30, and by 40 graduates lead 89% to 77% — so the pattern is age-dependent and stated here by education among women."
+      ]
+    },
+    "lexicon:term-the-effective-sex-ratio": {
+      "commonMisreadings": [
+        "Sex ratio is the master variable — count the men and women in any pool and you can read off who sets the terms."
+      ],
+      "boundaryConditions": [
+        "The support is four instrumented natural experiments — U.S. immigrant arrivals, the French war dead, post-1945 Soviet losses, China's missing daughters — that is, large exogenous shocks to one side of a market.",
+        "The site no longer leans on the out-of-print framework book for this claim, so the framework's wider extensions are not carried along with the finding."
+      ]
+    },
+    "lexicon:term-the-counting-correction": {
+      "commonMisreadings": [
+        "There are more single men than single women, full stop — the census says so.",
+        "The single-women surplus is a plain demographic fact you can apply at any age."
+      ],
+      "boundaryConditions": [
+        "Which answer you get depends on two hidden choices: which pool you count, and whether you count people actually in the market.",
+        "The never-married pool runs male-surplus at every age from 18 to 64; the reversal exists only in the wider unmarried pool and is produced entirely by the divorced and widowed."
+      ]
+    },
+    "lexicon:term-the-ideological-filter": {
+      "commonMisreadings": [
+        "Young women are 30 points more liberal than young men, and that gap is why the two of them can no longer date each other."
+      ],
+      "boundaryConditions": [
+        "The measured identification gap is 15 points, not the 30 in circulation: 40% of women aged 18-29 identify as liberal against 25% of men.",
+        "The filter is applied at sharply different rates — 60% of liberal young women call shared politics very important, against 47% of liberal young men and about 36-37% of conservatives of both sexes — so the gap and the screening are separate quantities."
+      ]
+    },
+    "lexicon:term-the-local-market": {
+      "commonMisreadings": [
+        "The national ratio is 115 single men per 100 single women, so men are in surplus wherever you happen to live."
+      ],
+      "boundaryConditions": [
+        "Markets vary nearly twofold between U.S. metros, so the national average does not describe a metro, a campus or a workplace.",
+        "The 115 figure is a raw headcount of U.S. singles aged 25-34; counting only the employed turns the same measure into 84 per 100, so one covariate flips the sign."
+      ]
+    },
+    "lexicon:term-the-border-bundle": {
+      "commonMisreadings": [
+        "A cross-border pairing is an immigration transaction with a relationship attached.",
+        "The migrating partner gains everything from the move and gives up nothing."
+      ],
+      "boundaryConditions": [
+        "The entry names what enters the relationship's terms when a pairing joins two containers — mobility, legal status, language, employment, family separation, access to another social network.",
+        "It holds that these expand the migrating partner's options and create leverage inside the relationship at the same time, without saying which way that leverage falls in any given pairing."
+      ]
+    },
+    "lexicon:term-the-saturation-rule": {
+      "commonMisreadings": [
+        "An edge dies because everyone learns it and arbitrages it away — that is what saturation means."
+      ],
+      "boundaryConditions": [
+        "The evidence against the arbitrage story comes from finance and psychology: published stock-market predictors returned 58% less after publication, yet the same knowledge reached 39 markets and killed the edge in exactly one.",
+        "Unpublished data-mined strategies decayed just as much, and plain replication halves psychology effects with nobody arbitraging anything — so decay is established, the mechanism the discourse names is not."
+      ]
+    },
+    "lexicon:term-the-survivorship-channel": {
+      "commonMisreadings": [
+        "He got the result, so the method works — his own outcome is the proof that the advice is sound."
+      ],
+      "boundaryConditions": [
+        "The coachable-tactic genre has essentially never been tested — not tested and failed, tested at all — so this is an absence of evidence rather than a measured failure rate.",
+        "The selection runs on who produces the advice: people selected for having succeeded or for being able to sell, with failures sitting in the source and getting stripped in transit."
+      ]
+    },
+    "lexicon:term-the-virality-filter": {
+      "commonMisreadings": [
+        "If a claim about dating is everywhere, there must be something to it — that many people would not be repeating it otherwise."
+      ],
+      "boundaryConditions": [
+        "The measured quantities are about spread, not truth: false stories were 70% more likely to be retweeted, and each additional out-group word raised the odds of a share by 67%.",
+        "The filter selected for novelty, out-group targeting, negative framing and confidence, which says what travels rather than whether any particular claim is wrong."
+      ]
+    },
+    "lexicon:term-the-diagnostic-turn": {
+      "commonMisreadings": [
+        "My ex is a narcissist and this was gaslighting — I know the attachment style and the diagnosis, so the argument is settled.",
+        "Clinical words are just more precise words: calling a partner's behaviour trauma or a boundary violation is describing them accurately, not accusing them."
+      ],
+      "boundaryConditions": [
+        "The entry is about what happens to the vocabulary in a dispute — applied at a distance, by the other party to the argument, and in the direction that exports the blame. It does not say the clinical terms are empty, only that this is not the setting in which they are being used to describe."
+      ]
+    },
+    "lexicon:term-the-surplus": {
+      "commonMisreadings": [
+        "This pairing produces a lot that neither of us could produce alone, so the way we currently split it is the right split.",
+        "I created most of the value here, which settles what share I am owed."
+      ],
+      "boundaryConditions": [
+        "How big the surplus is and how it gets divided are two separate questions; the concept names both and answers neither. Nearly every argument that invokes it is answering the division question while borrowing the authority of the size question."
+      ]
+    },
+    "lexicon:term-the-outside-option": {
+      "commonMisreadings": [
+        "Nothing inside a relationship changes unless the two people actually renegotiate it out loud.",
+        "Making exit cheaper only breaks marriages up; it cannot improve the ones that stay together."
+      ],
+      "boundaryConditions": [
+        "The evidence is Spain's 2005 collapse in divorce costs, followed by roughly a 30% fall in spousal conflict among couples who stayed married, plus a study instrumenting women's relative wages off industry composition that cut female assault admissions. Those are conflict and assault outcomes in particular settings, not a general law."
+      ]
+    },
+    "lexicon:term-the-commitment-problem": {
+      "commonMisreadings": [
+        "A promise that costs nothing to break carries no information, so a signal the sender did not pay for is worthless.",
+        "How believable a promise is depends on how sincerely the person means it."
+      ],
+      "boundaryConditions": [
+        "Schelling's move — that credibility comes from destroying your own ability to renege — is a definition rather than a finding, and inherits no empirical support from being stated. The sharper cost-only version was falsified by free virtual roses: a scarce but monetarily costless signal raised acceptance 3.3 points, a 20% increase."
+      ]
+    },
+    "lexicon:term-the-courtship-buffer": {
+      "commonMisreadings": [
+        "Meet sober and you finally see what someone is really like — the drinking was the only reason two people wanted each other.",
+        "Alcohol manufactures attraction, so an attraction that started over drinks was never real."
+      ],
+      "boundaryConditions": [
+        "The measured effects are real but small, and they land on three different rungs — none of which is whether two particular people wanted each other. The entry describes alcohol's place underneath early courtship, not the content of any specific pairing."
+      ]
+    },
+    "lexicon:term-the-ambiguity-tax": {
+      "commonMisreadings": [
+        "Reading a hint or grading a soft answer is the same job for everybody, so someone who misreads a signal simply was not paying attention.",
+        "There is nothing to interpret in courtship — people either say what they mean or they do not."
+      ],
+      "boundaryConditions": [
+        "The concept names the interpretive cost of running the interaction — catching hints, weighing tone, classifying an outcome as a refusal or as nothing much — and its point is that the bill is not the same size for everyone at the table. It does not assign fault for any particular misread."
+      ]
+    },
+    "lexicon:term-the-typology-shortcut": {
+      "commonMisreadings": [
+        "Match on love languages and satisfaction follows, so a mismatch on the four-letter code or the sign is a reason to rule someone out.",
+        "A folk type is a measuring instrument: it tells you who is worth ranking above whom."
+      ],
+      "boundaryConditions": [
+        "Matching on love languages added virtually nothing once personality and attachment were accounted for. What did track satisfaction was the continuously measured gap between what a person preferred and what they felt their partner expressed — a gap, not a type."
+      ]
+    },
+    "lexicon:term-the-authority-firewall": {
+      "commonMisreadings": [
+        "The problem is dating at work or on campus at all, so any relationship between two colleagues or two people on the same campus is the violation.",
+        "If both people say it is consensual, the institution has no claim on it."
+      ],
+      "boundaryConditions": [
+        "The trigger named here is evaluative authority running one direction — one person holding the other's assignments, pay, references, funding or promotion — not the venue. Where two people met and whether the institution will tolerate the pairing stay separate questions, and the second has an owner."
+      ]
+    },
+    "lexicon:term-the-attribution-fork": {
+      "commonMisreadings": [
+        "A desire gap has one real cause and it is the person — low desire is a trait, an orientation, or a diagnosis they carry.",
+        "Where the gap lives is obvious, so you can skip straight to acting on it."
+      ],
+      "boundaryConditions": [
+        "The entry names four places the gap can be located — a body, a person, the relationship, or the situation — and covers the step where somebody decides between them. It does not rank which location is most common or say which one applies to any given couple."
+      ]
+    },
+    "lexicon:term-the-distance-discount": {
+      "commonMisreadings": [
+        "Long distance is a weaker version of a relationship, so a couple living apart is a couple with something wrong with it.",
+        "Living at one address is what makes a bond close, and distance dilutes it."
+      ],
+      "boundaryConditions": [
+        "What the measurement covers is how people rate their own relationships: those separated by geography rate them at least as warmly as those at one address, reached through more adaptive self-disclosure and more idealised perceptions. Those are the named routes, and idealisation is one of them."
+      ]
+    },
+    "lexicon:term-synthetic-reciprocity": {
+      "commonMisreadings": [
+        "A companion chatbot gives you what a relationship gives you — it is attentive and always available, so it is a straight substitute for a person.",
+        "The bond runs both ways; the thing on the other side has something at stake too."
+      ],
+      "boundaryConditions": [
+        "One side of the ledger is removed by construction: the party on the other side has no needs, no welfare and no independent claim on the user. Coded against an established support taxonomy, four functions arrived — companionship, emotional, informational, appraisal — and tangible support, the one made of resources rather than attention, did not."
+      ]
+    },
+    "lexicon:term-ghosting": {
+      "commonMisreadings": [
+        "Ghosting shows what a person is really like — people got crueler, and the ones who do it are a type.",
+        "Everyone ghosts now; it is just how dating works."
+      ],
+      "boundaryConditions": [
+        "The page reads it as a price change rather than a character change: inside a shared network a silent exit was billed by mutual friends and reputation, and the app channel strips that graph, so the same conduct costs nothing. Around a fifth to a quarter of adults report it — not everyone."
+      ]
+    },
+    "lexicon:term-breadcrumbing": {
+      "commonMisreadings": [
+        "Ghosting is the damaging one and breadcrumbing at least keeps the door open, so being strung along is the gentler outcome.",
+        "Sporadic contact means they intend to close eventually."
+      ],
+      "boundaryConditions": [
+        "The finding rests on a Spanish sample of 626 adults, where breadcrumbing alone or combined with ghosting predicted lower life satisfaction and more loneliness and helplessness, while ghosting alone showed no significant association. Those are associations in one sample, on self-reported wellbeing."
+      ]
+    },
+    "lexicon:term-mankeeping": {
+      "commonMisreadings": [
+        "Mankeeping is a fact about men as such — men need managing, women do the managing, and naming the gender is the whole finding.",
+        "If a woman is her partner's main emotional support, that is mankeeping by definition."
+      ],
+      "boundaryConditions": [
+        "The page insists the term names one gendered instance and not the mechanism. The underlying variable is how a support portfolio spreads across partner, friends, family and community; the unreciprocated work is what a thin portfolio elsewhere pushes onto one channel."
+      ]
+    },
+    "lexicon:term-technoference-partner-phubbing": {
+      "commonMisreadings": [
+        "Technoference and phubbing are the same thing, and the damage is screen time — cut the device minutes and the problem goes away.",
+        "Any phone use in a partner's presence is phubbing."
+      ],
+      "boundaryConditions": [
+        "The page keeps the two terms apart: technoference is technology use that interrupts a shared conversation or activity, and partner phubbing is the phone-specific case where a partner experiences the device as receiving attention the interaction was supposed to get. The relationship variable is displaced expected attention, not device minutes."
+      ]
+    },
+    "lexicon:term-covenant-marriage": {
+      "commonMisreadings": [
+        "People would sign up for binding commitment if the law offered it — the reason nobody locks the door is that there is no lock.",
+        "Covenant marriage is a symbolic or religious label rather than an enforceable contract."
+      ],
+      "boundaryConditions": [
+        "What is measured is uptake, in three American states, where the harder-to-exit contract was offered at the same price as the ordinary one: between 98% and 99% of couples declined it, Louisiana running about 1% through the 2000s with a best year of 609 licences at 1.55%, and Arizona 0.25-1%. Uptake is not a measurement of how those marriages fared."
+      ]
+    },
+    "lexicon:term-operational-sex-ratio": {
+      "commonMisreadings": [
+        "The operational sex ratio in a city is the number of single men divided by the number of single women there.",
+        "Counting adults in a population tells you how many people are competing to mate."
+      ],
+      "boundaryConditions": [
+        "In its technical sense the term counts individuals actively competing to mate, and every study the entry rests on measures a plain headcount of adults instead. The site retired the word here and on the Five Levers page, its own correction reading \"We also used the wrong term.\""
+      ]
+    },
+    "lexicon:term-beer-goggles": {
+      "commonMisreadings": [
+        "Alcohol makes other people look dramatically better, which is why people go home together.",
+        "Beer goggles are a folk myth with nothing behind them."
+      ],
+      "boundaryConditions": [
+        "Measured, the effect is real and small: a meta-analysis of 16 studies (n = 1,811) put it at d = 0.19, rising to d = 0.30 for opposite-sex targets and falling to a non-significant d = 0.04 for same-sex ones. That is a shift in attractiveness ratings of that size, nothing larger."
+      ]
+    },
+    "lexicon:term-length-biased-sampling": {
+      "commonMisreadings": [
+        "The app pool is what single people are like, so if the pool looks bad the dating population is bad.",
+        "Whoever you keep seeing in the pool is representative of everyone who was ever in it."
+      ],
+      "boundaryConditions": [
+        "The point is about sampling a state at an instant: an app population is a sample of people currently searching, and everyone who pairs off leaves, so whoever stays longest is over-represented. It explains why the instantaneous snapshot always looks worse than the underlying reality; it is not a claim that the pool is fine."
+      ]
+    },
+    "lexicon:term-the-lemons-market-adverse-selection": {
+      "commonMisreadings": [
+        "Akerlof showed that dating is a lemons market, so the good people get driven out of the pool.",
+        "The lemons result carries Nobel-grade authority wherever it is applied, dating included."
+      ],
+      "boundaryConditions": [
+        "Akerlof's 1970 mechanism is carried as Tier 1 economic theory about markets in general — where only the seller knows quality, the bad drive out the good because both sell at the same price. He never said a word about dating, so applying lemons logic to a dating pool is the site's own extension and inherits none of his authority."
+      ]
+    },
+    "lexicon:term-composition-effect": {
+      "commonMisreadings": [
+        "Everyone good is already taken and what is left is the leftovers — that alone explains why the pool looks the way it does.",
+        "If the average of the remaining pool fell, the people in it must have gotten worse."
+      ],
+      "boundaryConditions": [
+        "The pool genuinely is not a random sample of a cohort, but the page's verdict is that composition is over-claimed as an exclusive explanation: consensus on desirability is only about 2% of romantic evaluation, so exits thin the pool close to randomly, and men were degraded in place by trade shocks rather than sorted out."
+      ]
+    },
+    "lexicon:term-disintermediation": {
+      "commonMisreadings": [
+        "Online is simply how couples meet now, so friends have dropped out of the picture entirely.",
+        "The apps only added a channel alongside the old ones and displaced nothing."
+      ],
+      "boundaryConditions": [
+        "The figures cover U.S. heterosexual couples: online became the top channel around 2013 and reached roughly 39% by 2017 while meeting through friends fell in step. Top channel at 39% is not most couples, and the mechanism named is the one in the authors' title, \"disintermediating your friends.\""
+      ]
+    },
+    "lexicon:term-the-principle-of-least-interest": {
+      "commonMisreadings": [
+        "Whoever cares less sets the terms, so acting less interested hands you the power in a relationship.",
+        "The classic test measured who actually got their way."
+      ],
+      "boundaryConditions": [
+        "The page grades the classic test Tier 3: it finds the less involved partner perceives more control, which is a survey of perceptions rather than a measurement of outcomes. It sits beside campus sex-ratio findings that are cross-sectional and non-random."
+      ]
+    },
+    "lexicon:term-the-suffocation-model": {
+      "commonMisreadings": [
+        "The suffocation model says people expect too much from a partner, so the fix is to want less.",
+        "A relationship suffocates when the two people are too involved with each other, so more distance and firmer rules always help."
+      ],
+      "boundaryConditions": [
+        "The page cites Finkel's term against boundary-maximalism rather than against high expectations. Relationship science consistently finds partnerships need autonomy and interdependence, so a rule-set optimising only autonomy builds the same model from the other side."
+      ]
+    },
+    "lexicon:term-propinquity": {
+      "commonMisreadings": [
+        "Proximity decides who you end up with — people marry whoever is nearest and the rest is decoration.",
+        "Where you live has nothing to do with who you meet."
+      ],
+      "boundaryConditions": [
+        "The baseline is Bossard's 5,000 consecutive Philadelphia marriage licences from 1931 — one city, one year — showing a third of couples living within five blocks of each other, one in six on the same block, one in eight in the same building. It describes who you ever meet, the filter upstream of choosing."
+      ]
+    },
+    "lexicon:term-the-male-marital-wage-premium": {
+      "commonMisreadings": [
+        "Marriage makes men earn more, so getting married raises a man's income by around a quarter.",
+        "The twin study settled the causal question."
+      ],
+      "boundaryConditions": [
+        "The page sets this aside rather than banks it. The cross-sectional premium is about 19%, and the 280-pair twin study that raises it to roughly 26% is a five-page proceedings piece from a convention-recruited sample."
+      ]
+    },
+    "lexicon:term-the-love-hierarchy": {
+      "commonMisreadings": [
+        "The Hierarchy is a measured model — the weights are fitted coefficients, so scoring someone returns their actual value.",
+        "There is one Hierarchy and it applies to everybody the same way."
+      ],
+      "boundaryConditions": [
+        "The model is honest about its own status: four versions sit side by side — Jason's, a generic male, and two reads of the generic female — and the weights are sensible defaults, not measured coefficients. It is a gate model of qualification, short- or long-term, with three tiers passed in sequence."
+      ]
+    },
+    "lexicon:term-primary-secondary-tertiary-factors": {
+      "commonMisreadings": [
+        "Score the three tiers, average them, and a strong Tertiary makes up for a failed Primary.",
+        "Tertiary factors are the ones that decide whether someone is attracted to you."
+      ],
+      "boundaryConditions": [
+        "The tiers rank what disqualifies rather than totalling what qualifies: Primary failure blocks everything above casual interest, Secondary weakness caps the thing at short-term, and Tertiary weakness rarely kills attraction but weakens the relationship's ability to last. It is not a scorecard you average."
+      ]
+    },
+    "lexicon:term-sequential-gates": {
+      "commonMisreadings": [
+        "Desire, Attachment and Life Fit are the established, measured stages a relationship moves through.",
+        "Enough warmth, loyalty and shared values will eventually produce the attraction that was not there at the start."
+      ],
+      "boundaryConditions": [
+        "The structure is the strong part — each gate cleared before the next is reached, and a failed Gate 1 is not manufactured later by warmth, loyalty or shared values. The gate names themselves are two AI proposals, arbitrated, not a measured finding."
+      ]
+    },
+    "lexicon:term-exposure": {
+      "commonMisreadings": [
+        "I am not matching with anyone, which proves the market is rigged against people like me.",
+        "Exposure is the shallow lever — if you are actually worth meeting, you will be found."
+      ],
+      "boundaryConditions": [
+        "Exposure is the fifth lever and the denominator under the others: how many qualified people actually encounter you, with the best profile scoring nothing if it is never seen. The entry calls it the most neglected and, for most people, the most movable — not a claim that volume substitutes for the other four."
+      ]
+    },
+    "lexicon:term-manosphere": {
+      "commonMisreadings": [
+        "The manosphere is one movement with one doctrine, so anyone using pill language holds all of it.",
+        "The communities overlap, which shows every user travelled the same path to the same politics."
+      ],
+      "boundaryConditions": [
+        "The ecosystem is loose: men's-rights politics, pickup technique, evolutionary storytelling, gym-and-career self-help, and hostility to feminism side by side under one metaphor. The computational history of 28.8 million posts across six forums and 51 subreddits is a map of traffic and language, and it found those communities increasingly overlapping."
+      ]
+    },
+    "lexicon:term-outcome-laundering": {
+      "commonMisreadings": [
+        "She responded, so the tactic worked — jealousy induction gets results.",
+        "If a move reliably produces a reaction, the reaction is the result you were after."
+      ],
+      "boundaryConditions": [
+        "Jealousy induction reliably produces something — pursuit, reassurance, surveillance, anger, withdrawal, exit — and the laundering is banking the pursuit and dropping the rest. Movement is not improvement; the entry names the accounting error, not a measurement of how often each response follows."
+      ]
+    },
+    "lexicon:term-just-be-first": {
+      "commonMisreadings": [
+        "Getting there first is all it takes — be her first real relationship and she is locked in for good, whatever you bring to the table."
+      ],
+      "boundaryConditions": [
+        "The synopsis describes a window before comparison pressure and full market calibration, not a permanent exemption from matching: the bond can form and commitment can lock it in, both hedged.",
+        "It says nothing about what happens once a clean comparison does become salient, and names no rate at which the exploit works."
+      ]
+    },
+    "lexicon:term-lens-not-identity": {
+      "commonMisreadings": [
+        "One of the three pills is the true one and the other two are for people who cannot handle it.",
+        "Picking a lens means picking a team, and once you are on it you read everything through it."
+      ],
+      "boundaryConditions": [
+        "The stance covers the site's three pills as ways of seeing, and holds that every lens sees something real and also distorts.",
+        "It ranks lenses only by which one answers the situation in front of you — it does not rule any of them true or false in general."
+      ]
+    },
+    "lexicon:term-the-great-emptying": {
+      "commonMisreadings": [
+        "Dating apps destroyed the places people used to meet — before the apps, the lodges and congregations and leagues were still doing introductions."
+      ],
+      "boundaryConditions": [
+        "The load-bearing claim is sequencing: the venues emptied years before the apps arrived, so the app inherited a vacancy rather than causing one.",
+        "It covers the post-1960 decline of those specific venues and does not say what, if anything, replaced their introductions."
+      ]
+    },
+    "lexicon:term-coverture": {
+      "commonMisreadings": [
+        "Coverture proves marriage back then was never freely chosen — a wife legally erased into her husband cannot also have been a love match."
+      ],
+      "boundaryConditions": [
+        "This is English common law, undone by the Married Women's Property Acts of 1870 and 1882; nothing here extends it past those Acts or to other legal systems.",
+        "Its point of contact with the love match is that the two ran alongside each other, not that one caused or preceded the other."
+      ]
+    },
+    "lexicon:term-companionate-marriage": {
+      "commonMisreadings": [
+        "Companionate marriage is an industrial-era invention: consent, closeness in age and a household of your own only became the norm once wages made it possible."
+      ],
+      "boundaryConditions": [
+        "The form described is Western and early modern, emerging before industrialization made it affordable.",
+        "The synopsis is explicit that feeling ran ahead of doctrine and law: the 1662 Book of Common Prayer still ranked companionship last of three reasons to marry, and coverture was still in force."
+      ]
+    },
+    "lexicon:term-bundling": {
+      "commonMisreadings": [
+        "The colonial past was puritanical: courting couples were kept apart, premarital sex was rare, and a pregnancy before the wedding was a scandal."
+      ],
+      "boundaryConditions": [
+        "Bundling is a colonial New England custom, and the 30 to 40% of brides pregnant at marriage is an estimate for that population, not a figure for the past in general."
+      ]
+    },
+    "lexicon:term-courtly-love": {
+      "commonMisreadings": [
+        "Courtly love is where romantic marriage comes from — the troubadours invented the idea that you marry the person you are consumed by."
+      ],
+      "boundaryConditions": [
+        "The reference points are the eleventh-century troubadour code and its rulebook De Amore, c. 1184.",
+        "The claim is that love and marriage were two systems that only occasionally overlapped — not that marriages of the period contained no affection."
+      ]
+    },
+    "lexicon:term-the-hajnal-line": {
+      "commonMisreadings": [
+        "The Hajnal line settles it: Western Europe has always married late and by choice, and the East has always married young and universally."
+      ],
+      "boundaryConditions": [
+        "The line is Hajnal's 1965 construction from Trieste to Leningrad, and the site flags that it has been repeatedly revised and criticized, partly for thin Eastern data.",
+        "It is treated as an influential map, not a settled measurement."
+      ]
+    },
+    "lexicon:term-serial-monogamy": {
+      "commonMisreadings": [
+        "Serial monogamy is modern decay: people used to pair once for life, and now they churn through partner after partner."
+      ],
+      "boundaryConditions": [
+        "The historical evidence cited is French marriages between the sixteenth and nineteenth centuries — about 30% involving a widow or widower, roughly half of widowers remarrying.",
+        "The comparison is about the exit mechanism, death then and divorce now, not a claim that the rates match."
+      ]
+    },
+    "lexicon:term-surplus-women": {
+      "commonMisreadings": [
+        "The Victorian panic over surplus women was pure moralizing about spinsters — there was no real shortage, only disapproval of women who did not marry."
+      ],
+      "boundaryConditions": [
+        "The counts are mid-nineteenth-century England: roughly 9.1 million women to 8.6 million men, with perhaps 30% of women over twenty unmarried.",
+        "Stripped of the moralizing it names a supply imbalance in that one marriage market, not a rule for other places or periods."
+      ]
+    },
+    "lexicon:term-no-fault-divorce": {
+      "commonMisreadings": [
+        "No-fault divorce broke marriage: it sent the divorce rate up and the rate has been climbing ever since."
+      ],
+      "boundaryConditions": [
+        "The figures are US rates per 1,000 — 2.2 in 1960 to 5.2 by 1980 — after California's 1969 law was copied by nearly every state within fifteen years.",
+        "The same series then enters the long decline it has been on ever since, and the synopsis places the doubling behind the law without isolating cause."
+      ]
+    },
+    "lexicon:term-the-two-parent-privilege": {
+      "commonMisreadings": [
+        "Americans across the board gave up on marriage — the married-parent home declined everywhere at about the same pace."
+      ],
+      "boundaryConditions": [
+        "The shares are US children living with married parents from 1980 to 2019, split by the mother's education: 90% to 84% at the top, 83% to 60% in the middle, 80% to 57% at the bottom.",
+        "It measures where children live, not what marriage does for any individual child."
+      ]
+    },
+    "lexicon:term-the-moynihan-report": {
+      "commonMisreadings": [
+        "The Moynihan Report was vindicated: non-marital birth is a Black-family problem, and 1965 called it early."
+      ],
+      "boundaryConditions": [
+        "The comparison runs between the 1965 memo's quarter-of-births alarm and 2023 shares — 26.8% among non-Hispanic white mothers, 40.0% overall.",
+        "The site's read is perspective rather than a verdict; it issues neither vindication nor dismissal."
+      ]
+    },
+    "lexicon:term-the-west-as-pilot-program": {
+      "commonMisreadings": [
+        "The unbundling is a Western cultural export, and societies that keep marriage mandatory will not go through it."
+      ],
+      "boundaryConditions": [
+        "The framing is about sequence across regions: East Asia furthest along, sub-Saharan Africa barely begun.",
+        "It says mandatory-marriage and optional-marriage societies reach the same low-fertility destination, not that they arrive at the same time or by the same route."
+      ]
+    },
+    "lexicon:term-uni-n-libre-free-union": {
+      "commonMisreadings": [
+        "Unión libre shows that decoupling marriage from childbearing protects fertility: where people can have children without a wedding, they keep having them."
+      ],
+      "boundaryConditions": [
+        "The arrangement described is Latin American, socially accepted with roots running back centuries, and produces the world's highest non-marital birth shares — 87% in Colombia, 78% in Chile.",
+        "The region that decoupled earliest still fell below replacement, so the case is about that region, not a transferable mechanism."
+      ]
+    },
+    "lexicon:term-replacement-rate": {
+      "commonMisreadings": [
+        "2.1 is a target countries either hit or miss, and the ones below it are following a different path from the ones still above."
+      ],
+      "boundaryConditions": [
+        "The rate is about 2.1 births per woman, and the global series runs roughly 5.0 in the 1960s, 3.3 by 1990, 2.2 in 2024.",
+        "The crossing around 2050 is a UN projection rather than a measurement, and the regional spread is read as one descent caught at different points."
+      ]
+    },
+    "lexicon:term-love-marriage": {
+      "commonMisreadings": [
+        "India has modernized into love marriage — the self-chosen match is the norm now and arranged marriage is basically over."
+      ],
+      "boundaryConditions": [
+        "The 84% arranged and 6% love figures come from one survey, Lokniti-CSDS 2016, of married Indians aged 15 to 34 across nineteen states.",
+        "The term is South Asian and is defined against arranged marriage as the default; the synopsis carries no later or wider measurement."
+      ]
+    },
+    "lexicon:term-the-double-standard-of-aging": {
+      "commonMisreadings": [
+        "Men get more desirable with age and women get less, so an older man can have whichever much younger woman he wants."
+      ],
+      "boundaryConditions": [
+        "The finding is England and McClintock's, from US marriage records covering 1970 to 1988, in first marriages and remarriages across every education group.",
+        "It measures the age gap of the bride relative to the groom, not desirability, offers received, or how those marriages turned out."
+      ]
+    },
+    "lexicon:term-advanced-maternal-age": {
+      "commonMisreadings": [
+        "Fertility falls off a cliff at 35 — past that the door has shut."
+      ],
+      "boundaryConditions": [
+        "35 is a screening threshold, the point at which a pregnancy is monitored more closely, not an endpoint.",
+        "ACOG puts the real turns at about 32, gradual but significant, and about 37, faster — neither of them 30 — and the shape described is a curve, not per-person odds."
+      ]
+    },
+    "lexicon:term-involuntary-singlehood": {
+      "commonMisreadings": [
+        "Single people who are not looking are single by choice — they say so themselves, so the involuntary category is mostly imaginary."
+      ],
+      "boundaryConditions": [
+        "The numbers are self-report among singles not looking: 47% bigger priorities, 44% like being single, and 'no one would be interested in me' at 26% of men against 12% of women.",
+        "The synopsis holds that the involuntary share is almost certainly understated — an inference from how self-report behaves, not a measured quantity."
+      ]
+    },
+    "lexicon:term-the-female-exit": {
+      "commonMisreadings": [
+        "Unpartnered women over 40 are out there being passed over — they are on the market and nobody is choosing them."
+      ],
+      "boundaryConditions": [
+        "The figures cover singles 40 and over: 71% of women say they are not looking to date against 42% of men.",
+        "An app measuring only its active users cannot see the withdrawal, so app data is not evidence about the women who have already left."
+      ]
+    },
+    "lexicon:term-the-sexual-double-standard": {
+      "commonMisreadings": [
+        "A man is praised for the exact sexual history a woman is shamed for, and it is one of the best-documented asymmetries we have."
+      ],
+      "boundaryConditions": [
+        "Belief in it is widespread while controlled studies find it weaker than expected: vignette designs detect a small effect, attitude scales find none, and the site deliberately refuses to chart it with hard numbers.",
+        "Where it does show up is behavior — anticipated stigma measurably lowers women's stated willingness to accept casual sex."
+      ]
+    },
+    "lexicon:term-the-provider-norm": {
+      "commonMisreadings": [
+        "The male provider norm is finished — marriages are equal-earning now, so the material base under hypergamy is gone."
+      ],
+      "boundaryConditions": [
+        "The measure is US opposite-sex marriages, 85% in 1972 to 55% in 2022, with roughly 45% now equal- or female-earning: dominance halved, still the majority.",
+        "The same report adds that wives in equal-earning marriages still do more housework and caregiving."
+      ]
+    },
+    "lexicon:term-demand-withdraw": {
+      "commonMisreadings": [
+        "Demand-withdraw is what kills couples — if your fights run that way, the relationship is already finished."
+      ],
+      "boundaryConditions": [
+        "The evidence is 74 studies, N = 14,255, and the association with worse outcomes is moderate at r = .36.",
+        "That is an association across studies, not a direction of cause or a prognosis for any one couple."
+      ]
+    },
+    "lexicon:term-the-cohabitation-effect": {
+      "commonMisreadings": [
+        "Living together before marriage raises your odds of divorce, so moving in first is a mistake."
+      ],
+      "boundaryConditions": [
+        "The split is by sequence: couples who moved in before any commitment to marry, versus those who moved in after getting engaged, who look no different from those who never cohabited.",
+        "The outcomes reported are marital satisfaction and proneness to divorce."
+      ]
+    },
+    "lexicon:term-friends-first": {
+      "commonMisreadings": [
+        "Couples match on looks, full stop — attractiveness sorting is how pairing works no matter how people met."
+      ],
+      "boundaryConditions": [
+        "The contrast is between couples who paired off quickly, who were tightly sorted by looks, and couples who knew each other about nine months or longer before dating.",
+        "For the latter, attractiveness matching was not statistically distinguishable from zero — an absence of detectable sorting, not proof that looks stopped mattering."
+      ]
+    },
+    "lexicon:term-on-again-off-again": {
+      "commonMisreadings": [
+        "Breaking up and getting back together is a rare, doomed pattern, and a couple who reconciles has worked the problem out."
+      ],
+      "boundaryConditions": [
+        "The shares are self-reported and cover having cycled at least once with the current partner: 37% of cohabiting and 23% of married couples.",
+        "What is reported afterward is more uncertainty about the future and lower satisfaction on both sides, with past cycling predicting more cycling."
+      ]
+    },
+    "lexicon:term-selection-effect": {
+      "commonMisreadings": [
+        "Paid app users report better experiences, so paying for the app gets you a better experience."
+      ],
+      "boundaryConditions": [
+        "The correction names a gap produced by who ends up in each group — paid users skewing richer, older and more intent; families that break differing before anything breaks; happier people being likelier to marry and stay married.",
+        "It flags that a comparison may not be causal; it does not say how much of any gap is selection."
+      ]
+    },
+    "lexicon:term-the-pool-is-not-the-population": {
+      "commonMisreadings": [
+        "There are 126 never-married men per 100 women aged 25 to 34, so the numbers are on women's side."
+      ],
+      "boundaryConditions": [
+        "The headcount is never-married men and women aged 25 to 34; applying one filter women commonly name, a job, turns the surplus into a shortfall of 91.",
+        "By education it flips: 67 employed men per 100 women at post-graduate level against 108 at high school or less — same country, same year."
+      ]
+    },
+    "lexicon:term-sexual-overperception-bias": {
+      "commonMisreadings": [
+        "Men imagine interest that is not there, so if you think she is into you, you are wrong."
+      ],
+      "boundaryConditions": [
+        "The site keeps the other half: real flirting is also frequently missed, so 'you're misreading everything' and 'you're missing signals' are both partly true.",
+        "Occupational friendliness inflates the false-positive rate, which makes this a tendency in a context, not a rate you can apply to a single read."
+      ]
+    },
+    "lexicon:term-fear-of-being-single": {
+      "commonMisreadings": [
+        "Fear of being single is just a taunt for people who settle, not anything you could actually measure."
+      ],
+      "boundaryConditions": [
+        "It is a measured construct, Spielmann's Fear of Being Single Scale, with findings across seven studies: staying in unsatisfying relationships and warming to less responsive, less attractive partners.",
+        "The sex direction has support — single men likelier to be looking, 61% against 38%, and less happy single — which is support, not a settled magnitude."
+      ]
+    },
+    "lexicon:term-romance-scam": {
+      "commonMisreadings": [
+        "Romance scams are a lonely-older-woman problem — that is who the scammers go after."
+      ],
+      "boundaryConditions": [
+        "The age pattern the stereotype survives on is check size: FTC median losses per report climb from $750 at 18 to 29 to $9,000 at 70 and over.",
+        "Targeting runs the other way in the reported figures — 52% of online daters say they met a suspected scammer, men under 50 highest at 63%, and the sextortion variant concentrates on 18-to-29-year-olds."
+      ]
+    },
+    "lexicon:term-constraint-triage": {
+      "commonMisreadings": [
+        "Triage just confirms the verdict: sort the causes honestly and they all land in the fixed column, so the only rational move is to stop.",
+        "If a constraint is on the list at all it is permanent, so grooming, conversation and fitness are cope."
+      ],
+      "boundaryConditions": [
+        "This is a diagnostic pass over a repeating outcome, not a residence — the sort has a movable column (fitness, grooming, photos, conversation, emotional regulation, income, introductions) and a contextual one.",
+        "Because the contextual column covers app versus in person, city, age band, subculture and whether your strengths are visible there, a triage done in one setting does not carry to another."
+      ]
+    },
+    "lexicon:term-fwhr-facial-width-to-height": {
+      "commonMisreadings": [
+        "A wide midface is a more attractive face, so a high fWHR raises your score and widening the midface is a looksmax.",
+        "fWHR is a core facial metric — the calculator underweights it because it is inconvenient."
+      ],
+      "boundaryConditions": [
+        "What fWHR tracks in the cited work is perceived dominance and aggression, not attractiveness; Geniole 2015 has larger being, if anything, less attractive to women.",
+        "It is popular online and thin in the literature, which is why the Face Calc displays it but deliberately barely weights it — shown for completeness, not weight."
+      ]
+    },
+    "lexicon:term-averageness": {
+      "commonMisreadings": [
+        "An average face is a plain face, so attractiveness comes from being extreme on the scoreable features rather than typical."
+      ],
+      "boundaryConditions": [
+        "Averageness means closeness to the population-mean face, so which face reads as average depends on the population being averaged.",
+        "Rhodes 2006 places it as one of the two most replicated predictors of attractiveness — a strong predictor, not the whole of attractiveness."
+      ]
+    },
+    "lexicon:term-sexual-dimorphism": {
+      "commonMisreadings": [
+        "More masculine is always more attractive on a man, so jaw and shoulder breadth pay off without limit.",
+        "Dimorphism works the same way in both directions — whatever femininity does for women, masculinity does for men."
+      ],
+      "boundaryConditions": [
+        "The dose matters and the sexes are not symmetric: femininity reliably predicts attractiveness in women, while the preference for male masculinity is genuinely mixed.",
+        "With averageness it is one of the two most replicated drivers of attractiveness, which is a claim about replication, not about any single face."
+      ]
+    },
+    "lexicon:term-golden-ratio-phi-mask": {
+      "commonMisreadings": [
+        "Beauty is 1.618: overlay the phi mask on a photograph and you have the actual measure of a face.",
+        "The divine proportions are fixed, so any deviation from them is a measurable flaw."
+      ],
+      "boundaryConditions": [
+        "The evidence does not support the golden ratio as a real predictor of attractiveness; it is a forum favourite the site carries anyway.",
+        "It appears in the Face Pill's proportion layer only as a lens marker — a measure flagged as one the forums oversell, not a weighted input."
+      ]
+    },
+    "lexicon:term-orbital-vector": {
+      "commonMisreadings": [
+        "You can read orbital vector off a front photo, and a negative vector is the verdict on the whole face.",
+        "The calculator leaves it out because it does not matter."
+      ],
+      "boundaryConditions": [
+        "Orbital vector is a genuine high-impact bone-layer feature and it is fixed — but a single front photo structurally cannot measure how far the under-eye rim sits ahead of the eyeball, which is why the Face Calc omits it instead of guessing.",
+        "It is one feature among the bone layer; the synopsis notes it is routinely handed a verdict it cannot carry alone."
+      ]
+    },
+    "lexicon:term-facial-thirds": {
+      "commonMisreadings": [
+        "Thirds are the proportion test that settles a face: measure hairline to brow, brow to nose, nose to chin, and unequal thirds are a scored flaw.",
+        "The calculator skips thirds because the site does not believe in proportion."
+      ],
+      "boundaryConditions": [
+        "Thirds carry moderate weight inside the gestalt raters actually integrate, not decisive weight on their own.",
+        "The Face Calc refuses to report them at all because the hairline has no landmark to measure from — a real proportion, not a scoreable one."
+      ]
+    },
+    "lexicon:term-waist-to-hip-ratio-whr": {
+      "commonMisreadings": [
+        "0.7 is the target, so for a woman lower is always better and a smaller waist keeps paying.",
+        "The ratio the calculator reads off a photo is her actual WHR."
+      ],
+      "boundaryConditions": [
+        "For women WHR is a true optimum rather than a lower-is-better slope, so both extremes cost; Singh 1993 puts it around 0.7 in women and 0.9 in men.",
+        "The Body Calc can only approximate it from a frontal silhouette — a front photo has no depth, and clothing, pose and camera angle redraw the outline, so it is far softer in practice than the decimal suggests."
+      ]
+    },
+    "lexicon:term-v-taper": {
+      "commonMisreadings": [
+        "Taper is the body's verdict and a frontal photo shows exactly who has it, so the ratio off one picture settles the read.",
+        "Like the bone layer, your frame is what you were born with."
+      ],
+      "boundaryConditions": [
+        "Taper is largely built rather than inherited, which is what makes weighting it above everything else more defensible than the facial equivalent.",
+        "One frontal photo cannot separate a lean frame from a soft one, so the shoulder-over-waist read taken from a picture is limited."
+      ]
+    },
+    "lexicon:term-waist-to-height-ratio-whtr": {
+      "commonMisreadings": [
+        "The width-to-height figure the calculator shows is your waist-to-height ratio, so you can read it straight against the published bands.",
+        "Body fat is the strongest cue for everyone, so the same threshold applies across the board."
+      ],
+      "boundaryConditions": [
+        "Tovée and Cornelissen's finding that body fat is the single strongest cue is stated for female bodies.",
+        "The Body Calc shows only a frontal width-to-height stand-in and pointedly refuses to score it: a front photo cannot see depth, so it does not convert to the waist circumference ratio the honest bands are built on."
+      ]
+    },
+    "lexicon:term-frame-the-body-sense": {
+      "commonMisreadings": [
+        "Frame is frame — the man told to hold his frame and the man told to build his frame are being told the same thing.",
+        "A body's frame is fixed skeleton, so nothing about it is buildable."
+      ],
+      "boundaryConditions": [
+        "This entry is the body sense only — skeleton and silhouette: shoulder span, taper, waist, leg-to-torso, symmetry — not the Red Pill's psychological composure.",
+        "It names the Body Calc's Black Pill profile, where V-taper, broad shoulders and leanness are weighted above everything else; that weighting is the looksmaxxing read, not the whole of the page."
+      ]
+    },
+    "lexicon:term-negging": {
+      "commonMisreadings": [
+        "Negging works — a backhanded compliment lowers her guard, which is why the technique spread.",
+        "The research has shown negging backfires, so the question is settled."
+      ],
+      "boundaryConditions": [
+        "Negging has never been tested for whether it works: the single empirical paper measured what people think of it, not what it does.",
+        "In that paper every variant was rated more harmful than an ordinary opening line, and nobody has run the efficacy study in either direction."
+      ]
+    },
+    "lexicon:term-playing-hard-to-get": {
+      "commonMisreadings": [
+        "Manufactured scarcity works: make yourself unavailable and your value rises, and there is a 1973 study behind it.",
+        "Being hard to get is a general tactic that works on anyone."
+      ],
+      "boundaryConditions": [
+        "The founding 1973 paper ran five experiments that found nothing; only the sixth worked, and only for a selectively hard-to-get target — hard for others, available to you.",
+        "That is a far narrower claim than the advice built on it, and it is the evidence base the entry rests on."
+      ]
+    },
+    "lexicon:term-market-model-vs-moral-theory": {
+      "commonMisreadings": [
+        "If the market rewards it, that settles what people deserve — the numbers tell you who is owed what and what anyone is allowed to feel.",
+        "The market model is a documented fact about how mating works, not a lens."
+      ],
+      "boundaryConditions": [
+        "The model's own column is what is scarce, what is rewarded, and where a person has leverage; it is weakest exactly when conclusions from that column are smuggled into what people deserve.",
+        "The site offers it as an interpretive tool and marks it as one — not a documented fact."
+      ]
+    },
+    "lexicon:term-branch-swinging": {
+      "commonMisreadings": [
+        "Women always branch-swing — lining up the next partner before letting go is simply what a woman is.",
+        "Because people protect their options, any woman with friends is already halfway out the door."
+      ],
+      "boundaryConditions": [
+        "Guarding your downside is an ordinary human tendency, and that is the real part; the leap is converting a distribution into a personality.",
+        "The entry is manosphere shorthand being audited as a textbook case of that leap, not a measured rate of the behaviour."
+      ]
+    },
+    "lexicon:term-alpha-beta": {
+      "commonMisreadings": [
+        "Men sort cleanly into alphas and betas, and the tier you land in is a fixed fact about you.",
+        "Researchers studied the hierarchy and found it, so the categories are established."
+      ],
+      "boundaryConditions": [
+        "The cited work is a thematic analysis of 227 Red Pill and incel posts, which found alpha/beta as one of three recurring pillars beside gender essentialism and an informal psychology assigning women hidden motives.",
+        "That is a finding about what the discourse repeats, not a measurement of whether the hierarchy exists."
+      ]
+    },
+    "lexicon:term-hegemonic-masculinity": {
+      "commonMisreadings": [
+        "Hegemonic masculinity is just an insult for masculinity itself — the term says being a man is the problem.",
+        "It describes how men actually are, since the culture's standard template is the natural one."
+      ],
+      "boundaryConditions": [
+        "The term names the dominant, competitive template a culture holds up as the standard — a sociological description of a template, not of every man.",
+        "The evidence cited is a content analysis of 26 foundational Red Pill documents (~130,000 words), so it characterizes that corpus's fusion of the template with self-optimization and market language, not men in general."
+      ]
+    },
+    "lexicon:term-mate-choice-copying": {
+      "commonMisreadings": [
+        "Preselection is a law: be seen with a woman and every woman wants you more.",
+        "Copying works the same in both directions, so men update on a woman's companion exactly as women update on a man's."
+      ],
+      "boundaryConditions": [
+        "The 2018 meta-analysis found the effect real but narrow: women rated male targets higher beside an opposite-sex companion, with no clear effect the other way, and both sexes updated when the companion's own desirability rose.",
+        "That literature carries high heterogeneity and moderate publication bias, which bounds how firmly the effect can be read."
+      ]
+    },
+    "lexicon:term-abundance": {
+      "commonMisreadings": [
+        "Abundance is a frame you project: act indifferent, imply competition, and the options follow.",
+        "Having options means never letting any single outcome matter to you."
+      ],
+      "boundaryConditions": [
+        "The split the entry draws is built versus performed: built abundance changes your behaviour, performed abundance only changes your messaging.",
+        "What is described is the composition of the useful version — friends, interests and several honest opportunities, so one stranger is not carrying your whole emotional future — not a measured effect on outcomes."
+      ]
+    },
+    "lexicon:term-the-fatherlessness-statistic": {
+      "commonMisreadings": [
+        "85% of imprisoned youth grew up fatherless — the number is documented and it settles the argument.",
+        "The real figure is 90% of felons, and the only reason it gets disputed is discomfort."
+      ],
+      "boundaryConditions": [
+        "The 85% and 90% versions have no traceable source; fact-checkers chasing them land on decades-old, unlocatable citations.",
+        "The measured figure is 57% of state prisoners raised in something other than a two-parent home — a real gap, nowhere near the claim, and a statement about household composition."
+      ]
+    },
+    "lexicon:term-never-date-single-mothers": {
+      "commonMisreadings": [
+        "The costs are real, so the rule is right: single mothers are a category you rule out on sight.",
+        "Noticing the constraints at all is bigotry, so the ledger should not be read."
+      ],
+      "boundaryConditions": [
+        "The three ledger entries the audit accepts are real time and money constraints, a 31.6% poverty rate for single-mother families, and a custody split pricing four-fifths of the load onto women.",
+        "Those describe a cost curve, not a cliff — absolutizing them into a caste is the failure, and the blue-pill mirror is the same dodge reversed."
+      ]
+    },
+    "lexicon:term-ages-like-wine": {
+      "commonMisreadings": [
+        "Men age like wine: a man's value keeps climbing, so waiting costs him nothing.",
+        "The desirability data proves the double standard runs one way for life."
+      ],
+      "boundaryConditions": [
+        "In the Bruch & Newman data men's app desirability does rise through the thirties and forties — then peaks around 50 and turns down.",
+        "The evidence is app desirability, and the phrase describes only the first half of that curve: the man favored at 45 is on the far side of his own peak a decade later."
+      ]
+    },
+    "lexicon:term-educational-hypergamy": {
+      "commonMisreadings": [
+        "Women always marry up in schooling, and as women collect more degrees hypergamy only hardens.",
+        "Educational hypergamy is a fixed rule, so a woman will not partner with a less-educated man."
+      ],
+      "boundaryConditions": [
+        "Esteve et al., across 120 countries, find wives are now more often the more-educated partner — this is the one place the trend has actually reversed.",
+        "Read alongside the provider norm falling from 85% to 55%, the site's read is 'fading, not hardening': hypergamy's material base thins as women's earnings and degrees rise."
+      ]
+    },
+    "lexicon:term-the-bar-is-in-hell": {
+      "commonMisreadings": [
+        "Women's standards for men have collapsed — the bar is on the floor, so anyone gets in.",
+        "If her standards were low she would be attracted to me, so being passed over proves the bar is high for everyone."
+      ],
+      "boundaryConditions": [
+        "The reframe is about selectivity, not level: the bar sits on the floor for men she isn't attracted to and on the roof for the ones she is.",
+        "The evidence cited is that attraction bends the ruler (Langlois et al., 2000; attractiveness predicts live desire at r ≈ .40, Eastwick et al., 2014)."
+      ]
+    },
+    "lexicon:term-dark-triad": {
+      "commonMisreadings": [
+        "Women want jerks: narcissism, manipulation and callousness are what actually attract, so decency is the mistake.",
+        "The Dark Triad advantage holds all the way through a relationship, not just at the start."
+      ],
+      "boundaryConditions": [
+        "The kernel the synopsis grants holds at first sight: 128 women rated a high-Dark-Triad character as more attractive with looks held constant, and narcissists are more popular at zero acquaintance.",
+        "Zero acquaintance and first impressions are the conditions of that evidence; nothing here reaches past them."
+      ]
+    },
+    "lexicon:term-love-conquers-all": {
+      "commonMisreadings": [
+        "If we love each other enough, the disagreements about children, money, geography or faith will dissolve on their own.",
+        "Strong feeling is the answer — if it feels this big, we should go ahead."
+      ],
+      "boundaryConditions": [
+        "The claim is about incompatible plans specifically: children, money, geography, faith.",
+        "Feeling strongly about someone tells you the stakes, never the answer — which is a statement about what affection cannot settle, not an argument against affection."
+      ]
+    },
+    "lexicon:term-don-t-settle": {
+      "commonMisreadings": [
+        "Never settle: if a real person misses anything on the list, holding out is the disciplined choice.",
+        "Any compromise at all is settling."
+      ],
+      "boundaryConditions": [
+        "As a floor the advice is sound — it correctly refuses contempt and neglect.",
+        "It goes corrosive only as a ceiling, where it licenses rejecting a real person for failing to match a composite who does not exist."
+      ]
+    },
+    "lexicon:term-it-happens-when-you-stop-looking": {
+      "commonMisreadings": [
+        "Stop looking and it will happen — the searching itself is what is keeping you single.",
+        "Wanting a relationship is the problem, so the fix is to want it less."
+      ],
+      "boundaryConditions": [
+        "Half of it holds: dropping desperation genuinely helps, while dropping exposure cannot.",
+        "The version that works keeps social surface area — communities, introductions, events, honest invitations — alongside a good life."
+      ]
+    },
+    "lexicon:term-the-bond-pathway": {
+      "commonMisreadings": [
+        "Kindness, loyalty and patience are what matter, so they are what should win the first impression.",
+        "The pathway says relationship virtues are overrated and should be dropped."
+      ],
+      "boundaryConditions": [
+        "The four stages are Notice, Explore, Trust, Build, and the point is placement: relationship virtues cannot yet be observed at the first-impression stage.",
+        "The correction is to put those qualities where they do their work, not to discard them."
+      ]
+    },
+    "lexicon:term-opposites-attract": {
+      "commonMisreadings": [
+        "Opposites attract: difference is what generates the spark, and too much similarity goes flat.",
+        "Complementarity is as well supported as similarity, so it is a toss-up."
+      ],
+      "boundaryConditions": [
+        "The stake is 10% true, graded Oversimplified: similarity predicts attraction at r = .47 actual and .39 perceived across 313 studies, while evidence for complementarity is weak and trait-specific.",
+        "In established relationships it is perceived similarity that carries the effect, not measured similarity."
+      ]
+    },
+    "lexicon:term-never-go-to-bed-angry": {
+      "commonMisreadings": [
+        "Settle it before you sleep — going to bed angry is what lets resentment set in, so stay up until it is resolved.",
+        "A fight left open overnight is a fight that gets worse."
+      ],
+      "boundaryConditions": [
+        "Graded Backwards: forcing a resolution while physiologically flooded escalates the conflict, and couples short on sleep behaved more hostilely and showed stronger inflammatory responses to conflict discussions.",
+        "What replaces the 2 a.m. settlement is a structured timeout — a deferral with a return, not indefinite avoidance."
+      ]
+    },
+    "lexicon:term-like-me-for-me": {
+      "commonMisreadings": [
+        "The right person takes you exactly as you are, so working on anything is a betrayal of who you are.",
+        "Being kind and intelligent is enough — those are the traits people actually select on."
+      ],
+      "boundaryConditions": [
+        "The ruling runs both ways, and the evidence is Li et al.'s budget studies: under tight budgets women spend first on status and resources and men on physical attractiveness, while kindness and intelligence are necessities for both.",
+        "Necessary is not sufficient — which is the kind-but-awkward man's exact problem."
+      ]
     }
   }
 }
