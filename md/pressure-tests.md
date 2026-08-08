@@ -4868,3 +4868,1278 @@ behavioural assertions beside them were untouched and still pass.
   candidate for that passage; the movement is IDF alone. The two assertions
   the test exists for — score above `minCredibleScore`, admission guard still
   blocking — both still hold.
+
+
+---
+
+# doctrine-pressure-test-09.md
+
+**Lane:** Parallel two-vendor 5-hour run under `md/pt09/PROTOCOL.md` (merged
+below) — Codex (ChatGPT Sol 5.6, reasoning xhigh) as the DOCTRINE & CANON lane
+in the checkout, Claude (Opus 5, reasoning high) as the ADVERSARIAL & ENGINE
+lane in an isolated local clone with a `git format-patch` ferry. First run
+under delegated per-crossing self-ruling: Jason delegated threshold verdicts
+in-session 2026-08-07 — agent attribution (`codex-pt09` / `opus-pt09`), never
+Jason's name, `--rule` still forbidden, every verdict reversible by him
+post-run. Baseline `main` @ e8c553a (v2.6.20), suite 18/18, canon 573.
+Integrated 2026-08-08 by the maintainer session (Claude Fable 5). The full
+pre-fold working tree survives at `git show 7040f79:md/pt09/`.
+
+## 1. Run design
+
+Both agents ran ~5 hours concurrently. Collision safety was a file partition,
+not politeness: Codex owned site pages, overlay, index, fixture pins, threshold
+rulings, and every commit in the tree; the opus lane owned `js/lab-*.js` and
+the engine tests in its clone, and its only real-tree writes were new `opus-*`
+files under `md/pt09/` plus ledger appends. Cross-feed ran both ways all run:
+opus doctrine proposals landed in `opus-proposals.md` for Codex's integration
+sweeps, and the clone rebased onto the checkout's `main` roughly hourly. The
+lane held on both sides — no opus patch touches a canon surface, and Codex
+never edited engine code.
+
+One harness lesson: the opus session's self-paced `/loop` lost its scheduled
+wakeup at ~2h52m (app-side — wakeups die if the machine sleeps or the app
+closes; the session had booked its next iteration and simply never woke).
+Resumed after a focused `/compact` at 477k context; it then closed ~40 minutes
+early on a fuzzy post-compact clock anchor, with every close obligation met.
+Externalizing run state to disk (ledger, findings files, clone commits) is
+what made both interruptions cheap.
+
+## 2. Codex lane — six frameworks, canon 573 → 579
+
+18 inputs captured (Guardian, PBS transcript, and 15 PMC primary studies),
+verdicts logged per cycle in `codex-findings.md` (merged below) with SHA-256
+capture provenance. Six integrations, each running the full pt04 procedure —
+baseline `--dump` first, entries + overlay + rebuilt index + moved pins in one
+suite-green commit, sweep onto the existing fixture, every weak and credible
+crossing ruled per-crossing under the delegation, then the stamp commit:
+
+- `frameworks:care-role-split` · `constraint-dedication-split` ·
+  `attention-boundary` · `repair-sequence` · `stress-transmission-split` ·
+  `sleep-interaction-loop` (the last under a new **Dyadic feedback** taxonomy
+  after a frozen bounded-context test exposed global IDF coupling — remedied
+  by taxonomy + narrower overlay wording, never site prose or a pin).
+- **2,409 rulings entered**, all `codex-pt09`: 299 ACCEPT / 2,110 REJECT.
+  Weak and credible pending returned to zero after every integration; all
+  prior rulings kept verdict and attribution.
+- Gap closure measured per source (e.g. romantic-forgiveness capture 9.3% →
+  33.9% mapped; the seven-day sleep study 55.6%). "No doctrine needed" was
+  exercised: the covered friendship-recession transcript shipped nothing.
+- Opus proposal dispositions: **P1 folded** — `build-canon-index.mjs` hashed
+  working-tree bytes, so five stray CRs made a fresh clone of green `main`
+  RED at validate; source bytes now fold `\r` before hashing. **P2 held**
+  (no evidence warrants the authored synonym; the engine half shipped in the
+  patch series). **P3 → Jason** (append-only fixtures). **P4 recorded** as
+  observation.
+
+## 3. Opus lane — sixteen attack families, eleven fixes
+
+15 numbered findings in `opus-findings.md` (merged below); 11 fixed RED-first
+as 22 commits — the RED test always committed before its fix, so the series
+bisects cleanly. Fixed: misreading distinctive-token guard reads
+`pressureTests` as the entry's own voice · the relevance gate reads
+`normalizeText` (one NBSP binned a passage) · intake decodes the entity table
+a DOM decodes · zero-width/format characters stripped (a ZWSP dropped a match
+0.747 → 0.562) · the generic cue ladder gains polarity (four denials read as
+their opposite) · the mate-value-mismatch idiom conjugates `date` and `marry`
+· RTF destination groups are not transcript text · hypothetical/interrogative
+cues no longer decide stance · decimal points and abbreviation periods are
+not clause boundaries · statistics spelled in words raise the flag · seven
+cue regexes admit U+2019 (a curly apostrophe flipped "source overreach" to
+"LE limitation" on the same sentence and defeated the consent-safety rule).
+Three surfaces came back **clean**: Markdown-export structural inertness,
+misreading-branch negation parity, coverage denominators under duplication/
+speaker turns/anaphora. Zero threshold crossings produced; zero rulings.
+
+## 4. Integration (2026-08-08, this session)
+
+The ferried series carried `v2.6.x-opus-pt09` placeholders in subjects AND
+code comments, so it was re-applied with **v2.6.21** stamped throughout
+rather than history-rewritten; the pristine as-ferried series is preserved at
+`git show 7040f79:md/pt09/opus-patches/`. Merged measurement (the handoff's
+explicit demand — eleven per-fix zeroes are not a measured zero for the
+eleven together): sweep against the pre-apply dump at 87ac5db over 1,402,917
+pairs → **0 changed scores, 0 crossings**. The zeroes compose. Suite 18/18 at
+every step; release tokens bumped at fe78a2b; release record in
+`lab-history.md` (`# lab-v2.6.21-release`). Ruling review: the fixture tally
+matches Codex's close-out exactly (299 A / 2,110 R `codex-pt09`; weak and
+credible pending 0; the 29,242 pending are candidate-floor census rows,
+unruled by contract; no verdict carries Jason's name).
+
+## 5. Deferred decisions — the run's open ledger
+
+1. **Tokenizer possessives** (`women's` indexes as `women'`): fix built in
+   the opus lane, 222 corpus rows move, **2,494 crossings** — needs a
+   scheduled adjudication window, not a spare hour.
+2. **`marry\w*` in CLAIM_CUES**: one-word fix, but it turns frozen benchmark
+   case pt-03 ("The merger married two incompatible corporate cultures.")
+   claim-like — the deliberate trap of the include-override test. Greening it
+   edits a frozen assertion: **Jason's ruling.**
+3. **List-marker segmentation** ("1." shards into its own unit): the real fix
+   renumbers 3,363 frozen band pairs in the fixture; a zero-cost
+   reporting-layer alternative is recorded in the findings. Design call.
+4. **Frozen-fixture appends (P3)**: NBSP/soft-hyphen/inflection cases for the
+   gate benchmark, polarity/question cases for the stance block — Jason-owned
+   append-only fixtures; interim unit-test guards shipped in the series.
+
+## 6. What the run measured about the instrument
+
+Six of the eleven fixes are one defect class: **a hand-written list of
+surface forms that stopped at the examples its author thought of** (v2.6.14
+taught a gate frame to conjugate `marry`; 959d32c taught it `date`; pt09
+found the same hole in the idiom, claim detection, the statistic detector,
+the entity table, and every contraction-bearing cue regex). A list of surface
+forms is a liability wherever the engine could derive the forms. And every
+shipped fix moved zero corpus rows **because the corpus cannot see these
+defects**: clean ASCII academic/newsroom prose exercises no Unicode spacing,
+no format characters, no RTF preambles, no word-spelled percentages, no
+typographic apostrophes, no questions. Widening the corpus toward
+reader-shaped text — forum posts, chat logs, word-processor pastes — would
+change what the instrument can see more than any single engine fix changed
+what the engine does.
+
+## 7. Verification
+
+Suite 18/18 green at: the 87ac5db pre-integration baseline, the merged tree
+after `git am`, and the v2.6.21 bump (fe78a2b) — exit codes read, never
+grepped. The 22 patches were verified by the opus lane via `git am` onto
+`origin/main` with a byte-identical result against its green clone before
+export. Floors untouched: domainRecall 1.0-measured pins, ignorePrecision,
+junkRecall ratchet 0.8529, knownSplits, WEAK_BACKLOG_CEILING 0 all stand.
+NOT done, on purpose: no push (awaits Jason's confirmation); candidate-floor
+census rows remain unruled by contract; no site page reworded; the
+abstract-only sleep source not promoted past its limitations; the four
+deferred decisions above shipped as decisions-to-make, not as half-fixes.
+
+
+---
+
+# pt09/PROTOCOL.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 7040f79:md/pt09/PROTOCOL.md` · the 22-file patch series: `git show 7040f79:md/pt09/opus-patches/`
+
+# Pressure test 09 — parallel 5-hour run protocol (Codex in-tree + Claude-in-clone)
+
+**Status:** READY for a 5-hour concurrent run, two vendors, two lanes.
+Baseline: `main` @ e8c553a (v2.6.20), suite 18/18 green, tree clean, synced with
+origin. The working agreements in `CLAUDE.md` bind both agents. Method ancestry:
+pt04 procedure as run two-handed in pt05/pt06 (`md/pressure-tests.md`), extended
+here with an adversarial engine lane and 5-hour scope.
+
+## Agents, models, effort (state these in every sub-spawn and handoff)
+
+- **Codex = ChatGPT Sol 5.6, reasoning xhigh.** DOCTRINE & CANON lane. Works
+  THIS checkout on `main`. Sole committer in this tree.
+- **Claude = Opus 5, reasoning high.** ADVERSARIAL & ENGINE lane. Works a fresh
+  local `git clone` of this checkout in its own session scratchpad. Commits only
+  in its clone; ferries work back as a patch series.
+
+## Delegated self-ruling (pt09-specific, ruled by Jason in-session 2026-08-07)
+
+Jason delegated threshold-crossing verdicts to the agents for this run. Rules:
+
+- Rule **per-crossing, having read the crossing** — `--rule` remains FORBIDDEN
+  in any form; bulk stamping is not ruling.
+- Verdict attribution is the agent: `codex-pt09` or `opus-pt09`. **Never
+  attribute a verdict to Jason.** Jason may overturn any pt09 ruling post-run.
+- Recording a verdict is still TWO edits: `counts.pendingByThreshold.<t>` and
+  `counts.pending` move together; never delete a key.
+- Ruled fixture keys never reopen on re-crossing.
+
+## Lanes — the file partition that prevents every serious collision
+
+**Codex owns (edit + commit, this tree):** site pages (`*.html`, `css/`),
+`data/canon-overlay.json`, `data/le-canon-index.json`, canon pins in
+`tests/fixtures/`, `tests/fixtures/threshold-neighbors.json` rulings, `md/`
+records, and `md/pt09/*` except `opus-*` files. Engine code — `js/lab-*.js`,
+`fixtures/run-analyzer.mjs`, `tools/lab-*.mjs`, `tests/lab-*.test.mjs` — is
+OFF-LIMITS except a minimal fix to a bug that hard-blocks a doctrine ship;
+any such fix is logged loudly in `md/pt09/codex-findings.md`. Engine bugs
+found but not blocking are recorded as findings for the opus lane.
+
+**Claude owns (edit + commit, in its clone only):** `js/lab-*.js`,
+`fixtures/run-analyzer.mjs`, `tools/lab-*.mjs`, `tests/` engine steps. Canon
+surfaces, site pages, overlay, and index are READ-ONLY for Claude even inside
+the clone — doctrine gaps it finds become PROPOSALS, never direct edits. In
+the REAL checkout Claude touches nothing except creating/appending NEW
+`md/pt09/opus-*` files and appending to `md/pt09/CLAIMS.md`.
+
+## Cross-feed while both run
+
+- **Claude → Codex:** doctrine proposals to the encompassing standard, appended
+  to `md/pt09/opus-proposals.md` (real tree, opus-prefixed, append-only). Codex
+  sweeps it at every integration and folds what clears the bar.
+- **Codex → Claude:** ordinary commits on the real tree's `main`. Claude runs
+  `git fetch origin && git rebase origin/main` in its clone roughly hourly and
+  always before close.
+- **Ledger:** `md/pt09/CLAIMS.md`, append-only, both agents, UTF-8. Re-read the
+  file immediately before appending. One line per input:
+  `- [agent] [lane] [source-or-attack] [status]`.
+- **NEVER `git push` from the clone.** The clone's `origin` is the live
+  checkout; ferry is by format-patch only. And in the real tree, no push to
+  GitHub without Jason's in-session confirmation — that rule survives the
+  delegation above.
+
+## Codex cycle (~25–35 min; integrate every 2–3 cycles)
+
+1. Claim an input in the ledger. Fetch raw HTML to a temp dir OUTSIDE the repo
+   (third-party text is never committed). Extract with
+   `tools/extract-source-text.mjs`, record the SHA-256, drop promo/
+   recirculation furniture (`--drop`/`--cut`).
+2. `node fixtures/run-analyzer.mjs --source <txt> --out <temp>/<slug>.json`,
+   recording the canon version from the summary line per capture.
+3. Judge like a reviewer: covered / gap / instrument finding / correctly
+   unmapped. Log in `md/pt09/codex-findings.md` (URL, words, SHA-256, canon
+   version, mapped %, verdict).
+4. Integration (full pt04 procedure): baseline `--dump` FIRST; entries +
+   overlay + rebuilt index + moved pins in ONE commit, suite green; sweep
+   `--baseline --neighbors` onto the EXISTING
+   `tests/fixtures/threshold-neighbors.json` (indent-2 JSON); rule EVERY weak
+   crossing per the delegation above; probe misreadings fire Contradicts
+   end-to-end; check analyzer-demo pins after any alias change — fix the
+   authored surface, never the pin; magnet-check new aliases against the
+   corpus; then the `generatedAt` stamp commit.
+
+**Content targets** (gap-driven, not quota-driven): statistics (Tier 1/2/3
+sourced — never intuitions), frameworks (rules-not-laws, reality-check tags,
+cross-cite both ways), lexicon terms, mythbuster entries (schema + stake-ledger
+truth ints + CALIBRATION = market share), pill expansions. Placement: Pills =
+worldviews, Frameworks = models, Statistics = numbers. Deep dives: PROPOSE with
+an outline unless a gap unmistakably merits a full essay; Essays cannot host
+Framework components (pt08). Misreadings obey the authoring contract: 10–18
+words, one sentence, no negators, an explicit relational-frame word, none of
+the morphology traps (`married/marries/chosen/dates`). "No doctrine needed" is
+a valid, valued verdict.
+
+## Claude cycle (adversarial & engine)
+
+1. Pick an attack surface; claim it in the ledger (a crafted-input family
+   counts as one claim line). Craft or collect inputs; run the analyzer
+   headless in the clone.
+2. When output is wrong: minimal repro first, then RED — a failing test
+   committed (or staged) before the fix — then the fix, suite green in the
+   clone, commit with the surface + repro in the message.
+3. Log every finding in the clone as you go; fold into
+   `md/pt09/opus-findings.md` (real tree) at close.
+
+**Attack map** (starting points, not fences): tokenizer — unicode, CRLF vs LF,
+zero-width chars, RTL, emoji, NBSP; intake normalization edges; gate morphology
+inflections (the `marry\w*`/"date" class — pt08's bug had siblings); stance-cue
+clause scoping (v2.6.20 is days old — probe it hard); misreading firing
+contract edges; negation, sarcasm, quoted speech, reported claims ("she said
+that…"); long and degenerate inputs (10k-word pastes, single-word, repeated
+text, lists, markdown/HTML fragments); register shifts (academic vs forum vs
+therapy-speak); injection-shaped text (the Lab must READ it, not obey it).
+Known refusal-pinned: hyphenated-compound unreachability — do not re-litigate
+the pin.
+
+**Engine-fix rules:** floors are hard (domainRecall ≥ 0.9 · ignorePrecision ≥
+0.95 · junkRecall ≥ 0.75 ratchet · knownSplits ≤ 1 · WEAK_BACKLOG_CEILING = 0);
+frozen benchmark fixtures and assertion values are never edited to green a
+test; a fix that needs a floor loosened does not ship — record it as a finding.
+If a fix moves corpus scores: copy `lab-corpus/` into the clone (COPY —
+robocopy/cp — NEVER a junction, never committed), sweep in the clone, self-rule
+per the delegation with `opus-pt09` attribution; rulings ride the patch series.
+Version numbers: real-tree `v2.6.x` numbers are Codex's to claim; Claude's
+commits say `v2.6.x-opus-ptNN` placeholders — final numbers assigned at
+integration.
+
+## Close (both agents, begin at T-30 min)
+
+- **Codex:** ledger QA (every claim line has a terminal status), close-out
+  section in `md/pt09/codex-findings.md` (entries shipped, rulings entered with
+  counts, instrument findings, what was deliberately NOT implemented), suite
+  green, final stamp commit. The pt09 run record and INDEX row wait for
+  integration — do not write them.
+- **Claude:** fetch + rebase onto `origin/main`, suite green in the clone,
+  `git format-patch origin/main..HEAD -o <real-tree>/md/pt09/opus-patches/`,
+  then write `md/pt09/opus-findings.md`: one row per finding — surface, repro,
+  RED test, fix commit, floor impact, rulings entered.
+- **Integration (post-run, separate session with Jason):** apply the patch
+  series, reconcile version numbers, rerun suite + sweep on the merged result,
+  review pt09 self-rulings, fold `md/pt09/` into `md/pressure-tests.md` +
+  INDEX row + mission-notes ledger row, delete-with-pointer.
+
+## Standing constraints (both agents)
+
+The real tree stays on `main` — never detach, never branch, **never
+`git worktree`** (the clone is a clone, not a worktree). Never reword a site
+page so the matcher scores better — authored overlay surfaces only.
+`lab-corpus/` text is never committed and never junctioned. Before every
+commit: `git rev-parse --abbrev-ref HEAD` + `git status --porcelain`; stage
+ONLY your lane's paths; read the full staged diff (`--cached`, hunks); commit
+from the index with NO pathspec; compare the commit `--stat` to the staged
+`--stat` — Jason and the other agent may have files sitting in the tree.
+Evidence bulk lives in `md/pt09/` only for the run's duration.
+
+
+---
+
+# pt09/CLAIMS.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 7040f79:md/pt09/CLAIMS.md` · the 22-file patch series: `git show 7040f79:md/pt09/opus-patches/`
+
+# PT09 claims ledger
+
+Append-only. One line per input: `- [agent] [lane] [source-URL-or-attack-family] [status]`.
+Re-read this file immediately before appending. Statuses: claimed → analyzed → verdict(covered|gap|instrument|novel|bug|clean).
+Keep this file UTF-8.
+
+- [codex] [F] [https://www.theguardian.com/lifeandstyle/2025/oct/19/living-together-to-save-money] [claimed]
+- [opus] [A] [attack:intake-normalization — unicode/CRLF/zero-width/bidi/NBSP/soft-hyphen] [claimed]
+- [opus] [A] [attack:stance-clause-scoping — v2.6.20 genericCueGround ground selection] [claimed]
+- [opus] [A] [env:fresh-clone-of-main is RED at scripts/validate-canon-index.mjs (stray CR in 5 working-tree pages)] [bug]
+- [codex] [F] [https://www.theguardian.com/lifeandstyle/2025/oct/19/living-together-to-save-money] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC10064083/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC10064083/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC10843698/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC10843698/] [verdict(gap+instrument)]
+- [opus] [A] [attack:misreading-firing-contract — pressureTests absent from the distinctive-token guard] [verdict(bug, fixed 14b04e7 in clone; RED 53420a4)]
+- [opus] [A] [attack:intake-normalization — one non-ASCII space bins a passage at the relevance gate] [verdict(bug, fixed 5dac712 in clone; RED adb1659)]
+- [opus] [A] [attack:zero-width-and-format-characters — ZWSP/soft-hyphen/word-joiner/BOM degrade retrieval silently] [claimed]
+- [opus] [A] [attack:html-entity-decoding — headless fallback decodes 6 names, a DOM decodes all] [verdict(bug, fixed 221ee19 in clone; RED dbcec64)]
+- [opus] [A] [attack:negated-generic-cues — the stance ladder has no polarity] [verdict(bug, fixed f1a30a6 in clone; RED fbb85df)]
+- [opus] [A] [attack:degenerate-and-huge-inputs + intake format edges (csv/json/srt/vtt/rtf)] [claimed]
+- [codex] [F] [https://pmc.ncbi.nlm.nih.gov/articles/PMC3377181/] [claimed]
+- [codex] [F] [https://pmc.ncbi.nlm.nih.gov/articles/PMC3377181/] [verdict(gap+instrument)]
+- [codex] [F] [https://pmc.ncbi.nlm.nih.gov/articles/PMC5956859/] [claimed]
+- [codex] [F] [https://pmc.ncbi.nlm.nih.gov/articles/PMC5956859/] [verdict(gap+instrument)]
+- [codex] [H] [https://www.pbs.org/newshour/show/why-a-growing-number-of-american-men-say-they-are-in-a-friendship-recession] [claimed]
+- [codex] [H] [https://www.pbs.org/newshour/show/why-a-growing-number-of-american-men-say-they-are-in-a-friendship-recession] [verdict(covered+instrument)]
+- [opus] [A] [attack:gate-morphology-inflections — mate-value-mismatch idiom half-conjugated] [verdict(bug, fixed in clone; RED first)]
+- [opus] [A] [attack:rtf-destination-groups — a Word preamble arrives as transcript text] [verdict(bug, fixed in clone; RED first)]
+- [opus] [A] [attack:injection-shaped-text + register shifts + reported speech] [claimed]
+- [opus] [A] [attack:tokenizer-possessives — every possessive is its own token, unifiable with nothing] [verdict(bug, MEASURED NOT SHIPPED: 2494 crossings need an adjudication window; see opus-findings.md #10)]
+
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC7430699/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC7430699/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC12106345/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC12106345/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC9285876/] [claimed]
+- [opus] [A] [attack:clause-splitting on decimals, thousands separators and abbreviation periods] [claimed]
+- [opus] [A] [attack:markdown-export structural injection (pipes/fences/headings/HTML)] [verdict(clean — quoted, escaped, tables well-formed)]
+- [opus] [A] [attack:shared-token display cap decides the stance ground] [verdict(instrument — latent coupling, 0 corpus effect, not shipped)]
+
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC9285876/] [verdict(gap+instrument+correctly-unmapped)]
+- [opus] [A] [attack:misreading-branch negation/endorsement/rejection parity] [verdict(clean — parity holds; negated endorsement and negated rejection both land Context only)]
+- [opus] [A] [attack:metrics + coverage denominators under duplication, speaker turns, anaphora] [verdict(clean)]
+- [opus] [A] [attack:risk-flag detectors — statistic spellings] [verdict(bug, fixed in clone; RED first; 6 research items gain the flag)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC3156929/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC3156929/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC8222305/] [claimed]
+
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC8222305/] [verdict(gap+instrument)]
+
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC7082420/] [claimed]
+
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC7082420/] [verdict(gap+instrument+correctly-unmapped)]
+- [opus] [A] [attack:claim-detection cues — CLAIM_CUES does not list `date`] [verdict(bug, date half fixed in clone; RED first; marry-conjugation half NOT shipped, collides with pt-03 include-override trap)]
+- [opus] [A] [attack:sentence segmentation of ordered lists — "1." shards into its own unit] [claimed]
+
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC5293605/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC5293605/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC5658017/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC5658017/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC2366194/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC2366194/] [verdict(gap+instrument)]
+
+<!-- opus close: terminal status for every [opus] [claimed] line above. -->
+- [opus] [A] [attack:intake-normalization — unicode/CRLF/zero-width/bidi/NBSP/soft-hyphen] [verdict(bug x3: NBSP at the gate, HTML entities, format characters — all fixed in clone, RED first; findings 3/4/5)]
+- [opus] [A] [attack:zero-width-and-format-characters — ZWSP/soft-hyphen/word-joiner/BOM degrade retrieval silently] [verdict(bug, fixed in clone; RED first; ZWSP drops a match 0.747->0.562; finding 5)]
+- [opus] [A] [attack:stance-clause-scoping — v2.6.20 genericCueGround ground selection] [verdict(bug x2: polarity-blind ladder and hypothetical/interrogative cues — both fixed in clone, RED first; findings 6 and 9)]
+- [opus] [A] [attack:clause-splitting on decimals, thousands separators and abbreviation periods] [verdict(bug, fixed in clone; RED first; finding 11)]
+- [opus] [A] [attack:degenerate-and-huge-inputs + intake format edges (csv/json/srt/vtt/rtf)] [verdict(bug in RTF destination groups, fixed in clone RED first — finding 8; degenerate/huge inputs themselves CLEAN: single-word, repeated, no-punctuation, 10k-word pastes all analyzed without error or metric distortion)]
+- [opus] [A] [attack:injection-shaped-text + register shifts + reported speech] [verdict(clean — the Lab reads injection-shaped text as text and never as instruction; register shifts and reported speech surfaced no defect the stance guards did not already cover)]
+- [opus] [A] [attack:sentence segmentation of ordered lists — "1." shards into its own unit] [verdict(bug, MEASURED NOT SHIPPED: the segmentation fix renumbers 3,363 frozen band pairs; reporting-layer alternative recorded for integration; finding 14)]
+- [opus] [A] [attack:cue-morphology x apostrophe form — seven cue regexes read only the ASCII apostrophe] [verdict(bug, fixed in clone; RED first; U+2019 flips "source overreach" to "LE limitation"; finding 15)]
+- [opus] [A] [CLOSE: 22 patches (11 RED/fix pairs) exported to md/pt09/opus-patches/; clone rebased onto origin/main 4149301, suite exit 0, 18/18; opus-findings.md finalized with handoff; 0 threshold crossings produced, 0 rulings entered]
+
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC2950886/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC2950886/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC9249692/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC9249692/] [verdict(gap+instrument)]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC12762798/] [claimed]
+- [codex] [G] [https://pmc.ncbi.nlm.nih.gov/articles/PMC12762798/] [verdict(gap+instrument)]
+
+
+---
+
+# pt09/KICKOFF.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 7040f79:md/pt09/KICKOFF.md` · the 22-file patch series: `git show 7040f79:md/pt09/opus-patches/`
+
+# PT09 kickoff prompts — paste one into each FRESH session
+
+Codex (ChatGPT Sol 5.6, reasoning **xhigh**) starts FIRST in this checkout.
+Claude (Opus 5, reasoning **high**) starts any time after, in its own clone.
+Both run 5 hours. `md/pt09/PROTOCOL.md` is the collision contract.
+
+---
+
+## Prompt 1 — Codex (fresh session, this checkout). Paste directly:
+
+```
+You are the DOCTRINE & CANON agent for pressure-test 09 on The Love Equations
+repo (this checkout, branch main), running a 5-HOUR self-paced loop. You are
+ChatGPT Sol 5.6 at reasoning xhigh. A Claude Opus 5 session runs concurrently
+in a separate clone as the ADVERSARIAL & ENGINE lane; you two share only the
+files md/pt09/PROTOCOL.md allows. Read md/pt09/PROTOCOL.md FIRST — it is the
+collision contract and it binds you — then CLAUDE.md, then md/INDEX.md.
+Baseline: main @ e8c553a (v2.6.20), suite 18/18 green.
+
+Your mission: feed the LE Lab real discourse it SHOULD read well, find where
+it reads nothing or reads wrong, and close the gaps with new doctrine —
+statistics (Tier-sourced), frameworks, lexicon terms, mythbuster entries,
+pill expansions, deep-dive proposals — implemented in the tree, suite green.
+You own canon surfaces, the overlay, the index, fixtures pins, threshold
+rulings, and every commit in this tree. You do NOT edit engine code
+(js/lab-*.js, fixtures/run-analyzer.mjs, tools/lab-*.mjs, tests/lab-*.test.mjs)
+except a minimal fix to a bug that hard-blocks a doctrine ship, logged loudly;
+other engine bugs you hit are findings for the opus lane — record them.
+
+Pick input territory yourself, but check coverage FIRST (lab-corpus.manifest.json
+and the ledgers in md/pressure-tests.md) — skip what pt02–pt08 already chewed.
+Spread across content types; gap-driven, not quota-driven.
+
+Each cycle (~25–35 min): claim the input in md/pt09/CLAIMS.md (re-read the
+file immediately before appending, keep UTF-8); fetch raw HTML to a temp dir
+OUTSIDE the repo; extract with tools/extract-source-text.mjs recording the
+SHA-256, dropping promo/recirculation furniture; run
+node fixtures/run-analyzer.mjs --source <txt> --out <temp>/<slug>.json
+recording the canon version per capture; judge like a reviewer (covered /
+gap / instrument / correctly unmapped); log in md/pt09/codex-findings.md.
+
+Every 2–3 cycles, integrate per the full procedure in PROTOCOL.md: baseline
+--dump FIRST; entries + overlay + rebuilt data/le-canon-index.json + moved
+pins in ONE commit suite-green; sweep --baseline --neighbors onto the
+EXISTING tests/fixtures/threshold-neighbors.json; rule EVERY weak crossing
+yourself — Jason has delegated pt09 verdicts, per-crossing, attributed
+codex-pt09, NEVER attributed to Jason, --rule still FORBIDDEN, the two-edit
+counts rule still applies; probe misreadings fire Contradicts end-to-end;
+check analyzer-demo pins after alias changes (fix the authored surface,
+never the pin); magnet-check new aliases; then the generatedAt stamp commit.
+Also sweep md/pt09/opus-proposals.md each integration and fold what clears
+the encompassing standard.
+
+Hard lines: never reword a site page so the matcher scores better; floors
+and ratchets are hard; frozen fixtures are never edited to green a test;
+misreadings obey the authoring contract (10–18 words, one sentence, no
+negators, a relational-frame word, none of married/marries/chosen/dates);
+before every commit stage ONLY your paths, review the full --cached diff,
+commit from the index with no pathspec, compare commit --stat to staged
+--stat; NEVER git push.
+
+At T-30min, close per PROTOCOL.md: ledger QA, close-out section in
+codex-findings.md (entries shipped, rulings entered with counts, instrument
+findings, what you deliberately did NOT implement), suite green, final stamp
+commit. Do NOT write the run record or INDEX row — integration does that.
+```
+
+---
+
+## Prompt 2 — Claude (fresh session, Opus 5, effort high). Paste as a `/loop` command:
+
+```
+/loop Run pressure-test 09 as the ADVERSARIAL & ENGINE agent, self-paced, for 5
+hours. You are Claude Opus 5 at reasoning effort high. A Codex Sol 5.6 session
+is concurrently shipping doctrine in the REAL checkout
+(F:\Programming\The Love Equations\The Love Equations Website); you work in
+your own CLONE. Read md/pt09/PROTOCOL.md in the real tree FIRST — it is the
+collision contract and it binds you — then CLAUDE.md.
+
+Setup (once): git clone the real checkout into your session scratchpad, then
+COPY lab-corpus/ into the clone (robocopy/cp — NEVER a junction; ~14 MB;
+never commit its text). Run npm run test:lab in the clone and confirm the
+banner names YOUR clone's tree and 18/18 green before touching anything.
+NEVER git worktree anywhere; NEVER git push from the clone (its origin is the
+live checkout).
+
+Your mission: break the Lab's logic with adversarial inputs, then fix what
+you break. You own engine code in the clone: js/lab-*.js,
+fixtures/run-analyzer.mjs, tools/lab-*.mjs, tests/ engine steps. Canon
+surfaces, site pages, overlay, and index are READ-ONLY even in your clone —
+doctrine gaps you find become proposals appended to md/pt09/opus-proposals.md
+in the REAL tree (opus-* files under md/pt09/ and CLAIMS.md appends are the
+ONLY writes you ever make to the real tree).
+
+Each cycle: pick an attack surface from the PROTOCOL.md attack map (tokenizer
+unicode/CRLF/zero-width, intake edges, gate morphology inflections, stance-cue
+clause scoping — v2.6.20 is days old, probe it hard — misreading contract
+edges, negation/quoted speech, degenerate and huge inputs, register shifts,
+injection-shaped text); claim the family in md/pt09/CLAIMS.md (real tree,
+re-read before appending, UTF-8); craft inputs; run the analyzer headless in
+the clone; when output is wrong, build the minimal repro, commit a RED failing
+test FIRST, then the fix, suite green, commit with surface + repro in the
+message. Floors are hard (domainRecall ≥0.9, ignorePrecision ≥0.95, junkRecall
+≥0.75 ratchet, knownSplits ≤1, weak backlog 0); frozen fixtures never edited
+to green; a fix needing a loosened floor does not ship — record it as a
+finding. Hyphenated-compound unreachability is refusal-pinned — skip it. If a
+fix moves corpus scores, sweep in the clone and self-rule crossings —
+Jason delegated pt09 verdicts, per-crossing, attributed opus-pt09, never to
+Jason, --rule FORBIDDEN, counts move as two edits. Version placeholders
+v2.6.x-opus-pt09; final numbers assigned at integration.
+
+Roughly hourly: git fetch origin and rebase onto origin/main to absorb
+Codex's canon commits, re-running the suite after each rebase.
+
+At T-30min, close per PROTOCOL.md: final fetch + rebase onto origin/main,
+suite green, git format-patch origin/main..HEAD -o
+"<real tree>/md/pt09/opus-patches/", then write md/pt09/opus-findings.md in
+the real tree — one row per finding: surface, repro, RED test, fix commit,
+floor impact, rulings entered — plus a handoff note for integration. Report:
+surfaces attacked, bugs found/fixed, bugs found/NOT fixed and why, proposals
+filed, rulings entered.
+```
+
+
+---
+
+# pt09/codex-findings.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 7040f79:md/pt09/codex-findings.md` · the 22-file patch series: `git show 7040f79:md/pt09/opus-patches/`
+
+# Codex doctrine & canon findings — pressure test 09
+
+Run lane: ChatGPT Sol 5.6, reasoning xhigh, doctrine/canon owner. Baseline checkout is `main` at scaffolding commit `77c340b` over requested baseline `e8c553a`; analyzer v2.6.20; initial suite 18/18 green with the local corpus present.
+
+## Cycle 1 — housing pressure and cohabitation timing
+
+- Source: https://www.theguardian.com/lifeandstyle/2025/oct/19/living-together-to-save-money
+- Capture: 1,203 analyzer-counted words; extracted-text SHA-256 `fa4a5c4c924a6cea84fb0ff3f3e1c7f881e0bab805acd628167d7192bcd8b666`; raw-HTML SHA-256 `27c61cf0a2a01d8c23e876e0fc9aa242b704f0de88ef754f864005b48cf38141`.
+- Extraction: Guardian `data-gu-name=body` container; all figures/rich links and ad/pullquote containers dropped; topic/share footer cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+9e24244bf93d`; 18 claim-like passages; 2 mapped; 16 unmapped; mapped share 11.1%; 0 tensions.
+- Reviewer verdict: **gap + instrument**. Both displayed mappings are false positives: cautious relationship pacing mapped to the rejection-etiquette mythbuster `M-TBD-3` at 0.467, and moving in during one's mid-20s mapped to dating-window mythbuster `M-TBD-59` at 0.454. The article's central relationship mechanism—housing costs can accelerate cohabitation while shared rent and a lease raise the price of leaving—was unmapped.
+- Doctrine disposition: candidate framework under `frameworks:commitment-problem`, working name **The Cohabitation Ratchet**. It must distinguish dedication from material constraint, cover both the cheaper joint household and the costlier breakup, and avoid turning commercial survey prevalence into a population statistic. Hold until fresh empirical support clears the encompassing standard.
+
+## Cycle 2 — chronic illness turning partnership into care
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC10064083/
+- Capture: 6,616 analyzer-counted words; extracted-text SHA-256 `124299e3db04c359a24d1f6d23ad6f0bf3e2fc5493d4558088af8348ad9f7988`; raw-HTML SHA-256 `6ce7a031bb3b1e3d399c2addf9e757abc06491513578ecfd85469f6841bc262d`.
+- Extraction: PMC English article container; figures, tables and asides dropped; data-availability, administrative and reference sections cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+9e24244bf93d`; 158 claim-like passages; 15 mapped; 143 unmapped; mapped share 9.5%; 5 generated tensions.
+- Reviewer verdict: **gap + instrument**. The paper's four result themes—partnership disappearing behind disease, changed tasks and roles, intimacy loss, and attempts to rebalance—are genuinely relationship doctrine and have no owner. Nearly every displayed mapping is false or merely topical: care dependency mapped `Contradicts` to the Marriage Bar (0.542), a dementia “reversible figure” mapped to Context (0.540), changed roles mapped to the transition-specific Co-Transition entry (0.518), and the care/couple integration result mapped `Supports` to Distance Discount (0.482).
+- Engine finding for Opus: the methods sentence “three interviews took place with only the caregiving partner (all women)” fired AWALT `Contradicts` at 0.790 and generated two bogus pressure tests. A bounded sample description is being read as a universal claim. No engine file was touched.
+- Doctrine disposition: candidate retention framework, working name **The Care Role Split**. It must distinguish the couple relationship from the care relationship occupying the same dyad; cover role/power/intimacy changes without treating illness as destiny; and state the survivor-selected, older German, qualitative boundary. One fresh longitudinal/dyadic evidence leg is required before integration.
+
+## Cycle 3 — shared illness appraisal and dyadic coping
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC10843698/
+- Capture: 8,656 analyzer-counted words; extracted-text SHA-256 `aba86e37b1d5d10cfece599b5f5aa39eda11f4ac075ffd052cf62423ebc4e2a4`; raw-HTML SHA-256 `e6a84f3c30af29c4542826b6e6925efbce6c0484bb2819641aa07f4478515dfb`.
+- Extraction: PMC English article container; figures, tables and asides dropped; reference list cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+9e24244bf93d`; 195 claim-like passages; 8 mapped; 187 unmapped; mapped share 4.1%; 0 tensions.
+- Reviewer verdict: **gap + instrument**. The longitudinal dyadic mechanism is dark: within-person increases in shared illness appraisal predicted more illness communication and dyadic coping, and more dyadic coping coincided with higher relationship satisfaction, closeness and sexual satisfaction. Displayed mappings were false: dyadic coping and the shared-illness result mapped to Desire-State Split (0.430/0.437), an `N = 242 couples` table heading mapped `Supports` to looks matching (0.480), and “concealable chronic illness” mapped to the generic Context multiplier (0.540).
+- Evidence: three waves six months apart, 242 couples at baseline, 146 at six months and 123 at twelve months; actor-partner interdependence mediation models separate within-person from between-person effects. Observational covariation, convenience recruitment, substantial attrition and the concealable-illness population constrain causal or universal claims.
+- Doctrine disposition: **The Care Role Split clears the encompassing standard** when Cycles 2 and 3 are read together. The older-German qualitative study identifies the two simultaneous roles and crowd-out themes; this longitudinal U.S. dyadic study supplies a measured repair path—shared appraisal, illness communication, dyadic coping—without claiming that communication cures disease or guarantees retention. Integrate as a retention/maintenance framework with both sources and explicit Tier 2/Tier 3 boundaries.
+
+## Integration 1 — The Care Role Split
+
+- Shipped `frameworks:care-role-split` with two source links, reciprocal cross-cites to Co-Transition, Ownership Load and Support Portfolio, a rule-not-law callout, four boundaries, three contract-compliant misreadings and two pressure tests. Integration commit: `0bb4b93`; post-commit index stamp: `802c38a`; canon `1.0.0+d5cbf0d36468`, 574 concepts.
+- Gap closure: the qualitative caregiving capture rose from 15/158 mapped (9.5%) to 33/158 (20.9%), including 24 Care Role Split matches. The dyadic-coping capture rose from 8/195 (4.1%) to 54/201 (26.9%), with 54 Care Role Split matches.
+- Instrument finding for Opus: on identical dyadic-coping input and unchanged analyzer/scoring versions, adding canon promoted seven previously absent passages into the analyzed segment set—six claim-like and one non-claim heading. The claim denominator therefore moved 195 to 201; the 26.9% post-integration share is not a pure mapping delta. No engine file was touched.
+- Misreading probe: all three authored sentences satisfy 10–18 words, one sentence, no forbidden negator/morphology, and a relational-frame word. End-to-end scores were 0.739, 0.738 and 0.741; all three mapped to Care Role Split with `Contradicts`.
+- Magnet check: no new alias or phrase appears verbatim anywhere in the 21-source corpus. The threshold sweep still exposed a broad synopsis magnet: 218 Care Role Split weak/credible gains on the existing corpus. After reading every crossing, 217 were rejected as lacking a partner chronic-illness caregiver/care-receiver frame; one was accepted—Finkel's chronic-health passage on whether a spouse must supply primary medical support.
+- Threshold record: mandatory baseline dump preceded authoring (2,423 passages × 573 entries, 1,388,379 pairs). Final sweep covered 2,423 × 574 (1,390,802 pairs). Entered 386 explicit `codex-pt09` rulings: weak 373 (150 ACCEPT, 223 REJECT) and credible 13 (6 ACCEPT, 7 REJECT); both actionable pending counts are zero. All 24,790 prior rulings remained byte-equivalent. Candidate-floor census rows were not adjudicated.
+- Verification: full suite 18/18 green before the integration commit and again before the stamp commit; analyzer-demo/canon pins stayed green after alias changes. `md/pt09/opus-proposals.md` did not yet exist at this integration sweep.
+
+## Cycle 4 — cohabitation constraints versus dedication
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3377181/
+- Capture: 6,821 analyzer-counted words; extracted-text SHA-256 `e7dfc329e1e85779cc69aedc7ba248acc4f76d0d68ac7c1abce21a3ca5b0cbaa`; raw-HTML SHA-256 `aa9b3ff78cd36bea742af61f04ea6d90a92c43159c835fb376e46eb04a8979ee`.
+- Extraction: PMC `main-article-body` container; formula/data tables dropped; acknowledgments, footnotes and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+d5cbf0d36468`; 160 claim-like passages; 7 mapped; 153 unmapped; mapped share 4.4%; 3 tensions.
+- Reviewer verdict: **gap + instrument**. The paper's central distinction—dedication is the desire to persist; constraints are forces that make leaving costly regardless of desire—is almost completely dark. So are the longitudinal claims that material constraints accumulated during cohabitation and predicted lower perceived dissolution likelihood independently of dedication, while dedication discrepancies predicted poorer later adjustment.
+- Displayed-map audit: the abstract's lease/joint-account constraint claim mapped to Financial Architecture Split (0.575) even though no asset-control method was at issue; a demographic “never married” sentence mapped `Supports` to cohabitation timing (0.435); increasing constraints mapped `Supports` to Stranger Market (0.438); a missing-data sentence mapped `Extends` to sexual-regret mythbuster M-TBD-64 (0.518). The Outside Option match on the principle of least interest (0.610) is adjacent but does not own the constraint/dedication distinction.
+- Evidence: 120 different-sex cohabiting couples, three waves over eight months. In 46% of couples the partners differed by at least one SD in dedication; the discrepancy predicted later relationship adjustment controlling initial dedication. Material constraints increased, and constraints predicted perceived—not observed—dissolution likelihood. Convenience/snowball sampling, attrition, single-item transition expectations, short follow-up and no observed breakup/marriage endpoint sharply bound the result.
+- Doctrine disposition: the live-article **Cohabitation Ratchet** now has a credible empirical mechanism, but the encompassing entry is better framed as **The Constraint–Dedication Split**: persistence can come from wanting the relationship or from the rising price of exit, and the two are neither uniformly good nor uniformly bad. Hold for a stronger transition design before integration.
+
+## Cycle 5 — the transition to cohabitation
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC5956859/
+- Capture: 7,360 analyzer-counted words; extracted-text SHA-256 `48d138629eb84a2dee2e14b6e1e3701f2cd52ec1af5a4e87551e296e017cd430`; raw-HTML SHA-256 `2e7cc3efc0939036a97c25cec666f72e4f05b4bda4b50fd15b525c618dce3b1c`.
+- Extraction: PMC `main-article-body` container; figures and tables dropped; acknowledgments and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+d5cbf0d36468`; 177 claim-like passages; 24 mapped; 153 unmapped; mapped share 13.6%; 2 tensions.
+- Reviewer verdict: **gap + instrument**. The nationally sampled cross-section and within-person transition study independently restate the dedication/constraint split, but the analyzer leaves almost every constraint claim dark—including the 1.07 SD material-constraint level jump at cohabitation and the finding that dedication stopped rising after the transition.
+- Displayed-map audit: the national `N = 1,294` methods claim mapped `Supports` to the orgasm-context statistic (0.437); the abstract's declines in relationship quality and interpersonal commitment mapped `Supports` to Satisfaction Flywheel (0.575); a cross-sectional-confounding warning mapped to Support Portfolio (0.439); the generic “Role of Commitment” heading mapped to gender advice and M-TBD-44; most sex-frequency trajectory claims mapped to Satisfaction Flywheel even though the entry is a sexual-satisfaction/relationship-satisfaction feedback loop, not a cohabitation frequency curve.
+- Evidence: Study 1 sampled 1,294 unmarried U.S. adults ages 18–35 in different-sex relationships; the targeted-list recruitment and 65% mailed-survey response still leave selection and cross-sectional confounding. Study 2 followed the 161 people who moved from dating to cohabiting with the same partner across six four-month waves (20 months; median five observations) and compared each person with their own pre-transition trajectory. Material constraints jumped by d = 1.07 and kept increasing; perceived constraints jumped by d = 0.37. Dedication and marriage-likelihood had risen before cohabitation and then flattened rather than declining. Satisfaction decline was only a trend (p = .09); negative communication and aggression rose at the transition by d = 0.21 and 0.16. Tests were one-tailed for preregistered directions, all measures were self-report, and the interrupted time series was not random assignment.
+- Doctrine disposition: **The Constraint–Dedication Split clears the encompassing standard** with Cycles 4 and 5. The 120-couple dyadic study shows that constraints accumulate and predict perceived staying independently of dedication; the national/transition study shows a large material-constraint jump without a matching dedication jump. The entry must say that continuation can reflect desire, exit cost, or both; constraint is neither automatically devotion nor automatically entrapment; and the evidence does not prove cohabitation causes divorce. Integrate as a retention/maintenance framework, cross-cited to cohabitation timing, Agreement Surface, Financial Architecture Split, Outside Option and Commitment Problem.
+
+## Cycle 6 — male friendship recession transcript
+
+- Source: https://www.pbs.org/newshour/show/why-a-growing-number-of-american-men-say-they-are-in-a-friendship-recession
+- Capture: 1,471 analyzer-counted words; extracted-text SHA-256 `27e54d5eeef7d18c3c315e8fb726cf1002b29ddbc5f3d7d63d6c0e5ad313a69b`; raw-HTML SHA-256 `e25531c87526f16e452653a1373bc0aa1c2d2f073e16fbd2833aad2496049366`.
+- Extraction: PBS `video-transcript` container only; audio-player, promotion and recirculation furniture excluded. Speaker labels and transcript wording were preserved. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+d5cbf0d36468`; 115 source segments became 151 candidate passages, but 150 passages (1,427 of 1,471 words) were discarded as `no-human-relational-frame`. One 44-word widowhood-support passage survived as claim-like, remained unmapped, and carried six unrelated weak matches. Effective mapped share: 0/1, while the source-level failure is 99.3% passage rejection.
+- Reviewer verdict: **covered + instrument**. The discarded claims include the report's 20% single-men/no-close-friend statement, weekly friend-support channel differences, the loss of physical connection, intentional male-friendship maintenance, and the role of recurring spaces. Existing doctrine already owns the encompassing material: `frameworks:support-portfolio` separates channel count, concentration and maintenance labor; its aliases explicitly include male friendship recession and fewer close friends; its boundaries constrain the gender and causal slogans; Third Places owns venue supply. A new entry would duplicate PT05 rather than close a canon gap.
+- Instrument control for Opus: an exact-quotation probe containing 102 words from five discarded friendship/support passages, separated into ordinary paragraphs and without speaker labels, produced zero analyzed passages; all four resulting blocks were again discarded. The relevance gate therefore prevents a strong existing alias from ever reaching retrieval. No engine file was touched.
+- Doctrine disposition: no canon change. Preserve the Support Portfolio's measured, non-universal framing; do not promote PBS's secondary figures into a new statistic without returning to the original survey instruments, and do not infer suicide causation from the interview's juxtaposition.
+
+## Integration 2 — The Constraint–Dedication Split
+
+- Shipped `frameworks:constraint-dedication-split` with two Tier-2 source links, reciprocal cross-cites to Cohabitation Timing, Agreement Surface, Financial Architecture Split, Outside Option and Commitment Problem, five boundaries, three contract-compliant misreadings and three pressure tests. Integration commit: `1ae14fe`; post-commit index stamp: `a4fd73d`; canon `1.0.0+81059814070a`, 575 concepts.
+- Gap closure: the cohabitation-constraints capture rose from 7/160 mapped (4.4%) to 41/160 (25.6%). The transition-to-cohabitation capture rose from 24/177 (13.6%) to 41/177 (23.2%). The entry owns persistence-versus-desire ambiguity without converting either observational study into a causal divorce claim.
+- Misreading probe: all three authored sentences satisfy 10–18 words, one sentence, no forbidden negator/morphology, and a relational-frame word. End-to-end scores were 0.735, 0.778 and 0.734; all three mapped to Constraint–Dedication Split with `Contradicts`.
+- Magnet and frozen-fixture check: none of the final aliases or phrases appears verbatim in the 21-source corpus. The first draft phrase `material constraints make breakup harder` nevertheless mapped a frozen novel pet-ownership sentence at 0.536. The authored surface—not the frozen pin—was narrowed by removing that phrase. The pet sentence returned to unmapped (best weak match Ownership Load, 0.371) while every misreading still fired correctly.
+- Threshold record: mandatory baseline dump preceded authoring (2,423 passages × 574 entries, 1,390,802 pairs). Final sweep covered 2,423 × 575 (1,393,225 pairs), with 35,872 changed scores: 19,782 down and 16,090 up. Entered 273 explicit `codex-pt09` rulings: weak 270 (42 ACCEPT, 228 REJECT) and credible 3 (2 ACCEPT, 1 REJECT); both actionable pending counts are zero. All 4,018 rulings that predated this integration remained byte-equivalent. Candidate-floor census rows were not adjudicated.
+- Opus proposal sweep: folded P1, the checkout-specific canon hash bug. `scripts/build-canon-index.mjs` now normalizes CRLF and bare CR before source hashing, and the canon fixture independently asserts normalized hashes. Five source pages in this checkout each carried one stray CR while Git promises LF, so the previous index could validate here and fail in a clean clone. A clean clone of `a4fd73d` validated the index and ran the 18-step suite green; its threshold assertion was explicitly skipped because the gitignored third-party corpus is absent. P2 was deliberately held: rewording the Conversion Ladder page is forbidden, while a bare `selection` alias would be a broad magnet and the Opus engine fix already closes the measured case. P3 remains Jason-owned append-only fixture work. P4 remains an instrument/doctrine observation, not a canon proposal.
+- Verification: the populated-corpus suite ran 18/18 green after the broad phrase was removed and again after the hash regression guard. The analyzer-demo/canon pins stayed green. No `js/lab-*`, analyzer, sweep or Lab test engine file was edited.
+
+## Cycle 7 — daily technology interruptions inside couples
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC7430699/
+- Capture: 6,382 analyzer-counted words; extracted-text SHA-256 `c318037083a5c92d463107b9e90f8cf64c5b13acc4a2b230068646b95a6508ef`; raw-HTML SHA-256 `f3ac7cd0066198a5fa1f6d12bc9768604b5b963fc1489d89524927003f581aa9`.
+- Extraction: PMC `main-article-body` container; figures, tables and asides dropped; acknowledgments and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+81059814070a`; 108 claim-like passages; 7 mapped; 101 unmapped; mapped share 6.5%; 1 generated tension.
+- Reviewer verdict: **gap + instrument**. The source's central relationship construct—`technoference`, a device interrupting a conversation or shared activity—is absent from canon vocabulary and doctrine. The within-person daily result, the distinction between interruption and raw screen time, and the role of couple-specific phone-etiquette expectations all remained unmapped.
+- Displayed-map audit: every mapped result was wrong or incidental. Two technology-in-context sentences mapped to the generic SMV Context multiplier at 0.540; a depression/attachment hypothesis mapped to Desire–Maintenance Split at 0.534; the 14-day dyadic design mapped to both the sex-frequency statistic (0.527) and the online-couple-meeting mythbuster (0.454); a depression covariate sentence mapped to the divorce-initiation statistic (0.454); and a social-exchange mechanism mapped to shared positive affect (0.445), generating an irrelevant causal tension. No engine file was touched.
+- Evidence: 173 U.S. heterosexual cohabiting couples, 95% married and 92% together at least five years, all with a child age five or younger; both partners completed up to 14 daily surveys (4,039 person-days, 3,892 days with partner contact). On days people perceived more phone interruption than their own usual level, they reported lower relationship quality (b = −0.04), more technology conflict (b = 0.10), less positive face-to-face interaction (b = −0.05) and more negative mood (b = 0.03), all p ≤ .02 after extensive stable controls. Contemporaneous self-report leaves direction and common-method bias unresolved; the mostly White, highly educated parents and single phone-interruption item sharply limit generalization.
+- Doctrine disposition: candidate retention framework, working name **The Interruption Meaning Split**: measure whether a device displaces expected partner attention, not screen minutes alone; an interruption is jointly interpreted against the couple's explicit or implicit attention boundary. Hold for a broader synthesis that can separate a robust average association from causal screen moralism and establish whether `phubbing`/`technoference` merits an authored lexicon surface.
+
+## Cycle 8 — partner-phubbing meta-analysis
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC12106345/
+- Capture: 6,516 analyzer-counted words; extracted-text SHA-256 `96e817feb07fefdafb2bd3a568d2a6062aaba38a9102c4a33ffcb28c947a4d2a`; raw-HTML SHA-256 `bb5f65becba1be3c051117915068c815ee6504d221eee7f724eed287f503da48`.
+- Extraction: PMC `main-article-body` container; figures, tables and asides dropped; funding, author-contribution, publisher-note and reference sections cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+81059814070a`; 142 claim-like passages; 26 mapped; 116 unmapped; mapped share 18.3%; 2 generated tensions.
+- Reviewer verdict: **gap + instrument**. `Partner phubbing` and its relationship outcomes remain without an honest owner. Nineteen of the 26 displayed mappings were to Diagnostic Turn because the review discusses attachment theory; those passages describe measured attachment correlates rather than pop-therapy labeling. Four more mapped to the sexual Desire–Maintenance Split because they named intimacy, responsiveness or relationship satisfaction. Publication-bias methods mapped to Survivorship Channel, an effect-size coding sentence mapped to mate-choice social proof, and the core satisfaction result mapped weakly to the generic commitment model. Both generated tensions were false. No engine file was touched.
+- Evidence: random-effects synthesis of 52 correlational studies (58 samples; total N = 19,698). Partner phubbing was associated with lower relationship satisfaction (r = −.219, 95% CI [−.260, −.175]), lower intimacy (r = −.267, [−.347, −.187]), lower partner responsiveness (r = −.292, [−.354, −.230]), more jealousy (r = .289, [.166, .412]) and more conflict (r = .573, [.228, .918]). Life satisfaction was not significant. Most outcomes were highly heterogeneous; responsiveness was the exception at I² ≈ 22.5%. The evidence base is predominantly cross-sectional, definitions and measures vary, and the review itself says direction may run from phubbing to distress or from distress to phubbing. Subgroup estimates therefore remain moderators of associations, not culture laws.
+- Doctrine disposition: Cycles 7 and 8 establish a repeatable average association plus a within-person daily association, but not that devices themselves damage relationships. The encompassing entry must distinguish use from interruption, and interruption from its relational meaning: displaced expected attention. The candidate **Interruption Meaning Split** remains live. One experimental or controlled boundary leg is required before integration, ideally one that separates active phubbing from mere phone presence and checks actual interaction outcomes.
+
+## Cycle 9 — controlled phubbing and ostracism
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC9285876/
+- Capture: 10,520 analyzer-counted words; extracted-text SHA-256 `faaa1ca67f071ebd773e00430bdab1ef1428cc544522e85567987ddedc245a83`; raw-HTML SHA-256 `37d41bb19c31bf17689956ceb15ad7c9bf87b2d73f4dc3a7becb9d31b60de1d7`.
+- Extraction: PMC `main-article-body` container; figures, tables and asides dropped; data-availability, author, funding, publisher-note and reference sections cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+81059814070a`; 39 claim-like passages; 1 mapped; 38 unmapped; mapped share 2.6%; 437 passages and 9,253 words ignored; 0 tensions.
+- Reviewer verdict: **gap + instrument + correctly unmapped**. The controlled study concerns zero-acquaintance interpersonal conversations rather than romantic couples, so the gate was right to exclude most of it from the LE relationship denominator. The instrument still missed explicit passages connecting phubbing to romantic/friendship satisfaction and the general displaced-attention mechanism. Its sole displayed mapping—“effects could vary depending on relationship closeness” to the cross-border Border Bundle at 0.438—was false. No engine file was touched.
+- Evidence: Study 1 randomly assigned 170 adults to recall being phubbed, phubbing someone, or an attentive conversation; the retrospective essay manipulation carries demand and directionality problems. Study 2 randomly assigned 165 adults in a scripted ten-minute conversation with a confederate to one or three phone interruptions, proactive or ringtone-reactive initiation, reading or writing, plus a water-drinking control. Three interruptions produced more ostracism than one (ηp² = .148), lower perceived politeness/attentiveness and fewer trust-game lots than one. Both one and three interruptions increased ostracism versus the control, but the condition main effects for need satisfaction, mood and trust were nonsignificant; one interruption did not differ from the control on attentiveness. The complex design was underpowered for subtle cells, the control diverted gaze, and strangers cannot establish romantic relationship effects.
+- Doctrine disposition: **The Attention Boundary clears the encompassing standard** across Cycles 7–9. The relationship-specific meta-analysis supplies the broad association; the dyadic daily diary shows same-person, same-couple-day deviations; the controlled stranger experiment identifies displaced attention and repetition as a plausible immediate mechanism while bounding the romantic inference. Integrate a retention/maintenance framework whose rule is “Audit displaced attention, not device minutes.” Define `technoference` and `partner phubbing` on the authored surface, cross-cite Agreement Surface and adjacent maintenance doctrine, and state explicitly that useful phone contact, device presence, work/care demands and mutually accepted parallel use are not equivalent to snubbing.
+
+## Integration 3 — The Attention Boundary
+
+- Shipped `frameworks:attention-boundary` with three source links, reciprocal cross-cites to Agreement Surface, Good-News Rule, Satisfaction Flywheel and Substitution Layer, six evidence and safety boundaries, three contract-compliant misreadings and three pressure tests. Integration commit: `b29f5c7`; post-commit index stamp: `83e474f`; canon `1.0.0+34637a842a72`, 576 concepts.
+- Gap closure: the daily-technoference capture rose from 7/108 mapped (6.5%) to 27/110 (24.5%), with 23 Attention Boundary matches. The meta-analysis rose from 26/142 (18.3%) to 31/142 (21.8%), with seven entry matches. The controlled stranger study rose from 1/39 (2.6%) to 3/39 (7.7%), with three entry matches while 437 non-domain passages remained correctly set aside. On the first source, the named concept correctly promoted three previously ignored rows—two claim-like and one heading—so the denominator movement is disclosed rather than presented as a pure mapping delta.
+- Misreading probe: all three authored sentences satisfy 10–18 words, one sentence, no forbidden negator/morphology, and a relational-frame word. End-to-end scores were 0.734, 0.734 and 0.797; all three mapped to Attention Boundary with `Contradicts`.
+- Magnet and frozen-fixture check: none of the five aliases or five phrases appears verbatim in the 21-source corpus. Adding the 576th entry initially moved the frozen Availability neighbor from 0.536 to 0.537 through corpus-wide IDF. Replacing the controlled-study boundary's vague “durable romantic satisfaction” with the evidentially sharper “sustained romantic satisfaction” restored the authored-surface invariant and the original pin; the test was never edited. The full analyzer test then passed 52/52.
+- Threshold record: mandatory baseline dump preceded authoring (2,423 passages × 575 entries, 1,393,225 pairs). Final sweep covered 2,423 × 576 (1,395,648 pairs), with 32,924 changed scores: 15,614 down and 17,310 up. Entered 287 explicit `codex-pt09` rulings: weak 283 (12 ACCEPT losses, 271 REJECT gains) and credible 4 (1 ACCEPT, 3 REJECT); both actionable pending counts are zero. All 28,093 prior rulings remained byte-equivalent. The new entry produced 265 weak gains in the old corpus; every passage was read and rejected because it concerned mate retention, sexual satisfaction, attention to alternatives, AI substitution or generic partner language rather than device-displaced shared attention. Candidate-floor census rows remain unadjudicated by contract.
+- Opus proposal sweep: P1 remains folded from Integration 2. P2 remains held because rewording the Conversion Ladder page is forbidden and a bare `selection` alias would be a topic magnet; the Opus engine fix already closes the measured failure. P3 remains Jason-owned append-only fixture work. P4 remains a measured thin-surface/register observation rather than an encompassing canon proposal.
+- Verification: canon validation passed at 576 concepts, all ten retrieval surfaces had zero corpus hits, and the populated-corpus suite ran 18/18 green before commit. The complete 74,741-line cached diff was reviewed; exactly five owned content/index/fixture paths were committed, and both the content and stamp commit stats matched their staged stats exactly. No `js/lab-*`, analyzer, sweep or Lab test engine file was edited.
+
+## Cycle 10 — forgiveness as changed conflict behavior and renewed effort
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3156929/
+- Capture: 5,173 whitespace-delimited words; extracted-text SHA-256 `24deafd2a8d29b94d47e72157b76034b4a928147b6bc6a349089addcf75c2891`; raw-HTML SHA-256 `fa0def7d72bca99727750e09bfed59422b7e7bff27f5b64e15b5dc9e5945aa80`.
+- Extraction: PMC `main-article-body`; four figure containers dropped; acknowledgments, author notes and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+34637a842a72`; 118 claim-like passages; 11 mapped; 107 unmapped; mapped share 9.3%; 1 generated tension.
+- Reviewer verdict: **gap + instrument**. The source's central maintenance mechanism is dark: forgiveness is not merely reduced vengeance or avoidance, but also renewed pro-relationship effort; effort and reduced negative tactics independently carried the association with later satisfaction. Displayed mappings were mostly incidental or wrong. A forgiveness/self-regulation/conflict keyword line mapped to Attention Boundary (0.495); an online-survey methods sentence mapped to Cohabitation Timing (0.464); forgiveness's negative residual mapped to the parenthood-satisfaction statistic (0.430); and the transformation-of-motivation definition mapped only to generic Context. Commitment-model neighbors are adjacent controls, not an owner for transgression repair. The single generated tension was not about the paper's repair claim. No engine file was touched.
+- Evidence: Study 1 surveyed 523 committed young adults (mean age 19.5; 84% women; 40% in relationships six months or less). Forgiveness predicted more relationship effort (β = .49) and fewer negative tactics (β = −.18); both mediated its association with concurrent satisfaction. Study 2 followed a separate 446-person sample for eight weeks (mean age 19.9; 81% women; attrition under 1%). Baseline forgiveness predicted later effort (β = .24) and fewer negative tactics (β = −.15); effort (β = .24) and negative tactics (β = −.45) predicted later satisfaction after baseline satisfaction and dedication. All variables were self-report, the design did not assign forgiveness or behavior, the samples were unusually young and female, Study 1's forgiveness reliability was α = .66, and the negative direct residual in Study 2 may be suppression rather than a harmful forgiveness effect.
+- Doctrine disposition: live candidate **The Repair Sequence**. A transgression is not repaired by a feeling label alone: the victim's reduction in retaliation/avoidance and renewed approach effort are behaviorally distinct, while repeated harmful conduct can make unconditioned forgiveness maladaptive. This study supplies the receiving partner's motivational pathway but does not test offender accountability, apology, restitution, reconciliation, or safety. Hold for a controlled accountable-response leg before proposing doctrine.
+
+
+## Cycle 11 — apology, perceived relationship value and forgiveness
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC8222305/
+- Capture: 7,978 whitespace-delimited words; extracted-text SHA-256 `cc7f18ab46cc47856b43fae278b7cf69f12d188bcbb5d35153154cb7ef5310e9`; raw-HTML SHA-256 `0cf688e8dc099e3f62abe9e07c71ca489ceb8e033c6889aaaa8ceae7545de79b`.
+- Extraction: PMC `main-article-body`; four figure and three data-table containers dropped; acknowledgments and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+34637a842a72`; 136 claim-like passages; 8 mapped; 128 unmapped; mapped share 5.9%; 0 generated tensions.
+- Reviewer verdict: **gap + instrument**. The randomized apology–forgiveness pathway is dark. None of the abstract's causal claims, the apology-to-perceived-value effect, the apology-to-forgiveness effect, or the behavioral preference result has a canon owner. All eight displayed mappings were false or incidental: evolutionary-context and experimental-context sentences mapped to the SMV Context multiplier (0.540); two novel-partner/value measurement sentences mapped to Courtship Buffer (0.448/0.460); the causal mediation conclusion mapped to Third-Party Layer (0.435); and a romantic-partner future-research limitation mapped to Co-Transition (0.457). No engine file was touched.
+- Evidence: preregistered 2 × 2 concurrent double-randomization experiment with 971 U.S. Mechanical Turk workers (mean age 35.22; 55.72% women). A brief closeness induction manipulated whether the eventual insulter was a higher- or lower-value novel partner; a scripted message plus a $1 compensation transfer manipulated apology. Apology increased perceived relationship value (`b = .366`, 95% CI [.293, .440]) and forgiveness (`b = .198`, [.135, .260]). Both effects were smaller in the high-value condition, consistent with overlapping informational pathways. The behavioral continuation choice, collected for only 399 participants after a programming error, modestly favored an apologetic transgressor (OR 1.148, [1.008, 1.307]); transgressor value itself did not significantly change that choice.
+- Boundaries: half the sample detected aspects of the deception, although preregistered robustness analyses found no coefficient differences and retained them after randomization. The transgression was a single online insult between strangers; the apology bundled words with compensation; relationship value and forgiveness were self-reports; partner preference was one decision with substantial missingness; and the authors explicitly say the design cannot establish responses among established romantic partners or more severe harms.
+- Doctrine disposition: the accountable-response leg is now causally credible, but **The Repair Sequence** does not yet clear. Cycle 10 shows that forgiveness forecasts changed victim behavior and later satisfaction inside young romantic relationships; Cycle 11 shows that an apology-plus-compensation package can raise forgiveness by changing perceived future relationship value after a modest stranger transgression. Neither isolates apology from restitution, tests offender follow-through, or licenses reconciliation after unsafe or repeated harm. Hold for a source that separates words from material amends or observed behavior.
+
+
+## Cycle 12 — apology versus restitution after harm
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC7082420/
+- Capture: 6,288 whitespace-delimited words; extracted-text SHA-256 `4dc2f555f3ff55ffc495700162f3ccf30caa81a6a7877a2b2e05dfbc73a1e059`; raw-HTML SHA-256 `1e8733e85d505d928ee7c16394132721fe9baa476914c4a20f800721ad213007`.
+- Extraction: PMC `main-article-body`; three figures and two data-table containers dropped; author, conflict, funding, acknowledgment and reference furniture cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+34637a842a72`; 6 claim-like passages; 1 mapped; 5 unmapped; mapped share 16.7%; 312 passages and 6,305 words ignored; 0 generated tensions.
+- Reviewer verdict: **gap + instrument + correctly unmapped**. The gate correctly excludes a hypothetical burglary study from the ordinary romantic-relationship denominator, but it also makes the source effectively unreadable as evidence for the live cross-context repair mechanism: apology and restitution are separable accountable responses. The one displayed map—an actual-restorative-justice future-research sentence to the SMV Context multiplier at 0.540—is false. The abstract, all experimental outcomes, and the apology/restitution distinction were gated out before retrieval. No engine file was touched.
+- Evidence: within-person, counterbalanced 2 × 2 imagery experiment with 61 Midwestern U.S. undergraduates (mean age 18.9; 32 men, 29 women; 54 White). Participants repeatedly imagined a burglary followed by apology only, restitution only, both, or neither. Apology and restitution independently reduced unforgiveness and increased empathy and forgiveness. Both together reduced unforgiveness more than either alone, but restitution was stronger than apology for unforgiveness, anger, positive valence and gratitude. Apology uniquely reduced heart-rate reactivity, rate-pressure product and under-eye muscle activity; restitution more strongly reduced brow-muscle activity. The design therefore distinguishes verbal responsibility-taking from tangible recompense rather than treating “sorry” as the whole repair.
+- Boundaries: all outcomes followed imagined crime scenarios, every participant saw all four conditions, the sample was small and homogeneous, many endpoints were single-item ratings, multiple physiological tests were exploratory, and no romantic bond, repeated transgression, behavioral follow-through or actual reconciliation was observed. Physiological differences during brief imagery are not evidence that apology prevents disease. The authors themselves call for real restorative-justice settings.
+- Doctrine disposition: **The Repair Sequence clears the encompassing standard** across Cycles 10–12. Cycle 10 supplies the receiving partner's two behavioral routes inside romantic relationships—less retaliation/avoidance and more relationship effort. Cycle 11 causally links apology-plus-compensation to forgiveness through perceived future relationship value. Cycle 12 separates apology from restitution and shows that words and tangible amends can do distinct work. Integrate a retention/maintenance framework that keeps four states separate: acknowledge the harm, make proportionate amends and change future conduct, allow the injured partner's forgiveness to remain voluntary, and treat reconciliation as a separate safety-and-trust decision. The evidence supports the distinctions, not a universal order or a duty to remain.
+
+
+## Integration 4 — The Repair Sequence
+
+- Shipped `frameworks:repair-sequence` with three source links, reciprocal cross-cites to Agreement Surface, Commitment Problem and the Sixth Rung, six evidence/safety boundaries, three contract-compliant misreadings and three pressure tests. Integration commit: `740aeb5`; post-commit index stamp: `4149301`; canon `1.0.0+22716b67fb37`, 577 concepts.
+- Gap closure: the romantic longitudinal forgiveness capture rose from 11/118 mapped (9.3%) to 40/118 (33.9%), with 33 Repair Sequence mappings. The randomized apology/value capture rose from 8/136 (5.9%) to 19/136 (14.0%), with 13 entry mappings. The hypothetical burglary capture remained 1/6 (16.7%) with zero entry mappings and 312 passages correctly set aside; the doctrine uses that study as a bounded cross-context construct-separation leg rather than forcing crime imagery into the romantic denominator.
+- Misreading probe: all three authored sentences satisfy 10–18 words, one sentence, no forbidden negator/morphology, and a relational-frame word. End-to-end scores were 0.797, 0.736 and 0.736; all three mapped to Repair Sequence with `Contradicts`.
+- Magnet and frozen-fixture check: all 22 final aliases/phrases have zero verbatim hits in the 21-source corpus. An intermediate broad surface mapped the frozen novel reputation sentence at 0.460 and promoted the non-romantic burglary capture from 6 to 42 claim-like passages. The authored surface—not either pin—was narrowed; the analyzer fixture returned green and the burglary denominator returned to 6. The final overlay preserves source-specific relationship-value and romantic-forgiveness retrieval without carrying generic apology/restitution prose.
+- Threshold record: mandatory baseline dump preceded authoring (2,423 passages × 576 entries, 1,395,648 pairs). Final sweep covered 2,423 × 577 (1,398,071 pairs), with 37,217 changed scores: 16,757 down and 20,460 up. It recorded 1,646 crossings: candidate floor 1,249 gains/50 losses, weak 293 gains/39 losses, credible 13 gains/2 losses. Entered 298 new explicit `codex-pt09` rulings: weak 284 (3 ACCEPT, 281 REJECT) and credible 14 (0 ACCEPT, 14 REJECT); both actionable pending counts are zero. All 29,555 prior rulings preserved their verdict and attribution, and candidate-floor rows remain unadjudicated by contract.
+- Adjudication detail: the three accepted weak crossings were two legitimate entry-IDF boundary moves from the first sweep and the final Desire-State Split loss on an ideal-standard mismatch passage. All Repair Sequence gains in the old corpus were rejected: they concerned mate retention, ordinary satisfaction, sex frequency, attachment, AI, sex ratios or generic relationship language without harm/accountability/forgiveness. Six final IDF gains to existing concepts were likewise rejected after full-passage review.
+- Canon pins moved in the content commit: concept count 576→577, Rules & Frameworks 73→74, misreading-bearing entries 576→577 and boundary-bearing entries 543→544, plus explicit evidence/alias/phrase/reciprocity assertions for Repair Sequence. Analyzer frozen pins were never edited.
+- Opus proposal sweep: P1 remains folded. P2 remains held because it would reword a site page for matcher behavior or introduce a broad `selection` magnet; the engine lane already owns the measured defect. P3 remains Jason-owned append-only fixture work. P4 remains an instrument/doctrine observation rather than an encompassing canon proposal.
+- Verification: final canon validation passed at 577 concepts; the populated-corpus suite ran 18/18 green after the authored canon pins moved. The complete 81,461-line cached diff was reviewed; exactly five owned content/index/fixture paths were committed, no prior verdict changed, the generated index rebuilt byte-identically at the staged timestamp, and both content and stamp commit stats matched their staged stats. No `js/lab-*`, analyzer, sweep or Lab engine-test file was edited.
+
+## Cycle 13 - daily stress spillover into couple conflict
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC5293605/
+- Capture: 8,021 whitespace-delimited words; extracted-text SHA-256 `dfd8beef89f31e39558f9a74e82c6b469f2a8404bc30e87592069ea27cfca112`; raw-HTML SHA-256 `1fc8bd83bad7e01aca793824308d271046ea8cecb5e2b95b046b2bbc7150ac7c`.
+- Extraction: PMC `main-article-body`; figures, table wrappers and asides dropped; acknowledgments and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+22716b67fb37`; 147 claim-like passages; 6 mapped; 141 unmapped; mapped share 4.1%; 283 passages ignored; 0 generated tensions.
+- Reviewer verdict: **gap + instrument**. The central distinction is dark: spillover is stress crossing from one life domain into the same person's relationship behavior, while crossover is one partner's strain affecting the other partner; ordinary same-day coupling is different from failure to recover across days. Every displayed map was false or incidental. Employment composition mapped `Supports` to M-TBD-39 (0.495), diary completion rates mapped to Equal-Earner Labor (0.467), a two-word table fragment produced four topical matches, model-description sentences mapped to Outside Option and Demand-Withdraw, and the null cross-day result only weakly resembled Demand-Withdraw. No engine file was touched.
+- Evidence: both members of 114 cohabiting married couples completed daily reports over two weeks (median 14 days; 92.9% overlapping days). Both wives' and husbands' daily stress covaried with more same-day conflict; the stress interaction was significant (b = .20, p < .001), with husband stress predicting conflict at high but not low wife stress. In the full sample, neither stress to next-day conflict nor conflict to next-day stress was significant. Cross-day links appeared only at high concurrent marital aggression, and conflict to next-day wife stress appeared among wives with high family-of-origin aggression. Couples averaged 15.9 years married, all had adolescent children, and aggression risk was unusually prevalent by the study's broad measure.
+- Boundaries: one end-of-day report cannot establish within-day direction; stress ratings mixed occurrence with concern; exploratory stressor tests were numerous; conflict type and initiator were not separated; cross-day persistence was moderator-specific rather than an average effect; the urban U.S. parent sample does not license a universal rule. Family-of-origin aggression is a vulnerability marker here, not a diagnosis or destiny.
+- Doctrine disposition: candidate retention framework, working name **The Stress Transmission Split**. It should separate same-person spillover, cross-partner crossover and shared-stressor exposure; distinguish ordinary same-day coupling from prolonged failure to recover; and prevent external load from being misread as relationship incompatibility. Hold for a multiwave dyadic satisfaction study that can test crossover over a longer horizon and clarify whether support uniformly buffers it.
+
+## Cycle 14 - workload crossover across the newlywed years
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC5658017/
+- Capture: 6,434 whitespace-delimited words; extracted-text SHA-256 `c66b668a01587d2fbf428f7adddeeeefbdab9021b96c418756ad5f9f1eb366f6`; raw-HTML SHA-256 `4a226cbd2d5a52e11a0416a834bc8a3e7d2cc12bb77af66f59c90583ea9c0325`.
+- Extraction: PMC `main-article-body`; figures, table wrappers and asides dropped; acknowledgments and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+22716b67fb37`; 106 claim-like passages; 4 mapped; 102 unmapped; mapped share 3.8%; 201 passages ignored; 0 generated tensions.
+- Reviewer verdict: **gap + instrument**. Spillover and crossover are defined explicitly, yet neither term nor the lagged partner-workload result has a canon owner. The four mappings were incidental: hypothesized resource depletion mapped to Availability (0.443), a generic partner-satisfaction sentence resembled Co-Transition and Cohabitation Timing, a trajectory heading resembled the Parenthood Satisfaction statistic, and a Census age aside resembled Marriage Age. The abstract, hypotheses and primary results remained unmapped. No engine file was touched.
+- Evidence: 172 different-sex first-marriage newlywed couples were assessed eight times at six-month intervals across four years. Cross-lagged multilevel models predicted later satisfaction from own and partner workload while controlling both partners' prior satisfaction and time. Higher partner workload predicted a greater decline in the other spouse's satisfaction by the next wave; own workload did not predict one's own later satisfaction. Neither the crossover effect nor the null spillover effect materially differed by sex or parental status. The contrast limits a one-person stress story: the partner may absorb reduced availability, labor, support or positive time even when the overloaded person does not downgrade the marriage.
+- Boundaries: the 1993-1994 Los Angeles license cohort had a 17.8% initial response, included only heterosexual first marriages and initially childless spouses ages 18-35, and fell to roughly 121-126 respondents by the last waves. Workload measured felt demands rather than hours, job quality or externally verified load. Six-month lags and prior-outcome controls strengthen temporality but do not identify causation or the proposed mechanisms; the own-workload null may depend on lag length.
+- Doctrine disposition: Cycle 14 strengthens **The Stress Transmission Split**. Cycle 13 shows ordinary same-day stress/conflict coupling and moderator-specific failure to recover across one day; this study shows cross-partner workload transmission over six months without a matching own-person lag. The encompassing rule must keep time scale, person and domain explicit. Hold for the promised support-buffering leg before deciding whether the framework clears integration.
+
+## Cycle 15 - support adequacy as a selective stress buffer
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC2366194/
+- Capture: 7,712 whitespace-delimited words; extracted-text SHA-256 `45bd580d8f355d13fa34031a352f82865518d4e422212caaff30e21db7a17b22`; raw-HTML SHA-256 `b7c29f53575a05ebbbc860b9d7903138fede1bf7f1d3f2411771636f8c7bd028`.
+- Extraction: PMC `main-article-body`; figures, table wrappers and asides dropped; acknowledgments and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+22716b67fb37`; 163 claim-like passages; 7 mapped; 156 unmapped; mapped share 4.3%; 203 passages ignored; 2 generated tensions.
+- Reviewer verdict: **gap + instrument**. The longitudinal stress/support moderation pattern is dark. Context-language passages mapped to the generic SMV Context multiplier (0.540), marriage trajectories mapped to Cohabitation Timing (0.618), a QMI heading mapped to Residual Pool, and a survivor-selection sentence mapped to Ended. Most revealingly, the table labels for support wives provided husbands and husbands provided wives both mapped `Contradicts` to Provider Norm (0.482), generating two false pressure tests from methods fragments. No engine file was touched.
+- Evidence: 101 first-marriage different-sex Iowa couples completed four waves across the first three years of marriage. Growth curves and actor-partner models linked change in nonmarital role strain to change in marital satisfaction. Rising husbands' strain accompanied steeper declines in husbands' satisfaction regardless of perceived support adequacy. Wives' rising strain was associated with a more favorable satisfaction course only when wives perceived husbands' support as more adequate; the same adequacy measure strengthened the counterintuitive association between rising husbands' strain and less decline for wives. Support adequacy meant the recipient's preferred frequency matching perceived provision, not support quantity.
+- Boundaries: the small, mostly White, educated, satisfied and low-strain sample was observational and entirely self-report; it cannot establish that support caused the trajectories. The asymmetric/counterintuitive paths need replication and must not become a gender law. The strain inventory excluded marital strain but mixed ten outside roles. Preference-matched support can still be poor quality or unsafe, and adequacy for one partner does not prove adequacy for the other.
+- Doctrine disposition: **The Stress Transmission Split clears the encompassing standard** across Cycles 13-15. The daily dyadic study separates common same-day coupling from moderator-specific cross-day persistence; the eight-wave workload study demonstrates six-month crossover without matching own-person spillover; the support study shows that recipient-matched support can moderate some paths but does not universally buffer stress. Integrate a retention/maintenance framework that names origin, person and time scale before diagnosing the bond, separates shared exposure from spillover and crossover, and treats support matching as conditional rather than curative.
+
+## Cycle 16 - nightly sleep and next-day couple interaction
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC2950886/
+- Capture: 5,194 whitespace-delimited words; extracted-text SHA-256 `b95fe10214dec50bdaad2f6290a2c189e26ff01415116a0c4922be0bfcd13a05`; raw-HTML SHA-256 `65bf6f322d7dab4cc66ab48d88cc488ebe9a44da5672956bb23b08e6c687dbc5`.
+- Extraction: PMC `main-article-body`; four figure containers dropped; acknowledgments, footnotes and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+ffa47876a969`; 99 claim-like passages; 12 mapped; 87 unmapped; mapped share 12.1%; 175 passages ignored; 0 generated tensions.
+- Reviewer verdict: **gap + instrument**. The Lab has no honest owner for sleep as a dyadic state that can affect next-day interaction and be affected by the prior day's interaction. All six Readiness Gate mappings were false timing collisions: circadian concordance and sleep onset are not relationship-stage readiness. Satisfaction Flywheel was adjacent but wrong because that entry concerns sexual satisfaction and relationship satisfaction, not sleep and interaction. Stress Transmission Split retrieved a null cross-partner sleep result and a generic concordance heading, not the central actor, partner or bidirectional findings. The abstract's four primary results remained unmapped. No engine file was touched.
+- Evidence: 29 different-sex co-sleeping couples completed seven days of sleep diaries, wrist actigraphy and ecological momentary ratings of partner interactions. For men, higher diary sleep efficiency predicted fewer negative interactions the next day (`B = -21.84`, `p = .02`), while actigraphy did not show that actor path. Women's positive and negative interaction ratings predicted men's diary sleep efficiency that night (`p = .02` and `.01`); women's negative interactions predicted their own actigraphy sleep efficiency (`p = .02`). For women only, greater sleep-onset discordance predicted less positive or more negative interaction the next day, depending on diary versus actigraphy measurement. Offset concordance was null.
+- Boundaries: this was explicitly preliminary: 29 mostly young, happy couples and good sleepers, one week of observation, many gender-specific paths, mixed diary/actigraphy convergence, and open-ended interaction ratings. Lag order improves temporal description but does not establish causation; actigraphy measures movement rather than sleep physiology; the gender pattern is not a population law. The paper did not assess sexual intimacy or clinically distressed sleepers.
+- Doctrine disposition: hold a candidate **Sleep-Interaction Loop** for a second, larger dyadic source. A future encompassing entry should separate sleep efficiency from timing concordance, actor from partner paths, subjective from behavioral measurement, and night-to-day from day-to-night direction. One small preliminary study is not enough to ship a new framework at T-30, and the existing Stress Transmission Split should not be broadened into a generic health-state bucket.
+
+## Cycle 17 - randomized total sleep loss before couple conflict
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC9249692/
+- Capture: 5,927 whitespace-delimited words; extracted-text SHA-256 `84abbe2984c126de50098f9f6bb6b5fe1536af3715422e41d06d129d54fe8db3`; raw-HTML SHA-256 `cab9253970ca6146a9a095025e91ad7139063b863af76c4e8b2fc53ab7a098a9`.
+- Extraction: PMC `main-article-body`; three figure containers dropped; acknowledgments and references cut. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+ffa47876a969`; 44 claim-like passages; 7 mapped; 37 unmapped; mapped share 15.9%; 214 passages ignored; 0 generated tensions.
+- Reviewer verdict: **gap + instrument**. The manipulated sleep-loss claim and all primary outcome sentences were dark. Shared Positive Affect mapped only a keyword line, Stress Transmission Split retrieved a background contrast between external stress and partner-generated tension, Never Go to Bed Angry retrieved a marginal cortisol/satisfaction association, and Parenthood Satisfaction plus M-TBD-29 retrieved relationship-satisfaction covariate fragments. None owns sleep as the manipulated state. No engine file was touched.
+- Evidence: 30 Geneva-area couples in relationships of one to five years were randomly assigned to one supervised night of total sleep deprivation or normal sleep at home, followed by a 15-minute recurrent-conflict discussion. Sleep-deprived couples reported less positive affect before (`beta-z = -1.29`) and after (`-0.99`) the discussion and had higher cortisol while preparing for and discussing conflict (`beta-z = .74` and `.72`). The manipulation did not significantly change agreement reached (`p = .63`), satisfaction with the agreement or discussion (`p >= .21`), negative affect, conflict severity, or multimodal emotion recognition (`p = .49`). The result is narrower than the abstract's general 'negative impact' wording.
+- Boundaries: the sample was small, young, unusually satisfied and screened to exclude sleep, medical and psychiatric disorders. The randomized groups differed in baseline relationship satisfaction and 14 participants lacked that covariate, although models adjusted it. Controls slept at home while deprived couples spent the night together in the lab; total deprivation lacks the ecology of shift work, infant waking or chronic insomnia. Cortisol was already elevated before the discussion, the behavioral/conflict-resolution endpoints were null, and replication is required.
+- Doctrine disposition: Cycle 17 strengthens the held **Sleep-Interaction Loop** by supplying a causal night-to-day leg, but only for positive affect and physiological arousal under extreme acute deprivation. Cycle 16 supplies naturalistic bidirectionality and timing concordance; this experiment prevents the eventual framework from collapsing 'felt worse' into 'resolved conflict worse.' Hold for a larger longitudinal dyadic source before integration.
+
+## Cycle 18 - eight-year marital quality and sleep in older couples
+
+- Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC12762798/
+- Capture: 247 whitespace-delimited words; extracted-text SHA-256 `ed4426cd1674ccf81b769896adce2e99165f9e56797e08151391444ae27debbe`; raw-HTML SHA-256 `066679db74b8c2fdd4ca2550bc4a597767121a3429c6ec23e9a12b30364752a7`.
+- Extraction: the complete PMC `main-article-body`; this proceedings record exposes an abstract only, with no full methods/results body. Raw and analyzed text remained outside the repository.
+- Analyzer: canon `1.0.0+ffa47876a969`; 4 claim-like passages; 1 mapped; 3 unmapped; mapped share 25.0%; 5 passages ignored; 0 generated tensions.
+- Reviewer verdict: **gap + instrument**. The named Dynamic Association model, dyadic sleep frame, age-50+ scope and conclusion all remained unmapped. The only displayed match was the null insomnia/support and strain/partner-effect sentence to Stress Transmission Split (`Supports`, 0.476), but this is relationship-to-sleep rather than outside-stress transmission. More importantly, the two positive longitudinal result sentences were set aside before retrieval even though they explicitly named spousal strain, support and partner sleep. No engine file was touched.
+- Evidence: dyadic random-intercept cross-lagged panel models used three waves across eight years from 2,343 couples in the nationally representative English Longitudinal Study of Ageing (mean age 63.12). Women's greater spousal strain predicted increases in their own insomnia symptoms and declines in subjective sleep quality; women's above-usual spousal support predicted later improvements in men's subjective sleep quality. Insomnia did not cross-lag with spousal support, and spousal strain did not show partner effects on subjective sleep quality.
+- Boundaries: only the abstract was available in the captured PMC body, so measure wording, coefficient magnitudes, attrition, missing-data handling and robustness specifications could not be audited here. Cross-lagged observational paths do not prove causation. The age-50+ English population and the reported sex asymmetry are scope conditions, not universal couple laws; subjective sleep quality and insomnia symptoms are separate outcomes.
+- Doctrine disposition: **The Sleep-Interaction Loop clears the encompassing standard** across Cycles 16-18. The seven-day study separates actor, partner and timing-concordance paths in both directions; the randomized study identifies acute sleep loss effects on affect/arousal while preserving null agreement, satisfaction and emotion-recognition endpoints; the eight-year study shows longer-horizon relationship-to-sleep paths and substantial reverse-path nulls in older couples. Integrate a retention/maintenance framework that asks four questions before interpreting a sleep/relationship association: which direction, whose outcome, which sleep measure, and what time scale. It must not turn one poor night into incompatibility, synchrony into a universal good, or acute total deprivation into ordinary insomnia.
+
+## Integration 5 — The Stress Transmission Split
+
+- Shipped `frameworks:stress-transmission-split` with three Tier 2 sources, reciprocal related links, seven boundaries, three contract-compliant misreadings and three pressure tests. Integration commit: `f3b5e01`; stamp: `29499a3`; canon `1.0.0+ffa47876a969`, 578 concepts.
+- Gap closure: daily stress rose to 42/147 mapped (28.6%; 38 entry matches), workload crossover to 23/106 (21.7%; 21 entry matches), and support adequacy to 51/166 (30.7%; 46 entry matches). One workload and five support passages correctly generated causal-language pressure tests.
+- Misreading scores were 0.733, 0.733 and 0.772, all `Contradicts`. All 15 aliases/phrases had zero corpus hits; related links were reciprocal; analyzer pins were untouched.
+- Sweep: 2,423 passages × 578 entries (1,400,494 pairs), 39,277 changed (23,247 down/16,030 up); crossings were 1,576/38 candidate-floor gains/losses, 545/71 weak, and 40/6 credible. Entered 607 new `codex-pt09` verdicts: credible gains 39 REJECT; credible losses 3 ACCEPT/1 REJECT; weak gains 5 ACCEPT/523 REJECT; weak losses 35 ACCEPT/1 REJECT. Actionable pending counts returned to zero and prior verdicts remained intact.
+- Verification: complete staged diff reviewed, only five owned paths committed, suite 18/18 green, and content/stamp stats matched their staged stats. No engine code changed.
+
+## Integration 6 — The Sleep-Interaction Loop
+
+- Shipped `frameworks:sleep-interaction-loop` under the distinct `Dyadic feedback` taxonomy, with three source links, reciprocal links to Stress Transmission Split, Satisfaction Flywheel and Repair Sequence, seven boundaries, three misreadings and three pressure tests. Integration commit: `b1705f4`; pre-stamp canon `1.0.0+a87ca9f599a9`, 579 concepts.
+- Gap closure: the seven-day source reached 55/99 mapped (55.6%) with 53 entry matches; the randomized source reached 18/44 (40.9%) with 14 entry matches; the abstract-only eight-year source reached 3/4 (75.0%) with three entry matches. All three misreadings mapped to the entry as `Contradicts` at 0.772, 0.733 and 0.773.
+- Magnet/contract QA: all 15 aliases/phrases had zero verbatim corpus hits; all three related links were reciprocal; each misreading is 12 words, one sentence, relationally framed, negator-free and morphology-safe. A frozen bounded-context test exposed global IDF coupling; the fix was taxonomy plus narrower overlay wording, never site-prose rewording, engine code or a frozen pin.
+- Sweep: 2,423 passages × 579 entries (1,402,917 pairs), 43,619 changed (22,526 down/21,093 up); crossings were 1,439/40 candidate-floor gains/losses, 523/57 weak and 30/5 credible. Entered 558 new verdicts: credible gains 30 REJECT; credible loss 1 ACCEPT; weak gains 3 ACCEPT/488 REJECT; weak losses 36 ACCEPT. All 500 new-entry weak/credible corpus crossings lacked a sleep construct and were individually rejected as generic magnetism. Zero actionable pending crossings remain; all 33,294 prior rulings retained verdict and attribution.
+- Verification: generated index and pins validated, complete cached diff archived and reviewed, only five owned paths committed, and the suite ran 18/18 green. Candidate-floor census rows remain unruled by contract.
+
+## Close-out
+
+- Entries shipped: six new Tier-bounded frameworks — `care-role-split`, `constraint-dedication-split`, `attention-boundary`, `repair-sequence`, `stress-transmission-split`, and `sleep-interaction-loop` — from 18 captured inputs across journalism, transcript and primary/PMC research.
+- Rulings entered: 2,409 total, all attributed `codex-pt09`: 299 ACCEPT and 2,110 REJECT. By crossing: credible gains 1 ACCEPT/90 REJECT; credible losses 12 ACCEPT/5 REJECT; weak gains 14 ACCEPT/1,996 REJECT; weak losses 272 ACCEPT/19 REJECT. Weak and credible pending counts are zero; candidate-floor census remains pending as required.
+- Instrument findings: the gate discards explicit dyadic sleep/support result sentences and cross-context repair evidence before retrieval; methods/table fragments can falsely fire doctrine and `Contradicts`; timing language can collide with Readiness Gate; broad relationship/affect surfaces create credible magnets; causal wording correctly activates pressure tests; and adding a canon document perturbs global IDF even when analyzer code is unchanged. Opus P1 also exposed checkout-dependent CRLF hashing and was folded earlier by normalizing source bytes before hashing.
+- Deliberately not implemented: no engine patch, threshold change, frozen-fixture relaxation, site-page rewording, forced doctrine for the covered friendship-recession transcript, or doctrine for correctly unmapped cross-context material. Opus P2 remains held because no evidence warrants a narrow authored synonym; P3 remains Jason-owned append-only fixture work; P4 remains an observation. Candidate-floor rows were not ruled, and the abstract-only sleep source was not promoted beyond its explicit limitations.
+- Ledger QA: every claim has a terminal verdict or the Opus close handoff; no source, attack family or proposal remains claimed-only. The full suite is green at 18/18. No push was performed. The run record and `md/INDEX.md` row remain for the post-run integration session.
+
+
+## Close-out QA addendum
+
+- The final six-entry aggregate audit caught one Integration 5 metadata asymmetry: `care-role-split` named `satisfaction-flywheel` as related without a reciprocal cross-cite. Commit `8765b48` added one bounded visible related note to each entry plus the reciprocal overlay relation. The notes are outside the published match surface.
+- A mandatory baseline preceded the correction (2,423 passages × 579 entries, 1,402,917 pairs). The post-change sweep reported exactly 0 changed scores and 0 crossings at candidate, weak or credible lines; no new ruling was required. All six entries then had zero nonreciprocal related links, zero alias/phrase corpus magnets and 18/18 contract-compliant misreadings when plural `partners` was correctly treated as a relational-frame word.
+- The populated-corpus suite remained 18/18 green before the correction commit. The correction touched only `frameworks.html`, the overlay, the rebuilt index and the existing neighbor fixture's canon-version metadata; its commit stat matched the staged stat.
+
+
+---
+
+# pt09/opus-findings.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 7040f79:md/pt09/opus-findings.md` · the 22-file patch series: `git show 7040f79:md/pt09/opus-patches/`
+
+# PT09 — adversarial & engine lane findings (Claude Opus 5, reasoning high)
+
+Run opened 2026-08-07 15:42 MDT from `main` @ 77c340b. Work happens in a local
+clone under the session scratchpad; nothing here is committed to the real tree
+except this file, `opus-proposals.md`, `opus-patches/`, and CLAIMS.md appends.
+Version numbers in clone commits are `v2.6.x-opus-pt09` placeholders.
+
+**This file is written progressively during the run, not only at close.**
+
+## Instrument facts established up front
+
+- Clone baseline: `npm run test:lab` 18/18 green (after the environment
+  finding below), banner naming the clone's HEAD.
+- Frozen gate benchmark at baseline: 191 cases, domainRecall 1.0000,
+  ignorePrecision 1.0000, junkRecall 0.8529.
+- Corpus stance census (all 42 archived sources, every displayed match):
+  1,298 rows at 77c340b, 1,300 after Codex's Care Role Split entry.
+  Distribution: 914 Resembles · 241 Supports · 86 Context only · 37
+  Contradicts · 16 Challenges · 4 Extends.
+- Every finding below was measured against BOTH instruments. **Every SHIPPED
+  fix moved zero rows in both.** The one finding that does move them (10) is
+  the one that did not ship, and for that reason. See "What the instruments
+  could not see" below.
+
+## Findings
+
+| # | Surface | Repro | RED test | Fix | Floor impact | Rulings |
+|---|---|---|---|---|---|---|
+| 1 | env / canon index | fresh `git clone` of `main` + `npm run test:lab` is 17/18 | — (env, not shipped code) | NOT FIXED — out of lane | none | none |
+| 2 | misreading firing contract | "The Conversion Ladder separates exposure, attention, attraction, and selection." reads `lexicon:term-conversion-ladder` **Contradicts** 0.881 | `tests/lab-analyzer.test.mjs` — "a token the entry uses only in its own pressure test…" | `js/lab-analyzer.js` — `pressureTests` joins the affirmative surface set | none (label-only; nothing here reaches a score) | none |
+| 3 | intake normalization × gate morphology | one U+00A0 between "a" and "provider" bins the passage `no-human-relational-frame` | "the relevance gate reads the same normalized text every other stage reads" | `localDomainRelevance` reads `normalizeText(unit.text)` | 191/1.0000/1.0000/0.8529 unchanged, every verdict byte-identical | none |
+| 4 | HTML entity decoding | 89 named entities survive extraction in the Node path, 0 in the browser | "the no-DOM HTML fallback decodes the same typographic entities the corpus extractor does" | `HTML_NAMED_ENTITIES` table + exact-case lookup | unchanged | none |
+| 5 | zero-width / format characters | ZWSP inside "hypergamy" drops the match 0.747 → 0.562, silently | "format characters that carry no text are removed at intake" | `FORMAT_CHARACTERS` strip in `cleanControlCharacters` | unchanged | none |
+| 6 | generic stance ladder polarity | "It is not true that <claim>" reads **Supports** 0.760; three more inversions | "a generic cue the passage has just denied does not decide the stance" | `cueFires` + `CUE_DEFEATER_BEFORE` | unchanged | none |
+| 7 | gate morphology inflections | "He married up last year." bins; "He is marrying up." retains | "the mate-value-mismatch idiom conjugates date and marry…" | `dat(?:e\|es\|ed\|ing)` and `marr(?:y\|ies\|ied\|ying)` | 191/1.0000/1.0000/0.8529 unchanged | none |
+| 8 | intake format edges (RTF) | a Word 2019 preamble extracts as "Calibri;Symbol;;;\\*Riched20 10.0.19041;She wanted…" | "an RTF header table is not transcript text" | `stripRtfDestinations` + one-pass brace handling | unchanged | none |
+| 9 | stance ladder, hypothetical half | "Is it true that <claim>?" and "It is true that <claim>." both read Supports 0.714 | "a supposed cue and a questioned cue are not asserted cues" | defeater set gains hypothetical subordinators; questions withhold claim-directed cues | unchanged | none |
+| 10 | tokenizer possessives | `women's` enters the index as `women'`, unifiable with nothing | built, then reverted | **NOT SHIPPED** — 2,494 crossings need an adjudication window | none moved | none |
+| 11 | clause splitting | "…in the U.S. market; that model is wrong." reads Resembles 0.697 where "…in most markets; …" reads Challenges 0.697 | "a decimal point and an abbreviation period do not end a clause" | period joining word chars, comma between digits, and the sentence merger's own abbreviation set | 191/1.0000/1.0000/0.8529 unchanged | none |
+| 12 | risk-flag detectors | "80 per cent of …" raises no `unsupported statistic` flag; "80% of …" does | "an unsupported statistic is flagged however the number is spelled" | `STATISTIC_SHAPES` + a lastIndex-safe accessor | unchanged; 6 research items gain the flag | none |
+| 13 | claim detection cues | "Women date up in status." scores 0.16 and is NOT a claim; "Women marry up in status." scores 0.30 and is | "claim detection knows the verb this site is about" | `date` added to CLAIM_CUES | unchanged; 1 corpus unit flips (a citation header the gate then bins) | none |
+| 13b | same line, `marry` + `\w*` | "Women married up in status." is still NOT claim-like | — | **NOT SHIPPED** — collides with the pt-03 include-override trap | none | none |
+| 14 | ordered-list segmentation | a three-item numbered list produces six units, three of them "1." "2." "3." | built, then reverted | **NOT SHIPPED** — renumbers 3,363 frozen band pairs | none moved | none |
+| 15 | cue morphology × apostrophe form | "Hypergamy means women can't be satisfied with a lower-status partner." reads **Likely source overreach**; the same sentence with U+2019 reads **Possible LE limitation** | "a typographic apostrophe is the same word to every cue that reads it" | `['\|U+2019]` in all seven contraction-bearing cue regexes | unchanged; 0 of 1,039 corpus segments move | none |
+
+## Finding 1 in full — a fresh clone of `main` fails the suite
+
+`scripts/build-canon-index.mjs` hashes the **working-tree bytes** of each
+source page into `sourcePages[].sha256` and into `indexVersion`. Five pages in
+the real checkout carried one stray CR each — `statistics.html`,
+`lexicon.html`, `deep-dive.html`, `dd-relationships-throughout-history.html`,
+`dd-competition-anxiety.html` — residue from an editing tool, invisible to git
+because `.gitattributes` says `* text=auto eol=lf` and normalizes them away in
+the blob.
+
+So the committed index encoded bytes that exist only in one working tree. A
+fresh clone checks out the `.gitattributes`-guaranteed LF form, rebuilds a
+different hash, and `scripts/validate-canon-index.mjs` throws
+"Generated index is stale" — 17/18, on an unmodified checkout of green `main`.
+
+- **Reproduce:** `git clone <repo> x && cd x && npm run test:lab`.
+- **Why not fixed here:** the fix is a `\r\n` → `\n` fold before hashing in
+  `scripts/build-canon-index.mjs`, and it necessarily rewrites
+  `data/le-canon-index.json` — both Codex's lane for this run.
+- **Workaround used:** the five files were copied byte-for-byte from the real
+  tree into the clone so the baseline was a true 18/18. Codex's later canon
+  commits re-stamped the index and the clone went clean on its own at the first
+  rebase; the underlying fragility is unchanged.
+- **Filed as a proposal** in `md/pt09/opus-proposals.md`.
+
+## What the instruments could not see
+
+Twelve findings, nine of them shipped fixes, and the frozen gate benchmark and
+the 42-source corpus moved **zero rows for all but one of them**. Each zero is
+attributed rather than assumed:
+
+- No case in the 191-case gate benchmark and no passage in the corpus contains
+  a non-ASCII space, a zero-width character, or an undecoded entity.
+- `dated up`, `married up` and `marries up` occur zero times across all 42
+  sources — which is why two previous rounds of fixing that exact defect shape
+  (v2.6.14, 959d32c) left a third copy of it standing.
+- The corpus holds no RTF at all.
+- For the stance guards the zero is the interesting one: the corpus DOES hold
+  47 question-form claim units (11 carrying matches) and 83 matched units
+  containing a hypothetical subordinator. The guards are reachable there and
+  change nothing, because in every case the cue already sat outside the
+  clause-scoped ground or the label was already decided by the misreading
+  branch.
+- Of the corpus's 782 matched claim units, 66 contain a decimal, 5 a
+  thousands comma and 23 an abbreviation period. The clause splitter reaches
+  all 94 and changes none of their outcomes.
+- The one exception is finding 12: 6 research-queue items across 2 sources gain
+  an `unsupported statistic` flag they should always have had. Even there,
+  nothing that scores moved.
+- Every negation composition in the frozen match-behavior benchmark carries an
+  asserted misreading, so all of them route through the parity branch and none
+  of them reaches the generic ladder — which is how a whole ladder shipped with
+  no polarity at all.
+
+The pt08 lesson generalizes: **this engine's defects live where its corpus
+does not.** A corpus of clean, ASCII, declarative, third-person journalism
+cannot see Unicode, formats, speech acts, or verb inflections that journalism
+does not use.
+
+## Finding 10 — the possessive of every noun is its own token (FOUND, MEASURED, NOT SHIPPED)
+
+The largest finding of the run, and the only one the archived corpus can see.
+
+`tokenize` keeps `women's` whole, then `stemToken` strips the trailing `s` and
+leaves the apostrophe. The token that enters the index is `women'` — a string
+that can never unify with `women`. The same holds for every possessive:
+`men's` → `men'`, `partner's` → `partner'`, `person's` → `person'`,
+`wife's` → `wife'`, `mate's` → `mate'`.
+
+Those are canon vocabulary. `partner` is in `RELATIONAL_ROLE_TERMS` and in
+canon aliases; `men` and `women` are in half the gate's frame patterns. A
+passage that writes "a partner's income" contributes no `partner` token at all.
+
+**Census:** 239 possessives across the 42 archived sources — `one's` x73,
+`women's` x17, `partner's` x14, `participant's` x14, `men's` x14,
+`person's` x13, `other's` x11, `mate's` x5, `wife's` x4, `people's` x4.
+
+**Candidate fix**, built and measured in the clone, then reverted:
+
+```js
+function stripPossessive(token) {
+  if (!token.endsWith("'s")) return token;
+  const bare = token.slice(0, -2);
+  return bare.length >= SCORING_CONFIG.minDerivedStemLength ? bare : token;
+}
+// in tokenize():  .map((token) => stripPossessive(token.replace(/^'|'$/g, '')))
+```
+
+The length floor is not decoration. Without it the strip re-creates exactly the
+defect the v2.6.0 floor exists to prevent: `tests/lab-tokenizer.test.mjs` goes
+RED with `le's -> le` and `li's -> li`, two-character fragments carrying an IDF
+they have not earned. With the floor that step is green.
+
+**Measured with the floor in place:**
+
+| instrument | before | after |
+|---|---|---|
+| gate benchmark | 191 · 1.0000 · 1.0000 · 0.8529 | identical |
+| `tests/lab-tokenizer.test.mjs` | ok | ok |
+| corpus stance census rows | 1,300 | 1,304 |
+| rows whose SCORE moves | — | 222 |
+| rows whose score or label moves | — | 226 |
+| threshold crossings in nobody's record | 0 | **2,494** |
+
+**Why it did not ship.** Not a floor problem — no floor moves. An adjudication
+problem. `WEAK_BACKLOG_CEILING = 0` means every one of those 2,494 crossings
+blocks until ruled, and pt09's delegation is explicit that ruling is
+per-crossing, having read the crossing, with `--rule` forbidden in any form.
+2,494 crossings cannot be honestly read in the remaining hours of a five-hour
+run, and stamping them would be the exact thing Jason declined on 2026-07-30.
+
+**Recommendation for integration:** this is a one-function change with a clean
+measurement already taken, and it wants its own session with an adjudication
+window — not a corner of a pressure-test run. Everything needed to reproduce
+it is in this entry.
+
+## Finding 13 — `marry` still cannot conjugate in CLAIM_CUES (FOUND, NOT SHIPPED)
+
+The `date` half of finding 13's line shipped (see the table). The `marry` half
+did not, and the reason is worth recording precisely.
+
+`CLAIM_CUES` carries `marry\w*`, the exact pattern v2.6.14 replaced in the
+relevance gate because it cannot reach `married` or `marries` — those words do
+not contain the literal stem `marry`. So:
+
+  "Women marry up in status."     0.30  claim-like
+  "Women marrying up in status."  0.30  claim-like
+  "Women married up in status."   0.16  NOT claim-like
+  "Women marries up in status."   0.16  NOT claim-like
+
+Fixing it to `marr(?:y|ies|ied|ying)` is one edit and it works. It also turns
+**"The merger married two incompatible corporate cultures."** claim-like — and
+that sentence is frozen benchmark case pt-03 (`polysemous-trap`, expected
+`ignore`) and the deliberate trap of the include-override test in
+`tests/lab-analyzer.test.mjs`, which asserts `machineClaimLike === false`.
+
+The gate still ignores pt-03 either way, so the frozen benchmark is unaffected
+and its floors do not move. What breaks is one incidental assertion in a unit
+test whose contract ("a passage the machine did not judge claim-like, when a
+visitor force-includes it, must be honoured through every population") does not
+depend on WHICH passage carries that property. Greening it means either editing
+an assertion or re-choosing the scenario's input sentence.
+
+Both are Jason's call, not a pressure-test run's, so the colliding half was
+left out rather than smuggled in beside the half that does not collide.
+
+## Finding 14 — a list marker becomes a passage of its own (FOUND, MEASURED, NOT SHIPPED)
+
+Both sentence-split paths end a sentence at the period of "1.", and
+`mergeSentenceSplitArtifacts` only folds BACKWARDS — an abbreviation absorbing
+what follows it. A bare enumerator has nothing behind it to absorb into, so it
+stands alone.
+
+Repro: a three-item numbered list produces six units — `"1."`, the first item,
+`"2."`, the second item, `"3."`, the third. Each marker then reaches the reader
+in the set-aside ledger reported as `no-human-relational-frame`, which reads as
+a substantive judgement about a list number, and `ignoredDomainSegments`
+counted 4 where 1 was real.
+
+**Candidate fix**, built and measured in the clone, then reverted: an
+`ENUMERATOR_ONLY` test (`/^\(?(?:\d{1,3}|[a-z]|[ivxlcdm]{1,5})[.)]$/i`) added as
+a forward fold at the head of `mergeSentenceSplitArtifacts`. It works, and it is
+anchored at both ends so "3.5 per cent of women date up." stays one sentence.
+
+**Why it did not ship:** merging two pieces into one renumbers every later
+`claim-NN` in that segment, so **3,363 frozen pairs in
+`tests/fixtures/threshold-neighbors.json` cease to exist by ID** and 132 corpus
+rows move at score level. Absorbing that means a wholesale regeneration of the
+band — which is a file the protocol assigns to the Codex lane in the real tree,
+and regenerating it here would put a 3,363-pair rewrite into the opus patch
+series to collide with Codex's own. That is a bad trade for a fix whose value is
+tidiness in a reader-facing ledger.
+
+**Narrower alternative for integration to weigh:** leave segmentation alone and
+suppress bare enumerators at the REPORTING layer only — keep them out of
+`domainRelevance.ignoredPassages` and out of `ignoredDomainSegments`. That
+changes no unit ID and no score, so it costs no band regeneration. It was not
+built, because choosing between the two is a design call.
+
+**Residuals found while measuring, not chased:** `"a) X. b) Y."` is ONE unit —
+the splitter never breaks at a closing parenthesis; and in `"i. X. ii. Y."` the
+splitter itself attaches `"ii."` to the end of the first sentence. Both are
+defeated one stage earlier than the fold, in where sentences END, which is a
+much larger claim than where a marker belongs.
+
+## Finding 15 — one apostrophe decides whether the source or the canon is at fault
+
+The engine has two normalizers and they disagree about scope. `normalizeText`
+folds the typographic apostrophe (U+2019) to ASCII, and `tokenize` folds it
+too — so retrieval, scoring and the gate were never affected, and no benchmark
+in the suite could see this. The **cue** layer is different: it matches its
+regexes against `unit.text`, the reader's own bytes, which intake deliberately
+does not rewrite (the Lab shows the reader their own text back). Seven regex
+literals across `lab-analyzer.js` spell their contractions with the ASCII
+apostrophe alone, so on the spelling most word processors and CMSs actually
+emit, those cues simply stop firing.
+
+**Repro**, one character apart, reader-visible in the pressure-test panel:
+
+    "Hypergamy means women can't be satisfied with a lower-status partner."
+      ASCII  -> "The source wording outruns the matched rule or its
+                 uncertainty."                     (Likely source overreach)
+      U+2019 -> "The source may identify a boundary or case the indexed rule
+                 does not yet resolve."            (Possible LE limitation)
+
+The `sex-binary` overreach rule requires `men|women` AND one of
+`all|always|never|are wired|by nature|biologically|every|cannot|can't`. Losing
+the second half moves the fault from the claim to the canon: the Lab tells the
+reader either that their source overreached or that LE is incomplete, decided
+by which apostrophe their word processor inserted.
+
+**The seven**, all matched against raw `unit.text`: the modal cue set (341),
+`MISREADING_DENIAL_CUES` (855), `QUOTED_ASSERTION_VERBS` (907),
+`CONTRADICTION_CUES` (911), the `sex-binary` overreach rule (979), the
+`consent-safety` overreach rule (1016), and the retrieval disqualifier (1106).
+The consent rule is the one worth naming on its own: `doesn't need consent` did
+not fire on the typographic spelling.
+
+**Fix:** every `'` joining two letters INSIDE a regex literal becomes a
+two-character class admitting the ASCII apostrophe and U+2019. The substitution
+is length-neutral in the text it matches and touches no quote delimiter and no
+prose, so every index-based clause slice downstream is unchanged — which is what
+makes it safe to apply mechanically to all seven at once.
+
+**Prevalence, and the zero attributed.** The archived corpus is *majority
+typographic*: 490 curly against 345 straight intra-word apostrophes, and 12 of
+21 files predominantly curly. It contains 17 curly negation contractions
+(didn't x3, don't x4, doesn't x2, aren't x2, wasn't x2, weren't x2, hasn't,
+can't — all with U+2019). And yet analysing every corpus file twice — as
+published, then with U+2019 folded to ASCII — moves **0 of 1,039 segments**.
+Those 17 occurrences are real but none of them sits where a cue decides a
+label. The zero is a fact about what this corpus is (academic and journalistic
+prose, where contractions are rare and rarely load-bearing), not evidence the
+engine was right.
+
+**The test guards the source, not the label.** A test wired to one cue can only
+catch that cue. The RED test asserts the end-to-end flip AND scans
+`js/lab-analyzer.js` for any regex literal containing a contraction spelled
+with the ASCII apostrophe alone, so the next one written fails here rather than
+in a reader's export three months later.
+
+## Close-out and handoff for integration
+
+**State at close.** Clone at `origin/main` + 22 commits, rebased onto
+`origin/main` (Codex through `4149301`), `npm run test:lab` exit 0, banner
+`testing main 3dabb01 · clean · 0 behind origin/main`, 18/18. Patch series
+exported to `md/pt09/opus-patches/` as 22 files, 0001–0022 — eleven RED/fix
+pairs, RED always before its fix, every commit `Co-Authored-By: Claude Opus 5`.
+
+**What the series contains** (apply in order; each fix's parent is its own RED
+commit, so the series bisects cleanly):
+
+| Patches | Finding | Files touched |
+|---|---|---|
+| 0001–0002 | 2 — misreading firing contract | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0003–0004 | 3 — gate reads `normalizeText` | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0005–0006 | 4, 5 — entity table + format-character strip | `js/lab-intake.js`, `tests/lab-intake.test.mjs` |
+| 0007–0008 | 6 — negated-cue defeater | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0009–0010 | 7 — mate-value-mismatch conjugation | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0011–0012 | 8 — RTF destination groups | `js/lab-intake.js`, `tests/lab-intake.test.mjs` |
+| 0013–0014 | 9 — hypothetical / interrogative guard | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0015–0016 | 11 — clause splitting | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0017–0018 | 12 — statistic shapes | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0019–0020 | 13 — `date` in CLAIM_CUES | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+| 0021–0022 | 15 — apostrophe form in cue regexes | `js/lab-analyzer.js`, `tests/lab-analyzer.test.mjs` |
+
+No patch touches a site page, `data/canon-overlay.json`,
+`data/le-canon-index.json`, a canon pin, or
+`tests/fixtures/threshold-neighbors.json`. The lane held.
+
+**Integration must do three things this run could not.**
+
+1. **Assign real version numbers.** Every fix commit says
+   `v2.6.x-opus-pt09`. Eleven fixes want numbers; whether they land as eleven
+   releases or one is Codex's call, but the placeholder must not survive into
+   `main`.
+2. **Re-run the suite and a `--dump` baseline on the MERGED result.** Each fix
+   was measured alone against the 191-case gate benchmark and the 42-source
+   stance census, and each moved zero rows. Eleven zeroes measured separately
+   are not a measured zero for the eleven together — nothing here assumes they
+   compose, and the merged measurement has not been taken.
+3. **Rule nothing yet.** Zero threshold crossings were produced, so zero
+   verdicts were entered and `counts.pending` is untouched. If the merged
+   measurement produces crossings, they are unruled and blocking
+   (`WEAK_BACKLOG_CEILING` is 0).
+
+**Three findings want their own sessions**, and each is blocked on a decision
+rather than on work:
+
+- **10 — tokenizer possessives.** `women's` enters the index as `women'`. Fix
+  is built (`stripPossessive`, honouring `minDerivedStemLength`) and saved at
+  the path recorded in that section. 239 possessives in the corpus, 222 rows
+  move, **2,494 threshold crossings**. Needs a scheduled adjudication window,
+  not a spare hour.
+- **13b — `marry` plus a wildcard in CLAIM_CUES.** One-word fix, but it turns
+  frozen benchmark case `pt-03` ("The merger married two incompatible corporate
+  cultures.") claim-like, and that case is the deliberate trap of the
+  include-override test. Greening it means editing a frozen assertion or
+  re-choosing the scenario input — **Jason's ruling, not an agent's.**
+- **14 — list-marker units.** The segmentation fix costs a 3,363-pair band
+  regeneration; the reporting-layer alternative costs nothing and fixes the
+  reader-visible half. A design call between two real options.
+
+**The shape this run kept finding.** Six of the eleven shipped fixes are the
+same defect: *an inflection, spelling or format list that names some forms and
+misses the rest.* v2.6.14 taught one gate frame to conjugate `marry`; 959d32c
+taught another to read `date`; pt09 found the same hole in the
+mate-value-mismatch idiom (7), in claim detection itself (13), in the statistic
+detector (12), in the HTML entity table (4), and in every contraction-bearing
+cue regex (15). The lists were all written by hand from examples, and each one
+stopped at the examples its author happened to think of. A list of surface
+forms is a liability wherever the engine could derive the forms instead.
+
+**Why the corpus could not have caught any of them.** Every shipped fix moved
+zero corpus rows, and that is the finding, not a disappointment. This engine's
+defects live where its corpus does not: a corpus of clean ASCII declarative
+journalism cannot exercise Unicode spacing, format characters, RTF preambles,
+word-form percentages, typographic apostrophes, questions, hypotheticals, or
+verb inflections that journalism does not use. Most of the twenty-one archived
+sources are academic or newsroom prose. Widening the corpus toward
+reader-shaped text — forum posts, chat logs, word-processor pastes — would
+change what the instrument can see more than any single fix here changes what
+the engine does.
+
+
+---
+
+# pt09/opus-proposals.md
+
+> Merged verbatim 2026-08-08 · pre-merge file: `git show 7040f79:md/pt09/opus-proposals.md` · the 22-file patch series: `git show 7040f79:md/pt09/opus-patches/`
+
+# PT09 — proposals from the adversarial & engine lane (Claude Opus 5)
+
+Append-only. These are things the opus lane found but does not own: canon
+surfaces, the canon index build, frozen fixtures, and site pages. Nothing here
+was edited by this lane. Codex sweeps this file at each integration; anything
+still open at close goes to Jason.
+
+## P1 — the canon index hashes working-tree bytes, so a fresh clone is RED
+
+**Owner:** Codex (`scripts/build-canon-index.mjs` + `data/le-canon-index.json`).
+**Severity:** blocks any second checkout of the repo from being green.
+
+`buildCanonIndex` hashes each source page's raw file bytes into
+`sourcePages[].sha256` and into `indexVersion`. `.gitattributes` guarantees
+`* text=auto eol=lf`, so the blob is LF and any CR in a working tree is a local
+artifact — but the hash is taken from the working tree, so a local artifact
+gets committed into the index and no other checkout can reproduce it.
+
+Measured on 2026-08-07: five pages in the real checkout each carried one stray
+CR (`statistics.html`, `lexicon.html`, `deep-dive.html`,
+`dd-relationships-throughout-history.html`, `dd-competition-anxiety.html`), and
+a fresh `git clone` of green `main` failed `scripts/validate-canon-index.mjs`.
+
+Proposed fix, one line plus its rebuild: fold `\r\n` (and bare `\r`) to `\n`
+before hashing, exactly as the repo's own LF contract already promises. This
+changes `data/le-canon-index.json` and so must ship as a canon commit with the
+suite green, in Codex's lane.
+
+Testable afterwards: clone the repo to a temp path, run `npm run test:lab`,
+expect 18/18. That check is worth a suite step of its own if it is cheap to
+express.
+
+## P2 — `lexicon:term-conversion-ladder` cannot distinguish its own concept from its misreading, by vocabulary
+
+**Owner:** Codex (canon surfaces).
+**Severity:** low now — the engine side is fixed. This is the authoring half.
+
+The entry's synopsis spells the fourth rung "chosen"; its `commonMisreadings`
+and its `pressureTests` both spell it "selection". Until
+v2.6.x-opus-pt09 that made `selection` a token "distinctive to the misreading",
+so a faithful restatement using the concept's own natural vocabulary read
+Contradicts at 0.881. The engine fix (pressure tests count as the entry's own
+voice) closes the measured case.
+
+The authoring observation stands on its own and is worth a look when that entry
+is next touched: an entry whose affirmative surfaces avoid the plainest word
+for its own concept is one synonym away from this class returning through a
+different token. **This is an observation, not a request to reword a page** —
+CLAUDE.md's rule that no site page is reworded so a matcher scores better
+applies, and the permitted remedy if one is wanted is an authored alias or
+misreading, not a synopsis edit.
+
+## P3 — candidate appends to the frozen fixtures
+
+**Owner:** Jason (both fixtures are append-only by agreement; the opus lane did
+not touch either).
+
+- `tests/fixtures/domain-relevance-benchmark.json` — the gate benchmark holds
+  no non-ASCII space, no zero-width character and no verb inflection pair. Five
+  of its own 89 expected-retain cases flip to `ignore` if a single U+00A0 is
+  inserted at some space (im-24, ds-05, ds-07, cr-02, cr-03). Candidate
+  appends: one NBSP case, one soft-hyphen case, one past-tense idiom pair.
+- `tests/fixtures/match-behavior-benchmark.json` — every case in the
+  `stanceComposition` block carries an asserted misreading, so the whole block
+  exercises the negation-parity branch and none of it reaches the generic cue
+  ladder. That is how a ladder with no polarity at all shipped and stayed
+  green. Candidate appends to that block: a negated generic cue, a supposed
+  generic cue, and a question.
+
+Both sets are guarded by ordinary unit tests in the opus patch series already,
+so nothing is unprotected while these wait for a ruling. The fixture policy
+(an append lands in a commit touching no classifier code) is why they are
+proposed rather than shipped.
+
+## P4 — observations that are doctrine's, not the engine's
+
+Recorded because they were measured, with no action requested.
+
+- A passage naming a canon concept by a single distinctive word ("hypergamy")
+  is not admitted by gate option 2a, which reads multi-word surfaces. That is
+  the design; it means single-word concepts depend entirely on frame
+  vocabulary being present. "Hypergamy shall mean the tendency to form
+  partnerships across and upward in relative status." bins.
+- Academic and therapy-speak paraphrases of a canon concept, both containing
+  the concept's own name, produced no match at all against
+  `pills:page-rp:hypergamy`. This is the thin-surface/participant-vocabulary
+  gap already on record, measured again in two more registers.
+- Forum register ("women date up, thats just hypergamy bro") is scored
+  `isClaimLike: false` and so leaves the coverage denominator entirely, while
+  still producing a Context-only match. Whether a lower-case, unpunctuated
+  forum assertion should count as a claim is a doctrine question, not an
+  engine one.

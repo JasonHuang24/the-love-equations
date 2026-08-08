@@ -9472,3 +9472,59 @@ suite run is worth knowing.
 Suite 18/18 green before commit; frozen stance benchmark unchanged;
 limitation string updated to describe the scoped behavior. Shipped at
 4418758 and pushed with this record under the same in-session confirmation.
+
+
+---
+
+# lab-v2.6.21-release — the pt09 adversarial batch: eleven engine fixes, one version
+
+(2026-08-08, pt09 integration session.) Eleven RED-first fixes from the pt09
+adversarial & engine lane (Claude Opus 5, reasoning high, in an isolated
+clone), ferried as a 22-commit format-patch series and applied to `main`. The
+ferried commits carried `v2.6.x-opus-pt09` placeholders in subjects and code
+comments; the series was re-applied with v2.6.21 stamped throughout (the
+pristine as-ferried series: `git show 7040f79:md/pt09/opus-patches/`), then
+`ANALYZER_VERSION` and every `?v=` cache token moved 2.6.20 → 2.6.21 at
+fe78a2b, release audit green.
+
+**The eleven, by surface.** Misreading distinctive-token guard reads
+`pressureTests` as the entry's own affirmative voice · relevance gate reads
+`normalizeText` (one U+00A0 binned a passage) · intake entity table decodes
+what a DOM decodes · zero-width/format characters stripped (ZWSP dropped a
+match 0.747 → 0.562) · negated-cue defeater — the generic ladder gains
+polarity · mate-value-mismatch idiom conjugates `date` and `marry` · RTF
+destination groups are not transcript text · hypothetical/interrogative guard
+on stance cues · decimal points and abbreviation periods are not clause
+boundaries · statistic flag reads word-spelled numbers · seven cue regexes
+admit U+2019 — the one worth naming: a curly apostrophe flipped the Lab's
+verdict from *source overreach* to *LE limitation* on the same sentence, and
+`doesn't need consent` in typographic spelling defeated the consent-safety
+rule.
+
+**Measured.** Each fix alone moved zero rows on the 191-case gate benchmark
+and the stance census. The MERGED series, swept against the pre-apply dump at
+87ac5db: 1,402,917 pairs, **0 changed scores, 0 crossings** — the eleven
+zeroes compose, so zero rulings were entered and every floor stands. That
+zero is a fact about the corpus, not the defects: clean ASCII journalism
+cannot exercise Unicode spacing, format characters, RTF preambles,
+word-spelled percentages, typographic apostrophes, questions, or the verb
+inflections journalism does not use.
+
+**The shape finding, for the next engine session.** Six of the eleven are the
+same defect class — a hand-written surface-form list that stopped at its
+author's examples (v2.6.14's `marry`, 959d32c's `date`, now the idiom, claim
+cues, the statistic detector, the entity table, the contraction regexes). A
+list of surface forms is a liability wherever the engine could derive the
+forms instead. The apostrophe RED test also guards the SOURCE, not the label:
+it scans `js/lab-analyzer.js` for any regex literal spelling a contraction
+with the ASCII apostrophe alone, so the next hand-written list fails in the
+suite, not in a reader's export.
+
+**Deferred, each on a decision:** tokenizer possessives (fix built, 2,494
+crossings await a scheduled adjudication window) · `marry\w*` in CLAIM_CUES
+(collides with the frozen pt-03 include-override trap — Jason's ruling) ·
+list-marker segmentation (3,363-pair band regeneration vs a zero-cost
+reporting-layer alternative) · the P3 fixture appends (Jason-owned). Full run
+record: `# doctrine-pressure-test-09.md` in `md/pressure-tests.md`.
+
+Suite 18/18 green before and after the bump; frozen fixtures untouched.
