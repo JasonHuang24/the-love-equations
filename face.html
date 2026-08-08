@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/face.css?v=1.7" />
+  <link rel="stylesheet" href="css/face.css?v=1.8" />
 </head>
 <body data-page="face">
   <div data-include="navigation-bar"></div>
@@ -24,9 +24,14 @@
     </div>
 
     <div class="content lc-content">
-      <div class="lc-caveat">
-        <strong>Read this first.</strong> This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the heuristic scores both. <strong>That model learned from SCUT-FBP5500</strong> &mdash; a fixed panel of raters scoring one specific set of faces &mdash; so its scale carries their tastes, era and demographic skew, not a universal truth. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; for a professionally-built facial assessment, see <a href="https://www.qoves.com/" target="_blank" rel="noopener">QOVES</a>.
-      </div>
+      <!-- Every word of the disclaimer is still here — it is folded, not trimmed —
+           so the drop zone reaches the first screen instead of sitting under it. -->
+      <details class="calc-fold">
+        <summary><i class="ti ti-alert-triangle" aria-hidden="true"></i> Read this first &mdash; methodology &amp; limitations<i class="ti ti-chevron-down calc-fold-chev" aria-hidden="true"></i></summary>
+        <div class="calc-fold-body lc-caveat-body">
+        This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the heuristic scores both. <strong>That model learned from SCUT-FBP5500</strong> &mdash; a fixed panel of raters scoring one specific set of faces &mdash; so its scale carries their tastes, era and demographic skew, not a universal truth. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; for a professionally-built facial assessment, see <a href="https://www.qoves.com/" target="_blank" rel="noopener">QOVES</a>.
+        </div>
+      </details>
 
       <div class="lc-grid">
         <!-- INPUT COLUMN -->
@@ -63,8 +68,8 @@
             <div class="lc-note lc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
           </div>
 
-          <div class="lc-panel">
-            <div class="lc-h"><i class="ti ti-eye-search"></i> What it reads &mdash; and how</div>
+          <details class="lc-panel calc-panel-fold">
+            <summary class="lc-h"><i class="ti ti-eye-search"></i> What it reads &mdash; and how<i class="ti ti-chevron-down calc-fold-chev" aria-hidden="true"></i></summary>
             <div class="lc-how">
               <div class="lc-how-row"><i class="ti ti-vector-triangle"></i><div><b>Bone &amp; proportions</b> &mdash; from 478 face landmarks: symmetry, jaw, midface, eye size, nose width, eye spacing, lips, plus the proportional-typicality and dimorphic-cue proxies. Width-to-height &amp; canthal tilt are shown as weak-evidence &ldquo;lens&rdquo; reads, not weighted.</div></div>
               <div class="lc-how-row"><i class="ti ti-line-height"></i><div><b>Facial leanness</b> &mdash; lower-face width against face height.</div></div>
@@ -73,7 +78,7 @@
               <div class="lc-how-row"><i class="ti ti-eye"></i><div><b>Under-eye</b> &mdash; brightness under the eyes versus the cheeks (darkness / bags proxy).</div></div>
             </div>
             <div class="lc-note"><strong>Left out, not faked:</strong> hairline &amp; hair, beard, eye-whites, and the profile (chin / jaw projection, orbital vector) &mdash; visible in the photo, but not something a front-view mesh can <em>measure</em>, so the panel omits them rather than guess. They still move the real score. See <a href="pills.html#face-pill">The Face Pill</a>.</div>
-          </div>
+          </details>
         </div>
 
         <!-- RESULT COLUMN -->

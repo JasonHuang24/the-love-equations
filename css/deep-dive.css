@@ -35,9 +35,26 @@ a.dd-feature:hover {
   box-shadow: var(--shadow);
 }
 
+/* Kicker row: category tag on the left, reading time on the right. The two share
+   a weight so neither reads as the headline — the essay title owns that. */
+.dd-feature-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  /* nowrap deliberately. Wrapping dropped the reading time onto its own line on
+     exactly the cards with a long category ("ESSAY 03 · GEOGRAPHY") and left it
+     inline on the short ones, so the same label sat in two different places
+     across one grid. Held on one row, the kicker wraps inside its own box
+     instead and the reading time stays put on every card. */
+  flex-wrap: nowrap;
+}
+
 .dd-feature-kicker {
   display: inline-flex;
   align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
   gap: 7px;
   font-size: 10px;
   letter-spacing: 0.16em;
@@ -46,6 +63,20 @@ a.dd-feature:hover {
   color: var(--scarlet);
 }
 .dd-feature-kicker i { font-size: 14px; }
+
+.dd-feature-read {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 5px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.dd-feature-read i { font-size: 13px; }
 
 .dd-feature-title {
   font-family: "Playfair Display", Georgia, serif;
@@ -108,6 +139,7 @@ a.dd-feature:hover {
   background: linear-gradient(145deg, rgba(255,255,255,0.55), rgba(243,230,216,0.4));
 }
 .dd-feature.upcoming .dd-feature-kicker { color: var(--text-dim); }
+.dd-feature.upcoming .dd-feature-read { display: none; }
 .dd-feature.upcoming:hover { transform: none; box-shadow: var(--shadow-soft); border-color: var(--border); }
 
 @media (max-width: 720px) {

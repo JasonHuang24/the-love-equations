@@ -2,6 +2,40 @@
 
 .lex-intro { font-size: 14px; color: var(--text-muted); line-height: 1.8; max-width: 820px; margin-bottom: 1.4rem; }
 .lex-intro strong { color: var(--text); }
+/* ── Search box (first row of the shared .filter-deck card). 226 terms is past the
+   point where scanning a two-column grid is navigation; the lens chips narrow by
+   family, this narrows by word, and the two compose. ── */
+.lex-search-row { border-bottom: 0.5px solid var(--border); }
+.lex-search { position: relative; display: flex; align-items: center; flex: 1 1 100%; min-width: 0; }
+.lex-search-ico { position: absolute; left: 0.85rem; font-size: 16px; color: var(--text-dim); pointer-events: none; }
+.lex-search-input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text);
+  padding: 0.6rem 2.2rem 0.6rem 2.4rem;
+  background: var(--card-solid);
+  border: 0.5px solid var(--border);
+  border-radius: 999px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.lex-search-input::placeholder { color: var(--text-dim); }
+.lex-search-input:focus { outline: none; border-color: var(--scarlet); box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.14); }
+.lex-search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.lex-search-clear {
+  position: absolute; right: 0.5rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; padding: 0;
+  border: none; border-radius: 999px; background: transparent;
+  color: var(--text-dim); cursor: pointer;
+}
+.lex-search-clear:hover { color: var(--scarlet); background: var(--scarlet-pale); }
+.lex-search-clear[hidden] { display: none; }
+.lex-empty { color: var(--text-muted); font-size: 13px; padding: 2rem; text-align: center; }
+.lex-empty[hidden] { display: none; }
+
 .lex-filter { display: flex; flex-wrap: wrap; gap: 7px; }
 .lex-fbtn {
   cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700;

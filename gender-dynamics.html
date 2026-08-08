@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/gender-dynamics.css?v=1.8" />
+  <link rel="stylesheet" href="css/gender-dynamics.css?v=1.9" />
 </head>
 <body data-page="gender-dynamics">
   <div data-include="navigation-bar"></div>
@@ -23,10 +23,10 @@
 
     <div class="content">
       <div class="tab-nav">
-        <button class="tab-btn land-active" onclick="showPage('land', this)">Overview</button>
-        <button class="tab-btn" onclick="showPage('male', this)">Male Perspective</button>
-        <button class="tab-btn" onclick="showPage('fem', this)">Female Perspective</button>
-        <button class="tab-btn" onclick="showPage('both', this)">Both Sides</button>
+        <button class="tab-btn land-active" aria-pressed="true" onclick="showPage('land', this)">Overview</button>
+        <button class="tab-btn" aria-pressed="false" onclick="showPage('male', this)">Male Perspective</button>
+        <button class="tab-btn" aria-pressed="false" onclick="showPage('fem', this)">Female Perspective</button>
+        <button class="tab-btn" aria-pressed="false" onclick="showPage('both', this)">Both Sides</button>
       </div>
 
       <!-- Overview -->
@@ -359,6 +359,30 @@
       });
     }
     document.addEventListener('DOMContentLoaded', sortCardsByLabel);
+
+    // Card count per section heading. Injected at runtime rather than authored into
+    // the markup on purpose: the canon builder reads each .dos-section's text as the
+    // subcategory of every card beneath it (extractGenderDynamics in
+    // scripts/build-canon-index.mjs), so writing "· 4 cards" into the heading would
+    // rename 133 canon entries to say how many cards were on a page. Scripts are
+    // stripped before that parse, so a count added here is invisible to it.
+    // Counted from the DOM, so it can never drift from what is actually rendered.
+    function labelSectionCounts() {
+      document.querySelectorAll('.dyn-page .dos-section').forEach((heading) => {
+        if (heading.querySelector('.dos-count')) return;
+        let cards = 0;
+        for (let node = heading.nextElementSibling; node; node = node.nextElementSibling) {
+          if (node.classList.contains('dos-section')) break;
+          if (node.classList.contains('dos-card')) cards += 1;
+        }
+        if (!cards) return;
+        const count = document.createElement('span');
+        count.className = 'dos-count';
+        count.textContent = cards === 1 ? '1 card' : `${cards} cards`;
+        heading.appendChild(count);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', labelSectionCounts);
     // Progressive enhancement: make the click-only widgets keyboard-operable and
     // expose their state to assistive tech. Runs after sortCardsByLabel so the
     // aria-expanded values reflect the post-sort open/closed state.

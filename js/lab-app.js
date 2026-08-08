@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.6.24';
+} from './lab-intake.js?v=2.6.25';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,32 +15,32 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.6.24';
-import { createDemoDocument } from './lab-demo.js?v=2.6.24';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.6.24';
-import { claimUnitRowDigest } from './lab-analyzer.js?v=2.6.24';
+} from './lab-extractors.js?v=2.6.25';
+import { createDemoDocument } from './lab-demo.js?v=2.6.25';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.6.25';
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.6.25';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.6.24';
+} from './lab-export.js?v=2.6.25';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
   ledgerFilterIsActive,
   ledgerRowMatchesFilter,
   nextLedgerFilter,
-} from './lab-ledger.js?v=2.6.24';
+} from './lab-ledger.js?v=2.6.25';
 import {
   REVIEW_DISPOSITIONS,
   buildMappingFeedback,
   mappingFeedbackFileName,
   mappingFeedbackToJson,
-} from './lab-feedback.js?v=2.6.24';
+} from './lab-feedback.js?v=2.6.25';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.6.24';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.6.25';
 // The Lab build that rendered a flagged row. Deliberately distinct from
 // provenance.analyzer.version, which names the engine that produced the numbers:
 // a UI-only patch moves this and not that, and triage needs to tell them apart.
@@ -49,6 +49,9 @@ const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
 const MAX_RENDERED_TRIAGE_ROWS = 120;
+// Sticky-nav clearance for programmatic scrolls. Mirrors the scroll-margin-top
+// the site uses site-wide (styles.css) and .lab-workspace carries in lab.css.
+const LAB_SCROLL_OFFSET = 96;
 
 const app = document.getElementById('lab-app');
 if (!app) throw new Error('LE Lab root was not found.');
@@ -1951,12 +1954,63 @@ async function loadDemo() {
   try {
     const documentValue = createDemoDocument();
     ui.sourceTitle.value = documentValue.source.title;
+    // Show the transcript in the paste box too. It used to load invisibly as a
+    // normalized document, so one click filled the title, left the textarea empty,
+    // and the whole run read as "nothing happened". The pasted text does NOT become
+    // the analyzed input — documentForAnalysis only prefers ui.text when activeInput
+    // is 'text' or there is no normalized document, and updateLoadedDocument sets
+    // both — so the VTT is still analyzed with its speaker and cue structure intact.
+    // Typing in the box switches activeInput to 'text' and takes over from there,
+    // which is what someone editing the demo would expect.
+    ui.text.value = documentValue.text;
     updateLoadedDocument(documentValue);
     ui.intakeStatus.textContent = 'Original demonstration loaded. Map it to populate the full Lab.';
     await runAnalysis();
+    // The results are the point of the demo, and they render a full screen below
+    // the intake form — without this the visitor is left looking at the same empty
+    // scaffolding they clicked from.
+    if (state.analysis) revealWorkspace();
   } catch (error) {
     showError(error, { analysisFailure: true });
   }
+}
+
+/**
+ * Bring the analysis into view after an automatic run. Only used by the demo:
+ * a manual Analyze click is a deliberate act by someone already looking at the
+ * page, and yanking their scroll position would be rude.
+ *
+ * The page inherits `html { scroll-behavior: smooth }` from styles.css, and a
+ * smooth scroll is an animation the browser is free not to run — in a headless
+ * or backgrounded view it can resolve to no movement at all, which would land
+ * the visitor back where they started with nothing to show for the click. So:
+ * ask for the animation, then check one beat later that the page actually moved,
+ * and jump outright if it did not. Reduced-motion skips straight to the jump.
+ */
+function revealWorkspace() {
+  if (!ui.workspace) return;
+  const targetTop = () =>
+    ui.workspace.getBoundingClientRect().top + window.scrollY - LAB_SCROLL_OFFSET;
+  // The jump must defeat `html { scroll-behavior: smooth }` explicitly: with it in
+  // force even scrollTo() animates, so a fallback for "the animation did not run"
+  // would itself be the animation that did not run.
+  const jump = () => {
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, Math.max(0, targetTop()));
+    root.style.scrollBehavior = previous;
+  };
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) { jump(); return; }
+
+  const startedAt = window.scrollY;
+  ui.workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window.setTimeout(() => {
+    // Still where we started and still not where we were going → the animation
+    // never ran. Anything in between means it is running or has arrived.
+    if (window.scrollY === startedAt && Math.abs(targetTop() - window.scrollY) > 4) jump();
+  }, 400);
 }
 
 async function removeFile() {

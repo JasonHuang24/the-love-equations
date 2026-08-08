@@ -27,6 +27,107 @@
 .bar-fill.fem { background: var(--scarlet); }
 .bar-fill.muted { background: #9AA0A6; }
 .chart-note { font-size: 12.5px; color: var(--text-muted); line-height: 1.7; margin-top: 0.85rem; }
+
+/* ── Evidence-tier chips + chart search (inside the shared .filter-deck card).
+   Chip colours reuse the tier palette above so the chip and the pill on the
+   card it selects are visibly the same object. ── */
+.st-filters { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; }
+.st-chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.st-chip:hover { color: var(--text); border-color: var(--text-dim); }
+.st-chip:focus-visible { outline: 2px solid var(--scarlet); outline-offset: 2px; }
+.st-chip-n { margin-left: 0.45em; font-size: 0.92em; font-variant-numeric: tabular-nums; opacity: 0.55; }
+.st-chip.active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
+.st-chip.active .st-chip-n { opacity: 0.8; }
+.st-chip.t1.active { background: #1E7B34; border-color: #1E7B34; }
+.st-chip.t2.active { background: #8A5F10; border-color: #8A5F10; }
+.st-chip.t3.active { background: #AD501D; border-color: #AD501D; }
+
+.st-search { position: relative; display: flex; align-items: center; flex: 1 1 210px; min-width: 0; }
+.st-search-ico { position: absolute; left: 0.85rem; font-size: 16px; color: var(--text-dim); pointer-events: none; }
+.st-search-input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text);
+  padding: 0.55rem 2.2rem 0.55rem 2.4rem;
+  background: var(--card-solid);
+  border: 0.5px solid var(--border);
+  border-radius: 999px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.st-search-input::placeholder { color: var(--text-dim); }
+.st-search-input:focus { outline: none; border-color: var(--scarlet); box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.14); }
+.st-search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.st-search-clear {
+  position: absolute; right: 0.5rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; padding: 0;
+  border: none; border-radius: 999px; background: transparent;
+  color: var(--text-dim); cursor: pointer;
+}
+.st-search-clear:hover { color: var(--scarlet); background: var(--scarlet-pale); }
+.st-search-clear[hidden] { display: none; }
+.st-empty { color: var(--text-muted); font-size: 13px; padding: 2rem; text-align: center; }
+.st-empty[hidden] { display: none; }
+
+/* ── Bar tooltips: the fill prints its value, but a short bar clips it and a
+   long series label wraps — the tooltip states label and value in full.
+   Anchored on .bar-row, which has no overflow clip (.bar-track does). ── */
+.bar-row[data-tip] { position: relative; }
+.bar-row[data-tip] .bar-track { cursor: default; }
+.bar-row[data-tip] .bar-track:focus-visible { outline: 2px solid var(--scarlet); outline-offset: 2px; }
+.bar-row[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 110px;                 /* clears .bar-label so the tip sits over the track */
+  bottom: calc(100% - 4px);
+  z-index: 5;
+  max-width: min(320px, 90%);
+  width: max-content;
+  padding: 5px 10px;
+  border-radius: 7px;
+  background: var(--text);
+  color: #fdf7ef;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 20px rgba(26, 14, 14, 0.24);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(3px);
+  transition: opacity 0.14s ease, transform 0.14s ease, visibility 0s 0.14s;
+  pointer-events: none;
+}
+.bar-row[data-tip]:hover::after,
+.bar-row[data-tip]:focus-within::after,
+.bar-row[data-tip].tip-on::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.14s ease, transform 0.14s ease, visibility 0s 0s;
+}
+@media (max-width: 620px) {
+  .bar-row[data-tip]::after { left: 0; max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-row[data-tip]::after { transition: none; }
+}
 .chart-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px 14px; margin-top: 0.85rem; padding-top: 0.7rem; border-top: 0.5px solid var(--border); }
 .chart-sample { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; color: var(--text); background: var(--surface); border: 0.5px solid var(--border); border-radius: 5px; padding: 2px 8px; white-space: nowrap; }
 .chart-sample i { font-size: 12px; color: var(--text-dim); }
@@ -119,6 +220,15 @@
   text-decoration-thickness: 0.5px;
   text-underline-offset: 2px;
 }
+/* The sample pill is nowrap so "n = 951" never breaks mid-figure — but three cards
+   carry a long descriptive sample ("n = DHS/MICS national surveys, aggregated by
+   UNICEF"), and on a narrow phone that one pill pushed the whole page 25px wide.
+   Below the phone breakpoint it wraps instead; the numeric ones are short enough
+   that nothing else changes. */
+@media (max-width: 420px) {
+  .chart-sample { white-space: normal; overflow-wrap: anywhere; }
+}
+
 @media (max-width: 620px) {
   .predictor-chart { padding: 0.75rem; }
   .predictor-scale { margin: 0 67px 0.4rem 0; }

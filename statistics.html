@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/statistics.css?v=1.10" />
+  <link rel="stylesheet" href="css/statistics.css?v=1.12" />
 </head>
 <body data-page="statistics">
   <div data-include="navigation-bar"></div>
@@ -22,6 +22,24 @@
     </div>
 
     <div class="content">
+      <div class="filter-deck">
+        <div class="filter-deck-row">
+          <!-- Tier chips are generated from the tier pills the charts actually carry
+               (js at the foot of this file), so a tier with no charts never gets a
+               chip that returns nothing. Two cards — the Mythbuster cross-reference
+               and the cutting-room floor — carry no tier by design and drop out of
+               any tier filter. -->
+          <div class="st-filters" id="st-filters" role="group" aria-label="Filter by evidence tier"></div>
+          <div class="st-search">
+            <i class="ti ti-search st-search-ico" aria-hidden="true"></i>
+            <input type="search" id="st-search" class="st-search-input" placeholder="Search charts&hellip;"
+                   aria-label="Search charts" autocomplete="off" spellcheck="false" />
+            <button type="button" class="st-search-clear" id="st-search-clear" aria-label="Clear search" hidden>
+              <i class="ti ti-x" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="filter-deck-count" id="st-filter-count" aria-live="polite"></p>
+        </div>
       <details class="page-toc" open aria-label="Table of contents">
         <summary class="page-toc-head"><i class="ti ti-list-details" aria-hidden="true"></i> On this page<i class="ti ti-chevron-down toc-chevron" aria-hidden="true"></i></summary>
         <div class="toc-groups">
@@ -135,6 +153,7 @@
           </div>
         </div>
       </details>
+      </div>
 
       <p class="stats-intro">No vibes, no inflated ratios. Where the data is solid we say so; where it&rsquo;s mixed we flag it; and where a viral stat breaks under scrutiny, we show the break instead of charting it. Every chart carries its sample size and method, a source trail, and a strength tag &mdash; because a percentage means nothing until you know whether it came from a thousand people or a few million.</p>
 
@@ -1068,5 +1087,188 @@
   </div>
 
   <div data-include="footer"></div>
+
+  <script>
+  /* ── Chart deck: evidence-tier chips + text search, and value tooltips on the
+     bars. Both read the charts already in the document — nothing here authors a
+     number, so a chart added to the markup joins the filter and gets a tooltip
+     with no edit down here. ── */
+  (function () {
+    'use strict';
+
+    var TIER_LABELS = { t1: 'Tier 1', t2: 'Tier 2', t3: 'Tier 3' };
+
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.chart-card'));
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.dos-section'));
+    var filters = document.getElementById('st-filters');
+    var countEl = document.getElementById('st-filter-count');
+    var search = document.getElementById('st-search');
+    var clear = document.getElementById('st-search-clear');
+
+    /* ── Index ─────────────────────────────────────────────────────────────
+       A card's tier is the pill in its KICKER — the card-level grade. The
+       `myth` pills inside the cutting-room notes mark individual debunked
+       claims, not the card, so they are deliberately not a tier here. */
+    var index = cards.map(function (card) {
+      var kicker = card.querySelector('.chart-kicker');
+      var tiers = kicker
+        ? Array.prototype.slice.call(kicker.querySelectorAll('.chart-tier'))
+            .map(function (pill) {
+              return ['t1', 't2', 't3'].filter(function (t) { return pill.classList.contains(t); })[0];
+            }).filter(Boolean)
+        : [];
+      return {
+        card: card,
+        tiers: tiers,
+        text: (card.textContent || '').replace(/\s+/g, ' ')
+          .replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, '-')
+          .toLowerCase(),
+      };
+    });
+
+    /* ── Tier chips, generated from the tiers present ─────────────────────── */
+    var counts = {};
+    index.forEach(function (item) {
+      item.tiers.forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
+    });
+    var present = ['t1', 't2', 't3'].filter(function (t) { return counts[t]; });
+
+    if (filters) {
+      filters.innerHTML = '<button class="st-chip active" type="button" data-tier="all" aria-pressed="true">All'
+        + '<span class="st-chip-n">' + cards.length + '</span></button>'
+        + present.map(function (t) {
+          return '<button class="st-chip ' + t + '" type="button" data-tier="' + t + '" aria-pressed="false">'
+            + TIER_LABELS[t] + '<span class="st-chip-n">' + counts[t] + '</span></button>';
+        }).join('');
+    }
+
+    function activeTier() {
+      var chip = filters && filters.querySelector('.st-chip.active');
+      return chip ? chip.dataset.tier : 'all';
+    }
+
+    function apply() {
+      var tier = activeTier();
+      var terms = (search ? search.value : '')
+        .replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, '-')
+        .trim().toLowerCase().split(/\s+/).filter(Boolean);
+      var visibleIds = {};
+      var shown = 0;
+
+      index.forEach(function (item) {
+        var ok = (tier === 'all' || item.tiers.indexOf(tier) >= 0)
+          && terms.every(function (term) { return item.text.indexOf(term) >= 0; });
+        item.card.hidden = !ok;
+        if (ok) { shown += 1; if (item.card.id) visibleIds[item.card.id] = true; }
+      });
+
+      // A group heading with every chart under it filtered away is a label for
+      // nothing — hide it with its group.
+      sections.forEach(function (heading) {
+        var any = false;
+        for (var node = heading.nextElementSibling; node; node = node.nextElementSibling) {
+          if (node.classList.contains('dos-section')) break;
+          if (node.classList.contains('chart-card') && !node.hidden) { any = true; break; }
+        }
+        heading.hidden = !any;
+      });
+
+      // The table of contents follows the same result set.
+      document.querySelectorAll('.page-toc .toc-group').forEach(function (group) {
+        var left = 0;
+        group.querySelectorAll('.toc-entry').forEach(function (entry) {
+          var id = (entry.getAttribute('href') || '').replace(/^#/, '');
+          // Sub-entries (13.1) point at anchors inside a card rather than at the
+          // card itself; they follow whichever card contains their target.
+          var target = id && document.getElementById(id);
+          var owner = target && target.closest ? target.closest('.chart-card') : null;
+          var on = owner ? !owner.hidden : !!visibleIds[id];
+          entry.style.display = on ? '' : 'none';
+          if (on) left += 1;
+        });
+        group.style.display = left ? '' : 'none';
+      });
+
+      if (countEl) {
+        countEl.textContent = shown === cards.length
+          ? 'Showing all ' + cards.length + ' charts'
+          : 'Showing ' + shown + ' of ' + cards.length + ' charts';
+      }
+      var empty = document.getElementById('st-no-results');
+      if (empty) empty.hidden = shown !== 0;
+    }
+
+    if (filters) {
+      filters.addEventListener('click', function (e) {
+        var chip = e.target.closest('.st-chip');
+        if (!chip) return;
+        filters.querySelectorAll('.st-chip').forEach(function (c) {
+          var on = c === chip;
+          c.classList.toggle('active', on);
+          c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        apply();
+      });
+    }
+    if (search) {
+      search.addEventListener('input', function () {
+        if (clear) clear.hidden = !search.value.trim();
+        apply();
+      });
+    }
+    if (clear) {
+      clear.addEventListener('click', function () {
+        search.value = '';
+        clear.hidden = true;
+        apply();
+        search.focus();
+      });
+    }
+
+    // Empty state, parked after the last chart group.
+    var lastCard = cards[cards.length - 1];
+    if (lastCard && lastCard.parentNode) {
+      var empty = document.createElement('p');
+      empty.className = 'st-empty';
+      empty.id = 'st-no-results';
+      empty.hidden = true;
+      empty.textContent = 'No charts match those filters. Try a different word, or clear the search.';
+      lastCard.parentNode.insertBefore(empty, lastCard.nextSibling);
+    }
+
+    /* ── Bar tooltips ───────────────────────────────────────────────────────
+       The value is printed inside the fill, but a short bar clips it against
+       .bar-track's overflow, and a long series label wraps. The tooltip states
+       both in full. Built from the row's own text, so it can never disagree
+       with the chart. Hover and keyboard focus on desktop; tap on touch. */
+    document.querySelectorAll('.bar-row').forEach(function (row) {
+      var label = row.querySelector('.bar-label');
+      var fill = row.querySelector('.bar-fill');
+      if (!fill) return;
+      var value = (fill.textContent || '').trim();
+      if (!value) return;
+      var name = label ? (label.textContent || '').trim() : '';
+      var tip = name ? name + ' — ' + value : value;
+      row.setAttribute('data-tip', tip);
+      var track = row.querySelector('.bar-track');
+      if (track) {
+        track.setAttribute('tabindex', '0');
+        track.setAttribute('role', 'img');
+        track.setAttribute('aria-label', tip);
+      }
+    });
+
+    // Touch: tap a bar to pin its tooltip, tap elsewhere to dismiss. One at a time.
+    document.addEventListener('click', function (e) {
+      var row = e.target.closest ? e.target.closest('.bar-row[data-tip]') : null;
+      document.querySelectorAll('.bar-row.tip-on').forEach(function (other) {
+        if (other !== row) other.classList.remove('tip-on');
+      });
+      if (row) row.classList.toggle('tip-on');
+    });
+
+    apply();
+  })();
+  </script>
 </body>
 </html>

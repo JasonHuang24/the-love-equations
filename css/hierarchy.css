@@ -62,6 +62,21 @@
 .bt-remove:hover { color: var(--scarlet); background: var(--scarlet-pale); }
 .builder-add-tier { margin-top: 0.25rem; }
 
+/* Reading time under the page subtitle. Only pages that read linearly carry one —
+   a single minute count on a 50-entry reference deck describes nobody's visit. */
+.page-readtime {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.9rem;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--text-dim);
+}
+.page-readtime i { font-size: 14px; color: var(--scarlet); }
+
 /* Flat full-width intro */
 .hierarchy-intro-flat { max-width: 760px; margin: 0 auto 2.75rem; text-align: center; }
 .hierarchy-intro-flat h2 { font-family: "Playfair Display", Georgia, serif; font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; margin: 0.4rem 0 1rem; }

@@ -120,7 +120,7 @@
 .bc-missing { font-size: 11.5px; color: var(--text-dim); line-height: 1.55; margin-top: 1rem; border-top: 0.5px solid var(--border-light); padding-top: 0.7rem; }
 .bc-missing a { color: var(--scarlet-dim); }
 
-/* ═══ Step 1 · objective-input panel (hybrid) ═══ */
+/* ═══ Step 2 · objective-input panel (hybrid) ═══ */
 .bc-inputs-lead { font-size: 12px; color: var(--text-muted); line-height: 1.55; margin-bottom: 0.9rem; }
 .bc-inputs-lead strong { color: var(--text); }
 .bc-step-opt {
@@ -142,7 +142,7 @@
   background: var(--scarlet-pale); border: 0.5px solid rgba(196,30,58,0.3); border-radius: var(--radius-md);
 }
 .bc-inputs.skip-on .bc-skip-note { display: block; }
-.bc-inputs.skip-on #bc-inputs-body { display: none; }   /* collapse Step 1; BC.* retains the values */
+.bc-inputs.skip-on #bc-inputs-body { display: none; }   /* collapse Step 2; BC.* retains the values */
 
 .bc-in-field { margin-bottom: 1rem; }
 .bc-field-label { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 0.45rem; }
@@ -195,6 +195,17 @@
 .bc-bf-lbl { font-size: 9.5px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.01em; }
 .bc-bf-tile.sel .bc-bf-lbl { color: var(--scarlet-deep); }
 .bc-bf-needsex { font-size: 12px; color: var(--text-dim); font-style: italic; padding: 0.3rem 0; }
+/* Both scales, shown before a sex is chosen. Dimmed to read as a reference rather
+   than a selection — but live: a click sets the sex and the bucket together. */
+.bc-bf-preview { display: grid; gap: 0.5rem; margin-bottom: 0.35rem; }
+.bc-bf-preview-lbl {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 0.25rem;
+}
+.bc-bf-preview .bc-bf-grid { margin-bottom: 0; opacity: 0.72; transition: opacity 0.15s ease; }
+.bc-bf-preview .bc-bf-grid:hover,
+.bc-bf-preview .bc-bf-grid:focus-within { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .bc-bf-preview .bc-bf-grid { transition: none; } }
 .bc-bf-measured { margin-top: 0.3rem; }
 .bc-bf-measured summary { font-size: 11.5px; color: var(--scarlet-dim); cursor: pointer; }
 .bc-bf-num { max-width: 170px; margin-top: 0.5rem; }
@@ -262,3 +273,65 @@
 .bc-batch-table tr.ok  td:nth-child(3) { color: #0F6E56; font-weight: 600; }
 .bc-batch-table tr.bad td:nth-child(3) { color: var(--scarlet); font-weight: 600; }
 .bc-batch-table tr.err td:nth-child(3) { color: var(--gold); font-weight: 600; }
+
+/* ── Collapsed methodology ("Read this first", "What it reads") ──────────────
+   Nothing is removed — the full text is one click away — but the tool's own
+   input reaches the first screen instead of sitting under a page of caveats.
+   <details> so the fold is native: keyboard, AX, and find-in-page all work. ── */
+.calc-fold {
+  border: 0.5px solid var(--border);
+  border-left: 3px solid var(--scarlet);
+  border-radius: var(--radius-md);
+  background: rgba(255, 250, 243, 0.7);
+  margin-bottom: 1.4rem;
+}
+.calc-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--scarlet);
+}
+.calc-fold > summary::-webkit-details-marker { display: none; }
+.calc-fold > summary:hover { color: var(--scarlet-dim); }
+.calc-fold > summary:focus-visible { outline: 2px solid var(--scarlet); outline-offset: -2px; }
+.calc-fold-chev {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 15px;
+  color: var(--text-dim);
+  transition: transform 0.22s ease;
+}
+.calc-fold[open] > summary .calc-fold-chev,
+.calc-panel-fold[open] > summary .calc-fold-chev { transform: rotate(180deg); }
+.calc-fold-body {
+  padding: 0 1rem 0.95rem;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.calc-fold-body strong { color: var(--text); }
+.calc-fold-body a { color: var(--scarlet-dim); }
+
+/* A fold INSIDE an existing panel: the panel already supplies the frame, so this
+   only adds the summary affordance to the panel's own heading. */
+.calc-panel-fold > summary {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 0;
+}
+.calc-panel-fold[open] > summary { margin-bottom: 0.7rem; }
+.calc-panel-fold > summary::-webkit-details-marker { display: none; }
+.calc-panel-fold > summary:focus-visible { outline: 2px solid var(--scarlet); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .calc-fold-chev { transition: none; }
+}

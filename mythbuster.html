@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <script src="js/mythbuster.js?v=2.6" defer></script>
-  <link rel="stylesheet" href="css/mythbuster.css?v=1.8" />
+  <script src="js/mythbuster.js?v=2.7" defer></script>
+  <link rel="stylesheet" href="css/mythbuster.css?v=1.9" />
 </head>
 <body data-page="mythbuster">
   <div data-include="navigation-bar"></div>
@@ -26,6 +26,32 @@
     <div class="content">
 
       <div class="filter-deck">
+        <div class="filter-deck-row mb-search-row">
+          <div class="mb-search">
+            <i class="ti ti-search mb-search-ico" aria-hidden="true"></i>
+            <input type="search" id="mb-search" class="mb-search-input" placeholder="Search questions, claims, and rulings&hellip;"
+                   aria-label="Search entries" autocomplete="off" spellcheck="false" />
+            <button type="button" class="mb-search-clear" id="mb-search-clear" aria-label="Clear search" hidden>
+              <i class="ti ti-x" aria-hidden="true"></i>
+            </button>
+          </div>
+          <!-- Ruling BADGES are free-text headlines ("Old money, young marks") — 54 distinct
+               across 65 entries, so they cannot be a filter axis. The categorical axis in the
+               data is the per-claim verdict; an entry matches if any of its claims carries it. -->
+          <label class="mb-select-wrap">
+            <span class="mb-select-label">Verdict</span>
+            <select id="mb-verdict" class="mb-select">
+              <option value="all">Any</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="oversimplified">Oversimplified</option>
+              <option value="false">False</option>
+              <option value="backwards">Backwards</option>
+            </select>
+          </label>
+          <button type="button" class="mb-expand-all" id="mb-expand-all" aria-expanded="false">
+            <i class="ti ti-arrows-diagonal" aria-hidden="true"></i> <span id="mb-expand-all-label">Expand all</span>
+          </button>
+        </div>
         <div class="filter-deck-row">
           <div class="mb-filters" id="mb-filters" role="group" aria-label="Filter by category">
             <!-- Filter chips are auto-generated from the categories in the data. -->

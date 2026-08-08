@@ -1,5 +1,75 @@
 /* ── frameworks.html — page styles (extracted from inline <style>) ── */
 
+/* ── "Start with these three": an orientation card above the table of contents.
+   Deliberately not styled like the TOC — scarlet-edged and warmer, so it reads as
+   a recommendation rather than the first group of a fifty-entry list. ── */
+.rf-starter {
+  border: 0.5px solid rgba(196, 30, 58, 0.28);
+  border-left: 3px solid var(--scarlet);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(250, 230, 232, 0.62), rgba(255, 252, 247, 0.86));
+  box-shadow: var(--shadow-soft);
+  padding: 1.25rem 1.4rem 1.3rem;
+  margin: 0 auto 1.2rem;
+  max-width: var(--container);
+}
+.rf-starter-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--scarlet);
+  margin-bottom: 0.5rem;
+}
+.rf-starter-head i { font-size: 16px; }
+.rf-starter-lead {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  max-width: 70ch;
+}
+.rf-starter-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.rf-starter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.85rem 0.95rem;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card-solid);
+  text-decoration: none;
+  transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+.rf-starter-item:hover,
+.rf-starter-item:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(196, 30, 58, 0.4);
+  box-shadow: var(--shadow-soft);
+}
+.rf-starter-name {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.rf-starter-why { font-size: 12px; line-height: 1.55; color: var(--text-muted); }
+@media (max-width: 720px) {
+  .rf-starter-list { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rf-starter-item { transition: none; }
+  .rf-starter-item:hover, .rf-starter-item:focus-visible { transform: none; }
+}
+
 .rf-entry { margin-bottom: 5.5rem; padding: 4.25rem 0 0; border-top: 3px solid #3a2020; border-bottom: 0; scroll-margin-top: 96px; }
 .rf-entry:last-child { margin-bottom: 0; }
 #conversion-ladder { margin-top: 4.25rem; padding-top: 0; border-top: 0; }

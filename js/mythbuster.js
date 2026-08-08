@@ -1954,8 +1954,20 @@
       '</div>';
   }
 
-  /* ── Card HTML for one (already-validated) entry ── */
-  function cardHTML(m) {
+  /* ── Collapsed-state summary line for an entry with no `question` field
+     (M-TBD-9 / M-TBD-10 predate it). The sole claim IS the public title, but it
+     only renders inside the claims column — which is folded away when collapsed.
+     Shown by CSS on the closed card only, so an expanded card never prints it
+     twice. Same derivation as the TOC label. ── */
+  function collapsedTitleHTML(m) {
+    if (m.question) return '';
+    return '<div class="mb-question mb-question-alt">' + esc(tocLabel(m)) + '</div>';
+  }
+
+  /* ── Card HTML for one (already-validated) entry.
+     `open` opens the fold — render() passes true for the first card only, so a
+     first-time visitor sees one worked example instead of 65 closed headlines. ── */
+  function cardHTML(m, open) {
     const claims = m.claims;
     const n = claims.length;
     const r = m.ruling;
@@ -2000,21 +2012,44 @@
         '</div>'
       : '';
 
+    // Verdicts present on this entry — the categorical filter axis (the ruling
+    // BADGE is a free-text headline, so it cannot be one).
+    const verdicts = claims.map(function (c) { return c.verdict; })
+      .filter(function (v, i, a) { return a.indexOf(v) === i; }).join(' ');
+
     return '' +
-      '<article class="mb-card' + (m.draft ? ' is-draft' : '') + '" id="' + esc(m.id) + '" data-category="' + esc(m.category) + '" data-id="' + esc(m.id) + '" data-claims="' + n + '">' +
+      '<article class="mb-card' + (m.draft ? ' is-draft' : '') + '" id="' + esc(m.id) + '" data-category="' + esc(m.category) + '" data-id="' + esc(m.id) + '" data-claims="' + n + '" data-verdicts="' + esc(verdicts) + '">' +
 
-        // Top strip
-        '<div class="mb-strip">' +
-          '<div class="mb-strip-left">' +
-            '<span class="mb-id">' + esc(m.id) + '</span>' +
-            (m.category ? '<span class="mb-cat">' + esc(m.category) + '</span>' : '') +
-            draftChip +
+      // The whole card body folds. <details>/<summary> rather than a scripted
+      // button: native keyboard, native AX, and it still works if this file 404s
+      // mid-session. The strip + question line stay in the summary, so a closed
+      // card still shows what it is and how it was ruled.
+      '<details class="mb-fold"' + (open ? ' open' : '') + '>' +
+        '<summary class="mb-head">' +
+
+          // Top strip
+          '<div class="mb-strip">' +
+            '<div class="mb-strip-left">' +
+              '<span class="mb-id">' + esc(m.id) + '</span>' +
+              (m.category ? '<span class="mb-cat">' + esc(m.category) + '</span>' : '') +
+              draftChip +
+            '</div>' +
+            '<div class="mb-strip-right">' +
+              // Collapsed-only echo of the ruling badge — the closed card has to
+              // carry the verdict, and the real badge lives down in the fold.
+              '<span class="mb-strip-badge">' + esc(r.badge) + '</span>' +
+              topRight +
+            '</div>' +
           '</div>' +
-          '<div class="mb-strip-right">' + topRight + '</div>' +
-        '</div>' +
 
-        // Heading (visible question, or sr-only claim-derived heading)
-        heading +
+          // Heading (visible question, or sr-only claim-derived heading)
+          '<div class="mb-headline">' +
+            heading +
+            collapsedTitleHTML(m) +
+            SVG_CHEVRON +
+          '</div>' +
+
+        '</summary>' +
 
         // Body: claims (left/top) | ruling (right/bottom), split by a hairline.
         // One entry-level visibility decision feeds both columns: chip %s on
@@ -2060,6 +2095,7 @@
           '</div>' +
         '</div>' +
 
+      '</details>' +
       '</article>';
   }
 
@@ -2080,18 +2116,29 @@
       : '<h2 class="mb-sr-only">' + esc((claims[0] && claims[0].text) || m.id) + '</h2>';
 
     return '' +
-      '<article class="mb-card is-docket" id="' + esc(m.id) + '" data-category="' + esc(m.category) + '" data-id="' + esc(m.id) + '" data-claims="' + n + '">' +
+      '<article class="mb-card is-docket" id="' + esc(m.id) + '" data-category="' + esc(m.category) + '" data-id="' + esc(m.id) + '" data-claims="' + n + '" data-verdicts="">' +
 
-        // Top strip — id + category only. The Ungraded pill now sits on the
-        // ruling-head row (mirroring the real card's badge), not in the strip.
-        '<div class="mb-strip">' +
-          '<div class="mb-strip-left">' +
-            '<span class="mb-id">' + esc(m.id) + '</span>' +
-            (m.category ? '<span class="mb-cat">' + esc(m.category) + '</span>' : '') +
+      // Same fold shell as a real card, but open: a docket card exists to be read
+      // and graded, so collapsing it by default would hide the only thing it is for.
+      '<details class="mb-fold" open>' +
+        '<summary class="mb-head">' +
+
+          // Top strip — id + category only. The Ungraded pill now sits on the
+          // ruling-head row (mirroring the real card's badge), not in the strip.
+          '<div class="mb-strip">' +
+            '<div class="mb-strip-left">' +
+              '<span class="mb-id">' + esc(m.id) + '</span>' +
+              (m.category ? '<span class="mb-cat">' + esc(m.category) + '</span>' : '') +
+            '</div>' +
           '</div>' +
-        '</div>' +
 
-        heading +
+          '<div class="mb-headline">' +
+            heading +
+            collapsedTitleHTML(m) +
+            SVG_CHEVRON +
+          '</div>' +
+
+        '</summary>' +
 
         // Body: claims (no verdict chips) | ruling placeholder ("Awaiting ruling").
         '<div class="mb-body">' +
@@ -2107,6 +2154,7 @@
           '</div>' +
         '</div>' +
 
+      '</details>' +
       '</article>';
   }
 
@@ -2144,12 +2192,14 @@
     return cats.map(function (cat) {
       var links = byCat[cat].map(function (m) {
         var num = String(m.id || '').replace(/^M-TBD-/, '');
-        return '<a class="toc-entry" href="#' + esc(m.id) + '">' +
+        // data-id lets the filter pass hide TOC entries alongside their cards —
+        // a TOC that still lists what the deck is hiding is a broken promise.
+        return '<a class="toc-entry" href="#' + esc(m.id) + '" data-id="' + esc(m.id) + '">' +
           '<span class="toc-num">' + esc(num) + '</span> ' + esc(tocLabel(m)) + '</a>';
       }).join('');
       return '<div class="toc-group" data-category="' + esc(cat) + '">' +
         '<div class="toc-group-label">' + esc(cat) +
-          '<span class="toc-count">' + byCat[cat].length + '</span></div>' +
+          '<span class="toc-count" data-total="' + byCat[cat].length + '">' + byCat[cat].length + '</span></div>' +
         links +
       '</div>';
     }).join('');
@@ -2161,6 +2211,139 @@
     el.textContent = shown === total
       ? 'Showing all ' + total + ' entries'
       : 'Showing ' + shown + ' of ' + total + ' entries';
+  }
+
+  /* ── Text-search index: id → one lowercased haystack per entry, covering
+     everything a reader would reasonably search by (question, every claim, the
+     ruling text and its badge, the category). Held in JS rather than stamped
+     into a data-search attribute so 65 entries' worth of prose is not duplicated
+     into the DOM. Rebuilt by every render(). ── */
+  var SEARCH_INDEX = Object.create(null);
+
+  function indexEntry(m) {
+    var parts = [m.id, m.category, m.question];
+    (m.claims || []).forEach(function (c) {
+      if (!c) return;
+      parts.push(c.camp, c.text, c.verdict && VERDICTS[c.verdict] ? VERDICTS[c.verdict].label : '');
+    });
+    if (m.ruling) {
+      parts.push(m.ruling.badge, m.ruling.text, m.ruling.researchNotes);
+      parts.push(TIERS[m.ruling.tier] ? TIERS[m.ruling.tier].label : '');
+      (m.ruling.sources || []).forEach(function (s) { if (s) parts.push(s.label); });
+    }
+    (m.related || []).forEach(function (rel) { if (rel) parts.push(rel.label); });
+    SEARCH_INDEX[m.id] = parts.filter(Boolean).join(' · ')
+      // Entity-encoded punctuation in the source prose must not defeat a plain
+      // typed query: normalize curly quotes/dashes to their ASCII forms.
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[–—]/g, '-')
+      .toLowerCase();
+  }
+
+  function normalizeQuery(value) {
+    return String(value == null ? '' : value)
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[–—]/g, '-')
+      .trim()
+      .toLowerCase();
+  }
+
+  /* Every whitespace-separated term must appear (AND), so a second word narrows
+     rather than widens — the behaviour a reader expects from a filter box. */
+  function matchesQuery(id, terms) {
+    if (!terms.length) return true;
+    var hay = SEARCH_INDEX[id] || '';
+    for (var i = 0; i < terms.length; i += 1) {
+      if (hay.indexOf(terms[i]) < 0) return false;
+    }
+    return true;
+  }
+
+  /* ── The one filter pass. Category chip, text query, and verdict select all
+     narrow the SAME set (AND), so "Attraction" + "height" + "Oversimplified"
+     means all three — no filter silently resets another. Cards, the TOC, and
+     the count line are all driven from this single evaluation. ── */
+  function applyFilters() {
+    var list = document.getElementById('mb-list');
+    if (!list) return;
+
+    var activeChip = document.querySelector('#mb-filters .mb-chip.active');
+    var cat = activeChip ? activeChip.dataset.category : 'all';
+    var searchEl = document.getElementById('mb-search');
+    var verdictEl = document.getElementById('mb-verdict');
+    var terms = normalizeQuery(searchEl && searchEl.value).split(/\s+/).filter(Boolean);
+    var verdict = verdictEl ? verdictEl.value : 'all';
+
+    var visibleIds = Object.create(null);
+    var shown = 0;
+    var total = 0;
+    list.querySelectorAll('.mb-card').forEach(function (card) {
+      total += 1;
+      var id = card.dataset.id;
+      var show = (cat === 'all' || card.dataset.category === cat)
+        && matchesQuery(id, terms)
+        && (verdict === 'all' || (' ' + (card.dataset.verdicts || '') + ' ').indexOf(' ' + verdict + ' ') >= 0);
+      card.classList.toggle('is-hidden', !show);
+      if (show) { shown += 1; visibleIds[id] = true; }
+    });
+
+    setFilterCount(shown, total);
+
+    var empty = document.getElementById('mb-no-results');
+    if (empty) empty.hidden = shown !== 0;
+
+    // TOC follows the same result set, entry by entry — a group with nothing
+    // left in it disappears rather than standing as an empty heading.
+    document.querySelectorAll('#mb-toc-groups .toc-group').forEach(function (group) {
+      var left = 0;
+      group.querySelectorAll('.toc-entry').forEach(function (entry) {
+        var on = !!visibleIds[entry.dataset.id];
+        entry.style.display = on ? '' : 'none';
+        if (on) left += 1;
+      });
+      group.style.display = left ? '' : 'none';
+      var count = group.querySelector('.toc-count');
+      if (count) count.textContent = left;
+    });
+
+    var hint = document.getElementById('mb-toc-hint');
+    if (hint && hint.dataset.base) {
+      hint.textContent = shown === total ? hint.dataset.base : shown + ' of ' + hint.dataset.base;
+    }
+
+    return shown;
+  }
+
+  /* ── Fold helpers ───────────────────────────────────────────────────────── */
+  function folds(visibleOnly) {
+    var list = document.getElementById('mb-list');
+    if (!list) return [];
+    return Array.prototype.slice.call(
+      list.querySelectorAll(visibleOnly ? '.mb-card:not(.is-hidden) .mb-fold' : '.mb-fold'));
+  }
+
+  function setExpandAllLabel() {
+    var btn = document.getElementById('mb-expand-all');
+    var label = document.getElementById('mb-expand-all-label');
+    if (!btn || !label) return;
+    var open = folds(true);
+    // "Collapse all" only once everything on screen is open; otherwise the
+    // button's job is still to finish opening.
+    var allOpen = open.length > 0 && open.every(function (d) { return d.open; });
+    label.textContent = allOpen ? 'Collapse all' : 'Expand all';
+    btn.setAttribute('aria-expanded', allOpen ? 'true' : 'false');
+    var icon = btn.querySelector('i');
+    if (icon) icon.className = allOpen ? 'ti ti-arrows-diagonal-minimize-2' : 'ti ti-arrows-diagonal';
+  }
+
+  /* Default reading state: the first entry open as a worked example, the rest
+     folded. Used on load and whenever a search query is cleared. */
+  function resetFolds() {
+    folds(false).forEach(function (fold, i) {
+      if (!fold.closest('.is-docket')) fold.open = i === 0;
+    });
   }
 
   /* ── Preview mode ("the docket"): show gate-FAILED entries for grading, but
@@ -2214,9 +2397,17 @@
     });
 
     // Gate-passing cards first, then (preview only) the docket cards after them.
-    var cards = rendered.map(cardHTML).join('') +
+    // The first card renders open — one worked example beats 65 closed headlines.
+    var cards = rendered.map(function (m, i) { return cardHTML(m, i === 0); }).join('') +
       (preview ? docket.map(docketCardHTML).join('') : '');
-    mount.innerHTML = cards || '<p class="mb-empty">No entries passed the render gate.</p>';
+    mount.innerHTML = (cards || '<p class="mb-empty">No entries passed the render gate.</p>') +
+      '<p class="mb-empty" id="mb-no-results" hidden>No entries match those filters. ' +
+      'Try a different word, or clear the search.</p>';
+
+    // Search index covers whatever is actually on screen, docket included.
+    SEARCH_INDEX = Object.create(null);
+    rendered.forEach(indexEntry);
+    if (preview) docket.forEach(indexEntry);
 
     // Chips (unique categories, first-seen order), TOC, count line, and header
     // hint all draw from the same source — gate-passers only on a normal load;
@@ -2236,7 +2427,11 @@
     if (tocMount) tocMount.innerHTML = tocGroupsHTML(deckSource);
 
     var hint = document.getElementById('mb-toc-hint');
-    if (hint) hint.textContent = deckSource.length + ' entries · ' + cats.length + ' categories';
+    if (hint) {
+      // Kept as the unfiltered baseline so applyFilters can prefix "N of …".
+      hint.dataset.base = deckSource.length + ' entries · ' + cats.length + ' categories';
+      hint.textContent = hint.dataset.base;
+    }
 
     setFilterCount(deckSource.length, deckSource.length);
 
@@ -2248,28 +2443,64 @@
     var filters = document.getElementById('mb-filters');
     var list = document.getElementById('mb-list');
 
+    var search = document.getElementById('mb-search');
+    var clear = document.getElementById('mb-search-clear');
+    var verdict = document.getElementById('mb-verdict');
+    var expandAll = document.getElementById('mb-expand-all');
+
     if (filters) {
       filters.addEventListener('click', function (e) {
         var chip = e.target.closest('.mb-chip');
         if (!chip) return;
-        var cat = chip.dataset.category;
         filters.querySelectorAll('.mb-chip').forEach(function (c) {
           var on = c === chip;
           c.classList.toggle('active', on);
           c.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
-        var shown = 0, total = 0;
-        list.querySelectorAll('.mb-card').forEach(function (card) {
-          var show = cat === 'all' || card.dataset.category === cat;
-          card.classList.toggle('is-hidden', !show);
-          total++;
-          if (show) shown++;
-        });
-        setFilterCount(shown, total);
-        // The TOC follows the active filter (group axis = filter axis).
-        document.querySelectorAll('#mb-toc-groups .toc-group').forEach(function (g) {
-          g.style.display = (cat === 'all' || g.dataset.category === cat) ? '' : 'none';
-        });
+        applyFilters();
+        setExpandAllLabel();
+      });
+    }
+
+    if (search) {
+      search.addEventListener('input', function () {
+        var query = search.value.trim();
+        if (clear) clear.hidden = !query;
+        applyFilters();
+        // A hit inside a folded card is invisible, which reads as a broken
+        // search. A live query opens what survived it; clearing restores the
+        // default one-example-open state rather than leaving 65 cards open.
+        if (query) folds(true).forEach(function (fold) { fold.open = true; });
+        else resetFolds();
+        setExpandAllLabel();
+      });
+    }
+
+    if (clear) {
+      clear.addEventListener('click', function () {
+        if (!search) return;
+        search.value = '';
+        clear.hidden = true;
+        applyFilters();
+        resetFolds();
+        setExpandAllLabel();
+        search.focus();
+      });
+    }
+
+    if (verdict) {
+      verdict.addEventListener('change', function () {
+        applyFilters();
+        setExpandAllLabel();
+      });
+    }
+
+    if (expandAll) {
+      expandAll.addEventListener('click', function () {
+        var visible = folds(true);
+        var allOpen = visible.length > 0 && visible.every(function (d) { return d.open; });
+        visible.forEach(function (fold) { fold.open = !allOpen; });
+        setExpandAllLabel();
       });
     }
 
@@ -2281,6 +2512,10 @@
         var open = sources.classList.toggle('open');
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
+      // A card opened or closed by hand re-decides what "Expand all" should say.
+      list.addEventListener('toggle', function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains('mb-fold')) setExpandAllLabel();
+      }, true);
     }
   }
 
@@ -2293,7 +2528,12 @@
     var id = (location.hash || '').slice(1);
     if (!/^M-TBD-/.test(id)) return;
     var el = document.getElementById(id);
-    if (el) el.scrollIntoView();
+    if (!el) return;
+    // Cards fold by default, so a deep link has to open its target — landing on
+    // a closed headline is not arriving at the entry someone linked to.
+    var fold = el.querySelector('.mb-fold');
+    if (fold) fold.open = true;
+    el.scrollIntoView();
   }
 
   function init() {
@@ -2301,6 +2541,8 @@
     if (preview) markPreviewNotice();
     render(ENTRIES, { preview: preview });
     wire();
+    applyFilters();
+    setExpandAllLabel();
     scrollToHashCard();
   }
 

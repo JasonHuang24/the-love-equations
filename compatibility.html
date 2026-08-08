@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/compatibility.css?v=2.0" />
+  <link rel="stylesheet" href="css/compatibility.css?v=2.1" />
 </head>
 <body data-page="compatibility">
   <div data-include="navigation-bar"></div>
@@ -40,11 +40,13 @@
             <div class="result-header">
               <div class="result-context" id="res-context">Jason&rsquo;s hierarchy</div>
               <div class="result-score-row">
-                <div class="result-score" id="res-score" style="color:var(--scarlet)">70.0</div>
+                <!-- Placeholders matching the neutral default (every factor at 5.0),
+                     so the first paint doesn't flash a score nobody has yet. -->
+                <div class="result-score" id="res-score" style="color:var(--scarlet)">50.0</div>
                 <div class="result-denom">/ 100</div>
               </div>
-              <div class="result-tier" id="res-tier">Strong Potential</div>
-              <div class="meter"><div class="meter-fill" id="meter-fill" style="width:70%"></div></div>
+              <div class="result-tier" id="res-tier">&nbsp;</div>
+              <div class="meter"><div class="meter-fill" id="meter-fill" style="width:50%"></div></div>
               <div class="result-band" id="res-band"></div>
             </div>
             <div class="result-body">
@@ -232,6 +234,15 @@
     const COMPAT_STORAGE_KEY = 'loveEquations.compatibilityCalculator.v1';
     let activeKey = 'you';
     let restoringState = false;
+    // Every factor starts at the 1–10 midpoint rather than the floor. At 1.0 a
+    // first-time visitor was met with 10.0/100 and a stack of red breach rows —
+    // an alarming verdict on a profile nobody had scored yet. NEUTRAL_SCORE is
+    // deliberately 5, not 5.5: the sub-5 floor is `< 5`, so the default sits
+    // exactly clear of it and trips nothing.
+    const NEUTRAL_SCORE = 5;
+    // Whether the profile has actually been scored. Until it has, the framework
+    // line says so instead of narrating gates against untouched defaults.
+    let compatTouched = false;
     const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
     const fid = (key, ti, fi) => `${key}-${ti}-${fi}`;
     const val = (key, ti, fi) => parseFloat(document.getElementById('s-' + fid(key, ti, fi)).value);
@@ -259,10 +270,10 @@
                 <button type="button" class="factor-name" title="${f.desc}" aria-expanded="false"
                         aria-controls="d-${id}" onclick="toggleFactorDesc('${id}')">${f.name}<i class="ti ti-info-circle" aria-hidden="true"></i></button>
                 <input class="factor-box" style="color:${color}" type="number" min="1" max="10" step="0.1"
-                       value="1.0" id="b-${id}" oninput="onBox('${id}')" onchange="normBox('${id}')" aria-label="${f.name} score" />
+                       value="${NEUTRAL_SCORE.toFixed(1)}" id="b-${id}" oninput="onBox('${id}')" onchange="normBox('${id}')" aria-label="${f.name} score" />
               </div>
               <div class="factor-desc" id="d-${id}" hidden>${f.desc}</div>
-              <input type="range" min="1" max="10" step="0.1" value="1" id="s-${id}"
+              <input type="range" min="1" max="10" step="0.1" value="${NEUTRAL_SCORE}" id="s-${id}"
                      style="--sld:${color}" oninput="onSlider('${id}')" aria-label="${f.name} slider" />
             </div>`;
           }).join('');
@@ -294,8 +305,9 @@
       update();
     }
 
-    function onSlider(id) { document.getElementById('b-' + id).value = parseFloat(document.getElementById('s-' + id).value).toFixed(1); update(); }
+    function onSlider(id) { compatTouched = true; document.getElementById('b-' + id).value = parseFloat(document.getElementById('s-' + id).value).toFixed(1); update(); }
     function onBox(id) {
+      compatTouched = true;
       const box = document.getElementById('b-' + id);
       let v = parseFloat(box.value);
       if (isNaN(v)) { update(); return; }
@@ -315,7 +327,9 @@
           const slider = document.getElementById('s-' + id);
           if (slider) values[id] = parseFloat(slider.value);
         })));
-        localStorage.setItem(COMPAT_STORAGE_KEY, JSON.stringify({ activeKey, values }));
+        // `touched` rides along so a reload of an untouched page comes back to the
+        // same neutral prompt rather than reading its own saved defaults as a score.
+        localStorage.setItem(COMPAT_STORAGE_KEY, JSON.stringify({ activeKey, values, touched: compatTouched }));
       } catch (err) {}
     }
 
@@ -326,8 +340,11 @@
         const saved = JSON.parse(raw);
         if (saved.activeKey && HIERARCHIES.some(h => h.key === saved.activeKey)) activeKey = saved.activeKey;
         if (!saved.values || typeof saved.values !== 'object') return;
+        // Records written before `touched` existed hold real scores, so treat a
+        // missing flag as touched rather than blanking someone's saved profile.
+        compatTouched = saved.touched === undefined ? true : !!saved.touched;
         Object.entries(saved.values).forEach(([id, rawValue]) => {
-          const v = Math.max(1, Math.min(10, Number(rawValue) || 1));
+          const v = Math.max(1, Math.min(10, Number(rawValue) || NEUTRAL_SCORE));
           const slider = document.getElementById('s-' + id);
           const box = document.getElementById('b-' + id);
           if (slider) slider.value = v;
@@ -346,9 +363,10 @@
         const id = fid(h.key, ti, fi);
         const slider = document.getElementById('s-' + id);
         const box = document.getElementById('b-' + id);
-        if (slider) slider.value = 1;
-        if (box) box.value = '1.0';
+        if (slider) slider.value = NEUTRAL_SCORE;
+        if (box) box.value = NEUTRAL_SCORE.toFixed(1);
       })));
+      compatTouched = false;
       activeKey = 'you';
       switchHier('you');
       const status = document.getElementById('export-status');
@@ -549,6 +567,7 @@
       const localCount = h.tiers.reduce((n, t) => n + t.factors.length, 0);
       if (pkg.factors.length !== localCount) { reject('That package was exported from a different version of this hierarchy — its factor layout doesn’t match.'); return; }
       switchHier(key);
+      compatTouched = true;   // an imported package IS a scored profile
       let idx = 0, filled = 0;
       h.tiers.forEach((t, ti) => t.factors.forEach((f, fi) => {
         const fac = pkg.factors[idx++];
@@ -591,9 +610,14 @@
       fill.style.background = band.color;
       document.getElementById('res-explanation').textContent = band.desc;
 
-      // Annotation below = framework breach (sub-5, 7-7, gates) or all-clear.
+      // Annotation below = framework breach (sub-5, 7-7, gates) or all-clear —
+      // but only once the profile has actually been scored. Narrating gate
+      // failures against untouched midpoints is a verdict on nobody.
       const bandEl = document.getElementById('res-band');
-      if (b.breached) {
+      if (!compatTouched) {
+        bandEl.textContent = 'Every factor sits at the 5.0 midpoint — move a slider to score a profile.';
+        bandEl.style.color = 'var(--text-dim)';
+      } else if (b.breached) {
         bandEl.textContent = 'Framework — ' + b.note;
         bandEl.style.color = b.color;
       } else {

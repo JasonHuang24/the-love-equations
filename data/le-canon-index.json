@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+c29bb779b4b6",
+  "indexVersion": "1.0.0+43e253b8642b",
   "generatedAt": "2026-08-08T18:08:20.000Z",
   "sourcePages": [
     {
@@ -11,7 +11,7 @@
       "inputs": [
         "hierarchy.html"
       ],
-      "sha256": "f5eaf364ffa99625a7c363f722679130ad72f1a617f93bbf90a2a319364b5ad4",
+      "sha256": "d9326f998451002a130d06dc705cee8a2c7dd87c353b32c406342c6745c4c3a7",
       "conceptCount": 41
     },
     {
@@ -22,7 +22,7 @@
       "inputs": [
         "smvlevers.html"
       ],
-      "sha256": "a59e072b478f4b1a489c0d87af940fc18ac27f835f2abb1d82a3dff86ce9cf87",
+      "sha256": "612982cd57886fb5b2d347986f13ba48a75d7f0871f31996de5bf437bb9c3882",
       "conceptCount": 35
     },
     {
@@ -33,7 +33,7 @@
       "inputs": [
         "frameworks.html"
       ],
-      "sha256": "4fa46fb3e086eab3f439cae54ec38ccb028d637eb2168a2fcf9c81124306056b",
+      "sha256": "7dfea75be28857fccaea0c7f392eb5005b8b90cd5183bec86f2b21067db124f0",
       "conceptCount": 76
     },
     {
@@ -44,7 +44,7 @@
       "inputs": [
         "gender-dynamics.html"
       ],
-      "sha256": "40dd711328adc06851810c544f0351a7f79ec5aab8063a6f8245b7e953b4bef5",
+      "sha256": "acc90150ac572bcd715fced24afc404601a8ae20713d24ba95ec1f7326dcc897",
       "conceptCount": 133
     },
     {
@@ -55,7 +55,7 @@
       "inputs": [
         "statistics.html"
       ],
-      "sha256": "81fd319998b4801eb0119035e3e2d9ec3a94e1d1a93d81bffe4ce32618064b83",
+      "sha256": "277ff3e226a8a5991439dc52255d9d39d1877c8c5bcc32246309af308756f6ca",
       "conceptCount": 51
     },
     {
@@ -67,7 +67,7 @@
         "mythbuster.html",
         "js/mythbuster.js"
       ],
-      "sha256": "9717a1fa0a1d2acaaaa3819085ca1f6ff4269345d14ce38038602e7ed927a34e",
+      "sha256": "94bf3422de6e4461daa817b21458a77950ae48d8317d01e6a721add6a39933b6",
       "conceptCount": 65
     },
     {
@@ -78,7 +78,7 @@
       "inputs": [
         "pills.html"
       ],
-      "sha256": "d62b35b40ee0534c248f65684e6b93706334d711182d527fca8c0e2d4f8185df",
+      "sha256": "96deec97edd0bf3eb9cf2c7bffc137d7d23eb353127531ff290562a327fe1d3a",
       "conceptCount": 28
     },
     {
@@ -89,7 +89,7 @@
       "inputs": [
         "lexicon.html"
       ],
-      "sha256": "c69a47f1d6633b4e18f0e6b9a194569fb6538600a8c7b9bdf7a1f4c309b0f89f",
+      "sha256": "763a9ca62db7745f58ccc710c5c46a4c0e945fcc665a9d822c5d102427414f56",
       "conceptCount": 226
     },
     {
@@ -100,7 +100,7 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "bf8218635df144f313b69103303f3710496c8c8eed4014d594d304172820ead8",
+      "sha256": "fb4931569e836f7cc1c831280fef3c38381e5c88cbf1388b8bc5033fb90e17c9",
       "conceptCount": 7
     },
     {
@@ -188,7 +188,7 @@
       "inputs": [
         "smvcalc.html"
       ],
-      "sha256": "d90d9cf4b034a5a92b535d04d983511b305f9fd926f64520f5c09b419fdff7f7",
+      "sha256": "dfd76e62d6695479e243be0ab1aab644ee65a24c6cf97d9e90ad4a9d1ecb840c",
       "conceptCount": 1
     },
     {
@@ -199,7 +199,7 @@
       "inputs": [
         "compatibility.html"
       ],
-      "sha256": "4dc13d661600804b5f53500652298cc42a94a4a3ea68b6f4a06b656f5b573cad",
+      "sha256": "fe943de41f972257aff8fb9d6156b6978edd0c84ff492288a409772ac60dfbbe",
       "conceptCount": 1
     },
     {
@@ -210,7 +210,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "aee8d4e0adc9f9afd28ce0a370cf1f1fd914741af0f8ddd68dd32365a0825652",
+      "sha256": "054e7a84bbda3d96fb0439b21fc0723ec789843938bc097cf11ddcd3ce2f885d",
       "conceptCount": 1
     },
     {
@@ -221,7 +221,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "d6c024c3cd6c0f6f94dce38f7f10fda1046a3977c4692d406854685b70df74c3",
+      "sha256": "e7dd609c7e6f7226816e3681f7aa6e2771670bbe3a5ee23295e98e3a6cb0976b",
       "conceptCount": 1
     },
     {

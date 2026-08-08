@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/smvlevers.css?v=1.7" />
+  <link rel="stylesheet" href="css/smvlevers.css?v=1.8" />
 </head>
 <body data-page="smvlevers">
   <div data-include="navigation-bar"></div>
@@ -63,7 +63,9 @@
         <nav class="factor-nav" id="factor-nav" aria-label="SMV factor selector"></nav>
 
         <!-- Dossier -->
-        <section class="dossier" id="dossier" aria-live="polite"></section>
+        <!-- One factor's dossier at a time; the strip above is its tab bar. scroll-margin
+             keeps a card-triggered scroll clear of the sticky nav. -->
+        <section class="dossier" id="dossier" role="tabpanel" aria-live="polite"></section>
 
         <!-- Multipliers -->
         <section class="synthesis-card" style="margin-top:0.6rem">
@@ -235,22 +237,48 @@
       return `<span class="ev ${tag}">${labels[tag]}</span>`;
     }
 
+    /* The five-card strip is a TAB BAR, not five collapsible sections: exactly one
+       factor's dossier is in the document at a time (selectFactor rewrites #dossier),
+       Looks is the one showing on load, and each card already carries its factor's
+       one-line tagline as its collapsed summary. Roles below say so out loud —
+       aria-pressed described a toggle button, which is not what these are — and add
+       the arrow-key movement a tab bar owes a keyboard user. */
     function renderNav() {
-      document.getElementById('factor-nav').innerHTML = FACTORS.map((f, i) => `
-        <button type="button" class="factor-tab" id="tab-${i}" onclick="selectFactor(${i})">
+      const nav = document.getElementById('factor-nav');
+      nav.setAttribute('role', 'tablist');
+      nav.innerHTML = FACTORS.map((f, i) => `
+        <button type="button" class="factor-tab" id="tab-${i}" role="tab"
+                aria-controls="dossier" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}"
+                onclick="selectFactor(${i}, { reveal: true })">
           <div class="ft-num" style="color:${f.color}"><span class="ft-dot" style="background:${f.color}"></span>${f.num}</div>
           <div class="ft-name">${f.name}</div>
           <div class="ft-tag">${f.tagline}</div>
         </button>
       `).join('');
+
+      nav.addEventListener('keydown', (event) => {
+        const tabs = [...nav.querySelectorAll('.factor-tab')];
+        const from = tabs.indexOf(document.activeElement);
+        if (from < 0) return;
+        let to = null;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') to = (from + 1) % tabs.length;
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') to = (from - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') to = 0;
+        if (event.key === 'End') to = tabs.length - 1;
+        if (to == null) return;
+        event.preventDefault();
+        selectFactor(to, { reveal: true });
+        tabs[to].focus();
+      });
     }
 
-    function selectFactor(i) {
+    function selectFactor(i, options = {}) {
       const f = FACTORS[i];
       document.querySelectorAll('.factor-tab').forEach((t, idx) => {
         const on = idx === i;
         t.classList.toggle('active', on);
-        t.setAttribute('aria-pressed', on ? 'true' : 'false');
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
         t.style.borderColor = on ? f.color : '';
         t.style.background = on
           ? `linear-gradient(145deg, rgba(255,255,255,0.96), ${hexToSoft(f.color)})`
@@ -272,7 +300,8 @@
           </div>
         </div>`).join('');
 
-      document.getElementById('dossier').innerHTML = `
+      const dossier = document.getElementById('dossier');
+      dossier.innerHTML = `
         <div class="dossier-meta" style="color:${f.color}"><i class="ti ${f.icon}"></i> Factor ${f.num}</div>
         <div class="dossier-name">${f.name}</div>
         <p class="dossier-def">${f.def}</p>
@@ -305,6 +334,37 @@
           <div class="cb-text">${f.curdle}</div>
         </div>
       `;
+      dossier.setAttribute('aria-labelledby', `tab-${i}`);
+
+      // Below the five-card strip the dossier can be entirely off-screen — picking a
+      // card then looked like nothing happened. Only on a real selection: the initial
+      // paint must not yank a visitor who has just arrived at the top of the page.
+      if (options.reveal) revealDossier(dossier);
+    }
+
+    /* `html { scroll-behavior: smooth }` is in force site-wide, and a smooth scroll is
+       an animation the browser may decline to run — so confirm the page actually moved
+       and jump outright if it did not. Skipped entirely when the dossier is already
+       comfortably in view, so clicking between factors on a desktop stays still. */
+    function revealDossier(dossier) {
+      const clearance = 96;                       // sticky-nav offset used site-wide
+      if (dossier.getBoundingClientRect().top >= clearance - 4
+        && dossier.getBoundingClientRect().top < window.innerHeight * 0.5) return;
+      const targetTop = () => dossier.getBoundingClientRect().top + window.scrollY - clearance;
+      const startedAt = window.scrollY;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.scrollTo(0, Math.max(0, targetTop()));
+        return;
+      }
+      dossier.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(() => {
+        if (window.scrollY !== startedAt || Math.abs(targetTop() - window.scrollY) <= 4) return;
+        const root = document.documentElement;
+        const previous = root.style.scrollBehavior;
+        root.style.scrollBehavior = 'auto';       // else the fallback animates too, and animation is what failed
+        window.scrollTo(0, Math.max(0, targetTop()));
+        root.style.scrollBehavior = previous;
+      }, 400);
     }
 
     function hexToSoft(hex) {

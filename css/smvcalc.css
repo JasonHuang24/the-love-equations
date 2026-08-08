@@ -150,6 +150,17 @@
   gap: 9px;
   margin-top: 1.35rem;
 }
+/* The factor map folded into its own panel — see .calc-panel-fold at the foot of
+   this file. It reads as methodology, so it sits behind one click below the
+   start button rather than above it. */
+.factor-map-fold {
+  border: 0.5px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 252, 247, 0.62);
+  padding: 1rem;
+  margin-top: 1.35rem;
+}
+.factor-map-fold .factor-map { margin-top: 0.7rem; }
 .factor-map-card {
   border: 0.5px solid var(--border-light);
   border-radius: var(--radius-md);
@@ -1087,4 +1098,66 @@
   .matchup-delta {
     white-space: normal;
   }
+}
+
+/* ── Collapsed methodology ("Read this first", "What it reads") ──────────────
+   Nothing is removed — the full text is one click away — but the tool's own
+   input reaches the first screen instead of sitting under a page of caveats.
+   <details> so the fold is native: keyboard, AX, and find-in-page all work. ── */
+.calc-fold {
+  border: 0.5px solid var(--border);
+  border-left: 3px solid var(--scarlet);
+  border-radius: var(--radius-md);
+  background: rgba(255, 250, 243, 0.7);
+  margin-bottom: 1.4rem;
+}
+.calc-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--scarlet);
+}
+.calc-fold > summary::-webkit-details-marker { display: none; }
+.calc-fold > summary:hover { color: var(--scarlet-dim); }
+.calc-fold > summary:focus-visible { outline: 2px solid var(--scarlet); outline-offset: -2px; }
+.calc-fold-chev {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 15px;
+  color: var(--text-dim);
+  transition: transform 0.22s ease;
+}
+.calc-fold[open] > summary .calc-fold-chev,
+.calc-panel-fold[open] > summary .calc-fold-chev { transform: rotate(180deg); }
+.calc-fold-body {
+  padding: 0 1rem 0.95rem;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.calc-fold-body strong { color: var(--text); }
+.calc-fold-body a { color: var(--scarlet-dim); }
+
+/* A fold INSIDE an existing panel: the panel already supplies the frame, so this
+   only adds the summary affordance to the panel's own heading. */
+.calc-panel-fold > summary {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 0;
+}
+.calc-panel-fold[open] > summary { margin-bottom: 0.7rem; }
+.calc-panel-fold > summary::-webkit-details-marker { display: none; }
+.calc-panel-fold > summary:focus-visible { outline: 2px solid var(--scarlet); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .calc-fold-chev { transition: none; }
 }

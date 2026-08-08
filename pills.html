@@ -47,15 +47,15 @@
         </section>
 
         <nav class="pill-nav" aria-label="Pill dossier tabs">
-          <button class="pill-tab active" onclick="showPill('blk', this)">
+          <button class="pill-tab active" aria-pressed="true" onclick="showPill('blk', this)">
             <span class="pill-tab-top"><span class="pill-tab-name">Black Pill</span><span class="pill-tab-code">01</span></span>
             <span class="pill-tab-copy">Looks, sorting, and hard constraints pushed toward fatalism.</span>
           </button>
-          <button class="pill-tab" onclick="showPill('rp', this)">
+          <button class="pill-tab" aria-pressed="false" onclick="showPill('rp', this)">
             <span class="pill-tab-top"><span class="pill-tab-name">Red Pill</span><span class="pill-tab-code">02</span></span>
             <span class="pill-tab-copy">Incentives, leverage, self-improvement, and attraction strategy.</span>
           </button>
-          <button class="pill-tab" onclick="showPill('bp', this)">
+          <button class="pill-tab" aria-pressed="false" onclick="showPill('bp', this)">
             <span class="pill-tab-top"><span class="pill-tab-name">Blue Pill</span><span class="pill-tab-code">03</span></span>
             <span class="pill-tab-copy">Romantic idealism, sincerity, kindness, and fair-world assumptions.</span>
           </button>
@@ -663,20 +663,58 @@
   <div data-include="footer"></div>
 
   <script>
-    function showPill(id, btn) {
-      document.querySelectorAll('.pill-page').forEach(p => p.classList.remove('visible'));
-      document.getElementById('page-' + id).classList.add('visible');
-      document.querySelectorAll('.pill-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
+    /* The three dossiers are already true tabs — .pill-page is display:none unless
+       .visible (css/pills.css), and the "Not tribes. Lenses." hero sits above the tab
+       bar, so it stays put whichever pill is selected. What was missing is the reading
+       position: each dossier is thousands of pixels long, so leaving the window scroll
+       untouched dropped you into the middle of the pill you switched TO, at a depth
+       that only meant something in the pill you left. */
+    const PILL_CODES = { blk: 0, rp: 1, bp: 2 };
+    const pillScroll = new Map();
+    let activePillCode = 'blk';
 
-    // Activate a dossier tab by code (no button needed) — used by inbound deep links.
-    function activatePill(code) {
+    function setActivePill(code) {
       document.querySelectorAll('.pill-page').forEach(p => p.classList.remove('visible'));
       const page = document.getElementById('page-' + code);
       if (page) page.classList.add('visible');
-      const idx = { blk: 0, rp: 1, bp: 2 }[code];
-      document.querySelectorAll('.pill-tab').forEach((b, i) => b.classList.toggle('active', i === idx));
+      const idx = PILL_CODES[code];
+      document.querySelectorAll('.pill-tab').forEach((b, i) => {
+        const on = i === idx;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      activePillCode = code;
+    }
+
+    function showPill(id, btn) {
+      if (id === activePillCode) return;
+      pillScroll.set(activePillCode, window.scrollY);
+      setActivePill(id);
+
+      const remembered = pillScroll.get(id);
+      const nav = document.querySelector('.pill-nav');
+      const navTop = nav ? nav.getBoundingClientRect().top + window.scrollY - 96 : 0;
+      // Instant, not smooth: a tab switch is a jump between two documents, and
+      // animating a jump to somewhere the reader has never been just reads as drift.
+      const root = document.documentElement;
+      const previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      if (remembered !== undefined) {
+        window.scrollTo(0, remembered);
+      } else if (window.scrollY > navTop) {
+        // First visit to this pill and the reader is already past the tab bar —
+        // start them at the top of the new dossier rather than mid-way down it.
+        window.scrollTo(0, Math.max(0, navTop));
+      }
+      root.style.scrollBehavior = previous;
+      if (btn) btn.focus({ preventScroll: true });
+    }
+
+    // Activate a dossier tab by code (no button needed) — used by inbound deep links.
+    // Deliberately NO scroll restore: the caller is about to scroll to a specific card,
+    // and a remembered position would fight it.
+    function activatePill(code) {
+      setActivePill(code);
     }
 
     // ── Face Pill · annotated face-anatomy carousel ──

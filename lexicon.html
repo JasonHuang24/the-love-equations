@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/lexicon.css?v=1.8" />
+  <link rel="stylesheet" href="css/lexicon.css?v=1.9" />
 </head>
 <body data-page="lexicon">
   <div data-include="navigation-bar"></div>
@@ -25,6 +25,16 @@
       <p class="lex-intro">The language here is borrowed from the pills &mdash; <strong>Black</strong>, <strong>Red</strong>, <strong>Blue</strong> &mdash; but the definitions aren&rsquo;t. Each term carries the lens that owns it; the ones marked <strong>Shared</strong> cut across all three. Filter by lens, and follow any link to the dossier, framework, or chart where the claim gets tested.</p>
 
       <div class="filter-deck">
+        <div class="filter-deck-row lex-search-row">
+          <div class="lex-search">
+            <i class="ti ti-search lex-search-ico" aria-hidden="true"></i>
+            <input type="search" id="lex-search" class="lex-search-input" placeholder="Search terms and definitions&hellip;"
+                   aria-label="Search terms" autocomplete="off" spellcheck="false" />
+            <button type="button" class="lex-search-clear" id="lex-search-clear" aria-label="Clear search" hidden>
+              <i class="ti ti-x" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
         <div class="filter-deck-row">
           <div class="lex-filter" role="group" aria-label="Filter by lens">
             <button class="lex-fbtn active" data-lens="all" onclick="lexFilter('all', this)">All</button>
@@ -294,9 +304,45 @@
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     }
 
+    // The lens chips and the search box narrow the SAME set, so both live here and
+    // every render reads both — otherwise typing would silently reset the lens, or
+    // picking a lens would silently drop the query.
+    let lexLens = 'all';
+    let lexQuery = '';
+
+    // Terms and definitions are authored markup (<strong>, entities, the Lab stamp's
+    // title text). Match against the plain reading text so a typed word finds a term
+    // whose definition happens to bold it, and never matches a tag name or an entity.
+    function lexPlain(value) {
+      return String(value == null ? '' : value)
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&[a-z]+;|&#\d+;/gi, ' ')
+        .replace(/[‘’]/g, "'")
+        .replace(/[“”]/g, '"')
+        .replace(/[–—]/g, '-')
+        .replace(/\s+/g, ' ')
+        .toLowerCase();
+    }
+
+    const LEX_HAYSTACK = new WeakMap();
+    function lexMatches(entry, terms) {
+      if (!terms.length) return true;
+      let hay = LEX_HAYSTACK.get(entry);
+      if (hay === undefined) {
+        // term · definition · the "read on" label, so "matching curve" finds the
+        // term and "frameworks" finds everything that points there.
+        hay = lexPlain([entry[0], entry[2], entry[4]].filter(Boolean).join(' · '));
+        LEX_HAYSTACK.set(entry, hay);
+      }
+      return terms.every(term => hay.indexOf(term) >= 0);
+    }
+
     function renderLex(filter) {
+      if (filter !== undefined) lexLens = filter;
       const grid = document.getElementById('lex-grid');
-      const shown = LEX.filter(t => filter === 'all' || t[1] === filter);
+      const terms = lexPlain(lexQuery).trim().split(/\s+/).filter(Boolean);
+      const shown = LEX.filter(t => (lexLens === 'all' || t[1] === lexLens) && lexMatches(t, terms));
       grid.innerHTML = shown.map(t => {
         const [term, lens, def, href, label] = t;
         const link = href
@@ -308,13 +354,34 @@
             ${link}
           </div>`;
       }).join('');
-      document.getElementById('lex-count').textContent =
-        `Showing ${shown.length} of ${LEX.length} terms` + (filter === 'all' ? '' : ` · ${LENS_LABEL[filter]}`);
-      // The TOC follows the active lens (group axis = filter axis, so whole
-      // groups show/hide and every visible link targets a rendered card).
+      document.getElementById('lex-count').textContent = shown.length === LEX.length
+        ? `Showing all ${LEX.length} terms`
+        : `Showing ${shown.length} of ${LEX.length} terms`
+          + (lexLens === 'all' ? '' : ` · ${LENS_LABEL[lexLens]}`)
+          + (terms.length ? ` · “${lexQuery.trim()}”` : '');
+
+      const empty = document.getElementById('lex-empty');
+      if (empty) empty.hidden = shown.length !== 0;
+
+      // The TOC follows the SAME result set. The lens alone used to decide it, so a
+      // search would have left the contents listing terms the grid was hiding.
+      const visible = new Set(shown.map(t => lexSlug(t[0])));
       document.querySelectorAll('#lex-toc-groups .toc-group').forEach(g => {
-        g.style.display = (filter === 'all' || g.dataset.lens === filter) ? '' : 'none';
+        let left = 0;
+        g.querySelectorAll('.toc-entry').forEach(a => {
+          const on = visible.has((a.getAttribute('href') || '').replace('#', ''));
+          a.style.display = on ? '' : 'none';
+          if (on) left += 1;
+        });
+        g.style.display = left ? '' : 'none';
+        const count = g.querySelector('.toc-count');
+        if (count) count.textContent = left;
       });
+
+      const hint = document.getElementById('lex-toc-hint');
+      if (hint && hint.dataset.base) {
+        hint.textContent = shown.length === LEX.length ? hint.dataset.base : `${shown.length} of ${hint.dataset.base}`;
+      }
     }
 
     // Table of contents — built once from LEX, in the lens order of the filter bar.
@@ -338,13 +405,48 @@
         b.insertAdjacentHTML('beforeend', `<span class="lex-n">${n}</span>`);
       });
       const hint = document.getElementById('lex-toc-hint');
-      if (hint) hint.textContent = `${LEX.length} terms · ${order.length} lenses`;
+      if (hint) {
+        hint.dataset.base = `${LEX.length} terms · ${order.length} lenses`;
+        hint.textContent = hint.dataset.base;
+      }
     })();
 
     function lexFilter(lens, btn) {
       document.querySelectorAll('.lex-fbtn').forEach(b => b.classList.toggle('active', b === btn));
       renderLex(lens);
     }
+
+    // Free-text search over the same set the lens chips narrow.
+    (function wireLexSearch() {
+      const input = document.getElementById('lex-search');
+      const clear = document.getElementById('lex-search-clear');
+      const grid = document.getElementById('lex-grid');
+      if (!input || !grid) return;
+
+      // Empty state, parked after the grid so a fruitless search says so rather
+      // than leaving a blank page under a live filter deck.
+      const empty = document.createElement('p');
+      empty.className = 'lex-empty';
+      empty.id = 'lex-empty';
+      empty.hidden = true;
+      empty.textContent = 'No terms match that search. Try a shorter word, or clear the box.';
+      grid.insertAdjacentElement('afterend', empty);
+
+      input.addEventListener('input', () => {
+        lexQuery = input.value;
+        if (clear) clear.hidden = !input.value.trim();
+        renderLex();
+      });
+      if (clear) {
+        clear.addEventListener('click', () => {
+          input.value = '';
+          lexQuery = '';
+          clear.hidden = true;
+          renderLex();
+          input.focus();
+        });
+      }
+    })();
 
     // Honor a #lens hash (e.g. lexicon.html#red) coming from a dossier "Go deeper" link.
     (function () {

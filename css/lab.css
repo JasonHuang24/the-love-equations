@@ -1008,6 +1008,9 @@
 .lab-workspace {
   margin-top: clamp(1.5rem, 4vw, 2.5rem);
   overflow: hidden;
+  /* The Demo Test scrolls here once its run finishes; clear the sticky nav.
+     Same offset the rest of the site uses (styles.css). */
+  scroll-margin-top: 96px;
 }
 
 .lab-workspace-head {

@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/body.css?v=1.8" />
+  <link rel="stylesheet" href="css/body.css?v=1.9" />
 </head>
 <body data-page="body">
   <div data-include="navigation-bar"></div>
@@ -24,24 +24,26 @@
     </div>
 
     <div class="content bc-content">
-      <div class="bc-caveat">
-        <strong>Read this first &mdash; the body is harder to read than the face.</strong> This is a mirror of two methodologies, not a verdict on a person. It estimates the frame straight from the image &mdash; joint positions from 33 pose landmarks, plus the body outline from an on-device segmentation mask &mdash; to compute ratios the literature actually uses: <strong>waist-to-hip</strong> (Singh 1993), a <strong>waist-to-height adiposity proxy</strong> (Tov&eacute;e &amp; Cornelissen show body-fat is the single strongest cue for female bodies), the <strong>shoulder-to-waist V-taper</strong> (Dixson) and leg-to-torso (Sorokowski). But the ceiling is lower than the face: <strong>clothing, pose, camera angle and arms-at-your-sides all corrupt the silhouette</strong>, a single frontal view has no depth (it can&rsquo;t see a gut side-on), and true body-fat / muscle / height can&rsquo;t be measured from pixels &mdash; only proxied. Unsupported crops and seated, bent, or side-on poses are refused rather than graded from extrapolated joints. When a trained model (<code>models/body-beauty.onnx</code>) is present it scores the headline &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the geometry scores both. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; and unlike the face, nothing credible <em>rates</em> a body&rsquo;s aesthetics. For the body-fat percentage it can only proxy, a caliper or BIA check at a gym or clinic gives a usable number &mdash; or, to track it at home, a body-fat smart scale like the <a href="https://www.wyze.com/products/wyze-scale-x" target="_blank" rel="noopener">Wyze Scale X</a> (best for trends under consistent conditions, not a precise one-off reading). For best results: <strong>face forward, full body in frame, arms slightly away from your sides, fitted clothing.</strong>
-      </div>
+      <!-- Every word of the disclaimer is still here — it is folded, not trimmed —
+           so the drop zone reaches the first screen instead of sitting under it. -->
+      <details class="calc-fold">
+        <summary><i class="ti ti-alert-triangle" aria-hidden="true"></i> Read this first &mdash; methodology &amp; limitations<i class="ti ti-chevron-down calc-fold-chev" aria-hidden="true"></i></summary>
+        <div class="calc-fold-body bc-caveat-body">
+        <strong>The body is harder to read than the face.</strong> This is a mirror of two methodologies, not a verdict on a person. It estimates the frame straight from the image &mdash; joint positions from 33 pose landmarks, plus the body outline from an on-device segmentation mask &mdash; to compute ratios the literature actually uses: <strong>waist-to-hip</strong> (Singh 1993), a <strong>waist-to-height adiposity proxy</strong> (Tov&eacute;e &amp; Cornelissen show body-fat is the single strongest cue for female bodies), the <strong>shoulder-to-waist V-taper</strong> (Dixson) and leg-to-torso (Sorokowski). But the ceiling is lower than the face: <strong>clothing, pose, camera angle and arms-at-your-sides all corrupt the silhouette</strong>, a single frontal view has no depth (it can&rsquo;t see a gut side-on), and true body-fat / muscle / height can&rsquo;t be measured from pixels &mdash; only proxied. Unsupported crops and seated, bent, or side-on poses are refused rather than graded from extrapolated joints. When a trained model (<code>models/body-beauty.onnx</code>) is present it scores the headline &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the geometry scores both. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; and unlike the face, nothing credible <em>rates</em> a body&rsquo;s aesthetics. For the body-fat percentage it can only proxy, a caliper or BIA check at a gym or clinic gives a usable number &mdash; or, to track it at home, a body-fat smart scale like the <a href="https://www.wyze.com/products/wyze-scale-x" target="_blank" rel="noopener">Wyze Scale X</a> (best for trends under consistent conditions, not a precise one-off reading). For best results: <strong>face forward, full body in frame, arms slightly away from your sides, fitted clothing.</strong>
+        </div>
+      </details>
 
       <div class="bc-grid">
         <!-- INPUT COLUMN -->
         <div>
-          <!-- STEP 1 · objective inputs (optional; upgrade the photo read into the hybrid) -->
-          <div class="bc-panel bc-inputs">
-            <div class="bc-h"><i class="ti ti-ruler-measure"></i> Step 1 &middot; Your numbers <span class="bc-step-opt">optional</span></div>
-            <div class="bc-inputs-lead">Numbers you can verify: a tape, a scale, a mirror-match. Height, weight and body-fat close the four things a photo structurally can&rsquo;t &mdash; absolute scale, muscle-vs-fat, depth, and a real leanness signal. <strong>Self-flattery in, garbage out.</strong></div>
-            <label class="bc-skip-toggle" for="bc-skip"><input type="checkbox" id="bc-skip"><span class="bc-skip-main"><strong>Skip the manual inputs &mdash; read from the photo alone.</strong> Collapses Step&nbsp;1; the score comes from the photo&rsquo;s shape read only. Height, weight and body-fat add what a photo can&rsquo;t measure &mdash; you can enter them anytime.</span></label>
-            <div class="bc-skip-note" id="bc-skip-note">Manual inputs are off &mdash; this is a photo-only read (shape and distribution, no absolute scale or leanness-by-the-numbers). Untick to bring the measured spine back.</div>
-            <div id="bc-inputs-body"><!-- built by renderInputsPanel() --></div>
-          </div>
-
+          <!-- STEP 1 · the photo. It is the tool's primary input — the numbers are
+               explicitly skippable and the drop zone is what a first-time visitor
+               came to use — so it leads, and the optional numbers follow it.
+               Ordering only: every id below is unchanged, and the script's
+               "Step-2" comments refer to the numbers panel by its ids
+               (.bc-inputs / #bc-inputs-body), not by position. -->
           <div class="bc-panel">
-            <div class="bc-h"><i class="ti ti-camera"></i> Step 2 &middot; Your photo</div>
+            <div class="bc-h"><i class="ti ti-camera"></i> Step 1 &middot; Your photo</div>
             <div class="bc-srcs">
               <span class="bc-src active" data-src="upload"><i class="ti ti-upload"></i> Upload</span>
               <span class="bc-src" data-src="camera"><i class="ti ti-camera"></i> Camera</span>
@@ -72,15 +74,24 @@
             <div class="bc-note bc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
           </div>
 
-          <div class="bc-panel">
-            <div class="bc-h"><i class="ti ti-eye-search"></i> What it reads &mdash; and how</div>
+          <!-- STEP 2 · objective inputs (optional; upgrade the photo read into the hybrid) -->
+          <div class="bc-panel bc-inputs">
+            <div class="bc-h"><i class="ti ti-ruler-measure"></i> Step 2 &middot; Your numbers <span class="bc-step-opt">optional</span></div>
+            <div class="bc-inputs-lead">Numbers you can verify: a tape, a scale, a mirror-match. Height, weight and body-fat close the four things a photo structurally can&rsquo;t &mdash; absolute scale, muscle-vs-fat, depth, and a real leanness signal. <strong>Self-flattery in, garbage out.</strong></div>
+            <label class="bc-skip-toggle" for="bc-skip"><input type="checkbox" id="bc-skip"><span class="bc-skip-main"><strong>Skip the manual inputs &mdash; read from the photo alone.</strong> Collapses Step&nbsp;2; the score comes from the photo&rsquo;s shape read only. Height, weight and body-fat add what a photo can&rsquo;t measure &mdash; you can enter them anytime.</span></label>
+            <div class="bc-skip-note" id="bc-skip-note">Manual inputs are off &mdash; this is a photo-only read (shape and distribution, no absolute scale or leanness-by-the-numbers). Untick to bring the measured spine back.</div>
+            <div id="bc-inputs-body"><!-- built by renderInputsPanel() --></div>
+          </div>
+
+          <details class="bc-panel calc-panel-fold">
+            <summary class="bc-h"><i class="ti ti-eye-search"></i> What it reads &mdash; and how<i class="ti ti-chevron-down calc-fold-chev" aria-hidden="true"></i></summary>
             <div class="bc-how">
               <div class="bc-how-row"><i class="ti ti-body-scan"></i><div><b>Frame &amp; proportions</b> &mdash; from 33 pose landmarks: shoulder span, hip span, torso vs. leg length, and left/right symmetry.</div></div>
               <div class="bc-how-row"><i class="ti ti-arrows-horizontal"></i><div><b>Silhouette widths</b> &mdash; from an on-device segmentation mask, the body&rsquo;s actual width at the shoulders, the narrowest waist, and the widest hips &mdash; which is what makes waist-to-hip and the V-taper measurable at all.</div></div>
               <div class="bc-how-row"><i class="ti ti-ruler-2"></i><div><b>Adiposity proxy</b> &mdash; waist width against standing height: an <em>uncalibrated frontal waist-width-to-height proxy</em>, displayed but <strong>not scored</strong>. A front photo can&rsquo;t see depth, so it doesn&rsquo;t convert to the real waist-<em>circumference</em> adiposity index &mdash; not true body-fat or BMI, and clothing and angle move it.</div></div>
             </div>
             <div class="bc-note"><strong>Proxied, not measured:</strong> true body-fat %, muscle vs. fat, absolute height and weight, and anything depth-dependent (a gut, posture, glutes) that a single frontal photo physically cannot see. The panel proxies what it can and flags the rest rather than faking a number. See <a href="frameworks.html#bone-pill">The Bone Pill</a> for why one number is a mirror, not a verdict.</div>
-          </div>
+          </details>
         </div>
 
         <!-- RESULT COLUMN -->
@@ -98,7 +109,7 @@
       <!-- ===== DEBUG · Batch mode (calibration/validation; localhost or ?debug only) ===== -->
       <div class="bc-batch" id="bc-batch" hidden>
         <div class="bc-batch-h"><i class="ti ti-flask"></i> Debug &middot; Batch mode <span class="bc-batch-tag">calibration &mdash; never persists</span></div>
-        <div class="bc-batch-note">Runs images <strong>sequentially</strong> through the exact single-shot pipeline (one pose worker; same gates, routing, silhouette/model, framing, sex read). Nothing is saved &mdash; your single-shot score, photo, Step-1 numbers and the Overall composite are untouched, and <code>localStorage</code> is verified unchanged after each run. If Step-1 numbers are set they feed the hybrid + Tier-0 columns. Localhost / <code>?debug</code> only.</div>
+        <div class="bc-batch-note">Runs images <strong>sequentially</strong> through the exact single-shot pipeline (one pose worker; same gates, routing, silhouette/model, framing, sex read). Nothing is saved &mdash; your single-shot score, photo, Step-2 numbers and the Overall composite are untouched, and <code>localStorage</code> is verified unchanged after each run. If Step-2 numbers are set they feed the hybrid + Tier-0 columns. Localhost / <code>?debug</code> only.</div>
         <div class="bc-batch-ctl">
           <input type="file" id="bc-batch-file" accept="image/*" multiple hidden />
           <button class="bc-btn" id="bc-batch-run"><i class="ti ti-player-play"></i> Batch run&hellip;</button>
@@ -578,7 +589,7 @@
                  bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null,
                  // Tier-0 objective inputs (optional; drive the hybrid blend). bf is a PERCENT; source 'picker'|'measured'.
                  inHeightCm:null, inWeightKg:null, inBfPct:null, inBfSource:null,
-                 skipInputs:false };   // Item 4: user opted out of Step 1 → photo-only read (numbers retained, not used)
+                 skipInputs:false };   // Item 4: user opted out of Step 2 → photo-only read (numbers retained, not used)
     // Unit prefs for the objective inputs — same two-state model as smvcalc.html's height/weight fields.
     let bcHeightUnit = 'imperial';   // 'imperial' (ft/in) | 'metric' (cm)
     let bcWeightUnit = 'imperial';   // 'imperial' (lb)    | 'metric' (kg)
@@ -738,7 +749,7 @@
       if (sc){
         rows.push({ kind:'sex-face',
           note:'face reads ' + sc.cls + ' (' + Math.round(sc.conf*100) + '%) vs your ' + sc.manual + ' pick — used your pick',
-          html:'<strong>The face vs. your sex pick.</strong> The face reads <strong>' + (sc.cls==='m'?'male':'female') + '</strong> (' + Math.round(sc.conf*100) + '% confident) but your Step&nbsp;1 pick is <strong>' + (sc.manual==='m'?'male':'female') + '</strong> &mdash; <a href="#" class="bc-sexflip" data-sex="' + sc.cls + '">switch the toggle</a> if this isn&rsquo;t you.' });
+          html:'<strong>The face vs. your sex pick.</strong> The face reads <strong>' + (sc.cls==='m'?'male':'female') + '</strong> (' + Math.round(sc.conf*100) + '% confident) but your Step&nbsp;2 pick is <strong>' + (sc.manual==='m'?'male':'female') + '</strong> &mdash; <a href="#" class="bc-sexflip" data-sex="' + sc.cls + '">switch the toggle</a> if this isn&rsquo;t you.' });
       }
       // a2) SEX — body frame cues vs a manual pick (no face needed; strong contradiction only; signal-only)
       if (BC.metrics && BC.sexSource === 'manual' && (BC.sex === 'm' || BC.sex === 'f')){
@@ -747,7 +758,7 @@
           const other = BC.sex === 'm' ? 'f' : 'm';
           rows.push({ kind:'sex-frame',
             note:'frame cues read strongly ' + reads + ' vs your ' + BC.sex + ' pick — used your pick',
-            html:'<strong>The frame cues vs. your sex pick.</strong> The frame cues (V-taper, waist-to-hip, breadth) read strongly <strong>' + reads + '</strong> against your Step&nbsp;1 <strong>' + (BC.sex==='m'?'male':'female') + '</strong> &mdash; <a href="#" class="bc-sexflip" data-sex="' + other + '">switch the toggle</a> if this isn&rsquo;t you.' });
+            html:'<strong>The frame cues vs. your sex pick.</strong> The frame cues (V-taper, waist-to-hip, breadth) read strongly <strong>' + reads + '</strong> against your Step&nbsp;2 <strong>' + (BC.sex==='m'?'male':'female') + '</strong> &mdash; <a href="#" class="bc-sexflip" data-sex="' + other + '">switch the toggle</a> if this isn&rsquo;t you.' });
         }
       }
       // b) BF% — silhouette WHtR vs the stated body-fat (adds a non-auto recommendation line)
@@ -797,11 +808,11 @@
       const bf = suggestedBfPct(heightCm, weightKg, sex);
       return bf == null ? -1 : bfBucketIndexFor(bf, sex);
     }
-    // Manual sex — a Step-1 selection OR a result-panel flip — is the top of the precedence order:
-    //   manual (Step-1 or flip)  >  face classifier  >  body-frame guess.
+    // Manual sex — a Step-2 selection OR a result-panel flip — is the top of the precedence order:
+    //   manual (Step-2 or flip)  >  face classifier  >  body-frame guess.
     // It re-bases the whole pipeline (objective tier, curves, bands) and STAYS put when a new photo is measured;
     // the classifier still runs and logs, it just can't silently re-sex a person the user already pinned.
-    // (Fable cold-review P2, Jason-ruled option a.) Keeps the state coherent: Step-1's stored sex follows a flip,
+    // (Fable cold-review P2, Jason-ruled option a.) Keeps the state coherent: Step-2's stored sex follows a flip,
     // and the body-fat guide re-bases with it — a value that predates the new sex's buckets is kept as the user's
     // number but shown in the measured field, not mis-highlighting a silhouette tile that can't honestly claim it.
     function bcApplyManualSex(s){
@@ -851,7 +862,7 @@
         + '<div class="bc-score" style="color:' + accent + '">' + fmt(score) + ' <span class="unit">' + prof.unit + '</span></div>'
         + '<div class="bc-tier" style="color:' + accent + '">' + tierFor(BC.profile, score, sex) + '</div>'
         + '<div class="bc-srcbadge hybrid">Numbers-only read &middot; add a photo for shape</div>'
-        + '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Objective spine only.</strong> Height, weight and body-fat give frame and leanness with real units &mdash; but not shape or distribution. <strong>Drop a photo in Step 2</strong> to fold those in (the hybrid read).</div>'
+        + '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Objective spine only.</strong> Height, weight and body-fat give frame and leanness with real units &mdash; but not shape or distribution. <strong>Drop a photo in Step 1</strong> to fold those in (the hybrid read).</div>'
         + '<div class="bc-other">The other lens &mdash; ' + PROFILES[other].name + ' &mdash; says <strong>' + fmt(oscore) + ' ' + PROFILES[other].unit + '</strong> (' + tierFor(other, oscore, sex) + ').</div>'
         + '</div>'
         + disagreementPanelHtml(t0)
@@ -877,7 +888,7 @@
       const BC_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
       const t0 = computeTier0();          // objective spine, or null unless the three numbers + a sex are all in
       const hasInputs = !!t0;
-      bcSyncInputsPreview();              // keep the Step-1 preview's photo-aware tail current (focus-safe span-only update)
+      bcSyncInputsPreview();              // keep the Step-2 preview's photo-aware tail current (focus-safe span-only update)
       if (!BC.metrics){
         if (hasInputs){ renderNumbersOnly(host, t0, BC_DEBUG); return; }   // State C — numbers only
         // No photo AND no numbers read: the calc is empty, so drop any score it previously
@@ -886,10 +897,10 @@
         // clearBody() guards on the skip-toggle (below) and bcResetResult.
         if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody();
         host.innerHTML = BC.skipInputs
-          ? '<div class="bc-empty"><i class="ti ti-body-scan"></i><strong>Photo-only mode.</strong> Manual inputs are skipped &mdash; drop a full-body or upper-body photo and the shape read appears here. Untick <em>Skip the manual inputs</em> in Step&nbsp;1 to add the measured spine.</div>'
+          ? '<div class="bc-empty"><i class="ti ti-body-scan"></i><strong>Photo-only mode.</strong> Manual inputs are skipped &mdash; drop a full-body or upper-body photo and the shape read appears here. Untick <em>Skip the manual inputs</em> in Step&nbsp;2 to add the measured spine.</div>'
           : bcInputsAny()
-          ? '<div class="bc-empty"><i class="ti ti-body-scan"></i>Your <strong>numbers read</strong> appears here once height, weight, body-fat <em>and</em> a sex are all set in Step&nbsp;1 &mdash; or drop a photo for the shape read.</div>'
-          : '<div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo &mdash; or add your numbers in Step&nbsp;1 &mdash; and the score appears here.</div>';
+          ? '<div class="bc-empty"><i class="ti ti-body-scan"></i>Your <strong>numbers read</strong> appears here once height, weight, body-fat <em>and</em> a sex are all set in Step&nbsp;2 &mdash; or drop a photo for the shape read.</div>'
+          : '<div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo &mdash; or add your numbers in Step&nbsp;2 &mdash; and the score appears here.</div>';
         return;
       }
       const prof = PROFILES[BC.profile];
@@ -998,7 +1009,7 @@
         + cantRows
         + '<div class="bc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box) when one is loaded; the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a single frontal silhouette misses depth, muscle-vs-fat, and everything under clothing &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. A fit body that reads middling usually traces to the <em>input</em> &mdash; a mis-read sex (toggle it) or a distant/occluded silhouette that flattens the ratios &mdash; more than the score; a clean, correctly-sexed read ranks roughly right. The one rubric caveat: the female bands reward the hourglass, so a broad, tapered frame is mildly under-credited &mdash; surfaced as <em>Tapered structure</em> below (a labelled choice, left out of the score, not a bug). With no model loaded, the geometry scores the headline too (badged above).</div>';
 
-      wireSexButtons(host);   // shared: also refreshes the Step-1 inputs picker (its silhouettes are sex-specific)
+      wireSexButtons(host);   // shared: also refreshes the Step-2 inputs picker (its silhouettes are sex-specific)
 
       // persist this body score for the Face × Body composite. The CNN headline is sex-agnostic; a geometry
       // headline needs a known sex (an unresolved male–female range can't yield one honest number → needsSex).
@@ -1052,9 +1063,9 @@
       BC.bareGeometry = !!bareGeometry; BC.skinFrac = (skinFrac==null ? null : skinFrac);
       BC.reliability = reliability || '';
       BC.sexClsSex = null; BC.sexClsConf = null;   // a new photo → drop the previous photo's classifier read before this one's fires
-      // Manual sex (a Step-1 pick or a prior flip) OUTRANKS the frame guess and the face classifier and SURVIVES a
+      // Manual sex (a Step-2 pick or a prior flip) OUTRANKS the frame guess and the face classifier and SURVIVES a
       // new photo — re-measure the body, don't silently re-sex the person. Only an auto (guess/model) sex is
-      // re-derived from this frame. (Fable cold-review P2: the old unconditional reset wiped the Step-1 sex, letting
+      // re-derived from this frame. (Fable cold-review P2: the old unconditional reset wiped the Step-2 sex, letting
       // a mis-read clothed photo re-base the objective tier to the wrong sex's curves.)
       if (BC.sexManual && (BC.sex === 'm' || BC.sex === 'f')){
         BC.sexAuto = false; BC.sexSource = 'manual'; BC.sexConf = null; BC.sexUnknownReason = '';
@@ -1065,7 +1076,7 @@
       setStatus(bcStatusNote(), false, true); renderResult();
     };
     // the on-device face sex classifier reports in async — it OVERRIDES the unreliable frame guess but NEVER a
-    // manual pick (Step-1 or a flip): manual > classifier > frame. The read is recorded either way, so a manual
+    // manual pick (Step-2 or a flip): manual > classifier > frame. The read is recorded either way, so a manual
     // choice it contradicts still surfaces a non-blocking conflict warning. (The headline score is unchanged; sex
     // only re-bases the typical bands.)
     window.bcSetSex = function(sex, conf){
@@ -1194,14 +1205,14 @@
       return 'FFMI <strong>' + t0.ffmiAdj.toFixed(1) + '</strong> &rarr; frame <strong>' + Math.round(t0.frame) + '/100</strong> &middot; '
         + 'body-fat <strong>' + t0.bfPct.toFixed(t0.bfSource === 'measured' ? 1 : 0) + '%</strong> &rarr; leanness <strong>' + Math.round(t0.lean) + '/100</strong> &middot; '
         + 'objective <strong>' + Math.round(t0.objective) + '/100</strong>'
-        + (BC.metrics ? ' &middot; blended with your photo.' : ' &middot; <span class="soft-flag">drop a photo (Step 2) for the full hybrid.</span>');
+        + (BC.metrics ? ' &middot; blended with your photo.' : ' &middot; <span class="soft-flag">drop a photo (Step 1) for the full hybrid.</span>');
     }
 
-    // Item 3 · the amber-suggest note HTML (static) — shared by the full Step-1 render and the focus-safe
+    // Item 3 · the amber-suggest note HTML (static) — shared by the full Step-2 render and the focus-safe
     // re-sync (bcSyncBfSuggest) so the two can never drift.
     const BC_BF_SUGGEST_NOTE_HTML = '<div class="bc-bf-suggest-note" id="bc-bf-suggest-note"><i class="ti ti-bulb" aria-hidden="true"></i> Highlighted tile is <strong>typical for your height/weight</strong> &mdash; a population average that can&rsquo;t see muscle. <strong>Your pick is the verdict.</strong></div>';
 
-    // Rebuild the Step-1 panel body. Unit / sex / picker changes rebuild (they restructure the fields);
+    // Rebuild the Step-2 panel body. Unit / sex / picker changes rebuild (they restructure the fields);
     // numeric typing does NOT rebuild — its oninput updates the preview + result in place so the field keeps focus.
     function renderInputsPanel(){
       const body = document.getElementById('bc-inputs-body');
@@ -1238,7 +1249,26 @@
 
       let bfBlock;
       if (!sex){
-        bfBlock = '<div class="bc-in-field"><div class="bc-field-label">Body fat</div><div class="bc-bf-needsex">Pick a sex above to see the body-fat silhouette guide.</div></div>';
+        // With no sex picked this used to be one italic line and an empty space where
+        // the reference should be. Show BOTH guides instead — the buckets differ by
+        // sex, so they cannot be merged into one row — and let a tile do the picking:
+        // clicking one sets the sex AND that body-fat bucket in a single gesture,
+        // which is the choice the prompt was asking for anyway.
+        const preview = ['f', 'm'].map(function(s){
+          const tiles = BF_BUCKETS[s].map(function(b, i){
+            return '<button type="button" class="bc-bf-tile" data-idx="' + i + '" data-sex="' + s + '"'
+              + ' title="' + (s === 'f' ? 'Female' : 'Male') + ' &middot; ' + b.label.replace(/&ndash;/g, '–') + ' body fat — picks this sex and this tile"'
+              + ' onclick="bcPickSexAndBf(\'' + s + '\', ' + i + ')">'
+              + bfSilhouetteSVG(s, i) + '<span class="bc-bf-lbl">' + b.label + '</span></button>';
+          }).join('');
+          return '<div class="bc-bf-preview-row"><div class="bc-bf-preview-lbl">'
+            + (s === 'f' ? 'Female' : 'Male') + '</div><div class="bc-bf-grid">' + tiles + '</div></div>';
+        }).join('');
+        bfBlock =
+          '<div class="bc-in-field"><div class="bc-field-label">Body fat <span class="bc-req">pick a sex, or click the silhouette that matches you</span></div>'
+          + '<div class="bc-bf-preview">' + preview + '</div>'
+          + '<div class="bc-bf-needsex">Both scales are shown because the buckets differ by sex. Clicking a silhouette sets the sex above and that body-fat range together.</div>'
+          + '</div>';
       } else {
         const selIdx = bfBucketIndexFor(BC.inBfPct, sex);
         // Item 3: when height+weight+sex are set but no BF is chosen yet, HINT the population-average tile in
@@ -1269,7 +1299,7 @@
       });
     }
 
-    // Item 3 · keep the amber BF suggestion live as height/weight change WITHOUT a full Step-1 rebuild (which
+    // Item 3 · keep the amber BF suggestion live as height/weight change WITHOUT a full Step-2 rebuild (which
     // would steal focus from the field being typed). renderInputsPanel only re-renders the grid on a rebuild
     // (sex / unit / pick), so the natural top-to-bottom entry — sex, then height, then weight — would otherwise
     // render the grid while height/weight are still 0 and never surface the hint until an unrelated rebuild fires.
@@ -1300,7 +1330,7 @@
       else if (suggestIdx < 0 && note) note.remove();
     }
 
-    // Update ONLY the Step-1 preview span (never the fields) — focus-safe, so it can run on every render,
+    // Update ONLY the Step-2 preview span (never the fields) — focus-safe, so it can run on every render,
     // keeping the "blended with your photo" tail honest when a photo arrives via the photo path.
     function bcSyncInputsPreview(){ const pv = document.getElementById('bc-in-preview'); if (pv) pv.innerHTML = bcInputsPreviewHtml(); }
     // In-place refresh after a numeric edit: update the preview + the result panel WITHOUT rebuilding the
@@ -1343,7 +1373,18 @@
       BC.inBfPct = b.mid; BC.inBfSource = 'picker';
       renderInputsPanel(); bcSaveInputs(); renderResult();   // buttons, no focus concern → full rebuild moves the highlight
     };
-    function bcSetInSex(s){ bcApplyManualSex(s); }   // Step-1 sex picker → the shared manual-sex path (precedence + BF coherence)
+    // The no-sex-yet preview grids: one click settles both questions. Sex goes through
+    // bcApplyManualSex (the precedence + BF-coherence path) FIRST, because it re-bases
+    // the BF value against the new sex's buckets — so the tile is applied after it, or
+    // the coherence pass would overwrite the number the user just picked.
+    window.bcPickSexAndBf = function(sex, i){
+      if (sex !== 'm' && sex !== 'f') return;
+      const b = BF_BUCKETS[sex][i]; if (!b) return;
+      bcApplyManualSex(sex);
+      BC.inBfPct = b.mid; BC.inBfSource = 'picker';
+      renderInputsPanel(); bcSaveInputs(); renderResult();
+    };
+    function bcSetInSex(s){ bcApplyManualSex(s); }   // Step-2 sex picker → the shared manual-sex path (precedence + BF coherence)
 
     // ── persistence: loveEquations.bodyInputs.v1 (survives page switches like the photo does) ──
     function bcSaveInputs(){
@@ -1373,7 +1414,7 @@
     window.bcSexFromLogits = sexFromLogits;
     window.bcFacePidx = FACE_PIDX;
 
-    // Item 4 · skip affordance — reflect BC.skipInputs in the Step-1 chrome (collapse the inputs body, show the
+    // Item 4 · skip affordance — reflect BC.skipInputs in the Step-2 chrome (collapse the inputs body, show the
     // active-note, sync the checkbox). A global (function declaration) so the debug batch harness can re-sync it
     // on restore. The checkbox lives in the static panel markup (outside #bc-inputs-body), so it is wired once.
     function applySkipUI(){
@@ -1392,7 +1433,7 @@
       });
     })();
 
-    // Restore any saved objective inputs and paint Step 1 immediately (the photo, if any, restores later in the
+    // Restore any saved objective inputs and paint Step 2 immediately (the photo, if any, restores later in the
     // MediaPipe module and re-renders — yielding State A when both are present).
     bcRestoreInputs();
     renderInputsPanel();
@@ -2028,7 +2069,7 @@
     // Feeds images one-at-a-time through the EXACT single-shot pipeline (handleImage → drawAndScore
     // → one pose worker → routing / model / sex inference), logs the read, and NEVER persists: a
     // Storage guard blocks every loveEquations.* write for the batch's duration, and the pre-batch UI
-    // (BC + Step-1 panel + canvas + status) is snapshotted and restored when it ends. No scoring / gate
+    // (BC + Step-2 panel + canvas + status) is snapshotted and restored when it ends. No scoring / gate
     // / constant is touched — additive only. A refused or worker-killed image logs its row and continues
     // (the pipeline recycles a dead worker itself; the next image gets a fresh one). Lives inside this
     // module so it reuses the pipeline in place (handleImage / session / sexSession / canvas).
@@ -2094,7 +2135,7 @@
       const stripTags = s => String(s==null?'':s).replace(/<[^>]*>/g,'');
       function decode(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=()=>rej(new Error('unreadable image')); img.src=URL.createObjectURL(file); }); }
 
-      // bp/cv computed EXACTLY as renderResult (hybrid blend when Step-1 inputs are set, else model, else geometry).
+      // bp/cv computed EXACTLY as renderResult (hybrid blend when Step-2 inputs are set, else model, else geometry).
       function bodyBpCv(){
         const sex = BC.sex==='m'?'m':'f';
         const usingModel = BC.model != null;
@@ -2218,7 +2259,7 @@
         const has = rows.length>0; btnCsv.disabled=!has; btnMd.disabled=!has; btnClear.disabled=!has;
       }
 
-      // ---- snapshot / restore the pre-batch UI (localStorage stays untouched; this is in-memory + canvas + Step-1) ----
+      // ---- snapshot / restore the pre-batch UI (localStorage stays untouched; this is in-memory + canvas + Step-2) ----
       function snapshot(){
         const shown = !canvas.hidden && stage.classList.contains('show');
         let url=null; try { if (shown) url = canvas.toDataURL('image/jpeg',0.92); } catch(_){}
@@ -2228,7 +2269,7 @@
       function restore(s){
         Object.assign(BC, s.bc);
         document.querySelectorAll('.bc-variant button').forEach(b=>b.classList.toggle('active', b.dataset.prof===BC.profile));
-        if (window.renderInputsPanel) window.renderInputsPanel();   // resync Step-1 (sex-specific picker) to restored BC
+        if (window.renderInputsPanel) window.renderInputsPanel();   // resync Step-2 (sex-specific picker) to restored BC
         if (window.applySkipUI) window.applySkipUI();               // Item 4: re-sync the skip checkbox + collapse state
         if (window.renderResult) window.renderResult();             // storage still guarded → repaint without persisting
         if (s.shown && s.url){ const im=new Image(); im.onload=()=>{ canvas.width=s.w; canvas.height=s.h; canvas.getContext('2d').drawImage(im,0,0,s.w,s.h); canvas.hidden=false; video.hidden=true; stage.classList.add('show'); }; im.src=s.url; }

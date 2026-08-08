@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/frameworks.css?v=1.14" />
+  <link rel="stylesheet" href="css/frameworks.css?v=1.15" />
 </head>
 <body data-page="frameworks">
   <div data-include="navigation-bar"></div>
@@ -33,6 +33,29 @@
     </div>
 
     <div class="content">
+
+      <!-- Orientation, not a summary: fifty entries with a complete TOC still leaves a
+           first-time reader without a reading order. Deliberately avoids the .toc-* class
+           family — those classes are the canon builder's grouping signal (tocGroups in
+           scripts/build-canon-index.mjs), and this card is navigation, not structure. -->
+      <aside class="rf-starter" aria-label="Suggested starting points">
+        <div class="rf-starter-head"><i class="ti ti-compass" aria-hidden="true"></i> New here? Start with these three.</div>
+        <p class="rf-starter-lead">The page below is a reference shelf, not a reading order. These three carry the vocabulary the other entries assume you already have.</p>
+        <div class="rf-starter-list">
+          <a class="rf-starter-item" href="#conversion-ladder">
+            <span class="rf-starter-name">The Conversion Ladder</span>
+            <span class="rf-starter-why">Separates attention, desire, choice, and durability &mdash; the lens the rest of the page sits inside.</span>
+          </a>
+          <a class="rf-starter-item" href="#seven-seven-rule">
+            <span class="rf-starter-name">The 7&ndash;7 Rule</span>
+            <span class="rf-starter-why">The long-term qualification gate, and the one rule the Compatibility Calculator enforces live.</span>
+          </a>
+          <a class="rf-starter-item" href="#smv-matching">
+            <span class="rf-starter-name">SMV Matching</span>
+            <span class="rf-starter-why">How attractiveness actually sorts the market &mdash; and where the hypergamy claim resolves.</span>
+          </a>
+        </div>
+      </aside>
 
       <details class="page-toc" open aria-label="Table of contents">
         <summary class="page-toc-head"><i class="ti ti-list-details" aria-hidden="true"></i> On this page<i class="ti ti-chevron-down toc-chevron" aria-hidden="true"></i></summary>

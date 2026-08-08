@@ -2,10 +2,34 @@
 
 .dyn-page { display: none; }
 .dyn-page.visible { display: block; }
-.tab-btn.land-active { background: var(--surface); color: var(--text); border-color: var(--text-dim); }
-.tab-btn.male-active { background: #EBF3FD; color: #0C447C; border-color: #85B7EB; }
-.tab-btn.fem-active { background: var(--scarlet-pale); color: var(--scarlet-dim); border-color: #E09090; }
-.tab-btn.both-active { background: #F2ECFB; color: #5B3A9B; border-color: #C9B3EE; }
+/* Active tab: a SOLID fill in that lens's own colour. The pale tints these rules used
+   to carry were the only thing separating the selected tab from the other three (every
+   .tab-btn is already font-weight 850), which on the cream background read as barely
+   selected at all — and .both-active was missing from styles.css's solid-fill list
+   entirely, so "Both Sides" looked different again. Each fill clears AA against the
+   #fffaf3 label; the per-lens hue is kept because it is the page's colour language. */
+.tab-btn.land-active { background: #5C463C; color: #fffaf3; border-color: #5C463C; }
+.tab-btn.male-active { background: #185FA5; color: #fffaf3; border-color: #185FA5; }
+.tab-btn.fem-active { background: var(--scarlet-dim); color: #fffaf3; border-color: var(--scarlet-dim); }
+.tab-btn.both-active { background: #5B3A9B; color: #fffaf3; border-color: #5B3A9B; }
+.tab-btn.land-active:hover, .tab-btn.male-active:hover,
+.tab-btn.fem-active:hover, .tab-btn.both-active:hover { color: #fffaf3; }
+
+/* Card count per section — "how much is under this heading" before you open anything. */
+.dos-section { display: flex; align-items: baseline; gap: 0.6rem; }
+.dos-count {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--scarlet-pale);
+  color: var(--scarlet-dim);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
 .dyn-hero { padding: 1.35rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; border: 0.5px solid var(--border); }
 .dyn-hero.land { background: var(--surface); }
 .dyn-hero.male { background: #EBF3FD; border-color: #B5D4F4; }
