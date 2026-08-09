@@ -106,6 +106,12 @@ const SOURCE_SPECS = [
     sourceType: 'Long-form essay',
     extractor: extractDeepDiveEssay,
   },
+  {
+    page: 'dd-autism-and-dating.html',
+    category: 'Deep Dives',
+    sourceType: 'Long-form essay',
+    extractor: extractDeepDiveEssay,
+  },
   { page: 'smvcalc.html', category: 'Instruments', sourceType: 'On-device instrument', extractor: extractInstrument },
   { page: 'compatibility.html', category: 'Instruments', sourceType: 'On-device instrument', extractor: extractInstrument },
   { page: 'face.html', category: 'Instruments', sourceType: 'On-device instrument', extractor: extractInstrument },

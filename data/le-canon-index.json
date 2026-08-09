@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+43e253b8642b",
+  "indexVersion": "1.0.0+e2b93eaaaeee",
   "generatedAt": "2026-08-08T18:39:10.000Z",
   "sourcePages": [
     {
@@ -100,8 +100,8 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "fb4931569e836f7cc1c831280fef3c38381e5c88cbf1388b8bc5033fb90e17c9",
-      "conceptCount": 7
+      "sha256": "ca872aa272e557929aec8f69c6534641101366cf768c4d314f99715c7dfc6c19",
+      "conceptCount": 8
     },
     {
       "page": "dd-relationships-throughout-history.html",
@@ -181,6 +181,17 @@
       "conceptCount": 5
     },
     {
+      "page": "dd-autism-and-dating.html",
+      "title": "Autism and Dating",
+      "category": "Deep Dives",
+      "sourceType": "Long-form essay",
+      "inputs": [
+        "dd-autism-and-dating.html"
+      ],
+      "sha256": "19e9de5d52470820bf027af06fa9d560413b72296b2e6d340a6091830074161b",
+      "conceptCount": 7
+    },
+    {
       "page": "smvcalc.html",
       "title": "SMV Calculator",
       "category": "Instruments",
@@ -237,10 +248,10 @@
     }
   ],
   "stats": {
-    "conceptCount": 707,
-    "sourceCount": 21,
+    "conceptCount": 715,
+    "sourceCount": 22,
     "byCategory": {
-      "Deep Dives": 47,
+      "Deep Dives": 55,
       "Five Levers": 35,
       "Gender Dynamics": 133,
       "Instruments": 5,
@@ -260,21 +271,21 @@
       "Instrument": 5,
       "LE framework": 2,
       "Lens": 86,
-      "Long-form synthesis": 16,
+      "Long-form synthesis": 18,
       "Model": 34,
       "Observation": 46,
       "Record": 13,
-      "Record + framework": 16,
+      "Record + framework": 22,
       "Strategy": 29,
       "Tested claim": 6,
       "Tier 1": 54,
       "Tier 2": 22,
       "Tier 3": 1
     },
-    "anchoredConceptCount": 612,
-    "conceptsWithExternalSources": 150,
-    "dependencyCount": 422,
-    "relatedCount": 531
+    "anchoredConceptCount": 618,
+    "conceptsWithExternalSources": 156,
+    "dependencyCount": 429,
+    "relatedCount": 538
   },
   "entries": [
     {
@@ -23547,6 +23558,34 @@
       "pressureTests": []
     },
     {
+      "id": "deep-dive:hub:autism-and-dating",
+      "title": "Autism and Dating",
+      "page": "deep-dive.html",
+      "anchor": "",
+      "category": "Deep Dives",
+      "subcategory": "Neurotype",
+      "synopsis": "“The advice assumes you missed a signal. The evidence keeps finding two people who missed each other.”",
+      "evidenceType": "Long-form synthesis",
+      "contentType": "Essay guide",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:autism-and-dating"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The hub card states the reframe in one line; the rates, the experiments and the two figures the essay could not confirm are all set out inside it."
+      ],
+      "commonMisreadings": [
+        "Autistic people find dating hard because they do not really want relationships in the first place."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
       "id": "deep-dive:relationships-throughout-history",
       "title": "Relationships Throughout History",
       "page": "dd-relationships-throughout-history.html",
@@ -24786,6 +24825,307 @@
         "Flaunting invented rivals keeps a partner anxious enough to treat the relationship seriously."
       ],
       "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:autism-and-dating",
+      "title": "Autism and Dating",
+      "page": "dd-autism-and-dating.html",
+      "anchor": "",
+      "category": "Deep Dives",
+      "subcategory": "Essay",
+      "synopsis": "A sourced Deep Dive into autistic dating: what the evidence says about wanting and having relationships, the double empathy problem, the cost of masking, reading signals, sensory logistics, and when to disclose.",
+      "evidenceType": "Long-form synthesis",
+      "contentType": "Essay",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [],
+      "related": [
+        "frameworks:ambiguity-tax",
+        "frameworks:interaction-gate",
+        "frameworks:meeting-channel"
+      ],
+      "boundaryConditions": [
+        "The essay rests on self-report and convenience samples throughout; it establishes mismatch and association, never the cause of any individual outcome."
+      ],
+      "commonMisreadings": [
+        "Autistic dating difficulty is a deficit located inside the autistic person, and the remedy is better social technique."
+      ],
+      "sourceLinks": [],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:autism-and-dating:the-numbers",
+      "title": "Start From What Is Measured, Not From What Is Assumed",
+      "page": "dd-autism-and-dating.html",
+      "anchor": "the-numbers",
+      "category": "Deep Dives",
+      "subcategory": "Autism and Dating",
+      "synopsis": "Almost every piece of dating advice written for autistic adults opens with an inventory of what you are presumed to be missing. Eye contact. Small talk. The ability to tell a polite exit from an invitation. The inventory has a shape, and the shape is a verdict: the reason this is hard is located inside you, and the remedy is to become someone else quickly enough that nobody notices.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:autism-and-dating"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Desire and partnership rates come from self-selected surveys of adults without intellectual disability, and the milestone comparison rests on thirty boys."
+      ],
+      "commonMisreadings": [
+        "Autistic adults seldom want romantic relationships, and their lower partnership rates are the proof."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Strunz, Schermuck, Ballerstein, Ahlers, Dziobek & Roepke (2017), “Romantic Relationships and Relationship Satisfaction Among Adults With Asperger Syndrome and High-Functioning Autism,” Journal of Clinical Psychology 73(2):113–125",
+          "url": "https://doi.org/10.1002/jclp.22319"
+        },
+        {
+          "label": "Dewinter, De Graaf & Begeer (2017), “Sexual Orientation, Gender Identity, and Romantic Relationships in Adolescents and Adults with Autism Spectrum Disorder,” Journal of Autism and Developmental Disorders",
+          "url": "https://doi.org/10.1007/s10803-017-3199-9"
+        },
+        {
+          "label": "Dewinter, Vermeiren, Vanwesenbeeck et al. (2016), “Adolescent boys with autism spectrum disorder growing up: follow-up of self-reported sexual experience,” European Child & Adolescent Psychiatry 25(9):969–978",
+          "url": "https://doi.org/10.1007/s00787-016-0816-7"
+        },
+        {
+          "label": "Roux, Shattuck, Rast, Rava & Anderson (2015), National Autism Indicators Report: Transition into Young Adulthood, A.J. Drexel Autism Institute",
+          "url": "https://drexel.edu/~/media/Files/autismoutcomes/publications/National%20Autism%20Indicators%20Report%20-%20July%202015.ashx"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:autism-and-dating:double-empathy",
+      "title": "The Gap Is Between Two People, and It Has Been Measured",
+      "page": "dd-autism-and-dating.html",
+      "anchor": "double-empathy",
+      "category": "Deep Dives",
+      "subcategory": "Autism and Dating",
+      "synopsis": "In 2012 the sociologist Damian Milton published a four-page paper arguing that the standard account of autistic social difficulty had a hole in it. The dominant model held that autistic people struggled to model other minds. Milton pointed out that this was being tested in one direction only, and named the thing nobody was measuring: the double empathy problem.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [
+        "Gap Is Between Two People, and It Has Been Measured"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:autism-and-dating"
+      ],
+      "related": [
+        "frameworks:ambiguity-tax"
+      ],
+      "boundaryConditions": [
+        "The diffusion-chain and thin-slice results describe mixed-neurotype pairings under laboratory conditions and predict nothing about how one particular pair will get on."
+      ],
+      "commonMisreadings": [
+        "Autistic people cannot read other minds, which is why conversations with them break down."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Milton (2012), “On the ontological status of autism: the ‘double empathy problem’,” Disability & Society 27(6):883–887",
+          "url": "https://doi.org/10.1080/09687599.2012.710008"
+        },
+        {
+          "label": "Crompton, Ropar, Evans-Williams, Flynn & Fletcher-Watson (2020), “Autistic peer-to-peer information transfer is highly effective,” Autism 24(7):1704–1712",
+          "url": "https://doi.org/10.1177/1362361320919286"
+        },
+        {
+          "label": "Sasson, Faso, Nugent, Lovell, Kennedy & Grossman (2017), “Neurotypical Peers are Less Willing to Interact with Those with Autism based on Thin Slice Judgments,” Scientific Reports 7:40700",
+          "url": "https://doi.org/10.1038/srep40700"
+        },
+        {
+          "label": "Sheppard, Pillai, Wong, Ropar & Mitchell (2016), “How Easy is it to Read the Minds of People with Autism Spectrum Disorder?” Journal of Autism and Developmental Disorders 46(4):1247–1254",
+          "url": "https://doi.org/10.1007/s10803-015-2662-8"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:autism-and-dating:the-mask",
+      "title": "The Mask Works, Which Is Exactly the Problem",
+      "page": "dd-autism-and-dating.html",
+      "anchor": "the-mask",
+      "category": "Deep Dives",
+      "subcategory": "Autism and Dating",
+      "synopsis": "The standard workaround for the gap in the last section is performance: suppress the stims, rehearse the small talk, run a continuous background process that monitors your own face. The research calls it camouflaging or masking. It is worth being precise about why it is such a stubborn strategy — it is stubborn because it works. It gets people through interviews, through parties, and through first dates.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [
+        "Mask Works, Which Is Exactly the Problem"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:autism-and-dating"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "Camouflaging's costs are measured by association, including one momentary-assessment design; no study cited establishes that masking causes the outcomes it travels with."
+      ],
+      "commonMisreadings": [
+        "Masking is a social skill worth practising until it runs by itself."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Hull, Petrides, Allison, Smith, Baron-Cohen, Lai & Mandy (2017), “‘Putting on My Best Normal’: Social Camouflaging in Adults with Autism Spectrum Conditions,” Journal of Autism and Developmental Disorders 47(8):2519–2534",
+          "url": "https://doi.org/10.1007/s10803-017-3166-5"
+        },
+        {
+          "label": "Cage & Troxell-Whitman (2019), “Understanding the Reasons, Contexts and Costs of Camouflaging for Autistic Adults,” Journal of Autism and Developmental Disorders 49:1899–1911",
+          "url": "https://doi.org/10.1007/s10803-018-03878-x"
+        },
+        {
+          "label": "Scheeren, Nieuwenhuis, Crane, Roke & Begeer (2025), “Masking, social context and perceived stress in autistic adults: An ecological momentary assessment study,” Autism 29:3002–3013",
+          "url": "https://doi.org/10.1177/13623613251353358"
+        },
+        {
+          "label": "Cassidy, Bradley, Shaw & Baron-Cohen (2018), “Risk markers for suicidality in autistic adults,” Molecular Autism 9:42",
+          "url": "https://doi.org/10.1186/s13229-018-0226-4"
+        },
+        {
+          "label": "Ridgway, Cooke, Demmer, Hooley, Westrupp & Stokes (2025), “Camouflaging Autism in Pursuit of Friendship and Intimate Relationships: A Systematic Review,” Autism in Adulthood 7(5):543–557",
+          "url": "https://doi.org/10.1089/aut.2023.0160"
+        },
+        {
+          "label": "Bargiela, Steward & Mandy (2016), “The Experiences of Late-diagnosed Women with Autism Spectrum Conditions: An Investigation of the Female Autism Phenotype,” Journal of Autism and Developmental Disorders 46(10):3281–3294",
+          "url": "https://doi.org/10.1007/s10803-016-2872-8"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:autism-and-dating:the-signal",
+      "title": "Reading the Ask, and the Cost of Vagueness",
+      "page": "dd-autism-and-dating.html",
+      "anchor": "the-signal",
+      "category": "Deep Dives",
+      "subcategory": "Autism and Dating",
+      "synopsis": "Courtship in most of the anglophone world runs on deniability. Interest is signalled in a register designed so that it can be withdrawn without either party having to acknowledge a refusal. That design has a purpose, and it is not cruelty: vagueness protects the person who might be rejected and the person who has to reject.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:autism-and-dating"
+      ],
+      "related": [
+        "frameworks:interaction-gate",
+        "frameworks:ambiguity-tax"
+      ],
+      "boundaryConditions": [
+        "The flirting evidence is a scoping review plus a fifty-seven-person qualitative sample; over-reading and under-reading are described patterns rather than measured rates."
+      ],
+      "commonMisreadings": [
+        "Autistic daters miss flirting because they are not paying close enough attention."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Minnell, Bowden, Barbaro, Sainsbury, Gardiner & Waddington (2025), “Autistic Adults’ Relationship Perceptions and Preferences: A Scoping Review,” Autism in Adulthood",
+          "url": "https://doi.org/10.1089/aut.2024.0358"
+        },
+        {
+          "label": "Sala, Hooley & Stokes (2020), “Romantic Intimacy in Autism: A Qualitative Analysis,” Journal of Autism and Developmental Disorders",
+          "url": "https://doi.org/10.1007/s10803-020-04377-8"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:autism-and-dating:the-room",
+      "title": "The Room Is a Variable, and You Control It",
+      "page": "dd-autism-and-dating.html",
+      "anchor": "the-room",
+      "category": "Deep Dives",
+      "subcategory": "Autism and Dating",
+      "synopsis": "The default first date in most of the West is a loud bar with variable lighting, unpredictable proximity to strangers, and a soundscape engineered to make conversation slightly difficult. For a substantial share of autistic adults that venue does not test compatibility. It tests auditory filtering under load, and then reports the result as though it were a verdict on chemistry.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [
+        "Room Is a Variable, and You Control It"
+      ],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:autism-and-dating"
+      ],
+      "related": [
+        "frameworks:meeting-channel"
+      ],
+      "boundaryConditions": [
+        "The sensory evidence is qualitative, drawn from public narratives and open-ended survey answers, and the online-dating map rests on eight small-sample studies."
+      ],
+      "commonMisreadings": [
+        "Asking to move a date somewhere quieter signals low interest, so the room has to be endured."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Gray, Kirby & Graham Holmes (2021), “Autistic Narratives of Sensory Features, Sexuality, and Relationships,” Autism in Adulthood",
+          "url": "https://doi.org/10.1089/aut.2020.0049"
+        },
+        {
+          "label": "Neumann, Steiner-Hofbauer & Mittmann (2024), “Autism and Online Dating: A Scoping Review,” Review Journal of Autism and Developmental Disorders",
+          "url": "https://doi.org/10.1007/s40489-024-00488-5"
+        }
+      ],
+      "pressureTests": []
+    },
+    {
+      "id": "deep-dive:autism-and-dating:saying-it",
+      "title": "Telling Them, and the Risk Nobody Warns You About",
+      "page": "dd-autism-and-dating.html",
+      "anchor": "saying-it",
+      "category": "Deep Dives",
+      "subcategory": "Autism and Dating",
+      "synopsis": "Disclosure gets discussed as though it were a question about you: are you ready, are you comfortable, have you accepted yourself. The evidence points somewhere less flattering to everyone else. Whether disclosure helps depends substantially on what the other person already knows.",
+      "evidenceType": "Record + framework",
+      "contentType": "Essay section",
+      "verdict": "",
+      "aliases": [],
+      "standaloneAliases": [],
+      "contextualAliases": [],
+      "phrases": [],
+      "dependencies": [
+        "deep-dive:autism-and-dating"
+      ],
+      "related": [],
+      "boundaryConditions": [
+        "The only disclosure-outcome figure with a denominator describes workplaces rather than dating, and the victimisation comparison is a single cross-sectional study."
+      ],
+      "commonMisreadings": [
+        "There is a correct moment to disclose an autism diagnosis, and mistiming it is what goes wrong."
+      ],
+      "sourceLinks": [
+        {
+          "label": "Sasson & Morrison (2019), “First impressions of adults with autism improve with diagnostic disclosure and increased autism knowledge of peers,” Autism 23(1):50–59",
+          "url": "https://doi.org/10.1177/1362361317729526"
+        },
+        {
+          "label": "Romualdez, Heasman, Walker, Davies & Remington (2021), “‘People Might Understand Me Better’: Diagnostic Disclosure Experiences of Autistic Individuals in the Workplace,” Autism in Adulthood",
+          "url": "https://doi.org/10.1089/aut.2020.0063"
+        },
+        {
+          "label": "Brown-Lavoie, Viecili & Weiss (2014), “Sexual Knowledge and Victimization in Adults with Autism Spectrum Disorders,” Journal of Autism and Developmental Disorders 44(9):2185–2196",
+          "url": "https://doi.org/10.1007/s10803-014-2093-y"
+        }
+      ],
       "pressureTests": []
     },
     {
