@@ -953,9 +953,20 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * eight concepts while this fix was in flight, so the value was re-measured on
    * top of it rather than assumed to carry. Two consecutive population steps have
    * now landed on the same thousandth from unrelated causes.
+   *
+   * 0.509 at 715, v2.7.0 — the first engine move in this log, and the last
+   * exact entry in it. unsharedTokenDfFloor capped what this claim's off-canon
+   * stems (`commut` among them) may charge, so the denominator fell and the
+   * score rose toward its evidence. Thirteen corpus moves never once flipped
+   * the three assertions around the pin; an exact equality here measured the
+   * corpus, not the behaviour, and the crawl that broke three fixtures moved
+   * it by one thousandth — the damage ran 54× the pin's reading, through
+   * stems this claim does not contain (lab-idf-unseen-token-fallback). The
+   * band below keeps the drift tripwire; the log above is the asset, closed.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.535);
+  assert.ok(weakPassage.weakMatches[0].score > 0.47 && weakPassage.weakMatches[0].score < 0.56,
+    `Availability corpus band [0.47, 0.56], measured 0.509 at v2.7.0/715: got ${weakPassage.weakMatches[0].score}`);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));

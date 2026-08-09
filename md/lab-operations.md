@@ -1598,7 +1598,9 @@ doctrine that will move this benchmark when it lands.
 caused. Diagnosed jointly: the QoL session bisected it to the commit and named
 the mechanism; this session reproduced every number independently. Jason ruled
 it an **engine finding to be opened as separate work**, not a fixture to re-cut.
-Status **LIVE** — nothing in the engine has been changed.
+Status **HIST** — closed 2026-08-09 by the v2.7.0 `unsharedTokenDfFloor`
+release; see `# lab-adjudication-2026-08-08` in this volume. Open item 2
+(corpus crossings) did not close and is carried there as permanent debt.
 
 ## What was measured
 
@@ -1714,3 +1716,98 @@ score-moving events, not annotation.
    behavior, or is replaced by a query-side rule that does not read entry df.
 2. Restore `lab-corpus/` and sweep, to size how many crossings the crawl caused.
 3. `frameworks:conversion-ladder` stays red until 1 is settled.
+
+# lab-adjudication-2026-08-08.md
+
+# Five tensions adjudicated, and the v2.7.0 unshared-token price ceiling that closes the first
+
+2026-08-09. Two briefs (the Lexicon and UX sessions) put five design tensions to
+adjudication. Jason delegated the decisions in-session on 2026-08-08 ("make the
+decisions"); the rulings below are the adjudicating session's under that
+delegation, Jason retains override on every one. No verdict below beyond that
+delegation is his.
+
+## T1 — unseen-token cost. RULED and SHIPPED (v2.7.0)
+
+Neither pole survived measurement. Keeping 1.0 mints a cliff per new stem
+(291 standing). Formula-consistent df-0 pricing (~7.56) is not a repair: the
+pre-crawl Commitment pass existed only because of the 1.0 subsidy, so the
+"consistent" price universalizes the injury — and it broke a frozen behavioral
+fixture (a reader with one off-canon word must still reach a concept,
+lab-match-behavior:1648).
+
+Shipped: `unsharedTokenDfFloor: 12` in SCORING_CONFIG. A query token the entry
+does not share is priced `min(idf, price(df 12))` (~5.0 at 715); the unseen
+price IS the ceiling, so cost is continuous at first sighting and all 291
+cliffs die by construction. Shared tokens and entry-side weights keep full IDF
+— discrimination and authored-surface lift untouched. Inactive below the
+small-canon cutoff (ceiling < 1), so toy fixtures keep frozen pricing.
+
+Measured before shipping (sweep: legacy, formula0, formula1, cap3/4/5,
+dffloor12; artifacts in session scratchpad): floors byte-identical under every
+policy (domainRecall 1.000 · ignorePrecision 1.000 · junkRecall 0.854 — the
+relevance gate never reads the fallback); full 19-step suite green under
+dffloor12 except the Availability exact pin; census over 104 real-canon fixture
+units: 2 flips, both unmapped→mapped domain claims reaching apt concepts, zero
+junk crossings, 6 units gain an apt extra match. The standing red closed BY
+ENGINE REPAIR: the continuation fixture maps at 0.445 with contextHelp intact,
++0.015 margin where it had 0.000. ANALYZER_VERSION 2.6.24 → 2.7.0; the config
+hash moves with the new key, so provenance distinguishes the eras.
+
+## T2 — the deliberately-red test, zero-margin fixtures, the pin. RULED
+
+A red closes only by the engine work it evidences (here: shipped) or by Jason
+re-cutting it; never by canon prose. A deliberate red must not share an exit
+code with regression — moot this time (the suite is green), standing rule if
+one recurs. Zero-margin fixtures are a test-design defect: a fixture asserting
+a landing point when its subject is a mechanism measures the corpus instead.
+The margin census (this release's baseline) lists the near-gate set; re-anchor
+them on mechanism, per fixture, as follow-up. The Availability pin: converted
+to a band [0.47, 0.56] (measured 0.509); its 13-move log is retired closed —
+the crawl that cost a claim 0.054 moved the pin 0.001, so the exact pin was
+the wrong instrument and its log is the asset. Standing authority: a session
+may update a banded pin for a canon-growth cause with behavioral assertions
+holding, logged; engine causes always get a record.
+
+## T3 — overlay prose moves scores. RULED: keep the coupling, meter it
+
+The coupling is the remedy's engine, not a side effect: the Commitment repair's
+lift rides `predictability`, df 1, idf 6.881 — a stem the repair itself promoted
+from unseen. Decoupling annotation from retrieval would gut the sanctioned
+remedy. Standing rule: every canon/overlay-touching commit runs the cliff
+census (stems entered, df histogram) and the fixture margin diff, recorded with
+the commit. v2.7.0 bounds the damage a minted stem can do to entries that lack
+it (~5.0 ceiling), but shared-side lift is uncapped by design — the census is
+how that stays honest.
+
+## T4 — repair vs. gaming. RULED: four prongs
+
+Lexical tests cannot draw this line (the approved Commitment repair contains
+neither `preferr` nor `prefer`; it works through an equivalent rare stem). The
+line that matches both of Jason's prior rulings: (1) doctrine before
+measurement — the gap is written as reader-error doctrine before its score
+effect is looked at, and the record shows that order; (2) non-restatement — the
+surface must add doctrine the entry's surfaces don't already state (the
+conversion-ladder proposal failed exactly this); (3) decisive clearance — a
+repair landing within 0.05 of the gate is presumptively fitting and escalates;
+(4) the ledger — every red resolved by authored surface gets a row (entry,
+fixture, stems entered, df histogram); a second repair on the same entry or
+fixture escalates. No frequency cap; no invisible accumulation.
+
+## T5 — the disarmed corpus tripwire. RULED, debt recorded
+
+A skipped gate may not report `ok`: it must carry a loud third state
+(DISARMED), and a canon-index-changing commit made while disarmed must carry a
+debt row. Implementation is queued work. PERMANENT DEBT, recorded here: the
+crossings caused by e61e336/4ad8410 (311 stems, 291 at the then-maximum jump)
+can never be measured against the original corpus. Recovery: successor corpus
++ committed hash manifest (identity, not just presence); the band regenerates
+`--neighbors`-onto-existing against v2.7.0 scoring, so crossings are ruled
+once, not twice; whether old rulings carry as precedent is Jason's alone.
+
+## T6 — raised, not asked
+
+The zero-dark-entries guard forced 128 overlay records to be bulk-authored in
+one pass under test pressure — every crawl becomes a mass score-moving
+authoring event. A staged admission state (misreadings owed, quarantined from
+match surface until authored) is queued as design work for Jason.

@@ -36,7 +36,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.6.24';
+export const ANALYZER_VERSION = '2.7.0';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -149,6 +149,16 @@ export const SCORING_CONFIG = Object.freeze({
   maxCandidatesPerUnit: 8,
   minCredibleScore: 0.43,
   minWeakScore: 0.25,
+  // NEW at v2.7.0. A query token the entry does NOT share is priced as if its
+  // document frequency were at least this, so no single word an entry lacks can
+  // charge more than a df-12 token does (~5.0 at 715 concepts). Before this,
+  // an unseen token cost 1.0 until the first entry to use it repriced it to the
+  // df-1 formula value — a +5.87 jump per stem, 291 latent instances after the
+  // e61e336 crawl (lab-idf-unseen-token-fallback). Shared tokens keep full IDF:
+  // discrimination and authored-surface lift are untouched. Inactive on canons
+  // small enough that the floor price falls below 1 (the price of nothing),
+  // which keeps toy fixtures on the exact pricing they froze.
+  unsharedTokenDfFloor: 12,
   minAdmissionDistinctiveShared: 2,
   minLocalSharedTokens: 2,
   // NEW at v2.4.0. How many distinctive concepts a contextual alias needs
@@ -1503,6 +1513,15 @@ export function prepareCanonIndex(canonIndex) {
       }
     });
   });
+  // The unshared-token price ceiling rides ON the map because scoreEntry is
+  // exported through analyzerInternals with (unit, entry, idf) — every caller
+  // already passes prepared.idf, and a bare Map (no property) prices exactly
+  // as v2.6.x did. Null below the small-canon cutoff, where a ceiling under
+  // 1.0 would undercut the price of a token the canon has never seen at all.
+  const unsharedFloorPrice = Math.log(
+    (entries.length + 1) / (SCORING_CONFIG.unsharedTokenDfFloor + 1),
+  ) + 1;
+  idf.unsharedPriceCap = unsharedFloorPrice >= 1 ? unsharedFloorPrice : null;
   return {
     schemaVersion: canonIndex.schemaVersion || 'le-canon-index/1.0',
     indexVersion: canonIndex.indexVersion || canonIndex.version || 'unknown',
@@ -2495,7 +2514,17 @@ function scoreEntry(unit, entry, idf) {
   const admissionDistinctiveShared = distinctiveShared
     .filter((token) => !LOW_INFORMATION_MATCH_TERMS.has(token));
 
-  const queryWeight = queryTokens.reduce((sum, token) => sum + (idf.get(token) || 1), 0) || 1;
+  // Query tokens the entry lacks are priced at min(idf, cap) — including the
+  // unseen, whose price IS the cap, so a stem's first canon sighting no longer
+  // moves what it charges (the non-monotone 1.0 → df-1 jump recorded in
+  // lab-idf-unseen-token-fallback). Shared tokens, and every entry-side token,
+  // keep the full formula value.
+  const cap = idf.unsharedPriceCap;
+  const priceQueryToken = (token) => {
+    if (entrySet.has(token) || !cap) return idf.get(token) || 1;
+    return Math.min(idf.get(token) ?? cap, cap);
+  };
+  const queryWeight = queryTokens.reduce((sum, token) => sum + priceQueryToken(token), 0) || 1;
   const entryWeight = entry._tokens.reduce((sum, token) => sum + (idf.get(token) || 1), 0) || 1;
   const sharedWeight = shared.reduce((sum, token) => sum + (idf.get(token) || 1), 0);
   const queryCoverage = sharedWeight / queryWeight;
