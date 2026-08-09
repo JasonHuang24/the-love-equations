@@ -1776,7 +1776,10 @@ lift rides `predictability`, df 1, idf 6.881 — a stem the repair itself promot
 from unseen. Decoupling annotation from retrieval would gut the sanctioned
 remedy. Standing rule: every canon/overlay-touching commit runs the cliff
 census (stems entered, df histogram) and the fixture margin diff, recorded with
-the commit. v2.7.0 bounds the damage a minted stem can do to entries that lack
+the commit. Instrument SHIPPED 2026-08-09: `tools/lab-cliff-census.mjs`
+(old index from `git show <ref>:data/le-canon-index.json` into scratchpad;
+`--selftest` for suite-independent verification). Validated against the crawl:
+it reports 579→715, +335 stems, 313 at df 1, `predictability` first entrant. v2.7.0 bounds the damage a minted stem can do to entries that lack
 it (~5.0 ceiling), but shared-side lift is uncapped by design — the census is
 how that stays honest.
 
