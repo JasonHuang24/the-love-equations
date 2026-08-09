@@ -1661,6 +1661,34 @@ Note the asymmetry the finding implies: those two are simply the near-gate pairs
 that happened to carry fixtures. Any other pair sitting within a few thousandths
 of an admission line moved the same way, unobserved.
 
+## The blast radius: 311
+
+Measured by the QoL session and reproduced here independently, comparing the
+prepared canon at f5cb372 against e61e336:
+
+| | |
+|---|---|
+| canon vocabulary | 5,194 → **5,505** stems |
+| stems that ENTERED the canon | **311** |
+| stems that left | **0** |
+| of the 311, at df 1 — the maximum jump | **291** (idf 6.8693, **+5.8693** off the 1.0 fallback) |
+| the rest | 16 at df 2 · 3 at df 3 · 1 at df 7 |
+
+So `preferr` is not a special case; it is one of 291 identical cases. Every one
+of those stems is a latent recall cliff for any claim that uses that word and
+meets an entry that does not. The two red fixtures are not the blast radius —
+they are the two places a fixture happened to sit close enough to a gate to make
+the mechanism visible.
+
+Why 128 glossary rows produced 311 new stems: `lexicalText`
+(`js/lab-analyzer.js:1395`) splats `...entry.boundaryConditions` and
+`...entry.commonMisreadings` into the tokenized surface, so overlay prose is
+fully in the IDF corpus. The authored misreadings carry far more vocabulary than
+the rows themselves. This also explains an ordering effect seen while the fix was
+in flight: two of the three reds appeared from the lexicon rows alone and the
+third only after the 128 overlay records merged. Overlay tranches are
+score-moving events, not annotation.
+
 ## What was NOT done
 
 - **The engine was not touched.** No change to the fallback, the formula, or any
