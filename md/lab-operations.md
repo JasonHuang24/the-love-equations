@@ -1762,7 +1762,19 @@ code with regression — moot this time (the suite is green), standing rule if
 one recurs. Zero-margin fixtures are a test-design defect: a fixture asserting
 a landing point when its subject is a mechanism measures the corpus instead.
 The margin census (this release's baseline) lists the near-gate set; re-anchor
-them on mechanism, per fixture, as follow-up. The Availability pin: converted
+them on mechanism, per fixture, as follow-up. DONE 2026-08-09, and the
+per-owner reading was better news than the ruling assumed: the hypergamy pair
+(term-hypergamy 0.4300 exactly, page-rp 0.4290) sits under an EQUIVALENCE
+assertion (apostrophe variants drift together), and the marriage-years claim
+(stat-cohabitation-outcomes 0.4300 exactly) under a GUARD-behaviour assertion
+— both already mechanism-anchored, no edit needed or made. The continuation
+fixture was the one landing-anchored test; it now also pins its promotion
+delta in [0.02, 0.08] (held ~+0.045 through every state), so a future landing
+drift reds it only if the mechanism broke. seven-seven-rule remains −0.001
+below the gate on the anchor claim with no assertion anchored to it: a
+crossing would surface as a new split in the frozen mapping benchmark, which
+is the correct place for it to be diagnosed. No assertion was loosened; no
+goalpost moved. The Availability pin: converted
 to a band [0.47, 0.56] (measured 0.509); its 13-move log is retired closed —
 the crawl that cost a claim 0.054 moved the pin 0.001, so the exact pin was
 the wrong instrument and its log is the asset. Standing authority: a session

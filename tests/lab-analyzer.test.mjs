@@ -352,6 +352,20 @@ test('a short referential continuation receives only traced one-sentence context
   assert.ok(match.contextHelp.localScore < 0.43);
   assert.ok(match.score >= 0.43);
   assert.ok(match.whyMatched.some((reason) => reason.startsWith('Bounded context help:')));
+  /*
+   * The mechanism, pinned independently of the landing. Bounded context is
+   * worth ~+0.045 here and held that exact delta through every state this
+   * fixture has lived in — 0.385→0.430 at the pre-crawl baseline, 0.383→0.428
+   * during the deliberate red, 0.400→0.445 at v2.7.0 — while the LANDING
+   * crossed the gate twice from corpus and engine drift. The two landing
+   * assertions above say the promotion still clears the gate; this one says
+   * the promotion itself is intact, so a drift that sinks the landing again
+   * reds this line only if the mechanism actually broke
+   * (lab-adjudication-2026-08-08, T2).
+   */
+  const promotion = match.score - match.contextHelp.localScore;
+  assert.ok(promotion > 0.02 && promotion < 0.08,
+    `bounded-context promotion ${promotion.toFixed(3)} outside [0.02, 0.08]`);
 });
 
 test('separate speaker turns and distant sentences cannot contaminate a novel claim', async () => {
