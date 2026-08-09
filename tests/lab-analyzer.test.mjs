@@ -122,6 +122,74 @@ test('canon preparation retains versioned metadata and usable entries', () => {
   assert.ok(prepared.idf.size > 5);
 });
 
+test('an unrelated first use of a query token cannot reprice an existing match', () => {
+  /*
+   * v2.6.x priced an unseen query token at 1.0, then repriced it near the
+   * maximum IDF as soon as one unrelated canon entry used it. Keep the canon
+   * population fixed here so the only difference is `preferr` moving from
+   * df 0 to df 1. The target entry never shares that token.
+   */
+  const entry = (id, title, synopsis) => ({
+    id,
+    title,
+    page: 'frameworks.html',
+    anchor: id,
+    href: `frameworks.html#${id}`,
+    category: 'Rules & Frameworks',
+    synopsis,
+    aliases: [],
+    boundaryConditions: [],
+    commonMisreadings: [],
+  });
+  const fillers = Array.from({ length: 11 }, (_, index) => entry(
+    `idf-filler-${index}`,
+    `Filler ${index}`,
+    `Opaque quartz marker ${index} with linden amber vocabulary.`,
+  ));
+  const canonWithWitness = (witnessSynopsis) => ({
+    schemaVersion: 'le-canon-index/1.0',
+    indexVersion: `idf-continuity-${witnessSynopsis}`,
+    generatedAt: '2026-08-09T00:00:00.000Z',
+    sourcePages: ['frameworks.html'],
+    stats: { conceptCount: 13, sourceCount: 1 },
+    entries: [
+      entry(
+        'idf-target',
+        'Commitment Boundary',
+        'Predictability and commitment are separate relationship decisions.',
+      ),
+      entry('idf-witness', 'Typology Witness', witnessSynopsis),
+      ...fillers,
+    ],
+  });
+
+  const absent = prepareCanonIndex(canonWithWitness('Zephyr cobalt mnemonic.'));
+  const present = prepareCanonIndex(canonWithWitness('Preferring zephyr cobalt mnemonic.'));
+  const unit = detectClaimUnits(normalizeInput({
+    text: 'A person can prefer predictability without preferring commitment.',
+  }))[0];
+  const targetBefore = absent.entries.find((candidate) => candidate.id === 'idf-target');
+  const targetAfter = present.entries.find((candidate) => candidate.id === 'idf-target');
+
+  assert.ok(absent.idf.unsharedPriceCap > 1);
+  assert.ok(present.idf.get('preferr') > present.idf.unsharedPriceCap,
+    'the df-1 formula price must sit above the unshared-token ceiling for this fixture');
+  assert.ok(!targetAfter._tokens.includes('preferr'), 'the target entry must not share the witness token');
+
+  const stableBefore = analyzerInternals.scoreEntry(unit, targetBefore, absent.idf);
+  const stableAfter = analyzerInternals.scoreEntry(unit, targetAfter, present.idf);
+  assert.equal(stableAfter.queryCoverage, stableBefore.queryCoverage);
+  assert.equal(stableAfter.components.overlapStrength, stableBefore.components.overlapStrength);
+  assert.equal(stableAfter.score, stableBefore.score);
+
+  // Remove the cap property to prove this fixture goes red under the v2.6.x
+  // fallback instead of passing because the probe was insensitive.
+  const legacyBefore = analyzerInternals.scoreEntry(unit, targetBefore, new Map(absent.idf));
+  const legacyAfter = analyzerInternals.scoreEntry(unit, targetAfter, new Map(present.idf));
+  assert.ok(legacyAfter.queryCoverage < legacyBefore.queryCoverage,
+    'the legacy df 0 -> 1 cliff must be observable in the control');
+});
+
 test('claim detector preserves stable segment references and recovered timestamps', () => {
   const document = normalizeInput({
     text: `WEBVTT

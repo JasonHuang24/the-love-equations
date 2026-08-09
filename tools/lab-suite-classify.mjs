@@ -7,8 +7,9 @@
  * not fail: it reported nothing, and for a tripwire that is the dangerous
  * state — the corpus gate self-disarmed behind an `ok` label once already
  * (lab-idf-unseen-token-fallback: 311 stems landed with exposure unmeasured).
- * DISARMED does not fail the run; absence of the corpus is legitimate. It is
- * only forbidden to look like coverage.
+ * DISARMED is a third state, not a pass. The runner exits 2 by default so
+ * automation can distinguish it from green; --allow-disarmed is the explicit
+ * acknowledgement for a run whose missing precondition is already understood.
  */
 
 /*
@@ -48,4 +49,10 @@ export function summarizeSteps(results) {
     `${failed} failed`,
   ].join(' · ');
   return { ok, disarmed, failed, line };
+}
+
+export function suiteExitCode(summary, { allowDisarmed = false } = {}) {
+  if (summary.failed > 0) return 1;
+  if (summary.disarmed > 0 && !allowDisarmed) return 2;
+  return 0;
 }

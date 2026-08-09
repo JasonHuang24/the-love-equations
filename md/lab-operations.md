@@ -1826,6 +1826,24 @@ can never be measured against the original corpus. Recovery: successor corpus
 `--neighbors`-onto-existing against v2.7.0 scoring, so crossings are ruled
 once, not twice; whether old rulings carry as precedent is Jason's alone.
 
+Release hardening 2026-08-09: DISARMED is now machine-actionable as well as
+visible. The ordinary runner exits 2 when any assertion skips; an operator must
+use `--allow-disarmed` (or `npm run test:lab:allow-disarmed`) to acknowledge the
+known missing precondition for that run. A real failure still dominates at exit
+1. The suite is 21 steps: the cliff-census self-test now runs in-band and guards
+both entrant vocabulary and a real weak/credible margin crossing. This does not
+recover or forgive the permanent corpus debt above.
+
+Successor baseline restored in the same hardening pass: committed corpus epoch
+`9429b35a081698e6` (29 sources, all byte-exact) retains 3,238 passages against
+715 entries under analyzer 2.7.0 / scoring hash `19eenj1`. Regenerating
+`threshold-neighbors.json` onto its existing rulings carried all 36,320 human
+records forward by key. Pending verdicts remain 0 credible / 0 weak; 29,242
+candidate-floor rows remain the census the suite deliberately does not treat as
+adjudicable. The original e61e336 crossing delta is still unknowable, as stated
+above, but future corpus/canon/engine drift is armed again against this committed
+successor identity.
+
 ## T6 — raised, not asked
 
 The zero-dark-entries guard forced 128 overlay records to be bulk-authored in

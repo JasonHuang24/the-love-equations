@@ -115,9 +115,9 @@ function report(oldFile, newFile) {
 }
 
 /*
- * Suite-independent smoke test over two inline micro-canons, so the tool can
- * be trusted without lab-corpus or the full suite. Kept out of the 20 steps on
- * purpose: the census is a pre-commit instrument, not a gate.
+ * Smoke test over two inline micro-canons, so the tool can be trusted without
+ * lab-corpus. The Lab suite runs it directly: a pre-commit instrument that can
+ * silently lose its margin detector is no instrument at all.
  */
 function selftest() {
   const page = { page: 'frameworks.html', anchor: 'a', href: 'frameworks.html#a' };
@@ -151,10 +151,17 @@ function selftest() {
   assert(census.left.length === 0, 'no stems left');
   assert(census.histogram[1] >= 1, 'entrants histogrammed at df 1');
   const moved = marginDiff(
-    [{ id: 'probe', text: 'Attraction precedes selection in dating markets.' }],
+    [{ id: 'probe', text: 'A typology quiz predicts compatibility outcomes.' }],
     oldPrepared, newPrepared,
   );
-  assert(Array.isArray(moved), 'marginDiff returns a list');
+  assert(moved.length === 1, 'the new exact concept produces one reported margin move');
+  assert(moved[0].id === 'probe', 'the moved probe keeps its benchmark identity');
+  assert(moved[0].before < WEAK, 'the old canon leaves the probe below the weak gate');
+  assert(moved[0].after >= CREDIBLE, 'the grown canon lifts the probe over the credible gate');
+  assert(moved[0].crossings.includes(WEAK), 'the weak-gate crossing is reported');
+  assert(moved[0].crossings.includes(CREDIBLE), 'the credible-gate crossing is reported');
+  assert(moved[0].near === false,
+    'a decisive crossing does not masquerade as a near-gate-only move');
   process.stdout.write('cliff-census selftest ok\n');
 }
 

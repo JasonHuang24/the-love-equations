@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { classifyStep, countSkips, skipLines, summarizeSteps } from '../tools/lab-suite-classify.mjs';
+import { classifyStep, countSkips, skipLines, suiteExitCode, summarizeSteps } from '../tools/lab-suite-classify.mjs';
 
 /*
  * The suite's third state, guarded.
@@ -52,6 +52,15 @@ test('the summary line carries the DISARMED count whenever one exists', () => {
   assert.equal(clean.line, '2 steps · 1 ok · 1 failed');
 });
 
+test('DISARMED is machine-actionable unless the caller explicitly acknowledges it', () => {
+  assert.equal(suiteExitCode({ failed: 1, disarmed: 1 }), 1,
+    'a real failure remains the dominant exit state');
+  assert.equal(suiteExitCode({ failed: 0, disarmed: 1 }), 2,
+    'an unacknowledged disarmed gate has a distinct nonzero exit');
+  assert.equal(suiteExitCode({ failed: 0, disarmed: 1 }, { allowDisarmed: true }), 0);
+  assert.equal(suiteExitCode({ failed: 0, disarmed: 0 }), 0);
+});
+
 test('skips are counted in both reporter dialects node actually emits', () => {
   /*
    * Found 2026-08-09, closing the DISARMED work: the runner's own skip
@@ -91,4 +100,6 @@ test('the runner actually uses the classifier it is guarded by', () => {
     'run-lab-suite.mjs no longer imports lab-suite-classify.mjs — the DISARMED state is unwired');
   assert.ok(runner.includes('classifyStep(') && runner.includes('summarizeSteps('),
     'run-lab-suite.mjs imports the classifier but does not call it');
+  assert.ok(runner.includes('suiteExitCode(') && runner.includes('--allow-disarmed'),
+    'run-lab-suite.mjs no longer makes DISARMED machine-actionable');
 });

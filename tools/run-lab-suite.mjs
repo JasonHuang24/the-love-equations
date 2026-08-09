@@ -47,16 +47,33 @@
  * The generalisation worth keeping: an instrument that cannot see the population
  * reports success either way.
  *
- * Exit code is 1 if any step failed, 0 otherwise. Skips do not fail the run —
- * they are legitimate — but they are always printed.
+ * Exit code is 1 if any step failed, 2 if a gate is DISARMED without explicit
+ * acknowledgement, and 0 otherwise. --allow-disarmed acknowledges skips for
+ * a run; it never relabels them as passes or hides them from the report.
  */
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { classifyStep, countSkips, skipLines, summarizeSteps } from './lab-suite-classify.mjs';
+import {
+  classifyStep,
+  countSkips,
+  skipLines,
+  suiteExitCode,
+  summarizeSteps,
+} from './lab-suite-classify.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+const options = new Set(process.argv.slice(2));
+const knownOptions = new Set(['--allow-disarmed']);
+const unknownOptions = [...options].filter((option) => !knownOptions.has(option));
+if (unknownOptions.length) {
+  process.stderr.write(`Unknown option(s): ${unknownOptions.join(', ')}\n`);
+  process.stderr.write('Usage: node tools/run-lab-suite.mjs [--allow-disarmed]\n');
+  process.exit(64);
+}
+const allowDisarmed = options.has('--allow-disarmed');
 
 /** Order preserved exactly as the former `&&` chain had it. */
 const STEPS = [
@@ -75,6 +92,7 @@ const STEPS = [
   ['node', 'tests/lab-gate-register.test.mjs'],
   ['node', 'tests/lab-corpus-extractor.test.mjs'],
   ['node', 'tests/lab-suite-classify.test.mjs'],
+  ['node', 'tools/lab-cliff-census.mjs', '--selftest'],
   ['node', 'tests/canon-index-fixtures.mjs'],
   ['node', 'scripts/validate-canon-index.mjs'],
   ['python', 'tools/lab_release_audit.py'],
@@ -118,8 +136,8 @@ const git = (...args) => {
 }
 
 const results = [];
-for (const [cmd, file] of STEPS) {
-  const run = spawnSync(cmd, [file], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1e9 });
+for (const [cmd, file, ...args] of STEPS) {
+  const run = spawnSync(cmd, [file, ...args], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1e9 });
   const out = `${run.stdout || ''}${run.stderr || ''}`;
   const failed = run.status !== 0;
 
@@ -141,7 +159,8 @@ for (const [cmd, file] of STEPS) {
 const failures = results.filter((r) => r.failed);
 const skipped = results.filter((r) => r.skips);
 
-process.stdout.write(`\n${summarizeSteps(results).line}\n`);
+const summary = summarizeSteps(results);
+process.stdout.write(`\n${summary.line}\n`);
 
 if (skipped.length) {
   process.stdout.write('\nSKIPPED ASSERTIONS — these ran green WITHOUT testing anything:\n');
@@ -160,6 +179,14 @@ if (failures.length) {
     process.stdout.write(r.out.trimEnd());
     process.stdout.write('\n');
   }
-  process.exit(1);
 }
-process.exit(0);
+const exitCode = suiteExitCode(summary, { allowDisarmed });
+if (!failures.length && summary.disarmed > 0) {
+  process.stdout.write(allowDisarmed
+    ? '\nDISARMED acknowledged with --allow-disarmed; skipped assertions remain untested.\n'
+    : [
+      '\nDISARMED is not release-green. Restore the missing gate preconditions,',
+      'or rerun with --allow-disarmed to acknowledge this specific run.\n',
+    ].join(' '));
+}
+process.exit(exitCode);

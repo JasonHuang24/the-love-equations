@@ -7,6 +7,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 LAB_HTML = ROOT / "lab.html"
 LAB_MODULE_DIR = ROOT / "js"
+LAB_ANALYZER = LAB_MODULE_DIR / "lab-analyzer.js"
 # Every relative module reached from lab-app.js is part of the release boundary
 # unless it is deliberately listed here as a shared, independently deployed module.
 SHARED_SITE_MODULES = set()
@@ -32,6 +33,9 @@ DIRECT_WORKER_RE = re.compile(r"""\bnew\s+Worker\(\s*["']([^"']+)["']""")
 DATA_REF_RE = re.compile(r"""["']((?:\./)?data/[^"']+\.json(?:\?[^"']*)?)["']""")
 HTTP_REF_RE = re.compile(r"""https?://[^"'()\s]+""")
 CSS_IMPORT_RE = re.compile(r"""@import\s+(?:url\(\s*)?["']([^"']+)["']""")
+ANALYZER_VERSION_RE = re.compile(
+    r"""(?m)^export const ANALYZER_VERSION\s*=\s*["']([^"']+)["']\s*;"""
+)
 
 
 errors = []
@@ -104,6 +108,14 @@ def resolve_module(owner, reference, kind):
 
 html_text = LAB_HTML.read_text(encoding="utf-8")
 html_references = list(HTML_REF_RE.findall(html_text))
+analyzer_text = LAB_ANALYZER.read_text(encoding="utf-8")
+analyzer_versions = ANALYZER_VERSION_RE.findall(analyzer_text)
+analyzer_version = analyzer_versions[0] if len(analyzer_versions) == 1 else None
+if len(analyzer_versions) != 1:
+    add_error(
+        "js/lab-analyzer.js must declare ANALYZER_VERSION exactly once; "
+        f"found {len(analyzer_versions)}"
+    )
 external_references.update(ref for ref in html_references if urlsplit(ref).scheme in {"http", "https"})
 
 html_targets = {}
@@ -194,6 +206,10 @@ if len(tokens) != 1:
     add_error(f"Lab release tokens disagree: {formatted}")
 
 active_token = next(iter(tokens), None)
+if active_token and analyzer_version and active_token != analyzer_version:
+    add_error(
+        f"Lab release token v={active_token} does not match ANALYZER_VERSION {analyzer_version}"
+    )
 if active_token:
     for reference in sorted(external_references):
         query = parse_qs(urlsplit(reference).query)

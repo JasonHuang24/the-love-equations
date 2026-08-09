@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test:lab:allow-disarmed": "node tools/run-lab-suite.mjs --allow-disarmed",
     "test:lab": "node tools/run-lab-suite.mjs",
     "test:smv": "node tests/smv-panel.mjs",
     "verify:matchmaker": "python tools/verify_matchmaker.py",
