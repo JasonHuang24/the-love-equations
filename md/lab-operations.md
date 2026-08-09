@@ -1587,3 +1587,102 @@ fifth needs a concept for consumer-capitalism claims about coupling, which the
 canon still lacks — and which is now, under the live coupling, a piece of
 doctrine that will move this benchmark when it lands.
 
+
+---
+
+# lab-idf-unseen-token-fallback.md
+
+# The unseen-token IDF fallback is non-monotonic, and the first entry to use a word taxes every entry that lacks it
+
+2026-08-08. Found while repairing a recall loss the Lexicon crawl (e61e336)
+caused. Diagnosed jointly: the QoL session bisected it to the commit and named
+the mechanism; this session reproduced every number independently. Jason ruled
+it an **engine finding to be opened as separate work**, not a fixture to re-cut.
+Status **LIVE** — nothing in the engine has been changed.
+
+## What was measured
+
+`js/lab-analyzer.js:1502` builds the IDF map over entry tokens only:
+
+    idf.set(token, Math.log((entries.length + 1) / ((documentFrequency.get(token) || 0) + 1)) + 1)
+
+and `scoreEntry` (:2498-2500) reads it for QUERY tokens as `idf.get(token) || 1`.
+A query token that no canon entry uses is therefore not in the map and takes the
+fallback **1.0**.
+
+That fallback is **below the value the formula itself would assign**. At 707
+concepts:
+
+| df | source | weight |
+|----|--------|--------|
+| 0 | `\|\| 1` fallback | **1.000** |
+| 0 | the formula, if asked | log(708/1)+1 ≈ **7.562** |
+| 1 | the formula | log(708/2)+1 ≈ **6.869** |
+
+So weight is not monotone in df. A word no entry has ever used is the cheapest
+token in the language; the moment ONE entry uses it, it becomes among the
+dearest. Nothing about the word's informativeness changed.
+
+## What it cost
+
+The claim "A person can prefer predictability without preferring commitment."
+mapped to `lexicon:term-commitment` at 0.437 and fell to **0.383** — under
+`minCredibleScore` 0.43 — so it mapped to nothing.
+
+Commitment was byte-identical across the two canons: same id, same 36 tokens,
+same `_phrases`, entryWeight 142.419 → 142.382. The entire delta is one query
+stem. "preferring" stems to `preferr`, df 0 before the crawl. Exactly one of the
+128 new entries introduced it — `lexicon:term-the-typology-shortcut`, on "what a
+person **preferred** and what they felt their partner expressed" — taking df to
+1 and the weight to 6.869. `preferr` is absent from Commitment's token set, so
+it added ~5.87 to `queryWeight` while contributing nothing to `sharedWeight`,
+and `queryCoverage = sharedWeight/queryWeight` collapsed.
+
+**One entry, one stem, -0.054.** The whole-corpus IDF drift from all 128 entries
+together moved the Availability pin by 0.001. The single-entry effect is
+twenty-five times the aggregate effect of the change that carried it.
+
+## The generalisation
+
+Adding vocabulary to the canon can REDUCE recall for exactly the claims that use
+that vocabulary. This inverts the intuition every canon-growth pass has run on —
+that more canon is monotonically more reach — and it is invisible to the metric
+that would normally catch it, because aggregate drift stays in the thousandths
+while individual claims move by tens of thousandths.
+
+Two failures in `tests/lab-analyzer.test.mjs` were near-gate at the time and only
+one was this mechanism; the other, `frameworks:conversion-ladder`, was a fixture
+pinned at EXACTLY 0.430 against a 0.43 gate. Its bounded-context promotion is
+intact and measured — +0.045 both before (0.385 → 0.430) and after (0.383 →
+0.428) — so only the landing point moved. Jason ruled that zero-margin pin is
+**evidence for this finding**, not a test to re-cut, and it stays red.
+
+Note the asymmetry the finding implies: those two are simply the near-gate pairs
+that happened to carry fixtures. Any other pair sitting within a few thousandths
+of an admission line moved the same way, unobserved.
+
+## What was NOT done
+
+- **The engine was not touched.** No change to the fallback, the formula, or any
+  threshold. Restoring monotonicity (df 0 costing ~7.562 rather than 1.0) would
+  make every unknown token expensive, move scores corpus-wide, and is a
+  score-moving release in the v2.6.0 sense — it needs its own red manifest,
+  crossing adjudication, and ruling. It is not a hotfix.
+- **No page was reworded** and no gate moved. The recall loss was repaired with
+  the permitted remedy — an authored canon surface. `lexicon:term-commitment`
+  gained the `commonMisreadings` entry for the predictability conflation it
+  genuinely lacked, which is a real gap in the entry independent of the score.
+  It now ranks first at 0.593 and maps.
+- **The exposure was not measured.** `lab-corpus/` is absent in this checkout, so
+  the corpus adjudication tripwire in `lab-threshold-neighbors` SKIPS while its
+  step still reports `ok`. How many pairs the 128 entries pushed across an
+  admission line is unknown, against `WEAK_BACKLOG_CEILING = 0`. Measuring it
+  needs the corpus restored (RERUN §1) and is the natural first step of the
+  separate work.
+
+## Open
+
+1. Decide whether the fallback becomes formula-consistent, is left as documented
+   behavior, or is replaced by a query-side rule that does not read entry df.
+2. Restore `lab-corpus/` and sweep, to size how many crossings the crawl caused.
+3. `frameworks:conversion-ladder` stays red until 1 is settled.
