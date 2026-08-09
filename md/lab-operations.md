@@ -1798,7 +1798,13 @@ fixture escalates. No frequency cap; no invisible accumulation.
 
 A skipped gate may not report `ok`: it must carry a loud third state
 (DISARMED), and a canon-index-changing commit made while disarmed must carry a
-debt row. Implementation is queued work. PERMANENT DEBT, recorded here: the
+debt row. SHIPPED 2026-08-09 (`tools/lab-suite-classify.mjs`, guarded by suite
+step `tests/lab-suite-classify.test.mjs`; the suite is 20 steps now). Closing
+it surfaced a second self-disarm: the runner's skip detector grepped the TAP
+literal `# SKIP` while node emits the spec reporter here, so the SKIPPED
+ASSERTIONS block had been silently dead — the detector for the disarmed state
+was itself disarmed. Both reporter dialects are now read, and spec-format `✖`
+failures count as failures rather than throws. PERMANENT DEBT, recorded here: the
 crossings caused by e61e336/4ad8410 (311 stems, 291 at the then-maximum jump)
 can never be measured against the original corpus. Recovery: successor corpus
 + committed hash manifest (identity, not just presence); the band regenerates

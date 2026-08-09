@@ -1,7 +1,9 @@
 # The Love Equations — working agreements
 
 Static site + the LE Lab (an NLP engine mapping discourse onto the site's canon).
-Suites: `npm run test:lab` (19 steps) · `npm run test:all`. **Read the exit code, never
+Suites: `npm run test:lab` (20 steps) · `npm run test:all`. A step whose
+assertions skipped reports `DISARMED(n)`, in the step label and the summary
+line — it is not a pass and must never be read as one. **Read the exit code, never
 grep the output** — two steps throw bare AssertionErrors outside TAP, and a piped
 `tail` hides the exit status. The suite's first line names the tree it tested;
 believe it, not your assumption.

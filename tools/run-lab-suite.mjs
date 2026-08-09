@@ -30,7 +30,10 @@
  *   3. A SKIPPED gate reads as `ok`. `lab-threshold-neighbors` test 3 skips when
  *      `lab-corpus/` is absent, which silently disarms the adjudication tripwire
  *      — correct behaviour, dangerous state, invisible to a `not ok` grep.
- *      (surfaced here as its own line, never folded into "pass")
+ *      (surfaced here as its own line — and since the 2026-08-08 adjudication,
+ *      as a third step state: DISARMED(n), carried into the summary line,
+ *      never folded into "pass". tools/lab-suite-classify.mjs, guarded by
+ *      tests/lab-suite-classify.test.mjs.)
  *   4. A red suite in a stale tree looks exactly like a regression. On
  *      2026-07-31 the shared checkout sat detached at a merge commit eight
  *      files behind origin/main; there, this suite honestly reported
@@ -51,6 +54,8 @@ import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { classifyStep, countSkips, skipLines, summarizeSteps } from './lab-suite-classify.mjs';
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /** Order preserved exactly as the former `&&` chain had it. */
@@ -69,6 +74,7 @@ const STEPS = [
   ['node', 'tests/lab-threshold-neighbors.test.mjs'],
   ['node', 'tests/lab-gate-register.test.mjs'],
   ['node', 'tests/lab-corpus-extractor.test.mjs'],
+  ['node', 'tests/lab-suite-classify.test.mjs'],
   ['node', 'tests/canon-index-fixtures.mjs'],
   ['node', 'scripts/validate-canon-index.mjs'],
   ['python', 'tools/lab_release_audit.py'],
@@ -118,13 +124,16 @@ for (const [cmd, file] of STEPS) {
   const failed = run.status !== 0;
 
   // TAP counts when present; a thrown AssertionError leaves none, which is trap 2.
-  const notOk = (out.match(/^not ok /gm) || []).length;
-  const skips = (out.match(/# SKIP/g) || []).length;
+  // Failure detection also reads the spec reporter's ✖ marks — `not ok` alone
+  // classified every spec-format red as FAIL(throw).
+  const notOk = (out.match(/^not ok /gm) || []).length
+    || (out.match(/^✖ /gm) || []).length;
+  const skips = countSkips(out);
   const threw = failed && notOk === 0;
 
   results.push({ file, failed, notOk, skips, threw, out });
 
-  const label = failed ? (threw ? 'FAIL(throw)' : `FAIL(${notOk})`) : 'ok';
+  const label = classifyStep({ failed, threw, notOk, skips });
   const skipNote = skips ? `  ${skips} SKIPPED` : '';
   process.stdout.write(`${label.padEnd(12)} ${file}${skipNote}\n`);
 }
@@ -132,12 +141,12 @@ for (const [cmd, file] of STEPS) {
 const failures = results.filter((r) => r.failed);
 const skipped = results.filter((r) => r.skips);
 
-process.stdout.write(`\n${STEPS.length} steps · ${STEPS.length - failures.length} ok · ${failures.length} failed\n`);
+process.stdout.write(`\n${summarizeSteps(results).line}\n`);
 
 if (skipped.length) {
   process.stdout.write('\nSKIPPED ASSERTIONS — these ran green WITHOUT testing anything:\n');
   for (const r of skipped) {
-    for (const line of r.out.split('\n').filter((l) => l.includes('# SKIP'))) {
+    for (const line of skipLines(r.out)) {
       process.stdout.write(`  ${r.file}: ${line.trim()}\n`);
     }
   }
