@@ -705,6 +705,26 @@ test('the full novel relationship matrix remains analyzable without sentence all
   // that ruling into the top slot at 0.416 and crowded out Commitment — which had
   // an exact alias hit at 0.412 — leaving the claim below the mapping gate. With
   // verdicts off the match surface, Commitment ranks first at 0.463 and it maps.
+  //
+  // "preferring" cost this claim its mapping a second time, by the opposite
+  // mechanism, and the episode is worth keeping. The Lexicon crawl of e61e336 left
+  // Commitment byte-identical, but one new entry — The Typology Shortcut, on
+  // "what a person preferred and what they felt their partner expressed" — put the
+  // stem `preferr` into the canon for the first time. Before that, df was 0 and
+  // `idf.get(token) || 1` at :1502 handed the stem the fallback 1.0; at df 1 the
+  // formula returns 6.869. The stem is not in Commitment's token set, so it landed
+  // almost six points of query weight that no shared weight could answer, and
+  // queryCoverage collapsed: 0.437 to 0.383, under the 0.43 gate, claim unmapped.
+  // One entry, one stem, -0.054 — twenty-five times the whole-corpus drift all 128
+  // entries produced on the pin at :922.
+  //
+  // The property to remember: the `|| 1` fallback is non-monotonic in df. An
+  // unseen token is cheap at 1.0, a token seen once is dear at 6.869, so the first
+  // entry to use a word taxes every entry that lacks it. Adding vocabulary can
+  // therefore REDUCE recall for the claims that use it. The remedy was the
+  // permitted one — a canon surface, not a reworded page, not a moved gate:
+  // Commitment gained a misreading for the predictability conflation it genuinely
+  // lacked, which is why it now ranks first at 0.594 rather than the 0.463 above.
   assert.deepEqual(mappedClaims, [
     'The decline of recurring community spaces reduces opportunities for repeated exposure.',
     'A person can prefer predictability without preferring commitment.',
@@ -917,9 +937,25 @@ test('credible mappings require score plus inspectable evidence sufficiency', as
    * same mechanism every prior entry in this log describes. The admission guard
    * still blocks the passage and the two assertions below it still hold, so
    * again this updates the corpus pin and nothing about the behavior.
+   *
+   * 0.535 at 707, the full-site Lexicon crawl of e61e336 — 128 terms covering
+   * every framework no Lexicon row reached, the Love Hierarchy, Exposure, and the
+   * jargon the pages had only defined in prose. Thirteen moves; cumulative drift
+   * is 0.003 against a minCredibleScore of 0.43. This is by a wide margin the
+   * largest population step in this log — 579 to 707, better than a fifth again —
+   * and it moved the pin by one thousandth, the same scale a single rewording
+   * produced at 476. Twelve entries of this log argued the pin measures the
+   * corpus rather than the change; the largest change yet is the cleanest
+   * evidence for it. The admission guard still blocks the passage and the three
+   * assertions below still hold.
+   *
+   * 0.535 HELD at 715 — deep-dive essay 08 added a twenty-second source page and
+   * eight concepts while this fix was in flight, so the value was re-measured on
+   * top of it rather than assumed to carry. Two consecutive population steps have
+   * now landed on the same thousandth from unrelated causes.
    */
   assert.equal(weakPassage.weakMatches[0].title, 'Availability');
-  assert.equal(weakPassage.weakMatches[0].score, 0.536);
+  assert.equal(weakPassage.weakMatches[0].score, 0.535);
   assert.ok(weakPassage.weakMatches[0].score > SCORING_CONFIG.minCredibleScore);
   assert.ok(weakPassage.weakMatches[0].whyMatched.some((reason) =>
     reason.startsWith('Admission guard:')));
