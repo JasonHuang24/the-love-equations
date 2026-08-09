@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+f912ededf573",
+  "indexVersion": "1.0.0+b828e773aa55",
   "generatedAt": "2026-08-09T01:28:37.000Z",
   "sourcePages": [
     {
@@ -100,7 +100,7 @@
       "inputs": [
         "deep-dive.html"
       ],
-      "sha256": "ca872aa272e557929aec8f69c6534641101366cf768c4d314f99715c7dfc6c19",
+      "sha256": "b0ce1a41a57626db39238551ffe68fb1b93eec6d513f104a949b00eb8577cd88",
       "conceptCount": 8
     },
     {
@@ -188,7 +188,7 @@
       "inputs": [
         "dd-autism-and-dating.html"
       ],
-      "sha256": "57b62e40bd274709cceb046b864aaf5ac90e6aaac217bf59ccb3f4d59225196d",
+      "sha256": "8af94ec956c3f1187d390bc88f6c33a9db0c1750cd29da4f214650fd30d5d38e",
       "conceptCount": 7
     },
     {
@@ -23564,7 +23564,7 @@
       "anchor": "",
       "category": "Deep Dives",
       "subcategory": "Neurotype",
-      "synopsis": "“The advice assumes you missed a signal. The evidence keeps finding two people who missed each other.”",
+      "synopsis": "“The advice assumes you missed a signal. The evidence keeps pointing at two people who missed each other.”",
       "evidenceType": "Long-form synthesis",
       "contentType": "Essay guide",
       "verdict": "",
@@ -24859,7 +24859,7 @@
     },
     {
       "id": "deep-dive:autism-and-dating:the-numbers",
-      "title": "Start From What Is Measured, Not From What Is Assumed",
+      "title": "Start From What Has Actually Been Measured",
       "page": "dd-autism-and-dating.html",
       "anchor": "the-numbers",
       "category": "Deep Dives",
@@ -24958,7 +24958,7 @@
       "anchor": "the-mask",
       "category": "Deep Dives",
       "subcategory": "Autism and Dating",
-      "synopsis": "The standard workaround for the gap in the last section is performance: suppress the stims, rehearse the small talk, run a continuous background process that monitors your own face. The research calls it camouflaging or masking. It is worth being precise about why it is such a stubborn strategy — it is stubborn because it works. It gets people through interviews, through parties, and through first dates.",
+      "synopsis": "The standard workaround for the gap in the last section is performance: suppress the stims, rehearse the small talk, run a continuous background process that monitors your own face. The research calls it camouflaging or masking. It is worth being precise about why it is such a stubborn strategy.",
       "evidenceType": "Record + framework",
       "contentType": "Essay section",
       "verdict": "",
@@ -25048,7 +25048,7 @@
     },
     {
       "id": "deep-dive:autism-and-dating:the-room",
-      "title": "The Room Is a Variable, and You Control It",
+      "title": "The Room Is a Variable, and Often Yours to Set",
       "page": "dd-autism-and-dating.html",
       "anchor": "the-room",
       "category": "Deep Dives",
@@ -25058,7 +25058,7 @@
       "contentType": "Essay section",
       "verdict": "",
       "aliases": [
-        "Room Is a Variable, and You Control It"
+        "Room Is a Variable, and Often Yours to Set"
       ],
       "standaloneAliases": [],
       "contextualAliases": [],
