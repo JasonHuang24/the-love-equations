@@ -61,6 +61,29 @@ function assessPose(lm, width, height){
     return { ok:false, code:'profile', message:'This body is too side-on for frontal width ratios. Use a front-facing photo.' };
   }
 
+  // ── Three-band framing read (v1). The hard gates in this function stay non-overridable refusals;
+  // 'degraded' asks the host for an explicit reduced-accuracy override before scoring. Rationale: the CNN
+  // scale was calibrated on full-body straight-on shots (the same build read ~16 raw points apart cropped
+  // vs full-body — see body.html MODEL_CONFIG), and every frontal width ratio shrinks with the cosine of
+  // body yaw. yawDeg is a BlazePose weak-perspective z estimate ("≈ degrees", z ≈ x scale; the symmetric
+  // shoulder pair gives it a zero baseline on a frontal body). tilt mirrors the host's poseSkeleton
+  // formula, so its long-standing 0.06 warn threshold carries over as the degraded edge. All thresholds
+  // reasoned/provisional — tune with the batch harness on known-angle photos. Non-finite z → yaw 0
+  // (unmeasured, honest pass) rather than a false refusal.
+  const spanN = Math.abs(lm[PIDX.shoulderL].x - lm[PIDX.shoulderR].x) || 1e-6;
+  const zOk = Number.isFinite(lm[PIDX.shoulderL].z) && Number.isFinite(lm[PIDX.shoulderR].z);
+  const yawDeg = zOk ? Math.abs(Math.atan2(lm[PIDX.shoulderL].z - lm[PIDX.shoulderR].z, spanN)) * 180/Math.PI : 0;
+  const tilt = (Math.abs(lm[PIDX.shoulderL].y - lm[PIDX.shoulderR].y) + Math.abs(lm[PIDX.hipL].y - lm[PIDX.hipR].y)) / 2 / spanN;
+  if (yawDeg >= 30){
+    return { ok:false, code:'profile', message:'This body is turned too far from the camera for frontal width ratios. Face the camera square-on.' };
+  }
+  if (tilt >= 0.14){
+    return { ok:false, code:'upright', message:'The shoulders and hips are too uneven to read — stand square to the camera, weight on both feet.' };
+  }
+  const issues = [];
+  if (yawDeg >= 15) issues.push('the body is angled away from the camera (~' + Math.round(yawDeg) + '°)');
+  if (tilt >= 0.06) issues.push('the shoulders/hips are tilted — a lean or hip-cock skews the width ratios');
+
   // Lower-body presence decides full vs. torso. Full body (feet in frame, confident) unlocks the height-based
   // adiposity proxy and leg proportion; a cropped upper-body shot scores the frame cues only.
   const lower=[25,26,27,28,29,30,31,32];
@@ -68,7 +91,8 @@ function assessPose(lm, width, height){
   const feetInside=[27,28,29,30,31,32].every(i => lm[i].x>=-0.03 && lm[i].x<=1.03 && lm[i].y>=0.04 && lm[i].y<=0.985);
   const feetPresent = feetInside && lowerConfidence >= 0.48 && confidence(lm[27]) >= 0.38 && confidence(lm[28]) >= 0.38;
   if (!feetPresent){
-    return { ok:true, code:'ok', framing:'torso', shoulderTorso, hipTorso };
+    issues.push('the photo is cropped above the feet — the score scale was calibrated on full-body shots');
+    return { ok:true, code:'ok', framing:'torso', shoulderTorso, hipTorso, yawDeg, tilt, band:'degraded', issues };
   }
 
   // Feet are in frame, so the legs must be straight and standing for the height/leg cues to be valid.
@@ -85,7 +109,8 @@ function assessPose(lm, width, height){
     return { ok:false, code:'standing', message:'Seated, crouched, or strongly bent legs cannot support standing body ratios. Use a neutral standing pose.' };
   }
   return { ok:true, code:'ok', framing:'full', lowerConfidence, shoulderTorso, hipTorso,
-    thighVertical:sideStats.map(s=>s.thighVertical), shinVertical:sideStats.map(s=>s.shinVertical) };
+    thighVertical:sideStats.map(s=>s.thighVertical), shinVertical:sideStats.map(s=>s.shinVertical),
+    yawDeg, tilt, band:(issues.length ? 'degraded' : 'pass'), issues };
 }
 
 function rowWidthNear(mask, mw, row, centerX){

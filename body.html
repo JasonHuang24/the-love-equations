@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/body.css?v=1.9" />
+  <link rel="stylesheet" href="css/body.css?v=2.0" />
 </head>
 <body data-page="body">
   <div data-include="navigation-bar"></div>
@@ -52,7 +52,7 @@
 
             <div class="bc-src-panel" data-panel="upload">
               <input type="file" id="bc-file" accept="image/*" hidden />
-              <div class="bc-drop" id="bc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing photo here &mdash; full body, or upper body to the hips. Click to choose. Saved on your device, never uploaded.</div>
+              <div class="bc-drop" id="bc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, <strong>full-body</strong> photo here &mdash; head to feet, standing square. Upper-body shots still work, at reduced accuracy. Click to choose. Saved on your device, never uploaded.</div>
             </div>
             <div class="bc-src-panel" data-panel="camera" hidden>
               <button class="bc-btn" id="bc-cam-start"><i class="ti ti-video"></i> Start camera</button>
@@ -69,6 +69,22 @@
             <div class="bc-stage" id="bc-stage">
               <video id="bc-video" playsinline hidden></video>
               <canvas id="bc-canvas" hidden></canvas>
+              <!-- camera-mode alignment guide (standard framing: whole body head-to-feet, standing square,
+                   arms a few inches out). Symmetric shapes only — the video is mirrored, the guide must
+                   read the same either way. -->
+              <div class="bc-guide" id="bc-guide" hidden aria-hidden="true">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                  <line class="g-mid" x1="50" y1="3" x2="50" y2="97" />
+                  <circle class="g-shape" cx="50" cy="13" r="6" />
+                  <path class="g-shape" d="M 38 25 L 62 25 L 58 56 L 42 56 Z" />
+                  <line class="g-shape" x1="38" y1="26" x2="27" y2="58" />
+                  <line class="g-shape" x1="62" y1="26" x2="73" y2="58" />
+                  <line class="g-shape" x1="44" y1="56" x2="42" y2="90" />
+                  <line class="g-shape" x1="56" y1="56" x2="58" y2="90" />
+                  <line class="g-bar" x1="26" y1="91" x2="74" y2="91" />
+                </svg>
+                <div class="bc-guide-tip">Whole body in frame &mdash; feet on the line, arms a few inches out, square to the camera.</div>
+              </div>
             </div>
             <div class="bc-status" id="bc-status" role="status" aria-live="polite">Loading the on-device pose model&hellip;</div>
             <div class="bc-note bc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
@@ -586,6 +602,7 @@
     const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
                  sexClsSex:null, sexClsConf:null,   // the face classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
+                 gate:null,   // a degraded-framing photo awaiting the user's rate-anyway override ({issues:[…]}); takes over the panel until decided
                  bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null,
                  // Tier-0 objective inputs (optional; drive the hybrid blend). bf is a PERCENT; source 'picker'|'measured'.
                  inHeightCm:null, inWeightKg:null, inBfPct:null, inBfSource:null,
@@ -889,6 +906,23 @@
       const t0 = computeTier0();          // objective spine, or null unless the three numbers + a sex are all in
       const hasInputs = !!t0;
       bcSyncInputsPreview();              // keep the Step-2 preview's photo-aware tail current (focus-safe span-only update)
+      // A gated photo takes over the panel (checked BEFORE metrics — a previous photo's stale result, or
+      // the numbers-only view, must not render under a new photo's canvas). Cleared by override, discard,
+      // a new photo, or Reset.
+      if (BC.gate){
+        host.innerHTML = '<div class="bc-gate">'
+          + '<div class="bc-gate-h"><i class="ti ti-viewfinder"></i> Framing is off &mdash; not scored yet</div>'
+          + '<ul class="bc-gate-list">' + BC.gate.issues.map(t => '<li>'+t+'</li>').join('') + '</ul>'
+          + '<div class="bc-gate-note">The score is calibrated on full-body, straight-on, standing photos &mdash; during calibration the same build scored measurably different cropped or angled than it did shot to standard. Scoring this photo means the number is rougher than the calc can normally stand behind.</div>'
+          + '<div class="bc-gate-btns"><button class="bc-btn" id="bc-gate-go"><i class="ti ti-alert-triangle"></i> Rate anyway &mdash; reduced accuracy</button>'
+          + '<button class="bc-btn ghost" id="bc-gate-drop">Discard photo</button></div>'
+          + '<div class="bc-gate-note">Better: retake head-to-feet, square to the camera, arms a few inches out.</div>'
+          + '</div>';
+        const go = host.querySelector('#bc-gate-go'), dr = host.querySelector('#bc-gate-drop');
+        if (go) go.addEventListener('click', function(){ if (window.bcGateOverride) window.bcGateOverride(); });
+        if (dr) dr.addEventListener('click', function(){ BC.gate = null; window.bcGateOverride = null; window.bcResetResult(); setStatus('Cleared. Drop a photo to start again.'); if (window.bcClearCanvas) window.bcClearCanvas(); });
+        return;
+      }
       if (!BC.metrics){
         if (hasInputs){ renderNumbersOnly(host, t0, BC_DEBUG); return; }   // State C — numbers only
         // No photo AND no numbers read: the calc is empty, so drop any score it previously
@@ -1058,6 +1092,7 @@
       return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + cfNote + (BC.reliability ? ' · ' + BC.reliability : '');
     }
     window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac){
+      BC.gate = null; window.bcGateOverride = null;   // this photo is committing — any pending framing prompt is decided/superseded
       BC.metrics = metrics; BC.model = null; BC.measuredAt = Date.now();   // stable stamp: a new photo, reused on every re-render so age stays honest
       BC.framing = framing === 'torso' ? 'torso' : 'full';
       BC.bareGeometry = !!bareGeometry; BC.skinFrac = (skinFrac==null ? null : skinFrac);
@@ -1103,7 +1138,9 @@
       const msg = BC.deferredRefusal; BC.deferredRefusal = null;
       window.bcSetStatus(msg, true); window.bcResetResult();
     };
-    window.bcResetResult = function(){ BC.deferredRefusal = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    window.bcResetResult = function(){ BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    // a degraded-framing photo parks here until the user rules on it (renderResult owns the prompt UI)
+    window.bcShowGate = function(issues){ BC.gate = { issues: issues || [] }; renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
@@ -1138,6 +1175,7 @@
     };
     // full reset of this calc (the composite Reset button calls this on whichever page is open)
     window.bcResetAll = function(){
+      BC.gate = null; window.bcGateOverride = null;
       BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
       BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
       BC.sexConf = null; BC.sexManual = false; BC.sexClsSex = null; BC.sexClsConf = null; BC.sexUnknownReason = ''; BC.shotDataURL = null;
@@ -1829,6 +1867,7 @@
     }
 
     let bcBusy = false;
+    let framingAutoOverride = false;   // batch harness only: score degraded-framing images without the interactive prompt (caveat still recorded)
     async function drawAndScore(srcEl, W, H){
       if (bcBusy){ window.bcSetStatus('Still analysing the previous photo — drop this one again when it finishes.', true); return; }
       bcBusy = true;
@@ -1873,6 +1912,12 @@
         // whole-body cues as unmeasured rather than defaulting to 'full' and scoring leg:torso /
         // symmetry from joints that may be extrapolated off-frame.
         if (!poseResult.quality){ skel.legTorso = null; skel.symmetry = null; }
+        // Three-band framing verdict from the worker (assessPose). 'refuse' never reaches here (it comes
+        // back ok:false above); 'degraded' parks the fully-prepared commit behind the rate-anyway override
+        // below. A missing quality object stays 'pass' — that path's degradation is already carried by
+        // poseResult.warning, and inventing a band for it would gate on information we don't have.
+        const gateBand = (poseResult.quality && poseResult.quality.band) || 'pass';
+        const gateIssues = (poseResult.quality && poseResult.quality.issues) || [];
 
         // Resolution / distance gate (M2). A subject filling little of the frame gives a coarse mask,
         // imprecise joints (width ratios compress toward 1.0 → a real V-taper flattens) and an upscaled CNN
@@ -1936,26 +1981,26 @@
         if (poseResult.warning) warns.push(poseResult.warning);
         if (px && (px.waistArm || px.hipArm)) warns.push('an arm covered part of your waist or hips, so that cue was skipped — arms a few inches out reads the full frame');
         else if (skel.armNearWaist) warns.push('an arm is by your waist, which can widen the silhouette — stand with arms slightly out');
-        if (skel.tilt > 0.06) warns.push('shoulders/hips look tilted — stand square to the camera');
+        // (the old skel.tilt>0.06 warn is superseded: the worker's framing band now classifies tilt BEFORE
+        //  scoring, and an overridden photo carries the framing caveat below instead)
         if (personFrac < 0.32 || personNativePx < 220) warns.push('the subject is small or distant in the frame, so fine width ratios and the model read are less reliable — fill more of the frame for a sharper read');
         if (skinFrac >= SKIN_AMBIG_LO && skinFrac < SKIN_AMBIG_HI) warns.push('the torso reads as borderline clothed/bare ('+Math.round(skinFrac*100)+'% skin), so the headline may be routed to the wrong instrument (model vs. silhouette) — if the score looks off, that is likely why');
+        if (gateBand === 'degraded') warns.unshift('non-standard framing: ' + gateIssues.join('; ') + ' — scored anyway at reduced accuracy');
         const relWarn = warns.length ? warns.join(' · ') : '';
 
         // crop the model tensor from the full-res source (pose landmarks are normalized) before any overlay
         const fullW = srcEl.naturalWidth||srcEl.width||W, fullH = srcEl.naturalHeight||srcEl.height||H;
         let tensorData = null;
         try { tensorData = cropBodyTensor(srcEl, lm, fullW, fullH); } catch(_){ tensorData = null; }
-        // Only stash for a deferred (still-loading) model run when this image actually routes to the model.
-        // A bare-physique image routes to geometry, so a late model-load must NOT silently override its headline.
-        if (useModel){ pendingTensor = tensorData; pendingTensorGen = gen; }
-        else { pendingTensor = null; }
         if (useModel && !tensorData && geoRefusalMsg){
           // The model was to carry the headline past the geometry gates, but its crop failed —
           // it can never score this photo, so the geometry refusal applies after all.
           window.bcSetStatus(geoRefusalMsg, true);
           window.bcResetResult(); return;
         }
-        BC.deferredRefusal = (useModel && geoRefusalMsg) ? geoRefusalMsg : null;
+        // pendingTensor / pendingSexTensor / BC.deferredRefusal are set in commit() below, NOT here: a photo
+        // parked behind the framing prompt must not get auto-scored (or auto-refused) by a model or
+        // classifier that finishes loading mid-prompt.
 
         // read sex from the face (overrides the unreliable frame guess); skipped if the face isn't visible OR if
         // the eyes are hidden (sunglasses make genderage confidently mis-sex women → don't trust it; fall back to
@@ -1966,10 +2011,6 @@
           window.__bcSex = { reason:'eyes-occluded', eyeCheekRatio: window.__bcEyeRatio };
         } else {
           try { sexData = cropSexFaceTensor(srcEl, lm, fullW, fullH); } catch(_){ sexData = null; }
-          if (sexData){
-            if (sexSession) inferSex(sexData, gen);
-            else if (sexState === 'loading'){ pendingSexTensor = sexData; pendingSexGen = gen; }   // classifier still loading
-          }
         }
 
         // overlay the skeleton for feedback
@@ -1982,11 +2023,32 @@
         // snapshot the analysed photo (with overlay) so it survives a page switch — restored by bcRestoreShot
         try { window.bcSetShot(downscaleToDataURL(canvas, 768)); } catch(_){}
 
-        window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac);
-        // eyes hidden (sunglasses) → keep bcAnalyze's decisive body-frame guess rather than asserting the
-        // confidently-wrong occluded-face read; the bold "switch" toggle fixes it if the frame mis-reads.
-        if (tensorData && session && useModel){ window.bcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
-        else if (tensorData && modelState === 'loading' && !bareBody){ window.bcSetStatus('Body measured — trained model still loading, the score will update automatically…'); }
+        // The commit tail — everything that turns this analysis into a live result. Runs immediately for a
+        // pass-band photo; for a degraded one it waits behind the rate-anyway override (gen-guarded, so a
+        // newer photo silently retires a stale prompt's commit).
+        const commit = function(){
+          // Only stash for a deferred (still-loading) model run when this image actually routes to the model.
+          // A bare-physique image routes to geometry, so a late model-load must NOT silently override its headline.
+          if (useModel){ pendingTensor = tensorData; pendingTensorGen = gen; }
+          else { pendingTensor = null; }
+          BC.deferredRefusal = (useModel && geoRefusalMsg) ? geoRefusalMsg : null;
+          if (sexData){
+            if (sexSession) inferSex(sexData, gen);
+            else if (sexState === 'loading'){ pendingSexTensor = sexData; pendingSexGen = gen; }   // classifier still loading
+          }
+          window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac);
+          // eyes hidden (sunglasses) → keep bcAnalyze's decisive body-frame guess rather than asserting the
+          // confidently-wrong occluded-face read; the bold "switch" toggle fixes it if the frame mis-reads.
+          if (tensorData && session && useModel){ window.bcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
+          else if (tensorData && modelState === 'loading' && !bareBody){ window.bcSetStatus('Body measured — trained model still loading, the score will update automatically…'); }
+        };
+        if (gateBand === 'degraded' && !framingAutoOverride){
+          window.bcGateOverride = function(){ if (gen !== currentGen) return; window.bcGateOverride = null; commit(); };
+          window.bcShowGate(gateIssues);
+          window.bcSetStatus('Photo readable, but the framing is off — rate it anyway in the panel, or retake to standard.', true);
+          return;
+        }
+        commit();
       } catch(e){
         window.bcSetStatus('Analysis failed: '+e.message, true); window.bcResetResult();
       } finally {
@@ -2032,7 +2094,8 @@
         stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
-        camShot.hidden=false; window.bcSetStatus('Camera live — step back so your whole body is in frame, then capture.');
+        document.getElementById('bc-guide').hidden = false;
+        camShot.hidden=false; window.bcSetStatus('Camera live — step back and line up with the guide, then capture.');
       } catch(e){ window.bcSetStatus('Camera blocked or unavailable: '+e.message, true); }
     });
     camShot.addEventListener('click', () => {
@@ -2046,6 +2109,7 @@
     window.bcStopCamera=function(){
       if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
       camShot.hidden=true; video.hidden=true;
+      document.getElementById('bc-guide').hidden = true;
     };
 
     // On load, restore a photo + result saved on a previous visit (persists until a new drop or Reset).
@@ -2286,6 +2350,7 @@
         const snap = snapshot();
         const lsBefore = snapshotLS();
         guardOn(); wrapsOn();
+        framingAutoOverride = true;   // batch = calibration: degraded framing scores without the prompt, caveat lands in the reliability column
         try {
           for (let i=0;i<files.length;i++){
             statusEl.textContent = 'Processing '+(i+1)+'/'+files.length+': '+files[i].name+' …';
@@ -2299,6 +2364,7 @@
           // wraps — else a late inferAndSet/inferSex passes its gen guard, calls the real (now-unwrapped) setter,
           // and renderResult persists loveEquations.* after the guard is gone. Order: gen → pendings → restore → off.
           currentGen++; pendingTensor = null; pendingSexTensor = null;
+          framingAutoOverride = false;
           cur = null;
           try { restore(snap); }         // storage still guarded → restore renders without persisting
           catch(e){ console.error('[body batch] UI restore failed:', e); }   // but ALWAYS un-patch below — a leaked guard would break the app's persistence
