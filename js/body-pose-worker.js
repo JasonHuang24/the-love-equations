@@ -247,6 +247,7 @@ async function initialize(){
 
 function analyze(message){
   const id=message.id, bitmap=message.bitmap, startedAt=performance.now();
+  const poseOnly=!!message.poseOnly;   // live-alignment probe: pose + quality only, skip the (expensive) silhouette
   let landmarks=null, silhouette=null, quality=null, warning='', recycle=false;
   try {
     if (!poseLandmarker) throw new Error('pose engine is not ready');
@@ -266,7 +267,9 @@ function analyze(message){
       return;
     }
 
-    if (!personSegmenter){
+    if (poseOnly){
+      // alignment probe — landmarks + quality are all the caller wants; no silhouette, no warning
+    } else if (!personSegmenter){
       warning='the silhouette model is unavailable';
     } else {
       try {
@@ -311,7 +314,8 @@ function analyze(message){
 //   error      {id, stage, message, elapsedMs}        analysis failed for this image
 //   init-error {message}                              task init failed (host shows a fatal load error)
 //   recycle:true on a result tells the host to terminate + respawn this worker (clears a native WASM spin).
-// Inbound: {type:'analyze', id, bitmap, ...} — the only message the worker accepts.
+// Inbound: {type:'analyze', id, bitmap, poseOnly?} — the only message the worker accepts.
+//   poseOnly:true = live-alignment probe: pose + quality only, silhouette skipped (cheap enough per-frame).
 if (typeof self !== 'undefined'){
   self.onmessage=function(event){
     const message=event.data || {};

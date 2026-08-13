@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/body.css?v=2.0" />
+  <link rel="stylesheet" href="css/body.css?v=2.1" />
 </head>
 <body data-page="body">
   <div data-include="navigation-bar"></div>
@@ -56,7 +56,7 @@
             </div>
             <div class="bc-src-panel" data-panel="camera" hidden>
               <button class="bc-btn" id="bc-cam-start"><i class="ti ti-video"></i> Start camera</button>
-              <button class="bc-btn ghost" id="bc-cam-shot" hidden><i class="ti ti-capture"></i> Capture</button>
+              <label class="bc-autosnap" for="bc-autosnap"><input type="checkbox" id="bc-autosnap" checked /> <span><strong>Auto-snap when aligned.</strong> Prop the phone, step back, and the photo takes itself once your whole body sits square in the guide &mdash; or tap the red shutter on the preview any time.</span></label>
             </div>
             <div class="bc-src-panel" data-panel="url" hidden>
               <div class="bc-url-row">
@@ -85,6 +85,7 @@
                 </svg>
                 <div class="bc-guide-tip">Whole body in frame &mdash; feet on the line, arms a few inches out, square to the camera.</div>
               </div>
+              <button class="bc-shutter" id="bc-shutter" hidden aria-label="Capture photo" title="Capture photo"></button>
             </div>
             <div class="bc-status" id="bc-status" role="status" aria-live="polite">Loading the on-device pose model&hellip;</div>
             <div class="bc-note bc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
@@ -1624,7 +1625,7 @@
       return poseReady;
     }
 
-    async function runPoseInWorker(bitmap, id){
+    async function runPoseInWorker(bitmap, id, poseOnly){
       let worker;
       try { worker = await ensurePoseWorker(); }
       catch(error){ try { bitmap.close(); } catch(_){ } throw error; }
@@ -1645,7 +1646,7 @@
           }
         }, POSE_ANALYSIS_TIMEOUT_MS);
         activePose = active;
-        try { worker.postMessage({ type:'analyze', id, bitmap }, [bitmap]); }
+        try { worker.postMessage({ type:'analyze', id, bitmap, poseOnly:!!poseOnly }, [bitmap]); }
         catch(error){ clearTimeout(active.timer); activePose = null; recyclePoseWorker(worker); reject(error); }
       });
     }
@@ -2087,29 +2088,97 @@
       img.src=u;
     });
 
+    // ── Camera capture: a round shutter overlaid on the live preview (camera-app style) + auto-snap
+    // when aligned. Auto-snap matters MOST here — the subject stands metres from a propped phone, so
+    // hands-free is the only capture that physically works. The probe runs the worker's assessPose
+    // (poseOnly — no silhouette) on a downscaled frame, so an auto-captured photo is pass-band (full
+    // body, square, level) by construction and never lands on the rate-anyway prompt. The shutter
+    // always works regardless of the toggle; an off-standard manual shot flows into the override.
     let stream=null;
-    const camStart=document.getElementById('bc-cam-start'), camShot=document.getElementById('bc-cam-shot');
+    const camStart=document.getElementById('bc-cam-start');
+    const shutter=document.getElementById('bc-shutter');
+    const autoSnapChk=document.getElementById('bc-autosnap');
+    const guideEl=document.getElementById('bc-guide');
+    const guideTip=guideEl.querySelector('.bc-guide-tip');
+    const GUIDE_TIP_DEFAULT=guideTip.textContent;
+    const AUTOSNAP_KEY='loveEquations.calcAutoSnap.v1';   // shared with the Face Calc — one preference
+    try { autoSnapChk.checked = localStorage.getItem(AUTOSNAP_KEY) !== '0'; } catch(_){}
+    autoSnapChk.addEventListener('change', function(){
+      try { localStorage.setItem(AUTOSNAP_KEY, autoSnapChk.checked ? '1' : '0'); } catch(_){}
+      alignStreak=0; guideTip.textContent=GUIDE_TIP_DEFAULT;
+    });
+
+    // Auto-align loop: a pose-only worker probe on a 320px frame every ~600ms; 2 consecutive pass-band
+    // reads with the body filling the frame → snap. Slower cadence than the face (pose is heavier), and
+    // it politely skips a tick whenever the worker is already busy with a real analysis.
+    let alignTimer=null, alignStreak=0, alignSeq=0, alignBusy=false;
+    const ALIGN_EVERY_MS=600, ALIGN_STREAK_NEEDED=2;
+    const alignCanvas=document.createElement('canvas');
+    const alignCtx=alignCanvas.getContext('2d');
+    async function alignTick(){
+      alignTimer=null;
+      if (!stream || video.hidden) return;                          // camera gone — the loop dies here
+      const schedule=()=>{ if (stream && !video.hidden) alignTimer=setTimeout(alignTick, ALIGN_EVERY_MS); };
+      if (!autoSnapChk.checked || bcBusy || alignBusy || activePose || !video.videoWidth){ schedule(); return; }
+      alignBusy=true;
+      try {
+        const s=Math.min(1, 320/video.videoWidth);
+        alignCanvas.width=Math.round(video.videoWidth*s); alignCanvas.height=Math.round(video.videoHeight*s);
+        alignCtx.drawImage(video, 0, 0, alignCanvas.width, alignCanvas.height);
+        const bitmap=await createImageBitmap(alignCanvas);
+        const res=await runPoseInWorker(bitmap, 'align-'+(++alignSeq), true);
+        let ok=false;
+        const q=res && res.quality;
+        if (q && q.ok && q.band==='pass' && res.landmarks){
+          // band 'pass' already implies full-body framing (torso → degraded); also require the body to
+          // actually fill the frame (vertical span of confident joints — the guide puts it at ~0.84)
+          let mn=1, mx=0, used=0;
+          for (const p of res.landmarks){ if (!p) continue;
+            const vis=p.visibility==null?1:p.visibility; if (vis<0.3) continue;
+            const y=Math.max(0,Math.min(1,p.y)); if (y<mn)mn=y; if (y>mx)mx=y; used++; }
+          ok = used>=4 && (mx-mn)>=0.5;
+        }
+        if (stream && !video.hidden) guideTip.textContent = ok ? 'Hold still…' : GUIDE_TIP_DEFAULT;
+        alignStreak = ok ? alignStreak+1 : 0;
+        if (stream && !video.hidden && alignStreak >= ALIGN_STREAK_NEEDED){
+          alignBusy=false; captureFrame(); return;                  // captureFrame stops the camera → loop dies
+        }
+      } catch(_){ alignStreak=0; }
+      alignBusy=false;
+      schedule();
+    }
+
+    function captureFrame(){
+      if (!stream || !video.videoWidth) return;
+      const w=video.videoWidth, h=video.videoHeight;
+      const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+      tmp.getContext('2d').drawImage(video, 0, 0, w, h);
+      window.bcStopCamera();                       // stop FIRST so the result paint never races the live preview
+      const maxW=620, scale=Math.min(1, maxW/w);
+      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale));
+    }
+    shutter.addEventListener('click', captureFrame);
+
     camStart.addEventListener('click', async () => {
       try {
         stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
-        document.getElementById('bc-guide').hidden = false;
-        camShot.hidden=false; window.bcSetStatus('Camera live — step back and line up with the guide, then capture.');
+        guideEl.hidden=false; shutter.hidden=false;
+        alignStreak=0; alignBusy=false; guideTip.textContent=GUIDE_TIP_DEFAULT;
+        if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
+        alignTimer=setTimeout(alignTick, ALIGN_EVERY_MS);
+        window.bcSetStatus(autoSnapChk.checked
+          ? 'Camera live — prop the phone, step back into the guide, and it snaps itself; the red button captures any time.'
+          : 'Camera live — step back into the guide and tap the red button.');
       } catch(e){ window.bcSetStatus('Camera blocked or unavailable: '+e.message, true); }
     });
-    camShot.addEventListener('click', () => {
-      const w=video.videoWidth, h=video.videoHeight;
-      const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
-      tmp.getContext('2d').drawImage(video, 0, 0, w, h);
-      const maxW=620, scale=Math.min(1, maxW/w);
-      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale));
-      window.bcStopCamera();
-    });
     window.bcStopCamera=function(){
+      if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
+      alignStreak=0; alignBusy=false;
       if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-      camShot.hidden=true; video.hidden=true;
-      document.getElementById('bc-guide').hidden = true;
+      video.hidden=true; guideEl.hidden=true; shutter.hidden=true;
+      guideTip.textContent=GUIDE_TIP_DEFAULT;
     };
 
     // On load, restore a photo + result saved on a previous visit (persists until a new drop or Reset).

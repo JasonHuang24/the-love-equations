@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/face.css?v=1.9" />
+  <link rel="stylesheet" href="css/face.css?v=2.0" />
 </head>
 <body data-page="face">
   <div data-include="navigation-bar"></div>
@@ -50,7 +50,7 @@
             </div>
             <div class="lc-src-panel" data-panel="camera" hidden>
               <button class="lc-btn" id="lc-cam-start"><i class="ti ti-video"></i> Start camera</button>
-              <button class="lc-btn ghost" id="lc-cam-shot" hidden><i class="ti ti-capture"></i> Capture</button>
+              <label class="lc-autosnap" for="lc-autosnap"><input type="checkbox" id="lc-autosnap" checked /> <span><strong>Auto-snap when aligned.</strong> Once your face sits square in the guide for a second, the photo takes itself &mdash; or tap the red shutter on the preview any time.</span></label>
             </div>
             <div class="lc-src-panel" data-panel="url" hidden>
               <div class="lc-url-row">
@@ -73,6 +73,7 @@
                 </svg>
                 <div class="lc-guide-tip">Centre your face in the oval, eyes on the bar, square to the camera.</div>
               </div>
+              <button class="lc-shutter" id="lc-shutter" hidden aria-label="Capture photo" title="Capture photo"></button>
             </div>
             <div class="lc-status" id="lc-status" role="status" aria-live="polite">Loading the on-device face model&hellip;</div>
             <div class="lc-note lc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
@@ -1090,29 +1091,87 @@
       img.src=u;
     });
 
+    // ── Camera capture: a round shutter overlaid on the live preview (camera-app style) + auto-snap
+    // when aligned. Auto-snap runs the SAME classifier as the scoring gate on a downscaled live frame,
+    // so an auto-captured photo is pass-band by construction and never lands on the rate-anyway prompt.
+    // The shutter always works regardless of the toggle — a deliberately off-standard manual shot then
+    // flows into the override prompt downstream, which is the honest path for it.
     let stream=null;
-    const camStart=document.getElementById('lc-cam-start'), camShot=document.getElementById('lc-cam-shot');
+    const camStart=document.getElementById('lc-cam-start');
+    const shutter=document.getElementById('lc-shutter');
+    const autoSnapChk=document.getElementById('lc-autosnap');
+    const guideEl=document.getElementById('lc-guide');
+    const guideTip=guideEl.querySelector('.lc-guide-tip');
+    const GUIDE_TIP_DEFAULT=guideTip.textContent;
+    const AUTOSNAP_KEY='loveEquations.calcAutoSnap.v1';   // shared with the Body Calc — one preference
+    try { autoSnapChk.checked = localStorage.getItem(AUTOSNAP_KEY) !== '0'; } catch(_){}
+    autoSnapChk.addEventListener('change', function(){
+      try { localStorage.setItem(AUTOSNAP_KEY, autoSnapChk.checked ? '1' : '0'); } catch(_){}
+      alignStreak=0; guideTip.textContent=GUIDE_TIP_DEFAULT;
+    });
+
+    // Auto-align loop: ~3 checks/sec on a 360px frame; 3 consecutive pass-band reads (~1s stable) → snap.
+    let alignTimer=null, alignStreak=0;
+    const ALIGN_EVERY_MS=350, ALIGN_STREAK_NEEDED=3;
+    const alignCanvas=document.createElement('canvas');
+    const alignCtx=alignCanvas.getContext('2d',{ willReadFrequently:true });
+    function alignTick(){
+      alignTimer=null;
+      if (!stream || video.hidden) return;                          // camera gone — the loop dies here
+      const schedule=()=>{ if (stream && !video.hidden) alignTimer=setTimeout(alignTick, ALIGN_EVERY_MS); };
+      if (!autoSnapChk.checked || !landmarker || lcBusy || !video.videoWidth){ schedule(); return; }
+      try {
+        const s=Math.min(1, 360/video.videoWidth);
+        alignCanvas.width=Math.round(video.videoWidth*s); alignCanvas.height=Math.round(video.videoHeight*s);
+        alignCtx.drawImage(video, 0, 0, alignCanvas.width, alignCanvas.height);
+        const r=landmarker.detect(alignCanvas);
+        const lm=r && r.faceLandmarks && r.faceLandmarks[0];
+        let ok=false;
+        if (lm && lm.length>=468){
+          const geo=window.lcComputeMetrics(lm, alignCanvas.width, alignCanvas.height);
+          const fwFrac=Math.hypot((lm[234].x-lm[454].x)*alignCanvas.width,(lm[234].y-lm[454].y)*alignCanvas.height)/alignCanvas.width;
+          ok = !!geo && Object.values(geo).every(Number.isFinite)
+            && window.lcClassifyFraming(geo).band==='pass'
+            && fwFrac >= 0.14;                                      // the pipeline's "small/distant" warn edge, not its 0.10 refuse edge
+        }
+        guideTip.textContent = ok ? 'Hold still…' : GUIDE_TIP_DEFAULT;
+        alignStreak = ok ? alignStreak+1 : 0;
+        if (alignStreak >= ALIGN_STREAK_NEEDED){ captureFrame(); return; }   // captureFrame stops the camera → loop dies
+      } catch(_){ alignStreak=0; }
+      schedule();
+    }
+
+    function captureFrame(){
+      if (!stream || !video.videoWidth) return;
+      const w=video.videoWidth, h=video.videoHeight;
+      const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+      tmp.getContext('2d').drawImage(video, 0, 0, w, h);
+      window.lcStopCamera();                       // stop FIRST so the result paint never races the live preview
+      const maxW=520, scale=Math.min(1, maxW/w);
+      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale));
+    }
+    shutter.addEventListener('click', captureFrame);
+
     camStart.addEventListener('click', async () => {
       try {
         stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
-        document.getElementById('lc-guide').hidden = false;
-        camShot.hidden=false; window.lcSetStatus('Camera live — line up with the guide and capture.');
+        guideEl.hidden=false; shutter.hidden=false;
+        alignStreak=0; guideTip.textContent=GUIDE_TIP_DEFAULT;
+        if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
+        alignTimer=setTimeout(alignTick, ALIGN_EVERY_MS);
+        window.lcSetStatus(autoSnapChk.checked
+          ? 'Camera live — line up with the guide and it snaps itself; the red button captures any time.'
+          : 'Camera live — line up with the guide and tap the red button.');
       } catch(e){ window.lcSetStatus('Camera blocked or unavailable: '+e.message, true); }
     });
-    camShot.addEventListener('click', () => {
-      const w=video.videoWidth, h=video.videoHeight;
-      const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
-      tmp.getContext('2d').drawImage(video, 0, 0, w, h);
-      const maxW=520, scale=Math.min(1, maxW/w);
-      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale));
-      window.lcStopCamera();
-    });
     window.lcStopCamera=function(){
+      if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
+      alignStreak=0;
       if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-      camShot.hidden=true; video.hidden=true;
-      document.getElementById('lc-guide').hidden = true;
+      video.hidden=true; guideEl.hidden=true; shutter.hidden=true;
+      guideTip.textContent=GUIDE_TIP_DEFAULT;
     };
 
     // On load, restore a face + result saved on a previous visit (persists until a new drop or Reset).
