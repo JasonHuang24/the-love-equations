@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/body.css?v=2.1" />
+  <link rel="stylesheet" href="css/body.css?v=2.2" />
 </head>
 <body data-page="body">
   <div data-include="navigation-bar"></div>
@@ -43,11 +43,10 @@
                "Step-2" comments refer to the numbers panel by its ids
                (.bc-inputs / #bc-inputs-body), not by position. -->
           <div class="bc-panel">
-            <div class="bc-h"><i class="ti ti-camera"></i> Step 1 &middot; Your photo</div>
+            <div class="bc-h bc-h-row"><i class="ti ti-camera"></i> Step 1 &middot; Your photo<button class="bc-btn ghost bc-reset" id="bc-reset" title="Clear this calculator &mdash; photo, numbers, score and saved result. The Face Calc keeps its score."><i class="ti ti-trash"></i> Reset</button></div>
             <div class="bc-srcs">
               <span class="bc-src active" data-src="upload"><i class="ti ti-upload"></i> Upload</span>
               <span class="bc-src" data-src="camera"><i class="ti ti-camera"></i> Camera</span>
-              <span class="bc-src" data-src="url"><i class="ti ti-link"></i> URL</span>
             </div>
 
             <div class="bc-src-panel" data-panel="upload">
@@ -57,13 +56,6 @@
             <div class="bc-src-panel" data-panel="camera" hidden>
               <button class="bc-btn" id="bc-cam-start"><i class="ti ti-video"></i> Start camera</button>
               <label class="bc-autosnap" for="bc-autosnap"><input type="checkbox" id="bc-autosnap" checked /> <span><strong>Auto-snap when aligned.</strong> Prop the phone, step back, and the photo takes itself once your whole body sits square in the guide &mdash; or tap the red shutter on the preview any time.</span></label>
-            </div>
-            <div class="bc-src-panel" data-panel="url" hidden>
-              <div class="bc-url-row">
-                <input type="text" id="bc-url" placeholder="https://&hellip;/body.jpg" />
-                <button class="bc-btn" id="bc-url-go">Load</button>
-              </div>
-              <div class="bc-note">Some hosts block cross-origin loads; if it fails, download and upload instead.</div>
             </div>
 
             <div class="bc-stage" id="bc-stage">
@@ -1174,6 +1166,14 @@
       document.querySelectorAll('.bc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===BC.profile); });
       setStatus(bcStatusNote(), false, true); renderResult();
     };
+    // Per-calculator Reset — clears THIS calc only (photo, Step-2 numbers, result, saved shot,
+    // composite body entry); the Face Calc's saved score is untouched. The composite section's
+    // "Reset both" remains the two-calc wipe. (Jason: the composite one forcing both was the gap.)
+    document.getElementById('bc-reset').addEventListener('click', function(){
+      if (window.bcStopCamera) window.bcStopCamera();
+      window.bcResetAll();
+      if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody();
+    });
     // full reset of this calc (the composite Reset button calls this on whichever page is open)
     window.bcResetAll = function(){
       BC.gate = null; window.bcGateOverride = null;
@@ -2080,14 +2080,6 @@
       img.src=URL.createObjectURL(file);
     }
 
-    document.getElementById('bc-url-go').addEventListener('click', () => {
-      const u=document.getElementById('bc-url').value.trim(); if (!u) return;
-      const img=new Image(); img.crossOrigin='anonymous';
-      img.onload=()=>{ handleImage(img); };
-      img.onerror=()=>window.bcSetStatus('That URL would not load (cross-origin block?). Download and upload instead.', true);
-      img.src=u;
-    });
-
     // ── Camera capture: a round shutter overlaid on the live preview (camera-app style) + auto-snap
     // when aligned. Auto-snap matters MOST here — the subject stands metres from a propped phone, so
     // hands-free is the only capture that physically works. The probe runs the worker's assessPose
@@ -2161,7 +2153,10 @@
 
     camStart.addEventListener('click', async () => {
       try {
-        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
+        // Ask for a high-res feed (ideal = non-fatal): browsers default getUserMedia to 640×480, which
+        // hands the CNN a soft upscaled crop vs the sharp stills it was calibrated on — a measured
+        // score-mover, not a cosmetic one. Phones typically grant 1280×720+ on the front camera.
+        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ ideal:1920 }, height:{ ideal:1440 } } });
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
         guideEl.hidden=false; shutter.hidden=false;

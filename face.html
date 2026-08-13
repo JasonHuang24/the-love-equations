@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/face.css?v=2.0" />
+  <link rel="stylesheet" href="css/face.css?v=2.1" />
 </head>
 <body data-page="face">
   <div data-include="navigation-bar"></div>
@@ -37,11 +37,10 @@
         <!-- INPUT COLUMN -->
         <div>
           <div class="lc-panel">
-            <div class="lc-h"><i class="ti ti-camera"></i> Give it a face</div>
+            <div class="lc-h lc-h-row"><i class="ti ti-camera"></i> Give it a face<button class="lc-btn ghost lc-reset" id="lc-reset" title="Clear this calculator &mdash; photo, score and saved result. The Body Calc keeps its score."><i class="ti ti-trash"></i> Reset</button></div>
             <div class="lc-srcs">
               <span class="lc-src active" data-src="upload"><i class="ti ti-upload"></i> Upload</span>
               <span class="lc-src" data-src="camera"><i class="ti ti-camera"></i> Camera</span>
-              <span class="lc-src" data-src="url"><i class="ti ti-link"></i> URL</span>
             </div>
 
             <div class="lc-src-panel" data-panel="upload">
@@ -51,13 +50,6 @@
             <div class="lc-src-panel" data-panel="camera" hidden>
               <button class="lc-btn" id="lc-cam-start"><i class="ti ti-video"></i> Start camera</button>
               <label class="lc-autosnap" for="lc-autosnap"><input type="checkbox" id="lc-autosnap" checked /> <span><strong>Auto-snap when aligned.</strong> Once your face sits square in the guide for a second, the photo takes itself &mdash; or tap the red shutter on the preview any time.</span></label>
-            </div>
-            <div class="lc-src-panel" data-panel="url" hidden>
-              <div class="lc-url-row">
-                <input type="text" id="lc-url" placeholder="https://&hellip;/face.jpg" />
-                <button class="lc-btn" id="lc-url-go">Load</button>
-              </div>
-              <div class="lc-note">Some hosts block cross-origin loads; if it fails, download and upload instead.</div>
             </div>
 
             <div class="lc-stage" id="lc-stage">
@@ -71,7 +63,7 @@
                   <ellipse class="g-shape" cx="50" cy="46" rx="20" ry="27" />
                   <line class="g-bar" x1="33" y1="40" x2="67" y2="40" />
                 </svg>
-                <div class="lc-guide-tip">Centre your face in the oval, eyes on the bar, square to the camera.</div>
+                <div class="lc-guide-tip">Face in the oval, eyes on the bar, square-on &mdash; and hold the phone an arm&rsquo;s length or more away (close-up selfies distort proportions).</div>
               </div>
               <button class="lc-shutter" id="lc-shutter" hidden aria-label="Capture photo" title="Capture photo"></button>
             </div>
@@ -726,6 +718,14 @@
       document.querySelectorAll('.lc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===LC.profile); });
       renderResult();
     };
+    // Per-calculator Reset — clears THIS calc only (photo, result, saved shot, composite face entry);
+    // the Body Calc's saved score is untouched. The composite section's "Reset both" remains the
+    // two-calc wipe. (Jason: the composite one forcing both was the gap.)
+    document.getElementById('lc-reset').addEventListener('click', function(){
+      if (window.lcStopCamera) window.lcStopCamera();
+      window.lcResetAll();
+      if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace();
+    });
     // full reset of this calc (the composite Reset button calls this on whichever page is open)
     window.lcResetAll = function(){
       LC.gate = null; window.lcGateOverride = null;
@@ -1083,14 +1083,6 @@
       img.src=URL.createObjectURL(file);
     }
 
-    document.getElementById('lc-url-go').addEventListener('click', () => {
-      const u=document.getElementById('lc-url').value.trim(); if (!u) return;
-      const img=new Image(); img.crossOrigin='anonymous';
-      img.onload=()=>handleImage(img);
-      img.onerror=()=>window.lcSetStatus('That URL would not load (cross-origin block?). Download and upload instead.', true);
-      img.src=u;
-    });
-
     // ── Camera capture: a round shutter overlaid on the live preview (camera-app style) + auto-snap
     // when aligned. Auto-snap runs the SAME classifier as the scoring gate on a downscaled live frame,
     // so an auto-captured photo is pass-band by construction and never lands on the rate-anyway prompt.
@@ -1154,7 +1146,10 @@
 
     camStart.addEventListener('click', async () => {
       try {
-        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
+        // Ask for a high-res feed (ideal = non-fatal): browsers default getUserMedia to 640×480, which
+        // hands the CNN a soft upscaled crop vs the sharp stills it was calibrated on — a measured
+        // score-mover, not a cosmetic one. Phones typically grant 1280×720+ on the front camera.
+        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ ideal:1920 }, height:{ ideal:1440 } } });
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
         guideEl.hidden=false; shutter.hidden=false;
