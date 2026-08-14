@@ -21,6 +21,15 @@
       <div class="page-eyebrow">Tool &middot; prototype</div>
       <h1 class="page-title">Body Calculator</h1>
       <div class="page-sub">Drop in a full-body photo &mdash; on your device, nothing uploaded &mdash; and it reads the frame it can from the silhouette, then scores it two ways: the <strong>Black Pill</strong> lens and a <strong>conventional</strong> one. No sliders. It pairs with the <a href="face.html">Face Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
+      <!-- The line above is this page's canon synopsis, so editing it moves the LE Lab's frozen threshold
+           band. Measured 2026-08-14: every rewording tried moved it (9, 13 and 15 crossings), and the one
+           measured in full carried 3 weak-class crossings, which block under WEAK_BACKLOG_CEILING = 0.
+           Adjudicating those is a Lab lane with its own rulings, so the claim is corrected HERE instead —
+           extractInstrument reads only .page-title, .page-sub and the header's links. -->
+      <div class="bc-page-subnote"><strong>Since 2026-08-14 that is only half true.</strong> The two lenses survive on the
+        silhouette-geometry read and the numbers-only read. A <strong>trained-model photo score has one scale and no lens</strong>
+        &mdash; it is a percentile of a stated reference population, 5.0 being that population&rsquo;s median, the same
+        currency the <a href="face.html">Face Calc</a> uses.</div>
     </div>
 
     <div class="content bc-content">
@@ -114,7 +123,7 @@
             <button class="cv" data-prof="conventional"><i class="ti ti-mood-smile"></i> Conventional</button>
           </div>
           <div id="bc-result">
-            <div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo and the score appears here &mdash; switch lenses any time.</div>
+            <div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo and the score appears here.</div>
           </div>
         </div>
       </div>
@@ -330,6 +339,13 @@
       'Anything under clothing &mdash; baggy or structured clothes redraw the silhouette'
     ];
 
+    // ── LENS PROFILES — GEOMETRY AND SELF-REPORT ONLY (2026-08-14 percentile remap) ──────────────
+    // These two curves no longer touch the PHOTO/trained-model path: that path is now a percentile of a
+    // stated reference population (see REF_RAW below), with no contrast curve anywhere in it. What is
+    // left here serves the silhouette-geometry route and the numbers-only self-report read, whose 0–100
+    // raws are weighted rubric scores, NOT percentiles of any measured population — so they have nothing
+    // to be a percentile of, and re-mapping them would be inventing a reference. Their turn is a separate
+    // job; until then the machinery below is theirs alone.
     const PROFILES = {
       // contrast = sigmoid exponent (>1 spreads toward extremes). gamma shifts the middle.
       // Black Pill = the looksmaxxing "frame" lens: V-taper, broad shoulders, leanness dominate.
@@ -367,14 +383,153 @@
       return { score: 1 + (prof.scaleMax-1)*x, raw:x*100, subs:subs };
     }
 
-    // ── Trained-model path ── one CNN scalar t∈[0,1] interpreted through each lens's curve, so the
-    // two variants survive (the CNN measures; the lens interprets). Geometry stays the breakdown + fallback.
+    // ── Lens curve for the GEOMETRY and SELF-REPORT raws (0–100 → 1–scaleMax). NOT the photo path. ──
     function mapModelScore(t, profKey){
       const prof = PROFILES[profKey];
       let x = Math.max(0, Math.min(1, t));
       if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
       x = Math.pow(x, prof.gamma);
       return 1 + (prof.scaleMax-1)*x;
+    }
+
+    // ══ PHOTO DISPLAY MAPPING — 2026-08-14 percentile remap ══════════════════════════════════════════
+    // The trained-model score IS a percentile against a stated reference population, shown on the same
+    // scale as the Face Calc (5.0 = the reference median, one point = 1/1.4 sd). No lens curve, no
+    // outMin/outMax two-point fit, one number.
+    //
+    // WHAT WAS WRONG: the retired anchors (outMin 14.247 / outMax 58.628) were solved on FIVE photographs
+    // against the contrast-1.7 curve, and they seated the scale on studio stimuli, not on the photos real
+    // people take. Measured through this exact crop→tensor→model path: the 726 Connor studio images land
+    // median raw 34.88 (p2 20.99 / p98 47.57) — almost exactly where the old anchors centred the scale —
+    // while ordinary full-body press photos land far below that. On the retired map five of ten
+    // guide-passing roster photos displayed 1.00–1.64. The floor was the reference population, not the
+    // bodies.
+    //
+    // REFERENCE POPULATION — 254 REAL-WORLD PHOTOGRAPHS, built 2026-08-14 through this exact
+    // crop→tensor→model path in the browser (not an offline re-implementation of it):
+    //   SOURCE   every file in four Wikimedia Commons categories — "21st-century portrait photographs
+    //            of standing women at full length" and its black-and-white sibling, "…of standing men at
+    //            full length" and its military-uniform sibling. 499 downloaded, 1400px max width.
+    //   FILTER   only the rows the shipped MODEL ROUTE would actually take: a readable pose,
+    //            framing==='full', torso skin < 45%. 90 refused at the pose gate, 113 read as torso
+    //            crops, 73 as bare torsos, 82 clothed-but-cropped → 254 usable.
+    //   BALANCE  138 female / 116 male by source category, DESIGN-CORRECTED to half the mass each
+    //            before the quantiles are taken. Weighted median raw 21.607.
+    //   FRAMING  253 of the 254 also cleared the framing gate at 'pass'; rebuilding the table on those
+    //            alone moves no knot by more than 0.2 raw points, so the gate band is not load-bearing.
+    //   ERROR    the table is an estimate off a few hundred photos, not thousands. Bootstrapped over 400
+    //            resamples, the displayed score at a fixed raw carries sd 0.12 in the middle and 0.19 in
+    //            the tails — roughly ±0.2 display points of pure sampling noise, before any question of
+    //            whether the model is right.
+    //   BIAS, STATED PLAINLY: these are people photographed in public — at events, at work, in uniform,
+    //            on a stage. That is not a random sample of adults. It skews toward Western, English-
+    //            Commons subjects, toward being dressed for an occasion, and toward whatever framing a
+    //            photographer chose to keep. There is no per-person de-duplication, so anyone
+    //            photographed twice counts twice. It is a real-world PHOTOGRAPHY population, which is
+    //            what a user's own photo is; it is not a census.
+    //
+    // WHY NOT THE CONNOR SET: it is this model's own training data (in-distribution), it is studio-framed
+    // against a plain backdrop, and — decisively — its raws sit far above what casual photography
+    // produces, so a Connor reference would put an ordinary real photo in the bottom percentiles. That is
+    // the pathology this remap exists to end. Connor is used below ONLY as a labelled validation set.
+    //
+    // WHY ONE POOLED TABLE AND NOT TWO SEX-CONDITIONAL ONES: the model emits one sex-agnostic scalar and
+    // this headline is sex-agnostic by design. Per-sex tables would define 50 as "the median of your own
+    // sex", so two people with the SAME raw would display different scores — which breaks the single
+    // shared currency with the Face Calc and would quietly absorb the model's known sex skew into the
+    // scale instead of leaving it visible. The dataset's own sex imbalance IS corrected (each sex is
+    // reweighted to half the mass before the quantiles are taken) so the reference is not tilted by how
+    // many of each Commons happens to hold.
+    //
+    // REF_RAW[i] = the i-th percentile of that distribution, strictly increasing by construction so the
+    // lookup is monotone and invertible — the invariant the whole mapping rests on.
+    const REF_RAW = [5.815,6.051,6.479,6.868,7.404,7.701,8,8.58,9.439,10.255,10.948,11.224,11.404,11.719,
+      12.041,12.172,12.275,12.337,12.941,13.48,13.724,13.999,14.171,14.394,14.873,15.28,15.916,16.269,
+      16.779,16.943,17.118,17.185,17.223,17.534,17.743,17.883,17.954,18.4,18.789,18.89,19.507,19.823,
+      19.955,20.118,20.317,20.708,21.014,21.097,21.223,21.325,21.607,21.754,22.337,22.781,23.611,23.94,
+      24.307,24.426,24.55,24.681,24.767,25.249,25.776,26.422,26.673,26.775,26.992,27.153,27.295,27.836,
+      28.001,28.236,28.439,28.953,29.246,29.707,30.861,31.385,31.671,32.115,32.343,32.65,33.192,34.227,
+      34.914,35.591,36.168,36.734,38.308,38.629,39.093,39.276,41.098,41.941,42.328,43.016,44.371,45.654,
+      47.019,48.546,56.823];
+    const REF_MID = 5.0, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
+    // The reference population, stated on the page. A percentile is meaningless without naming what it is
+    // a percentile OF, and naming it is the only thing that keeps the number honest.
+    const REF_POP_NOTE = '<div class="bc-missing"><strong>What the percentile is measured against:</strong> '
+      + '<strong>254 real-world photographs</strong> &mdash; every Wikimedia Commons image in four &ldquo;21st-century '
+      + 'portrait photographs of standing women / men at full length&rdquo; categories that this calculator would '
+      + 'actually score (readable pose, head-to-feet framing, not bare-torso), run through this exact pipeline. '
+      + '138 women / 116 men, reweighted to half each so the reference is not tilted by how many of each Commons happens '
+      + 'to hold. <strong>5.0 is that population&rsquo;s median.</strong> '
+      + 'What it is <em>not</em>: a census. These are people photographed in public &mdash; at events, at work, in uniform, '
+      + 'on a stage &mdash; skewed Western, dressed for the occasion, and framed by a photographer who chose the shot. It is a '
+      + 'real-world <em>photography</em> population, which is what your own photo is. It is also only a few hundred photos '
+      + 'deep, so the scale itself carries some sampling noise. '
+      + 'The trained model was fitted on a separate studio set (Connor et al., 726 rated full-body photos), which is '
+      + 'deliberately <em>not</em> the reference &mdash; studio shots read far higher through this pipeline than ordinary '
+      + 'photography does, and using them would put an average real photo near the floor.</div>';
+
+    // Percentile of a raw model output within the reference population, in [0,1]. Binary search + linear
+    // interpolation between knots; PINNED (not extrapolated) outside the reference's own observed range,
+    // because we have no evidence about raws the reference never produced. (DOM-free, testable.)
+    function refPercentile(raw){
+      const last = REF_RAW.length - 1;
+      if (!(raw > REF_RAW[0])) return 0;
+      if (raw >= REF_RAW[last]) return 1;
+      let lo = 0, hi = last;
+      while (hi - lo > 1){ const mid = (lo + hi) >> 1; if (REF_RAW[mid] <= raw) lo = mid; else hi = mid; }
+      const span = REF_RAW[hi] - REF_RAW[lo];
+      return (lo + (span > 0 ? (raw - REF_RAW[lo]) / span : 0)) / last;
+    }
+    // Inverse standard-normal CDF — Acklam's rational approximation (|error| < 1.15e-9 over the whole
+    // range). Turns a percentile back into a score whose SPACING means something; without it, equal score
+    // steps would not be equal population steps. (DOM-free, testable.)
+    function invNorm(p){
+      if (!(p > 0 && p < 1)) return p <= 0 ? -Infinity : Infinity;
+      const a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+            b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+            c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+            d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+      const pl = 0.02425, ph = 1 - pl; let q, r;
+      if (p < pl){ q = Math.sqrt(-2*Math.log(p));
+        return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+      if (p > ph){ q = Math.sqrt(-2*Math.log(1-p));
+        return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+      q = p - 0.5; r = q*q;
+      return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+    }
+    function normCdf(z){   // Abramowitz & Stegun 7.1.26 via erf; plenty for a displayed percentile
+      const t = 1 / (1 + 0.2316419 * Math.abs(z));
+      const d = 0.3989422804014327 * Math.exp(-z*z/2);
+      const p = d*t*(0.319381530 + t*(-0.356563782 + t*(1.781477937 + t*(-1.821255978 + t*1.330274429))));
+      return z > 0 ? 1 - p : p;
+    }
+    // A 0–100 PERCENTILE → the displayed score. This is the only display map the photo path uses, and it
+    // is what the blend feeds too: with the photo term expressed as a percentile, blendRaw's two terms are
+    // finally on one 0–100 population axis. (DOM-free, testable.)
+    function pctToScore(pct){
+      if (!Number.isFinite(pct)) return null;
+      const p = Math.min(Math.max(pct / 100, 1e-6), 1 - 1e-6);
+      return Math.min(SCORE_MAX, Math.max(SCORE_MIN, REF_MID + invNorm(p) * REF_SD));
+    }
+    // raw model output → displayed score. Monotone in raw (refPercentile and invNorm both are). (testable)
+    function scoreFromRaw(raw){
+      return Number.isFinite(raw) ? pctToScore(100 * refPercentile(raw)) : null;
+    }
+    // The percentile a displayed score encodes, 0–100 — what the number actually claims. (testable)
+    function scorePercentile(score){
+      if (!Number.isFinite(score)) return null;
+      return 100 * normCdf((score - REF_MID) / REF_SD);
+    }
+    // English ordinal suffix — 1st/2nd/3rd/4th, with the 11–13 exception. (testable)
+    function ordinal(n){
+      const v = Math.abs(n) % 100, d = v % 10;
+      return n + ((v >= 11 && v <= 13) ? 'th' : d === 1 ? 'st' : d === 2 ? 'nd' : d === 3 ? 'rd' : 'th');
+    }
+    // ONE display map for a 0–100 photo/blend raw. On the model route that raw is a percentile of the
+    // reference population; on the geometry / self-report routes it is a lens-curve rubric score. Every
+    // caller goes through here so the two can never be silently swapped. (DOM-free, testable.)
+    function displayScore(raw0to100, profKey, usingModel){
+      return usingModel ? pctToScore(raw0to100) : mapModelScore(raw0to100 / 100, profKey);
     }
     // RGBA bytes (size×size) → CHW float32 tensor, ImageNet-normalized. (DOM-free, testable.)
     function preprocessToTensor(rgba, size, mean, std){
@@ -536,20 +691,31 @@
     // spread (21/100). Geometry has no fitted error model, so it gets a wider 25/100 precaution. Input
     // margins (12 typed / 20 visual) are REASONED, not empirical; weighted sums are conservative envelopes,
     // not confidence intervals. A framing override widens the photo margin another 5 raw points.
-    const SCORE_BAND_RAW = { model:21, geometry:25, inputMeasured:12, inputPicker:20, framing:5 };
+    // `model` is 21 CONNOR LABEL POINTS and no longer describes this axis: since the 2026-08-14 remap the
+    // model route's 0–100 raw is a PERCENTILE of the reference population, not a label. Converted rather
+    // than guessed — the empirical label→reference-percentile relation over the 658 Connor photos that
+    // clear this pipeline's model route is pct = 0.507·label + 61.1, so 21 label points ≈ 10.7 percentile
+    // points → `modelPct` 11. Measured where Connor actually sits (the upper half of the reference), so it
+    // is likely an UNDER-statement lower down, and it is a payload-only field: nothing renders it and
+    // js/composite-score.js does not read `band` at all. The 21 stays for the record.
+    const SCORE_BAND_RAW = { model:21, modelPct:11, geometry:25, inputMeasured:12, inputPicker:20, framing:5 };
     function inputRawUncertainty(source){ return source === 'measured' ? SCORE_BAND_RAW.inputMeasured : SCORE_BAND_RAW.inputPicker; }
     function photoRawUncertainty(usingModel, framingOverride){
-      return (usingModel ? SCORE_BAND_RAW.model : SCORE_BAND_RAW.geometry) + (framingOverride ? SCORE_BAND_RAW.framing : 0);
+      return (usingModel ? SCORE_BAND_RAW.modelPct : SCORE_BAND_RAW.geometry) + (framingOverride ? SCORE_BAND_RAW.framing : 0);
     }
     function blendedRawUncertainty(source, usingModel, framingOverride){
       const w = inputBlendWeight(source);
       return w * inputRawUncertainty(source) + (1 - w) * photoRawUncertainty(usingModel, framingOverride);
     }
-    function makeScoreBand(centerRaw, profKey, halfRaw){
+    // Never rendered (Jason, 2026-08-14) but still carried in bodyScore.v3, so it must ride the SAME
+    // display map as the score it brackets — `usingModel` picks the percentile scale, exactly as the
+    // headline does. A band computed through the lens curve around a percentile centre would be a range
+    // in units the score is not in.
+    function makeScoreBand(centerRaw, profKey, halfRaw, usingModel){
       const margin = Math.max(0, halfRaw || 0);
       const lo = Math.max(0, Math.min(100, centerRaw - margin));
       const hi = Math.max(0, Math.min(100, centerRaw + margin));
-      return { low:mapModelScore(lo / 100, profKey), high:mapModelScore(hi / 100, profKey), rawHalf:margin };
+      return { low:displayScore(lo, profKey, usingModel), high:displayScore(hi, profKey, usingModel), rawHalf:margin };
     }
 
     // Pure end-to-end self-report read for the Node gate rig and the UI wrapper. Kouri FFMI is returned
@@ -652,6 +818,7 @@
     }
 
     if (typeof module !== 'undefined') { module.exports = { poseSkeleton, armOverWaist, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX,
+      REF_RAW, REF_MID, REF_SD, SCORE_MIN, SCORE_MAX, refPercentile, invNorm, normCdf, pctToScore, scoreFromRaw, scorePercentile, ordinal, displayScore,
       interpAnchors, computeFFMI, frameScore, massFrameScore, leannessScore, selfReportScore, computeInputRead, geomPreLens, blendRaw, inputBlendWeight, inputRawUncertainty, photoRawUncertainty, blendedRawUncertainty, makeScoreBand, crossCheckBF,
       bodySexCueContradicts, inputImplausible, suggestedBfPct,
       FRAME_ANCHORS, MASS_FRAME_ANCHORS, LEANNESS_BAND, LEANNESS_SIGMA_M, LEANNESS_SIGMA_F, LEANNESS_MAX, INPUT_SCORE_W, INPUT_BLEND_W, SCORE_BAND_RAW, BF_BUCKETS, LB_TO_KG, IN_TO_CM, FRONTAL_WHTR_BY_BF, FFMI_KOURI_K, FFMI_KOURI_H0, CROSSCHECK_GROSS,
@@ -801,7 +968,7 @@
         + '</div>';
     }
     // Self-report breakdown: Kouri FFMI is context-only; scored terms are BF-free mass/height + BF leanness.
-    function tier0Breakdown(t0, profKey, photoRaw, blended, headline){
+    function tier0Breakdown(t0, profKey, photoRaw, blended, headline, usingModel){
       const sex = t0.sex, b = LEANNESS_BAND[sex];
       const ffmiWhere = t0.frame >= 85 ? 'High FFMI context' : t0.frame >= 55 ? 'Mid FFMI context' : 'Low FFMI context';
       const massWhere = t0.massFrame >= 85 ? 'Higher mass-for-height' : t0.massFrame >= 60 ? 'Middle range' : 'Lower mass-for-height';
@@ -826,7 +993,11 @@
       const inputMath = '<div class="bc-t0-math">Self-report index &nbsp;=&nbsp; 0.30 &times; ' + Math.round(t0.massFrame) + ' mass/height &nbsp;+&nbsp; 0.70 &times; ' + Math.round(t0.lean) + ' leanness &nbsp;=&nbsp; <strong>' + Math.round(t0.inputScore) + ' / 100</strong></div>';
       const inputW = inputBlendWeight(t0.bfSource), photoW = 1 - inputW;
       const blendMath = (photoRaw == null) ? '' :
-        '<div class="bc-t0-math">Blend &nbsp;=&nbsp; ' + inputW.toFixed(2) + ' &times; ' + Math.round(t0.inputScore) + ' self-report &nbsp;+&nbsp; ' + photoW.toFixed(2) + ' &times; ' + Math.round(photoRaw) + ' photo &nbsp;=&nbsp; ' + blended.toFixed(0) + ' &nbsp;&rarr;&nbsp; <strong>' + fmtScore(headline) + ' ' + PROFILES[profKey].unit + '</strong></div>';
+        '<div class="bc-t0-math">Blend &nbsp;=&nbsp; ' + inputW.toFixed(2) + ' &times; ' + Math.round(t0.inputScore) + ' self-report &nbsp;+&nbsp; ' + photoW.toFixed(2) + ' &times; ' + Math.round(photoRaw) + ' photo &nbsp;=&nbsp; ' + blended.toFixed(0) + ' &nbsp;&rarr;&nbsp; <strong>' + fmtScore(headline) + ' ' + (usingModel ? '/ 10' : PROFILES[profKey].unit) + '</strong></div>'
+        // A units caveat that has to be said out loud: the photo term IS a percentile of the reference
+        // population, and the self-report index is a weighted rubric on the same 0–100 axis — but it has
+        // never been calibrated against a population, so the blend treats it AS IF it were a percentile.
+        + (usingModel ? '<div class="bc-note-line">The photo term above is a <strong>percentile</strong> of the reference population. The self-report index shares its 0&ndash;100 axis but is a reasoned rubric, not a measured percentile &mdash; the blend treats it as one, which is the weakest join in this arithmetic.</div>' : '');
       return '<div class="bc-bd-h">Self-reported inputs</div>'
         + '<div class="bc-note-line">Height and scale weight are direct entries; BF is a typed estimate or visual match. This is a provisional input rubric, not ground truth. Typed BF gets 35% of a hybrid; a visual tile gets 20%; the photo owns the rest.</div>'
         + ffmiRow + massRow + leanRow + inputMath + blendMath;
@@ -931,6 +1102,13 @@
       if (!(typeof BC.sexClsConf === 'number' && BC.sexClsConf >= SEX_CONFLICT_MIN)) return null;
       return { manual:manual, cls:cls, conf:BC.sexClsConf };
     }
+    // Show or hide the lens toggle. It survives only where two lens curves still do — the geometry and
+    // self-report routes. A trained-model read is one percentile on one scale, so leaving a control that
+    // cannot move the number would be a display defect, not a choice.
+    function bcSyncLensToggle(show){
+      const el = document.querySelector('.bc-variant');
+      if (el) el.style.display = show ? '' : 'none';
+    }
     // Sex toggle wiring, shared by the full and numbers-only renders (both draw into #bc-result).
     function wireSexButtons(host){
       host.querySelectorAll('.bc-sex button').forEach(function(b){
@@ -981,6 +1159,7 @@
     }
     function renderResult(){
       const host = document.getElementById('bc-result');
+      bcSyncLensToggle(true);   // default on; the model-route render below hides it (only it has one scale)
       // Verbose red calibration rows (skin %, model raw, face read): shown on localhost or with ?debug —
       // the ?debug param deliberately works anywhere (personal site; calibration escape hatch). See Face Calc.
       const BC_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -1028,23 +1207,27 @@
           : '<div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo &mdash; or add your numbers in Step&nbsp;2 &mdash; and the score appears here.</div>';
         return;
       }
-      const prof = PROFILES[BC.profile];
-      const other = BC.profile === 'blackpill' ? 'conventional' : 'blackpill';
-      const accent = BC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
       const sex = BC.sex === 'm' ? 'm' : 'f';
-      const heur = gradeBody(BC.metrics, sex, BC.profile);
       const usingModel = BC.model != null;
+      // A trained-model read has ONE scale (a percentile of the reference population), so it has no lens
+      // and no "other lens" — the toggle is hidden for it and the frame ladder names the tier. The
+      // geometry and self-report routes still carry two lens curves, so they keep the toggle.
+      bcSyncLensToggle(!usingModel);
+      const prof = usingModel ? { unit:'/ 10' } : PROFILES[BC.profile];
+      const other = BC.profile === 'blackpill' ? 'conventional' : 'blackpill';
+      const accent = usingModel ? '#51606F' : BC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
       const photoRaw = pk => usingModel ? BC.model * 100 : geomPreLens(gradeBody(BC.metrics, sex, pk).subs, pk);
       let rawCur = photoRaw(BC.profile), rawOtherCur = photoRaw(other);
-      let score = mapModelScore(rawCur / 100, BC.profile), oscore = mapModelScore(rawOtherCur / 100, other);
+      let score = displayScore(rawCur, BC.profile, usingModel), oscore = displayScore(rawOtherCur, other, usingModel);
       let photoRawCur = null, blendedCur = null;
       if (hasInputs){
         photoRawCur = photoRaw(BC.profile);
         rawCur = blendRaw(t0.inputScore, photoRawCur, t0.bfSource);
         rawOtherCur = blendRaw(t0.inputScore, photoRaw(other), t0.bfSource);
-        score = mapModelScore(rawCur / 100, BC.profile); oscore = mapModelScore(rawOtherCur / 100, other);
+        score = displayScore(rawCur, BC.profile, usingModel); oscore = displayScore(rawOtherCur, other, usingModel);
         blendedCur = rawCur;
       }
+      const tierNow = usingModel ? frameTier(score, sex) : tierFor(BC.profile, score, sex);
       // Sex-range headline: a GEOMETRY headline is scored against sex-specific bands, so an undetermined sex
       // can't yield one honest number. Show the male–female range until a reliable read or manual pick resolves
       // it (the model headline is sex-agnostic, so it needs no range). Collapses to a single score when sex is set.
@@ -1120,55 +1303,60 @@
         + '<div class="bc-score" style="color:'+accent+'">'+(usingRange ? fmtScore(rng.lo)+'&ndash;'+fmtScore(rng.hi) : fmtScore(score))+' <span class="unit">'+prof.unit+'</span></div>'
         + '<div class="bc-tier" style="color:'+accent+'">'+(usingRange
             ? 'Depends on sex &mdash; &#9794; '+fmtScore(rng.m)+' '+tierFor(BC.profile,rng.m,'m')+' &middot; &#9792; '+fmtScore(rng.f)+' '+tierFor(BC.profile,rng.f,'f')
-            : tierFor(BC.profile, score, sex))+'</div>'
+            : tierNow)+'</div>'
+        + (usingModel ? '<div class="bc-pct">Around the <strong>'+ordinal(Math.round(Math.min(99, Math.max(1, scorePercentile(score)))))+' percentile</strong> of the reference population'+(hasInputs?' once your typed numbers are blended in':'')+'</div>' : '')
         + srcBadge
         + (usingRange ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to resolve the score.</strong> A bare-physique read is scored against sex-specific bands, so until sex is set the headline is the male&ndash;female range above &mdash; pick one below.</div>'
            : rng ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to use this in the Overall.</strong> The cues that survived on this photo are sex-neutral, so the number above does not depend on it &mdash; but the Overall looks rating still needs a sex before it will include the body.</div>' : '')
-        + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental one-photo estimate.</strong> Not a precise grade &mdash; the human raters who produced its training labels disagreed heavily with each other, and casual photos are unlike the training set.</div>' : '')
+        + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental one-photo estimate.</strong> Not a precise grade &mdash; the human raters who produced its training labels disagreed heavily with each other, and casual photos are unlike the training set. It is a <strong>percentile, not a verdict</strong>: <strong>5.0 is the median</strong> of the reference population described below, and one point is about two-thirds of a standard deviation. Same scale as the <a href="face.html">Face Calc</a>.</div>' : '')
         + (BC.outlineOverride ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Rated on your override &mdash; fewer cues than a clean read.</strong> You asked for a number on a photo whose shape read came up short: '
             + BC.outlineIssues.join('; ') + '. The score above is built from what survived, and it is marked as a reduced-accuracy input everywhere it is reused.</div>' : '')
         + (BC.framing === 'torso' ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Upper-body read.</strong> Scored on frame cues only &mdash; waist-to-hip, V-taper, shoulder breadth. Leanness (needs full height) and leg proportion are cropped out, and a draped top softens the waist; a full-body shot in fitted clothing reads more.</div>' : '')
         + (BC.reliability ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+BC.reliability+'</div>' : '')
         + (hasInputs ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Photo-dominant hybrid.</strong> Self-reported inputs contribute '+Math.round(t0.inputWeight*100)+'%; the '+(usingModel?'trained-model':'silhouette')+' photo contributes '+Math.round((1-t0.inputWeight)*100)+'%. The arithmetic is shown below.</div>' : '')
         + disagreementPanelHtml(t0)
-        + (BC_DEBUG && usingModel && BC.modelRaw!=null ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+BC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
+        + (BC_DEBUG && usingModel && BC.modelRaw!=null ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+BC.modelRaw.toFixed(3)+'</strong> &rarr; reference percentile '+(100*BC.model).toFixed(1)+'</div>' : '')
         + skinDebug
         + (BC_DEBUG && window.__bcSex ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; face read = '+(window.__bcSex.reason||'pending')+'</strong>'+(window.__bcSex.facePx!=null?' &middot; face '+window.__bcSex.facePx+'px, vis '+window.__bcSex.avgVis:'')+(window.__bcSex.sex?' &rarr; '+window.__bcSex.sex+' '+Math.round((window.__bcSex.conf||0)*100)+'%':'')+'</div>' : '')
-        + '<div class="bc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+(usingRange ? fmtScore(rng.oLo)+'&ndash;'+fmtScore(rng.oHi)+' '+PROFILES[other].unit+'</strong> (depends on sex)' : fmtScore(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+')')+'.</div>'
+        + (usingModel ? '' : '<div class="bc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+(usingRange ? fmtScore(rng.oLo)+'&ndash;'+fmtScore(rng.oHi)+' '+PROFILES[other].unit+'</strong> (depends on sex)' : fmtScore(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+')')+'.</div>')
         + '</div>'
         + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits on each measured trait, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; an atypical reading is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
-        + (hasInputs ? tier0Breakdown(t0, BC.profile, photoRawCur, blendedCur, score) : '')
+        + (hasInputs ? tier0Breakdown(t0, BC.profile, photoRawCur, blendedCur, score, usingModel) : '')
         + drivers + coreRows + featRows + propRows
         + (comp.athletic == null ? '' : '<div class="bc-bd-h">Tapered structure &middot; observation (not scored)</div>' + athleticRow(comp.athletic))
         + cantRows
+        + (usingModel ? REF_POP_NOTE : '')
         + '<div class="bc-missing"><strong>How to read this:</strong> the headline is a broad one-photo estimate, not a precise grade. The trained model is a black box when loaded; the panel is a separate, transparent geometry read. A frontal photo misses depth, muscle-vs-fat, and much of what clothing hides. The self-report term adds limited context but cannot validate its own BF entry. The female geometry bands intentionally describe an hourglass convention; <em>Tapered structure</em> is shown separately and not scored.</div>';
 
       wireSexButtons(host);   // shared: also refreshes the Step-2 inputs picker (its silhouettes are sex-specific)
 
       // Emit only the v3 payload contract. Every resolved score carries one conservative scalar half-width
       // (the maximum deviation across both lenses) for the composite consumer.
+      // A MODEL-ROUTE payload has no two lenses to be the max of: bp === cv, and both maxes are 10, so the
+      // composite's hasTwoLenses goes false on its own and it reads the ceiling off the payload as it always
+      // has. No change is required in js/composite-score.js.
       if (window.leComposite){
         if (hasInputs){
           const pr = pk => usingModel ? BC.model * 100 : geomPreLens(gradeBody(BC.metrics, sex, pk).subs, pk);
           const bpRaw = blendRaw(t0.inputScore, pr('blackpill'), t0.bfSource);
-          const cvRaw = blendRaw(t0.inputScore, pr('conventional'), t0.bfSource);
-          const bp = mapModelScore(bpRaw / 100, 'blackpill'), cv = mapModelScore(cvRaw / 100, 'conventional');
+          const cvRaw = usingModel ? bpRaw : blendRaw(t0.inputScore, pr('conventional'), t0.bfSource);
+          const bp = displayScore(bpRaw, 'blackpill', usingModel), cv = usingModel ? bp : displayScore(cvRaw, 'conventional', false);
           const half = blendedRawUncertainty(t0.bfSource, usingModel, BC.framingOverride);
-          const bpBand = makeScoreBand(bpRaw, 'blackpill', half), cvBand = makeScoreBand(cvRaw, 'conventional', half);
+          const bpBand = makeScoreBand(bpRaw, 'blackpill', half, usingModel), cvBand = usingModel ? bpBand : makeScoreBand(cvRaw, 'conventional', half);
           window.leComposite.saveBody(Object.assign({
             schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand,cvBand,bp,cv),
-            bpMax:PROFILES.blackpill.scaleMax, cvMax:PROFILES.conventional.scaleMax, floor:1,
+            bpMax:(usingModel?SCORE_MAX:PROFILES.blackpill.scaleMax), cvMax:(usingModel?SCORE_MAX:PROFILES.conventional.scaleMax), floor:1,
             source:'hybrid', sex:sex, sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
             inputs:{ffmi:t0.ffmiAdj,bf:t0.bfPct,bfSource:t0.bfSource,weight:t0.inputWeight}, ts:BC.measuredAt
           }, overrideFlags()));
         } else if (usingModel){
-          const bp = mapModelScore(BC.model,'blackpill'), cv = mapModelScore(BC.model,'conventional');
+          const s = pctToScore(BC.model * 100);
           const half = photoRawUncertainty(true, BC.framingOverride);
-          const bpBand = makeScoreBand(BC.model*100,'blackpill',half), cvBand = makeScoreBand(BC.model*100,'conventional',half);
+          const band = makeScoreBand(BC.model*100, 'blackpill', half, true);
           window.leComposite.saveBody(Object.assign({
-            schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand,cvBand,bp,cv),
-            bpMax:PROFILES.blackpill.scaleMax, cvMax:PROFILES.conventional.scaleMax, floor:1,
+            schemaVersion:3, bp:s, cv:s, band:scoreBandPayload(band,band,s,s),
+            bpMax:SCORE_MAX, cvMax:SCORE_MAX, floor:1,
             source:'model', sex:(sexKnown?sex:null), sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
             ts:BC.measuredAt
           }, overrideFlags()));
@@ -1301,7 +1489,13 @@
       const fin = (x, d) => (typeof x==='number' && isFinite(x)) ? x : d;
       BC.profile = s.profile==='conventional' ? 'conventional' : 'blackpill'; BC.metrics = s.metrics;
       BC.measuredAt = fin(s.measuredAt, Date.now());
-      BC.model = fin(s.model, null); BC.modelRaw = fin(s.modelRaw, null);
+      // BC.model is a PERCENTILE of the reference population now, and a shot saved before the 2026-08-14
+      // remap holds the retired min/max normalisation instead. The raw model output was always saved
+      // alongside it, so re-derive from that and the old record becomes correct rather than stale. A record
+      // with no raw cannot be re-derived — drop the model read and let the geometry carry it, because
+      // restoring a number on the retired scale would be silently wrong.
+      BC.modelRaw = fin(s.modelRaw, null);
+      BC.model = BC.modelRaw != null ? refPercentile(BC.modelRaw) : null;
       BC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; BC.sexAuto = !!s.sexAuto;
       BC.sexSource = s.sexSource || 'guess'; BC.sexConf = fin(s.sexConf, null);
       BC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; BC.sexClsConf = fin(s.sexClsConf, null);
@@ -1827,19 +2021,14 @@
       inputSize: 224,
       mean: [0.485, 0.456, 0.406],   // ImageNet
       std:  [0.229, 0.224, 0.225],
-      outMin: 14.247, outMax: 58.628, // REAL-PHOTO calibrated, 2026-06-21 (replaces the 26.234/69.261 STUDIO percentiles,
-                                     // which crushed every real body into 1–3). Two-point fit on 5 clean full-body, clothed,
-                                     // front-facing shots: average-male center ≈34.8 (mean of 3) → 4.5, athletic male 47.91
-                                     // (full-body, fitted) → 8.0, solved against the blackpill curve (contrast 1.7). Lands
-                                     // avg males 4.2–5.0, athletic 8.0. BIGGEST lesson: framing dominates the raw — the SAME
-                                     // athletic build read 31.8 cropped at the hips vs 47.9 full-body (~16 pts). Score
-                                     // full-body fitted shots ONLY; upper-body/baggy/cropped raws are not comparable. KNOWN
-                                     // GAPS: (1) residual sex skew — avg-slim women still read ~6 (the studio set leans
-                                     // feminine; the headline is sex-agnostic by design, so this is a model bias, not a
-                                     // calc bug). The low/heavy end is now VALIDATED, not re-fit: a clean full-body heavy
-                                     // male read raw 26.5 → 2.3 (sub-tier), so the raw≈25→2 extrapolation held and the
-                                     // bottom is confirmed. Full real-photo spread is monotonic: heavy 2.3 < avg ~4.5 <
-                                     // athletic 8.2. Revisable per real-photo batch; do NOT assume studio transfers.
+      // NO outMin/outMax. The 2026-06-21 two-point fit (14.247/58.628, solved on five photographs against
+      // the contrast-1.7 curve) is retired: the raw model output is now converted straight to a percentile
+      // of REF_RAW. Two of its lessons survive and still govern this file:
+      //  · FRAMING DOMINATES THE RAW — the same athletic build read 31.8 cropped at the hips vs 47.9
+      //    full-body (~16 points). That is why the model route requires framing==='full' and why the
+      //    reference table was built on full-body-framed photos only; a cropped raw is not comparable.
+      //  · RESIDUAL SEX SKEW — average-slim women read higher than comparable men. The headline is
+      //    sex-agnostic by design and the pooled reference leaves that skew visible rather than absorbing it.
       inputName: null, outputName: null
     };
     let currentGen = 0;
@@ -1920,8 +2109,9 @@
         const oName=MODEL_CONFIG.outputName || session.outputNames[0];
         const raw=Number(out[oName].data[0]);
         if (!Number.isFinite(raw)) throw new Error('model returned a non-finite value');
-        const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
-        window.bcSetModelScore(norm, raw);
+        // The photo term is a PERCENTILE of the reference population (0–1), not a min/max normalisation.
+        // Everything downstream — headline, blend, payload — reads it as one.
+        window.bcSetModelScore(window.refPercentile(raw), raw);
       } catch(e){
         if (gen === currentGen){
           window.bcSetStatus('Trained-model inference failed: '+e.message, true);
@@ -2650,8 +2840,11 @@
           bpRaw = pr('blackpill'); cvRaw = pr('conventional');
           half = window.photoRawUncertainty(usingModel,BC.framingOverride);
         }
-        const bp = window.mapModelScore(bpRaw/100,'blackpill'), cv = window.mapModelScore(cvRaw/100,'conventional');
-        const bpBand = window.makeScoreBand(bpRaw,'blackpill',half), cvBand = window.makeScoreBand(cvRaw,'conventional',half);
+        // Model route: one percentile scale, so bp === cv exactly as the payload emits them.
+        const bp = window.displayScore(bpRaw,'blackpill',usingModel);
+        const cv = usingModel ? bp : window.displayScore(cvRaw,'conventional',false);
+        const bpBand = window.makeScoreBand(bpRaw,'blackpill',half,usingModel);
+        const cvBand = usingModel ? bpBand : window.makeScoreBand(cvRaw,'conventional',half);
         return {bp:bp,cv:cv,bpBand:bpBand,cvBand:cvBand};
       }
 

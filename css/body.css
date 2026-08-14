@@ -82,7 +82,13 @@
 .bc-score .unit { font-size: 0.36em; color: var(--text-dim); letter-spacing: 0.04em; }
 /* .bc-score-band / -range / -note deleted 2026-08-14: the score band is no longer rendered anywhere
    (it is still computed for the bodyScore.v3 payload). The headline is the score + tier, nothing between. */
+/* Correction line under the page header. It exists because .page-sub is the canon synopsis and cannot be
+   edited without moving the Lab's frozen threshold band — see the comment beside it in body.html. */
+.bc-page-subnote { max-width: 74ch; margin: 0.5rem auto 0; font-size: 13px; line-height: 1.55; color: var(--text-muted); }
 .bc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
+/* What the trained-model headline actually claims: its position in the reference population. A percentile,
+   not a range — the 2026-08-14 band deletion above removed ranges, not the meaning of the number. */
+.bc-pct { font-size: 12px; color: var(--text-muted); margin-top: 0.4rem; line-height: 1.5; }
 .bc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
 .bc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
 .bc-srcbadge.heur  { color: #936211; background: #FBEFD6; } /* darkened from #A06A12 (4.03:1 AA fail) to 4.61:1 */
