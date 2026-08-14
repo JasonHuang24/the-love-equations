@@ -598,6 +598,7 @@
   <script>
     const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
+                 framingOverride:false,   // this result was scored on the rate-anyway override — rides into the shot state AND the composite payload (provenance must survive the blend)
                  sexClsSex:null, sexClsConf:null,   // the face classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
                  gate:null,   // a degraded-framing photo awaiting the user's rate-anyway override ({issues:[…]}); takes over the panel until decided
                  bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null,
@@ -973,6 +974,8 @@
         ? '<div class="bc-srcbadge model">Trained model score &middot; the breakdown below is the transparent geometry</div>'
         : BC.bareGeometry
         ? '<div class="bc-srcbadge heur">Bare-physique read &middot; the trained model is clothed-trained, so a shirtless / swimwear shot is scored from the silhouette geometry instead</div>'
+        : BC.framing === 'torso'
+        ? '<div class="bc-srcbadge heur">Upper-body read &middot; scored from the silhouette frame cues (the trained score scale is calibrated on full-body shots, so it doesn&rsquo;t apply to a cropped one)</div>'
         : '<div class="bc-srcbadge heur">Geometry score &middot; no trained model loaded (see note)</div>';
       const skinDebug = (BC_DEBUG && BC.skinFrac != null)
         ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; torso skin = '+Math.round(BC.skinFrac*100)+'%</strong> &mdash; '+(BC.bareGeometry?'bare &rarr; geometry headline':'clothed &rarr; model headline')+(BC.skinFrac>=0.35&&BC.skinFrac<0.55?' &middot; <strong>borderline</strong>':'')+' (switch 45%, 35&ndash;55% borderline)</div>'
@@ -1052,19 +1055,22 @@
             bp: mapModelScore(blendRaw(t0.objective, pr('blackpill')) / 100, 'blackpill'),
             cv: mapModelScore(blendRaw(t0.objective, pr('conventional')) / 100, 'conventional'),
             bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
-            source: 'hybrid', sex: sex, tier0: { ffmi: t0.ffmiAdj, bf: t0.bfPct }, ts: BC.measuredAt
+            source: 'hybrid', sex: sex, tier0: { ffmi: t0.ffmiAdj, bf: t0.bfPct }, ts: BC.measuredAt,
+            framingOverride: !!BC.framingOverride
           });
         } else if (usingModel){
           window.leComposite.saveBody({
             bp: mapModelScore(BC.model,'blackpill'), cv: mapModelScore(BC.model,'conventional'),
             bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
-            source: 'model', sex: (sexKnown ? sex : null), ts: BC.measuredAt
+            source: 'model', sex: (sexKnown ? sex : null), ts: BC.measuredAt,
+            framingOverride: !!BC.framingOverride
           });
         } else if (sexKnown){
           window.leComposite.saveBody({
             bp: gradeBody(BC.metrics, sex,'blackpill').score, cv: gradeBody(BC.metrics, sex,'conventional').score,
             bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
-            source: 'geometry', sex: sex, ts: BC.measuredAt
+            source: 'geometry', sex: sex, ts: BC.measuredAt,
+            framingOverride: !!BC.framingOverride
           });
         } else {
           window.leComposite.saveBody({ needsSex: true, ts: BC.measuredAt });
@@ -1088,10 +1094,11 @@
       const cfNote = cf ? ' · <strong style="color:var(--scarlet)">face reads ' + (cf.cls==='m'?'male':'female') + ' (' + Math.round(cf.conf*100) + '%) — using your pick</strong>' : '';
       return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + cfNote + (BC.reliability ? ' · ' + BC.reliability : '');
     }
-    window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac){
+    window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac, framingOverride){
       BC.gate = null; window.bcGateOverride = null;   // this photo is committing — any pending framing prompt is decided/superseded
       BC.metrics = metrics; BC.model = null; BC.measuredAt = Date.now();   // stable stamp: a new photo, reused on every re-render so age stays honest
       BC.framing = framing === 'torso' ? 'torso' : 'full';
+      BC.framingOverride = !!framingOverride;   // structured provenance: a degraded-framing photo scored on the user's override
       BC.bareGeometry = !!bareGeometry; BC.skinFrac = (skinFrac==null ? null : skinFrac);
       BC.reliability = reliability || '';
       BC.sexClsSex = null; BC.sexClsConf = null;   // a new photo → drop the previous photo's classifier read before this one's fires
@@ -1135,7 +1142,7 @@
       const msg = BC.deferredRefusal; BC.deferredRefusal = null;
       window.bcSetStatus(msg, true); window.bcResetResult();
     };
-    window.bcResetResult = function(){ BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    window.bcResetResult = function(){ BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.framingOverride = false; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
     // a degraded-framing photo parks here until the user rules on it (renderResult owns the prompt UI)
     window.bcShowGate = function(issues){ BC.gate = { issues: issues || [] }; renderResult(); };
 
@@ -1147,6 +1154,7 @@
         sex:BC.sex, sexAuto:BC.sexAuto, sexSource:BC.sexSource, sexConf:BC.sexConf, sexManual:BC.sexManual,
         sexClsSex:BC.sexClsSex, sexClsConf:BC.sexClsConf,
         sexUnknownReason:BC.sexUnknownReason||'', reliability:BC.reliability, framing:BC.framing,
+        framingOverride:!!BC.framingOverride,
         bareGeometry:BC.bareGeometry, skinFrac:BC.skinFrac, measuredAt:BC.measuredAt };
       try { localStorage.setItem(BC_SHOT_KEY, JSON.stringify({ img:BC.shotDataURL, state, ts:BC.measuredAt })); }
       catch(e){ try { localStorage.removeItem(BC_SHOT_KEY); } catch(_){} }   // quota: drop the stale shot so a reload can't pair an old photo with a fresh score
@@ -1166,6 +1174,7 @@
       BC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; BC.sexClsConf = fin(s.sexClsConf, null);
       BC.sexManual = !!s.sexManual; BC.sexUnknownReason = s.sexUnknownReason || '';
       BC.reliability = s.reliability || ''; BC.framing = s.framing==='torso' ? 'torso' : 'full';
+      BC.framingOverride = !!s.framingOverride;
       BC.bareGeometry = !!s.bareGeometry; BC.skinFrac = fin(s.skinFrac, null);
       document.querySelectorAll('.bc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===BC.profile); });
       setStatus(bcStatusNote(), false, true); renderResult();
@@ -1180,8 +1189,14 @@
     });
     // full reset of this calc (the composite Reset button calls this on whichever page is open)
     window.bcResetAll = function(){
-      BC.gate = null; window.bcGateOverride = null;
+      // Cancel FIRST: Reset must be an async boundary. Without this an in-flight pose analysis /
+      // model inference still owns the current generation and resurrects the photo, score, storage
+      // and composite after the wipe (cold-review find). The hook lives in the MediaPipe module
+      // (which owns currentGen and the pending tensors).
+      if (window.bcCancelAnalysis) window.bcCancelAnalysis();
+      BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null;
       BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
+      BC.framingOverride = false; BC.measuredAt = null;
       BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
       BC.sexConf = null; BC.sexManual = false; BC.sexClsSex = null; BC.sexClsConf = null; BC.sexUnknownReason = ''; BC.shotDataURL = null;
       BC.routeBare = false; BC.routeUseModel = false;
@@ -1649,6 +1664,15 @@
             error.stage = stage; reject(error);
           }
         }, POSE_ANALYSIS_TIMEOUT_MS);
+        // A shutter press can land while an alignment probe is in flight. Overwriting the singleton
+        // without settling it orphans the probe's promise forever (its timeout sees active !== activePose
+        // and returns without resolving) — settle it as superseded so every posted job settles exactly once.
+        // The worker still processes the probe message; its result is ignored by the id check above.
+        if (activePose){
+          const prev = activePose;
+          clearTimeout(prev.timer); activePose = null;
+          prev.reject(new Error('superseded by a newer analysis'));
+        }
         activePose = active;
         try { worker.postMessage({ type:'analyze', id, bitmap, poseOnly:!!poseOnly }, [bitmap]); }
         catch(error){ clearTimeout(active.timer); activePose = null; recyclePoseWorker(worker); reject(error); }
@@ -1877,6 +1901,10 @@
       if (bcBusy){ window.bcSetStatus('Still analysing the previous photo — drop this one again when it finishes.', true); return; }
       bcBusy = true;
       const gen = ++currentGen;
+      // A new analysis supersedes any refusal the PREVIOUS photo stashed for a still-loading model —
+      // without this, a stale refusal could fire mid-prompt and erase the new photo's gate (cold-review find).
+      BC.deferredRefusal = null;
+      BC.poseQuality = null;   // instrumentation only (debug batch logs the framing readouts per image)
       try {
         canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
         const ctx = canvas.getContext('2d', { willReadFrequently:true });
@@ -1892,6 +1920,7 @@
           window.bcResetResult(); return;
         }
         if (gen !== currentGen) return;
+        BC.poseQuality = (poseResult && poseResult.quality) || null;   // instrumentation only: this image's framing readouts (yaw/tilt/band) for the debug batch
         if (!poseResult || !poseResult.landmarks){
           window.bcSetStatus('No body found — use a clear, full-body, front-facing photo.', true); window.bcResetResult(); return;
         }
@@ -1952,7 +1981,11 @@
         // the headline to the geometry silhouette there (and apply the geometry gates). Computed before the overlay.
         const skinFrac = torsoSkinFraction(ctx, lm, W, H);
         const bareBody = skinFrac >= SKIN_HEADLINE_THRESHOLD;
-        const useModel = (!!session || modelState === 'loading') && !bareBody;
+        // The CNN owns only FULL-BODY clothed shots: its scale was calibrated on full-body framing, and the
+        // same build measured ~16 raw points different cropped at the hips (see MODEL_CONFIG) — so a torso
+        // crop routed to it scores the framing, not the frame. Torso shots score from the silhouette frame
+        // cues (the renormalized geometry path), which is what the panel already tells the user.
+        const useModel = (!!session || modelState === 'loading') && !bareBody && framing === 'full';
         BC.routeBare = bareBody; BC.routeUseModel = useModel;   // instrumentation only: the TRUE routing decision (incl. the model-load window) for the debug batch harness — no logic change
         const px = poseResult.silhouette || null;
         const metrics = window.bcBodyRatios(px, skel);
@@ -2026,7 +2059,9 @@
         } catch(_){ /* overlay is cosmetic */ }
 
         // snapshot the analysed photo (with overlay) so it survives a page switch — restored by bcRestoreShot
-        try { window.bcSetShot(downscaleToDataURL(canvas, 768)); } catch(_){}
+        let shotURL = null;
+        try { shotURL = downscaleToDataURL(canvas, 768); } catch(_){}
+        window.bcSetShot(shotURL);
 
         // The commit tail — everything that turns this analysis into a live result. Runs immediately for a
         // pass-band photo; for a degraded one it waits behind the rate-anyway override (gen-guarded, so a
@@ -2041,13 +2076,20 @@
             if (sexSession) inferSex(sexData, gen);
             else if (sexState === 'loading'){ pendingSexTensor = sexData; pendingSexGen = gen; }   // classifier still loading
           }
-          window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac);
+          window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac, gateBand === 'degraded');
           // eyes hidden (sunglasses) → keep bcAnalyze's decisive body-frame guess rather than asserting the
           // confidently-wrong occluded-face read; the bold "switch" toggle fixes it if the frame mis-reads.
           if (tensorData && session && useModel){ window.bcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
-          else if (tensorData && modelState === 'loading' && !bareBody){ window.bcSetStatus('Body measured — trained model still loading, the score will update automatically…'); }
+          else if (tensorData && modelState === 'loading' && useModel){ window.bcSetStatus('Body measured — trained model still loading, the score will update automatically…'); }
         };
         if (gateBand === 'degraded' && !framingAutoOverride){
+          // This photo is ACCEPTED (it's on the canvas) — the previous photo's committed result must not
+          // outlive it. Without this, the old score stayed in storage + the composite while the prompt was
+          // open, and navigating away restored it under the new photo (cold-review find; the privacy note
+          // promises "cleared the moment you drop a new one"). Retire it, then keep THIS photo's snapshot
+          // for the post-override commit.
+          window.bcResetResult();
+          window.bcSetShot(shotURL);
           window.bcGateOverride = function(){ if (gen !== currentGen) return; window.bcGateOverride = null; commit(); };
           window.bcShowGate(gateIssues);
           window.bcSetStatus('Photo readable, but the framing is off — rate it anyway in the panel, or retake to standard.', true);
@@ -2081,10 +2123,24 @@
       if (u){ window.bcSetStatus('Loading image from URL…'); loadFromUrl(u); }
     });
     fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
+    // Reset's async cancellation boundary (owned by this module — it owns the generation counter and the
+    // pending tensors). Retires an in-flight pose analysis / model / sex inference and a parked override
+    // commit (all gen-guarded), and clears the file input so re-choosing the same file fires `change` again.
+    window.bcCancelAnalysis = function(){
+      currentGen++;
+      pendingTensor = null; pendingSexTensor = null;
+      loadSeq++;               // a pending URL load must not land after a Reset either
+      fileInput.value = '';
+    };
+    // Source-request ordering: image loads are async, so without a sequence a slow URL A finishing after
+    // a fast URL B would overwrite B's result (completion order ≠ request order — cold-review repro).
+    // Every accepted source (file, URL, paste, drop) claims the sequence; stale onload/onerror self-discard.
+    let loadSeq = 0;
     function loadFile(file){
+      const seq = ++loadSeq;
       const img=new Image();
-      img.onload=async()=>{ try { await handleImage(img); } finally { URL.revokeObjectURL(img.src); } };
-      img.onerror=()=>{ window.bcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
+      img.onload=async()=>{ try { if (seq===loadSeq) await handleImage(img); } finally { URL.revokeObjectURL(img.src); } };
+      img.onerror=()=>{ if (seq===loadSeq) window.bcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
       img.src=URL.createObjectURL(file);
     }
     // The Upload lane also takes an image URL — the visible field below the drop zone (the old URL
@@ -2098,14 +2154,27 @@
     document.getElementById('bc-url-go').addEventListener('click', loadUrlField);
     urlInput.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); loadUrlField(); } });
     function loadFromUrl(u){
+      const seq = ++loadSeq;
       const img=new Image(); img.crossOrigin='anonymous';
-      img.onload=()=>{ handleImage(img); };
-      img.onerror=()=>window.bcSetStatus('That URL would not load (cross-origin block?). Download the image and upload it instead.', true);
+      img.onload=()=>{ if (seq===loadSeq) handleImage(img); };
+      img.onerror=()=>{ if (seq===loadSeq) window.bcSetStatus('That URL would not load (cross-origin block?). Download the image and upload it instead.', true); };
       img.src=u;
     }
+    // text/uri-list per RFC 2483: line-separated, '#' lines are comments — a browser-copied payload like
+    // "# source\r\nhttps://…" must parse (the old first-line-only read rejected it), and a nonempty but
+    // invalid uri-list must still fall through to text/plain.
     function urlFromDataTransfer(dt){
-      const t=((dt && (dt.getData('text/uri-list') || dt.getData('text/plain'))) || '').trim().split(/[\r\n]/)[0];
-      return /^https?:\/\/\S+$/i.test(t) ? t : null;
+      if (!dt) return null;
+      const types=['text/uri-list','text/plain'];
+      for (let k=0;k<types.length;k++){
+        const lines=String(dt.getData(types[k])||'').split(/\r?\n/);
+        for (let j=0;j<lines.length;j++){
+          const t=lines[j].trim();
+          if (!t || t.charAt(0)==='#') continue;
+          if (/^https?:\/\/\S+$/i.test(t)) return t;
+        }
+      }
+      return null;
     }
     document.addEventListener('paste', e => {
       const t=e.target;
@@ -2120,8 +2189,10 @@
     // when aligned. Auto-snap matters MOST here — the subject stands metres from a propped phone, so
     // hands-free is the only capture that physically works. The probe runs the worker's assessPose
     // (poseOnly — no silhouette) on a downscaled frame, so an auto-captured photo is pass-band (full
-    // body, square, level) by construction and never lands on the rate-anyway prompt. The shutter
-    // always works regardless of the toggle; an off-standard manual shot flows into the override.
+    // body, square, level) AT THE PROBE'S RESOLUTION — the full-resolution scoring gate re-checks, and
+    // a borderline read (or movement between probe and capture) can still land on the rate-anyway
+    // prompt; the downstream gate stays the authority. The shutter always works regardless of the
+    // toggle; an off-standard manual shot flows into the override.
     let stream=null;
     const camStart=document.getElementById('bc-cam-start');
     const shutter=document.getElementById('bc-shutter');
@@ -2176,7 +2247,13 @@
           for (const p of res.landmarks){ if (!p) continue;
             const vis=p.visibility==null?1:p.visibility; if (vis<0.3) continue;
             const y=Math.max(0,Math.min(1,p.y)); if (y<mn)mn=y; if (y>mx)mx=y; used++; }
-          if (used>=4 && (mx-mn)>=0.5) ok=true;
+          if (used>=4 && (mx-mn)>=0.5){
+            // arms tucked at the waist zero out the waist/hip silhouette cues downstream — don't snap a
+            // photo whose best fix is free; the hint names it and the shutter still overrides
+            const sk = window.bcPoseSkeleton(res.landmarks);
+            if (sk && sk.armNearWaist) hint='Arms a few inches out from your sides.';
+            else ok=true;
+          }
           else hint='Step closer — fill the frame top to bottom.';
         }
         if (ok) hint='Hold still…';
@@ -2201,12 +2278,18 @@
     }
     shutter.addEventListener('click', captureFrame);
 
+    let camRequesting=false;   // a second Start click mid-request must not acquire a second (leaked) stream
     camStart.addEventListener('click', async () => {
+      if (camRequesting) return;
+      camRequesting=true;
+      let s=null;   // the candidate stream — stopped in EVERY failure path, incl. a post-acquire play() rejection
       try {
+        window.bcStopCamera();   // restart semantics: never hold two live streams
         // Ask for a high-res feed (ideal = non-fatal): browsers default getUserMedia to 640×480, which
         // hands the CNN a soft upscaled crop vs the sharp stills it was calibrated on — a measured
         // score-mover, not a cosmetic one. Phones typically grant 1280×720+ on the front camera.
-        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ ideal:1920 }, height:{ ideal:1440 } } });
+        s=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ ideal:1920 }, height:{ ideal:1440 } } });
+        stream=s;
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
         guideEl.hidden=false; shutter.hidden=false;
@@ -2216,8 +2299,12 @@
         window.bcSetStatus(autoSnapChk.checked
           ? 'Camera live — prop the phone, step back into the guide, and it snaps itself; the red button captures any time.'
           : 'Camera live — step back into the guide and tap the red button.');
-      } catch(e){ window.bcSetStatus('Camera blocked or unavailable: '+e.message, true); }
+      } catch(e){
+        if (s){ try { s.getTracks().forEach(t=>t.stop()); } catch(_){} if (stream===s){ stream=null; video.srcObject=null; } }
+        window.bcSetStatus('Camera blocked or unavailable: '+e.message, true);
+      } finally { camRequesting=false; }
     });
+    window.addEventListener('pagehide', () => window.bcStopCamera());   // bfcache keeps the page alive — the camera must not stay on
     window.bcStopCamera=function(){
       if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
       alignStreak=0; alignBusy=false;
@@ -2267,6 +2354,9 @@
         { key:'routing',     label:'routing' },
         { key:'skin_frac',   label:'skin_frac' },
         { key:'framing',     label:'framing' },
+        { key:'gate_band',   label:'gate_band' },
+        { key:'gate_tilt',   label:'gate_tilt' },
+        { key:'gate_yaw',    label:'gate_yaw' },
         { key:'model_raw',   label:'model_raw' },
         { key:'bp',          label:'bp' },
         { key:'cv',          label:'cv' },
@@ -2360,7 +2450,7 @@
       async function processOne(file){
         cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null, sexRes:null, abandoned:false };
         const ts = nowISO();
-        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', routing:'', skin_frac:'', framing:'', model_raw:'', bp:'', cv:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
+        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', routing:'', skin_frac:'', framing:'', gate_band:'', gate_tilt:'', gate_yaw:'', model_raw:'', bp:'', cv:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
         let img=null;
         try { img = await decode(file); }
         catch(e){ return blank({ refusal:'could not decode image' }); }
@@ -2375,6 +2465,15 @@
 
         const scored = !!BC.metrics;
         let bp='', cv='', routing='', skin='', framing='', t0f='', t0b='', xchk='';
+        // framing-gate readouts for THIS image (BC.poseQuality is nulled per analysis) — logged for
+        // scored AND refused rows alike; this column pair is the tilt-threshold calibration instrument
+        let gband='', gtilt='', gyaw='';
+        const pq = BC.poseQuality;
+        if (pq){
+          gband = pq.band || pq.code || '';
+          gtilt = (typeof pq.tilt==='number' && isFinite(pq.tilt)) ? pq.tilt.toFixed(4) : '';
+          gyaw  = (typeof pq.yawDeg==='number' && isFinite(pq.yawDeg)) ? pq.yawDeg.toFixed(1) : '';
+        }
         if (scored){
           // Finding 3: a geometry or hybrid row's bp/cv is sex-dependent — the single-shot UI re-renders with the
           // classifier sex, so await that read before computing. The pure-model headline is sex-agnostic → skip.
@@ -2415,6 +2514,7 @@
           outcome: scored ? 'scored' : 'refused',
           refusal: scored ? '' : stripTags(cur.statusMsg),
           routing, skin_frac:skin, framing,
+          gate_band:gband, gate_tilt:gtilt, gate_yaw:gyaw,
           model_raw: cur.modelRaw!=null ? cur.modelRaw.toFixed(3) : '',
           bp, cv,
           sex: scored ? (BC.sex||'unknown') : '',
@@ -2460,6 +2560,10 @@
       async function runBatch(files){
         files = Array.from(files||[]).filter(f=>f && (f.type ? /^image\//.test(f.type) : true));
         if (running || !files.length) return;
+        // A pending gate prompt cannot survive a batch: batch commits clear the global override closure and
+        // retire its generation, so restoring the prompt afterwards would paint a dead "Rate anyway" button.
+        // Decide it first (cold-review find).
+        if (BC.gate){ statusEl.textContent = 'A framing prompt is open — decide it (Rate anyway / Discard) before running a batch.'; return; }
         running = true; rows.length = 0; renderTable();
         const snap = snapshot();
         const lsBefore = snapshotLS();

@@ -459,6 +459,7 @@
   <script>
     const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'',
+                 framingOverride:false,   // this result was scored on the rate-anyway override — rides into the shot state AND the composite payload (provenance must survive the blend)
                  sexClsSex:null, sexClsConf:null,   // the classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
                  gate:null,   // a degraded-framing photo awaiting the user's rate-anyway override ({issues:[…]}); takes over the panel until decided
                  shotDataURL:null, measuredAt:null };
@@ -625,7 +626,7 @@
         + '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">'+prof.unit+'</span></div>'
         + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score, tierSex)+'</div>'
         + srcBadge
-        + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Low-res read.</strong> '+LC.reliability.replace(/^ · small\/distant face /, '').replace(/^ · /, '')+'</div>' : '')
+        + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+LC.reliability.replace(/^[\s·]+/, '')+'</div>' : '')
         + (sexConflict ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:var(--scarlet)"><strong>Your sex pick and the photo disagree.</strong> You set the sex to <strong>'+(sexConflict.manual==='m'?'male':'female')+'</strong>, but the photo&rsquo;s face classifier reads <strong>'+(sexConflict.cls==='m'?'male':'female')+'</strong> ('+Math.round(sexConflict.conf*100)+'% confident). The panel below uses <strong>your selection</strong> &mdash; the headline score is the same either way. <strong><a href="#" class="lc-sexflip" data-sex="'+sexConflict.cls+'" style="color:var(--scarlet)">Use the '+(sexConflict.cls==='m'?'male':'female')+' read instead &rarr;</a></strong></div>' : '')
         + (LE_DEBUG && usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
         + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, tierSex)+').</div>'
@@ -650,16 +651,18 @@
           bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
           // undetermined sex persists as null (matches the Body Calc's model path) — the display-only
           // 'f' fallback must not enter the composite's sex-conflict check as a real read
-          source: usingModel ? 'model' : 'heuristic', sex: (sexKnown ? sex : null), ts: LC.measuredAt
+          source: usingModel ? 'model' : 'heuristic', sex: (sexKnown ? sex : null), ts: LC.measuredAt,
+          framingOverride: !!LC.framingOverride
         });
       }
       lcSaveShot();   // persist the photo + this result across page switches
     }
 
-    window.lcAnalyze = function(geo, soft, reliability){
+    window.lcAnalyze = function(geo, soft, reliability, framingOverride){
       LC.geo = geo; LC.soft = soft; LC.model = null; LC.measuredAt = Date.now();   // new face: heuristic shows first, model score arrives async
       LC.gate = null; window.lcGateOverride = null;    // this photo is committing — any pending framing prompt is decided/superseded
       LC.reliability = reliability || '';              // persistent low-res caveat (survives the async model re-render)
+      LC.framingOverride = !!framingOverride;          // structured provenance: a degraded-framing photo scored on the user's override
       LC.sexClsSex = null; LC.sexClsConf = null;   // new photo → drop the previous photo's classifier read before this one's fires
       // Manual sex (a panel flip) OUTRANKS the guess AND the classifier and SURVIVES a new photo — re-measure the
       // face, don't silently re-sex the person. Only an auto guess is re-derived from this frame. (Body P2.)
@@ -690,7 +693,7 @@
       LC.sex = s; LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
       renderResult();
     };
-    window.lcResetResult = function(){ LC.gate = null; window.lcGateOverride = null; LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.sexClsSex = null; LC.sexClsConf = null; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
+    window.lcResetResult = function(){ LC.gate = null; window.lcGateOverride = null; LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.framingOverride = false; LC.sexClsSex = null; LC.sexClsConf = null; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
     // a degraded-framing photo parks here until the user rules on it (renderResult owns the prompt UI)
     window.lcShowGate = function(issues){ LC.gate = { issues: issues || [] }; renderResult(); };
 
@@ -701,7 +704,7 @@
       const state = { profile:LC.profile, geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
         sex:LC.sex, sexAuto:LC.sexAuto, sexSource:LC.sexSource, sexConf:LC.sexConf, sexManual:LC.sexManual,
         sexClsSex:LC.sexClsSex, sexClsConf:LC.sexClsConf,
-        reliability:LC.reliability, measuredAt:LC.measuredAt };
+        reliability:LC.reliability, framingOverride:!!LC.framingOverride, measuredAt:LC.measuredAt };
       try { localStorage.setItem(LC_SHOT_KEY, JSON.stringify({ img:LC.shotDataURL, state, ts:LC.measuredAt })); }
       catch(e){ try { localStorage.removeItem(LC_SHOT_KEY); } catch(_){} }   // quota: drop the stale shot so a reload can't pair an old photo with a fresh score
     }
@@ -718,7 +721,7 @@
       LC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; LC.sexAuto = !!s.sexAuto;
       LC.sexSource = s.sexSource || 'guess'; LC.sexConf = fin(s.sexConf, null);
       LC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; LC.sexClsConf = fin(s.sexClsConf, null);
-      LC.sexManual = !!s.sexManual; LC.reliability = s.reliability || '';
+      LC.sexManual = !!s.sexManual; LC.reliability = s.reliability || ''; LC.framingOverride = !!s.framingOverride;
       document.querySelectorAll('.lc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===LC.profile); });
       renderResult();
     };
@@ -732,8 +735,13 @@
     });
     // full reset of this calc (the composite Reset button calls this on whichever page is open)
     window.lcResetAll = function(){
+      // Cancel FIRST: Reset must be an async boundary — an in-flight model/sex inference still owns the
+      // current generation and would mutate status/state after the wipe (cold-review find). The hook
+      // lives in the MediaPipe module (which owns currentGen and the pending tensors).
+      if (window.lcCancelAnalysis) window.lcCancelAnalysis();
       LC.gate = null; window.lcGateOverride = null;
       LC.geo = null; LC.soft = null; LC.model = null; LC.modelRaw = null; LC.reliability = '';
+      LC.framingOverride = false; LC.measuredAt = null;
       LC.sex = null; LC.sexAuto = true; LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false; LC.shotDataURL = null;
       LC.sexClsSex = null; LC.sexClsConf = null;
       lcClearShot(); if (window.lcClearCanvas) window.lcClearCanvas();
@@ -1035,7 +1043,9 @@
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS, { color:'#C41E3A', lineWidth:1 });
         // snapshot the analysed face (with overlay) so it survives a page switch — restored by lcRestoreShot
-        try { window.lcSetShot(downscaleToDataURL(canvas, 768)); } catch(_){}
+        let shotURL = null;
+        try { shotURL = downscaleToDataURL(canvas, 768); } catch(_){}
+        window.lcSetShot(shotURL);
         // The commit tail — everything that turns this analysis into a live result. Runs immediately for a
         // pass-band photo; for a degraded one it waits behind the rate-anyway override (gen-guarded, so a
         // newer photo silently retires a stale prompt's commit).
@@ -1045,12 +1055,19 @@
         const commit = function(){
           pendingTensor = tensorData; pendingTensorGen = gen;
           pendingSexTensor = eyesHidden ? null : sexData; pendingSexGen = gen;
-          window.lcAnalyze(geo, soft, relWarn + framingCaveat);
+          window.lcAnalyze(geo, soft, relWarn + framingCaveat, fr.band === 'degraded');
           if (sexData && sexSession && !eyesHidden) inferSex(sexData, gen);   // refine the geometry sex-guess with the classifier
           if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
           else if (tensorData && modelState === 'loading'){ window.lcSetStatus('Face measured — trained model still loading, the score will update automatically…'); }
         };
         if (fr.band === 'degraded' && !framingAutoOverride){
+          // This photo is ACCEPTED (it's on the canvas) — the previous photo's committed result must not
+          // outlive it. Without this, the old score stayed in storage + the composite while the prompt was
+          // open, and navigating away restored it under the new photo (cold-review find; the privacy note
+          // promises "cleared the moment you drop a new one"). Retire it, then keep THIS photo's snapshot
+          // for the post-override commit.
+          window.lcResetResult();
+          window.lcSetShot(shotURL);
           window.lcGateOverride = function(){ if (gen !== currentGen) return; window.lcGateOverride = null; commit(); };
           window.lcShowGate(fr.issues);
           window.lcSetStatus('Photo readable, but the framing is off — rate it anyway in the panel, or retake square-on.', true);
@@ -1084,10 +1101,24 @@
       if (u){ window.lcSetStatus('Loading image from URL…'); loadFromUrl(u); }
     });
     fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
+    // Reset's async cancellation boundary (owned by this module — it owns the generation counter and the
+    // pending tensors). Retires an in-flight model/sex inference and a parked override commit (all
+    // gen-guarded), and clears the file input so re-choosing the same file fires `change` again.
+    window.lcCancelAnalysis = function(){
+      currentGen++;
+      pendingTensor = null; pendingSexTensor = null;
+      loadSeq++;               // a pending URL load must not land after a Reset either
+      fileInput.value = '';
+    };
+    // Source-request ordering: image loads are async, so without a sequence a slow URL A finishing after
+    // a fast URL B would overwrite B's result (completion order ≠ request order — cold-review repro).
+    // Every accepted source (file, URL, paste, drop) claims the sequence; stale onload/onerror self-discard.
+    let loadSeq = 0;
     function loadFile(file){
+      const seq = ++loadSeq;
       const img=new Image();
-      img.onload=()=>{ handleImage(img); URL.revokeObjectURL(img.src); };
-      img.onerror=()=>{ window.lcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
+      img.onload=()=>{ if (seq===loadSeq) handleImage(img); URL.revokeObjectURL(img.src); };
+      img.onerror=()=>{ if (seq===loadSeq) window.lcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
       img.src=URL.createObjectURL(file);
     }
     // The Upload lane also takes an image URL — the visible field below the drop zone (the old URL
@@ -1101,14 +1132,27 @@
     document.getElementById('lc-url-go').addEventListener('click', loadUrlField);
     urlInput.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); loadUrlField(); } });
     function loadFromUrl(u){
+      const seq = ++loadSeq;
       const img=new Image(); img.crossOrigin='anonymous';
-      img.onload=()=>handleImage(img);
-      img.onerror=()=>window.lcSetStatus('That URL would not load (cross-origin block?). Download the image and upload it instead.', true);
+      img.onload=()=>{ if (seq===loadSeq) handleImage(img); };
+      img.onerror=()=>{ if (seq===loadSeq) window.lcSetStatus('That URL would not load (cross-origin block?). Download the image and upload it instead.', true); };
       img.src=u;
     }
+    // text/uri-list per RFC 2483: line-separated, '#' lines are comments — a browser-copied payload like
+    // "# source\r\nhttps://…" must parse (the old first-line-only read rejected it), and a nonempty but
+    // invalid uri-list must still fall through to text/plain.
     function urlFromDataTransfer(dt){
-      const t=((dt && (dt.getData('text/uri-list') || dt.getData('text/plain'))) || '').trim().split(/[\r\n]/)[0];
-      return /^https?:\/\/\S+$/i.test(t) ? t : null;
+      if (!dt) return null;
+      const types=['text/uri-list','text/plain'];
+      for (let k=0;k<types.length;k++){
+        const lines=String(dt.getData(types[k])||'').split(/\r?\n/);
+        for (let j=0;j<lines.length;j++){
+          const t=lines[j].trim();
+          if (!t || t.charAt(0)==='#') continue;
+          if (/^https?:\/\/\S+$/i.test(t)) return t;
+        }
+      }
+      return null;
     }
     document.addEventListener('paste', e => {
       const t=e.target;
@@ -1121,9 +1165,11 @@
 
     // ── Camera capture: a round shutter overlaid on the live preview (camera-app style) + auto-snap
     // when aligned. Auto-snap runs the SAME classifier as the scoring gate on a downscaled live frame,
-    // so an auto-captured photo is pass-band by construction and never lands on the rate-anyway prompt.
-    // The shutter always works regardless of the toggle — a deliberately off-standard manual shot then
-    // flows into the override prompt downstream, which is the honest path for it.
+    // so an auto-captured photo is pass-band AT THE PROBE'S RESOLUTION — the full-resolution scoring
+    // gate re-checks, and a borderline read (or movement between probe and capture) can still land on
+    // the rate-anyway prompt; the downstream gate stays the authority. The shutter always works
+    // regardless of the toggle — a deliberately off-standard manual shot then flows into the override
+    // prompt downstream, which is the honest path for it.
     let stream=null;
     const camStart=document.getElementById('lc-cam-start');
     const shutter=document.getElementById('lc-shutter');
@@ -1180,12 +1226,18 @@
     }
     shutter.addEventListener('click', captureFrame);
 
+    let camRequesting=false;   // a second Start click mid-request must not acquire a second (leaked) stream
     camStart.addEventListener('click', async () => {
+      if (camRequesting) return;
+      camRequesting=true;
+      let s=null;   // the candidate stream — stopped in EVERY failure path, incl. a post-acquire play() rejection
       try {
+        window.lcStopCamera();   // restart semantics: never hold two live streams
         // Ask for a high-res feed (ideal = non-fatal): browsers default getUserMedia to 640×480, which
         // hands the CNN a soft upscaled crop vs the sharp stills it was calibrated on — a measured
         // score-mover, not a cosmetic one. Phones typically grant 1280×720+ on the front camera.
-        stream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ ideal:1920 }, height:{ ideal:1440 } } });
+        s=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ ideal:1920 }, height:{ ideal:1440 } } });
+        stream=s;
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
         guideEl.hidden=false; shutter.hidden=false;
@@ -1195,8 +1247,12 @@
         window.lcSetStatus(autoSnapChk.checked
           ? 'Camera live — line up with the guide and it snaps itself; the red button captures any time.'
           : 'Camera live — line up with the guide and tap the red button.');
-      } catch(e){ window.lcSetStatus('Camera blocked or unavailable: '+e.message, true); }
+      } catch(e){
+        if (s){ try { s.getTracks().forEach(t=>t.stop()); } catch(_){} if (stream===s){ stream=null; video.srcObject=null; } }
+        window.lcSetStatus('Camera blocked or unavailable: '+e.message, true);
+      } finally { camRequesting=false; }
     });
+    window.addEventListener('pagehide', () => window.lcStopCamera());   // bfcache keeps the page alive — the camera must not stay on
     window.lcStopCamera=function(){
       if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
       alignStreak=0;
@@ -1368,6 +1424,10 @@
       async function runBatch(files){
         files = Array.from(files||[]).filter(f=>f && (f.type ? /^image\//.test(f.type) : true));
         if (running || !files.length) return;
+        // A pending gate prompt cannot survive a batch: batch commits clear the global override closure and
+        // retire its generation, so restoring the prompt afterwards would paint a dead "Rate anyway" button.
+        // Decide it first (cold-review find).
+        if (LC.gate){ statusEl.textContent = 'A framing prompt is open — decide it (Rate anyway / Discard) before running a batch.'; return; }
         running = true; rows.length = 0; renderTable();
         const snap = snapshot();
         const lsBefore = snapshotLS();

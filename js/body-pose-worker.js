@@ -13,6 +13,15 @@ const SILHOUETTE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/im
 // indices that must be present and finite for a pose to be usable (torso + legs/feet).
 const PIDX = { shoulderR:12, shoulderL:11, hipR:24, hipL:23 };
 const REQUIRED = [0,11,12,23,24,25,26,27,28,29,30,31,32];
+// Degraded-only tilt threshold, in PIXEL-slope units (see assessPose): mean shoulder/hip Δy over the
+// shoulder span, both in pixels, ≈ tan(shoulder-line angle) — 0.22 ≈ a 12° visible slope.
+// MEASURED 2026-08-14 (343 roster photos through the batch probe; 47 reached the framing read):
+//   neutral standing full-body passes ≤ 0.054 · readable-candid p50 0.065 / p90 0.17 · visible
+//   leans 0.26–0.30. 0.22 sits ≥4× above the neutral-standing spread, above candid slack, below
+//   real leans — and is equivalent to v2's 0.18 on a 3:4 portrait phone photo (old units multiplied
+//   the true slope by width/height), so portrait field behavior is preserved while a landscape
+//   frame is no longer over-flagged 1.78×.
+const TILT_DEGRADED = 0.22;
 
 let mod = null;
 let poseLandmarker = null;
@@ -61,24 +70,30 @@ function assessPose(lm, width, height){
     return { ok:false, code:'profile', message:'This body is too side-on for frontal width ratios. Use a front-facing photo.' };
   }
 
-  // ── Three-band framing read (v2 — re-banded from FIELD data after v1 false-refused real photos).
+  // ── Three-band framing read (v3 — v2's tilt re-expressed in PIXEL units after a cold review caught
+  // an aspect-ratio contamination; thresholds re-measured, see TILT_DEGRADED below).
   // v1 gated on shoulder z-yaw (≥15° degraded / ≥30° refuse) and tilt (≥0.06 degraded / ≥0.14 refuse),
   // thresholds argued from synthetic poses. Field measurement (128 roster photos through this probe,
   // 2026-08-13; only 5 read as scoreable bodies, but unanimously): real, roughly-frontal standing
-  // bodies read yaw p50 16.8° / max 26.9° and tilt p50 0.096 / max 0.119 — v1 classified EVERY real
-  // body degraded and hard-refused some (confirmed on-device by Jason). So:
+  // bodies read yaw p50 16.8° / max 26.9° — v1 classified EVERY real body degraded and hard-refused
+  // some (confirmed on-device by Jason). So:
   //   · z-yaw is NOT classification-grade in the field (BlazePose z is model-inferred; the zero-
   //     baseline-by-symmetry argument held only on synthetic landmarks). Readout-only now — the
   //     long-standing shoulderTorso<0.38 profile gate above remains the yaw protection, and mild real
   //     yaw was never the error worth a prompt anyway (cos 20° shrinks frontal widths only ~6%).
-  //   · tilt gates DEGRADED-ONLY at ≥0.18, comfortably above the observed real-body range; the
-  //     upright gate above covers gross cases. There is no tilt hard-refuse.
+  //   · tilt gates DEGRADED-ONLY, comfortably above the observed real-body range; the upright gate
+  //     above covers gross cases. There is no tilt hard-refuse.
   const spanN = Math.abs(lm[PIDX.shoulderL].x - lm[PIDX.shoulderR].x) || 1e-6;
   const zOk = Number.isFinite(lm[PIDX.shoulderL].z) && Number.isFinite(lm[PIDX.shoulderR].z);
-  const yawDeg = zOk ? Math.abs(Math.atan2(lm[PIDX.shoulderL].z - lm[PIDX.shoulderR].z, spanN)) * 180/Math.PI : 0;   // readout-only (see above)
-  const tilt = (Math.abs(lm[PIDX.shoulderL].y - lm[PIDX.shoulderR].y) + Math.abs(lm[PIDX.hipL].y - lm[PIDX.hipR].y)) / 2 / spanN;
+  const yawDeg = zOk ? Math.abs(Math.atan2(lm[PIDX.shoulderL].z - lm[PIDX.shoulderR].z, spanN)) * 180/Math.PI : 0;   // readout-only (see above; z shares x's normalized scale, so the normalized span is the right denominator)
+  // Tilt is a PIXEL-space slope. Normalized coords divide y by height and x by width, so a normalized
+  // Δy/span ratio silently multiplies the true slope by the image's aspect ratio — the SAME pose read
+  // 0.18 in a 16:9 landscape frame and 0.06 in a 9:16 portrait one (v2's unit bug, caught 2026-08-13
+  // by cold review). Convert both axes to pixels before dividing; the threshold is calibrated in this unit.
+  const spanPx = Math.abs(px(PIDX.shoulderL).x - px(PIDX.shoulderR).x) || 1e-6;
+  const tilt = (Math.abs(px(PIDX.shoulderL).y - px(PIDX.shoulderR).y) + Math.abs(px(PIDX.hipL).y - px(PIDX.hipR).y)) / 2 / spanPx;
   const issues = [];
-  if (tilt >= 0.18) issues.push('the shoulders/hips are strongly tilted — a lean or hip-cock skews the width ratios');
+  if (tilt >= TILT_DEGRADED) issues.push('the shoulders/hips are strongly tilted — a lean or hip-cock skews the width ratios');
 
   // Lower-body presence decides full vs. torso. Full body (feet in frame, confident) unlocks the height-based
   // adiposity proxy and leg proportion; a cropped upper-body shot scores the frame cues only.

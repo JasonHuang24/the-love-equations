@@ -130,6 +130,15 @@
       var conflictNote = sexConflict
         ? '<div class="composite-note" style="color:var(--scarlet)"><strong>The two reads disagree on sex</strong> &mdash; face read ' + sexWord(fsex) + ', body read ' + sexWord(bsex) + '. The blend assumes <strong>one person</strong>; if that’s right, set the sex on each calc so they match. Tier shown sex-neutral until they agree.</div>'
         : '';
+      // Framing-override provenance (additive payload field; absent on pre-existing saves). A score rated on
+      // the "Rate anyway — reduced accuracy" override must not blend into the overall looking like a
+      // to-standard read — the caveat rides the payload so the blend stays as honest as the calc panel.
+      var ovr = [];
+      if (face.framingOverride) ovr.push('face');
+      if (body.framingOverride) ovr.push('body');
+      var overrideNote = ovr.length
+        ? '<div class="composite-note" style="color:#A06A12"><strong>&#9888; Reduced-accuracy input.</strong> The ' + ovr.join(' and ') + ' score' + (ovr.length > 1 ? 's were' : ' was') + ' rated on a non-standard-framing override, so the overall is rougher than a to-standard read.</div>'
+        : '';
       host.innerHTML =
         lensToggle(lens)
         + '<div class="composite-score-wrap">'
@@ -139,6 +148,7 @@
         + '<div class="composite-breakdown">Face <strong>' + fmt(fS) + '</strong> &amp; Body <strong>' + fmt(bS) + '</strong> &rarr; weighted ' + wF + ' / ' + wB + ' (face / body). These are the same numbers each calc shows.</div>'
         + '</div>'
         + conflictNote
+        + overrideNote
         + '<div class="composite-note"><strong>Two prototype reads, blended.</strong> Face from the ' + sourceWord(face.source) + ' (' + ago(face.ts) + '), body from the ' + sourceWord(body.source) + ' (' + ago(body.ts) + '). <strong>Assumes both are the same person</strong> &mdash; scores persist across visits, so an old read can linger; Reset clears them. The ' + wF + '/' + wB + ' face/body split is a provisional, tunable default. A mirror of the methodology, not a verdict on a person.</div>'
         + '<div class="composite-foot"><button type="button" id="composite-reset">Reset both (scores + photos)</button></div>';
       wireReset(); wireLens();
