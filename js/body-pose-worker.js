@@ -61,28 +61,24 @@ function assessPose(lm, width, height){
     return { ok:false, code:'profile', message:'This body is too side-on for frontal width ratios. Use a front-facing photo.' };
   }
 
-  // ── Three-band framing read (v1). The hard gates in this function stay non-overridable refusals;
-  // 'degraded' asks the host for an explicit reduced-accuracy override before scoring. Rationale: the CNN
-  // scale was calibrated on full-body straight-on shots (the same build read ~16 raw points apart cropped
-  // vs full-body — see body.html MODEL_CONFIG), and every frontal width ratio shrinks with the cosine of
-  // body yaw. yawDeg is a BlazePose weak-perspective z estimate ("≈ degrees", z ≈ x scale; the symmetric
-  // shoulder pair gives it a zero baseline on a frontal body). tilt mirrors the host's poseSkeleton
-  // formula, so its long-standing 0.06 warn threshold carries over as the degraded edge. All thresholds
-  // reasoned/provisional — tune with the batch harness on known-angle photos. Non-finite z → yaw 0
-  // (unmeasured, honest pass) rather than a false refusal.
+  // ── Three-band framing read (v2 — re-banded from FIELD data after v1 false-refused real photos).
+  // v1 gated on shoulder z-yaw (≥15° degraded / ≥30° refuse) and tilt (≥0.06 degraded / ≥0.14 refuse),
+  // thresholds argued from synthetic poses. Field measurement (128 roster photos through this probe,
+  // 2026-08-13; only 5 read as scoreable bodies, but unanimously): real, roughly-frontal standing
+  // bodies read yaw p50 16.8° / max 26.9° and tilt p50 0.096 / max 0.119 — v1 classified EVERY real
+  // body degraded and hard-refused some (confirmed on-device by Jason). So:
+  //   · z-yaw is NOT classification-grade in the field (BlazePose z is model-inferred; the zero-
+  //     baseline-by-symmetry argument held only on synthetic landmarks). Readout-only now — the
+  //     long-standing shoulderTorso<0.38 profile gate above remains the yaw protection, and mild real
+  //     yaw was never the error worth a prompt anyway (cos 20° shrinks frontal widths only ~6%).
+  //   · tilt gates DEGRADED-ONLY at ≥0.18, comfortably above the observed real-body range; the
+  //     upright gate above covers gross cases. There is no tilt hard-refuse.
   const spanN = Math.abs(lm[PIDX.shoulderL].x - lm[PIDX.shoulderR].x) || 1e-6;
   const zOk = Number.isFinite(lm[PIDX.shoulderL].z) && Number.isFinite(lm[PIDX.shoulderR].z);
-  const yawDeg = zOk ? Math.abs(Math.atan2(lm[PIDX.shoulderL].z - lm[PIDX.shoulderR].z, spanN)) * 180/Math.PI : 0;
+  const yawDeg = zOk ? Math.abs(Math.atan2(lm[PIDX.shoulderL].z - lm[PIDX.shoulderR].z, spanN)) * 180/Math.PI : 0;   // readout-only (see above)
   const tilt = (Math.abs(lm[PIDX.shoulderL].y - lm[PIDX.shoulderR].y) + Math.abs(lm[PIDX.hipL].y - lm[PIDX.hipR].y)) / 2 / spanN;
-  if (yawDeg >= 30){
-    return { ok:false, code:'profile', message:'This body is turned too far from the camera for frontal width ratios. Face the camera square-on.' };
-  }
-  if (tilt >= 0.14){
-    return { ok:false, code:'upright', message:'The shoulders and hips are too uneven to read — stand square to the camera, weight on both feet.' };
-  }
   const issues = [];
-  if (yawDeg >= 15) issues.push('the body is angled away from the camera (~' + Math.round(yawDeg) + '°)');
-  if (tilt >= 0.06) issues.push('the shoulders/hips are tilted — a lean or hip-cock skews the width ratios');
+  if (tilt >= 0.18) issues.push('the shoulders/hips are strongly tilted — a lean or hip-cock skews the width ratios');
 
   // Lower-body presence decides full vs. torso. Full body (feet in frame, confident) unlocks the height-based
   // adiposity proxy and leg proportion; a cropped upper-body shot scores the frame cues only.

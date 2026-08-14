@@ -52,6 +52,7 @@
             <div class="bc-src-panel" data-panel="upload">
               <input type="file" id="bc-file" accept="image/*" hidden />
               <div class="bc-drop" id="bc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, <strong>full-body</strong> photo here &mdash; head to feet, standing square. Upper-body shots still work, at reduced accuracy. Click to choose. Saved on your device, never uploaded.</div>
+              <div class="bc-note">Also works: paste an image or an image URL (Ctrl+V), or drop a URL onto the box.</div>
             </div>
             <div class="bc-src-panel" data-panel="camera" hidden>
               <button class="bc-btn" id="bc-cam-start"><i class="ti ti-video"></i> Start camera</button>
@@ -2071,7 +2072,11 @@
     });
     ['dragover','dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor='var(--scarlet)'; }));
     ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor=''; }));
-    drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+    drop.addEventListener('drop', e => {
+      if (e.dataTransfer.files[0]){ loadFile(e.dataTransfer.files[0]); return; }
+      const u = urlFromDataTransfer(e.dataTransfer);
+      if (u){ window.bcSetStatus('Loading image from URL…'); loadFromUrl(u); }
+    });
     fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
     function loadFile(file){
       const img=new Image();
@@ -2079,6 +2084,26 @@
       img.onerror=()=>{ window.bcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
       img.src=URL.createObjectURL(file);
     }
+    // The Upload lane also takes an image URL — dropped onto the box, or pasted anywhere on the page
+    // (the dedicated URL tab was removed as feature bloat; this is the lightweight replacement).
+    function loadFromUrl(u){
+      const img=new Image(); img.crossOrigin='anonymous';
+      img.onload=()=>{ handleImage(img); };
+      img.onerror=()=>window.bcSetStatus('That URL would not load (cross-origin block?). Download the image and upload it instead.', true);
+      img.src=u;
+    }
+    function urlFromDataTransfer(dt){
+      const t=((dt && (dt.getData('text/uri-list') || dt.getData('text/plain'))) || '').trim().split(/[\r\n]/)[0];
+      return /^https?:\/\/\S+$/i.test(t) ? t : null;
+    }
+    document.addEventListener('paste', e => {
+      const t=e.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName||''))) return;   // Step-2 number fields must keep normal paste
+      const files=(e.clipboardData && e.clipboardData.files) || [];
+      if (files[0] && /^image\//.test(files[0].type||'')){ e.preventDefault(); loadFile(files[0]); return; }
+      const u=urlFromDataTransfer(e.clipboardData);
+      if (u){ e.preventDefault(); window.bcSetStatus('Loading image from URL…'); loadFromUrl(u); }
+    });
 
     // ── Camera capture: a round shutter overlaid on the live preview (camera-app style) + auto-snap
     // when aligned. Auto-snap matters MOST here — the subject stands metres from a propped phone, so
@@ -2119,18 +2144,32 @@
         alignCtx.drawImage(video, 0, 0, alignCanvas.width, alignCanvas.height);
         const bitmap=await createImageBitmap(alignCanvas);
         const res=await runPoseInWorker(bitmap, 'align-'+(++alignSeq), true);
-        let ok=false;
+        // Actionable live feedback: the tip names the ONE thing blocking the snap (field lesson —
+        // "it just never fires" is undiagnosable from a static tip; the user needs to know what to fix).
+        let ok=false, hint=GUIDE_TIP_DEFAULT;
         const q=res && res.quality;
-        if (q && q.ok && q.band==='pass' && res.landmarks){
-          // band 'pass' already implies full-body framing (torso → degraded); also require the body to
-          // actually fill the frame (vertical span of confident joints — the guide puts it at ~0.84)
+        if (!res || !res.landmarks){ hint='No body found — step into the frame.'; }
+        else if (q && !q.ok){
+          hint = q.code==='partial'  ? 'Step back — whole body in frame, head to feet.'
+               : q.code==='profile'  ? 'Turn to face the camera square-on.'
+               : q.code==='standing' ? 'Stand upright, legs straight.'
+               : q.code==='upright'  ? 'Stand up straight, square to the camera.'
+               : GUIDE_TIP_DEFAULT;
+        }
+        else if (q && q.framing==='torso'){ hint='Step back — feet in the frame.'; }
+        else if (q && q.band==='degraded'){ hint='Square up — shoulders and hips level.'; }
+        else if (q && q.ok){
+          // pass band = full-body, square, level; also require the body to actually fill the frame
+          // (vertical span of confident joints — the guide puts it at ~0.84)
           let mn=1, mx=0, used=0;
           for (const p of res.landmarks){ if (!p) continue;
             const vis=p.visibility==null?1:p.visibility; if (vis<0.3) continue;
             const y=Math.max(0,Math.min(1,p.y)); if (y<mn)mn=y; if (y>mx)mx=y; used++; }
-          ok = used>=4 && (mx-mn)>=0.5;
+          if (used>=4 && (mx-mn)>=0.5) ok=true;
+          else hint='Step closer — fill the frame top to bottom.';
         }
-        if (stream && !video.hidden) guideTip.textContent = ok ? 'Hold still…' : GUIDE_TIP_DEFAULT;
+        if (ok) hint='Hold still…';
+        if (stream && !video.hidden) guideTip.textContent = hint;
         alignStreak = ok ? alignStreak+1 : 0;
         if (stream && !video.hidden && alignStreak >= ALIGN_STREAK_NEEDED){
           alignBusy=false; captureFrame(); return;                  // captureFrame stops the camera → loop dies

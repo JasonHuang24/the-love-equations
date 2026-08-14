@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+9a56c7573bb6",
+  "indexVersion": "1.0.0+99a959fb136c",
   "generatedAt": "2026-08-13T23:52:19.000Z",
   "sourcePages": [
     {
@@ -221,7 +221,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "33ea934fa7bbd64f6d7b37871425bd2e65161abb8fbeb8cd22bf5337df311dba",
+      "sha256": "80c81839950c03ea1a23989754f9b8380c9f0f76ed4c684d3c91ad5ca1400195",
       "conceptCount": 1
     },
     {
@@ -232,7 +232,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "362cb91b786a85bde230429dde57fd48117edd8b853622755363d06716cd896d",
+      "sha256": "783d0493dcb450b62f5337f05f35f293c2d01fdae001c91f765a1320407c7318",
       "conceptCount": 1
     },
     {

@@ -46,6 +46,7 @@
             <div class="lc-src-panel" data-panel="upload">
               <input type="file" id="lc-file" accept="image/*" hidden />
               <div class="lc-drop" id="lc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, well-lit photo here, or click to choose. Saved on your device, never uploaded.</div>
+              <div class="lc-note">Also works: paste an image or an image URL (Ctrl+V), or drop a URL onto the box.</div>
             </div>
             <div class="lc-src-panel" data-panel="camera" hidden>
               <button class="lc-btn" id="lc-cam-start"><i class="ti ti-video"></i> Start camera</button>
@@ -1074,7 +1075,11 @@
     });
     ['dragover','dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor='var(--scarlet)'; }));
     ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor=''; }));
-    drop.addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+    drop.addEventListener('drop', e => {
+      if (e.dataTransfer.files[0]){ loadFile(e.dataTransfer.files[0]); return; }
+      const u = urlFromDataTransfer(e.dataTransfer);
+      if (u){ window.lcSetStatus('Loading image from URL…'); loadFromUrl(u); }
+    });
     fileInput.addEventListener('change', () => { if (fileInput.files[0]) loadFile(fileInput.files[0]); });
     function loadFile(file){
       const img=new Image();
@@ -1082,6 +1087,26 @@
       img.onerror=()=>{ window.lcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
       img.src=URL.createObjectURL(file);
     }
+    // The Upload lane also takes an image URL — dropped onto the box, or pasted anywhere on the page
+    // (the dedicated URL tab was removed as feature bloat; this is the lightweight replacement).
+    function loadFromUrl(u){
+      const img=new Image(); img.crossOrigin='anonymous';
+      img.onload=()=>handleImage(img);
+      img.onerror=()=>window.lcSetStatus('That URL would not load (cross-origin block?). Download the image and upload it instead.', true);
+      img.src=u;
+    }
+    function urlFromDataTransfer(dt){
+      const t=((dt && (dt.getData('text/uri-list') || dt.getData('text/plain'))) || '').trim().split(/[\r\n]/)[0];
+      return /^https?:\/\/\S+$/i.test(t) ? t : null;
+    }
+    document.addEventListener('paste', e => {
+      const t=e.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName||''))) return;   // never hijack a form field
+      const files=(e.clipboardData && e.clipboardData.files) || [];
+      if (files[0] && /^image\//.test(files[0].type||'')){ e.preventDefault(); loadFile(files[0]); return; }
+      const u=urlFromDataTransfer(e.clipboardData);
+      if (u){ e.preventDefault(); window.lcSetStatus('Loading image from URL…'); loadFromUrl(u); }
+    });
 
     // ── Camera capture: a round shutter overlaid on the live preview (camera-app style) + auto-snap
     // when aligned. Auto-snap runs the SAME classifier as the scoring gate on a downscaled live frame,
