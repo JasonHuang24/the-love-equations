@@ -89,20 +89,6 @@
     if (s < 9.0) return coded('Chad', 'Stacy', 'Chad / Stacy');
     return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
   }
-  // A band spanning two rungs is labelled with the span, never with one end.
-  function tierForBand(lo, hi, lens, sex) {
-    var a = tierFor(lo, lens, sex), b = tierFor(hi, lens, sex);
-    return a === b ? a : a + ' → ' + b;
-  }
-  // Half-width of the blended score's band. The two calcs measure different things from different
-  // photos, so their errors are independent and combine in quadrature rather than adding. A calc that
-  // ships no band (older payload shape) contributes null → we degrade to no band rather than invent one.
-  function blendedHalf(face, body) {
-    if (!num(face.band) || !num(body.band)) return null;
-    var f = FACE_WEIGHT * face.band, b = (1 - FACE_WEIGHT) * body.band;
-    return Math.sqrt(f * f + b * b);
-  }
-
   function sourceWord(s) {
     return s === 'model' ? 'trained model'
       : s === 'geometry' ? 'silhouette geometry'
@@ -158,19 +144,12 @@
       var overrideNote = ovr.length
         ? '<div class="composite-note" style="color:#A06A12"><strong>&#9888; Reduced-accuracy input.</strong> The ' + ovr.join(' and ') + ' score' + (ovr.length > 1 ? 's were' : ' was') + ' rated on a non-standard-framing override, so the overall is rougher than a to-standard read.</div>'
         : '';
-      // Bands ride through the blend: an Overall built from two banded reads is itself a range, and
-      // showing it as a bare decimal would re-introduce exactly the false precision the calcs just dropped.
-      var oHalf = blendedHalf(face, body);
-      var oLo = oHalf == null ? null : Math.max(1, o - oHalf);
-      var oHi = oHalf == null ? null : Math.min(10, o + oHalf);
-      var headline = oHalf == null
-        ? '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(o) + ' <span class="unit">/ 10</span></div>'
-          + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierFor(o, lens, sex) + '</div>'
-        : '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(oLo) + '&ndash;' + fmt(oHi) + '</div>'
-          + '<div class="composite-breakdown" style="margin-top:.25rem">best estimate <strong>' + fmt(o) + '</strong> / 10 &middot; likely band</div>'
-          + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierForBand(oLo, oHi, lens, sex) + '</div>';
+      // Presentation is the single weighted point estimate and its tier. Payload uncertainty fields remain
+      // untouched for the v3 machine contract, but Jason's 2026-08-14 ruling removes them from display.
+      var headline = '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(o) + ' <span class="unit">/ 10</span></div>'
+        + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierFor(o, lens, sex) + '</div>';
       var photoNote = num(face.photos) && face.photos < 3
-        ? '<div class="composite-note">The face read came from ' + face.photos + ' photo' + (face.photos > 1 ? 's' : '') + '. <a href="face.html">Add more on the Face Calc</a> and this band narrows.</div>'
+        ? '<div class="composite-note">The face read came from ' + face.photos + ' photo' + (face.photos > 1 ? 's' : '') + '. <a href="face.html">Add more on the Face Calc</a> for a steadier read.</div>'
         : '';
       host.innerHTML =
         (hasTwoLenses(face, body) ? lensToggle(lens) : '')
@@ -195,13 +174,12 @@
     function rowTodo(label, href, prompt) {
       return '<div class="composite-row todo"><i class="ti ti-circle-dashed" aria-hidden="true"></i> <a href="' + href + '">' + label + ' &mdash; ' + prompt + ' &rarr;</a></div>';
     }
-    // A lone half is shown as ITS OWN banded score, explicitly labelled as one half — never as an
-    // Overall. Half of the blend is not a smaller Overall, it is a different measurement.
+    // A lone half is shown as ITS OWN point score, explicitly labelled as one half — never as an Overall.
+    // Half of the blend is not a smaller Overall, it is a different measurement.
     function halfValue(calc) {
       var s = rawScore(calc, lens);
       if (s == null) return '—';
-      if (!num(calc.band)) return fmt(s) + ' / 10';
-      return fmt(Math.max(1, s - calc.band)) + '–' + fmt(Math.min(10, s + calc.band)) + ' (best ' + fmt(s) + ')';
+      return fmt(s) + ' / 10';
     }
     var faceRow = haveFace
       ? rowDone('Face Calc', halfValue(face), ago(face.ts))

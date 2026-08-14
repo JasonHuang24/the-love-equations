@@ -91,7 +91,7 @@
         <!-- RESULT COLUMN -->
         <div class="lc-panel">
           <div id="lc-result">
-            <div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; add up to three for a tighter read.</div>
+            <div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; add up to three for a steadier read.</div>
           </div>
         </div>
       </div>
@@ -373,10 +373,10 @@
     // LTN 4–4.9 spans the 24th–50th percentile, MTN 5–5.9 the 50th–76th, HTN 6–6.9 the 76th–92nd,
     // Chadlite 7–7.9 the 92nd–98th, Chad 8–8.9 the 98th–99.8th.
     const REF_MID = 5.0, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
-    // 90%-coverage band half-width by photo count. MEASURED, not assumed: 166 people × ≥3 genuinely
+    // Machine-side uncertainty half-width by photo count. MEASURED, not assumed: 166 people × ≥3 genuinely
     // different real photographs each (roster galleries), scoring the mean raw of k held-out shots against
-    // the consensus of the rest. A single photo genuinely carries ±1.7 points of capture noise — that is
-    // the instrument's honest resolution, and it is why no naked decimal appears on this page.
+    // the consensus of the rest. Kept in faceScore.v3 for downstream compatibility; Jason's 2026-08-14
+    // presentation ruling deliberately removes it from every user-visible score surface.
     const BAND_HALF = [1.7, 1.1, 0.9];
     const MAX_SHOTS = BAND_HALF.length;
 
@@ -418,8 +418,7 @@
       return Math.min(SCORE_MAX, Math.max(SCORE_MIN, REF_MID + invNorm(p) * REF_SD));
     }
     // MULTI-PHOTO: average the RAW model outputs, THEN map once. The order matters — the map is
-    // non-linear, so the mean of mapped scores is NOT the score of the mean, and the band widths above
-    // were measured against averaged raws. (DOM-free, testable.)
+    // non-linear, so the mean of mapped scores is NOT the score of the mean. (DOM-free, testable.)
     function scoreFromRaws(raws){
       if (!raws || !raws.length) return null;
       let s = 0, n = 0;
@@ -483,13 +482,6 @@
       if (s < 9.0) return coded('Chad', 'Stacy', 'Chad / Stacy');
       return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
     }
-    // A band spanning rungs must not be labelled with one of them. Returns the single tier when both
-    // ends agree, else the honest span. (testable)
-    function tierForBand(lo, hi, sex){
-      const a = faceTier(lo, sex), b = faceTier(hi, sex);
-      return a === b ? a : a + ' → ' + b;
-    }
-
     // ── Batch-mode serializers (debug/calibration only; DOM-free, testable). Generic over a columns
     //    spec [{key,label}] so the on-page table, CSV and markdown all share one stable column order.
     //    RFC-4180 CSV quoting; markdown pipe-escaping. No scoring here — pure text shaping. ──
@@ -513,14 +505,14 @@
       return [head, sep].concat(body).join('\n') + '\n';
     }
 
-    if (typeof module !== 'undefined') { module.exports = { computeMetrics, computeSoft, preprocessToTensor, METRICS, SOFT, MEASURES, CANT_READ, bandFor, mascIndex, computeComposites, guessSex, preprocessSex, sexFromLogits, faceTier, tierForBand, batchToCSV, batchToMarkdown, batchCsvCell, batchMdCell, classifyFraming, FRAMING_GATE, ordinal, REF_RAW, REF_MID, REF_SD, BAND_HALF, MAX_SHOTS, refPercentile, invNorm, normCdf, scoreFromRaw, scoreFromRaws, bandHalfFor, scorePercentile }; }
+    if (typeof module !== 'undefined') { module.exports = { computeMetrics, computeSoft, preprocessToTensor, METRICS, SOFT, MEASURES, CANT_READ, bandFor, mascIndex, computeComposites, guessSex, preprocessSex, sexFromLogits, faceTier, batchToCSV, batchToMarkdown, batchCsvCell, batchMdCell, classifyFraming, FRAMING_GATE, ordinal, REF_RAW, REF_MID, REF_SD, BAND_HALF, MAX_SHOTS, refPercentile, invNorm, normCdf, scoreFromRaw, scoreFromRaws, bandHalfFor, scorePercentile }; }
   </script>
 
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
     const LC = { geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
                  // MULTI-PHOTO: raw model outputs for up to MAX_SHOTS photos of the SAME person. The score
-                 // is the mapping of their MEAN raw, and the band narrows as the array fills. `addMode`
+                 // is the mapping of their MEAN raw, and repeated photos steady that point estimate. `addMode`
                  // makes the NEXT scored photo append instead of starting over — set only by the explicit
                  // "Add another photo" affordance, so a plain new drop still means "new person".
                  shots:[], addMode:false,
@@ -621,7 +613,7 @@
         return;
       }
       if (!LC.geo){
-        host.innerHTML = '<div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; add up to three for a tighter read.</div>';
+        host.innerHTML = '<div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; add up to three for a steadier read.</div>';
         return;
       }
       const accent = '#51606F';
@@ -637,9 +629,6 @@
       const lo = usingModel ? Math.max(SCORE_MIN, score - half) : null;
       const hi = usingModel ? Math.min(SCORE_MAX, score + half) : null;
       const pct = usingModel ? scorePercentile(score) : null;
-      // per-photo scores, so a multi-photo read can show how much the camera moved the answer
-      const perShot = shots.map(scoreFromRaw);
-      const spread = nShots > 1 ? Math.max.apply(null, perShot) - Math.min.apply(null, perShot) : null;
 
       const srcBadge = usingModel
         ? '<div class="lc-srcbadge model">Trained CNN score &middot; the breakdown below is the transparent geometry</div>'
@@ -658,13 +647,13 @@
         : LC.sexSource === 'manual'
         ? 'Sex set by you. '
         : LC.sexSource === 'unknown'
-        ? '<strong>Sex undetermined</strong> &mdash; this front-view face was too ambiguous to call. Set it below (it re-bases the sex-typical bands &amp; the dimorphism read; the headline score is the same either way). '
+        ? '<strong>Sex undetermined</strong> &mdash; this front-view face was too ambiguous to call. Set it below (it re-bases the sex-typical reference values &amp; the dimorphism read; the headline score is the same either way). '
         : 'Sex guessed from geometry (classifier not loaded &mdash; drop <code>models/face-sex.onnx</code>) &mdash; flip if wrong. ';
       const sexCtl =
         '<div class="lc-sex"><button data-sex="f"'+(LC.sex==='f'?' class="active"':'')+'>Read as female</button>'
         + '<button data-sex="m"'+(LC.sex==='m'?' class="active"':'')+'>Read as male</button></div>'
         + '<div class="lc-sexnote">'+sexSrcNote
-        + 'This only re-bases the typical ranges below (dimorphism is sex-conditional); it does <em>not</em> change the headline score (the model scores the same either way &mdash; though that model carries its training set&rsquo;s own demographic biases).</div>';
+        + 'This only re-bases the typical reference values below (dimorphism is sex-conditional); it does <em>not</em> change the headline score (the model scores the same either way &mdash; though that model carries its training set&rsquo;s own demographic biases).</div>';
 
       const drivers = sexKnown
         ? ('<div class="lc-bd-h">Strongest drivers &middot; Tier 1</div>'
@@ -673,12 +662,12 @@
            + compRow((sex==='m'?'Masculinity':'Femininity')+' &middot; dimorphic cues', comp.dimorphism, [45,80], 'Androgynous', (sex==='m'?'Masculine':'Feminine'),
                (sex==='m'?'expression-sensitive proxy · male masculinity preference is mixed':'expression-sensitive proxy · femininity reliably predicts attractiveness')))
         : ('<div class="lc-bd-h">Strongest drivers &middot; Tier 1</div>'
-           + '<div class="lc-note-line"><strong>Set sex to resolve these.</strong> Proportional typicality and the dimorphic-cue read are scored against sex-specific bands &mdash; pick male or female above and they&rsquo;ll appear.</div>');
+           + '<div class="lc-note-line"><strong>Set sex to resolve these.</strong> Proportional typicality and the dimorphic-cue read use sex-specific reference values &mdash; pick male or female above and they&rsquo;ll appear.</div>');
 
       const grp = g => MEASURES.filter(m => m.group === g);
       const showMeas = m => sexKnown || Array.isArray(m.band);   // undetermined → hide sex-conditional bands (jaw/lips/eyeOpen/noseWidth/leanness), keep sex-agnostic ones
       const featRows = '<div class="lc-bd-h">Sex-typical features &middot; Tier 2</div>'
-        + (sexKnown ? '' : '<div class="lc-note-line">Sex-specific bands appear once you set sex above.</div>')
+        + (sexKnown ? '' : '<div class="lc-note-line">Sex-specific reference values appear once you set sex above.</div>')
         + grp('feature').filter(showMeas).map(m => measureRow(resolve(m), LC.geo[m.key])).join('')
         + (LC.soft ? pxRow('Skin clarity', LC.soft.skin) + pxRow('Skin-tone evenness', LC.soft.evenness) + pxRow('Under-eye', LC.soft.undereye)
             + '<div class="lc-note-line" style="margin:0.4rem 0 0">Skin &amp; adiposity is a genuine Tier-2 cue, but read from pixels it&rsquo;s lighting-dependent &mdash; a clean studio shot scores higher than a candid. Photo quality, not dermatology.</div>' : '');
@@ -690,47 +679,42 @@
       const cantRows = '<div class="lc-bd-h">What this panel cannot measure</div>'
         + '<ul class="lc-cant">' + CANT_READ.map(t => '<li>'+t+'</li>').join('') + '</ul>';
 
-      // Multi-photo strip: how many shots are in, what each one alone said, and how much the camera moved
-      // the answer. The spread is the honest advertisement for adding photos — measured, not asserted.
-      function lcShotsUI(n, per, sp){
+      // Multi-photo strip: how many shots are in and the explicit affordance to add more. Repeated photos
+      // still stabilize the raw average, but Jason's presentation ruling removes intervals and margins.
+      function lcShotsUI(n){
         const dots = [];
         for (let i = 0; i < MAX_SHOTS; i++){
           dots.push('<span class="lc-dot'+(i < n ? ' on' : '')+'"></span>');
         }
         const nudge = n >= MAX_SHOTS
-          ? '<span class="lc-shot-note">Three photos in &mdash; this is the tightest read the instrument gives.</span>'
-          : '<span class="lc-shot-note"><strong>Add another photo to narrow the band.</strong> The same face photographed '
-            + 'differently moves this score by <strong>±1.7 points</strong> on one shot; three shots cuts that to ±0.9.</span>';
+          ? '<span class="lc-shot-note">Three photos in &mdash; this is the steadiest read the instrument gives.</span>'
+          : '<span class="lc-shot-note"><strong>Add another photo for a steadier read.</strong> Different photos of the same face can move the estimate.</span>';
         return '<div class="lc-shots">'
           + '<div class="lc-shot-row">' + dots.join('')
           + '<span class="lc-shot-count">'+n+' of '+MAX_SHOTS+' photos</span>'
           + (n < MAX_SHOTS ? '<button type="button" class="lc-btn ghost lc-addshot">+ Add another photo</button>' : '')
           + (n > 1 ? '<button type="button" class="lc-btn ghost lc-clearshots">Start over</button>' : '')
           + '</div>'
-          + (sp != null ? '<div class="lc-spread">Across your '+n+' photos the score alone ranged '
-              + '<strong>'+fmt(Math.min.apply(null, per))+'</strong> to <strong>'+fmt(Math.max.apply(null, per))+'</strong> '
-              + '(spread '+sp.toFixed(1)+'). That range is the camera, not your face.</div>' : '')
           + nudge
           + '</div>';
       }
 
-      // ── Headline. The BAND is the result; the midpoint is shown smaller, under it. There is no naked
-      //    decimal on this page — a single photo carries ±1.7 points of measured capture noise, and a
-      //    point estimate at that resolution is a claim the instrument cannot support.
+      // ── Headline. Jason's 2026-08-14 presentation ruling makes the single best-estimate score the result.
+      //    Its tier is derived from that same point; percentile and photo count remain plain fine print.
+      //    The unchanged machine-side half-width still persists in faceScore.v3 and is never rendered here.
       const headline = !usingModel
         ? '<div class="lc-noscore">No score</div>'
           + '<div class="lc-tier" style="color:'+accent+'">The trained model isn&rsquo;t loaded</div>'
-        : '<div class="lc-band" style="color:'+accent+'">'+fmt(lo)+' &ndash; '+fmt(hi)+'</div>'
-          + '<div class="lc-band-sub">best estimate <strong>'+fmt(score)+'</strong> &middot; '
-            + '90% band from '+nShots+' photo'+(nShots===1?'':'s')+'</div>'
-          + '<div class="lc-tier" style="color:'+accent+'">'+tierForBand(lo, hi, tierSex)+'</div>'
+        : '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">/ 10</span></div>'
+          + '<div class="lc-tier" style="color:'+accent+'">'+faceTier(score, tierSex)+'</div>'
           + '<div class="lc-pct">Around the <strong>'+ordinal(Math.round(pct))+' percentile</strong> of the reference population '
+            + '&middot; based on '+nShots+' photo'+(nShots===1?'':'s')+' '
             + '<a href="#lc-convention">(what that means)</a></div>';
 
       host.innerHTML =
         '<div class="lc-score-wrap">'
         + headline
-        + (usingModel ? lcShotsUI(nShots, perShot, spread) : '')
+        + (usingModel ? lcShotsUI(nShots) : '')
         + srcBadge
         + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+LC.reliability.replace(/^[\s·]+/, '')+'</div>' : '')
         + (sexConflict ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:var(--scarlet)"><strong>Your sex pick and the photo disagree.</strong> You set the sex to <strong>'+(sexConflict.manual==='m'?'male':'female')+'</strong>, but the photo&rsquo;s face classifier reads <strong>'+(sexConflict.cls==='m'?'male':'female')+'</strong> ('+Math.round(sexConflict.conf*100)+'% confident). The panel below uses <strong>your selection</strong> &mdash; the headline score is the same either way. <strong><a href="#" class="lc-sexflip" data-sex="'+sexConflict.cls+'" style="color:var(--scarlet)">Use the '+(sexConflict.cls==='m'?'male':'female')+' read instead &rarr;</a></strong></div>' : '')
@@ -738,15 +722,14 @@
         + (usingModel ? '<div class="lc-other" id="lc-convention"><strong>What the number means.</strong> '
             + 'It is a <strong>percentile</strong>, not a verdict: <strong>5.0 is the median</strong> of the reference '
             + 'population, and one point is 1/1.4 of a standard deviation. That places the looksmaxxing ladder where it '
-            + 'has always claimed to sit &mdash; LTN 4&ndash;4.9 is the 24th&ndash;50th percentile, MTN 5&ndash;5.9 the '
-            + '50th&ndash;76th, HTN 6&ndash;6.9 the 76th&ndash;92nd, Chadlite 7&ndash;7.9 the 92nd&ndash;98th. '
+            + 'has always claimed to sit &mdash; LTN begins at 4, MTN at 5, HTN at 6, and Chadlite at 7. '
             + 'The reference is this model&rsquo;s output over all 5,500 SCUT-FBP5500 faces, reweighted so the '
             + 'dataset&rsquo;s 4:1 Asian oversample doesn&rsquo;t pass as a population fact. '
             + '<strong>It is one rater population</strong> (60 Chinese volunteers) <strong>on one photo style</strong>, and the model '
             + 'never saw a face outside its two racial groups &mdash; so this says where you sit against '
             + '<em>that</em> reference, not against everyone.</div>' : '')
         + '</div>'
-        + '<div class="lc-note-line" style="margin-top:0.8rem">Where this face sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
+        + '<div class="lc-note-line" style="margin-top:0.8rem">How this face reads on each descriptive trait, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; unusual readings are noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
         + drivers + featRows + propRows + lensRows + cantRows
         + '<div class="lc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box); the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a front-on measure misses gestalt and the whole profile &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. <strong>With no model loaded there is no headline score at all</strong> &mdash; the geometry panel describes the face, but it has no reference population to be a percentile against, so it does not get to name a number.</div>';
