@@ -167,7 +167,7 @@
         ? '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(o) + ' <span class="unit">/ 10</span></div>'
           + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierFor(o, lens, sex) + '</div>'
         : '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(oLo) + '&ndash;' + fmt(oHi) + '</div>'
-          + '<div class="composite-breakdown" style="margin-top:.25rem">best estimate <strong>' + fmt(o) + '</strong> / 10 &middot; 90% band</div>'
+          + '<div class="composite-breakdown" style="margin-top:.25rem">best estimate <strong>' + fmt(o) + '</strong> / 10 &middot; likely band</div>'
           + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierForBand(oLo, oHi, lens, sex) + '</div>';
       var photoNote = num(face.photos) && face.photos < 3
         ? '<div class="composite-note">The face read came from ' + face.photos + ' photo' + (face.photos > 1 ? 's' : '') + '. <a href="face.html">Add more on the Face Calc</a> and this band narrows.</div>'
