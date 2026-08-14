@@ -4711,16 +4711,33 @@
   const pyramidsForTarget = () => Object.keys(PYRAMIDS).filter(k => PYRAMIDS[k].describes === targetSex());
   const bandFor = s => BANDS.find(b => s >= b.min);
 
-  // ── localStorage imports (same keys/shape as the calc pages) ──
+  // ── localStorage imports (v3 percentile contract) ──
   function readLS(key){ try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){ return null; } }
-  function readCv(key, expectSex){
+  // Matchmaker's roster/manual Looks comparisons use the SMV convention: 5.5 is neutral. Calc v3 uses
+  // 5.0 as its reference median, so align the two with endpoint-preserving segments through 1→1,
+  // 5→5.5 and 10→10. This is the same mapping used by smvcalc; a raw re-key would compare unlike scales.
+  function percentileScoreToLooks(score){
+    const x=clamp(score,1,10);
+    return x<=5 ? 1+(x-1)*(4.5/4) : 5.5+(x-5)*(4.5/5);
+  }
+  function readCalcImport(key, kind, expectSex){
     const o = readLS(key);
-    if (!(o && !o.needsSex && typeof o.cv==='number' && isFinite(o.cv))) return null;
-    // Sex-provenance guard (Sol audit #2, mirrors smvcalc's readCalcCv): reads scored on a
-    // sex-specific rubric (Body Calc geometry/measured/hybrid) don't survive a sex mismatch;
-    // only the CNN 'model' headline and the Face Calc's sex-agnostic 'heuristic' reuse freely.
-    if (expectSex && o.sex && o.sex !== expectSex && !/^(model|heuristic)$/i.test(o.source || '')) return null;
-    return o.cv;
+    if (!(o && !o.needsSex && typeof o.bp==='number' && isFinite(o.bp)
+      && typeof o.cv==='number' && isFinite(o.cv) && Math.abs(o.bp-o.cv)<1e-9
+      && o.bpMax===10 && o.cvMax===10 && o.floor===1)) return null;
+    if (kind==='face') {
+      if (o.convention!=='percentile-v3' || o.source!=='model') return null;
+    } else {
+      // Body comparisons must not silently cross a sex rubric. Public photo/self-report sources are
+      // valid; detailed model/geometry/hybrid sources require the new percentile convention marker,
+      // which quarantines pre-remap records that used the same v3 key. The manual slider is the fallback.
+      const bodySourceOk=/^(photo|self-report)$/.test(o.source||'')
+        || (o.convention==='percentile-v3' && /^(model|geometry|hybrid)$/.test(o.source||''));
+      if (o.schemaVersion!==3 || !bodySourceOk
+        || o.sexConfirmed!==true || !(o.sex==='m'||o.sex==='f') || (expectSex && o.sex!==expectSex)) return null;
+    }
+    return { value:percentileScoreToLooks(o.cv), source:o.source,
+      framingOverride:!!o.framingOverride, overrideReason:o.overrideReason||'' };
   }
   let looksFromPackage = false;   // importedLooks came from a pasted SMV package, not the calc fold
   function refreshCalcImports(){
@@ -4729,8 +4746,10 @@
     // exports (Sol review #2). An explicitly PASTED package's Looks is the user's own assertion
     // (chip shows "imported") and sticks until re-pasted or overridden.
     const expect = (userSex==='m'||userSex==='f') ? userSex : null;
-    importedFace = readCv('loveEquations.faceScore.v2', expect);
-    importedBody = readCv('loveEquations.bodyScore.v2', expect);
+    const faceRec = readCalcImport('loveEquations.faceScore.v3', 'face', expect);
+    const bodyRec = readCalcImport('loveEquations.bodyScore.v3', 'body', expect);
+    importedFace = faceRec ? faceRec.value : null;
+    importedBody = bodyRec ? bodyRec.value : null;
     // Both-or-nothing (Sol audit #3): a lone Face or Body read is NOT an overall Looks score —
     // the shared composite (composite-score.js) refuses to blend without both, so the intake
     // must too. A partial read still shows as a chip hint; the 50/50 average below mirrors
@@ -4761,6 +4780,14 @@
       if (scored){ compatValues = compat.values; compatImported = true; selfGrades = Object.assign({}, compat.values); pyramid = ak; }
     }
     if (PYRAMIDS[pyramid].describes !== targetSex()) pyramid = pyramidsForTarget()[0];
+  }
+
+  function calcOverrideCaveat(){
+    const expect=(userSex==='m'||userSex==='f')?userSex:null;
+    const recs=[readCalcImport('loveEquations.faceScore.v3','face',expect), readCalcImport('loveEquations.bodyScore.v3','body',expect)].filter(Boolean);
+    const overridden=recs.filter(r=>r.framingOverride);
+    if (!overridden.length) return '';
+    return ` <span style="color:#A06A12"><strong>Reduced-accuracy import:</strong> ${overridden.length===2?'both calculator photos were':'the calculator photo was'} rated through an override.</span>`;
   }
 
   // ── persistence: remember the user's own matchmaker session (not the live calc imports,
@@ -4812,11 +4839,11 @@
     const looksSrc = looksFromPackage && looksFound
       ? `From your pasted SMV package&rsquo;s Looks factor.`
       : (importedFace!=null && importedBody!=null)
-      ? `Face ${importedFace.toFixed(1)} &middot; Body ${importedBody.toFixed(1)} (avg). From <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.`
+      ? `Face ${importedFace.toFixed(1)} &middot; Body ${importedBody.toFixed(1)} (avg). V3 percentiles re-anchored to the 5.5-neutral Looks scale. From <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.${calcOverrideCaveat()}`
       : importedFace!=null
-      ? `Face ${importedFace.toFixed(1)} imported &mdash; Looks needs the <a href="body.html">Body calc</a> too. Set it manually until then.`
+      ? `Face ${importedFace.toFixed(1)} imported on the 5.5-neutral Looks scale &mdash; Looks needs the <a href="body.html">Body calc</a> too. Set it manually until then.${calcOverrideCaveat()}`
       : importedBody!=null
-      ? `Body ${importedBody.toFixed(1)} imported &mdash; Looks needs the <a href="face.html">Face calc</a> too. Set it manually until then.`
+      ? `Body ${importedBody.toFixed(1)} imported on the 5.5-neutral Looks scale &mdash; Looks needs the <a href="face.html">Face calc</a> too. Set it manually until then.${calcOverrideCaveat()}`
       : `No saved score &mdash; set it, or run the <a href="face.html">Face</a>/<a href="body.html">Body</a> calc.`;
     document.getElementById('intake-grid').innerHTML = `
       <div class="mm-chip">
