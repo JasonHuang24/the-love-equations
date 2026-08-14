@@ -190,6 +190,28 @@
                symmetry, tilt, vis, armNearWaist, shoulderMidX: sh.x };
     }
 
+    // Does an arm sit inside the waist or hip measurement band? The alignment guide and the silhouette scan
+    // have to agree about this or the guide green-lights a pose the scan then refuses — and it did: the guide
+    // checked WRISTS only (poseSkeleton.armNearWaist) while the scan zeroes the waist width on an ELBOW OR
+    // wrist inside the band, and 68% of every refusal in the 2026-08-14 battery was that one cause. This is
+    // extractSilhouette's `armIn` predicate (js/body-pose-worker.js), landmark-only so the live probe can run
+    // it without a silhouette. Keep the two in step. (DOM-free, testable.)
+    function armOverWaist(lm){
+      if (!lm || lm.length < 25) return false;
+      const need = [11,12,23,24];
+      if (!need.every(i => lm[i] && Number.isFinite(lm[i].x) && Number.isFinite(lm[i].y))) return false;
+      const shoulderY = (lm[11].y+lm[12].y)/2, hipY = (lm[23].y+lm[24].y)/2, span = hipY - shoulderY;
+      if (!(span > 0.01)) return false;
+      const centerX = (lm[11].x+lm[12].x+lm[23].x+lm[24].x)/4;
+      const torsoHalf = Math.max(Math.abs(lm[11].x-lm[12].x), Math.abs(lm[23].x-lm[24].x))/2;
+      const inBand = (loY, hiY) => [13,14,15,16].some(function(i){
+        const a = lm[i];
+        return a && Number.isFinite(a.x) && Number.isFinite(a.y)
+          && a.y >= loY && a.y <= hiY && Math.abs(a.x - centerX) < torsoHalf*1.1;
+      });
+      return inBand(shoulderY + 0.42*span, hipY - 0.06*span) || inBand(hipY - 0.04*span, hipY + 0.22*span);
+    }
+
     // Combine silhouette widths (mask PIXELS — so the cross-axis waist-to-height ratio is correct) with the
     // skeleton into the final metric object the rubric reads. All ratios; no absolute scale is needed.
     function bodyRatios(px, skel){
@@ -629,7 +651,7 @@
       return [head, sep].concat(body).join('\n') + '\n';
     }
 
-    if (typeof module !== 'undefined') { module.exports = { poseSkeleton, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX,
+    if (typeof module !== 'undefined') { module.exports = { poseSkeleton, armOverWaist, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX,
       interpAnchors, computeFFMI, frameScore, massFrameScore, leannessScore, selfReportScore, computeInputRead, geomPreLens, blendRaw, inputBlendWeight, inputRawUncertainty, photoRawUncertainty, blendedRawUncertainty, makeScoreBand, crossCheckBF,
       bodySexCueContradicts, inputImplausible, suggestedBfPct,
       FRAME_ANCHORS, MASS_FRAME_ANCHORS, LEANNESS_BAND, LEANNESS_SIGMA_M, LEANNESS_SIGMA_F, LEANNESS_MAX, INPUT_SCORE_W, INPUT_BLEND_W, SCORE_BAND_RAW, BF_BUCKETS, LB_TO_KG, IN_TO_CM, FRONTAL_WHTR_BY_BF, FFMI_KOURI_K, FFMI_KOURI_H0, CROSSCHECK_GROSS,
@@ -642,8 +664,9 @@
     const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
                  framingOverride:false,   // this result was scored on the rate-anyway override — rides into the shot state AND the composite payload (provenance must survive the blend)
+                 outlineOverride:false, outlineIssues:[],   // …and the same for a geometry headline scored WITHOUT its outline cues (no silhouette / hidden waist), plus WHICH cues were missing
                  sexClsSex:null, sexClsConf:null,   // the face classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
-                 gate:null,   // a degraded-framing photo awaiting the user's rate-anyway override ({issues:[…]}); takes over the panel until decided
+                 gate:null,   // a photo awaiting the user's rate-anyway override ({issues:[…], kind}); takes over the panel until decided
                  bareGeometry:false, skinFrac:null, sexUnknownReason:'', shotDataURL:null, measuredAt:null,
                  // Self-reported inputs (optional). bf is a PERCENT; source 'picker'|'measured'.
                  inHeightCm:null, inWeightKg:null, inBfPct:null, inBfSource:null,
@@ -686,15 +709,22 @@
     function fmt(n){ return (Math.round(n*10)/10).toFixed(1); }
     // Public body ratings resolve only to half-points; the exact float stays in debug exports/persistence.
     function fmtScore(n){ const v=Math.round(n*2)/2; return Number.isInteger(v) ? String(v) : v.toFixed(1); }
-    function scoreBandHtml(band, profKey, basis){
-      if (!band) return '';
-      return '<div class="bc-score-band"><span class="bc-score-band-range">Likely band ' + fmtScore(band.low) + '&ndash;' + fmtScore(band.high) + ' ' + PROFILES[profKey].unit + '</span>'
-        + '<span class="bc-score-band-note">' + basis + '</span></div>';
-    }
-    function scoreBandText(band){ return band ? fmtScore(band.low) + '–' + fmtScore(band.high) : ''; }
+    // The score band is COMPUTED but never RENDERED (Jason, 2026-08-14: "I don't need to see bands for any
+    // reason, it's just noise"). makeScoreBand / scoreBandPayload stay — the bodyScore.v3 contract still
+    // carries a numeric `band` for the composite; only the display of it is gone. Caveats survive as plain
+    // text, because a diagnosis ("an arm hid your waist") is information and a range is not.
     // Composite v3 consumes one scalar half-width. Use the larger lens deviation so either toggle remains covered.
     function scoreBandPayload(bpBand, cvBand, bp, cv){
       return Math.max(bp - bpBand.low, bpBand.high - bp, cv - cvBand.low, cvBand.high - cv);
+    }
+    // Override provenance for the composite. Its consumer keys on `framingOverride`, which its own comment
+    // defines as "a score rated on the Rate anyway — reduced accuracy override" — an outline override is
+    // exactly that too, so both raise the flag and `overrideReason` records which one. (The composite's
+    // note still WORDS it as framing; widening that copy is an edit in the composite's own file.)
+    function overrideFlags(){
+      const f = !!BC.framingOverride, o = !!BC.outlineOverride;
+      return { framingOverride: f || o,
+               overrideReason: (f && o) ? 'framing+outline' : f ? 'framing' : o ? 'outline' : '' };
     }
 
     // descriptive reading: marker placed against the typical band — no good/bad colouring
@@ -918,12 +948,7 @@
       const sex = t0.sex;
       const score = mapModelScore(t0.inputScore / 100, BC.profile);
       const oscore = mapModelScore(t0.inputScore / 100, other);
-      const rawHalf = inputRawUncertainty(t0.bfSource);
-      const band = makeScoreBand(t0.inputScore, BC.profile, rawHalf);
-      const oband = makeScoreBand(t0.inputScore, other, rawHalf);
-      const bandBasis = t0.bfSource === 'measured'
-        ? 'Self-report only; typed BF has a reasoned ±12/100 input margin.'
-        : 'Self-report only; visual BF matching has a reasoned ±20/100 input margin.';
+      const rawHalf = inputRawUncertainty(t0.bfSource);   // payload only — never rendered
       const sexWord = sex === 'm' ? 'male' : 'female', sexOther = sex === 'm' ? 'f' : 'm', sexOtherWord = sexOther === 'm' ? 'male' : 'female';
       const flipPrompt = '<strong><a href="#" class="bc-sexflip" data-sex="' + sexOther + '" style="color:var(--scarlet)">Wrong? Switch to ' + sexOtherWord + ' &rarr;</a></strong>';
       const sexCtl =
@@ -933,11 +958,10 @@
       host.innerHTML =
         '<div class="bc-score-wrap">'
         + '<div class="bc-score" style="color:' + accent + '">' + fmtScore(score) + ' <span class="unit">' + prof.unit + '</span></div>'
-        + scoreBandHtml(band, BC.profile, bandBasis)
         + '<div class="bc-tier" style="color:' + accent + '">' + tierFor(BC.profile, score, sex) + '</div>'
         + '<div class="bc-srcbadge hybrid">Self-reported inputs only &middot; add a photo for shape</div>'
         + '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Not an objective measurement.</strong> Height and scale weight are direct entries; BF is still a typed estimate or visual match. <strong>Drop a photo in Step 1</strong> for the photo-dominant hybrid.</div>'
-        + '<div class="bc-other">The other lens &mdash; ' + PROFILES[other].name + ' &mdash; says <strong>' + fmtScore(oscore) + ' ' + PROFILES[other].unit + '</strong>, likely band <strong>' + scoreBandText(oband) + '</strong> (' + tierFor(other, oscore, sex) + ').</div>'
+        + '<div class="bc-other">The other lens &mdash; ' + PROFILES[other].name + ' &mdash; says <strong>' + fmtScore(oscore) + ' ' + PROFILES[other].unit + '</strong> (' + tierFor(other, oscore, sex) + ').</div>'
         + '</div>'
         + disagreementPanelHtml(t0)
         + sexCtl
@@ -967,13 +991,23 @@
       // the numbers-only view, must not render under a new photo's canvas). Cleared by override, discard,
       // a new photo, or Reset.
       if (BC.gate){
+        const kind = BC.gate.kind || 'framing';
+        const head = kind === 'outline' ? 'Part of the shape read is missing &mdash; not scored yet'
+                   : kind === 'both'    ? 'Framing is off and part of the shape read is missing &mdash; not scored yet'
+                   : 'Framing is off &mdash; not scored yet';
+        const why = kind === 'outline'
+          ? 'Your pose read fine. What failed is the outline step that traces your silhouette &mdash; and the cues it feeds (waist-to-hip, V-taper, breadth) are the ones the geometry score leans on hardest. Scoring anyway means a number built from fewer cues than the calc normally requires.'
+          : 'The score is calibrated on full-body, straight-on, standing photos &mdash; during calibration the same build scored measurably different cropped or angled than it did shot to standard. Scoring this photo means the number is rougher than the calc can normally stand behind.';
+        const fix = kind === 'framing'
+          ? 'Better: retake head-to-feet, square to the camera, arms a few inches out.'
+          : 'Better: retake standing with your arms a few inches out from your sides, in fitted clothing, against a plain wall.';
         host.innerHTML = '<div class="bc-gate">'
-          + '<div class="bc-gate-h"><i class="ti ti-viewfinder"></i> Framing is off &mdash; not scored yet</div>'
+          + '<div class="bc-gate-h"><i class="ti ti-viewfinder"></i> ' + head + '</div>'
           + '<ul class="bc-gate-list">' + BC.gate.issues.map(t => '<li>'+t+'</li>').join('') + '</ul>'
-          + '<div class="bc-gate-note">The score is calibrated on full-body, straight-on, standing photos &mdash; during calibration the same build scored measurably different cropped or angled than it did shot to standard. Scoring this photo means the number is rougher than the calc can normally stand behind.</div>'
+          + '<div class="bc-gate-note">' + why + '</div>'
           + '<div class="bc-gate-btns"><button class="bc-btn" id="bc-gate-go"><i class="ti ti-alert-triangle"></i> Rate anyway &mdash; reduced accuracy</button>'
           + '<button class="bc-btn ghost" id="bc-gate-drop">Discard photo</button></div>'
-          + '<div class="bc-gate-note">Better: retake head-to-feet, square to the camera, arms a few inches out.</div>'
+          + '<div class="bc-gate-note">' + fix + '</div>'
           + '</div>';
         const go = host.querySelector('#bc-gate-go'), dr = host.querySelector('#bc-gate-drop');
         if (go) go.addEventListener('click', function(){ if (window.bcGateOverride) window.bcGateOverride(); });
@@ -1003,10 +1037,6 @@
       const photoRaw = pk => usingModel ? BC.model * 100 : geomPreLens(gradeBody(BC.metrics, sex, pk).subs, pk);
       let rawCur = photoRaw(BC.profile), rawOtherCur = photoRaw(other);
       let score = mapModelScore(rawCur / 100, BC.profile), oscore = mapModelScore(rawOtherCur / 100, other);
-      let rawHalf = photoRawUncertainty(usingModel, BC.framingOverride);
-      let bandBasis = usingModel
-        ? 'One-photo band uses the measured 21/100 label spread' + (BC.framingOverride ? ' plus a framing penalty.' : '.')
-        : 'Geometry has no fitted error model; this uses a precautionary 25/100 margin' + (BC.framingOverride ? ' plus a framing penalty.' : '.');
       let photoRawCur = null, blendedCur = null;
       if (hasInputs){
         photoRawCur = photoRaw(BC.profile);
@@ -1014,31 +1044,23 @@
         rawOtherCur = blendRaw(t0.inputScore, photoRaw(other), t0.bfSource);
         score = mapModelScore(rawCur / 100, BC.profile); oscore = mapModelScore(rawOtherCur / 100, other);
         blendedCur = rawCur;
-        rawHalf = blendedRawUncertainty(t0.bfSource, usingModel, BC.framingOverride);
-        bandBasis = 'Photo-dominant hybrid band combines measured photo spread with ' + (t0.bfSource === 'measured' ? 'typed-BF' : 'visual-BF') + ' uncertainty.';
       }
-      let band = makeScoreBand(rawCur, BC.profile, rawHalf);
-      let oband = makeScoreBand(rawOtherCur, other, rawHalf);
       // Sex-range headline: a GEOMETRY headline is scored against sex-specific bands, so an undetermined sex
       // can't yield one honest number. Show the male–female range until a reliable read or manual pick resolves
       // it (the model headline is sex-agnostic, so it needs no range). Collapses to a single score when sex is set.
       const sexKnown = BC.sex === 'm' || BC.sex === 'f';
       const sexConfirmed = BC.sexSource === 'manual' || (BC.sexSource === 'model' && BC.sexConf >= SEX_COMMIT_MIN);
-      const usingRange = !usingModel && !sexKnown;
       let rng = null;
-      if (usingRange){
+      if (!usingModel && !sexKnown){
         const gM = gradeBody(BC.metrics,'m',BC.profile), gF = gradeBody(BC.metrics,'f',BC.profile);
         const ogM = gradeBody(BC.metrics,'m',other), ogF = gradeBody(BC.metrics,'f',other);
         const sM = gM.score, sF = gF.score, oM = ogM.score, oF = ogF.score;
-        const rM = geomPreLens(gM.subs, BC.profile), rF = geomPreLens(gF.subs, BC.profile);
-        const orM = geomPreLens(ogM.subs, other), orF = geomPreLens(ogF.subs, other);
-        const bM = makeScoreBand(rM, BC.profile, rawHalf), bF = makeScoreBand(rF, BC.profile, rawHalf);
-        const obM = makeScoreBand(orM, other, rawHalf), obF = makeScoreBand(orF, other, rawHalf);
-        rng = { lo:Math.min(sM,sF), hi:Math.max(sM,sF), m:sM, f:sF, oLo:Math.min(oM,oF), oHi:Math.max(oM,oF),
-                band:{low:Math.min(bM.low,bF.low),high:Math.max(bM.high,bF.high)},
-                oband:{low:Math.min(obM.low,obF.low),high:Math.max(obM.high,obF.high)} };
-        band = rng.band; oband = rng.oband;
+        rng = { lo:Math.min(sM,sF), hi:Math.max(sM,sF), m:sM, f:sF, oLo:Math.min(oM,oF), oHi:Math.max(oM,oF) };
       }
+      // …but only when the two ends actually differ once rounded. An outline-override read scores from
+      // leg proportion and symmetry alone — both sex-neutral — so the "range" collapsed to a headline
+      // reading "6–6 / 10" and a prompt to set a sex that changes nothing. Show one number there.
+      const usingRange = !!rng && fmtScore(rng.lo) !== fmtScore(rng.hi);
 
       const srcBadge = hasInputs
         ? '<div class="bc-srcbadge hybrid">Hybrid &middot; self-reported inputs &times; ' + (usingModel ? 'trained-model' : 'silhouette') + ' photo read</div>'
@@ -1096,13 +1118,15 @@
       host.innerHTML =
         '<div class="bc-score-wrap">'
         + '<div class="bc-score" style="color:'+accent+'">'+(usingRange ? fmtScore(rng.lo)+'&ndash;'+fmtScore(rng.hi) : fmtScore(score))+' <span class="unit">'+prof.unit+'</span></div>'
-        + scoreBandHtml(band, BC.profile, bandBasis)
         + '<div class="bc-tier" style="color:'+accent+'">'+(usingRange
             ? 'Depends on sex &mdash; &#9794; '+fmtScore(rng.m)+' '+tierFor(BC.profile,rng.m,'m')+' &middot; &#9792; '+fmtScore(rng.f)+' '+tierFor(BC.profile,rng.f,'f')
             : tierFor(BC.profile, score, sex))+'</div>'
         + srcBadge
-        + (usingRange ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to resolve the score.</strong> A bare-physique read is scored against sex-specific bands, so until sex is set the headline is the male&ndash;female range above &mdash; pick one below.</div>' : '')
-        + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental one-photo estimate.</strong> The band uses the measured 21/100 label spread; it is not a precise grade, especially on casual photos unlike the training set.</div>' : '')
+        + (usingRange ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to resolve the score.</strong> A bare-physique read is scored against sex-specific bands, so until sex is set the headline is the male&ndash;female range above &mdash; pick one below.</div>'
+           : rng ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to use this in the Overall.</strong> The cues that survived on this photo are sex-neutral, so the number above does not depend on it &mdash; but the Overall looks rating still needs a sex before it will include the body.</div>' : '')
+        + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental one-photo estimate.</strong> Not a precise grade &mdash; the human raters who produced its training labels disagreed heavily with each other, and casual photos are unlike the training set.</div>' : '')
+        + (BC.outlineOverride ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Rated on your override &mdash; fewer cues than a clean read.</strong> You asked for a number on a photo whose shape read came up short: '
+            + BC.outlineIssues.join('; ') + '. The score above is built from what survived, and it is marked as a reduced-accuracy input everywhere it is reused.</div>' : '')
         + (BC.framing === 'torso' ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Upper-body read.</strong> Scored on frame cues only &mdash; waist-to-hip, V-taper, shoulder breadth. Leanness (needs full height) and leg proportion are cropped out, and a draped top softens the waist; a full-body shot in fitted clothing reads more.</div>' : '')
         + (BC.reliability ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+BC.reliability+'</div>' : '')
         + (hasInputs ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Photo-dominant hybrid.</strong> Self-reported inputs contribute '+Math.round(t0.inputWeight*100)+'%; the '+(usingModel?'trained-model':'silhouette')+' photo contributes '+Math.round((1-t0.inputWeight)*100)+'%. The arithmetic is shown below.</div>' : '')
@@ -1110,9 +1134,9 @@
         + (BC_DEBUG && usingModel && BC.modelRaw!=null ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+BC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
         + skinDebug
         + (BC_DEBUG && window.__bcSex ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; face read = '+(window.__bcSex.reason||'pending')+'</strong>'+(window.__bcSex.facePx!=null?' &middot; face '+window.__bcSex.facePx+'px, vis '+window.__bcSex.avgVis:'')+(window.__bcSex.sex?' &rarr; '+window.__bcSex.sex+' '+Math.round((window.__bcSex.conf||0)*100)+'%':'')+'</div>' : '')
-        + '<div class="bc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+(usingRange ? fmtScore(rng.oLo)+'&ndash;'+fmtScore(rng.oHi)+' '+PROFILES[other].unit+'</strong> (depends on sex)' : fmtScore(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+')')+', likely band <strong>'+scoreBandText(oband)+'</strong>.</div>'
+        + '<div class="bc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+(usingRange ? fmtScore(rng.oLo)+'&ndash;'+fmtScore(rng.oHi)+' '+PROFILES[other].unit+'</strong> (depends on sex)' : fmtScore(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+')')+'.</div>'
         + '</div>'
-        + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
+        + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits on each measured trait, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; an atypical reading is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
         + (hasInputs ? tier0Breakdown(t0, BC.profile, photoRawCur, blendedCur, score) : '')
         + drivers + coreRows + featRows + propRows
@@ -1132,35 +1156,34 @@
           const bp = mapModelScore(bpRaw / 100, 'blackpill'), cv = mapModelScore(cvRaw / 100, 'conventional');
           const half = blendedRawUncertainty(t0.bfSource, usingModel, BC.framingOverride);
           const bpBand = makeScoreBand(bpRaw, 'blackpill', half), cvBand = makeScoreBand(cvRaw, 'conventional', half);
-          window.leComposite.saveBody({
+          window.leComposite.saveBody(Object.assign({
             schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand,cvBand,bp,cv),
             bpMax:PROFILES.blackpill.scaleMax, cvMax:PROFILES.conventional.scaleMax, floor:1,
             source:'hybrid', sex:sex, sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
-            inputs:{ffmi:t0.ffmiAdj,bf:t0.bfPct,bfSource:t0.bfSource,weight:t0.inputWeight}, ts:BC.measuredAt,
-            framingOverride:!!BC.framingOverride
-          });
+            inputs:{ffmi:t0.ffmiAdj,bf:t0.bfPct,bfSource:t0.bfSource,weight:t0.inputWeight}, ts:BC.measuredAt
+          }, overrideFlags()));
         } else if (usingModel){
           const bp = mapModelScore(BC.model,'blackpill'), cv = mapModelScore(BC.model,'conventional');
           const half = photoRawUncertainty(true, BC.framingOverride);
           const bpBand = makeScoreBand(BC.model*100,'blackpill',half), cvBand = makeScoreBand(BC.model*100,'conventional',half);
-          window.leComposite.saveBody({
+          window.leComposite.saveBody(Object.assign({
             schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand,cvBand,bp,cv),
             bpMax:PROFILES.blackpill.scaleMax, cvMax:PROFILES.conventional.scaleMax, floor:1,
             source:'model', sex:(sexKnown?sex:null), sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
-            ts:BC.measuredAt, framingOverride:!!BC.framingOverride
-          });
+            ts:BC.measuredAt
+          }, overrideFlags()));
         } else if (sexKnown){
           const bpRaw = geomPreLens(gradeBody(BC.metrics,sex,'blackpill').subs,'blackpill');
           const cvRaw = geomPreLens(gradeBody(BC.metrics,sex,'conventional').subs,'conventional');
           const bp = mapModelScore(bpRaw/100,'blackpill'), cv = mapModelScore(cvRaw/100,'conventional');
           const half = photoRawUncertainty(false, BC.framingOverride);
           const bpBand = makeScoreBand(bpRaw,'blackpill',half), cvBand = makeScoreBand(cvRaw,'conventional',half);
-          window.leComposite.saveBody({
+          window.leComposite.saveBody(Object.assign({
             schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand,cvBand,bp,cv),
             bpMax:PROFILES.blackpill.scaleMax, cvMax:PROFILES.conventional.scaleMax, floor:1,
             source:'geometry', sex:sex, sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
-            ts:BC.measuredAt, framingOverride:!!BC.framingOverride
-          });
+            ts:BC.measuredAt
+          }, overrideFlags()));
         } else {
           window.leComposite.saveBody({schemaVersion:3, needsSex:true, sexSource:BC.sexSource, ts:BC.measuredAt});
         }
@@ -1184,11 +1207,16 @@
       const cfNote = cf ? ' · <strong style="color:var(--scarlet)">face reads ' + (cf.cls==='m'?'male':'female') + ' (' + Math.round(cf.conf*100) + '%) — using your pick</strong>' : '';
       return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + cfNote + (BC.reliability ? ' · ' + BC.reliability : '');
     }
-    window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac, framingOverride){
-      BC.gate = null; window.bcGateOverride = null;   // this photo is committing — any pending framing prompt is decided/superseded
+    window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac, framingOverride, outlineOverride){
+      BC.gate = null; window.bcGateOverride = null;   // this photo is committing — any pending prompt is decided/superseded
       BC.metrics = metrics; BC.model = null; BC.measuredAt = Date.now();   // stable stamp: a new photo, reused on every re-render so age stays honest
       BC.framing = framing === 'torso' ? 'torso' : 'full';
       BC.framingOverride = !!framingOverride;   // structured provenance: a degraded-framing photo scored on the user's override
+      // …and a geometry headline scored with outline cues missing. The ISSUE LIST rides along, not just a
+      // boolean: the gate prompt that named the missing cues is gone by the time the score renders, and
+      // "reduced accuracy" without naming what is missing is the same non-diagnosis the old refusal gave.
+      BC.outlineIssues = (outlineOverride && outlineOverride.length) ? outlineOverride.slice() : [];
+      BC.outlineOverride = BC.outlineIssues.length > 0;
       BC.bareGeometry = !!bareGeometry; BC.skinFrac = (skinFrac==null ? null : skinFrac);
       BC.reliability = reliability || '';
       BC.sexClsSex = null; BC.sexClsConf = null;   // a new photo → drop the previous photo's classifier read before this one's fires
@@ -1231,16 +1259,25 @@
     window.bcSetModelScore = function(t, raw){ BC.deferredRefusal = null; BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
     window.bcModelReady = function(ok){ BC.modelReady = ok; };
     // The geometry gates were bypassed on the model's credit but the model will never deliver for the
-    // current photo (load failed / inference failed) — apply the stashed refusal: drop the un-gated
-    // geometry score (and its persisted composite entry) and show the refusal the gates would have given.
+    // current photo (load failed / inference failed). The geometry result is already computed and on
+    // screen — it just has not been ruled on. This used to DROP it (score gone, dead end); now it parks
+    // behind the same rate-anyway override, so a photo the guide accepted still ends in a number.
     window.bcApplyDeferredRefusal = function(){
       if (!BC.deferredRefusal) return;
-      const msg = BC.deferredRefusal; BC.deferredRefusal = null;
-      window.bcSetStatus(msg, true); window.bcResetResult();
+      const issues = (BC.deferredIssues && BC.deferredIssues.length) ? BC.deferredIssues.slice() : [BC.deferredRefusal];
+      BC.deferredRefusal = null; BC.deferredIssues = null;
+      if (window.__bcTrace) window.__bcTrace.cause = 'model-absent+' + (window.__bcTrace.cause || 'geo');
+      if (!BC.metrics){ window.bcResetResult(); return; }   // nothing computed to fall back to
+      const take = function(){ BC.outlineIssues = issues.slice(); BC.outlineOverride = true; };
+      if (window.__bcAutoOverride){ take(); renderResult(); return; }   // batch harness: rule automatically, provenance still recorded
+      window.bcGateOverride = function(){ window.bcGateOverride = null; BC.gate = null; take(); renderResult(); };
+      window.bcShowGate(issues.concat(['the trained model could not score this photo, so the headline falls back to the outline geometry']), 'outline');
+      window.bcSetStatus('The trained model could not score this photo and the outline read is incomplete — rate it anyway in the panel, or retake.', true);
     };
-    window.bcResetResult = function(){ BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.framingOverride = false; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
-    // a degraded-framing photo parks here until the user rules on it (renderResult owns the prompt UI)
-    window.bcShowGate = function(issues){ BC.gate = { issues: issues || [] }; renderResult(); };
+    window.bcResetResult = function(){ BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.deferredIssues = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.framingOverride = false; BC.outlineOverride = false; BC.outlineIssues = []; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    // a photo parks here until the user rules on it (renderResult owns the prompt UI). kind decides the
+    // copy: 'framing' (retakeable), 'outline' (the shape read is short of cues), or 'both'.
+    window.bcShowGate = function(issues, kind){ BC.gate = { issues: issues || [], kind: kind || 'framing' }; renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
     const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
@@ -1250,7 +1287,7 @@
         sex:BC.sex, sexAuto:BC.sexAuto, sexSource:BC.sexSource, sexConf:BC.sexConf, sexManual:BC.sexManual,
         sexClsSex:BC.sexClsSex, sexClsConf:BC.sexClsConf,
         sexUnknownReason:BC.sexUnknownReason||'', reliability:BC.reliability, framing:BC.framing,
-        framingOverride:!!BC.framingOverride,
+        framingOverride:!!BC.framingOverride, outlineOverride:!!BC.outlineOverride, outlineIssues:(BC.outlineIssues||[]),
         bareGeometry:BC.bareGeometry, skinFrac:BC.skinFrac, measuredAt:BC.measuredAt };
       try { localStorage.setItem(BC_SHOT_KEY, JSON.stringify({ img:BC.shotDataURL, state, ts:BC.measuredAt })); }
       catch(e){ try { localStorage.removeItem(BC_SHOT_KEY); } catch(_){} }   // quota: drop the stale shot so a reload can't pair an old photo with a fresh score
@@ -1271,6 +1308,10 @@
       BC.sexManual = !!s.sexManual; BC.sexUnknownReason = s.sexUnknownReason || '';
       BC.reliability = s.reliability || ''; BC.framing = s.framing==='torso' ? 'torso' : 'full';
       BC.framingOverride = !!s.framingOverride;
+      // the issue list must survive with the flag: restoring "rated on your override" with an empty list
+      // would render the caveat with nothing after the colon
+      BC.outlineIssues = Array.isArray(s.outlineIssues) ? s.outlineIssues.filter(x => typeof x === 'string') : [];
+      BC.outlineOverride = !!s.outlineOverride && BC.outlineIssues.length > 0;
       BC.bareGeometry = !!s.bareGeometry; BC.skinFrac = fin(s.skinFrac, null);
       document.querySelectorAll('.bc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===BC.profile); });
       setStatus(bcStatusNote(), false, true); renderResult();
@@ -1290,9 +1331,9 @@
       // and composite after the wipe (cold-review find). The hook lives in the MediaPipe module
       // (which owns currentGen and the pending tensors).
       if (window.bcCancelAnalysis) window.bcCancelAnalysis();
-      BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null;
+      BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.deferredIssues = null;
       BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
-      BC.framingOverride = false; BC.measuredAt = null;
+      BC.framingOverride = false; BC.outlineOverride = false; BC.outlineIssues = []; BC.measuredAt = null;
       BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
       BC.sexConf = null; BC.sexManual = false; BC.sexClsSex = null; BC.sexClsConf = null; BC.sexUnknownReason = ''; BC.shotDataURL = null;
       BC.routeBare = false; BC.routeUseModel = false;
@@ -1558,6 +1599,7 @@
     window.bcSexConflict = bcSexConflict;   // manual-vs-classifier sex conflict (batch harness mirrors it into reliability)
     window.bcState = BC;                 // live handle for the debug batch harness (BC is const, never reassigned)
     window.bcPoseSkeleton = poseSkeleton;
+    window.bcArmOverWaist = armOverWaist;
     window.bcBodyRatios = bodyRatios;
     window.bcPreprocess = preprocessToTensor;
     window.bcPreprocessSex = preprocessSex;
@@ -1985,8 +2027,31 @@
       } catch(e){ if(window.__bcSex) window.__bcSex.reason='infer-error:'+e.message; }
     }
 
+    // ── Outline-failure vocabulary ──────────────────────────────────────────────────────────────
+    // The worker reports WHY the silhouette is missing (js/body-pose-worker.js). Two things are done
+    // with that string and both used to be thrown away:
+    //   · TRANSIENT vs deterministic — decides whether re-running the same photo is worth anything.
+    //   · the user-facing diagnosis — the old copy said "the body outline was not reliable enough to
+    //     score" for EVERY cause, so a 12-second WASM timeout was reported to the user as a defect in
+    //     their photo. That is a misdiagnosis, and it tells them to retake a shot that was fine.
+    const SIL_TRANSIENT = /timed out|worker crashed|task failed|returned no mask|model is unavailable|silhouette analysis failed/i;
+    function outlineDiagnosis(warning, retried){
+      const w = String(warning || ''), twice = retried ? ' twice' : '';
+      if (/timed out/i.test(w))                      return 'the on-device outline step timed out' + twice + ' — that is this device being slow, not a problem with your photo';
+      if (/worker crashed|task failed/i.test(w))     return 'the on-device outline step crashed' + twice + ' — a browser/engine fault, not a problem with your photo';
+      if (/model is unavailable|returned no mask/i.test(w)) return 'the outline model did not load (it downloads once from a CDN), so nothing could trace your silhouette';
+      if (/plausibility/i.test(w))                   return 'the traced outline came back an implausible body shape — usually loose or draped clothing, a busy background, or a second person in frame';
+      if (/no usable body outline|head-to-body|no usable body height/i.test(w)) return 'the outline model could not separate you from the background — usually low contrast between your clothing and the backdrop';
+      if (/invalid pose landmarks|degenerate|mask dimensions/i.test(w)) return 'the outline scan could not use the detected joints';
+      return 'the traced outline was not reliable enough to measure';
+    }
+
     let bcBusy = false;
-    let framingAutoOverride = false;   // batch harness only: score degraded-framing images without the interactive prompt (caveat still recorded)
+    // Batch harness only: take every rate-anyway override without the interactive prompt (provenance still
+    // recorded). Mirrored onto window because bcApplyDeferredRefusal lives in the UI script block, which
+    // cannot see this one's scope.
+    let framingAutoOverride = false;
+    function setAutoOverride(on){ framingAutoOverride = !!on; window.__bcAutoOverride = !!on; }
     async function drawAndScore(srcEl, W, H){
       if (bcBusy){ window.bcSetStatus('Still analysing the previous photo — drop this one again when it finishes.', true); return; }
       bcBusy = true;
@@ -1995,35 +2060,73 @@
       // without this, a stale refusal could fire mid-prompt and erase the new photo's gate (cold-review find).
       BC.deferredRefusal = null;
       BC.poseQuality = null;   // instrumentation only (debug batch logs the framing readouts per image)
+      // Instrumentation only (debug batch): WHY this analysis ended the way it did. Lives on window rather
+      // than BC because a refusal calls bcResetResult, which wipes BC before the harness can read it.
+      window.__bcTrace = { poseWarning:'', silRetry:0, cause:'', route:'', skin:'', framing:'', personFrac:'' };
+      const trace = window.__bcTrace;
+      const cause = c => { trace.cause = c; return c; };
       try {
         canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
         const ctx = canvas.getContext('2d', { willReadFrequently:true });
         ctx.drawImage(srcEl, 0, 0, W, H);
         window.bcSetStatus('Reading pose and silhouette on-device…');
-        const bitmap = await createImageBitmap(canvas);
-        let poseResult;
-        try { poseResult = await runPoseInWorker(bitmap, gen); }
-        catch(error){
+        // A missing silhouette has several causes and the worker names each one. Some are TRANSIENT — a WASM
+        // stall, a crashed or never-initialised segmenter, a dropped mask — and the SAME photo reads fine on a
+        // second pass with a fresh worker. Those used to cost the user their score. Retry once, silently, on
+        // that class only; a deterministic failure (implausible outline, no usable body) would just fail again.
+        let poseResult, attempt = 0;
+        for (;;){
+          const bitmap = await createImageBitmap(canvas);   // one per attempt: the bitmap is TRANSFERRED to the worker
+          try { poseResult = await runPoseInWorker(bitmap, gen); }
+          catch(error){
+            if (gen !== currentGen) return;
+            if (attempt === 0){   // a stalled/aborted engine is transient by definition — the worker was just recycled
+              attempt = 1; trace.silRetry = 1;
+              window.bcSetStatus('The on-device read stalled — retrying once with a fresh engine…');
+              continue;
+            }
+            console.warn('[Body calculator] isolated pose analysis failed:', error.stage || 'startup', error.message);
+            cause('pose-engine-failed');
+            window.bcSetStatus('Couldn’t read that photo — the isolated pose engine stalled or aborted twice. This is a problem on this device, not with your photo. Reload the page and try again.', true);
+            window.bcResetResult(); return;
+          }
           if (gen !== currentGen) return;
-          console.warn('[Body calculator] isolated pose analysis failed:', error.stage || 'startup', error.message);
-          window.bcSetStatus('Couldn’t read that photo — the isolated pose engine stalled or aborted. Try a clearer, front-facing, full-body shot; the next photo will start a fresh engine automatically.', true);
-          window.bcResetResult(); return;
+          // Test seam. A WASM stall / dead segmenter cannot be provoked on demand, so the retry path is
+          // otherwise unverifiable: set window.__bcFaultInject = {silFail:1} in the console to make the next
+          // N reads come back as a transient outline failure. Undefined in normal use — the branch is inert.
+          if (window.__bcFaultInject && window.__bcFaultInject.silFail > 0 && poseResult && poseResult.landmarks){
+            window.__bcFaultInject.silFail--;
+            poseResult = Object.assign({}, poseResult, { silhouette:null,
+              warning: window.__bcFaultInject.warning || 'silhouette analysis timed out, so the outline cues were skipped' });
+          }
+          const w = (poseResult && poseResult.warning) || '';
+          const retryable = poseResult && poseResult.landmarks && !poseResult.silhouette
+            && poseResult.quality && poseResult.quality.ok && SIL_TRANSIENT.test(w);
+          if (!retryable || attempt > 0) break;
+          attempt = 1; trace.silRetry = 1;
+          // A segmenter that never initialised only recovers on a NEW worker; the timeout/crash paths
+          // already recycled theirs.
+          if (/model is unavailable/i.test(w)) recyclePoseWorker(poseWorker);
+          window.bcSetStatus('The outline read didn’t land — retrying once…');
         }
-        if (gen !== currentGen) return;
+        trace.poseWarning = (poseResult && poseResult.warning) || '';
         BC.poseQuality = (poseResult && poseResult.quality) || null;   // instrumentation only: this image's framing readouts (yaw/tilt/band) for the debug batch
         if (!poseResult || !poseResult.landmarks){
+          cause('no-body');
           window.bcSetStatus('No body found — use a clear, full-body, front-facing photo.', true); window.bcResetResult(); return;
         }
         const lm = poseResult.landmarks;
         const skel = window.bcPoseSkeleton(lm, W / H);   // aspect makes the cross-axis symmetry/tilt reads pixel-space
-        if (!skel){ window.bcSetStatus('Could not read the pose — try a fuller, clearer shot.', true); window.bcResetResult(); return; }
+        if (!skel){ cause('pose-unreadable'); window.bcSetStatus('Could not read the pose — try a fuller, clearer shot.', true); window.bcResetResult(); return; }
 
         // The worker evaluates framing in image pixels, joint confidence, stance, and frontal breadth before
         // asking the silhouette model to run. Do not score extrapolated feet or seated/profile geometry.
         if (poseResult.quality && !poseResult.quality.ok){
+          cause('pose-quality:' + (poseResult.quality.code || '?'));
           window.bcSetStatus(poseResult.quality.message, true); window.bcResetResult(); return;
         }
         if (!poseResult.quality && skel.vis < 0.5){
+          cause('lower-body-cropped');
           window.bcSetStatus('The lower body is cropped or uncertain. Include the whole body from head to feet.', true); window.bcResetResult(); return;
         }
 
@@ -2056,9 +2159,11 @@
           if(x<pMinX)pMinX=x; if(y<pMinY)pMinY=y; if(x>pMaxX)pMaxX=x; if(y>pMaxY)pMaxY=y; pUsed++; }
         if (pUsed < 4){ pMinX=0; pMinY=0; pMaxX=1; pMaxY=1; }   // too few confident joints → assume full frame (don't false-reject; skel.vis already gated)
         const personFrac = Math.max(pMaxX-pMinX, pMaxY-pMinY);
+        trace.personFrac = personFrac.toFixed(3);
         const srcNatW = srcEl.naturalWidth||srcEl.width||W, srcNatH = srcEl.naturalHeight||srcEl.height||H;
         const personNativePx = Math.max((pMaxX-pMinX)*srcNatW, (pMaxY-pMinY)*srcNatH);
         if (personFrac < 0.14){
+          cause('subject-too-small');
           window.bcSetStatus('The subject is too small / far away to read reliably — they fill only '+Math.round(personFrac*100)+'% of the frame. Retake closer so the body fills most of the height.', true);
           window.bcResetResult(); return;
         }
@@ -2076,6 +2181,9 @@
         // crop routed to it scores the framing, not the frame. Torso shots score from the silhouette frame
         // cues (the renormalized geometry path), which is what the panel already tells the user.
         const useModel = (!!session || modelState === 'loading') && !bareBody && framing === 'full';
+        trace.route = bareBody ? 'bare→geometry' : (useModel ? 'clothed→model' : 'clothed→geometry');
+        trace.skin = Math.round(skinFrac*100) + '%';
+        trace.framing = framing;
         BC.routeBare = bareBody; BC.routeUseModel = useModel;   // instrumentation only: the TRUE routing decision (incl. the model-load window) for the debug batch harness — no logic change
         const px = poseResult.silhouette || null;
         const metrics = window.bcBodyRatios(px, skel);
@@ -2083,30 +2191,46 @@
         // proportions alone are too thin for an honest GEOMETRY headline. If an arm hid the waist the worker drops
         // those cues upstream — so (no model) refuse with a fix-it rather than score the remnants.
         const hasWaist = metrics.vTaper != null || metrics.whr != null;
-        // The refusal is computed for BOTH routes. Geometry headline → refuse now. Model headline →
-        // the gates are bypassed on the model's CREDIT (still loading, or inference pending); if the
-        // model never delivers for this photo, the stashed refusal fires instead of letting an
-        // un-gated geometry score stand and persist (see bcApplyDeferredRefusal).
-        let geoRefusalMsg = null;
+        // Geometry-route blockers. Computed for BOTH routes. Model headline → the gates are bypassed on the
+        // model's CREDIT (still loading, or inference pending); if the model never delivers for this photo,
+        // the stashed issues surface instead of letting an un-gated geometry score stand (bcApplyDeferredRefusal).
+        //
+        // These used to be a DEAD END on the geometry route — no number, no override, no way past. That broke
+        // the alignment guide's promise (Jason's ruling, 2026-08-14: "a photo that passes it must produce a
+        // rating"), and it fired hardest on exactly the shots the guide is happiest with: a bare torso routes
+        // to geometry by design, and standing with your arms anywhere near your sides zeroes the waist cue.
+        // They are now ISSUES on the same rate-anyway override the framing gate uses. The photo still scores,
+        // the caveat names what is missing, and the provenance rides into the payload and the composite.
+        const geoIssues = [];
         if (!px){
-          geoRefusalMsg = 'The pose was readable, but the body outline was not reliable enough to score. No number was produced; try a neutral standing photo with clear contrast and fitted clothing.';
+          cause('no-outline');
+          geoIssues.push(outlineDiagnosis(trace.poseWarning, trace.silRetry > 0)
+            + '. Waist-to-hip, V-taper, shoulder breadth and the leanness proxy are all unmeasured; only leg proportion and left/right evenness are left to score from');
         } else if (!hasWaist){
+          cause(px.waistArm || px.hipArm ? 'waist-occluded' : 'waist-unreadable');
           const which = px.waistArm ? (px.hipArm ? 'across your waist and hips' : 'across your waist')
                       : px.hipArm ? 'resting on your hip' : '';
-          geoRefusalMsg = which
-            ? 'An arm is '+which+', which hides your waistline — the frame can’t be read from a silhouette. Retake standing with your arms a few inches out from your sides.'
-            : 'The body outline wasn’t reliable enough to score. Try a neutral standing photo, arms a few inches out, fitted clothing.';
+          geoIssues.push(which
+            ? 'an arm is ' + which + ', which hides your waistline — waist-to-hip and V-taper cannot be measured from the silhouette'
+            : 'the silhouette gave no usable waist width, so waist-to-hip and V-taper are unmeasured');
         }
-        if (geoRefusalMsg && !useModel){
-          window.bcSetStatus(geoRefusalMsg, true);
-          window.bcResetResult(); return;
+        // Name the routing too when it is WHY this photo is on the thin instrument in the first place. A
+        // shirtless/swimwear shot is out-of-distribution for the clothed-trained CNN, so it is sent to the
+        // geometry silhouette on purpose — the user cannot otherwise tell why a clean photo scored the hard way.
+        if (geoIssues.length && !useModel && bareBody){
+          geoIssues.push('this reads as a bare torso (' + Math.round(skinFrac*100) + '% skin), so it is scored from the outline instead of the trained model — the trained model is clothed-trained and would score skin, not physique');
+        } else if (geoIssues.length && !useModel && framing === 'torso'){
+          // (the framing issue above already says it is cropped — add only the CONSEQUENCE, not the fact again)
+          geoIssues.push('that crop also sends it to the outline instead of the trained model, whose score scale only applies to full-body shots');
         }
+        const geoRefusalMsg = geoIssues.length ? geoIssues[0] : null;   // deferred-path carrier (model promised, never delivered)
 
         // reliability caveats (non-blocking) — the body has more ways to read soft than the face
         const warns = [];
-        // the worker's own degradation note (silhouette model unavailable / analysis failed) — without
-        // it a model-headline score renders with no hint that the silhouette breakdown is missing
-        if (poseResult.warning) warns.push(poseResult.warning);
+        // The worker's own degradation note — without it a model-headline score renders with no hint that the
+        // silhouette breakdown is missing. Translated, not quoted: the raw strings are engine vocabulary
+        // ("segmentation outline failed plausibility checks") and the reader cannot act on them.
+        if (poseResult.warning) warns.push(outlineDiagnosis(poseResult.warning, trace.silRetry > 0));
         if (px && (px.waistArm || px.hipArm)) warns.push('an arm covered part of your waist or hips, so that cue was skipped — arms a few inches out reads the full frame');
         else if (skel.armNearWaist) warns.push('an arm is by your waist, which can widen the silhouette — stand with arms slightly out');
         // (the old skel.tilt>0.06 warn is superseded: the worker's framing band now classifies tilt BEFORE
@@ -2120,12 +2244,13 @@
         const fullW = srcEl.naturalWidth||srcEl.width||W, fullH = srcEl.naturalHeight||srcEl.height||H;
         let tensorData = null;
         try { tensorData = cropBodyTensor(srcEl, lm, fullW, fullH); } catch(_){ tensorData = null; }
-        if (useModel && !tensorData && geoRefusalMsg){
-          // The model was to carry the headline past the geometry gates, but its crop failed —
-          // it can never score this photo, so the geometry refusal applies after all.
-          window.bcSetStatus(geoRefusalMsg, true);
-          window.bcResetResult(); return;
-        }
+        // The model was to carry the headline past the geometry gates, but its crop failed — it can never
+        // score this photo, so the geometry issues apply after all. No longer a dead end: it falls through
+        // to the same rate-anyway override the geometry route now gets.
+        const modelDead = useModel && !tensorData;
+        if (modelDead && geoIssues.length) cause('crop-failed+' + trace.cause);
+        // Whether the geometry headline needs the user's ruling: it is missing cues AND no model will carry it.
+        const needsGeoOverride = geoIssues.length > 0 && (!useModel || modelDead);
         // pendingTensor / pendingSexTensor / BC.deferredRefusal are set in commit() below, NOT here: a photo
         // parked behind the framing prompt must not get auto-scored (or auto-refused) by a model or
         // classifier that finishes loading mid-prompt.
@@ -2159,20 +2284,26 @@
         const commit = function(){
           // Only stash for a deferred (still-loading) model run when this image actually routes to the model.
           // A bare-physique image routes to geometry, so a late model-load must NOT silently override its headline.
-          if (useModel){ pendingTensor = tensorData; pendingTensorGen = gen; }
+          if (useModel && !modelDead){ pendingTensor = tensorData; pendingTensorGen = gen; }
           else { pendingTensor = null; }
-          BC.deferredRefusal = (useModel && geoRefusalMsg) ? geoRefusalMsg : null;
+          BC.deferredRefusal = (useModel && !modelDead && geoRefusalMsg) ? geoRefusalMsg : null;
+          BC.deferredIssues  = BC.deferredRefusal ? geoIssues.slice() : null;
           if (sexData){
             if (sexSession) inferSex(sexData, gen);
             else if (sexState === 'loading'){ pendingSexTensor = sexData; pendingSexGen = gen; }   // classifier still loading
           }
-          window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac, gateBand === 'degraded');
+          window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac, gateBand === 'degraded', needsGeoOverride ? geoIssues : null);
           // eyes hidden (sunglasses) → keep bcAnalyze's decisive body-frame guess rather than asserting the
           // confidently-wrong occluded-face read; the bold "switch" toggle fixes it if the frame mis-reads.
           if (tensorData && session && useModel){ window.bcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
           else if (tensorData && modelState === 'loading' && useModel){ window.bcSetStatus('Body measured — trained model still loading, the score will update automatically…'); }
         };
-        if (gateBand === 'degraded' && !framingAutoOverride){
+        // ONE prompt for both kinds of blocker — a photo that is both off-standard AND missing outline cues
+        // must not make the user rule twice. The framing issues lead (they are the retakeable ones).
+        const prompt = [];
+        if (gateBand === 'degraded') prompt.push.apply(prompt, gateIssues);
+        if (needsGeoOverride) prompt.push.apply(prompt, geoIssues);
+        if (prompt.length && !framingAutoOverride){
           // This photo is ACCEPTED (it's on the canvas) — the previous photo's committed result must not
           // outlive it. Without this, the old score stayed in storage + the composite while the prompt was
           // open, and navigating away restored it under the new photo (cold-review find; the privacy note
@@ -2181,8 +2312,10 @@
           window.bcResetResult();
           window.bcSetShot(shotURL);
           window.bcGateOverride = function(){ if (gen !== currentGen) return; window.bcGateOverride = null; commit(); };
-          window.bcShowGate(gateIssues);
-          window.bcSetStatus('Photo readable, but the framing is off — rate it anyway in the panel, or retake to standard.', true);
+          window.bcShowGate(prompt, needsGeoOverride ? (gateBand === 'degraded' ? 'both' : 'outline') : 'framing');
+          window.bcSetStatus(needsGeoOverride && gateBand !== 'degraded'
+            ? 'Photo readable, but part of the shape read is missing — rate it anyway in the panel, or retake.'
+            : 'Photo readable, but the framing is off — rate it anyway in the panel, or retake to standard.', true);
           return;
         }
         commit();
@@ -2338,10 +2471,11 @@
             const vis=p.visibility==null?1:p.visibility; if (vis<0.3) continue;
             const y=Math.max(0,Math.min(1,p.y)); if (y<mn)mn=y; if (y>mx)mx=y; used++; }
           if (used>=4 && (mx-mn)>=0.5){
-            // arms tucked at the waist zero out the waist/hip silhouette cues downstream — don't snap a
-            // photo whose best fix is free; the hint names it and the shutter still overrides
-            const sk = window.bcPoseSkeleton(res.landmarks);
-            if (sk && sk.armNearWaist) hint='Arms a few inches out from your sides.';
+            // An arm in the waist/hip band zeroes those silhouette cues downstream — don't snap a photo whose
+            // best fix is free; the hint names it and the shutter still overrides. This uses the SCAN's own
+            // predicate (armOverWaist), not the wrist-only skeleton flag the guide used to check: that gap is
+            // what let the guide pass a pose the scan then refused.
+            if (window.bcArmOverWaist(res.landmarks)) hint='Arms a few inches out — an arm across your waist hides the measurement.';
             else ok=true;
           }
           else hint='Step closer — fill the frame top to bottom.';
@@ -2441,9 +2575,14 @@
         { key:'timestamp',   label:'timestamp' },
         { key:'outcome',     label:'outcome' },
         { key:'refusal',     label:'refusal_reason' },
+        { key:'cause',       label:'cause' },            // instrumentation: the decision site that ended the analysis
+        { key:'pose_warning',label:'pose_warning' },     // the worker's OWN account of why the outline is missing
+        { key:'sil_retry',   label:'sil_retry' },
         { key:'routing',     label:'routing' },
         { key:'skin_frac',   label:'skin_frac' },
         { key:'framing',     label:'framing' },
+        { key:'person_frac', label:'person_frac' },
+        { key:'override',    label:'override' },       // '' | framing | outline | framing+outline — the payload's provenance
         { key:'gate_band',   label:'gate_band' },
         { key:'gate_tilt',   label:'gate_tilt' },
         { key:'gate_yaw',    label:'gate_yaw' },
@@ -2549,7 +2688,7 @@
       async function processOne(file){
         cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null, sexRes:null, abandoned:false };
         const ts = nowISO();
-        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', routing:'', skin_frac:'', framing:'', gate_band:'', gate_tilt:'', gate_yaw:'', skel_symmetry:'', model_raw:'', bp:'', bp_band:'', cv:'', cv_band:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
+        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', cause:'', pose_warning:'', sil_retry:'', routing:'', skin_frac:'', framing:'', person_frac:'', override:'', gate_band:'', gate_tilt:'', gate_yaw:'', skel_symmetry:'', model_raw:'', bp:'', bp_band:'', cv:'', cv_band:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
         let img=null;
         try { img = await decode(file); }
         catch(e){ return blank({ refusal:'could not decode image' }); }
@@ -2595,7 +2734,10 @@
           } else {
             const pair=bodyBpCv(); bp=n2(pair.bp); bpBandOut=n2(pair.bpBand.low)+'–'+n2(pair.bpBand.high); cv=n2(pair.cv); cvBandOut=n2(pair.cvBand.low)+'–'+n2(pair.cvBand.high);
           }
-          routing = BC.routeBare ? 'bare→geometry' : 'clothed→model';   // Finding 2: log the true bare decision, not bareBody&&!!session
+          // Finding 2: log the true bare decision, not bareBody&&!!session. Three-valued, from the trace —
+          // BC's pair of booleans cannot distinguish clothed→model from clothed→geometry (a torso crop), and
+          // collapsing them made every scored torso shot read as a model score it never got.
+          routing = (window.__bcTrace && window.__bcTrace.route) || (BC.routeBare ? 'bare→geometry' : 'clothed→model');
           skin = BC.skinFrac!=null ? Math.round(BC.skinFrac*100)+'%' : '';
           framing = BC.framing || '';
           const t0 = window.computeTier0();
@@ -2615,11 +2757,17 @@
           const dis = window.bcDisagreements ? window.bcDisagreements(window.computeTier0()) : [];
           dis.forEach(function(d){ relOut = relOut ? relOut + ' · ' + d.note : d.note; });
         }
+        const tr = window.__bcTrace || {};
         return {
           filename:file.name, timestamp:ts,
           outcome: scored ? 'scored' : 'refused',
           refusal: scored ? '' : stripTags(cur.statusMsg),
-          routing, skin_frac:skin, framing,
+          cause: tr.cause || '', pose_warning: tr.poseWarning || '', sil_retry: tr.silRetry || 0,
+          // routing/skin/framing from the TRACE, not BC — a refused row has already been through
+          // bcResetResult, so BC's copies are blank exactly on the rows the diagnosis needs them.
+          routing: routing || tr.route || '', skin_frac: skin || tr.skin || '', framing: framing || tr.framing || '',
+          person_frac: tr.personFrac || '',
+          override: scored ? ((BC.framingOverride && BC.outlineOverride) ? 'framing+outline' : BC.framingOverride ? 'framing' : BC.outlineOverride ? 'outline' : '') : '',
           gate_band:gband, gate_tilt:gtilt, gate_yaw:gyaw,
           skel_symmetry: (scored && BC.metrics && typeof BC.metrics.symmetry==='number' && isFinite(BC.metrics.symmetry)) ? BC.metrics.symmetry.toFixed(4) : '',
           model_raw: cur.modelRaw!=null ? cur.modelRaw.toFixed(3) : '',
@@ -2675,7 +2823,7 @@
         const snap = snapshot();
         const lsBefore = snapshotLS();
         guardOn(); wrapsOn();
-        framingAutoOverride = true;   // batch = calibration: degraded framing scores without the prompt, caveat lands in the reliability column
+        setAutoOverride(true);   // batch = calibration: every override is taken without the prompt; provenance lands in the override column
         try {
           for (let i=0;i<files.length;i++){
             statusEl.textContent = 'Processing '+(i+1)+'/'+files.length+': '+files[i].name+' …';
@@ -2689,7 +2837,7 @@
           // wraps — else a late inferAndSet/inferSex passes its gen guard, calls the real (now-unwrapped) setter,
           // and renderResult persists loveEquations.* after the guard is gone. Order: gen → pendings → restore → off.
           currentGen++; pendingTensor = null; pendingSexTensor = null;
-          framingAutoOverride = false;
+          setAutoOverride(false);
           cur = null;
           try { restore(snap); }         // storage still guarded → restore renders without persisting
           catch(e){ console.error('[body batch] UI restore failed:', e); }   // but ALWAYS un-patch below — a leaked guard would break the app's persistence

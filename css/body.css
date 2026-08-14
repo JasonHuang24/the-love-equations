@@ -80,14 +80,8 @@
 .bc-score-wrap { text-align: center; padding: 0.5rem 0 0.2rem; }
 .bc-score { font-family: "Playfair Display", Georgia, serif; font-size: clamp(3.2rem, 12vw, 5rem); line-height: 0.9; color: var(--text); }
 .bc-score .unit { font-size: 0.36em; color: var(--text-dim); letter-spacing: 0.04em; }
-.bc-score-band {
-  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0.25rem 0.55rem;
-  max-width: 34rem; margin: 0.6rem auto 0; padding: 0.5rem 0.7rem;
-  border: 0.5px solid var(--border-light); border-radius: var(--radius-md); background: rgba(255,252,247,0.72);
-  font-variant-numeric: tabular-nums;
-}
-.bc-score-band-range { font-size: 13px; font-weight: 800; color: var(--text); }
-.bc-score-band-note { font-size: 10.5px; line-height: 1.45; color: var(--text-dim); }
+/* .bc-score-band / -range / -note deleted 2026-08-14: the score band is no longer rendered anywhere
+   (it is still computed for the bodyScore.v3 payload). The headline is the score + tier, nothing between. */
 .bc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
 .bc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
 .bc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
