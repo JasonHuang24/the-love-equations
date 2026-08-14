@@ -151,10 +151,15 @@
       hipR:24, hipL:23, kneeR:26, kneeL:25, ankleR:28, ankleL:27
     };
 
-    // Skeleton metrics from the pose landmarks alone (normalized coords; within-axis ratios cancel image
-    // aspect). These are the joint-to-joint proportions a photo CAN read without the silhouette.
-    function poseSkeleton(lm){
+    // Skeleton metrics from the pose landmarks alone. Normalized coords: WITHIN-axis ratios (leg:torso,
+    // shoulder:hip) cancel image aspect, but the CROSS-AXIS ratios (symmetry, tilt — a vertical mismatch
+    // over a horizontal span) do NOT — normalized Δy/Δx multiplies the true slope by width/height, the
+    // same unit bug fixed in the worker's framing tilt (2026-08-14 cold review). Pass the image aspect
+    // (width/height) so those two read in pixel space; callers that only use the positional flags
+    // (armNearWaist in the auto-snap loop) may omit it.
+    function poseSkeleton(lm, aspect){
       if (!lm || lm.length < 29) return null;
+      const ar = (Number.isFinite(aspect) && aspect > 0) ? aspect : 1;
       const X = i => lm[i].x, Y = i => lm[i].y, V = i => (lm[i].visibility==null?1:lm[i].visibility);
       const mid = (a,b) => ({ x:(X(a)+X(b))/2, y:(Y(a)+Y(b))/2 });
       const sh = mid(PIDX.shoulderR, PIDX.shoulderL);
@@ -167,13 +172,15 @@
       const legLen   = Math.abs(an.y - hp.y);
       const legTorso = torsoLen ? legLen / torsoLen : null;
       const shoulderHipSkel = hipJointW ? shoulderJointW / hipJointW : null;   // skeletal V (bony, not silhouette)
-      // left/right symmetry: mean vertical mismatch of paired joints, normalized by shoulder span
+      // left/right symmetry: mean vertical mismatch of paired joints over the shoulder span, in PIXEL
+      // space (÷ar converts the normalized cross-axis ratio; without it a landscape frame read ~2.7×
+      // a portrait of the SAME pose). Band re-measured in this unit — see MEASURES.symmetry.
       const span = shoulderJointW || 1;
       const dy = (a,b) => Math.abs(Y(a) - Y(b));
       const symmetry = (dy(PIDX.shoulderR,PIDX.shoulderL) + dy(PIDX.hipR,PIDX.hipL)
-                      + dy(PIDX.kneeR,PIDX.kneeL) + dy(PIDX.wristR,PIDX.wristL)) / 4 / span;
-      // crude validity: shoulders & hips roughly level (frontal, upright) and the key joints visible
-      const tilt = (Math.abs(Y(PIDX.shoulderR)-Y(PIDX.shoulderL)) + Math.abs(Y(PIDX.hipR)-Y(PIDX.hipL))) / 2 / span;
+                      + dy(PIDX.kneeR,PIDX.kneeL) + dy(PIDX.wristR,PIDX.wristL)) / 4 / span / ar;
+      // crude validity readout (superseded by the worker's framing tilt for gating): same pixel-space fix
+      const tilt = (Math.abs(Y(PIDX.shoulderR)-Y(PIDX.shoulderL)) + Math.abs(Y(PIDX.hipR)-Y(PIDX.hipL))) / 2 / span / ar;
       const vis = (V(PIDX.shoulderR)+V(PIDX.shoulderL)+V(PIDX.hipR)+V(PIDX.hipL)+V(PIDX.ankleR)+V(PIDX.ankleL))/6;
       // arms-in flag: a wrist tucked against the torso near waist height corrupts the silhouette waist
       const waistY = sh.y + 0.6*(hp.y - sh.y);
@@ -236,9 +243,14 @@
       { key:'legTorso',   group:'prop', tier:'Tier 3', label:'Leg-to-torso ratio', dir:'band',
         band:[1.35,1.70], disp:[1.05,2.05], below:'Short-legged', above:'Long-legged', fmt:v=>v.toFixed(2),
         note:'slightly-above-average legs preferred, curvilinear (Sorokowski) — longer is not always better' },
+      // symmetry band re-derived 2026-08-14 in PIXEL units (poseSkeleton's aspect fix changed the unit):
+      // measured on the 9 full-body roster reads from a 1029-photo probe — neutral standing bodies
+      // cluster 0.02–0.11; active/asymmetric poses separate clearly (0.27–0.54, e.g. a mic arm or a
+      // lean). Band edge 0.11 = the top of the neutral cluster; disp keeps the old ~2.7× window ratio;
+      // tol 4 keeps the old lenient logistic width. Small-n, same standing as the v2 tilt re-band.
       { key:'symmetry',   group:'prop', tier:'Tier 3', label:'Left–right symmetry', dir:'low', tol:4,
-        band:[0,0.05], disp:[0,0.14], below:'Very even', above:'Asymmetric', fmt:null,
-        note:'pose-sensitive — a hip cock or weight shift inflates it, so it is read leniently and weighted low' }
+        band:[0,0.11], disp:[0,0.30], below:'Very even', above:'Asymmetric', fmt:null,
+        note:'pose-sensitive — a hip cock, weight shift or raised arm inflates it, so it is read leniently and weighted low' }
     ];
     function bandFor(m, sex){ return Array.isArray(m.band) ? m.band : m.band[sex === 'm' ? 'm' : 'f']; }
     function dirFor(m, sex){ return typeof m.dir === 'function' ? m.dir(sex === 'm' ? 'm' : 'f') : (m.dir || 'band'); }
@@ -1925,7 +1937,7 @@
           window.bcSetStatus('No body found — use a clear, full-body, front-facing photo.', true); window.bcResetResult(); return;
         }
         const lm = poseResult.landmarks;
-        const skel = window.bcPoseSkeleton(lm);
+        const skel = window.bcPoseSkeleton(lm, W / H);   // aspect makes the cross-axis symmetry/tilt reads pixel-space
         if (!skel){ window.bcSetStatus('Could not read the pose — try a fuller, clearer shot.', true); window.bcResetResult(); return; }
 
         // The worker evaluates framing in image pixels, joint confidence, stance, and frontal breadth before
@@ -2357,6 +2369,7 @@
         { key:'gate_band',   label:'gate_band' },
         { key:'gate_tilt',   label:'gate_tilt' },
         { key:'gate_yaw',    label:'gate_yaw' },
+        { key:'skel_symmetry', label:'skel_symmetry' },
         { key:'model_raw',   label:'model_raw' },
         { key:'bp',          label:'bp' },
         { key:'cv',          label:'cv' },
@@ -2450,7 +2463,7 @@
       async function processOne(file){
         cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null, sexRes:null, abandoned:false };
         const ts = nowISO();
-        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', routing:'', skin_frac:'', framing:'', gate_band:'', gate_tilt:'', gate_yaw:'', model_raw:'', bp:'', cv:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
+        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', routing:'', skin_frac:'', framing:'', gate_band:'', gate_tilt:'', gate_yaw:'', skel_symmetry:'', model_raw:'', bp:'', cv:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
         let img=null;
         try { img = await decode(file); }
         catch(e){ return blank({ refusal:'could not decode image' }); }
@@ -2515,6 +2528,7 @@
           refusal: scored ? '' : stripTags(cur.statusMsg),
           routing, skin_frac:skin, framing,
           gate_band:gband, gate_tilt:gtilt, gate_yaw:gyaw,
+          skel_symmetry: (scored && BC.metrics && typeof BC.metrics.symmetry==='number' && isFinite(BC.metrics.symmetry)) ? BC.metrics.symmetry.toFixed(4) : '',
           model_raw: cur.modelRaw!=null ? cur.modelRaw.toFixed(3) : '',
           bp, cv,
           sex: scored ? (BC.sex||'unknown') : '',
