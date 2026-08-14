@@ -138,11 +138,17 @@
       // Framing-override provenance (additive payload field; absent on pre-existing saves). A score rated on
       // the "Rate anyway — reduced accuracy" override must not blend into the overall looking like a
       // to-standard read — the caveat rides the payload so the blend stays as honest as the calc panel.
+      // Name the actual override cause: the body's rate-anyway flag can mean non-standard framing OR an
+      // unreadable outline (bodyScore.v3 overrideReason: 'framing' | 'outline' | 'framing+outline'); the
+      // face's only override is framing. Older body payloads without overrideReason read as framing.
+      var bodyCause = body.overrideReason === 'outline' ? 'unreadable outline'
+        : body.overrideReason === 'framing+outline' ? 'non-standard framing and an unreadable outline'
+        : 'non-standard framing';
       var ovr = [];
-      if (face.framingOverride) ovr.push('face');
-      if (body.framingOverride) ovr.push('body');
+      if (face.framingOverride) ovr.push('face (non-standard framing)');
+      if (body.framingOverride) ovr.push('body (' + bodyCause + ')');
       var overrideNote = ovr.length
-        ? '<div class="composite-note" style="color:#A06A12"><strong>&#9888; Reduced-accuracy input.</strong> The ' + ovr.join(' and ') + ' score' + (ovr.length > 1 ? 's were' : ' was') + ' rated on a non-standard-framing override, so the overall is rougher than a to-standard read.</div>'
+        ? '<div class="composite-note" style="color:#A06A12"><strong>&#9888; Reduced-accuracy input.</strong> The ' + ovr.join(' and ') + ' score' + (ovr.length > 1 ? 's were rated on rate-anyway overrides' : ' was rated on a rate-anyway override') + ', so the overall is rougher than a to-standard read.</div>'
         : '';
       // Presentation is the single weighted point estimate and its tier. Payload uncertainty fields remain
       // untouched for the v3 machine contract, but Jason's 2026-08-14 ruling removes them from display.
