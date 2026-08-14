@@ -23,16 +23,12 @@
     <div class="page-header">
       <div class="page-eyebrow">Tool &middot; prototype</div>
       <h1 class="page-title">Body Calculator</h1>
-      <div class="page-sub">Drop in a full-body photo &mdash; on your device, nothing uploaded &mdash; and it reads the frame it can from the silhouette, then scores it two ways: the <strong>Black Pill</strong> lens and a <strong>conventional</strong> one. No sliders. It pairs with the <a href="face.html">Face Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
-      <!-- The line above is this page's canon synopsis, so editing it moves the LE Lab's frozen threshold
-           band. Measured 2026-08-14: every rewording tried moved it (9, 13 and 15 crossings), and the one
-           measured in full carried 3 weak-class crossings, which block under WEAK_BACKLOG_CEILING = 0.
-           Adjudicating those is a Lab lane with its own rulings, so the claim is corrected HERE instead —
-           extractInstrument reads only .page-title, .page-sub and the header's links. -->
-      <div class="bc-page-subnote"><strong>Since 2026-08-14 that is out of date.</strong> There are no longer two lenses and
-        there is no longer a score without a photo. <strong>Every photo gets one number on one scale</strong> &mdash; a percentile
-        of a stated reference population, 5.0 being that population&rsquo;s median, the same currency the
-        <a href="face.html">Face Calc</a> uses. Typed numbers add context to a photo; on their own they are described, not rated.</div>
+      <div class="page-sub">Drop in a full-body photo &mdash; on your device, nothing uploaded &mdash; and it reads the frame it can from the silhouette, then scores it on <strong>one scale</strong>: a percentile of a stated reference population, <strong>5.0</strong> being its median. No sliders. It pairs with the <a href="face.html">Face Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
+      <!-- The line above is this page's canon synopsis — editing it moves the LE Lab's frozen threshold
+           band (extractInstrument reads only .page-title, .page-sub and the header's links). Corrected to
+           the one-scale percentile claim 2026-08-14 and swept in the same commit (--neighbors onto the
+           existing fixture): this rewording created zero new crossings — measured, not assumed. -->
+      <div class="bc-page-subnote"><strong>Typed numbers add context to a photo; on their own they are described, not rated.</strong></div>
     </div>
 
     <div class="content bc-content">

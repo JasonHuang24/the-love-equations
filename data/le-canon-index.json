@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+1d0be694d9e3",
+  "indexVersion": "1.0.0+1fab05c357be",
   "generatedAt": "2026-08-14T22:48:49.000Z",
   "sourcePages": [
     {
@@ -221,7 +221,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "7869a37b87286407949877fdd5e1bfb8882f57c82867785a11c4ca33f8b0ffc0",
+      "sha256": "e7e2a3abef6498783ccee67f5a35383a76cff6a6985abbd0eee61950340fa74e",
       "conceptCount": 1
     },
     {
@@ -232,7 +232,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "d1b4f8d1c4b1dcc9ec017e1baf2e22ee616f3000dafb457156759215b07fc2fe",
+      "sha256": "f4a3df5ef997739b2f994512f21b184abcd078a061254a0814ffceee6b607cb3",
       "conceptCount": 1
     },
     {
@@ -25197,7 +25197,7 @@
       "anchor": "",
       "category": "Instruments",
       "subcategory": "Face Calculator",
-      "synopsis": "Drop in a face — on your device, nothing uploaded — and it reads everything it can from the photo, then scores it two ways: the Black Pill (PSL) lens and a conventional one. No sliders. It pairs with the Body Calc, and the two combine into an Overall looks rating below.",
+      "synopsis": "Drop in a face — on your device, nothing uploaded — and it reads everything it can from the photo, then scores it on one scale: a percentile of a stated reference population, 5.0 being its median. No sliders. It pairs with the Body Calc, and the two combine into an Overall looks rating below.",
       "evidenceType": "Instrument",
       "contentType": "On-device instrument",
       "verdict": "",
@@ -25228,7 +25228,7 @@
       "anchor": "",
       "category": "Instruments",
       "subcategory": "Body Calculator",
-      "synopsis": "Drop in a full-body photo — on your device, nothing uploaded — and it reads the frame it can from the silhouette, then scores it two ways: the Black Pill lens and a conventional one. No sliders. It pairs with the Face Calc, and the two combine into an Overall looks rating below.",
+      "synopsis": "Drop in a full-body photo — on your device, nothing uploaded — and it reads the frame it can from the silhouette, then scores it on one scale: a percentile of a stated reference population, 5.0 being its median. No sliders. It pairs with the Face Calc, and the two combine into an Overall looks rating below.",
       "evidenceType": "Instrument",
       "contentType": "On-device instrument",
       "verdict": "",
