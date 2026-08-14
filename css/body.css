@@ -370,3 +370,10 @@
 /* Per-calculator Reset — small ghost button right-aligned in the panel heading */
 .bc-h .bc-reset { margin-left: auto; font-size: 12px; padding: 4px 10px; font-weight: 600; }
 .bc-h-row { display: flex; }   /* the photo-panel heading hosts the Reset button — full-width so margin-left:auto lands it right */
+
+/* URL field in the Upload lane (restored — the old URL tab was bloat, the field itself wasn't) */
+.bc-url-row { display: flex; gap: 6px; margin-top: 0.6rem; }
+.bc-url-row input {
+  flex: 1; border: 0.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12.5px;
+  background: #fff; color: var(--text); font-family: inherit;
+}

@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/face.css?v=2.1" />
+  <link rel="stylesheet" href="css/face.css?v=2.2" />
 </head>
 <body data-page="face">
   <div data-include="navigation-bar"></div>
@@ -46,7 +46,10 @@
             <div class="lc-src-panel" data-panel="upload">
               <input type="file" id="lc-file" accept="image/*" hidden />
               <div class="lc-drop" id="lc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, well-lit photo here, or click to choose. Saved on your device, never uploaded.</div>
-              <div class="lc-note">Also works: paste an image or an image URL (Ctrl+V), or drop a URL onto the box.</div>
+              <div class="lc-url-row">
+                <input type="text" id="lc-url" placeholder="&hellip;or paste an image URL here" />
+                <button class="lc-btn" id="lc-url-go">Load</button>
+              </div>
             </div>
             <div class="lc-src-panel" data-panel="camera" hidden>
               <button class="lc-btn" id="lc-cam-start"><i class="ti ti-video"></i> Start camera</button>
@@ -1087,8 +1090,16 @@
       img.onerror=()=>{ window.lcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
       img.src=URL.createObjectURL(file);
     }
-    // The Upload lane also takes an image URL — dropped onto the box, or pasted anywhere on the page
-    // (the dedicated URL tab was removed as feature bloat; this is the lightweight replacement).
+    // The Upload lane also takes an image URL — the visible field below the drop zone (the old URL
+    // tab, folded in: the tab was the bloat, the field wasn't), or pasted anywhere on the page.
+    const urlInput=document.getElementById('lc-url');
+    function loadUrlField(){
+      const u=(urlInput.value||'').trim();
+      if (!/^https?:\/\/\S+$/i.test(u)){ window.lcSetStatus('That doesn’t look like an image URL — it should start with http(s)://.', true); return; }
+      window.lcSetStatus('Loading image from URL…'); loadFromUrl(u);
+    }
+    document.getElementById('lc-url-go').addEventListener('click', loadUrlField);
+    urlInput.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); loadUrlField(); } });
     function loadFromUrl(u){
       const img=new Image(); img.crossOrigin='anonymous';
       img.onload=()=>handleImage(img);

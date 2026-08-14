@@ -11,7 +11,7 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/body.css?v=2.2" />
+  <link rel="stylesheet" href="css/body.css?v=2.3" />
 </head>
 <body data-page="body">
   <div data-include="navigation-bar"></div>
@@ -52,7 +52,10 @@
             <div class="bc-src-panel" data-panel="upload">
               <input type="file" id="bc-file" accept="image/*" hidden />
               <div class="bc-drop" id="bc-drop"><i class="ti ti-photo-up"></i>Drop a clear, front-facing, <strong>full-body</strong> photo here &mdash; head to feet, standing square. Upper-body shots still work, at reduced accuracy. Click to choose. Saved on your device, never uploaded.</div>
-              <div class="bc-note">Also works: paste an image or an image URL (Ctrl+V), or drop a URL onto the box.</div>
+              <div class="bc-url-row">
+                <input type="text" id="bc-url" placeholder="&hellip;or paste an image URL here" />
+                <button class="bc-btn" id="bc-url-go">Load</button>
+              </div>
             </div>
             <div class="bc-src-panel" data-panel="camera" hidden>
               <button class="bc-btn" id="bc-cam-start"><i class="ti ti-video"></i> Start camera</button>
@@ -2084,8 +2087,16 @@
       img.onerror=()=>{ window.bcSetStatus('Could not read that image.', true); URL.revokeObjectURL(img.src); };
       img.src=URL.createObjectURL(file);
     }
-    // The Upload lane also takes an image URL — dropped onto the box, or pasted anywhere on the page
-    // (the dedicated URL tab was removed as feature bloat; this is the lightweight replacement).
+    // The Upload lane also takes an image URL — the visible field below the drop zone (the old URL
+    // tab, folded in: the tab was the bloat, the field wasn't), or pasted anywhere on the page.
+    const urlInput=document.getElementById('bc-url');
+    function loadUrlField(){
+      const u=(urlInput.value||'').trim();
+      if (!/^https?:\/\/\S+$/i.test(u)){ window.bcSetStatus('That doesn’t look like an image URL — it should start with http(s)://.', true); return; }
+      window.bcSetStatus('Loading image from URL…'); loadFromUrl(u);
+    }
+    document.getElementById('bc-url-go').addEventListener('click', loadUrlField);
+    urlInput.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); loadUrlField(); } });
     function loadFromUrl(u){
       const img=new Image(); img.crossOrigin='anonymous';
       img.onload=()=>{ handleImage(img); };
