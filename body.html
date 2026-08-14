@@ -11,7 +11,10 @@
   <script src="js/include.js?v=1.0" defer></script>
   <script src="js/composite-score.js?v=1.0" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/body.css?v=2.3" />
+  <!-- NOT deferred: the inline scoring core below runs during parse and calls bodyArmBand. The pose
+       worker importScripts() this same file — one definition of the arm-band predicate, two contexts. -->
+  <script src="js/body-arm-band.js?v=1.0"></script>
+  <link rel="stylesheet" href="css/body.css?v=2.4" />
 </head>
 <body data-page="body">
   <div data-include="navigation-bar"></div>
@@ -26,10 +29,10 @@
            measured in full carried 3 weak-class crossings, which block under WEAK_BACKLOG_CEILING = 0.
            Adjudicating those is a Lab lane with its own rulings, so the claim is corrected HERE instead —
            extractInstrument reads only .page-title, .page-sub and the header's links. -->
-      <div class="bc-page-subnote"><strong>Since 2026-08-14 that is only half true.</strong> The two lenses survive on the
-        silhouette-geometry read and the numbers-only read. A <strong>trained-model photo score has one scale and no lens</strong>
-        &mdash; it is a percentile of a stated reference population, 5.0 being that population&rsquo;s median, the same
-        currency the <a href="face.html">Face Calc</a> uses.</div>
+      <div class="bc-page-subnote"><strong>Since 2026-08-14 that is out of date.</strong> There are no longer two lenses and
+        there is no longer a score without a photo. <strong>Every photo gets one number on one scale</strong> &mdash; a percentile
+        of a stated reference population, 5.0 being that population&rsquo;s median, the same currency the
+        <a href="face.html">Face Calc</a> uses. Typed numbers add context to a photo; on their own they are described, not rated.</div>
     </div>
 
     <div class="content bc-content">
@@ -38,7 +41,7 @@
       <details class="calc-fold">
         <summary><i class="ti ti-alert-triangle" aria-hidden="true"></i> Read this first &mdash; methodology &amp; limitations<i class="ti ti-chevron-down calc-fold-chev" aria-hidden="true"></i></summary>
         <div class="calc-fold-body bc-caveat-body">
-        <strong>The body is harder to read than the face.</strong> This is a mirror of two methodologies, not a verdict on a person. It estimates the frame straight from the image &mdash; joint positions from 33 pose landmarks, plus the body outline from an on-device segmentation mask &mdash; to compute ratios the literature actually uses: <strong>waist-to-hip</strong> (Singh 1993), a <strong>waist-to-height adiposity proxy</strong> (Tov&eacute;e &amp; Cornelissen show body-fat is the single strongest cue for female bodies), the <strong>shoulder-to-waist V-taper</strong> (Dixson) and leg-to-torso (Sorokowski). But the ceiling is lower than the face: <strong>clothing, pose, camera angle and arms-at-your-sides all corrupt the silhouette</strong>, a single frontal view has no depth (it can&rsquo;t see a gut side-on), and true body-fat / muscle / height can&rsquo;t be measured from pixels &mdash; only proxied. Unsupported crops and seated, bent, or side-on poses are refused rather than graded from extrapolated joints. When a trained model (<code>models/body-beauty.onnx</code>) is present it scores the headline &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the geometry scores both. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; and unlike the face, nothing credible <em>rates</em> a body&rsquo;s aesthetics. For the body-fat percentage it can only proxy, a caliper or BIA check at a gym or clinic gives a usable number &mdash; or, to track it at home, a body-fat smart scale like the <a href="https://www.wyze.com/products/wyze-scale-x" target="_blank" rel="noopener">Wyze Scale X</a> (best for trends under consistent conditions, not a precise one-off reading). For best results: <strong>face forward, full body in frame, arms slightly away from your sides, fitted clothing.</strong>
+        <strong>The body is harder to read than the face.</strong> This is a mirror of two methodologies, not a verdict on a person. It estimates the frame straight from the image &mdash; joint positions from 33 pose landmarks, plus the body outline from an on-device segmentation mask &mdash; to compute ratios the literature actually uses: <strong>waist-to-hip</strong> (Singh 1993), a <strong>waist-to-height adiposity proxy</strong> (Tov&eacute;e &amp; Cornelissen show body-fat is the single strongest cue for female bodies), the <strong>shoulder-to-waist V-taper</strong> (Dixson) and leg-to-torso (Sorokowski). But the ceiling is lower than the face: <strong>clothing, pose, camera angle and arms-at-your-sides all corrupt the silhouette</strong>, a single frontal view has no depth (it can&rsquo;t see a gut side-on), and true body-fat / muscle / height can&rsquo;t be measured from pixels &mdash; only proxied. Unsupported crops and seated, bent, or side-on poses are refused rather than graded from extrapolated joints. When a trained model (<code>models/body-beauty.onnx</code>) is present it scores the headline &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; when it can&rsquo;t &mdash; a bare torso, a cropped shot, no model loaded &mdash; the silhouette geometry scores it instead. Either way the number is a <strong>percentile of a stated reference population</strong> of real photographs, and the page names which population it used. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; and unlike the face, nothing credible <em>rates</em> a body&rsquo;s aesthetics. For the body-fat percentage it can only proxy, a caliper or BIA check at a gym or clinic gives a usable number &mdash; or, to track it at home, a body-fat smart scale like the <a href="https://www.wyze.com/products/wyze-scale-x" target="_blank" rel="noopener">Wyze Scale X</a> (best for trends under consistent conditions, not a precise one-off reading). For best results: <strong>face forward, full body in frame, arms slightly away from your sides, fitted clothing.</strong>
         </div>
       </details>
 
@@ -118,10 +121,9 @@
 
         <!-- RESULT COLUMN -->
         <div class="bc-panel">
-          <div class="bc-variant">
-            <button class="active bp" data-prof="blackpill"><i class="ti ti-skull"></i> Black Pill &middot; Frame</button>
-            <button class="cv" data-prof="conventional"><i class="ti ti-mood-smile"></i> Conventional</button>
-          </div>
+          <!-- The Black Pill / Conventional lens toggle was removed 2026-08-14: there is one score on one
+               scale on every route now (a percentile of a stated reference population), so a control that
+               cannot move the number would imply a distinction that no longer exists. -->
           <div id="bc-result">
             <div class="bc-empty"><i class="ti ti-body-scan"></i>No body yet. Drop a full-body or upper-body photo and the score appears here.</div>
           </div>
@@ -202,23 +204,14 @@
     // Does an arm sit inside the waist or hip measurement band? The alignment guide and the silhouette scan
     // have to agree about this or the guide green-lights a pose the scan then refuses — and it did: the guide
     // checked WRISTS only (poseSkeleton.armNearWaist) while the scan zeroes the waist width on an ELBOW OR
-    // wrist inside the band, and 68% of every refusal in the 2026-08-14 battery was that one cause. This is
-    // extractSilhouette's `armIn` predicate (js/body-pose-worker.js), landmark-only so the live probe can run
-    // it without a silhouette. Keep the two in step. (DOM-free, testable.)
+    // wrist inside the band, and 68% of every refusal in the 2026-08-14 battery was that one cause. The page
+    // then carried a COPY of the scan's predicate, which is the same failure one edit away. There is now a
+    // single definition — js/body-arm-band.js, loaded here and importScripts()'d by the worker — and this is
+    // the guide's boolean view of it. (DOM-free, testable.)
     function armOverWaist(lm){
-      if (!lm || lm.length < 25) return false;
-      const need = [11,12,23,24];
-      if (!need.every(i => lm[i] && Number.isFinite(lm[i].x) && Number.isFinite(lm[i].y))) return false;
-      const shoulderY = (lm[11].y+lm[12].y)/2, hipY = (lm[23].y+lm[24].y)/2, span = hipY - shoulderY;
-      if (!(span > 0.01)) return false;
-      const centerX = (lm[11].x+lm[12].x+lm[23].x+lm[24].x)/4;
-      const torsoHalf = Math.max(Math.abs(lm[11].x-lm[12].x), Math.abs(lm[23].x-lm[24].x))/2;
-      const inBand = (loY, hiY) => [13,14,15,16].some(function(i){
-        const a = lm[i];
-        return a && Number.isFinite(a.x) && Number.isFinite(a.y)
-          && a.y >= loY && a.y <= hiY && Math.abs(a.x - centerX) < torsoHalf*1.1;
-      });
-      return inBand(shoulderY + 0.42*span, hipY - 0.06*span) || inBand(hipY - 0.04*span, hipY + 0.22*span);
+      if (typeof bodyArmBand !== 'function') throw new Error('js/body-arm-band.js did not load');
+      const a = bodyArmBand(lm);
+      return a.waistArm || a.hipArm;
     }
 
     // Combine silhouette widths (mask PIXELS — so the cross-axis waist-to-height ratio is correct) with the
@@ -339,22 +332,28 @@
       'Anything under clothing &mdash; baggy or structured clothes redraw the silhouette'
     ];
 
-    // ── LENS PROFILES — GEOMETRY AND SELF-REPORT ONLY (2026-08-14 percentile remap) ──────────────
-    // These two curves no longer touch the PHOTO/trained-model path: that path is now a percentile of a
-    // stated reference population (see REF_RAW below), with no contrast curve anywhere in it. What is
-    // left here serves the silhouette-geometry route and the numbers-only self-report read, whose 0–100
-    // raws are weighted rubric scores, NOT percentiles of any measured population — so they have nothing
-    // to be a percentile of, and re-mapping them would be inventing a reference. Their turn is a separate
-    // job; until then the machinery below is theirs alone.
+    // ── THE TWO GEOMETRY WEIGHTINGS (2026-08-14 · the lens CURVES are gone) ──────────────────────
+    // These were the "Black Pill" and "Conventional" lenses. What survives is the only part of them that
+    // was ever a measurement decision: how much each cue counts. The contrast/gamma sigmoids and the 9.0
+    // vs 10.0 ceilings are DELETED — every displayed body score is now a percentile of a stated reference
+    // population, on both photo routes and inside the hybrid blend, so there is nothing left for a curve
+    // to do but spread a number away from what the population says.
+    //
+    // AND THE SCORE NO LONGER PICKS ONE. Neither weighting is fitted: both are reasoned vectors over the
+    // same five measured cues, and shipping either one AS the geometry score would promote an unfitted
+    // preference to a verdict while the other, equally reasoned, sat one click away disagreeing by a
+    // point. The score is their MIDPOINT (geomRawFor) and the reference table below is measured the same
+    // way, so "50th percentile" means the same thing in both. The two vectors stay named and separate
+    // because they are the provenance of that midpoint, not because a user can choose between them.
     const PROFILES = {
-      // contrast = sigmoid exponent (>1 spreads toward extremes). gamma shifts the middle.
-      // Black Pill = the looksmaxxing "frame" lens: V-taper, broad shoulders, leanness dominate.
-      blackpill: { name:'Black Pill · Frame', unit:'/ 10', gamma:1.0, contrast:1.7, scaleMax:9.0,
+      // Black Pill = the looksmaxxing "frame" reading: V-taper, broad shoulders, leanness dominate.
+      blackpill: { name:'Black Pill · Frame',
         w:{ whtr:1.3, whr:0.8, vTaper:1.5, shoulderHip:1.3, legTorso:0.7, symmetry:0.3 } },
-      // Conventional = balanced health/proportion read: leanness + waist-to-hip + symmetry weigh more evenly.
-      conventional: { name:'Conventional', unit:'/ 10', gamma:0.95, contrast:1.4, scaleMax:10,
+      // Conventional = balanced health/proportion reading: leanness + waist-to-hip + symmetry weigh more evenly.
+      conventional: { name:'Conventional',
         w:{ whtr:1.4, whr:1.2, vTaper:0.8, shoulderHip:0.7, legTorso:0.7, symmetry:0.5 } }
     };
+    const GEOM_LENSES = ['blackpill', 'conventional'];
 
     // per-metric attractiveness score → 0..100 (the fallback breakdown score). Directional, NOT
     // closeness-to-typical: a 'band' cue (true optimum) is a gaussian on band-distance; a 'low'/'high'
@@ -369,27 +368,18 @@
       const t = (dir === 'high' ? (v - c) : (c - v)) / scale;   // + = toward the attractive pole
       return 100 / (1 + Math.exp(-t));                          // 50 at band centre, →100 good way, →0 bad way
     }
-    function gradeBody(metrics, sex, profKey){
-      const prof = PROFILES[profKey];
-      let num=0, den=0; const subs={};
+    // Per-cue attractiveness scores, 0–100, keyed by measure. Weighting-independent: which cues exist and
+    // what each is worth depends only on the metrics and the sex, never on a lens. `null`/absent cues are
+    // simply not in the object, and every weighted read below renormalizes over what IS there — so a torso
+    // crop or an arm-hidden waist thins the read instead of scoring a missing cue as zero. (testable)
+    function bodySubs(metrics, sex){
+      const subs = {};
       if (metrics){ MEASURES.forEach(function(m){
         if (m.scored === false) return;                 // measured-but-not-scored (uncalibrated WHtR units bug)
         const s = scoreMeasure(metrics[m.key], m, sex); if (s==null) return;
-        subs[m.key]=s; num += prof.w[m.key]*s; den += prof.w[m.key];
+        subs[m.key] = s;
       }); }
-      let x = (den ? num/den : 0) / 100;
-      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
-      x = Math.pow(x, prof.gamma);
-      return { score: 1 + (prof.scaleMax-1)*x, raw:x*100, subs:subs };
-    }
-
-    // ── Lens curve for the GEOMETRY and SELF-REPORT raws (0–100 → 1–scaleMax). NOT the photo path. ──
-    function mapModelScore(t, profKey){
-      const prof = PROFILES[profKey];
-      let x = Math.max(0, Math.min(1, t));
-      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
-      x = Math.pow(x, prof.gamma);
-      return 1 + (prof.scaleMax-1)*x;
+      return subs;
     }
 
     // ══ PHOTO DISPLAY MAPPING — 2026-08-14 percentile remap ══════════════════════════════════════════
@@ -468,18 +458,81 @@
       + 'deliberately <em>not</em> the reference &mdash; studio shots read far higher through this pipeline than ordinary '
       + 'photography does, and using them would put an average real photo near the floor.</div>';
 
-    // Percentile of a raw model output within the reference population, in [0,1]. Binary search + linear
-    // interpolation between knots; PINNED (not extrapolated) outside the reference's own observed range,
-    // because we have no evidence about raws the reference never produced. (DOM-free, testable.)
-    function refPercentile(raw){
-      const last = REF_RAW.length - 1;
-      if (!(raw > REF_RAW[0])) return 0;
-      if (raw >= REF_RAW[last]) return 1;
+    // ══ THE GEOMETRY INSTRUMENT'S OWN REFERENCE — built 2026-08-14 ═══════════════════════════════════
+    // The silhouette geometry is a SECOND instrument reading the SAME population, and its raw is not on the
+    // model's axis, so it gets its own quantile function. Same corpus as REF_RAW (the 499 Commons files),
+    // same browser pipeline — same pose worker, same silhouette scan, same rubric, same sex-to-half-mass
+    // design correction. Only the row filter differs:
+    //   POPULATION  EVERY scored read that produced at least one cue — full-framed and torso-cropped,
+    //               waist visible or hidden, clothed and bare. 385 of the 499 (90 refused at the pose gate,
+    //               24 produced no cue at all). 212 female / 173 male, each reweighted to half the mass.
+    //               Weighted median raw 43.409.
+    //   WHY SO WIDE — decided on evidence, after two narrower populations were built and REJECTED. A
+    //               reference of clean full-body waist-visible reads is the instrument at its best, and it
+    //               FLOORED the instrument's own output: 28% of the 166-photo battery landed at exactly
+    //               1.00, because the thin reads the geometry route actually meets (a torso crop, an arm
+    //               across the waist) fall below such a table's floor. On this population the same battery
+    //               floors 3%. The reference has to run the same lottery of surviving cues the user's photo
+    //               does, or it is a scale for a photograph nobody took.
+    //   CLOTHED vs BARE — MEASURED, because this route fires disproportionately on bare-torso shots (a
+    //               shirtless photo is sent here ON PURPOSE: the trained model is clothed-trained). 315
+    //               clothed read median raw 45.9, 70 bare read 39.4 — bare lands about 0.48 display points
+    //               lower, bootstrap 95% CI on the gap [−16.3, −1.1] raw, which excludes zero. Real, then,
+    //               but poorly pinned (that CI spans a factor of fifteen) and small beside this
+    //               instrument's own slop. POOLED AT THEIR NATURAL PROPORTIONS: reweighting to 50/50 would
+    //               assert that half of all photographs are shirtless, and correcting by a point estimate
+    //               that loose would be worse than stating it. Stated on the page.
+    //   WHICH CUES SURVIVED MOVES THE READ, and it is the biggest thing wrong with the geometry route.
+    //               Measured across the 385: a full five-cue read sits 13 percentile points BELOW the
+    //               middle; a read that lost its waist to an arm sits 11 ABOVE; leg-and-symmetry only sits
+    //               29 above; shoulder-breadth only sits 41 BELOW. The rubric renormalizes over what
+    //               survives and what survives is not equally strict. A property of the rubric, older than
+    //               this remap — the percentile scale is what made it visible. It is told to the user in
+    //               the override caveat that already names the missing cues, and NOT silently corrected:
+    //               these offsets do not share a sign, let alone a size.
+    //   ERROR       bootstrapped over 400 resamples, the displayed score at a fixed raw carries sd 0.09 in
+    //               the middle and 0.16 in the tails — tighter than the model table's, on more rows.
+    //   BIAS        the same population as REF_RAW, so the same bias: people photographed in public,
+    //               Western-skewed, dressed for the occasion, no per-person de-duplication.
+    const GEOM_REF_RAW = [0,0.431,1.567,3.762,7.877,8.913,10.839,11.727,12.764,15.109,18.105,18.589,19.941,
+      21.416,23.161,24.546,24.928,25.454,26.492,26.919,27.812,28.129,28.447,29.71,30.08,30.77,31.849,
+      32.895,33.477,33.754,34.254,34.69,35.06,35.525,37.052,37.614,38.106,38.427,38.888,39.192,39.37,
+      39.889,40.436,40.723,40.975,41.244,41.473,42.099,42.519,43.113,43.409,43.863,45.118,45.604,46.063,
+      46.456,47.077,47.994,48.534,48.764,49.158,49.385,50.503,50.97,51.725,53.229,54.324,54.508,55.196,
+      56.068,57.29,58.314,58.76,60.147,60.425,61.036,62.422,62.925,64.006,65.061,65.52,66.287,67.915,
+      68.618,70.901,71.622,72.554,73.841,74.461,75.556,76.643,77.343,78.714,79.239,80.415,81.38,82.668,
+      83.064,85.812,87.666,97.63];
+    // The geometry route's reference, stated on the page — same contract as REF_POP_NOTE.
+    const GEOM_POP_NOTE = '<div class="bc-missing"><strong>What this percentile is measured against:</strong> '
+      + 'the same corpus as the trained-model score, read by the same instrument that just read your photo. '
+      + '<strong>385 real-world photographs</strong> &mdash; every Wikimedia Commons &ldquo;standing women / men at full '
+      + 'length&rdquo; image whose outline this calculator could measure <em>anything</em> from. 212 women / 173 men, '
+      + 'reweighted to half each. <strong>5.0 is that population&rsquo;s median.</strong> '
+      + 'That deliberately includes the awkward ones &mdash; cropped shots, arms across the waist &mdash; because your '
+      + 'photo runs the same gauntlet, and a reference of only perfect photographs would put most real ones near the floor. '
+      + 'The cost is that <strong>which measurements survived moves the number</strong>: a read with everything visible sits '
+      + 'lower than one where an arm hid the waist. The page says which cues it lost. '
+      + '315 of the 385 are clothed and 70 bare-torso, kept in that proportion &mdash; bare reads about half a display point '
+      + 'lower, which we measured rather than assumed, and left uncorrected because the measurement is too loose to correct on. '
+      + 'Same caveat as the other scale: these are people photographed in public, '
+      + 'skewed Western and dressed for the occasion. A photography population, not a census.</div>';
+
+    // Percentile of a raw within a 101-knot quantile table, in [0,1]. Binary search + linear interpolation
+    // between knots; PINNED (not extrapolated) outside the table's own observed range, because we have no
+    // evidence about raws the reference never produced. ONE implementation, two tables — the trained model
+    // and the silhouette geometry are two instruments reading the same population, and each needs its own
+    // quantile function because their raws are not on the same axis. (DOM-free, testable.)
+    function tablePercentile(table, raw){
+      const last = table.length - 1;
+      if (!(raw > table[0])) return 0;
+      if (raw >= table[last]) return 1;
       let lo = 0, hi = last;
-      while (hi - lo > 1){ const mid = (lo + hi) >> 1; if (REF_RAW[mid] <= raw) lo = mid; else hi = mid; }
-      const span = REF_RAW[hi] - REF_RAW[lo];
-      return (lo + (span > 0 ? (raw - REF_RAW[lo]) / span : 0)) / last;
+      while (hi - lo > 1){ const mid = (lo + hi) >> 1; if (table[mid] <= raw) lo = mid; else hi = mid; }
+      const span = table[hi] - table[lo];
+      return (lo + (span > 0 ? (raw - table[lo]) / span : 0)) / last;
     }
+    function refPercentile(raw){ return tablePercentile(REF_RAW, raw); }        // trained-model raw → percentile
+    function geomPercentile(raw){ return tablePercentile(GEOM_REF_RAW, raw); }  // geometry rubric raw → percentile
     // Inverse standard-normal CDF — Acklam's rational approximation (|error| < 1.15e-9 over the whole
     // range). Turns a percentile back into a score whose SPACING means something; without it, equal score
     // steps would not be equal population steps. (DOM-free, testable.)
@@ -525,11 +578,49 @@
       const v = Math.abs(n) % 100, d = v % 10;
       return n + ((v >= 11 && v <= 13) ? 'th' : d === 1 ? 'st' : d === 2 ? 'nd' : d === 3 ? 'rd' : 'th');
     }
-    // ONE display map for a 0–100 photo/blend raw. On the model route that raw is a percentile of the
-    // reference population; on the geometry / self-report routes it is a lens-curve rubric score. Every
-    // caller goes through here so the two can never be silently swapped. (DOM-free, testable.)
-    function displayScore(raw0to100, profKey, usingModel){
-      return usingModel ? pctToScore(raw0to100) : mapModelScore(raw0to100 / 100, profKey);
+    // ══ MULTI-PHOTO ══════════════════════════════════════════════════════════════════════════════════
+    // A shot is one analysed photo's contribution to the score, and it is stored as the INPUT to a
+    // percentile, never as a percentile: a model shot keeps its raw model output, a geometry shot keeps
+    // its metrics. That is not bookkeeping fussiness — the geometry percentile is sex-conditional, so a
+    // frozen number would keep a stale sex forever when the face classifier lands late or the user flips
+    // the toggle. Both are re-derived on every render instead.
+    //
+    // AVERAGING STAGE — the design decision, made explicitly: shots are averaged at the PERCENTILE stage,
+    // and photos on DIFFERENT routes average together.
+    //   · Two raws from different routes are not commensurable at all (a model output and a rubric score
+    //     share neither units nor scale), while two percentiles are: each says where this photo puts this
+    //     body inside the SAME corpus of real photographs, read by a different instrument (the two tables
+    //     differ only in which of those photographs each instrument could score at all). Refusing to mix
+    //     them would mean silently dropping a photo the user just added — a bare-torso shot alongside a clothed one is the
+    //     ordinary case for a body, not an edge case — and silent dropping is exactly the failure the face
+    //     lane's flag-lifetime bug was.
+    //   · The cost, stated: the mean of percentiles is not the percentile of the mean raw. The Face Calc
+    //     averages raws (one route, one instrument, so it can). Within a single route this gives a slightly
+    //     different — and slightly more outlier-resistant — answer than the face convention would.
+    // What repeated photos buy is a steadier estimate of one person's position, not a better instrument:
+    // the single-photo reliability of the underlying model is untouched by this lane.
+    const MAX_SHOTS = 3;
+    // shot = { route:'model', raw:<model output> } | { route:'geometry', metrics:<ratios object> }
+    function shotPercentile(shot, sex){
+      if (!shot) return null;
+      if (shot.route === 'model') return Number.isFinite(shot.raw) ? 100 * refPercentile(shot.raw) : null;
+      if (!shot.metrics) return null;
+      const raw = geomRawFor(shot.metrics, sex);
+      return raw == null ? null : 100 * geomPercentile(raw);
+    }
+    // Mean percentile over the shots, 0–100, or null when none resolve. (DOM-free, testable.)
+    function photoPercentile(shots, sex){
+      if (!shots || !shots.length) return null;
+      let sum = 0, n = 0;
+      for (let i = 0; i < shots.length; i++){
+        const p = shotPercentile(shots[i], sex);
+        if (Number.isFinite(p)){ sum += p; n++; }
+      }
+      return n ? sum / n : null;
+    }
+    // Does this shot set depend on which sex is read? Only the geometry route's bands do. (testable)
+    function shotsNeedSex(shots){
+      return !!shots && shots.some(function(s){ return s && s.route !== 'model'; });
     }
     // RGBA bytes (size×size) → CHW float32 tensor, ImageNet-normalized. (DOM-free, testable.)
     function preprocessToTensor(rgba, size, mean, std){
@@ -559,7 +650,9 @@
     // face-keypoint indices in BlazePose's 33-point set (0 nose · 1-6 eyes · 7-8 ears · 9-10 mouth)
     const FACE_PIDX = [0,1,2,3,4,5,6,7,8,9,10];
 
-    // Body tiers. Black Pill ladder is sex-aware (the body-looksmaxxing vocabulary); conventional is plain.
+    // Body tier ladder, sex-aware (the body-looksmaxxing vocabulary). There is ONE ladder now: the
+    // "conventional" tier names went with the lens they belonged to, and a second set of words for the
+    // same number was never a second measurement. Rungs are unchanged.
     function frameTier(s, sex){
       const f = sex === 'f';
       if (s<3.0) return 'Sub-tier';
@@ -570,16 +663,6 @@
       if (s<8.5) return f ? 'Stacy-tier physique' : 'Chad-tier physique';
       return f ? 'Elite / IG-tier' : 'Elite / Zyzz-tier';
     }
-    function convTier(s){
-      if (s<3) return 'Well below average';
-      if (s<4.5) return 'Below average';
-      if (s<5.5) return 'About average';
-      if (s<6.5) return 'Above average';
-      if (s<8) return 'Fit / attractive';
-      if (s<9) return 'Very fit';
-      return 'Exceptional';
-    }
-    function tierFor(p, s, sex){ return p === 'blackpill' ? frameTier(s, sex) : convTier(s); }
 
     // ═══════════════════════════════════════════════════════════════════════════════════════════
     // SELF-REPORTED INPUT LAYER (hybrid). Pure, DOM-free, testable. This is a provisional rubric,
@@ -667,14 +750,25 @@
       if (massSc == null || leanSc == null) return null;
       return INPUT_SCORE_W.mass * massSc + INPUT_SCORE_W.leanness * leanSc;
     }
-    // The PHOTO tier's PRE-lens 0–100 raw, reconstructed from gradeBody()'s own per-metric `subs` and the
-    // profile weights — i.e. exactly gradeBody's internal num/den, WITHOUT reaching into gradeBody (spec
-    // constraint 4). The blend happens on this pre-lens value; the lens curve is applied once, afterwards.
-    // A Node test asserts mapModelScore(geomPreLens(subs,p)/100, p) === gradeBody(...).score. (testable)
-    function geomPreLens(subs, profKey){
+    // One weighting's 0–100 rubric read over whatever cues survived, renormalized over their weights. (testable)
+    function geomWeighted(subs, profKey){
       const w = PROFILES[profKey].w; let num = 0, den = 0;
       Object.keys(subs || {}).forEach(function(k){ if (w[k] != null){ num += w[k]*subs[k]; den += w[k]; } });
       return den ? num/den : 0;
+    }
+    // THE geometry raw: the midpoint of the two weightings (see PROFILES for why it is a midpoint and not
+    // a choice). This is the quantity GEOM_REF_RAW tabulates, so the two can never drift apart. Note it is
+    // SEX-CONDITIONAL all the way down — scoreMeasure bands differ by sex — which is why an unresolved sex
+    // still shows a male–female range on this route while the model route needs none.
+    // NULL when not a single cue survived. The old code returned 0 there — a real number, on the scale,
+    // that displayed as 1.0 "Sub-tier" for a photo the instrument had measured NOTHING on. A read with no
+    // cues is not a low score, it is an absent one, and every caller treats null as "no number". (testable)
+    function geomRawFor(metrics, sex){
+      const subs = bodySubs(metrics, sex);
+      if (!Object.keys(subs).length) return null;
+      let sum = 0;
+      for (let i = 0; i < GEOM_LENSES.length; i++) sum += geomWeighted(subs, GEOM_LENSES[i]);
+      return sum / GEOM_LENSES.length;
     }
 
     // Verifiability-weighted blend. A typed BF% (plus scale/tape height and weight) receives 35%; an
@@ -687,35 +781,42 @@
       return w * input0to100 + (1 - w) * photo0to100;
     }
 
-    // Broad sensitivity bands. The CNN photo term uses the independently measured median Connor-panel
-    // spread (21/100). Geometry has no fitted error model, so it gets a wider 25/100 precaution. Input
-    // margins (12 typed / 20 visual) are REASONED, not empirical; weighted sums are conservative envelopes,
-    // not confidence intervals. A framing override widens the photo margin another 5 raw points.
-    // `model` is 21 CONNOR LABEL POINTS and no longer describes this axis: since the 2026-08-14 remap the
-    // model route's 0–100 raw is a PERCENTILE of the reference population, not a label. Converted rather
-    // than guessed — the empirical label→reference-percentile relation over the 658 Connor photos that
-    // clear this pipeline's model route is pct = 0.507·label + 61.1, so 21 label points ≈ 10.7 percentile
-    // points → `modelPct` 11. Measured where Connor actually sits (the upper half of the reference), so it
-    // is likely an UNDER-statement lower down, and it is a payload-only field: nothing renders it and
-    // js/composite-score.js does not read `band` at all. The 21 stays for the record.
-    const SCORE_BAND_RAW = { model:21, modelPct:11, geometry:25, inputMeasured:12, inputPicker:20, framing:5 };
+    // Broad sensitivity bands. EVERY axis here is now PERCENTILE POINTS, because every displayed score is. The two original numbers
+    // are kept for the record and neither is used:
+    //  · `model` = 21 CONNOR LABEL POINTS. Converted, not guessed — the empirical label→percentile relation
+    //    over the 658 Connor photos that clear this pipeline's model route is pct = 0.507·label + 61.1, so
+    //    21 label points ≈ 10.7 percentile points → `modelPct` 11. Measured where Connor sits (the upper
+    //    half of the reference), so it likely UNDER-states lower down.
+    //  · `geometry` = 25 RUBRIC POINTS, an invented precaution ("no fitted error model, so go wider").
+    //    Converted through GEOM_REF_RAW it is ±35 percentile points at the middle — p15 to p85. That is not
+    //    a conversion error: the rubric's population spread is narrow (IQR ≈ 30 raw points), so ±25 of them
+    //    always DID mean "this read barely constrains anything". The contrast curve hid it; the percentile
+    //    scale states it. Kept at its honest width rather than quietly trimmed to look useful.
+    // Input margins (12 typed / 20 visual) are REASONED, not empirical, and ride the same 0–100 axis the
+    // self-report index does. Weighted sums are conservative envelopes, not confidence intervals. A framing
+    // override widens the photo margin another 5 points. All of it is PAYLOAD-ONLY: nothing renders a band
+    // (Jason, 2026-08-14) and js/composite-score.js does not read the field at all.
+    const SCORE_BAND_RAW = { model:21, modelPct:11, geometry:25, geometryPct:35, inputMeasured:12, inputPicker:20, framing:5 };
     function inputRawUncertainty(source){ return source === 'measured' ? SCORE_BAND_RAW.inputMeasured : SCORE_BAND_RAW.inputPicker; }
-    function photoRawUncertainty(usingModel, framingOverride){
-      return (usingModel ? SCORE_BAND_RAW.modelPct : SCORE_BAND_RAW.geometry) + (framingOverride ? SCORE_BAND_RAW.framing : 0);
+    // `anyGeometry` — with multi-photo, a shot set can mix routes. Take the WIDER of the two rather than
+    // averaging: one silhouette read in the set is enough to make the estimate the loose kind. No reduction
+    // for a 2- or 3-photo set either, because nothing here has measured what repeat photos buy on the BODY
+    // (the face's per-count half-widths came from a 166-person study this instrument has no equivalent of).
+    function photoRawUncertainty(anyGeometry, framingOverride){
+      return (anyGeometry ? SCORE_BAND_RAW.geometryPct : SCORE_BAND_RAW.modelPct) + (framingOverride ? SCORE_BAND_RAW.framing : 0);
     }
-    function blendedRawUncertainty(source, usingModel, framingOverride){
+    function blendedRawUncertainty(source, anyGeometry, framingOverride){
       const w = inputBlendWeight(source);
-      return w * inputRawUncertainty(source) + (1 - w) * photoRawUncertainty(usingModel, framingOverride);
+      return w * inputRawUncertainty(source) + (1 - w) * photoRawUncertainty(anyGeometry, framingOverride);
     }
-    // Never rendered (Jason, 2026-08-14) but still carried in bodyScore.v3, so it must ride the SAME
-    // display map as the score it brackets — `usingModel` picks the percentile scale, exactly as the
-    // headline does. A band computed through the lens curve around a percentile centre would be a range
-    // in units the score is not in.
-    function makeScoreBand(centerRaw, profKey, halfRaw, usingModel){
-      const margin = Math.max(0, halfRaw || 0);
-      const lo = Math.max(0, Math.min(100, centerRaw - margin));
-      const hi = Math.max(0, Math.min(100, centerRaw + margin));
-      return { low:displayScore(lo, profKey, usingModel), high:displayScore(hi, profKey, usingModel), rawHalf:margin };
+    // Never rendered (Jason, 2026-08-14) but still carried in bodyScore.v3. Centre and half-width are both
+    // percentile points now, so the band is just the score map applied at the two edges — no branch, no
+    // second scale to get wrong. (testable)
+    function makeScoreBand(centerPct, halfPct){
+      const margin = Math.max(0, halfPct || 0);
+      const lo = Math.max(0, Math.min(100, centerPct - margin));
+      const hi = Math.max(0, Math.min(100, centerPct + margin));
+      return { low:pctToScore(lo), high:pctToScore(hi), rawHalf:margin };
     }
 
     // Pure end-to-end self-report read for the Node gate rig and the UI wrapper. Kouri FFMI is returned
@@ -817,9 +918,10 @@
       return [head, sep].concat(body).join('\n') + '\n';
     }
 
-    if (typeof module !== 'undefined') { module.exports = { poseSkeleton, armOverWaist, bodyRatios, gradeBody, scoreMeasure, mapModelScore, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, convTier, tierFor, PIDX, FACE_PIDX,
-      REF_RAW, REF_MID, REF_SD, SCORE_MIN, SCORE_MAX, refPercentile, invNorm, normCdf, pctToScore, scoreFromRaw, scorePercentile, ordinal, displayScore,
-      interpAnchors, computeFFMI, frameScore, massFrameScore, leannessScore, selfReportScore, computeInputRead, geomPreLens, blendRaw, inputBlendWeight, inputRawUncertainty, photoRawUncertainty, blendedRawUncertainty, makeScoreBand, crossCheckBF,
+    if (typeof module !== 'undefined') { module.exports = { poseSkeleton, armOverWaist, bodyRatios, bodySubs, scoreMeasure, preprocessToTensor, preprocessSex, sexFromLogits, MEASURES, PROFILES, GEOM_LENSES, bandFor, dirFor, bodyMascIndex, computeComposites, guessSex, CANT_READ, frameTier, PIDX, FACE_PIDX,
+      REF_RAW, GEOM_REF_RAW, REF_MID, REF_SD, SCORE_MIN, SCORE_MAX, tablePercentile, refPercentile, geomPercentile, invNorm, normCdf, pctToScore, scoreFromRaw, scorePercentile, ordinal,
+      MAX_SHOTS, shotPercentile, photoPercentile, shotsNeedSex,
+      interpAnchors, computeFFMI, frameScore, massFrameScore, leannessScore, selfReportScore, computeInputRead, geomWeighted, geomRawFor, blendRaw, inputBlendWeight, inputRawUncertainty, photoRawUncertainty, blendedRawUncertainty, makeScoreBand, crossCheckBF,
       bodySexCueContradicts, inputImplausible, suggestedBfPct,
       FRAME_ANCHORS, MASS_FRAME_ANCHORS, LEANNESS_BAND, LEANNESS_SIGMA_M, LEANNESS_SIGMA_F, LEANNESS_MAX, INPUT_SCORE_W, INPUT_BLEND_W, SCORE_BAND_RAW, BF_BUCKETS, LB_TO_KG, IN_TO_CM, FRONTAL_WHTR_BY_BF, FFMI_KOURI_K, FFMI_KOURI_H0, CROSSCHECK_GROSS,
       BODY_SEX_CUE_STRONG, INPUT_BMI_MIN, INPUT_BMI_MAX, INPUT_HEIGHT_MIN, INPUT_HEIGHT_MAX, BF_SUGGEST_AGE,
@@ -828,7 +930,14 @@
 
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
-    const BC = { profile:'blackpill', metrics:null, model:null, modelRaw:null, modelReady:false,
+    const BC = { metrics:null, model:null, modelRaw:null, modelReady:false,
+                 // MULTI-PHOTO: up to MAX_SHOTS analysed photos of the SAME body. Each holds the INPUT to a
+                 // percentile (a model raw, or the metrics a geometry percentile is derived from), never a
+                 // frozen number — see shotPercentile. `addMode` makes the NEXT scored photo append instead
+                 // of starting over, and is set ONLY by the explicit "Add another photo" affordance, so a
+                 // plain new drop still means "new person". `photoPending` = this photo routed to the
+                 // trained model and its score has not landed yet, so there is no number to show.
+                 shots:[], addMode:false, photoPending:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'', framing:'full',
                  framingOverride:false,   // this result was scored on the rate-anyway override — rides into the shot state AND the composite payload (provenance must survive the blend)
                  outlineOverride:false, outlineIssues:[],   // …and the same for a geometry headline scored WITHOUT its outline cues (no silhouette / hidden waist), plus WHICH cues were missing
@@ -861,13 +970,6 @@
       });
     });
 
-    document.querySelectorAll('.bc-variant button').forEach(function(b){
-      b.addEventListener('click', function(){
-        document.querySelectorAll('.bc-variant button').forEach(x => x.classList.toggle('active', x===b));
-        BC.profile = b.dataset.prof; renderResult();
-      });
-    });
-
     function setStatus(msg, isErr, isHtml){
       const el = document.getElementById('bc-status');
       if (isHtml) el.innerHTML = msg; else el.textContent = msg;   // isHtml only for our own controlled bcStatusNote markup
@@ -880,7 +982,9 @@
     // reason, it's just noise"). makeScoreBand / scoreBandPayload stay — the bodyScore.v3 contract still
     // carries a numeric `band` for the composite; only the display of it is gone. Caveats survive as plain
     // text, because a diagnosis ("an arm hid your waist") is information and a range is not.
-    // Composite v3 consumes one scalar half-width. Use the larger lens deviation so either toggle remains covered.
+    // Composite v3 consumes one scalar half-width — the largest deviation from the score. The (bp, cv) pair
+    // is now always the same number, so this reduces to the wider of the two edges; the signature is kept
+    // because the payload's two fields are.
     function scoreBandPayload(bpBand, cvBand, bp, cv){
       return Math.max(bp - bpBand.low, bpBand.high - bp, cv - cvBand.low, cvBand.high - cv);
     }
@@ -968,7 +1072,7 @@
         + '</div>';
     }
     // Self-report breakdown: Kouri FFMI is context-only; scored terms are BF-free mass/height + BF leanness.
-    function tier0Breakdown(t0, profKey, photoRaw, blended, headline, usingModel){
+    function tier0Breakdown(t0, _unusedProfKey, photoRaw, blended, headline, usingModel){
       const sex = t0.sex, b = LEANNESS_BAND[sex];
       const ffmiWhere = t0.frame >= 85 ? 'High FFMI context' : t0.frame >= 55 ? 'Mid FFMI context' : 'Low FFMI context';
       const massWhere = t0.massFrame >= 85 ? 'Higher mass-for-height' : t0.massFrame >= 60 ? 'Middle range' : 'Lower mass-for-height';
@@ -992,12 +1096,19 @@
       });
       const inputMath = '<div class="bc-t0-math">Self-report index &nbsp;=&nbsp; 0.30 &times; ' + Math.round(t0.massFrame) + ' mass/height &nbsp;+&nbsp; 0.70 &times; ' + Math.round(t0.lean) + ' leanness &nbsp;=&nbsp; <strong>' + Math.round(t0.inputScore) + ' / 100</strong></div>';
       const inputW = inputBlendWeight(t0.bfSource), photoW = 1 - inputW;
+      // WHAT THE BLENDED QUANTITY IS, said out loud rather than left to the arithmetic. Both photo routes
+      // now hand the blend a PERCENTILE of a stated reference population, so the "photo" term is a measured
+      // population position. The self-report index shares its 0–100 axis but has never been measured against
+      // any population, so the blend reads it AS IF it were a percentile. The result is therefore a
+      // percentile-scale composite, honest about the photo half and provisional about the other — and that
+      // join is the weakest step in this page's arithmetic. It is stated here, on screen, every time.
       const blendMath = (photoRaw == null) ? '' :
-        '<div class="bc-t0-math">Blend &nbsp;=&nbsp; ' + inputW.toFixed(2) + ' &times; ' + Math.round(t0.inputScore) + ' self-report &nbsp;+&nbsp; ' + photoW.toFixed(2) + ' &times; ' + Math.round(photoRaw) + ' photo &nbsp;=&nbsp; ' + blended.toFixed(0) + ' &nbsp;&rarr;&nbsp; <strong>' + fmtScore(headline) + ' ' + (usingModel ? '/ 10' : PROFILES[profKey].unit) + '</strong></div>'
-        // A units caveat that has to be said out loud: the photo term IS a percentile of the reference
-        // population, and the self-report index is a weighted rubric on the same 0–100 axis — but it has
-        // never been calibrated against a population, so the blend treats it AS IF it were a percentile.
-        + (usingModel ? '<div class="bc-note-line">The photo term above is a <strong>percentile</strong> of the reference population. The self-report index shares its 0&ndash;100 axis but is a reasoned rubric, not a measured percentile &mdash; the blend treats it as one, which is the weakest join in this arithmetic.</div>' : '');
+        '<div class="bc-t0-math">Blend &nbsp;=&nbsp; ' + inputW.toFixed(2) + ' &times; ' + Math.round(t0.inputScore) + ' self-report &nbsp;+&nbsp; ' + photoW.toFixed(2) + ' &times; ' + Math.round(photoRaw) + ' photo percentile &nbsp;=&nbsp; ' + blended.toFixed(0) + ' &nbsp;&rarr;&nbsp; <strong>' + fmtScore(headline) + ' / 10</strong></div>'
+        + '<div class="bc-note-line">The photo term is a <strong>percentile</strong> of the reference population &mdash; '
+        + (usingModel ? 'the trained model&rsquo;s' : 'the silhouette geometry&rsquo;s') + ' reading of where your photo places you among it. '
+        + 'The self-report index shares the same 0&ndash;100 axis but is a reasoned rubric, never measured against a population; '
+        + 'the blend treats it as though it were a percentile. That is the weakest join in this arithmetic, and it is why the '
+        + 'photo keeps the majority weight.</div>';
       return '<div class="bc-bd-h">Self-reported inputs</div>'
         + '<div class="bc-note-line">Height and scale weight are direct entries; BF is a typed estimate or visual match. This is a provisional input rubric, not ground truth. Typed BF gets 35% of a hybrid; a visual tile gets 20%; the photo owns the rest.</div>'
         + ffmiRow + massRow + leanRow + inputMath + blendMath;
@@ -1102,13 +1213,6 @@
       if (!(typeof BC.sexClsConf === 'number' && BC.sexClsConf >= SEX_CONFLICT_MIN)) return null;
       return { manual:manual, cls:cls, conf:BC.sexClsConf };
     }
-    // Show or hide the lens toggle. It survives only where two lens curves still do — the geometry and
-    // self-report routes. A trained-model read is one percentile on one scale, so leaving a control that
-    // cannot move the number would be a display defect, not a choice.
-    function bcSyncLensToggle(show){
-      const el = document.querySelector('.bc-variant');
-      if (el) el.style.display = show ? '' : 'none';
-    }
     // Sex toggle wiring, shared by the full and numbers-only renders (both draw into #bc-result).
     function wireSexButtons(host){
       host.querySelectorAll('.bc-sex button').forEach(function(b){
@@ -1119,14 +1223,60 @@
       });
     }
 
-    // ── State C — self-report-only read (inputs present, no photo). Always shown with a broad band. ──
+    // Append an analysed photo to the shot set. A fourth photo replaces the oldest rather than being
+    // silently ignored — the same rule the Face Calc uses, and for the same reason: a dropped photo the
+    // user just added is indistinguishable, on screen, from a photo that changed nothing.
+    function bcPushShot(shot){
+      if (!shot) return;
+      if (BC.shots.length >= MAX_SHOTS) BC.shots.shift();
+      BC.shots.push(shot);
+    }
+    // Multi-photo strip: how many photos are in, and the explicit affordance to add more. Mirrors the Face
+    // Calc's, including the rule that only THIS button arms append-mode.
+    function bcShotsUI(n){
+      const dots = [];
+      for (let i = 0; i < MAX_SHOTS; i++) dots.push('<span class="bc-dot'+(i < n ? ' on' : '')+'"></span>');
+      const nudge = n >= MAX_SHOTS
+        ? '<span class="bc-shot-note">Three photos in &mdash; this is the steadiest read the instrument gives.</span>'
+        : '<span class="bc-shot-note"><strong>Add another photo for a steadier read.</strong> A different day, outfit or distance can move a body read a long way.</span>';
+      return '<div class="bc-shots">'
+        + '<div class="bc-shot-row">' + dots.join('')
+        + '<span class="bc-shot-count">'+n+' of '+MAX_SHOTS+' photos</span>'
+        + (n < MAX_SHOTS ? '<button type="button" class="bc-btn ghost bc-addshot">+ Add another photo</button>' : '')
+        + (n > 1 ? '<button type="button" class="bc-btn ghost bc-clearshots">Start over</button>' : '')
+        + '</div>' + nudge
+        + (n > 1 ? '<span class="bc-shot-note">The measurement panel below describes the <strong>most recent</strong> photo only; the score above averages all '+n+'.</span>' : '')
+        + '</div>';
+    }
+    // "+ Add another photo" arms append-mode, then opens the same picker the first photo used. Any OTHER
+    // route to a new image (a fresh drop, paste, URL, shutter) leaves addMode false and therefore starts a
+    // new body — the safe default, since two photos cannot be told to be the same person.
+    function wireShotButtons(host){
+      host.querySelectorAll('.bc-addshot').forEach(function(b){
+        b.addEventListener('click', function(){
+          BC.addMode = true;
+          setStatus('Add another photo of the SAME body — a different angle, outfit or day is ideal.');
+          const fi = document.getElementById('bc-file'); if (fi) fi.click();
+        });
+      });
+      host.querySelectorAll('.bc-clearshots').forEach(function(b){
+        b.addEventListener('click', function(){
+          window.bcResetResult(); setStatus('Cleared. Drop a photo to start again.');
+          if (window.bcClearCanvas) window.bcClearCanvas();
+        });
+      });
+    }
+
+    // ── State C — self-report-only read (numbers present, NO photo). ─────────────────────────────────
+    // Jason ruled the numbers-only defect fixed on 2026-08-14, by the Face Calc's precedent: no photo, no
+    // scored headline. The self-report index is a reasoned rubric that has never been measured against any
+    // population, so it has nothing to be a percentile OF — and every other score on this page now is one.
+    // Displaying it as a number meant a typed height, weight and body-fat guess produced "8.9 / 10 · Elite
+    // / Zyzz-tier" with no photo in evidence. What survives is the descriptive read: the measurements, FFMI
+    // as context, the honesty note. Nothing is persisted either — the composite treats the body as missing,
+    // exactly as it treats a face with no photo.
     function renderNumbersOnly(host, t0, BC_DEBUG){
-      const prof = PROFILES[BC.profile], other = BC.profile === 'blackpill' ? 'conventional' : 'blackpill';
-      const accent = BC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
       const sex = t0.sex;
-      const score = mapModelScore(t0.inputScore / 100, BC.profile);
-      const oscore = mapModelScore(t0.inputScore / 100, other);
-      const rawHalf = inputRawUncertainty(t0.bfSource);   // payload only — never rendered
       const sexWord = sex === 'm' ? 'male' : 'female', sexOther = sex === 'm' ? 'f' : 'm', sexOtherWord = sexOther === 'm' ? 'male' : 'female';
       const flipPrompt = '<strong><a href="#" class="bc-sexflip" data-sex="' + sexOther + '" style="color:var(--scarlet)">Wrong? Switch to ' + sexOtherWord + ' &rarr;</a></strong>';
       const sexCtl =
@@ -1135,31 +1285,27 @@
         + '<div class="bc-sexnote">Sex set to <strong>' + sexWord + '</strong>. ' + flipPrompt + ' It bases the leanness curve and FFMI context; the scored mass/height proxy is sex-neutral.</div>';
       host.innerHTML =
         '<div class="bc-score-wrap">'
-        + '<div class="bc-score" style="color:' + accent + '">' + fmtScore(score) + ' <span class="unit">' + prof.unit + '</span></div>'
-        + '<div class="bc-tier" style="color:' + accent + '">' + tierFor(BC.profile, score, sex) + '</div>'
-        + '<div class="bc-srcbadge hybrid">Self-reported inputs only &middot; add a photo for shape</div>'
-        + '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Not an objective measurement.</strong> Height and scale weight are direct entries; BF is still a typed estimate or visual match. <strong>Drop a photo in Step 1</strong> for the photo-dominant hybrid.</div>'
-        + '<div class="bc-other">The other lens &mdash; ' + PROFILES[other].name + ' &mdash; says <strong>' + fmtScore(oscore) + ' ' + PROFILES[other].unit + '</strong> (' + tierFor(other, oscore, sex) + ').</div>'
+        + '<div class="bc-noscore">No score</div>'
+        + '<div class="bc-tier" style="color:#51606F">Numbers alone don&rsquo;t get a rating</div>'
+        + '<div class="bc-srcbadge heur">Self-reported numbers only &middot; drop a photo for a score</div>'
+        + '<div class="bc-note-line" style="margin:0.7rem 0 0;color:#A06A12"><strong>Why there is no number here.</strong> '
+        + 'Every score on this page is a <strong>percentile of a measured reference population</strong>. Your height, weight and '
+        + 'body-fat entry produce a reasoned index &mdash; but that index has never been measured against any population, so it has '
+        + 'nothing to be a percentile <em>of</em>, and turning it into a rating would be inventing the reference. It also cannot see '
+        + 'your shape at all: mass and leanness with no frame behind them. <strong>Drop a photo in Step&nbsp;1</strong> and these '
+        + 'numbers become the minority term in a photo-dominant hybrid, which is the job they can honestly do.</div>'
         + '</div>'
         + disagreementPanelHtml(t0)
         + sexCtl
-        + tier0Breakdown(t0, BC.profile, null, null, null)
-        + '<div class="bc-missing"><strong>How to read this:</strong> this is a broad self-report estimate, not a measured grade. FFMI is context only; BF enters the score once. A photo supplies shape and distribution and receives the majority weight.</div>';
+        + tier0Breakdown(t0, null, null, null, null)
+        + '<div class="bc-missing"><strong>How to read this:</strong> a description of the numbers you typed, not a grade. FFMI is context only. Nothing here is saved to the <strong>Overall looks rating</strong> &mdash; with no photo, the body reads as missing there, exactly as a face does with no photo.</div>';
       wireSexButtons(host);
-      if (window.leComposite){
-        const bp = mapModelScore(t0.inputScore / 100, 'blackpill'), cv = mapModelScore(t0.inputScore / 100, 'conventional');
-        const bpBand = makeScoreBand(t0.inputScore, 'blackpill', rawHalf), cvBand = makeScoreBand(t0.inputScore, 'conventional', rawHalf);
-        window.leComposite.saveBody({
-          schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand, cvBand, bp, cv),
-          bpMax:PROFILES.blackpill.scaleMax, cvMax:PROFILES.conventional.scaleMax, floor:1,
-          source:'self-report', sex:sex, sexSource:BC.sexSource, sexConfirmed:true,
-          inputs:{ ffmi:t0.ffmiAdj, bf:t0.bfPct, bfSource:t0.bfSource, weight:t0.inputWeight }, ts:(BC.measuredAt || Date.now())
-        });
-      }
+      // Nothing is persisted, and any earlier numbers-only payload is purged. A stale self-report score
+      // outliving this ruling would keep feeding the Overall from a route that no longer scores.
+      if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody();
     }
     function renderResult(){
       const host = document.getElementById('bc-result');
-      bcSyncLensToggle(true);   // default on; the model-route render below hides it (only it has one scale)
       // Verbose red calibration rows (skin %, model raw, face read): shown on localhost or with ?debug —
       // the ?debug param deliberately works anywhere (personal site; calibration escape hatch). See Face Calc.
       const BC_DEBUG = /[?&]debug\b/.test(location.search||'') || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -1184,8 +1330,14 @@
           + '<div class="bc-gate-h"><i class="ti ti-viewfinder"></i> ' + head + '</div>'
           + '<ul class="bc-gate-list">' + BC.gate.issues.map(t => '<li>'+t+'</li>').join('') + '</ul>'
           + '<div class="bc-gate-note">' + why + '</div>'
+          // "Discard" is a FULL clear, not a clear of this photo alone — so when a multi-photo set is
+          // waiting behind the prompt the button has to say so rather than quietly take the others with it.
+          // Rating anyway keeps the set (the armed "+ Add another photo" survives the prompt); discarding
+          // starts over. That asymmetry is a wart, and it is at least an announced one.
           + '<div class="bc-gate-btns"><button class="bc-btn" id="bc-gate-go"><i class="ti ti-alert-triangle"></i> Rate anyway &mdash; reduced accuracy</button>'
-          + '<button class="bc-btn ghost" id="bc-gate-drop">Discard photo</button></div>'
+          + '<button class="bc-btn ghost" id="bc-gate-drop">'
+          + (BC.shots.length ? 'Discard &mdash; and start over (clears the ' + BC.shots.length + ' photo' + (BC.shots.length===1?'':'s') + ' already added)' : 'Discard photo')
+          + '</button></div>'
           + '<div class="bc-gate-note">' + fix + '</div>'
           + '</div>';
         const go = host.querySelector('#bc-gate-go'), dr = host.querySelector('#bc-gate-drop');
@@ -1208,44 +1360,52 @@
         return;
       }
       const sex = BC.sex === 'm' ? 'm' : 'f';
-      const usingModel = BC.model != null;
-      // A trained-model read has ONE scale (a percentile of the reference population), so it has no lens
-      // and no "other lens" — the toggle is hidden for it and the frame ladder names the tier. The
-      // geometry and self-report routes still carry two lens curves, so they keep the toggle.
-      bcSyncLensToggle(!usingModel);
-      const prof = usingModel ? { unit:'/ 10' } : PROFILES[BC.profile];
-      const other = BC.profile === 'blackpill' ? 'conventional' : 'blackpill';
-      const accent = usingModel ? '#51606F' : BC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
-      const photoRaw = pk => usingModel ? BC.model * 100 : geomPreLens(gradeBody(BC.metrics, sex, pk).subs, pk);
-      let rawCur = photoRaw(BC.profile), rawOtherCur = photoRaw(other);
-      let score = displayScore(rawCur, BC.profile, usingModel), oscore = displayScore(rawOtherCur, other, usingModel);
-      let photoRawCur = null, blendedCur = null;
-      if (hasInputs){
-        photoRawCur = photoRaw(BC.profile);
-        rawCur = blendRaw(t0.inputScore, photoRawCur, t0.bfSource);
-        rawOtherCur = blendRaw(t0.inputScore, photoRaw(other), t0.bfSource);
-        score = displayScore(rawCur, BC.profile, usingModel); oscore = displayScore(rawOtherCur, other, usingModel);
-        blendedCur = rawCur;
-      }
-      const tierNow = usingModel ? frameTier(score, sex) : tierFor(BC.profile, score, sex);
-      // Sex-range headline: a GEOMETRY headline is scored against sex-specific bands, so an undetermined sex
-      // can't yield one honest number. Show the male–female range until a reliable read or manual pick resolves
-      // it (the model headline is sex-agnostic, so it needs no range). Collapses to a single score when sex is set.
+      const accent = '#51606F';
+      // ── ONE score, from the shot set. Each shot contributes a percentile of the reference population its
+      // route was measured against; the headline is the mean of those, blended with the self-report index
+      // when there is one, then mapped once. `usingModel` is now only about VOCABULARY (which reference to
+      // name, which badge to show) — both routes end on the same scale.
+      const shots = BC.shots || [];
+      const nShots = shots.length;
+      const anyGeometry = shotsNeedSex(shots);
+      const usingModel = nShots > 0 && !anyGeometry;
+      // A set can hold photos from BOTH routes (a clothed full-body shot plus a bare-torso one is the
+      // ordinary case). Then neither reference alone names what the number is measured against, so the
+      // copy says so and both references are described below.
+      const mixedRoutes = anyGeometry && shots.some(function(s){ return s && s.route === 'model'; });
+      const pctFor = s => photoPercentile(shots, s);
+      // Blended percentile-scale composite for a given sex reading (see tier0Breakdown for what the blend
+      // of a measured percentile and an unmeasured rubric actually means).
+      const rawFor = s => {
+        const p = pctFor(s);
+        return p == null ? null : (hasInputs ? blendRaw(t0.inputScore, p, t0.bfSource) : p);
+      };
+      const scoreFor = s => { const r = rawFor(s); return r == null ? null : pctToScore(r); };
+      const photoRawCur = nShots ? pctFor(sex) : null;
+      const rawCur = rawFor(sex);
+      const blendedCur = hasInputs ? rawCur : null;
+      const score = scoreFor(sex);
+      const tierNow = score == null ? '' : frameTier(score, sex);
       const sexKnown = BC.sex === 'm' || BC.sex === 'f';
       const sexConfirmed = BC.sexSource === 'manual' || (BC.sexSource === 'model' && BC.sexConf >= SEX_COMMIT_MIN);
+      // Sex-range headline: a GEOMETRY shot is scored against sex-specific bands, so an undetermined sex
+      // can't yield one honest number. Show the male–female range until a reliable read or manual pick
+      // resolves it. A pure-model shot set is sex-agnostic and needs none. …And only when the two ends
+      // actually differ once rounded: an outline-override read scores from leg proportion and symmetry
+      // alone — both sex-neutral — so the "range" collapsed to "6–6 / 10" and a prompt that changes nothing.
       let rng = null;
-      if (!usingModel && !sexKnown){
-        const gM = gradeBody(BC.metrics,'m',BC.profile), gF = gradeBody(BC.metrics,'f',BC.profile);
-        const ogM = gradeBody(BC.metrics,'m',other), ogF = gradeBody(BC.metrics,'f',other);
-        const sM = gM.score, sF = gF.score, oM = ogM.score, oF = ogF.score;
-        rng = { lo:Math.min(sM,sF), hi:Math.max(sM,sF), m:sM, f:sF, oLo:Math.min(oM,oF), oHi:Math.max(oM,oF) };
+      if (nShots && anyGeometry && !sexKnown){
+        const sM = scoreFor('m'), sF = scoreFor('f');
+        if (sM != null && sF != null) rng = { lo:Math.min(sM,sF), hi:Math.max(sM,sF), m:sM, f:sF };
       }
-      // …but only when the two ends actually differ once rounded. An outline-override read scores from
-      // leg proportion and symmetry alone — both sex-neutral — so the "range" collapsed to a headline
-      // reading "6–6 / 10" and a prompt to set a sex that changes nothing. Show one number there.
       const usingRange = !!rng && fmtScore(rng.lo) !== fmtScore(rng.hi);
+      // A photo that routed to the trained model whose score has not landed yet: no number rather than a
+      // geometry number that would jump the moment inference finishes.
+      const awaitingModel = !nShots && !!BC.photoPending;
 
-      const srcBadge = hasInputs
+      const srcBadge = awaitingModel
+        ? '<div class="bc-srcbadge heur">Measured &middot; the trained model is still scoring this photo</div>'
+        : hasInputs
         ? '<div class="bc-srcbadge hybrid">Hybrid &middot; self-reported inputs &times; ' + (usingModel ? 'trained-model' : 'silhouette') + ' photo read</div>'
         : usingModel
         ? '<div class="bc-srcbadge model">Trained model score &middot; the breakdown below is the transparent geometry</div>'
@@ -1279,7 +1439,7 @@
           ? 'Your manual selection sets the sex-specific leanness curve and FFMI context used by the self-report term.'
           : usingModel
           ? 'For a photo-only model read, sex changes the typical ranges below but not the sex-agnostic model headline.'
-          : 'For geometry, sex-specific bands affect both the ranges and headline; until confirmed, the page shows a male&ndash;female range.')
+          : 'For a silhouette read, sex-specific bands affect both the ranges and the score; until confirmed, the page shows a male&ndash;female range.')
         + '</div>';
 
       const drivers = '<div class="bc-bd-h">Strongest drivers &middot; Tier 1</div>'
@@ -1298,82 +1458,89 @@
       const cantRows = '<div class="bc-bd-h">What a photo cannot measure</div>'
         + '<ul class="bc-cant">' + CANT_READ.map(t => '<li>'+t+'</li>').join('') + '</ul>';
 
+      const headline = awaitingModel
+        ? '<div class="bc-noscore">Scoring&hellip;</div>'
+          + '<div class="bc-tier" style="color:'+accent+'">The trained model is reading this photo</div>'
+        : score == null
+        ? '<div class="bc-noscore">No score</div>'
+          + '<div class="bc-tier" style="color:'+accent+'">This photo produced no usable read</div>'
+        : '<div class="bc-score" style="color:'+accent+'">'+(usingRange ? fmtScore(rng.lo)+'&ndash;'+fmtScore(rng.hi) : fmtScore(score))+' <span class="unit">/ 10</span></div>'
+          + '<div class="bc-tier" style="color:'+accent+'">'+(usingRange
+              ? 'Depends on sex &mdash; &#9794; '+fmtScore(rng.m)+' '+frameTier(rng.m,'m')+' &middot; &#9792; '+fmtScore(rng.f)+' '+frameTier(rng.f,'f')
+              : tierNow)+'</div>'
+          + (usingRange ? '' : '<div class="bc-pct">Around the <strong>'+ordinal(Math.round(Math.min(99, Math.max(1, scorePercentile(score)))))+' percentile</strong> of the '+(mixedRoutes?'reference population &mdash; averaged across both of the scales below':(usingModel?'reference population':'silhouette reference population'))+(hasInputs?', once your typed numbers are blended in':'')+(nShots>1?' &middot; based on '+nShots+' photos':'')+'</div>');
       host.innerHTML =
         '<div class="bc-score-wrap">'
-        + '<div class="bc-score" style="color:'+accent+'">'+(usingRange ? fmtScore(rng.lo)+'&ndash;'+fmtScore(rng.hi) : fmtScore(score))+' <span class="unit">'+prof.unit+'</span></div>'
-        + '<div class="bc-tier" style="color:'+accent+'">'+(usingRange
-            ? 'Depends on sex &mdash; &#9794; '+fmtScore(rng.m)+' '+tierFor(BC.profile,rng.m,'m')+' &middot; &#9792; '+fmtScore(rng.f)+' '+tierFor(BC.profile,rng.f,'f')
-            : tierNow)+'</div>'
-        + (usingModel ? '<div class="bc-pct">Around the <strong>'+ordinal(Math.round(Math.min(99, Math.max(1, scorePercentile(score)))))+' percentile</strong> of the reference population'+(hasInputs?' once your typed numbers are blended in':'')+'</div>' : '')
+        + headline
+        + (nShots ? bcShotsUI(nShots) : '')
         + srcBadge
-        + (usingRange ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to resolve the score.</strong> A bare-physique read is scored against sex-specific bands, so until sex is set the headline is the male&ndash;female range above &mdash; pick one below.</div>'
+        + (usingRange ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to resolve the score.</strong> A silhouette read is scored against sex-specific bands, so until sex is set the headline is the male&ndash;female range above &mdash; pick one below.</div>'
            : rng ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Set sex to use this in the Overall.</strong> The cues that survived on this photo are sex-neutral, so the number above does not depend on it &mdash; but the Overall looks rating still needs a sex before it will include the body.</div>' : '')
-        + (usingModel ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental one-photo estimate.</strong> Not a precise grade &mdash; the human raters who produced its training labels disagreed heavily with each other, and casual photos are unlike the training set. It is a <strong>percentile, not a verdict</strong>: <strong>5.0 is the median</strong> of the reference population described below, and one point is about two-thirds of a standard deviation. Same scale as the <a href="face.html">Face Calc</a>.</div>' : '')
+        + (score == null ? ''
+           : '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Experimental estimate.</strong> Not a precise grade. '
+             + (usingModel
+                ? 'The human raters who produced the trained model&rsquo;s labels disagreed heavily with each other, and casual photos are unlike its training set. '
+                : 'This is the silhouette read &mdash; clothing, pose and camera angle all move the outline it measures, and it has never been validated against human judgement at all. ')
+             + 'It is a <strong>percentile, not a verdict</strong>: <strong>5.0 is the median</strong> of the reference population described below, and one point is about two-thirds of a standard deviation. Same scale as the <a href="face.html">Face Calc</a>.</div>')
         + (BC.outlineOverride ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Rated on your override &mdash; fewer cues than a clean read.</strong> You asked for a number on a photo whose shape read came up short: '
-            + BC.outlineIssues.join('; ') + '. The score above is built from what survived, and it is marked as a reduced-accuracy input everywhere it is reused.</div>' : '')
+            + BC.outlineIssues.join('; ')
+            + '. The score above is built from what survived, and it is marked as a reduced-accuracy input everywhere it is reused. '
+            + '<strong>Which measurements survive moves the number, and not in one direction.</strong> Across the 385 reference photos: '
+            + 'a read that lost its waist to an arm sits about <strong>20 percentile points above</strong> one that kept it &mdash; the cues that '
+            + 'drop out are the strict ones &mdash; while a crop left with shoulder width alone sits far <em>below</em>. Standing head-to-feet with your '
+            + 'arms a few inches out removes the guesswork, and costs nothing.</div>' : '')
         + (BC.framing === 'torso' ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Upper-body read.</strong> Scored on frame cues only &mdash; waist-to-hip, V-taper, shoulder breadth. Leanness (needs full height) and leg proportion are cropped out, and a draped top softens the waist; a full-body shot in fitted clothing reads more.</div>' : '')
         + (BC.reliability ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+BC.reliability+'</div>' : '')
         + (hasInputs ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Photo-dominant hybrid.</strong> Self-reported inputs contribute '+Math.round(t0.inputWeight*100)+'%; the '+(usingModel?'trained-model':'silhouette')+' photo contributes '+Math.round((1-t0.inputWeight)*100)+'%. The arithmetic is shown below.</div>' : '')
         + disagreementPanelHtml(t0)
-        + (BC_DEBUG && usingModel && BC.modelRaw!=null ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+BC.modelRaw.toFixed(3)+'</strong> &rarr; reference percentile '+(100*BC.model).toFixed(1)+'</div>' : '')
+        + (BC_DEBUG && nShots ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; shots</strong> = '
+            + shots.map(function(s){ return s.route === 'model'
+                ? 'model raw ' + (Number.isFinite(s.raw) ? s.raw.toFixed(3) : '?') + ' &rarr; pct ' + (shotPercentile(s, sex)||0).toFixed(1)
+                : 'geom raw ' + (geomRawFor(s.metrics, sex)==null ? 'no cues' : geomRawFor(s.metrics, sex).toFixed(2)) + ' &rarr; pct ' + (shotPercentile(s, sex)||0).toFixed(1); }).join(' &middot; ')
+            + ' &rarr; mean pct ' + (photoRawCur==null?'?':photoRawCur.toFixed(1)) + '</div>' : '')
         + skinDebug
         + (BC_DEBUG && window.__bcSex ? '<div class="bc-other" style="color:var(--scarlet)"><strong>debug &middot; face read = '+(window.__bcSex.reason||'pending')+'</strong>'+(window.__bcSex.facePx!=null?' &middot; face '+window.__bcSex.facePx+'px, vis '+window.__bcSex.avgVis:'')+(window.__bcSex.sex?' &rarr; '+window.__bcSex.sex+' '+Math.round((window.__bcSex.conf||0)*100)+'%':'')+'</div>' : '')
-        + (usingModel ? '' : '<div class="bc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+(usingRange ? fmtScore(rng.oLo)+'&ndash;'+fmtScore(rng.oHi)+' '+PROFILES[other].unit+'</strong> (depends on sex)' : fmtScore(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, sex)+')')+'.</div>')
         + '</div>'
         + '<div class="bc-note-line" style="margin-top:0.8rem">Where this body sits on each measured trait, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; an atypical reading is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
-        + (hasInputs ? tier0Breakdown(t0, BC.profile, photoRawCur, blendedCur, score, usingModel) : '')
+        + (hasInputs ? tier0Breakdown(t0, null, photoRawCur, blendedCur, score, usingModel) : '')
         + drivers + coreRows + featRows + propRows
         + (comp.athletic == null ? '' : '<div class="bc-bd-h">Tapered structure &middot; observation (not scored)</div>' + athleticRow(comp.athletic))
         + cantRows
-        + (usingModel ? REF_POP_NOTE : '')
-        + '<div class="bc-missing"><strong>How to read this:</strong> the headline is a broad one-photo estimate, not a precise grade. The trained model is a black box when loaded; the panel is a separate, transparent geometry read. A frontal photo misses depth, muscle-vs-fat, and much of what clothing hides. The self-report term adds limited context but cannot validate its own BF entry. The female geometry bands intentionally describe an hourglass convention; <em>Tapered structure</em> is shown separately and not scored.</div>';
+        + (score == null ? '' : mixedRoutes ? (REF_POP_NOTE + GEOM_POP_NOTE) : usingModel ? REF_POP_NOTE : GEOM_POP_NOTE)
+        + '<div class="bc-missing"><strong>How to read this:</strong> the headline is a broad estimate from '+(nShots>1?'your '+nShots+' photos':'one photo')+', not a precise grade. The trained model is a black box when loaded; the panel is a separate, transparent geometry read. A frontal photo misses depth, muscle-vs-fat, and much of what clothing hides. The self-report term adds limited context but cannot validate its own BF entry. The female geometry bands intentionally describe an hourglass convention; <em>Tapered structure</em> is shown separately and not scored.</div>';
 
       wireSexButtons(host);   // shared: also refreshes the Step-2 inputs picker (its silhouettes are sex-specific)
+      wireShotButtons(host);  // "+ Add another photo" / "Start over"
 
-      // Emit only the v3 payload contract. Every resolved score carries one conservative scalar half-width
-      // (the maximum deviation across both lenses) for the composite consumer.
-      // A MODEL-ROUTE payload has no two lenses to be the max of: bp === cv, and both maxes are 10, so the
-      // composite's hasTwoLenses goes false on its own and it reads the ceiling off the payload as it always
-      // has. No change is required in js/composite-score.js.
+      // The v3 payload contract, from ONE branch now. There is one score on one scale, so `bp` and `cv`
+      // carry the same value and both maxes are 10: the composite's hasTwoLenses goes false on its own and
+      // it reads the ceiling off the payload as it always has. js/composite-score.js needs no change.
+      // A geometry read with no sex still saves needsSex — the number exists but the composite refuses to
+      // blend a body whose bands were never resolved.
       if (window.leComposite){
-        if (hasInputs){
-          const pr = pk => usingModel ? BC.model * 100 : geomPreLens(gradeBody(BC.metrics, sex, pk).subs, pk);
-          const bpRaw = blendRaw(t0.inputScore, pr('blackpill'), t0.bfSource);
-          const cvRaw = usingModel ? bpRaw : blendRaw(t0.inputScore, pr('conventional'), t0.bfSource);
-          const bp = displayScore(bpRaw, 'blackpill', usingModel), cv = usingModel ? bp : displayScore(cvRaw, 'conventional', false);
-          const half = blendedRawUncertainty(t0.bfSource, usingModel, BC.framingOverride);
-          const bpBand = makeScoreBand(bpRaw, 'blackpill', half, usingModel), cvBand = usingModel ? bpBand : makeScoreBand(cvRaw, 'conventional', half);
-          window.leComposite.saveBody(Object.assign({
-            schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand,cvBand,bp,cv),
-            bpMax:(usingModel?SCORE_MAX:PROFILES.blackpill.scaleMax), cvMax:(usingModel?SCORE_MAX:PROFILES.conventional.scaleMax), floor:1,
-            source:'hybrid', sex:sex, sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
-            inputs:{ffmi:t0.ffmiAdj,bf:t0.bfPct,bfSource:t0.bfSource,weight:t0.inputWeight}, ts:BC.measuredAt
-          }, overrideFlags()));
-        } else if (usingModel){
-          const s = pctToScore(BC.model * 100);
-          const half = photoRawUncertainty(true, BC.framingOverride);
-          const band = makeScoreBand(BC.model*100, 'blackpill', half, true);
-          window.leComposite.saveBody(Object.assign({
-            schemaVersion:3, bp:s, cv:s, band:scoreBandPayload(band,band,s,s),
-            bpMax:SCORE_MAX, cvMax:SCORE_MAX, floor:1,
-            source:'model', sex:(sexKnown?sex:null), sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
-            ts:BC.measuredAt
-          }, overrideFlags()));
-        } else if (sexKnown){
-          const bpRaw = geomPreLens(gradeBody(BC.metrics,sex,'blackpill').subs,'blackpill');
-          const cvRaw = geomPreLens(gradeBody(BC.metrics,sex,'conventional').subs,'conventional');
-          const bp = mapModelScore(bpRaw/100,'blackpill'), cv = mapModelScore(cvRaw/100,'conventional');
-          const half = photoRawUncertainty(false, BC.framingOverride);
-          const bpBand = makeScoreBand(bpRaw,'blackpill',half), cvBand = makeScoreBand(cvRaw,'conventional',half);
-          window.leComposite.saveBody(Object.assign({
-            schemaVersion:3, bp:bp, cv:cv, band:scoreBandPayload(bpBand,cvBand,bp,cv),
-            bpMax:PROFILES.blackpill.scaleMax, cvMax:PROFILES.conventional.scaleMax, floor:1,
-            source:'geometry', sex:sex, sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
-            ts:BC.measuredAt
-          }, overrideFlags()));
-        } else {
+        if (score == null){
+          // No number yet (or ever) for this photo — and the PREVIOUS photo's score must not outlive it.
+          if (window.leComposite.clearBody) window.leComposite.clearBody();
+        } else if (anyGeometry && !sexKnown){
           window.leComposite.saveBody({schemaVersion:3, needsSex:true, sexSource:BC.sexSource, ts:BC.measuredAt});
+        } else {
+          const half = hasInputs
+            ? blendedRawUncertainty(t0.bfSource, anyGeometry, BC.framingOverride)
+            : photoRawUncertainty(anyGeometry, BC.framingOverride);
+          const band = makeScoreBand(rawCur, half);
+          window.leComposite.saveBody(Object.assign({
+            schemaVersion:3, bp:score, cv:score, band:scoreBandPayload(band, band, score, score),
+            bpMax:SCORE_MAX, cvMax:SCORE_MAX, floor:SCORE_MIN,
+            convention:'percentile-v3',   // 5.0 = reference median, 1 pt = 1/1.4 sd — same currency as the Face Calc
+            photos:nShots,
+            // A mixed-route set reports 'geometry' — the looser of the two instruments it contains, and a
+            // value downstream readers already accept (matchmaker.html gates on model|geometry|hybrid).
+            // Claiming 'model' for a set that is half silhouette would overstate it.
+            source:(hasInputs ? 'hybrid' : usingModel ? 'model' : 'geometry'),
+            sex:(sexKnown ? sex : null), sexSource:BC.sexSource, sexConfirmed:sexConfirmed,
+            ts:BC.measuredAt
+          }, hasInputs ? {inputs:{ffmi:t0.ffmiAdj,bf:t0.bfPct,bfSource:t0.bfSource,weight:t0.inputWeight}} : {}, overrideFlags()));
         }
       }
       bcSaveShot();   // persist the photo + this result across page switches
@@ -1395,9 +1562,21 @@
       const cfNote = cf ? ' · <strong style="color:var(--scarlet)">face reads ' + (cf.cls==='m'?'male':'female') + ' (' + Math.round(cf.conf*100) + '%) — using your pick</strong>' : '';
       return (BC.framing==='torso' ? 'Upper body measured' : 'Body measured') + ' · ' + how + cfNote + (BC.reliability ? ' · ' + BC.reliability : '');
     }
-    window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac, framingOverride, outlineOverride){
+    window.bcAnalyze = function(metrics, reliability, framing, bareGeometry, skinFrac, framingOverride, outlineOverride, route){
       BC.gate = null; window.bcGateOverride = null;   // this photo is committing — any pending prompt is decided/superseded
       BC.metrics = metrics; BC.model = null; BC.measuredAt = Date.now();   // stable stamp: a new photo, reused on every re-render so age stays honest
+      // A photo that did NOT arrive through "+ Add another photo" is a new body: drop the accumulated shots.
+      // Keeping them would silently average two different people. The flag is CONSUMED HERE and nowhere else
+      // — its lifetime is exactly "armed until the next photo commits". Clearing it from the async model
+      // callback instead let a late inference from the PREVIOUS photo disarm it between the click and this
+      // call, which silently replaced the set instead of adding to it (the Face Calc's flag-lifetime bug).
+      const append = BC.addMode;
+      BC.addMode = false;
+      if (!append) BC.shots = [];
+      // A geometry photo can contribute immediately; a model photo has to wait for its inference, and until
+      // then there is no number rather than a geometry number that would jump when the model lands.
+      BC.photoPending = (route === 'model');
+      if (route !== 'model') bcPushShot({ route:'geometry', metrics:metrics });
       BC.framing = framing === 'torso' ? 'torso' : 'full';
       BC.framingOverride = !!framingOverride;   // structured provenance: a degraded-framing photo scored on the user's override
       // …and a geometry headline scored with outline cues missing. The ISSUE LIST rides along, not just a
@@ -1444,34 +1623,58 @@
       BC.sex = null; BC.sexSource = 'unknown'; BC.sexConf = null; BC.sexUnknownReason = reason || '';
       setStatus(bcStatusNote(), false, true); renderResult();
     };
-    window.bcSetModelScore = function(t, raw){ BC.deferredRefusal = null; BC.model = t; BC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
+    // `t` is retained only as the "a model result landed" flag; the SCORE comes from BC.shots, since the
+    // mapping consumes raw model outputs directly.
+    window.bcSetModelScore = function(t, raw){
+      BC.deferredRefusal = null; BC.model = t; BC.modelRaw = (raw==null?null:raw);
+      if (BC.photoPending && Number.isFinite(raw)) bcPushShot({ route:'model', raw:raw });
+      BC.photoPending = false;
+      setStatus(BC.shots.length > 1
+        ? 'Scored with the trained model — averaging ' + BC.shots.length + ' photos.'
+        : 'Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').');
+      renderResult();
+    };
     window.bcModelReady = function(ok){ BC.modelReady = ok; };
     // The geometry gates were bypassed on the model's credit but the model will never deliver for the
     // current photo (load failed / inference failed). The geometry result is already computed and on
     // screen — it just has not been ruled on. This used to DROP it (score gone, dead end); now it parks
     // behind the same rate-anyway override, so a photo the guide accepted still ends in a number.
     window.bcApplyDeferredRefusal = function(){
-      if (!BC.deferredRefusal) return;
+      if (!BC.photoPending) return;                         // nothing was promised to the model for the live photo
+      if (!BC.metrics){ BC.photoPending = false; window.bcResetResult(); return; }   // nothing computed to fall back to
+      BC.photoPending = false;
+      if (window.__bcTrace) window.__bcTrace.cause = 'model-absent+' + (window.__bcTrace.cause || 'geo');
+      if (!BC.deferredRefusal){
+        // The model cannot score this photo, but the outline read is complete — fall straight back to the
+        // silhouette shot. No ruling needed: nothing is missing, only the instrument changed.
+        bcPushShot({ route:'geometry', metrics:BC.metrics });
+        renderResult(); return;
+      }
       const issues = (BC.deferredIssues && BC.deferredIssues.length) ? BC.deferredIssues.slice() : [BC.deferredRefusal];
       BC.deferredRefusal = null; BC.deferredIssues = null;
-      if (window.__bcTrace) window.__bcTrace.cause = 'model-absent+' + (window.__bcTrace.cause || 'geo');
-      if (!BC.metrics){ window.bcResetResult(); return; }   // nothing computed to fall back to
-      const take = function(){ BC.outlineIssues = issues.slice(); BC.outlineOverride = true; };
+      const take = function(){ BC.outlineIssues = issues.slice(); BC.outlineOverride = true; bcPushShot({ route:'geometry', metrics:BC.metrics }); };
       if (window.__bcAutoOverride){ take(); renderResult(); return; }   // batch harness: rule automatically, provenance still recorded
       window.bcGateOverride = function(){ window.bcGateOverride = null; BC.gate = null; take(); renderResult(); };
       window.bcShowGate(issues.concat(['the trained model could not score this photo, so the headline falls back to the outline geometry']), 'outline');
       window.bcSetStatus('The trained model could not score this photo and the outline read is incomplete — rate it anyway in the panel, or retake.', true);
     };
-    window.bcResetResult = function(){ BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.deferredIssues = null; BC.metrics = null; BC.model = null; BC.reliability = ''; BC.framing = 'full'; BC.framingOverride = false; BC.outlineOverride = false; BC.outlineIssues = []; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
+    window.bcResetResult = function(){ BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.deferredIssues = null; BC.metrics = null; BC.model = null; BC.shots = []; BC.addMode = false; BC.photoPending = false; BC.reliability = ''; BC.framing = 'full'; BC.framingOverride = false; BC.outlineOverride = false; BC.outlineIssues = []; BC.bareGeometry = false; BC.skinFrac = null; BC.sexClsSex = null; BC.sexClsConf = null; BC.routeBare = false; BC.routeUseModel = false; BC.shotDataURL = null; bcClearShot(); if (window.leComposite && window.leComposite.clearBody) window.leComposite.clearBody(); renderResult(); };
     // a photo parks here until the user rules on it (renderResult owns the prompt UI). kind decides the
     // copy: 'framing' (retakeable), 'outline' (the shape read is short of cues), or 'both'.
     window.bcShowGate = function(issues, kind){ BC.gate = { issues: issues || [], kind: kind || 'framing' }; renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
+    // The key is NOT bumped for the 2026-08-14 multi-photo change: the payload gains `shots` and drops the
+    // lens `profile`, and bcRestoreState reconstructs the shot an older record stood for from its own
+    // fields. Nothing in an old record is now wrong, so throwing one away would cost a user their photo
+    // for no gain.
     const BC_SHOT_KEY = 'loveEquations.bodyShot.v1';
     function bcSaveShot(){
       if (!BC.metrics || !BC.shotDataURL) return;          // only persist a real, analysed result
-      const state = { profile:BC.profile, metrics:BC.metrics, model:BC.model, modelRaw:BC.modelRaw,
+      if (BC.photoPending) return;   // …and not mid-inference: a record saved in that window has an empty
+                                     // shot list, and restoring it would show the photo with no score
+
+      const state = { shots:BC.shots.slice(), metrics:BC.metrics, model:BC.model, modelRaw:BC.modelRaw,
         sex:BC.sex, sexAuto:BC.sexAuto, sexSource:BC.sexSource, sexConf:BC.sexConf, sexManual:BC.sexManual,
         sexClsSex:BC.sexClsSex, sexClsConf:BC.sexClsConf,
         sexUnknownReason:BC.sexUnknownReason||'', reliability:BC.reliability, framing:BC.framing,
@@ -1487,15 +1690,20 @@
     window.bcRestoreState = function(s){
       if (!s || typeof s !== 'object' || !s.metrics || typeof s.metrics !== 'object') return;   // schema guard
       const fin = (x, d) => (typeof x==='number' && isFinite(x)) ? x : d;
-      BC.profile = s.profile==='conventional' ? 'conventional' : 'blackpill'; BC.metrics = s.metrics;
+      BC.metrics = s.metrics;
       BC.measuredAt = fin(s.measuredAt, Date.now());
-      // BC.model is a PERCENTILE of the reference population now, and a shot saved before the 2026-08-14
-      // remap holds the retired min/max normalisation instead. The raw model output was always saved
-      // alongside it, so re-derive from that and the old record becomes correct rather than stale. A record
-      // with no raw cannot be re-derived — drop the model read and let the geometry carry it, because
-      // restoring a number on the retired scale would be silently wrong.
       BC.modelRaw = fin(s.modelRaw, null);
       BC.model = BC.modelRaw != null ? refPercentile(BC.modelRaw) : null;
+      // Restore the shot set. A record written since 2026-08-14 carries it; an older one predates multi-photo, so
+      // reconstruct the single shot it stood for from its own fields — the model raw if the model scored
+      // it, otherwise the metrics the silhouette read. Both are re-derived through the current tables, so
+      // an old record comes back correct rather than stale. Nothing a user had is discarded.
+      const restored = Array.isArray(s.shots) ? s.shots.filter(function(x){
+        return x && (x.route === 'model' ? Number.isFinite(x.raw) : (x.metrics && typeof x.metrics === 'object'));
+      }).slice(0, MAX_SHOTS) : (BC.modelRaw != null ? [{ route:'model', raw:BC.modelRaw }]
+                                                    : [{ route:'geometry', metrics:s.metrics }]);
+      BC.shots = restored;
+      BC.addMode = false; BC.photoPending = false;
       BC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; BC.sexAuto = !!s.sexAuto;
       BC.sexSource = s.sexSource || 'guess'; BC.sexConf = fin(s.sexConf, null);
       BC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; BC.sexClsConf = fin(s.sexClsConf, null);
@@ -1507,7 +1715,6 @@
       BC.outlineIssues = Array.isArray(s.outlineIssues) ? s.outlineIssues.filter(x => typeof x === 'string') : [];
       BC.outlineOverride = !!s.outlineOverride && BC.outlineIssues.length > 0;
       BC.bareGeometry = !!s.bareGeometry; BC.skinFrac = fin(s.skinFrac, null);
-      document.querySelectorAll('.bc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===BC.profile); });
       setStatus(bcStatusNote(), false, true); renderResult();
     };
     // Per-calculator Reset — clears THIS calc only (photo, Step-2 numbers, result, saved shot,
@@ -1526,7 +1733,7 @@
       // (which owns currentGen and the pending tensors).
       if (window.bcCancelAnalysis) window.bcCancelAnalysis();
       BC.gate = null; window.bcGateOverride = null; BC.deferredRefusal = null; BC.deferredIssues = null;
-      BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.reliability = ''; BC.framing = 'full';
+      BC.metrics = null; BC.model = null; BC.modelRaw = null; BC.shots = []; BC.addMode = false; BC.photoPending = false; BC.reliability = ''; BC.framing = 'full';
       BC.framingOverride = false; BC.outlineOverride = false; BC.outlineIssues = []; BC.measuredAt = null;
       BC.bareGeometry = false; BC.skinFrac = null; BC.sex = null; BC.sexAuto = true; BC.sexSource = 'guess';
       BC.sexConf = null; BC.sexManual = false; BC.sexClsSex = null; BC.sexClsConf = null; BC.sexUnknownReason = ''; BC.shotDataURL = null;
@@ -2252,7 +2459,7 @@
       BC.poseQuality = null;   // instrumentation only (debug batch logs the framing readouts per image)
       // Instrumentation only (debug batch): WHY this analysis ended the way it did. Lives on window rather
       // than BC because a refusal calls bcResetResult, which wipes BC before the harness can read it.
-      window.__bcTrace = { poseWarning:'', silRetry:0, cause:'', route:'', skin:'', framing:'', personFrac:'' };
+      window.__bcTrace = { poseWarning:'', silRetry:0, cause:'', route:'', skin:'', framing:'', personFrac:'', armDivergence:'' };
       const trace = window.__bcTrace;
       const cause = c => { trace.cause = c; return c; };
       try {
@@ -2376,6 +2583,19 @@
         trace.framing = framing;
         BC.routeBare = bareBody; BC.routeUseModel = useModel;   // instrumentation only: the TRUE routing decision (incl. the model-load window) for the debug batch harness — no logic change
         const px = poseResult.silhouette || null;
+        // Divergence tripwire for the shared arm-band predicate (js/body-arm-band.js). The worker reports
+        // which bands it zeroed; the page recomputes the same answer from the same landmarks. Equal by
+        // construction while there is ONE definition — so an inequality means a copy was reintroduced in one
+        // context, and it says so on the first photo with an arm near a band instead of drifting silently.
+        if (px){
+          const here = window.bodyArmBand(lm);
+          if (here.waistArm !== !!px.waistArm || here.hipArm !== !!px.hipArm){
+            trace.armDivergence = 'page ' + here.waistArm + '/' + here.hipArm + ' vs worker ' + !!px.waistArm + '/' + !!px.hipArm;
+            console.error('[body] ARM-BAND DIVERGENCE — the page and the pose worker disagree about which '
+              + 'measurement bands an arm is in (' + trace.armDivergence + '). They share one definition in '
+              + 'js/body-arm-band.js; if this fires, a duplicate has been reintroduced.');
+          }
+        }
         const metrics = window.bcBodyRatios(px, skel);
         // The waist read (V-taper / waist-to-hip) is the discriminating frame cue; shoulder breadth + Tier-3
         // proportions alone are too thin for an honest GEOMETRY headline. If an arm hid the waist the worker drops
@@ -2482,7 +2702,11 @@
             if (sexSession) inferSex(sexData, gen);
             else if (sexState === 'loading'){ pendingSexTensor = sexData; pendingSexGen = gen; }   // classifier still loading
           }
-          window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac, gateBand === 'degraded', needsGeoOverride ? geoIssues : null);
+          // The ROUTE is passed in rather than re-derived: only this scope knows whether an inference was
+          // actually scheduled for this photo (it depends on the model-load window and the crop), and
+          // bcAnalyze has to know whether to expect a score or contribute a silhouette shot right now.
+          window.bcAnalyze(metrics, relWarn, framing, bareBody && !!session, skinFrac, gateBand === 'degraded',
+                           needsGeoOverride ? geoIssues : null, (useModel && !modelDead) ? 'model' : 'geometry');
           // eyes hidden (sunglasses) → keep bcAnalyze's decisive body-frame guess rather than asserting the
           // confidently-wrong occluded-face read; the bold "switch" toggle fixes it if the frame mis-reads.
           if (tensorData && session && useModel){ window.bcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
@@ -2498,8 +2722,13 @@
           // outlive it. Without this, the old score stayed in storage + the composite while the prompt was
           // open, and navigating away restored it under the new photo (cold-review find; the privacy note
           // promises "cleared the moment you drop a new one"). Retire it, then keep THIS photo's snapshot
-          // for the post-override commit.
+          // for the post-override commit. The one thing that must SURVIVE that retirement is an armed
+          // "+ Add another photo": the user asked to add to a set, and the gate is a question about THIS
+          // photo, not a cancellation of the set. Without this, ruling on a gated second photo silently
+          // discarded the first.
+          const keepShots = BC.addMode ? BC.shots.slice() : null;
           window.bcResetResult();
+          if (keepShots){ BC.shots = keepShots; BC.addMode = true; }
           window.bcSetShot(shotURL);
           window.bcGateOverride = function(){ if (gen !== currentGen) return; window.bcGateOverride = null; commit(); };
           window.bcShowGate(prompt, needsGeoOverride ? (gateBand === 'degraded' ? 'both' : 'outline') : 'framing');
@@ -2731,7 +2960,7 @@
     function bcRestoreShot(){
       let saved; try { saved = JSON.parse(localStorage.getItem('loveEquations.bodyShot.v1') || 'null'); } catch(_){ saved = null; }
       if (!saved || !saved.img || !saved.state || !saved.state.metrics) return;
-      if (window.bcSetShot) window.bcSetShot(saved.img);               // so later sex/lens changes re-persist (Codex F1)
+      if (window.bcSetShot) window.bcSetShot(saved.img);               // so a later sex change re-persists (Codex F1)
       if (window.bcRestoreState) window.bcRestoreState(saved.state);   // sets BC + renders the panel
       const im = new Image();
       im.onload = () => {
@@ -2778,6 +3007,17 @@
         { key:'gate_yaw',    label:'gate_yaw' },
         { key:'skel_symmetry', label:'skel_symmetry' },
         { key:'model_raw',   label:'model_raw' },
+        // The geometry rubric's PRE-display raws, logged for BOTH sexes and BOTH weightings on every
+        // scored row — including model-route rows, where nothing displays them. This is the instrument
+        // that built GEOM_REF_RAW: the reference table has to be measured on photos whose sex comes from
+        // their source, not from whatever this run's classifier happened to say, and on the same rows the
+        // model table was measured on. `geom_cues` names which cues survived, so a thin read (an arm over
+        // the waist, a torso crop) can be excluded from a reference instead of quietly thinning it.
+        { key:'geom_bp_m',   label:'geom_bp_m' },
+        { key:'geom_cv_m',   label:'geom_cv_m' },
+        { key:'geom_bp_f',   label:'geom_bp_f' },
+        { key:'geom_cv_f',   label:'geom_cv_f' },
+        { key:'geom_cues',   label:'geom_cues' },
         { key:'bp',          label:'bp' },
         { key:'bp_band',     label:'bp_band' },
         { key:'cv',          label:'cv' },
@@ -2825,27 +3065,21 @@
       const stripTags = s => String(s==null?'':s).replace(/<[^>]*>/g,'');
       function decode(file){ return new Promise((res,rej)=>{ const img=new Image(); img.onload=()=>res(img); img.onerror=()=>rej(new Error('unreadable image')); img.src=URL.createObjectURL(file); }); }
 
-      // bp/cv + uncertainty computed exactly as renderResult (hybrid, model-only, or geometry-only).
-      function bodyBpCv(){
-        const sex = BC.sex==='m'?'m':'f';
-        const usingModel = BC.model != null;
+      // The displayed score + its half-width, computed exactly as renderResult does. There is ONE score on
+      // ONE scale now, so bp === cv by construction — the pair survives only because the payload contract
+      // and this table's columns do.
+      function bodyBpCv(sexOverride){
+        const sex = sexOverride || (BC.sex==='m'?'m':'f');
         const t0 = window.computeTier0();
-        const pr = pk => usingModel ? BC.model*100 : window.geomPreLens(window.gradeBody(BC.metrics,sex,pk).subs,pk);
-        let bpRaw, cvRaw, half;
-        if (t0){
-          bpRaw = window.blendRaw(t0.inputScore,pr('blackpill'),t0.bfSource);
-          cvRaw = window.blendRaw(t0.inputScore,pr('conventional'),t0.bfSource);
-          half = window.blendedRawUncertainty(t0.bfSource,usingModel,BC.framingOverride);
-        } else {
-          bpRaw = pr('blackpill'); cvRaw = pr('conventional');
-          half = window.photoRawUncertainty(usingModel,BC.framingOverride);
-        }
-        // Model route: one percentile scale, so bp === cv exactly as the payload emits them.
-        const bp = window.displayScore(bpRaw,'blackpill',usingModel);
-        const cv = usingModel ? bp : window.displayScore(cvRaw,'conventional',false);
-        const bpBand = window.makeScoreBand(bpRaw,'blackpill',half,usingModel);
-        const cvBand = usingModel ? bpBand : window.makeScoreBand(cvRaw,'conventional',half);
-        return {bp:bp,cv:cv,bpBand:bpBand,cvBand:cvBand};
+        const anyGeometry = window.shotsNeedSex(BC.shots);
+        const p = window.photoPercentile(BC.shots, sex);
+        if (p == null) return null;
+        const raw = t0 ? window.blendRaw(t0.inputScore, p, t0.bfSource) : p;
+        const half = t0 ? window.blendedRawUncertainty(t0.bfSource, anyGeometry, BC.framingOverride)
+                        : window.photoRawUncertainty(anyGeometry, BC.framingOverride);
+        const s = window.pctToScore(raw);
+        const band = window.makeScoreBand(raw, half);
+        return {bp:s, cv:s, bpBand:band, cvBand:band};
       }
 
       // Await THIS image's trained-model score, when one was actually scheduled (routeUseModel). Resolves the
@@ -2881,7 +3115,7 @@
       async function processOne(file){
         cur = { statusMsg:'', statusErr:false, model:null, modelRaw:null, modelSettled:false, sexFired:false, res:null, sexRes:null, abandoned:false };
         const ts = nowISO();
-        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', cause:'', pose_warning:'', sil_retry:'', routing:'', skin_frac:'', framing:'', person_frac:'', override:'', gate_band:'', gate_tilt:'', gate_yaw:'', skel_symmetry:'', model_raw:'', bp:'', bp_band:'', cv:'', cv_band:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
+        const blank = extra => Object.assign({ filename:file.name, timestamp:ts, outcome:'error', refusal:'', cause:'', pose_warning:'', sil_retry:'', routing:'', skin_frac:'', framing:'', person_frac:'', override:'', gate_band:'', gate_tilt:'', gate_yaw:'', skel_symmetry:'', model_raw:'', geom_bp_m:'', geom_cv_m:'', geom_bp_f:'', geom_cv_f:'', geom_cues:'', bp:'', bp_band:'', cv:'', cv_band:'', sex:'', sex_conf:'', sex_source:'', reliability:'', tier0_ffmi:'', tier0_bf:'', crosscheck:'' }, extra);
         let img=null;
         try { img = await decode(file); }
         catch(e){ return blank({ refusal:'could not decode image' }); }
@@ -2896,6 +3130,7 @@
 
         const scored = !!BC.metrics;
         let bp='', bpBandOut='', cv='', cvBandOut='', routing='', skin='', framing='', t0f='', t0b='', xchk='';
+        let gBpM='', gCvM='', gBpF='', gCvF='', gCues='';
         // framing-gate readouts for THIS image (BC.poseQuality is nulled per analysis) — logged for
         // scored AND refused rows alike; this column pair is the tilt-threshold calibration instrument
         let gband='', gtilt='', gyaw='';
@@ -2906,27 +3141,30 @@
           gyaw  = (typeof pq.yawDeg==='number' && isFinite(pq.yawDeg)) ? pq.yawDeg.toFixed(1) : '';
         }
         if (scored){
-          // Finding 3: a geometry or hybrid row's bp/cv is sex-dependent — the single-shot UI re-renders with the
-          // classifier sex, so await that read before computing. The pure-model headline is sex-agnostic → skip.
-          const usingModel = BC.model != null;
+          // Finding 3: a silhouette or hybrid row's score is sex-dependent — the single-shot UI re-renders with
+          // the classifier sex, so await that read before computing. A pure-model row is sex-agnostic → skip.
+          const anyGeometry = window.shotsNeedSex(BC.shots);
           const tier0Numbers = BC.inHeightCm>0 && BC.inWeightKg>0 && Number.isFinite(BC.inBfPct);
-          if (!usingModel || tier0Numbers) await settleSex();
-          // bp/cv EXACTLY as renderResult: a bare/geometry headline with an unresolved sex is a male–female
-          // RANGE on the page (usingRange), not a single number — so log the range, don't silently pick 'f'.
+          if (anyGeometry || tier0Numbers) await settleSex();
+          // EXACTLY as renderResult: a silhouette read with an unresolved sex is a male–female RANGE on the
+          // page (usingRange), not a single number — so log the range, don't silently pick 'f'.
           const sexKnown = BC.sex==='m' || BC.sex==='f';
-          if (!usingModel && !sexKnown && !window.computeTier0()){
-            const rng = pk => {
-              const gm=window.gradeBody(BC.metrics,'m',pk), gf=window.gradeBody(BC.metrics,'f',pk);
-              const rm=window.geomPreLens(gm.subs,pk), rf=window.geomPreLens(gf.subs,pk);
-              const half=window.photoRawUncertainty(false,BC.framingOverride);
-              const bm=window.makeScoreBand(rm,pk,half), bf=window.makeScoreBand(rf,pk,half);
-              return {score:n2(Math.min(gm.score,gf.score))+'–'+n2(Math.max(gm.score,gf.score)),band:n2(Math.min(bm.low,bf.low))+'–'+n2(Math.max(bm.high,bf.high))};
-            };
-            const rb=rng('blackpill'), rc=rng('conventional');
-            bp=rb.score; bpBandOut=rb.band; cv=rc.score; cvBandOut=rc.band;
+          const pairM = anyGeometry && !sexKnown && !window.computeTier0() ? bodyBpCv('m') : null;
+          if (pairM){
+            const pairF = bodyBpCv('f');
+            bp = n2(Math.min(pairM.bp,pairF.bp))+'–'+n2(Math.max(pairM.bp,pairF.bp));
+            bpBandOut = n2(Math.min(pairM.bpBand.low,pairF.bpBand.low))+'–'+n2(Math.max(pairM.bpBand.high,pairF.bpBand.high));
+            cv = bp; cvBandOut = bpBandOut;
           } else {
-            const pair=bodyBpCv(); bp=n2(pair.bp); bpBandOut=n2(pair.bpBand.low)+'–'+n2(pair.bpBand.high); cv=n2(pair.cv); cvBandOut=n2(pair.cvBand.low)+'–'+n2(pair.cvBand.high);
+            const pair = bodyBpCv();
+            if (pair){ bp=n2(pair.bp); bpBandOut=n2(pair.bpBand.low)+'–'+n2(pair.bpBand.high); cv=n2(pair.cv); cvBandOut=n2(pair.cvBand.low)+'–'+n2(pair.cvBand.high); }
           }
+          // Geometry rubric raws for BOTH sexes and BOTH weightings — reference-build instrumentation, logged
+          // on every scored row regardless of which route displayed. n2 keeps them 2dp like every other number.
+          const gRaw = (s,pk) => n2(window.geomWeighted(window.bodySubs(BC.metrics,s), pk));
+          gBpM = gRaw('m','blackpill'); gCvM = gRaw('m','conventional');
+          gBpF = gRaw('f','blackpill'); gCvF = gRaw('f','conventional');
+          gCues = Object.keys(window.bodySubs(BC.metrics,'f')).join('+');
           // Finding 2: log the true bare decision, not bareBody&&!!session. Three-valued, from the trace —
           // BC's pair of booleans cannot distinguish clothed→model from clothed→geometry (a torso crop), and
           // collapsing them made every scored torso shot read as a model score it never got.
@@ -2964,6 +3202,7 @@
           gate_band:gband, gate_tilt:gtilt, gate_yaw:gyaw,
           skel_symmetry: (scored && BC.metrics && typeof BC.metrics.symmetry==='number' && isFinite(BC.metrics.symmetry)) ? BC.metrics.symmetry.toFixed(4) : '',
           model_raw: cur.modelRaw!=null ? cur.modelRaw.toFixed(3) : '',
+          geom_bp_m:gBpM, geom_cv_m:gCvM, geom_bp_f:gBpF, geom_cv_f:gCvF, geom_cues:gCues,
           bp, bp_band:bpBandOut, cv, cv_band:cvBandOut,
           sex: scored ? (BC.sex||'unknown') : '',
           sex_conf: (scored && BC.sexConf!=null) ? Math.round(BC.sexConf*100)+'%' : '',
@@ -2989,12 +3228,13 @@
       function snapshot(){
         const shown = !canvas.hidden && stage.classList.contains('show');
         let url=null; try { if (shown) url = canvas.toDataURL('image/jpeg',0.92); } catch(_){}
-        return { bc:Object.assign({}, BC), w:canvas.width, h:canvas.height, shown, url,
+        // `shots` is COPIED, not aliased: Object.assign is shallow and bcPushShot mutates the array in
+        // place, so a shared reference would let the batch quietly rewrite the user's own shot set.
+        return { bc:Object.assign({}, BC, { shots:(BC.shots||[]).slice() }), w:canvas.width, h:canvas.height, shown, url,
                  status:document.getElementById('bc-status').innerHTML };
       }
       function restore(s){
         Object.assign(BC, s.bc);
-        document.querySelectorAll('.bc-variant button').forEach(b=>b.classList.toggle('active', b.dataset.prof===BC.profile));
         if (window.renderInputsPanel) window.renderInputsPanel();   // resync Step-2 (sex-specific picker) to restored BC
         if (window.applySkipUI) window.applySkipUI();               // Item 4: re-sync the skip checkbox + collapse state
         if (window.renderResult) window.renderResult();             // storage still guarded → repaint without persisting

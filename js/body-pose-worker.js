@@ -3,6 +3,12 @@
 // PoseLandmarker without segmentation, plus the dedicated Selfie ImageSegmenter. Both stay off the
 // main thread and under the page watchdog, so a native abort or spin cannot freeze the UI.
 
+// The arm-in-measurement-band predicate is SHARED with body.html's camera guide — one definition, in
+// js/body-arm-band.js, loaded here by importScripts (classic worker) and by a plain <script> there.
+// The two must agree or the guide passes a pose this scan then declines to measure; see that file.
+if (typeof importScripts === 'function') importScripts('body-arm-band.js');
+else if (typeof require === 'function') globalThis.bodyArmBand = require('./body-arm-band.js').bodyArmBand;
+
 const VISION_MODULE_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs';
 const WASM_URL = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm';
 const POSE_MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task';
@@ -188,18 +194,14 @@ function extractSilhouette(mask, mw, mh, lm, framing){
 
   // Arm-corruption guard. The width scan grows a contiguous run of body pixels outward from the centre, so an
   // arm pressed against — or resting on — the torso gets counted as torso, inflating the waist/hip and faking a
-  // straight, narrow frame (this is why a tapered, hand-on-hip physique can read "narrow"). Detect an elbow or
-  // wrist sitting inside a measurement band AND tucked within ~the torso's own width; that band is then
+  // straight, narrow frame (this is why a tapered, hand-on-hip physique can read "narrow"). An affected band is
   // unreliable, so we drop the dependent cue rather than score an inflated value (honest over confidently wrong).
+  // The predicate itself lives in js/body-arm-band.js because the page's camera guide has to apply the SAME one.
   const centerXNorm=(lm[11].x+lm[12].x+lm[23].x+lm[24].x)/4;
-  const torsoHalf=Math.max(Math.abs(lm[11].x-lm[12].x), Math.abs(lm[23].x-lm[24].x))/2;
-  const armIn=(loY,hiY)=>[13,14,15,16].some(i=>{
-    const a=lm[i];
-    return a && Number.isFinite(a.x) && Number.isFinite(a.y)
-      && a.y>=loY && a.y<=hiY && Math.abs(a.x-centerXNorm) < torsoHalf*1.1;
-  });
-  const waistArm=armIn(shoulderY+0.42*span, hipY-0.06*span);
-  const hipArm  =armIn(hipY-0.04*span, hipY+0.22*span);
+  if (typeof bodyArmBand !== 'function') throw new Error('body-arm-band.js did not load — the arm-band predicate is missing');
+  const arm=bodyArmBand(lm);
+  const waistArm=arm.waistArm;
+  const hipArm  =arm.hipArm;
 
   const centerX=centerXNorm*mw;
   const shoulderJointW=Math.abs(lm[11].x-lm[12].x)*mw;

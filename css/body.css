@@ -68,18 +68,17 @@
 .bc-privacy { border-top: none; margin-top: 0.5rem; padding-top: 0; opacity: 0.92; }
 .bc-privacy i { color: var(--scarlet-dim); }
 
-.bc-variant { display: flex; gap: 6px; margin-bottom: 1rem; }
-.bc-variant button {
-  flex: 1; border: 0.5px solid var(--border); background: rgba(255,255,255,0.6);
-  border-radius: 9px; padding: 9px 10px; font-size: 13px; cursor: pointer; color: var(--text-muted); font-weight: 600;
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-}
-.bc-variant button.active.bp { background: #51606F; color: #fff; border-color: #51606F; }
-.bc-variant button.active.cv { background: #0F6E56; color: #fff; border-color: #0F6E56; }
+/* .bc-variant (the Black Pill / Conventional lens toggle) deleted 2026-08-14 with the lens curves it
+   switched between. Every route displays one percentile of a stated reference population now, so the
+   control had nothing left to change. */
 
 .bc-score-wrap { text-align: center; padding: 0.5rem 0 0.2rem; }
 .bc-score { font-family: "Playfair Display", Georgia, serif; font-size: clamp(3.2rem, 12vw, 5rem); line-height: 0.9; color: var(--text); }
 .bc-score .unit { font-size: 0.36em; color: var(--text-dim); letter-spacing: 0.04em; }
+/* Deliberately quieter and smaller than .bc-score: the states that use it (numbers with no photo, a photo
+   still being scored) are the absence of a number, and typesetting them at headline size would read as
+   one. Mirrors the Face Calc's .lc-noscore. */
+.bc-noscore { font-family: "Playfair Display", Georgia, serif; font-size: clamp(2rem, 7vw, 2.8rem); line-height: 1; color: var(--text-dim); }
 /* .bc-score-band / -range / -note deleted 2026-08-14: the score band is no longer rendered anywhere
    (it is still computed for the bodyScore.v3 payload). The headline is the score + tier, nothing between. */
 /* Correction line under the page header. It exists because .page-sub is the canon synopsis and cannot be
@@ -89,6 +88,15 @@
 /* What the trained-model headline actually claims: its position in the reference population. A percentile,
    not a range — the 2026-08-14 band deletion above removed ranges, not the meaning of the number. */
 .bc-pct { font-size: 12px; color: var(--text-muted); margin-top: 0.4rem; line-height: 1.5; }
+/* Multi-photo strip (2026-08-14). Same shapes as the Face Calc's .lc-shots so the two calculators'
+   "add another photo" affordance reads as one feature, not two. */
+.bc-shots { margin-top: 0.85rem; padding-top: 0.7rem; border-top: 0.5px solid var(--border); }
+.bc-shot-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.bc-dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--border); display: inline-block; }
+.bc-dot.on { background: #51606F; border-color: #51606F; }
+.bc-shot-count { font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 700; margin-left: 2px; }
+.bc-shots .bc-btn { padding: 5px 11px; font-size: 12px; }
+.bc-shot-note { display: block; font-size: 12px; color: var(--text-dim); margin-top: 0.55rem; line-height: 1.5; }
 .bc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
 .bc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
 .bc-srcbadge.heur  { color: #936211; background: #FBEFD6; } /* darkened from #A06A12 (4.03:1 AA fail) to 4.61:1 */
