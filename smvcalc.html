@@ -400,12 +400,11 @@
           // happens to use the new key but still carries the retired conventional lens.
           if (o.convention !== 'percentile-v3' || o.source !== 'model') return null;
         } else {
-          // Body's final v3 contract has one percentile score too. photo / self-report are the public
-          // provenance names. The concurrent writer retains the more detailed model/geometry/hybrid names,
-          // so those are accepted ONLY with its new percentile convention marker; old same-key v3 records
-          // used those names without the marker and stay quarantined. Unresolved sex also rejects.
-          const bodySourceOk = /^(photo|self-report)$/.test(o.source || '')
-            || (o.convention === 'percentile-v3' && /^(model|geometry|hybrid)$/.test(o.source || ''));
+          // Body's final v3 contract has one percentile score with a convention marker, and every shipped
+          // writer names its route: model / geometry / hybrid (body.html saveBody). Marker-less records —
+          // including retired self-report scores, which Jason's numbers-only ruling made non-scores —
+          // stay quarantined. Unresolved sex also rejects.
+          const bodySourceOk = o.convention === 'percentile-v3' && /^(model|geometry|hybrid)$/.test(o.source || '');
           if (o.schemaVersion !== 3 || !bodySourceOk
             || o.sexConfirmed !== true || !(o.sex === 'm' || o.sex === 'f')) return null;
           const chosen = (typeof SEX_IDX !== 'undefined' && (answers[SEX_IDX] === 'm' || answers[SEX_IDX] === 'f')) ? answers[SEX_IDX] : null;

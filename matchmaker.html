@@ -4728,11 +4728,11 @@
     if (kind==='face') {
       if (o.convention!=='percentile-v3' || o.source!=='model') return null;
     } else {
-      // Body comparisons must not silently cross a sex rubric. Public photo/self-report sources are
-      // valid; detailed model/geometry/hybrid sources require the new percentile convention marker,
-      // which quarantines pre-remap records that used the same v3 key. The manual slider is the fallback.
-      const bodySourceOk=/^(photo|self-report)$/.test(o.source||'')
-        || (o.convention==='percentile-v3' && /^(model|geometry|hybrid)$/.test(o.source||''));
+      // Body comparisons must not silently cross a sex rubric. Every shipped writer names its route —
+      // model / geometry / hybrid, always with the percentile convention marker (body.html saveBody).
+      // Marker-less records — including retired self-report scores, which the numbers-only ruling made
+      // non-scores — stay quarantined. The manual slider is the fallback.
+      const bodySourceOk=o.convention==='percentile-v3' && /^(model|geometry|hybrid)$/.test(o.source||'');
       if (o.schemaVersion!==3 || !bodySourceOk
         || o.sexConfirmed!==true || !(o.sex==='m'||o.sex==='f') || (expectSex && o.sex!==expectSex)) return null;
     }
