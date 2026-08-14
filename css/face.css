@@ -67,19 +67,29 @@
 .lc-privacy { border-top: none; margin-top: 0.5rem; padding-top: 0; opacity: 0.92; }
 .lc-privacy i { color: var(--scarlet-dim); }
 
-.lc-variant { display: flex; gap: 6px; margin-bottom: 1rem; }
-.lc-variant button {
-  flex: 1; border: 0.5px solid var(--border); background: rgba(255,255,255,0.6);
-  border-radius: 9px; padding: 9px 10px; font-size: 13px; cursor: pointer; color: var(--text-muted); font-weight: 600;
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-}
-.lc-variant button.active.bp { background: #51606F; color: #fff; border-color: #51606F; }
-.lc-variant button.active.cv { background: #0F6E56; color: #fff; border-color: #0F6E56; }
+/* The .lc-variant lens toggle was REMOVED in the 2026-08-14 recalibration: "Black Pill · PSL" and
+   "Conventional" were two contrast curves over one model output, not two conventions. One scale now. */
 
 .lc-score-wrap { text-align: center; padding: 0.5rem 0 0.2rem; }
-.lc-score { font-family: "Playfair Display", Georgia, serif; font-size: clamp(3.2rem, 12vw, 5rem); line-height: 0.9; color: var(--text); }
-.lc-score .unit { font-size: 0.36em; color: var(--text-dim); letter-spacing: 0.04em; }
+/* The BAND is the headline — the range is the result, the midpoint is a footnote to it. A single photo
+   carries a measured ±1.7 points of capture noise, so a big lone decimal would be a lie of precision. */
+.lc-band { font-family: "Playfair Display", Georgia, serif; font-size: clamp(2.6rem, 9.5vw, 4rem); line-height: 0.95; color: var(--text); }
+.lc-band-sub { font-size: 12px; color: var(--text-dim); margin-top: 0.3rem; letter-spacing: 0.01em; }
+.lc-band-sub strong { color: var(--text-muted); font-size: 14px; }
+.lc-noscore { font-family: "Playfair Display", Georgia, serif; font-size: clamp(2rem, 7vw, 2.8rem); line-height: 1; color: var(--text-dim); }
+.lc-pct { font-size: 12px; color: var(--text-muted); margin-top: 0.4rem; line-height: 1.5; }
+.lc-pct a { color: var(--text-dim); text-decoration: underline; }
 .lc-tier { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; margin-top: 0.35rem; }
+
+/* multi-photo strip */
+.lc-shots { margin-top: 0.85rem; padding-top: 0.7rem; border-top: 0.5px solid var(--border); }
+.lc-shot-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.lc-dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--border); display: inline-block; }
+.lc-dot.on { background: #51606F; border-color: #51606F; }
+.lc-shot-count { font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 700; margin-left: 2px; }
+.lc-shots .lc-btn { padding: 5px 11px; font-size: 12px; }
+.lc-spread { font-size: 12px; color: #936211; background: #FBEFD6; border-radius: 8px; padding: 7px 10px; margin-top: 0.6rem; line-height: 1.5; }
+.lc-shot-note { display: block; font-size: 12px; color: var(--text-dim); margin-top: 0.55rem; line-height: 1.5; }
 .lc-srcbadge { display: inline-block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 800; border-radius: 999px; padding: 3px 10px; margin-top: 0.55rem; }
 .lc-srcbadge.model { color: #0F6E56; background: #E4F3EC; }
 .lc-srcbadge.heur  { color: #936211; background: #FBEFD6; } /* darkened from #A06A12 (4.03:1 AA fail) to 4.61:1 */

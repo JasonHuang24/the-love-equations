@@ -90,12 +90,8 @@
 
         <!-- RESULT COLUMN -->
         <div class="lc-panel">
-          <div class="lc-variant">
-            <button class="active bp" data-prof="blackpill"><i class="ti ti-skull"></i> Black Pill &middot; PSL</button>
-            <button class="cv" data-prof="conventional"><i class="ti ti-mood-smile"></i> Conventional</button>
-          </div>
           <div id="lc-result">
-            <div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; switch lenses any time.</div>
+            <div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; add up to three for a tighter read.</div>
           </div>
         </div>
       </div>
@@ -198,11 +194,6 @@
       { key:'lips',       label:'Lip fullness',            ideal:0.50, tol:0.15, prov:'Geometry' },
       { key:'leanness',   label:'Lower-face ratio',        ideal:0.52, lowTol:0.13, highTol:0.16, prov:'Geometry' }
     ];
-    function scoreMetric(v, m){
-      const tol = v < m.ideal ? (m.lowTol || m.tol) : (m.highTol || m.tol);
-      return 100 * Math.exp(-Math.pow((v - m.ideal)/tol, 2));
-    }
-
     // pixel-read features (already 0..100). pixelStats from the page's canvas sampling.
     function computeSoft(px){
       if (!px) return null;
@@ -347,39 +338,111 @@
       'Skin quality at any real level — only the lighting-grade proxy below'
     ];
 
-    const PROFILES = {
-      // contrast = sigmoid exponent (>1 spreads toward extremes). gamma shifts the middle.
-      blackpill: { name:'Black Pill · PSL', unit:'PSL', gamma:1.0, contrast:1.75, scaleMax:8.6,
-        w:{ symmetry:1.1, jaw:1.4, midface:1.0, fwhr:0.3, canthal:0.3, eyeSpacing:0.6, lips:0.6, leanness:1.0,
-            skin:0.5, evenness:0.4, undereye:0.4 } },
-      conventional: { name:'Conventional', unit:'/ 10', gamma:0.9, contrast:1.35, scaleMax:10,
-        w:{ symmetry:1.0, jaw:0.6, midface:0.5, fwhr:0.2, canthal:0.2, eyeSpacing:0.4, lips:0.8, leanness:0.9,
-            skin:1.5, evenness:1.0, undereye:0.8 } }
-    };
+    // ══ Display mapping — 2026-08-14 recalibration ═══════════════════════════════════════════════════
+    // The score IS a percentile against a stated reference population. There is NO lens curve anywhere.
+    //
+    // WHY THE LENSES ARE GONE: "Black Pill · PSL" and "Conventional" were two different contrast sigmoids
+    // applied to ONE model output. That is not two conventions, it is one measurement displayed twice, and
+    // the spread it showed was manufactured by the curve. Measured on all 5500 SCUT faces through the
+    // shipped pipeline: the old curve put the MEDIAN face at 3.46 ("Incel-tier"), sent 50.9% of an ordinary
+    // population below "Below average", and still handed 7+ to a quarter of it — it failed BOTH tails at
+    // once. Its local gain ran 1.6 points-per-unit at the floor against 13.3 in the middle, so it spent all
+    // its resolution amplifying noise around the average face and crushed the tails flat. One honest scale
+    // replaces both.
+    //
+    // REFERENCE POPULATION: this model's raw output over SCUT-FBP5500 (n=5500, every image, scored through
+    // this exact crop→tensor→model path), DESIGN-CORRECTED — the dataset ships 2000 AF / 2000 AM / 750 CF /
+    // 750 CM, so the four subsets are reweighted to 25% each before the quantiles are taken. Without that
+    // the reference inherits the dataset's 4:1 Asian oversample as though it were a population fact.
+    // REF_RAW[i] = the i-th percentile of that distribution. Strictly increasing by construction, so the
+    // percentile lookup is monotone and invertible — the invariant the whole mapping rests on.
+    //
+    // WHAT THIS DOES NOT FIX: the reference is one rater population (SCUT's 60 Chinese volunteers) on one
+    // image style (frontal, neutral, studio-ish), and the model never saw a face outside its two racial
+    // groups. A percentile against that reference is honest about WHERE it stands; it does not make the
+    // reference universal. See the on-page note.
+    const REF_RAW = [1.344,2.052,2.166,2.24,2.277,2.322,2.36,2.394,2.418,2.446,2.466,2.488,2.499,2.515,
+      2.529,2.544,2.559,2.573,2.584,2.6,2.61,2.622,2.63,2.637,2.644,2.654,2.662,2.67,2.678,2.687,2.696,
+      2.705,2.712,2.72,2.728,2.735,2.741,2.746,2.751,2.757,2.766,2.773,2.779,2.787,2.793,2.801,2.808,
+      2.818,2.824,2.833,2.842,2.853,2.865,2.877,2.891,2.903,2.917,2.938,2.951,2.973,2.992,3.013,3.035,
+      3.065,3.088,3.116,3.143,3.178,3.215,3.252,3.297,3.342,3.381,3.421,3.47,3.523,3.565,3.603,3.641,
+      3.686,3.723,3.759,3.796,3.831,3.857,3.888,3.923,3.947,3.972,3.994,4.013,4.033,4.057,4.089,4.117,
+      4.147,4.178,4.21,4.266,4.318,4.556];
+    // CONVENTION (cited on-page, not assumed): 5.0 = the reference population's median. One point =
+    // 1/1.4 of a standard deviation, which is what puts the community PSL ladder where it claims to sit —
+    // LTN 4–4.9 spans the 24th–50th percentile, MTN 5–5.9 the 50th–76th, HTN 6–6.9 the 76th–92nd,
+    // Chadlite 7–7.9 the 92nd–98th, Chad 8–8.9 the 98th–99.8th.
+    const REF_MID = 5.0, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
+    // 90%-coverage band half-width by photo count. MEASURED, not assumed: 166 people × ≥3 genuinely
+    // different real photographs each (roster galleries), scoring the mean raw of k held-out shots against
+    // the consensus of the rest. A single photo genuinely carries ±1.7 points of capture noise — that is
+    // the instrument's honest resolution, and it is why no naked decimal appears on this page.
+    const BAND_HALF = [1.7, 1.1, 0.9];
+    const MAX_SHOTS = BAND_HALF.length;
 
-    function gradeFace(geo, soft, profKey){
-      const prof = PROFILES[profKey];
-      let num=0, den=0; const subs={};
-      if (geo){ METRICS.forEach(function(m){
-        const s = scoreMetric(geo[m.key], m); subs[m.key]=s; num += prof.w[m.key]*s; den += prof.w[m.key];
-      }); }
-      if (soft){ SOFT.forEach(function(s){
-        const v = soft[s.key]; subs[s.key]=v; num += prof.w[s.key]*v; den += prof.w[s.key];
-      }); }
-      let x = (den ? num/den : 0) / 100;
-      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
-      x = Math.pow(x, prof.gamma);
-      return { score: 1 + (prof.scaleMax-1)*x, raw:x*100, subs:subs };
+    // Percentile of a raw model output within the reference population, in [0,1]. Binary search + linear
+    // interpolation between knots; PINNED (not extrapolated) outside the reference's own observed range,
+    // because we have no evidence about raws the reference never produced. (DOM-free, testable.)
+    function refPercentile(raw){
+      const last = REF_RAW.length - 1;
+      if (!(raw > REF_RAW[0])) return 0;
+      if (raw >= REF_RAW[last]) return 1;
+      let lo = 0, hi = last;
+      while (hi - lo > 1){ const mid = (lo + hi) >> 1; if (REF_RAW[mid] <= raw) lo = mid; else hi = mid; }
+      const span = REF_RAW[hi] - REF_RAW[lo];
+      return (lo + (span > 0 ? (raw - REF_RAW[lo]) / span : 0)) / last;
     }
-
-    // ── Trained-model path ── one objective CNN score t∈[0,1] interpreted through each lens's curve,
-    // so the two variants survive (the CNN measures; the lens interprets). Heuristic stays the breakdown.
-    function mapModelScore(t, profKey){
-      const prof = PROFILES[profKey];
-      let x = Math.max(0, Math.min(1, t));
-      if (prof.contrast !== 1){ const k=prof.contrast, a=Math.pow(x,k), b=Math.pow(1-x,k); x = (a+b)? a/(a+b) : x; }
-      x = Math.pow(x, prof.gamma);
-      return 1 + (prof.scaleMax-1)*x;
+    // Inverse standard-normal CDF — Acklam's rational approximation (|error| < 1.15e-9 over the whole
+    // range). Turns a percentile back into a score whose SPACING means something; without it, equal score
+    // steps would not be equal population steps. (DOM-free, testable.)
+    function invNorm(p){
+      if (!(p > 0 && p < 1)) return p <= 0 ? -Infinity : Infinity;
+      const a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+            b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+            c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+            d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+      const pl = 0.02425, ph = 1 - pl; let q, r;
+      if (p < pl){ q = Math.sqrt(-2*Math.log(p));
+        return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+      if (p > ph){ q = Math.sqrt(-2*Math.log(1-p));
+        return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+      q = p - 0.5; r = q*q;
+      return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+    }
+    // raw → displayed score. Monotone in raw (refPercentile and invNorm both are), clamped to [1,10].
+    // The 1e-6 pinch keeps the two clamped tails from swallowing more than they should: measured on the
+    // reference population, clipping is 0.073% low / 0.018% high. (DOM-free, testable.)
+    function scoreFromRaw(raw){
+      if (!Number.isFinite(raw)) return null;
+      const p = Math.min(Math.max(refPercentile(raw), 1e-6), 1 - 1e-6);
+      return Math.min(SCORE_MAX, Math.max(SCORE_MIN, REF_MID + invNorm(p) * REF_SD));
+    }
+    // MULTI-PHOTO: average the RAW model outputs, THEN map once. The order matters — the map is
+    // non-linear, so the mean of mapped scores is NOT the score of the mean, and the band widths above
+    // were measured against averaged raws. (DOM-free, testable.)
+    function scoreFromRaws(raws){
+      if (!raws || !raws.length) return null;
+      let s = 0, n = 0;
+      for (let i = 0; i < raws.length; i++){ if (Number.isFinite(raws[i])){ s += raws[i]; n++; } }
+      return n ? scoreFromRaw(s / n) : null;
+    }
+    function bandHalfFor(n){ return BAND_HALF[Math.min(Math.max(n|0, 1), MAX_SHOTS) - 1]; }
+    // The percentile a displayed score encodes, 0–100 — what the number actually claims. (testable)
+    function scorePercentile(score){
+      if (!Number.isFinite(score)) return null;
+      return 100 * normCdf((score - REF_MID) / REF_SD);
+    }
+    // English ordinal suffix — 1st/2nd/3rd/4th, with the 11–13 exception. (testable)
+    function ordinal(n){
+      const v = Math.abs(n) % 100, d = v % 10;
+      const suf = (v >= 11 && v <= 13) ? 'th' : d === 1 ? 'st' : d === 2 ? 'nd' : d === 3 ? 'rd' : 'th';
+      return n + suf;
+    }
+    function normCdf(z){   // Abramowitz & Stegun 7.1.26 via erf; plenty for a displayed percentile
+      const t = 1 / (1 + 0.2316419 * Math.abs(z));
+      const d = 0.3989422804014327 * Math.exp(-z*z/2);
+      const p = d*t*(0.319381530 + t*(-0.356563782 + t*(1.781477937 + t*(-1.821255978 + t*1.330274429))));
+      return z > 0 ? 1 - p : p;
     }
     // RGBA bytes (size×size) → CHW float32 tensor, ImageNet-normalized. (DOM-free, testable.)
     function preprocessToTensor(rgba, size, mean, std){
@@ -404,30 +467,28 @@
       return { sex: male>female ? 'm' : 'f', conf: Math.max(e0,e1)/z };
     }
 
-    function pslTier(s, sex){
-      // Sex-coded rungs: male / female / sex-neutral. An undetermined sex must NOT resolve to one
-      // ladder (it read female before this) — show the combined label, mirroring composite-score.js.
+    // Tier rungs on the WHOLE-POINT community boundaries, which under this convention are also the
+    // percentile boundaries they always claimed to be (24th / 50th / 76th / 92nd / 98th). The old ladder
+    // fired "Incel-tier" at what is really the 30th percentile of an ordinary population; under the
+    // recalibrated scale the pejorative rung reaches only the bottom ~8%, which is what the word means.
+    // Sex-coded rungs: male / female / sex-neutral — an undetermined sex must NOT resolve to one ladder.
+    function faceTier(s, sex){
       const coded = (m, f, neutral) => sex === 'm' ? m : sex === 'f' ? f : neutral;
-      if (s<2.5) return 'Sub-tier';
-      if (s<3.5) return coded('Incel-tier', 'Femcel-tier', 'Incel / Femcel-tier');
-      if (s<4.5) return 'Below average';
-      if (s<5.0) return 'LTN · Low-Tier Normie';
-      if (s<5.5) return 'MTN · Mid-Tier Normie';
-      if (s<6.5) return 'HTN · High-Tier Normie';
-      if (s<7.5) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
-      if (s<8.5) return coded('Chad', 'Stacy', 'Chad / Stacy');
+      if (s < 3.0) return 'Sub-tier';
+      if (s < 4.0) return 'Below average';
+      if (s < 5.0) return 'LTN · Low-Tier Normie';
+      if (s < 6.0) return 'MTN · Mid-Tier Normie';
+      if (s < 7.0) return 'HTN · High-Tier Normie';
+      if (s < 8.0) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
+      if (s < 9.0) return coded('Chad', 'Stacy', 'Chad / Stacy');
       return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
     }
-    function convTier(s){
-      if (s<3) return 'Well below average';
-      if (s<4.5) return 'Below average';
-      if (s<5.5) return 'About average';
-      if (s<6.5) return 'Above average';
-      if (s<8) return 'Attractive';
-      if (s<9) return 'Very attractive';
-      return 'Exceptional';
+    // A band spanning rungs must not be labelled with one of them. Returns the single tier when both
+    // ends agree, else the honest span. (testable)
+    function tierForBand(lo, hi, sex){
+      const a = faceTier(lo, sex), b = faceTier(hi, sex);
+      return a === b ? a : a + ' → ' + b;
     }
-    function tierFor(p, s, sex){ return p === 'blackpill' ? pslTier(s, sex) : convTier(s); }
 
     // ── Batch-mode serializers (debug/calibration only; DOM-free, testable). Generic over a columns
     //    spec [{key,label}] so the on-page table, CSV and markdown all share one stable column order.
@@ -452,12 +513,17 @@
       return [head, sep].concat(body).join('\n') + '\n';
     }
 
-    if (typeof module !== 'undefined') { module.exports = { computeMetrics, computeSoft, gradeFace, scoreMetric, mapModelScore, preprocessToTensor, METRICS, SOFT, MEASURES, CANT_READ, PROFILES, bandFor, mascIndex, computeComposites, guessSex, preprocessSex, sexFromLogits, pslTier, convTier, batchToCSV, batchToMarkdown, batchCsvCell, batchMdCell, classifyFraming, FRAMING_GATE }; }
+    if (typeof module !== 'undefined') { module.exports = { computeMetrics, computeSoft, preprocessToTensor, METRICS, SOFT, MEASURES, CANT_READ, bandFor, mascIndex, computeComposites, guessSex, preprocessSex, sexFromLogits, faceTier, tierForBand, batchToCSV, batchToMarkdown, batchCsvCell, batchMdCell, classifyFraming, FRAMING_GATE, ordinal, REF_RAW, REF_MID, REF_SD, BAND_HALF, MAX_SHOTS, refPercentile, invNorm, normCdf, scoreFromRaw, scoreFromRaws, bandHalfFor, scorePercentile }; }
   </script>
 
   <!-- ===== UI wiring (no MediaPipe) ===== -->
   <script>
-    const LC = { profile:'blackpill', geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
+    const LC = { geo:null, soft:null, model:null, modelRaw:null, modelReady:false,
+                 // MULTI-PHOTO: raw model outputs for up to MAX_SHOTS photos of the SAME person. The score
+                 // is the mapping of their MEAN raw, and the band narrows as the array fills. `addMode`
+                 // makes the NEXT scored photo append instead of starting over — set only by the explicit
+                 // "Add another photo" affordance, so a plain new drop still means "new person".
+                 shots:[], addMode:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'',
                  framingOverride:false,   // this result was scored on the rate-anyway override — rides into the shot state AND the composite payload (provenance must survive the blend)
                  sexClsSex:null, sexClsConf:null,   // the classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
@@ -483,12 +549,6 @@
       });
     });
 
-    document.querySelectorAll('.lc-variant button').forEach(function(b){
-      b.addEventListener('click', function(){
-        document.querySelectorAll('.lc-variant button').forEach(x => x.classList.toggle('active', x===b));
-        LC.profile = b.dataset.prof; renderResult();
-      });
-    });
 
     function setStatus(msg, isErr){
       const el = document.getElementById('lc-status'); el.textContent = msg; el.classList.toggle('err', !!isErr);
@@ -561,20 +621,29 @@
         return;
       }
       if (!LC.geo){
-        host.innerHTML = '<div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; switch lenses any time.</div>';
+        host.innerHTML = '<div class="lc-empty"><i class="ti ti-face-id"></i>No face yet. Drop a photo and the score appears here &mdash; add up to three for a tighter read.</div>';
         return;
       }
-      const prof = PROFILES[LC.profile];
-      const other = LC.profile === 'blackpill' ? 'conventional' : 'blackpill';
-      const accent = LC.profile === 'blackpill' ? '#51606F' : '#0F6E56';
-      const heur = gradeFace(LC.geo, LC.soft, LC.profile);   // always the breakdown; also the fallback score
-      const usingModel = LC.model != null;
-      const score  = usingModel ? mapModelScore(LC.model, LC.profile) : heur.score;
-      const oscore = usingModel ? mapModelScore(LC.model, other) : gradeFace(LC.geo, LC.soft, other).score;
+      const accent = '#51606F';
+      // The headline REQUIRES the trained model. The old geometry fallback scored the headline through the
+      // same contrast curve this recalibration removed, and it has no reference population to be a
+      // percentile against — so with no model there is no number, and the page says so rather than
+      // inventing one. The geometry panel below still renders: it is a description, not a score.
+      const shots = LC.shots.filter(Number.isFinite);
+      const nShots = shots.length;
+      const usingModel = nShots > 0;
+      const score = usingModel ? scoreFromRaws(shots) : null;
+      const half = usingModel ? bandHalfFor(nShots) : null;
+      const lo = usingModel ? Math.max(SCORE_MIN, score - half) : null;
+      const hi = usingModel ? Math.min(SCORE_MAX, score + half) : null;
+      const pct = usingModel ? scorePercentile(score) : null;
+      // per-photo scores, so a multi-photo read can show how much the camera moved the answer
+      const perShot = shots.map(scoreFromRaw);
+      const spread = nShots > 1 ? Math.max.apply(null, perShot) - Math.min.apply(null, perShot) : null;
 
       const srcBadge = usingModel
         ? '<div class="lc-srcbadge model">Trained CNN score &middot; the breakdown below is the transparent geometry</div>'
-        : '<div class="lc-srcbadge heur">Geometry heuristic &middot; no trained model loaded (see note)</div>';
+        : '<div class="lc-srcbadge heur">No trained model loaded &mdash; the panel below still measures, but there is no score (see note)</div>';
       const sexKnown = LC.sex === 'm' || LC.sex === 'f';
       const sex = sexKnown ? LC.sex : 'f';   // 'f' fallback ONLY re-bases the (hidden) sex-conditional bands; sex-conditional blocks gate on sexKnown
       const tierSex = sexKnown ? LC.sex : null;   // tier labels get the TRUE sex (or null → sex-neutral rung), never the 'f' fallback
@@ -621,20 +690,66 @@
       const cantRows = '<div class="lc-bd-h">What this panel cannot measure</div>'
         + '<ul class="lc-cant">' + CANT_READ.map(t => '<li>'+t+'</li>').join('') + '</ul>';
 
+      // Multi-photo strip: how many shots are in, what each one alone said, and how much the camera moved
+      // the answer. The spread is the honest advertisement for adding photos — measured, not asserted.
+      function lcShotsUI(n, per, sp){
+        const dots = [];
+        for (let i = 0; i < MAX_SHOTS; i++){
+          dots.push('<span class="lc-dot'+(i < n ? ' on' : '')+'"></span>');
+        }
+        const nudge = n >= MAX_SHOTS
+          ? '<span class="lc-shot-note">Three photos in &mdash; this is the tightest read the instrument gives.</span>'
+          : '<span class="lc-shot-note"><strong>Add another photo to narrow the band.</strong> The same face photographed '
+            + 'differently moves this score by <strong>±1.7 points</strong> on one shot; three shots cuts that to ±0.9.</span>';
+        return '<div class="lc-shots">'
+          + '<div class="lc-shot-row">' + dots.join('')
+          + '<span class="lc-shot-count">'+n+' of '+MAX_SHOTS+' photos</span>'
+          + (n < MAX_SHOTS ? '<button type="button" class="lc-btn ghost lc-addshot">+ Add another photo</button>' : '')
+          + (n > 1 ? '<button type="button" class="lc-btn ghost lc-clearshots">Start over</button>' : '')
+          + '</div>'
+          + (sp != null ? '<div class="lc-spread">Across your '+n+' photos the score alone ranged '
+              + '<strong>'+fmt(Math.min.apply(null, per))+'</strong> to <strong>'+fmt(Math.max.apply(null, per))+'</strong> '
+              + '(spread '+sp.toFixed(1)+'). That range is the camera, not your face.</div>' : '')
+          + nudge
+          + '</div>';
+      }
+
+      // ── Headline. The BAND is the result; the midpoint is shown smaller, under it. There is no naked
+      //    decimal on this page — a single photo carries ±1.7 points of measured capture noise, and a
+      //    point estimate at that resolution is a claim the instrument cannot support.
+      const headline = !usingModel
+        ? '<div class="lc-noscore">No score</div>'
+          + '<div class="lc-tier" style="color:'+accent+'">The trained model isn&rsquo;t loaded</div>'
+        : '<div class="lc-band" style="color:'+accent+'">'+fmt(lo)+' &ndash; '+fmt(hi)+'</div>'
+          + '<div class="lc-band-sub">best estimate <strong>'+fmt(score)+'</strong> &middot; '
+            + '90% band from '+nShots+' photo'+(nShots===1?'':'s')+'</div>'
+          + '<div class="lc-tier" style="color:'+accent+'">'+tierForBand(lo, hi, tierSex)+'</div>'
+          + '<div class="lc-pct">Around the <strong>'+ordinal(Math.round(pct))+' percentile</strong> of the reference population '
+            + '<a href="#lc-convention">(what that means)</a></div>';
+
       host.innerHTML =
         '<div class="lc-score-wrap">'
-        + '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">'+prof.unit+'</span></div>'
-        + '<div class="lc-tier" style="color:'+accent+'">'+tierFor(LC.profile, score, tierSex)+'</div>'
+        + headline
+        + (usingModel ? lcShotsUI(nShots, perShot, spread) : '')
         + srcBadge
         + (LC.reliability ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>⚠ Read with caution.</strong> '+LC.reliability.replace(/^[\s·]+/, '')+'</div>' : '')
         + (sexConflict ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:var(--scarlet)"><strong>Your sex pick and the photo disagree.</strong> You set the sex to <strong>'+(sexConflict.manual==='m'?'male':'female')+'</strong>, but the photo&rsquo;s face classifier reads <strong>'+(sexConflict.cls==='m'?'male':'female')+'</strong> ('+Math.round(sexConflict.conf*100)+'% confident). The panel below uses <strong>your selection</strong> &mdash; the headline score is the same either way. <strong><a href="#" class="lc-sexflip" data-sex="'+sexConflict.cls+'" style="color:var(--scarlet)">Use the '+(sexConflict.cls==='m'?'male':'female')+' read instead &rarr;</a></strong></div>' : '')
         + (LE_DEBUG && usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
-        + '<div class="lc-other">The other lens &mdash; '+PROFILES[other].name+' &mdash; says <strong>'+fmt(oscore)+' '+PROFILES[other].unit+'</strong> ('+tierFor(other, oscore, tierSex)+').</div>'
+        + (usingModel ? '<div class="lc-other" id="lc-convention"><strong>What the number means.</strong> '
+            + 'It is a <strong>percentile</strong>, not a verdict: <strong>5.0 is the median</strong> of the reference '
+            + 'population, and one point is 1/1.4 of a standard deviation. That places the looksmaxxing ladder where it '
+            + 'has always claimed to sit &mdash; LTN 4&ndash;4.9 is the 24th&ndash;50th percentile, MTN 5&ndash;5.9 the '
+            + '50th&ndash;76th, HTN 6&ndash;6.9 the 76th&ndash;92nd, Chadlite 7&ndash;7.9 the 92nd&ndash;98th. '
+            + 'The reference is this model&rsquo;s output over all 5,500 SCUT-FBP5500 faces, reweighted so the '
+            + 'dataset&rsquo;s 4:1 Asian oversample doesn&rsquo;t pass as a population fact. '
+            + '<strong>It is one rater population</strong> (60 Chinese volunteers) <strong>on one photo style</strong>, and the model '
+            + 'never saw a face outside its two racial groups &mdash; so this says where you sit against '
+            + '<em>that</em> reference, not against everyone.</div>' : '')
         + '</div>'
         + '<div class="lc-note-line" style="margin-top:0.8rem">Where this face sits against a typical range, <strong>ordered by how much the evidence says each trait matters</strong>. Descriptive, not a verdict &mdash; a reading outside the band is noted, not penalized, and the score above can disagree.</div>'
         + sexCtl
         + drivers + featRows + propRows + lensRows + cantRows
-        + '<div class="lc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box); the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a front-on measure misses gestalt and the whole profile &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. With no model loaded, the geometry scores the headline too (badged above).</div>';
+        + '<div class="lc-missing"><strong>How to read this:</strong> the headline is the trained model&rsquo;s (a black box); the panel is the transparent geometry &mdash; an independent, evidence-ranked read the model can overrule. They <em>will</em> diverge, because a front-on measure misses gestalt and the whole profile &mdash; the point of <a href="frameworks.html#bone-pill">The Bone Pill</a>. <strong>With no model loaded there is no headline score at all</strong> &mdash; the geometry panel describes the face, but it has no reference population to be a percentile against, so it does not get to name a number.</div>';
 
       host.querySelectorAll('.lc-sex button').forEach(function(b){
         b.addEventListener('click', function(){ LC.sex = b.dataset.sex; LC.sexAuto = false; LC.sexManual = true; LC.sexSource = 'manual'; renderResult(); });
@@ -642,13 +757,34 @@
       host.querySelectorAll('.lc-sexflip').forEach(function(a){
         a.addEventListener('click', function(e){ e.preventDefault(); LC.sex = a.dataset.sex; LC.sexAuto = false; LC.sexManual = true; LC.sexSource = 'manual'; renderResult(); });
       });
+      // "+ Add another photo" arms append-mode, then opens the same picker the first photo used. Any
+      // OTHER route to a new image (a fresh drop, paste, URL, shutter) leaves addMode false and therefore
+      // starts a new person — the safe default, since we cannot tell two faces apart.
+      host.querySelectorAll('.lc-addshot').forEach(function(b){
+        b.addEventListener('click', function(){
+          LC.addMode = true;
+          setStatus('Add another photo of the SAME face — a different angle or day is ideal.');
+          const fi = document.getElementById('lc-file'); if (fi) fi.click();
+        });
+      });
+      host.querySelectorAll('.lc-clearshots').forEach(function(b){
+        b.addEventListener('click', function(){
+          LC.shots = []; LC.addMode = false; LC.model = null; LC.modelRaw = null;
+          window.lcResetResult(); setStatus('Cleared. Drop a face to start again.');
+          if (window.lcClearCanvas) window.lcClearCanvas();
+        });
+      });
 
-      // persist this face score for the Face × Body composite (both lenses; the composite normalises them)
-      if (window.leComposite){
+      // Persist for the Face × Body composite. There is ONE score now, so `bp` and `cv` carry the same
+      // value — the field names survive for the downstream readers, the two-lens fiction does not. With no
+      // model there is nothing to persist: clear instead, so a stale read can't outlive the photo.
+      if (window.leComposite && !usingModel){ window.leComposite.clearFace(); }
+      else if (window.leComposite){
         window.leComposite.saveFace({
-          bp: usingModel ? mapModelScore(LC.model,'blackpill') : gradeFace(LC.geo, LC.soft,'blackpill').score,
-          cv: usingModel ? mapModelScore(LC.model,'conventional') : gradeFace(LC.geo, LC.soft,'conventional').score,
-          bpMax: PROFILES.blackpill.scaleMax, cvMax: PROFILES.conventional.scaleMax, floor: 1,
+          bp: score, cv: score,
+          lo: lo, hi: hi, band: half, pct: pct, photos: nShots,
+          convention: 'percentile-v3',   // 5.0 = reference median, 1 pt = 1/1.4 sd
+          bpMax: SCORE_MAX, cvMax: SCORE_MAX, floor: SCORE_MIN,
           // undetermined sex persists as null (matches the Body Calc's model path) — the display-only
           // 'f' fallback must not enter the composite's sex-conflict check as a real read
           source: usingModel ? 'model' : 'heuristic', sex: (sexKnown ? sex : null), ts: LC.measuredAt,
@@ -659,7 +795,15 @@
     }
 
     window.lcAnalyze = function(geo, soft, reliability, framingOverride){
-      LC.geo = geo; LC.soft = soft; LC.model = null; LC.measuredAt = Date.now();   // new face: heuristic shows first, model score arrives async
+      LC.geo = geo; LC.soft = soft; LC.model = null; LC.measuredAt = Date.now();   // new face: the panel shows first, the model score arrives async
+      // A photo that did NOT arrive through "+ Add another photo" is a new person: drop the accumulated
+      // shots. Keeping them would silently average two different faces together.
+      // The flag is CONSUMED HERE and nowhere else — its lifetime is exactly "armed until the next photo
+      // commits". Clearing it from the async model callback instead let a late inference from the PREVIOUS
+      // photo disarm it between the click and this call, which silently replaced the set instead of adding.
+      const append = LC.addMode;
+      LC.addMode = false;
+      if (!append) LC.shots = [];
       LC.gate = null; window.lcGateOverride = null;    // this photo is committing — any pending framing prompt is decided/superseded
       LC.reliability = reliability || '';              // persistent low-res caveat (survives the async model re-render)
       LC.framingOverride = !!framingOverride;          // structured provenance: a degraded-framing photo scored on the user's override
@@ -682,7 +826,19 @@
       note += LC.reliability;
       setStatus(note); renderResult();
     };
-    window.lcSetModelScore = function(t, raw){ LC.model = t; LC.modelRaw = (raw==null?null:raw); setStatus('Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').'); renderResult(); };
+    // `t` is retained only as the "a model result landed" flag; the SCORE now comes from LC.shots, since
+    // the mapping consumes raw model outputs directly (no normalised t in the display path any more).
+    window.lcSetModelScore = function(t, raw){
+      LC.model = t; LC.modelRaw = (raw==null?null:raw);
+      if (Number.isFinite(raw)){
+        if (LC.shots.length >= MAX_SHOTS) LC.shots.shift();   // a 4th photo replaces the oldest, never silently ignored
+        LC.shots.push(raw);
+      }
+      setStatus(LC.shots.length > 1
+        ? 'Scored with the trained model — averaging ' + LC.shots.length + ' photos.'
+        : 'Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').');
+      renderResult();
+    };
     window.lcModelReady = function(ok){ LC.modelReady = ok; };
     // the on-device classifier reports in — it OVERRIDES the geometry guess but NEVER a manual pick. The read is
     // recorded either way (LC.sexClsSex/Conf), so a manual choice it contradicts still surfaces a conflict note.
@@ -693,15 +849,19 @@
       LC.sex = s; LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
       renderResult();
     };
-    window.lcResetResult = function(){ LC.gate = null; window.lcGateOverride = null; LC.geo = null; LC.soft = null; LC.model = null; LC.reliability = ''; LC.framingOverride = false; LC.sexClsSex = null; LC.sexClsConf = null; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
+    window.lcResetResult = function(){ LC.gate = null; window.lcGateOverride = null; LC.geo = null; LC.soft = null; LC.model = null; LC.shots = []; LC.addMode = false; LC.reliability = ''; LC.framingOverride = false; LC.sexClsSex = null; LC.sexClsConf = null; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
     // a degraded-framing photo parks here until the user rules on it (renderResult owns the prompt UI)
     window.lcShowGate = function(issues){ LC.gate = { issues: issues || [] }; renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
-    const LC_SHOT_KEY = 'loveEquations.faceShot.v1';
+    // v2: the payload now carries the SHOTS array, and no longer carries a lens `profile`. Bumped rather
+    // than migrated — a v1 shot was scored on the retired contrast curve, so restoring one would put a
+    // pre-recalibration number back on screen.
+    const LC_SHOT_KEY = 'loveEquations.faceShot.v2';
+    try { localStorage.removeItem('loveEquations.faceShot.v1'); } catch(e){}
     function lcSaveShot(){
       if (!LC.geo || !LC.shotDataURL) return;          // only persist a real, analysed result
-      const state = { profile:LC.profile, geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
+      const state = { shots:LC.shots.slice(), geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
         sex:LC.sex, sexAuto:LC.sexAuto, sexSource:LC.sexSource, sexConf:LC.sexConf, sexManual:LC.sexManual,
         sexClsSex:LC.sexClsSex, sexClsConf:LC.sexClsConf,
         reliability:LC.reliability, framingOverride:!!LC.framingOverride, measuredAt:LC.measuredAt };
@@ -715,14 +875,15 @@
     window.lcRestoreState = function(s){
       if (!s || typeof s !== 'object' || !s.geo || typeof s.geo !== 'object') return;   // schema guard
       const fin = (x, d) => (typeof x==='number' && isFinite(x)) ? x : d;
-      LC.profile = s.profile==='conventional' ? 'conventional' : 'blackpill'; LC.geo = s.geo; LC.soft = (s.soft && typeof s.soft==='object') ? s.soft : null;
+      LC.geo = s.geo; LC.soft = (s.soft && typeof s.soft==='object') ? s.soft : null;
+      LC.shots = Array.isArray(s.shots) ? s.shots.filter(Number.isFinite).slice(0, MAX_SHOTS) : [];
+      LC.addMode = false;
       LC.measuredAt = fin(s.measuredAt, Date.now());
       LC.model = fin(s.model, null); LC.modelRaw = fin(s.modelRaw, null);
       LC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; LC.sexAuto = !!s.sexAuto;
       LC.sexSource = s.sexSource || 'guess'; LC.sexConf = fin(s.sexConf, null);
       LC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; LC.sexClsConf = fin(s.sexClsConf, null);
       LC.sexManual = !!s.sexManual; LC.reliability = s.reliability || ''; LC.framingOverride = !!s.framingOverride;
-      document.querySelectorAll('.lc-variant button').forEach(function(b){ b.classList.toggle('active', b.dataset.prof===LC.profile); });
       renderResult();
     };
     // Per-calculator Reset — clears THIS calc only (photo, result, saved shot, composite face entry);
@@ -741,6 +902,7 @@
       if (window.lcCancelAnalysis) window.lcCancelAnalysis();
       LC.gate = null; window.lcGateOverride = null;
       LC.geo = null; LC.soft = null; LC.model = null; LC.modelRaw = null; LC.reliability = '';
+      LC.shots = []; LC.addMode = false;
       LC.framingOverride = false; LC.measuredAt = null;
       LC.sex = null; LC.sexAuto = true; LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false; LC.shotDataURL = null;
       LC.sexClsSex = null; LC.sexClsConf = null;
@@ -752,6 +914,8 @@
     window.lcSexConflict = lcSexConflict;
     window.lcComputeMetrics = computeMetrics;
     window.lcClassifyFraming = classifyFraming;
+    window.scoreFromRaw = scoreFromRaw;   // batch mode scores rows through the same mapping the panel uses
+    window.scoreFromRaws = scoreFromRaws;
     window.lcPreprocess = preprocessToTensor;
     window.lcPreprocessSex = preprocessSex;
     window.lcSexFromLogits = sexFromLogits;
@@ -1371,9 +1535,11 @@
         const scored = !!LC.geo;
         let bp='', cv='';
         if (scored){
-          const usingModel = cur.model != null;
-          bp = n2(usingModel ? window.mapModelScore(cur.model,'blackpill')  : window.gradeFace(LC.geo,LC.soft,'blackpill').score);
-          cv = n2(usingModel ? window.mapModelScore(cur.model,'conventional'): window.gradeFace(LC.geo,LC.soft,'conventional').score);
+          // Batch scores ONE photo per row (that is the point of a calibration sweep), so it always uses
+          // the single-shot band. No model → no score, same as the interactive path.
+          const s = Number.isFinite(cur.modelRaw) ? window.scoreFromRaw(cur.modelRaw) : null;
+          bp = s == null ? '' : n2(s);
+          cv = bp;
         }
         // Finding 1: if settle timed out, this image's model/sex inference may still be in flight — invalidate it
         // now (so a late inferAndSet/inferSex self-discards) before advancing so it can't bleed into the next row.
@@ -1412,7 +1578,6 @@
       }
       function restore(s){
         Object.assign(LC, s.lc);
-        document.querySelectorAll('.lc-variant button').forEach(b=>b.classList.toggle('active', b.dataset.prof===LC.profile));
         if (window.renderResult) window.renderResult();          // storage still guarded → repaint without persisting
         if (s.shown && s.url){ const im=new Image(); im.onload=()=>{ canvas.width=s.w; canvas.height=s.h; canvas.getContext('2d').drawImage(im,0,0,s.w,s.h); canvas.hidden=false; video.hidden=true; stage.classList.add('show'); }; im.src=s.url; }
         else { window.lcClearCanvas(); }

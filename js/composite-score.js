@@ -15,9 +15,18 @@
 (function () {
   'use strict';
 
-  var FACE_KEY = 'loveEquations.faceScore.v2';
-  var BODY_KEY = 'loveEquations.bodyScore.v2';
+  // v3 = the 2026-08-14 recalibration's convention (5.0 = reference-population median, one point =
+  // 1/1.4 sd, every score carries a measured uncertainty band). QUARANTINE: we read ONLY v3. A v2 score
+  // was produced by the retired contrast curve — on that curve the median face read 3.46 — so blending a
+  // stored v2 into an Overall would silently mix two incompatible scales. Old keys are not migrated and
+  // not read; they are deleted on load so they cannot be resurrected by a downgrade.
+  var FACE_KEY = 'loveEquations.faceScore.v3';
+  var BODY_KEY = 'loveEquations.bodyScore.v3';
+  var LEGACY_KEYS = ['loveEquations.faceScore.v2', 'loveEquations.bodyScore.v2'];
   var LENS_KEY = 'loveEquations.compositeLens.v1';
+  for (var _i = 0; _i < LEGACY_KEYS.length; _i++) {
+    try { localStorage.removeItem(LEGACY_KEYS[_i]); } catch (e) {}
+  }
 
   // Provisional, tunable: face vs. body share of "overall looks" (one constant re-weights everywhere).
   var FACE_WEIGHT = 0.5;
@@ -66,29 +75,32 @@
     return Math.round(s / 86400) + 'd ago';
   }
 
-  // Tiers are fed the RAW score. The blackpill ladder mirrors the Face Calc's pslTier exactly (the
-  // composite already speaks PSL vocabulary; the Body Calc keeps its own physique ladder by design);
-  // the conventional ladder matches both calcs' convTier thresholds.
+  // Tier rungs on the v3 convention: whole-point boundaries that are ALSO percentile boundaries
+  // (24th / 50th / 76th / 92nd / 98th). Mirrors the Face Calc's faceTier exactly — if the two ever
+  // drift, the composite would label a number differently from the calc that produced it.
   function tierFor(s, lens, sex) {
-    if (lens === 'blackpill') {
-      var coded = function (m, fem, neutral) { return sex === 'm' ? m : sex === 'f' ? fem : neutral; };
-      if (s < 2.5) return 'Sub-tier';
-      if (s < 3.5) return coded('Incel-tier', 'Femcel-tier', 'Incel / Femcel-tier');
-      if (s < 4.5) return 'Below average';
-      if (s < 5.0) return 'LTN · Low-Tier Normie';
-      if (s < 5.5) return 'MTN · Mid-Tier Normie';
-      if (s < 6.5) return 'HTN · High-Tier Normie';
-      if (s < 7.5) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
-      if (s < 8.5) return coded('Chad', 'Stacy', 'Chad / Stacy');
-      return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
-    }
-    if (s < 3) return 'Well below average';
-    if (s < 4.5) return 'Below average';
-    if (s < 5.5) return 'About average';
-    if (s < 6.5) return 'Above average';
-    if (s < 8) return 'Attractive';
-    if (s < 9) return 'Very attractive';
-    return 'Exceptional';
+    var coded = function (m, fem, neutral) { return sex === 'm' ? m : sex === 'f' ? fem : neutral; };
+    if (s < 3.0) return 'Sub-tier';
+    if (s < 4.0) return 'Below average';
+    if (s < 5.0) return 'LTN · Low-Tier Normie';
+    if (s < 6.0) return 'MTN · Mid-Tier Normie';
+    if (s < 7.0) return 'HTN · High-Tier Normie';
+    if (s < 8.0) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
+    if (s < 9.0) return coded('Chad', 'Stacy', 'Chad / Stacy');
+    return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
+  }
+  // A band spanning two rungs is labelled with the span, never with one end.
+  function tierForBand(lo, hi, lens, sex) {
+    var a = tierFor(lo, lens, sex), b = tierFor(hi, lens, sex);
+    return a === b ? a : a + ' → ' + b;
+  }
+  // Half-width of the blended score's band. The two calcs measure different things from different
+  // photos, so their errors are independent and combine in quadrature rather than adding. A calc that
+  // ships no band (older payload shape) contributes null → we degrade to no band rather than invent one.
+  function blendedHalf(face, body) {
+    if (!num(face.band) || !num(body.band)) return null;
+    var f = FACE_WEIGHT * face.band, b = (1 - FACE_WEIGHT) * body.band;
+    return Math.sqrt(f * f + b * b);
   }
 
   function sourceWord(s) {
@@ -101,6 +113,13 @@
   }
   function lensLabel(lens) { return lens === 'blackpill' ? 'Black Pill &middot; Frame' : 'Conventional'; }
   function lensColor(lens) { return lens === 'blackpill' ? '#51606F' : '#0F6E56'; }   // match the calc accents
+  // The toggle only earns its place if some payload actually DIFFERS between the two fields. The Face
+  // Calc collapsed to one scale in v3 (bp === cv), so if the Body Calc has too, the toggle would switch
+  // between two identical numbers — worse than absent, because it implies a distinction that is gone.
+  function hasTwoLenses(face, body) {
+    return !!((face && num(face.bp) && num(face.cv) && face.bp !== face.cv)
+           || (body && num(body.bp) && num(body.cv) && body.bp !== body.cv));
+  }
   function lensToggle(lens) {
     return '<div class="composite-lens" role="tablist">'
       + '<button type="button" class="composite-lensbtn' + (lens === 'blackpill' ? ' active' : '') + '" data-lens="blackpill">Black Pill &middot; Frame</button>'
@@ -139,14 +158,28 @@
       var overrideNote = ovr.length
         ? '<div class="composite-note" style="color:#A06A12"><strong>&#9888; Reduced-accuracy input.</strong> The ' + ovr.join(' and ') + ' score' + (ovr.length > 1 ? 's were' : ' was') + ' rated on a non-standard-framing override, so the overall is rougher than a to-standard read.</div>'
         : '';
+      // Bands ride through the blend: an Overall built from two banded reads is itself a range, and
+      // showing it as a bare decimal would re-introduce exactly the false precision the calcs just dropped.
+      var oHalf = blendedHalf(face, body);
+      var oLo = oHalf == null ? null : Math.max(1, o - oHalf);
+      var oHi = oHalf == null ? null : Math.min(10, o + oHalf);
+      var headline = oHalf == null
+        ? '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(o) + ' <span class="unit">/ 10</span></div>'
+          + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierFor(o, lens, sex) + '</div>'
+        : '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(oLo) + '&ndash;' + fmt(oHi) + '</div>'
+          + '<div class="composite-breakdown" style="margin-top:.25rem">best estimate <strong>' + fmt(o) + '</strong> / 10 &middot; 90% band</div>'
+          + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierForBand(oLo, oHi, lens, sex) + '</div>';
+      var photoNote = num(face.photos) && face.photos < 3
+        ? '<div class="composite-note">The face read came from ' + face.photos + ' photo' + (face.photos > 1 ? 's' : '') + '. <a href="face.html">Add more on the Face Calc</a> and this band narrows.</div>'
+        : '';
       host.innerHTML =
-        lensToggle(lens)
+        (hasTwoLenses(face, body) ? lensToggle(lens) : '')
         + '<div class="composite-score-wrap">'
-        + '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(o) + ' <span class="unit">/ 10</span></div>'
-        + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierFor(o, lens, sex) + '</div>'
-        + '<div class="composite-srcbadge">' + lensLabel(lens) + ' &middot; Face &times; Body</div>'
+        + headline
+        + '<div class="composite-srcbadge">' + (hasTwoLenses(face, body) ? lensLabel(lens) + ' &middot; ' : '') + 'Face &times; Body</div>'
         + '<div class="composite-breakdown">Face <strong>' + fmt(fS) + '</strong> &amp; Body <strong>' + fmt(bS) + '</strong> &rarr; weighted ' + wF + ' / ' + wB + ' (face / body). These are the same numbers each calc shows.</div>'
         + '</div>'
+        + photoNote
         + conflictNote
         + overrideNote
         + '<div class="composite-note"><strong>Two prototype reads, blended.</strong> Face from the ' + sourceWord(face.source) + ' (' + ago(face.ts) + '), body from the ' + sourceWord(body.source) + ' (' + ago(body.ts) + '). <strong>Assumes both are the same person</strong> &mdash; scores persist across visits, so an old read can linger; Reset clears them. The ' + wF + '/' + wB + ' face/body split is a provisional, tunable default. A mirror of the methodology, not a verdict on a person.</div>'
@@ -162,20 +195,32 @@
     function rowTodo(label, href, prompt) {
       return '<div class="composite-row todo"><i class="ti ti-circle-dashed" aria-hidden="true"></i> <a href="' + href + '">' + label + ' &mdash; ' + prompt + ' &rarr;</a></div>';
     }
+    // A lone half is shown as ITS OWN banded score, explicitly labelled as one half — never as an
+    // Overall. Half of the blend is not a smaller Overall, it is a different measurement.
+    function halfValue(calc) {
+      var s = rawScore(calc, lens);
+      if (s == null) return '—';
+      if (!num(calc.band)) return fmt(s) + ' / 10';
+      return fmt(Math.max(1, s - calc.band)) + '–' + fmt(Math.min(10, s + calc.band)) + ' (best ' + fmt(s) + ')';
+    }
     var faceRow = haveFace
-      ? rowDone('Face Calc', fmt(rawScore(face, lens)) + ' / 10', ago(face.ts))
+      ? rowDone('Face Calc', halfValue(face), ago(face.ts))
       : rowTodo('Face Calc', 'face.html', 'score a face');
     var bodyRow = haveBody
-      ? rowDone('Body Calc', fmt(rawScore(body, lens)) + ' / 10', ago(body.ts))
+      ? rowDone('Body Calc', halfValue(body), ago(body.ts))
       : rowTodo('Body Calc', 'body.html', bodyNeedsSex ? 'set a sex to resolve its score' : 'score a body');
 
     var anyScored = haveFace || haveBody;
+    var loneNote = (haveFace !== haveBody)
+      ? '<div class="composite-note">Showing the <strong>' + (haveFace ? 'face' : 'body') + ' read alone</strong> — this is not an overall looks rating, and it is not half of one. Score the other calculator to get the blend.</div>'
+      : '';
     host.innerHTML =
-      (anyScored ? lensToggle(lens) : '')
+      (anyScored && hasTwoLenses(face, body) ? lensToggle(lens) : '')
       + '<div class="composite-empty">'
       + '<i class="ti ti-sparkles" aria-hidden="true"></i>'
       + '<div class="composite-empty-lead">Your <strong>overall looks rating</strong> blends both calculators. Score the missing one to see it.</div>'
       + '<div class="composite-rows">' + faceRow + bodyRow + '</div>'
+      + loneNote
       + ((anyScored || bodyNeedsSex) ? '<div class="composite-foot"><button type="button" id="composite-reset">Reset</button></div>' : '')
       + '</div>';
     wireReset(); wireLens();
