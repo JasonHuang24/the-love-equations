@@ -956,21 +956,48 @@
     };
     let currentGen = 0;   // bumped per analysis; async inferences tag themselves and self-discard if superseded
     let session = null, modelState = 'loading', pendingTensor = null, pendingTensorGen = 0;
+    // Resilient loader — 2026-08-15. The model is a ~45 MB download and every site deploy re-stamps its
+    // Last-Modified (GitHub Pages), busting the HTTP cache — so a transient network hiccup used to strand
+    // the page in the no-model state for the whole session, and since the percentile remap deleted the
+    // heuristic fallback score, that read as "No score" on the live site (the regression Jason hit).
+    // Three attempts with backoff; bytes go through the Cache API where the context allows it
+    // (https/localhost), so a reload after one successful visit does not re-download at all.
+    // (GET, never HEAD — some static hosts reject HEAD while serving GET.)
+    async function fetchModelBuffer(url){
+      let cache = null;
+      try { if (typeof caches !== 'undefined') cache = await caches.open('le-models-v1'); } catch(e){}
+      if (cache){
+        try { const hit = await cache.match(url); if (hit) return new Uint8Array(await hit.arrayBuffer()); } catch(e){}
+      }
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      if (cache){ try { await cache.put(url, resp.clone()); } catch(e){} }   // quota failures are non-fatal
+      return new Uint8Array(await resp.arrayBuffer());
+    }
+    async function dropCachedModel(url){
+      try { if (typeof caches !== 'undefined'){ const c = await caches.open('le-models-v1'); await c.delete(url); } } catch(e){}
+    }
     async function initModel(){
       const ort = window.ort;
-      if (!ort){ modelState='absent'; window.lcModelReady(false); return; }
-      try {
-        ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
-        window.lcSetStatus('Loading the trained model (~45 MB, re-downloads each reload)…');
-        // no HEAD pre-check — some static hosts reject HEAD while serving GET; let create() GET it and catch
-        session = await ort.InferenceSession.create(MODEL_CONFIG.url, { executionProviders:['wasm'] });
-        modelState='ready'; window.lcModelReady(true);
-        window.lcSetStatus('Trained model ready.');
-        if (pendingTensor) inferAndSet(pendingTensor, pendingTensorGen);   // auto-score a face dropped before the model finished
-      } catch(e){
-        session = null; modelState='absent'; window.lcModelReady(false);
-        window.lcSetStatus('No trained beauty model loaded — running on the geometry heuristic. Drop models/face-beauty.onnx to enable it.');
+      if (!ort){ modelState='absent'; window.lcModelReady(false); window.lcSetStatus('The scoring engine (onnxruntime) did not load — check the connection and reload the page.'); return; }
+      ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
+      for (let attempt = 1; attempt <= 3; attempt++){
+        try {
+          window.lcSetStatus('Loading the trained model (~45 MB)…' + (attempt > 1 ? ' — retry ' + attempt + ' of 3' : ''));
+          const buf = await fetchModelBuffer(MODEL_CONFIG.url);
+          session = await ort.InferenceSession.create(buf, { executionProviders:['wasm'] });
+          modelState='ready'; window.lcModelReady(true);
+          window.lcSetStatus('Trained model ready.');
+          if (pendingTensor) inferAndSet(pendingTensor, pendingTensorGen);   // auto-score a face dropped before the model finished
+          return;
+        } catch(e){
+          session = null;
+          await dropCachedModel(MODEL_CONFIG.url);   // a corrupt cached copy must not wedge every retry
+          if (attempt < 3) await new Promise(r => setTimeout(r, 1500 * attempt));
+        }
       }
+      modelState='absent'; window.lcModelReady(false);
+      window.lcSetStatus('The trained model failed to load after 3 tries — usually a network hiccup during its ~45 MB download. The score needs it (the measurements below still work without it). Reload the page to retry.');
     }
     initModel();
 
