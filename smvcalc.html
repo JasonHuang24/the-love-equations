@@ -379,15 +379,16 @@
     function heightToScore(cm, sex) { return interpAnchors(sex === 'f' ? FEMALE_HEIGHT : MALE_HEIGHT, cm); }
     function bmiToScore(bmi, sex)   { return interpAnchors(sex === 'f' ? FEMALE_BMI : MALE_BMI, bmi); }
 
-    // v3 calc interop. The photo calculators now speak a percentile score (5.0 = their reference
-    // median), while this quiz's Looks factor uses 5.5 as its neutral/manual-gap anchor. Re-anchor with
-    // two straight segments through 1→1, 5→5.5 and 10→10: the median moves without clipping either tail
-    // (a blanket +0.5 would collapse every 9.5–10 input to the same ceiling). DOM-free and testable.
+    // v3 calc interop. Since the 2026-08-14 conventional anchor the photo calculators put their
+    // reference median at 5.5 — the same value this quiz's Looks factor uses as its neutral/manual-gap
+    // anchor — so the import is the identity (clamped). DOM-free and testable.
     const FACE_SCORE_KEY = 'loveEquations.faceScore.v3';
     const BODY_SCORE_KEY = 'loveEquations.bodyScore.v3';
+    // Identity since the 2026-08-14 conventional anchor: the calcs' scale now puts its median at 5.5,
+    // which IS this calculator's neutral — the old piecewise 5.0→5.5 re-anchor became a no-op and was
+    // retired with the marker bump (percentile-v3.1). Clamp only.
     function percentileScoreToLooks(score) {
-      const x = clampScore(score);
-      return x <= 5 ? 1 + (x - 1) * (4.5 / 4) : 5.5 + (x - 5) * (4.5 / 5);
+      return clampScore(score);
     }
     function readCalcImport(key, kind) {
       try {
@@ -396,15 +397,16 @@
           && typeof o.cv === 'number' && isFinite(o.cv) && Math.abs(o.bp - o.cv) < 1e-9
           && o.bpMax === 10 && o.cvMax === 10 && o.floor === 1)) return null;
         if (kind === 'face') {
-          // Face v3 names its scale. Requiring the marker quarantines an old or hand-shaped record that
-          // happens to use the new key but still carries the retired conventional lens.
-          if (o.convention !== 'percentile-v3' || o.source !== 'model') return null;
+          // Face v3 names its scale. Requiring the CURRENT marker (v3.1 = the 5.5-median anchor)
+          // quarantines lens-era records AND 5.0-median-era records — an older anchor imported here
+          // would land half a point low.
+          if (o.convention !== 'percentile-v3.1' || o.source !== 'model') return null;
         } else {
           // Body's final v3 contract has one percentile score with a convention marker, and every shipped
           // writer names its route: model / geometry / hybrid (body.html saveBody). Marker-less records —
           // including retired self-report scores, which Jason's numbers-only ruling made non-scores —
           // stay quarantined. Unresolved sex also rejects.
-          const bodySourceOk = o.convention === 'percentile-v3' && /^(model|geometry|hybrid)$/.test(o.source || '');
+          const bodySourceOk = o.convention === 'percentile-v3.1' && /^(model|geometry|hybrid)$/.test(o.source || '');
           if (o.schemaVersion !== 3 || !bodySourceOk
             || o.sexConfirmed !== true || !(o.sex === 'm' || o.sex === 'f')) return null;
           const chosen = (typeof SEX_IDX !== 'undefined' && (answers[SEX_IDX] === 'm' || answers[SEX_IDX] === 'f')) ? answers[SEX_IDX] : null;

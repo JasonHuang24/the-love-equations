@@ -23,7 +23,7 @@
     <div class="page-header">
       <div class="page-eyebrow">Tool &middot; prototype</div>
       <h1 class="page-title">Body Calculator</h1>
-      <div class="page-sub">Drop in a full-body photo &mdash; on your device, nothing uploaded &mdash; and it reads the frame it can from the silhouette, then scores it on <strong>one scale</strong>: a percentile of a stated reference population, <strong>5.0</strong> being its median. No sliders. It pairs with the <a href="face.html">Face Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
+      <div class="page-sub">Drop in a full-body photo &mdash; on your device, nothing uploaded &mdash; and it reads the frame it can from the silhouette, then scores it on <strong>one scale</strong>: a percentile of a stated reference population, <strong>5.5</strong> being its median. No sliders. It pairs with the <a href="face.html">Face Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
       <!-- The line above is this page's canon synopsis — editing it moves the LE Lab's frozen threshold
            band (extractInstrument reads only .page-title, .page-sub and the header's links). Corrected to
            the one-scale percentile claim 2026-08-14 and swept in the same commit (--neighbors onto the
@@ -380,7 +380,7 @@
 
     // ══ PHOTO DISPLAY MAPPING — 2026-08-14 percentile remap ══════════════════════════════════════════
     // The trained-model score IS a percentile against a stated reference population, shown on the same
-    // scale as the Face Calc (5.0 = the reference median, one point = 1/1.4 sd). No lens curve, no
+    // scale as the Face Calc (5.5 = the reference median, one point = 1/1.4 sd). No lens curve, no
     // outMin/outMax two-point fit, one number.
     //
     // WHAT WAS WRONG: the retired anchors (outMin 14.247 / outMax 58.628) were solved on FIVE photographs
@@ -437,7 +437,9 @@
       28.001,28.236,28.439,28.953,29.246,29.707,30.861,31.385,31.671,32.115,32.343,32.65,33.192,34.227,
       34.914,35.591,36.168,36.734,38.308,38.629,39.093,39.276,41.098,41.941,42.328,43.016,44.371,45.654,
       47.019,48.546,56.823];
-    const REF_MID = 5.0, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
+    // 5.5 = the reference median (2026-08-14 conventional anchor, Jason's ruling — matches how rating
+    // panels centre a 1–10 scale and the SMV Calc's 5.5-neutral convention; same anchor as the Face Calc).
+    const REF_MID = 5.5, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
     // The reference population, stated on the page. A percentile is meaningless without naming what it is
     // a percentile OF, and naming it is the only thing that keeps the number honest.
     const REF_POP_NOTE = '<div class="bc-missing"><strong>What the percentile is measured against:</strong> '
@@ -445,7 +447,7 @@
       + 'portrait photographs of standing women / men at full length&rdquo; categories that this calculator would '
       + 'actually score (readable pose, head-to-feet framing, not bare-torso), run through this exact pipeline. '
       + '138 women / 116 men, reweighted to half each so the reference is not tilted by how many of each Commons happens '
-      + 'to hold. <strong>5.0 is that population&rsquo;s median.</strong> '
+      + 'to hold. <strong>5.5 is that population&rsquo;s median</strong> (rating panels centre a 1&ndash;10 scale above its midpoint; this matches them). '
       + 'What it is <em>not</em>: a census. These are people photographed in public &mdash; at events, at work, in uniform, '
       + 'on a stage &mdash; skewed Western, dressed for the occasion, and framed by a photographer who chose the shot. It is a '
       + 'real-world <em>photography</em> population, which is what your own photo is. It is also only a few hundred photos '
@@ -503,7 +505,7 @@
       + 'the same corpus as the trained-model score, read by the same instrument that just read your photo. '
       + '<strong>385 real-world photographs</strong> &mdash; every Wikimedia Commons &ldquo;standing women / men at full '
       + 'length&rdquo; image whose outline this calculator could measure <em>anything</em> from. 212 women / 173 men, '
-      + 'reweighted to half each. <strong>5.0 is that population&rsquo;s median.</strong> '
+      + 'reweighted to half each. <strong>5.5 is that population&rsquo;s median</strong> (rating panels centre a 1&ndash;10 scale above its midpoint; this matches them). '
       + 'That deliberately includes the awkward ones &mdash; cropped shots, arms across the waist &mdash; because your '
       + 'photo runs the same gauntlet, and a reference of only perfect photographs would put most real ones near the floor. '
       + 'The cost is that <strong>which measurements survived moves the number</strong>: a read with everything visible sits '
@@ -646,18 +648,16 @@
     // face-keypoint indices in BlazePose's 33-point set (0 nose · 1-6 eyes · 7-8 ears · 9-10 mouth)
     const FACE_PIDX = [0,1,2,3,4,5,6,7,8,9,10];
 
-    // Body tier ladder, sex-aware (the body-looksmaxxing vocabulary). There is ONE ladder now: the
-    // "conventional" tier names went with the lens they belonged to, and a second set of words for the
-    // same number was never a second measurement. Rungs are unchanged.
+    // Body tier ladder, CONVENTIONAL vocabulary (Jason's ruling 2026-08-14: the pill/looksmaxxing ladder
+    // is retired from the scale). Rungs are defined by PERCENTILE — 8 / 24 / 76 / 92 / 98 / 99.8 — through
+    // the same invNorm the display mapping uses, so they survive any future anchor change. Sex-neutral;
+    // the sex param is unused but the signature stays for the callers.
+    // LOCKSTEP: face.html faceTier and composite-score.js tierFor band on these same percentiles.
+    const TIER_RUNGS = [[0.08,'Well below average'],[0.24,'Below average'],[0.76,'Average build'],
+      [0.92,'Fit'],[0.98,'Athletic'],[0.998,'Very athletic']];
     function frameTier(s, sex){
-      const f = sex === 'f';
-      if (s<3.0) return 'Sub-tier';
-      if (s<4.5) return f ? 'Soft / unbuilt' : 'Dyel · unbuilt';
-      if (s<5.5) return 'Average frame';
-      if (s<6.5) return f ? 'Toned' : 'Fit';
-      if (s<7.5) return f ? 'Fit · hourglass' : 'Lean · aesthetic';
-      if (s<8.5) return f ? 'Stacy-tier physique' : 'Chad-tier physique';
-      return f ? 'Elite / IG-tier' : 'Elite / Zyzz-tier';
+      for (const [p, label] of TIER_RUNGS) if (s < REF_MID + invNorm(p) * REF_SD) return label;
+      return 'Exceptional physique';
     }
 
     // ═══════════════════════════════════════════════════════════════════════════════════════════
@@ -1477,7 +1477,7 @@
              + (usingModel
                 ? 'The human raters who produced the trained model&rsquo;s labels disagreed heavily with each other, and casual photos are unlike its training set. '
                 : 'This is the silhouette read &mdash; clothing, pose and camera angle all move the outline it measures, and it has never been validated against human judgement at all. ')
-             + 'It is a <strong>percentile, not a verdict</strong>: <strong>5.0 is the median</strong> of the reference population described below, and one point is about two-thirds of a standard deviation. Same scale as the <a href="face.html">Face Calc</a>.</div>')
+             + 'It is a <strong>percentile, not a verdict</strong>: <strong>5.5 is the median</strong> of the reference population described below, and one point is about two-thirds of a standard deviation. Same scale as the <a href="face.html">Face Calc</a>.</div>')
         + (BC.outlineOverride ? '<div class="bc-note-line" style="margin:0.55rem 0 0;color:#A06A12"><strong>Rated on your override &mdash; fewer cues than a clean read.</strong> You asked for a number on a photo whose shape read came up short: '
             + BC.outlineIssues.join('; ')
             + '. The score above is built from what survived, and it is marked as a reduced-accuracy input everywhere it is reused. '
@@ -1528,7 +1528,7 @@
           window.leComposite.saveBody(Object.assign({
             schemaVersion:3, bp:score, cv:score, band:scoreBandPayload(band, band, score, score),
             bpMax:SCORE_MAX, cvMax:SCORE_MAX, floor:SCORE_MIN,
-            convention:'percentile-v3',   // 5.0 = reference median, 1 pt = 1/1.4 sd — same currency as the Face Calc
+            convention:'percentile-v3.1',   // 5.5 = reference median (2026-08-14 conventional anchor), 1 pt = 1/1.4 sd — same currency as the Face Calc
             photos:nShots,
             // A mixed-route set reports 'geometry' — the looser of the two instruments it contains, and a
             // value downstream readers already accept (matchmaker.html gates on model|geometry|hybrid).

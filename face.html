@@ -20,7 +20,7 @@
     <div class="page-header">
       <div class="page-eyebrow">Tool &middot; prototype</div>
       <h1 class="page-title">Face Calculator</h1>
-      <div class="page-sub">Drop in a face &mdash; on your device, nothing uploaded &mdash; and it reads everything it can from the photo, then scores it on <strong>one scale</strong>: a percentile of a stated reference population, <strong>5.0</strong> being its median. No sliders. It pairs with the <a href="body.html">Body Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
+      <div class="page-sub">Drop in a face &mdash; on your device, nothing uploaded &mdash; and it reads everything it can from the photo, then scores it on <strong>one scale</strong>: a percentile of a stated reference population, <strong>5.5</strong> being its median. No sliders. It pairs with the <a href="body.html">Body Calc</a>, and the two combine into an <strong>Overall looks rating</strong> below.</div>
     </div>
 
     <div class="content lc-content">
@@ -368,11 +368,12 @@
       3.065,3.088,3.116,3.143,3.178,3.215,3.252,3.297,3.342,3.381,3.421,3.47,3.523,3.565,3.603,3.641,
       3.686,3.723,3.759,3.796,3.831,3.857,3.888,3.923,3.947,3.972,3.994,4.013,4.033,4.057,4.089,4.117,
       4.147,4.178,4.21,4.266,4.318,4.556];
-    // CONVENTION (cited on-page, not assumed): 5.0 = the reference population's median. One point =
-    // 1/1.4 of a standard deviation, which is what puts the community PSL ladder where it claims to sit —
-    // LTN 4–4.9 spans the 24th–50th percentile, MTN 5–5.9 the 50th–76th, HTN 6–6.9 the 76th–92nd,
-    // Chadlite 7–7.9 the 92nd–98th, Chad 8–8.9 the 98th–99.8th.
-    const REF_MID = 5.0, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
+    // CONVENTION (cited on-page, not assumed): 5.5 = the reference population's median, matching how
+    // human rating panels actually use a 1–10 scale (they centre above the arithmetic midpoint — old
+    // Conventional lens median 5.82, MEBeauty panel median 6.2) and matching the SMV Calc's 5.5-neutral
+    // convention, so every scale on the site shares one anchor (Jason's ruling, 2026-08-14). One point =
+    // 1/1.4 sd. Tier rungs are defined by PERCENTILE (see faceTier), not by whole display points.
+    const REF_MID = 5.5, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
     // Machine-side uncertainty half-width by photo count. MEASURED, not assumed: 166 people × ≥3 genuinely
     // different real photographs each (roster galleries), scoring the mean raw of k held-out shots against
     // the consensus of the rest. Kept in faceScore.v3 for downstream compatibility; Jason's 2026-08-14
@@ -466,21 +467,18 @@
       return { sex: male>female ? 'm' : 'f', conf: Math.max(e0,e1)/z };
     }
 
-    // Tier rungs on the WHOLE-POINT community boundaries, which under this convention are also the
-    // percentile boundaries they always claimed to be (24th / 50th / 76th / 92nd / 98th). The old ladder
-    // fired "Incel-tier" at what is really the 30th percentile of an ordinary population; under the
-    // recalibrated scale the pejorative rung reaches only the bottom ~8%, which is what the word means.
-    // Sex-coded rungs: male / female / sex-neutral — an undetermined sex must NOT resolve to one ladder.
+    // Rungs are defined by PERCENTILE of the reference population — 8 / 24 / 76 / 92 / 98 / 99.8 — and
+    // computed through the same invNorm the display mapping uses, so they survive any future anchor
+    // change untouched. Conventional vocabulary (Jason's ruling 2026-08-14: the pill ladder is retired
+    // from the scale; pill terms survive only where they describe the community's own claims). The
+    // ladder is sex-neutral, so the sex param is unused; the signature stays for the callers.
+    // LOCKSTEP: body.html frameTier and composite-score.js tierFor band on these same percentiles —
+    // if the rungs or labels drift apart, the composite labels a number differently from the calc.
+    const TIER_RUNGS = [[0.08,'Well below average'],[0.24,'Below average'],[0.76,'Average'],
+      [0.92,'Above average'],[0.98,'Attractive'],[0.998,'Very attractive']];
     function faceTier(s, sex){
-      const coded = (m, f, neutral) => sex === 'm' ? m : sex === 'f' ? f : neutral;
-      if (s < 3.0) return 'Sub-tier';
-      if (s < 4.0) return 'Below average';
-      if (s < 5.0) return 'LTN · Low-Tier Normie';
-      if (s < 6.0) return 'MTN · Mid-Tier Normie';
-      if (s < 7.0) return 'HTN · High-Tier Normie';
-      if (s < 8.0) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
-      if (s < 9.0) return coded('Chad', 'Stacy', 'Chad / Stacy');
-      return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
+      for (const [p, label] of TIER_RUNGS) if (s < REF_MID + invNorm(p) * REF_SD) return label;
+      return 'Exceptional';
     }
     // ── Batch-mode serializers (debug/calibration only; DOM-free, testable). Generic over a columns
     //    spec [{key,label}] so the on-page table, CSV and markdown all share one stable column order.
@@ -720,9 +718,9 @@
         + (sexConflict ? '<div class="lc-note-line" style="margin:0.55rem 0 0;color:var(--scarlet)"><strong>Your sex pick and the photo disagree.</strong> You set the sex to <strong>'+(sexConflict.manual==='m'?'male':'female')+'</strong>, but the photo&rsquo;s face classifier reads <strong>'+(sexConflict.cls==='m'?'male':'female')+'</strong> ('+Math.round(sexConflict.conf*100)+'% confident). The panel below uses <strong>your selection</strong> &mdash; the headline score is the same either way. <strong><a href="#" class="lc-sexflip" data-sex="'+sexConflict.cls+'" style="color:var(--scarlet)">Use the '+(sexConflict.cls==='m'?'male':'female')+' read instead &rarr;</a></strong></div>' : '')
         + (LE_DEBUG && usingModel && LC.modelRaw!=null ? '<div class="lc-other" style="color:var(--scarlet)"><strong>debug · model raw output = '+LC.modelRaw.toFixed(3)+'</strong> (calibrating the scale)</div>' : '')
         + (usingModel ? '<div class="lc-other" id="lc-convention"><strong>What the number means.</strong> '
-            + 'It is a <strong>percentile</strong>, not a verdict: <strong>5.0 is the median</strong> of the reference '
-            + 'population, and one point is 1/1.4 of a standard deviation. That places the looksmaxxing ladder where it '
-            + 'has always claimed to sit &mdash; LTN begins at 4, MTN at 5, HTN at 6, and Chadlite at 7. '
+            + 'It is a <strong>percentile</strong>, not a verdict: <strong>5.5 is the median</strong> of the reference '
+            + 'population &mdash; rating panels centre a 1&ndash;10 scale above its midpoint, and this matches them &mdash; '
+            + 'and one point is 1/1.4 of a standard deviation. &ldquo;Average&rdquo; spans the middle half of the population. '
             + 'The reference is this model&rsquo;s output over all 5,500 SCUT-FBP5500 faces, reweighted so the '
             + 'dataset&rsquo;s 4:1 Asian oversample doesn&rsquo;t pass as a population fact. '
             + '<strong>It is one rater population</strong> (60 Chinese volunteers) <strong>on one photo style</strong>, and the model '
@@ -766,7 +764,7 @@
         window.leComposite.saveFace({
           bp: score, cv: score,
           lo: lo, hi: hi, band: half, pct: pct, photos: nShots,
-          convention: 'percentile-v3',   // 5.0 = reference median, 1 pt = 1/1.4 sd
+          convention: 'percentile-v3.1',   // 5.5 = reference median (2026-08-14 conventional anchor), 1 pt = 1/1.4 sd
           bpMax: SCORE_MAX, cvMax: SCORE_MAX, floor: SCORE_MIN,
           // undetermined sex persists as null (matches the Body Calc's model path) — the display-only
           // 'f' fallback must not enter the composite's sex-conflict check as a real read

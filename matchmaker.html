@@ -4713,12 +4713,11 @@
 
   // ── localStorage imports (v3 percentile contract) ──
   function readLS(key){ try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){ return null; } }
-  // Matchmaker's roster/manual Looks comparisons use the SMV convention: 5.5 is neutral. Calc v3 uses
-  // 5.0 as its reference median, so align the two with endpoint-preserving segments through 1→1,
-  // 5→5.5 and 10→10. This is the same mapping used by smvcalc; a raw re-key would compare unlike scales.
+  // Matchmaker's roster/manual Looks comparisons use the SMV convention: 5.5 is neutral.
+  // Identity since the 2026-08-14 conventional anchor (5.5 = calc median = SMV neutral): the old
+  // piecewise re-anchor became a no-op and was retired with the marker bump (percentile-v3.1).
   function percentileScoreToLooks(score){
-    const x=clamp(score,1,10);
-    return x<=5 ? 1+(x-1)*(4.5/4) : 5.5+(x-5)*(4.5/5);
+    return clamp(score,1,10);
   }
   function readCalcImport(key, kind, expectSex){
     const o = readLS(key);
@@ -4726,13 +4725,14 @@
       && typeof o.cv==='number' && isFinite(o.cv) && Math.abs(o.bp-o.cv)<1e-9
       && o.bpMax===10 && o.cvMax===10 && o.floor===1)) return null;
     if (kind==='face') {
-      if (o.convention!=='percentile-v3' || o.source!=='model') return null;
+      // CURRENT marker only (v3.1 = the 5.5-median anchor): an older 5.0-median record would import half a point low.
+      if (o.convention!=='percentile-v3.1' || o.source!=='model') return null;
     } else {
       // Body comparisons must not silently cross a sex rubric. Every shipped writer names its route —
       // model / geometry / hybrid, always with the percentile convention marker (body.html saveBody).
       // Marker-less records — including retired self-report scores, which the numbers-only ruling made
       // non-scores — stay quarantined. The manual slider is the fallback.
-      const bodySourceOk=o.convention==='percentile-v3' && /^(model|geometry|hybrid)$/.test(o.source||'');
+      const bodySourceOk=o.convention==='percentile-v3.1' && /^(model|geometry|hybrid)$/.test(o.source||'');
       if (o.schemaVersion!==3 || !bodySourceOk
         || o.sexConfirmed!==true || !(o.sex==='m'||o.sex==='f') || (expectSex && o.sex!==expectSex)) return null;
     }

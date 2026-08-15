@@ -1,6 +1,6 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+1fab05c357be",
+  "indexVersion": "1.0.0+aa93aea0c721",
   "generatedAt": "2026-08-14T23:00:13.000Z",
   "sourcePages": [
     {
@@ -199,7 +199,7 @@
       "inputs": [
         "smvcalc.html"
       ],
-      "sha256": "b7ad0013b84f1dc39c3f714451ec49badc8d086e90a899265dbe91ecb1e0f445",
+      "sha256": "6134a74e5e12ad10c5d1561cccfe9d06326f594f82a83a9134e9929990d513d3",
       "conceptCount": 1
     },
     {
@@ -221,7 +221,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "e7e2a3abef6498783ccee67f5a35383a76cff6a6985abbd0eee61950340fa74e",
+      "sha256": "c3619182211b0cf737b62b0b448b11dd0f5d6e9d628cdc70fd21d46c57cd0fd7",
       "conceptCount": 1
     },
     {
@@ -232,7 +232,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "f4a3df5ef997739b2f994512f21b184abcd078a061254a0814ffceee6b607cb3",
+      "sha256": "6904fad9d2337de4e012d56bd1e7ddecc2116eb25f2fe09e6d50b80211f4d763",
       "conceptCount": 1
     },
     {
@@ -243,7 +243,7 @@
       "inputs": [
         "matchmaker.html"
       ],
-      "sha256": "9facbba83a30f840d4d37e18d5738b281939d1477e36b3bd986987b553ae8fae",
+      "sha256": "3fc44c9a7db6e53ba593190c8338ba4fa082d36c2b4d15f0f44c54953c087d98",
       "conceptCount": 1
     }
   ],
@@ -25197,7 +25197,7 @@
       "anchor": "",
       "category": "Instruments",
       "subcategory": "Face Calculator",
-      "synopsis": "Drop in a face — on your device, nothing uploaded — and it reads everything it can from the photo, then scores it on one scale: a percentile of a stated reference population, 5.0 being its median. No sliders. It pairs with the Body Calc, and the two combine into an Overall looks rating below.",
+      "synopsis": "Drop in a face — on your device, nothing uploaded — and it reads everything it can from the photo, then scores it on one scale: a percentile of a stated reference population, 5.5 being its median. No sliders. It pairs with the Body Calc, and the two combine into an Overall looks rating below.",
       "evidenceType": "Instrument",
       "contentType": "On-device instrument",
       "verdict": "",
@@ -25228,7 +25228,7 @@
       "anchor": "",
       "category": "Instruments",
       "subcategory": "Body Calculator",
-      "synopsis": "Drop in a full-body photo — on your device, nothing uploaded — and it reads the frame it can from the silhouette, then scores it on one scale: a percentile of a stated reference population, 5.0 being its median. No sliders. It pairs with the Face Calc, and the two combine into an Overall looks rating below.",
+      "synopsis": "Drop in a full-body photo — on your device, nothing uploaded — and it reads the frame it can from the silhouette, then scores it on one scale: a percentile of a stated reference population, 5.5 being its median. No sliders. It pairs with the Face Calc, and the two combine into an Overall looks rating below.",
       "evidenceType": "Instrument",
       "contentType": "On-device instrument",
       "verdict": "",

@@ -4,14 +4,10 @@
      - body.html  (Body Calc) → window.leComposite.saveBody({ ... })  or, for an unresolved sex range: { needsSex:true, ts }
    Loaded on BOTH pages; renders into partials/composite-section.html (injected by include.js).
 
-   It shows each calc's RAW lens score — the exact number the calc displayed — and blends the two raw
-   scores into the overall. A Black Pill / Conventional toggle switches which lens is shown (mirrors the
-   calc toggles). We deliberately DON'T normalise for display: a normalised number (e.g. an 8.3 body on a
-   9-max lens → 9.1/10) matches nothing the user saw on the calc and reads as "from nowhere", and it shifts
-   the tier too. Raw keeps the composite legible and its tiers consistent with the calcs. The lens ceilings
-   differ slightly (face PSL ~8.6, body BP 9; both Conventional 10), but on-screen both read ~1–9, so a
-   weighted average of the displayed numbers is exactly what a reader expects ("overall sits between your
-   face and body"). Scores survive navigation until Reset. */
+   It shows each calc's score — the exact number the calc displayed — and blends the two into the
+   overall. One scale (the 2026-08-14 conventional anchor: percentile of a stated reference population,
+   5.5 = median, 1 pt = 1/1.4 sd, ceilings both 10); the old Black Pill / Conventional lens toggle is
+   gone with the lenses themselves. Scores survive navigation until Reset. */
 (function () {
   'use strict';
 
@@ -22,8 +18,8 @@
   // not read; they are deleted on load so they cannot be resurrected by a downgrade.
   var FACE_KEY = 'loveEquations.faceScore.v3';
   var BODY_KEY = 'loveEquations.bodyScore.v3';
-  var LEGACY_KEYS = ['loveEquations.faceScore.v2', 'loveEquations.bodyScore.v2'];
-  var LENS_KEY = 'loveEquations.compositeLens.v1';
+  // The stored lens pick joins the legacy purge: the lens toggle is gone (one scale since 2026-08-14).
+  var LEGACY_KEYS = ['loveEquations.faceScore.v2', 'loveEquations.bodyScore.v2', 'loveEquations.compositeLens.v1'];
   for (var _i = 0; _i < LEGACY_KEYS.length; _i++) {
     try { localStorage.removeItem(LEGACY_KEYS[_i]); } catch (e) {}
   }
@@ -39,28 +35,25 @@
   function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
   function num(x) { return typeof x === 'number' && isFinite(x); }
 
-  function getLens() {
-    try { return localStorage.getItem(LENS_KEY) === 'conventional' ? 'conventional' : 'blackpill'; }
-    catch (e) { return 'blackpill'; }
-  }
-  function setLens(l) { try { localStorage.setItem(LENS_KEY, l); } catch (e) {} render(); }
-
-  // A persisted score is trustworthy only if both lens values, both ranges, and the floor are finite and the
-  // floor sits below each max. Guards against stale / partial / hand-edited payloads — e.g. a missing `cv`.
+  // A persisted score is trustworthy only if it names the CURRENT convention (percentile-v3.1, the
+  // 2026-08-14 5.5-median anchor — an older 5.0-median score blended in would silently mix two scales,
+  // the same class of defect that retired the v2 keys), both score fields agree and are finite, and the
+  // floor sits below the max. Guards against stale / partial / hand-edited payloads.
   function validScore(o) {
     return !!o && typeof o === 'object'
+      && o.convention === 'percentile-v3.1'
       && num(o.bp) && num(o.cv) && num(o.bpMax) && num(o.cvMax) && num(o.floor)
       && o.bpMax > o.floor && o.cvMax > o.floor;
   }
 
-  // RAW lens score — the exact number the calc displays (no normalisation, so the composite matches the calc).
-  function rawScore(calc, lens) {
+  // The exact number the calc displays (bp === cv on the single scale; no normalisation).
+  function rawScore(calc) {
     if (!validScore(calc) || calc.needsSex) return null;
-    return lens === 'blackpill' ? calc.bp : calc.cv;
+    return calc.cv;
   }
-  // Blend the two RAW lens scores (weighted average of the displayed numbers).
-  function overall(face, body, lens) {
-    var f = rawScore(face, lens), b = rawScore(body, lens);
+  // Blend the two scores (weighted average of the displayed numbers).
+  function overall(face, body) {
+    var f = rawScore(face), b = rawScore(body);
     if (f == null || b == null) return null;
     return FACE_WEIGHT * f + (1 - FACE_WEIGHT) * b;
   }
@@ -75,19 +68,18 @@
     return Math.round(s / 86400) + 'd ago';
   }
 
-  // Tier rungs on the v3 convention: whole-point boundaries that are ALSO percentile boundaries
-  // (24th / 50th / 76th / 92nd / 98th). Mirrors the Face Calc's faceTier exactly — if the two ever
-  // drift, the composite would label a number differently from the calc that produced it.
-  function tierFor(s, lens, sex) {
-    var coded = function (m, fem, neutral) { return sex === 'm' ? m : sex === 'f' ? fem : neutral; };
-    if (s < 3.0) return 'Sub-tier';
-    if (s < 4.0) return 'Below average';
-    if (s < 5.0) return 'LTN · Low-Tier Normie';
-    if (s < 6.0) return 'MTN · Mid-Tier Normie';
-    if (s < 7.0) return 'HTN · High-Tier Normie';
-    if (s < 8.0) return coded('Chadlite', 'Stacylite', 'Chadlite / Stacylite');
-    if (s < 9.0) return coded('Chad', 'Stacy', 'Chad / Stacy');
-    return coded('Gigachad / Model', 'Gigastacy / Model', 'Gigachad / Gigastacy');
+  // Tier rungs, conventional vocabulary, banded by PERCENTILE (8 / 24 / 76 / 92 / 98 / 99.8) on the
+  // 5.5-median / 1.4-sd anchor. The numeric rungs below are 5.5 + invNorm(p) × 1.4, precomputed because
+  // this file has no invNorm. LOCKSTEP with face.html faceTier and body.html frameTier — if the rungs
+  // or labels drift, the composite labels a number differently from the calc that produced it.
+  function tierFor(s) {
+    if (s < 3.533) return 'Well below average';
+    if (s < 4.511) return 'Below average';
+    if (s < 6.489) return 'Average';
+    if (s < 7.467) return 'Above average';
+    if (s < 8.375) return 'Attractive';
+    if (s < 9.529) return 'Very attractive';
+    return 'Exceptional';
   }
   function sourceWord(s) {
     return s === 'model' ? 'trained model'
@@ -97,26 +89,11 @@
       : s === 'hybrid' ? 'hybrid read (measured &times; photo)'   // Body Calc objective-spine blend (bodyScore.v2 additive source)
       : (s || '—');
   }
-  function lensLabel(lens) { return lens === 'blackpill' ? 'Black Pill &middot; Frame' : 'Conventional'; }
-  function lensColor(lens) { return lens === 'blackpill' ? '#51606F' : '#0F6E56'; }   // match the calc accents
-  // The toggle only earns its place if some payload actually DIFFERS between the two fields. The Face
-  // Calc collapsed to one scale in v3 (bp === cv), so if the Body Calc has too, the toggle would switch
-  // between two identical numbers — worse than absent, because it implies a distinction that is gone.
-  function hasTwoLenses(face, body) {
-    return !!((face && num(face.bp) && num(face.cv) && face.bp !== face.cv)
-           || (body && num(body.bp) && num(body.cv) && body.bp !== body.cv));
-  }
-  function lensToggle(lens) {
-    return '<div class="composite-lens" role="tablist">'
-      + '<button type="button" class="composite-lensbtn' + (lens === 'blackpill' ? ' active' : '') + '" data-lens="blackpill">Black Pill &middot; Frame</button>'
-      + '<button type="button" class="composite-lensbtn' + (lens === 'conventional' ? ' active' : '') + '" data-lens="conventional">Conventional</button>'
-      + '</div>';
-  }
+  var ACCENT = '#0F6E56';   // the conventional accent — the only scale left
 
   function render() {
     var host = document.getElementById('composite-result');
     if (!host) return;
-    var lens = getLens();
 
     var face = readScore(FACE_KEY);
     var body = readScore(BODY_KEY);
@@ -126,14 +103,13 @@
 
     if (haveFace && haveBody) {
       var fsex = face.sex || null, bsex = body.sex || null;
-      var sexConflict = !!(fsex && bsex && fsex !== bsex);
-      var sex = sexConflict ? null : (fsex || bsex || null);   // conflicted → sex-neutral tier, don't silently pick one
+      var sexConflict = !!(fsex && bsex && fsex !== bsex);   // the ladder is sex-neutral; the conflict still gets flagged
       var sexWord = function (s) { return s === 'm' ? 'male' : 'female'; };
-      var o = overall(face, body, lens);
-      var fS = rawScore(face, lens), bS = rawScore(body, lens);
+      var o = overall(face, body);
+      var fS = rawScore(face), bS = rawScore(body);
       var wF = Math.round(FACE_WEIGHT * 100), wB = 100 - wF;
       var conflictNote = sexConflict
-        ? '<div class="composite-note" style="color:var(--scarlet)"><strong>The two reads disagree on sex</strong> &mdash; face read ' + sexWord(fsex) + ', body read ' + sexWord(bsex) + '. The blend assumes <strong>one person</strong>; if that’s right, set the sex on each calc so they match. Tier shown sex-neutral until they agree.</div>'
+        ? '<div class="composite-note" style="color:var(--scarlet)"><strong>The two reads disagree on sex</strong> &mdash; face read ' + sexWord(fsex) + ', body read ' + sexWord(bsex) + '. The blend assumes <strong>one person</strong>; if that’s right, set the sex on each calc so they match.</div>'
         : '';
       // Framing-override provenance (additive payload field; absent on pre-existing saves). A score rated on
       // the "Rate anyway — reduced accuracy" override must not blend into the overall looking like a
@@ -152,16 +128,15 @@
         : '';
       // Presentation is the single weighted point estimate and its tier. Payload uncertainty fields remain
       // untouched for the v3 machine contract, but Jason's 2026-08-14 ruling removes them from display.
-      var headline = '<div class="composite-score" style="color:' + lensColor(lens) + '">' + fmt(o) + ' <span class="unit">/ 10</span></div>'
-        + '<div class="composite-tier" style="color:' + lensColor(lens) + '">' + tierFor(o, lens, sex) + '</div>';
+      var headline = '<div class="composite-score" style="color:' + ACCENT + '">' + fmt(o) + ' <span class="unit">/ 10</span></div>'
+        + '<div class="composite-tier" style="color:' + ACCENT + '">' + tierFor(o) + '</div>';
       var photoNote = num(face.photos) && face.photos < 3
         ? '<div class="composite-note">The face read came from ' + face.photos + ' photo' + (face.photos > 1 ? 's' : '') + '. <a href="face.html">Add more on the Face Calc</a> for a steadier read.</div>'
         : '';
       host.innerHTML =
-        (hasTwoLenses(face, body) ? lensToggle(lens) : '')
-        + '<div class="composite-score-wrap">'
+        '<div class="composite-score-wrap">'
         + headline
-        + '<div class="composite-srcbadge">' + (hasTwoLenses(face, body) ? lensLabel(lens) + ' &middot; ' : '') + 'Face &times; Body</div>'
+        + '<div class="composite-srcbadge">Face &times; Body</div>'
         + '<div class="composite-breakdown">Face <strong>' + fmt(fS) + '</strong> &amp; Body <strong>' + fmt(bS) + '</strong> &rarr; weighted ' + wF + ' / ' + wB + ' (face / body). These are the same numbers each calc shows.</div>'
         + '</div>'
         + photoNote
@@ -169,7 +144,7 @@
         + overrideNote
         + '<div class="composite-note"><strong>Two prototype reads, blended.</strong> Face from the ' + sourceWord(face.source) + ' (' + ago(face.ts) + '), body from the ' + sourceWord(body.source) + ' (' + ago(body.ts) + '). <strong>Assumes both are the same person</strong> &mdash; scores persist across visits, so an old read can linger; Reset clears them. The ' + wF + '/' + wB + ' face/body split is a provisional, tunable default. A mirror of the methodology, not a verdict on a person.</div>'
         + '<div class="composite-foot"><button type="button" id="composite-reset">Reset both (scores + photos)</button></div>';
-      wireReset(); wireLens();
+      wireReset();
       return;
     }
 
@@ -183,7 +158,7 @@
     // A lone half is shown as ITS OWN point score, explicitly labelled as one half — never as an Overall.
     // Half of the blend is not a smaller Overall, it is a different measurement.
     function halfValue(calc) {
-      var s = rawScore(calc, lens);
+      var s = rawScore(calc);
       if (s == null) return '—';
       return fmt(s) + ' / 10';
     }
@@ -199,26 +174,19 @@
       ? '<div class="composite-note">Showing the <strong>' + (haveFace ? 'face' : 'body') + ' read alone</strong> — this is not an overall looks rating, and it is not half of one. Score the other calculator to get the blend.</div>'
       : '';
     host.innerHTML =
-      (anyScored && hasTwoLenses(face, body) ? lensToggle(lens) : '')
-      + '<div class="composite-empty">'
+      '<div class="composite-empty">'
       + '<i class="ti ti-sparkles" aria-hidden="true"></i>'
       + '<div class="composite-empty-lead">Your <strong>overall looks rating</strong> blends both calculators. Score the missing one to see it.</div>'
       + '<div class="composite-rows">' + faceRow + bodyRow + '</div>'
       + loneNote
       + ((anyScored || bodyNeedsSex) ? '<div class="composite-foot"><button type="button" id="composite-reset">Reset</button></div>' : '')
       + '</div>';
-    wireReset(); wireLens();
+    wireReset();
   }
 
   function wireReset() {
     var rb = document.getElementById('composite-reset');
     if (rb) rb.addEventListener('click', function () { window.leComposite.reset(); });
-  }
-  function wireLens() {
-    var btns = document.querySelectorAll('.composite-lensbtn');
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].addEventListener('click', function () { setLens(this.getAttribute('data-lens')); });
-    }
   }
 
   window.leComposite = {
@@ -237,7 +205,6 @@
         localStorage.removeItem('loveEquations.bodyInputs.v1');
         // the single global Reset: instrument state persists across pages by design, and this
         // button is the one place that clears ALL of it — every key any page writes
-        localStorage.removeItem(LENS_KEY);
         localStorage.removeItem('loveEquations.smvCalculator.v7_2');
         localStorage.removeItem('loveEquations.compatibilityCalculator.v1');
         localStorage.removeItem('loveEquations.matchmaker.v1');
