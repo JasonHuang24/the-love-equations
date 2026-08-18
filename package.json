@@ -7,6 +7,7 @@
     "test:lab": "node tools/run-lab-suite.mjs",
     "test:smv": "node tests/smv-panel.mjs",
     "verify:matchmaker": "python tools/verify_matchmaker.py",
-    "test:all": "npm run test:lab && npm run test:smv && npm run verify:matchmaker"
+    "test:face": "node tests/face-core.test.mjs && node tests/face-crop.test.mjs && node tests/face-camera-guide.test.mjs && node tests/face-camera-integration.test.mjs && node tests/face-batch.test.mjs && node tests/face-evaluation.test.mjs",
+    "test:all": "npm run test:lab && npm run test:smv && npm run test:face && npm run verify:matchmaker"
   }
 }

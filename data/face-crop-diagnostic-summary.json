@@ -1,0 +1,44 @@
+{
+  "schema_version": "face-crop-diagnostic-summary.v1",
+  "generated_date": "2026-08-18",
+  "definition": {
+    "requested_fits_false": "The requested square side exceeds at least one source dimension; padding is unavoidable at the frozen crop scale.",
+    "shifted": "The requested square fit after translating at least one axis by more than 0.005 source pixels.",
+    "face_clipped": "The finite landmark bounding box is not fully inside the valid contained source intersection.",
+    "pre_crop_outcomes": "Rows refused before crop creation intentionally leave crop diagnostics blank."
+  },
+  "canonical_after": {
+    "input": "data/face-roster-pressure-test-after.csv",
+    "input_sha256": "64922a34ae723ab43b5ced93b1e119be6c8c7e92715f44f5196e3c2eb5189710",
+    "submitted": 199,
+    "scored_with_crop_diagnostics": 166,
+    "pre_crop_refusals": 33,
+    "source_rectangles_contained": 166,
+    "source_rectangles_not_contained": 0,
+    "requested_square_fits": 160,
+    "requested_square_cannot_fit": 6,
+    "translated_to_fit": 47,
+    "unavoidable_padding": 6,
+    "landmark_face_clipped": 26,
+    "max_padding_area_pct": 39.5,
+    "min_face_visible_pct": 74.57,
+    "max_abs_translation_px": 214.04
+  },
+  "gallery_after": {
+    "input": "data/face-roster-gallery-after.csv",
+    "input_sha256": "5f5128631271659edcb9ba4b75d4a1fe9d78cca0727dcb05cfca92d2b56da2d6",
+    "submitted": 825,
+    "scored_with_crop_diagnostics": 656,
+    "pre_crop_refusals": 169,
+    "source_rectangles_contained": 656,
+    "source_rectangles_not_contained": 0,
+    "requested_square_fits": 576,
+    "requested_square_cannot_fit": 80,
+    "translated_to_fit": 108,
+    "unavoidable_padding": 80,
+    "landmark_face_clipped": 23,
+    "max_padding_area_pct": 64.94,
+    "min_face_visible_pct": 71.47,
+    "max_abs_translation_px": 97.45
+  }
+}

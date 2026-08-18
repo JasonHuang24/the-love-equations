@@ -1,0 +1,106 @@
+{
+  "schema_version": "face-evaluation-preregistration.v1",
+  "frozen_date": "2026-08-18",
+  "identity_split": {
+    "path": "data/face-identity-split-v1.csv",
+    "sha256": "0005aa687c2b0bb383d857b1df59f2a5859095a6ca203957fdaf181dc5fbcd1a",
+    "unit": "identity",
+    "counts": {
+      "train": 119,
+      "validation": 40,
+      "holdout": 40
+    },
+    "leakage_rule": "Every canonical and gallery image inherits exactly one identity split; image-level splitting is forbidden."
+  },
+  "label_interpretation": "Independent Matchmaker editorial judgments; not scientific ground truth, objective beauty, or universal consensus.",
+  "known_holdout_exposure": {
+    "gallery_mean_before_baseline_examined": true,
+    "reason": "Required baseline gallery audit reported the arithmetic-mean holdout before alternative aggregators were evaluated.",
+    "consequence": "Treat this as a reused locked benchmark, not a pristine never-viewed cohort; change no candidate definition or threshold after holdout output."
+  },
+  "candidates": [
+    {
+      "id": "canonical_single",
+      "role": "baseline",
+      "rule": "Finite raw from the canonical roster portrait; otherwise identity refusal."
+    },
+    {
+      "id": "gallery_mean",
+      "role": "candidate",
+      "rule": "Arithmetic mean of all finite gallery raws; otherwise identity refusal."
+    },
+    {
+      "id": "gallery_median",
+      "role": "candidate",
+      "rule": "Median of all finite gallery raws; otherwise identity refusal."
+    },
+    {
+      "id": "gallery_trimmed_mean",
+      "role": "candidate",
+      "rule": "If n>=3, remove exactly one minimum and maximum then arithmetic-mean the remainder; if n=1 or n=2, arithmetic mean; if n=0, identity refusal."
+    }
+  ],
+  "comparison_cohorts": {
+    "primary": "Fixed phase identities with finite predictions from every locked candidate.",
+    "operational": "Every identity in the phase, with refusal reported for each candidate."
+  },
+  "primary_metrics": [
+    "within_expected_sex_top_bottom_editorial_label_quartile_auc",
+    "within_expected_sex_pairwise_accuracy_editorial_label_gap_ge_1_0"
+  ],
+  "secondary_metrics": [
+    "spearman_rho",
+    "pearson_r",
+    "image_refusal_rate",
+    "identity_refusal_rate",
+    "within_person_raw_sd",
+    "within_person_raw_range",
+    "within_person_raw_mad",
+    "worst_photo_pair",
+    "multi_photo_raw_mean_error_to_all_photo_consensus",
+    "aggregator_leave_one_out_sd",
+    "aggregator_leave_one_out_range",
+    "expected_sex_subgroup_deltas",
+    "supportable_explicit_editorial_demographic_deltas",
+    "bootstrap_confidence_intervals"
+  ],
+  "bootstrap": {
+    "rounds": 2000,
+    "seed": 20260818,
+    "unit": "identity cluster (all photos retained together)"
+  },
+  "demographic_policy": {
+    "expected_sex_reported_separately": true,
+    "other_allowed_source": "matchmaker.html explicit editorial ethnicity field",
+    "image_inference_used": false,
+    "minimum_scored_identities": 20,
+    "requires_both_primary_label_classes": true,
+    "empty_result_rule": "State explicitly that no group meets the support threshold."
+  },
+  "validation_gate": {
+    "at_least_one_primary_delta_min": 0.03,
+    "other_primary_delta_min": -0.01,
+    "maximum_identity_refusal_delta": 0.03,
+    "maximum_leave_one_out_stability_relative_worsening": 0.1,
+    "tie_break": [
+      "maximum minimum primary delta",
+      "maximum sum of primary deltas",
+      "gallery_mean",
+      "gallery_median",
+      "gallery_trimmed_mean"
+    ]
+  },
+  "holdout_ship_gate": {
+    "improving_primary_delta_min": 0.03,
+    "improving_primary_bootstrap_ci_must_exclude_zero": true,
+    "other_primary_delta_min": -0.01,
+    "other_primary_bootstrap_lower_bound_min": -0.03,
+    "maximum_stability_relative_worsening": 0.1,
+    "maximum_refusal_absolute_delta": 0.03,
+    "maximum_expected_sex_primary_point_regression": 0.05,
+    "maximum_supportable_demographic_primary_point_regression": 0.05,
+    "nonfinite_outputs_allowed": false,
+    "storage_mutation_allowed": false
+  },
+  "display_remap_note": "A monotone display remap cannot improve either primary ordering metric."
+}

@@ -1,0 +1,301 @@
+{
+  "baseline": {
+    "auc": {
+      "bootstrap_95_ci": [
+        0.46907407407407403,
+        0.96005303030303
+      ],
+      "high_identities": 9,
+      "low_identities": 9,
+      "value": 0.7654320987654321
+    },
+    "identity_refusal_rate": 0.0,
+    "pairwise": {
+      "bootstrap_95_ci": [
+        0.5212938388625593,
+        0.852052567323269
+      ],
+      "eligible_pairs": 199,
+      "value": 0.6934673366834171
+    },
+    "rho": {
+      "bootstrap_95_ci": [
+        -0.00015164624885727346,
+        0.6530471726601825
+      ],
+      "value": 0.37424640550123084
+    },
+    "scored_identities": 35
+  },
+  "candidate": {
+    "auc": {
+      "bootstrap_95_ci": [
+        0.4635839160839161,
+        0.9621422558922558
+      ],
+      "high_identities": 9,
+      "low_identities": 9,
+      "value": 0.7530864197530864
+    },
+    "identity_refusal_rate": 0.0,
+    "pairwise": {
+      "bootstrap_95_ci": [
+        0.5284428688301064,
+        0.855426518909864
+      ],
+      "eligible_pairs": 199,
+      "value": 0.7035175879396985
+    },
+    "rho": {
+      "bootstrap_95_ci": [
+        0.07015762731458458,
+        0.6900128568954043
+      ],
+      "value": 0.4290628119079553
+    },
+    "scored_identities": 35
+  },
+  "common_scored_identity_count": 35,
+  "demographic_provenance": {
+    "image_inference_used": false,
+    "minimum_common_scored_identities": 20,
+    "no_eligible_groups": false,
+    "source": "matchmaker.html explicit editorial ethnicity field"
+  },
+  "editorial_ethnicity_subgroups": {
+    "white": {
+      "canonical_single": {
+        "auc": {
+          "bootstrap_95_ci": [
+            0.48148148148148145,
+            0.9896033653846154
+          ],
+          "high_identities": 10,
+          "low_identities": 8,
+          "value": 0.7375
+        },
+        "identity_refusal_rate": 0.0,
+        "pairwise": {
+          "bootstrap_95_ci": [
+            0.493236105824134,
+            0.875
+          ],
+          "eligible_pairs": 124,
+          "value": 0.7096774193548387
+        },
+        "rho": {
+          "bootstrap_95_ci": [
+            0.1006135744354795,
+            0.7199553162207938
+          ],
+          "value": 0.4487117430630428
+        },
+        "scored_identities": 28
+      },
+      "gallery_mean": {
+        "auc": {
+          "bootstrap_95_ci": [
+            0.5,
+            1.0
+          ],
+          "high_identities": 10,
+          "low_identities": 8,
+          "value": 0.8
+        },
+        "identity_refusal_rate": 0.0,
+        "pairwise": {
+          "bootstrap_95_ci": [
+            0.5555555555555556,
+            0.9230978260869565
+          ],
+          "eligible_pairs": 124,
+          "value": 0.7661290322580645
+        },
+        "rho": {
+          "bootstrap_95_ci": [
+            0.2060503825116035,
+            0.7892952731386892
+          ],
+          "value": 0.5539570197740208
+        },
+        "scored_identities": 28
+      }
+    }
+  },
+  "expected_sex_subgroups": {
+    "f": {
+      "canonical_single": {
+        "auc": {
+          "bootstrap_95_ci": [
+            0.3886904761904762,
+            1.0
+          ],
+          "high_identities": 5,
+          "low_identities": 5,
+          "value": 0.88
+        },
+        "identity_refusal_rate": 0.0,
+        "pairwise": {
+          "bootstrap_95_ci": [
+            0.4594525648097077,
+            0.9173596319332027
+          ],
+          "eligible_pairs": 106,
+          "value": 0.7169811320754716
+        },
+        "rho": {
+          "bootstrap_95_ci": [
+            -0.11370787826172861,
+            0.8094981773048187
+          ],
+          "value": 0.4109126392948792
+        },
+        "scored_identities": 19
+      },
+      "gallery_mean": {
+        "auc": {
+          "bootstrap_95_ci": [
+            0.2857142857142857,
+            1.0
+          ],
+          "high_identities": 5,
+          "low_identities": 5,
+          "value": 0.76
+        },
+        "identity_refusal_rate": 0.0,
+        "pairwise": {
+          "bootstrap_95_ci": [
+            0.4183627087198516,
+            0.8811978895257946
+          ],
+          "eligible_pairs": 106,
+          "value": 0.6792452830188679
+        },
+        "rho": {
+          "bootstrap_95_ci": [
+            -0.22384581671631973,
+            0.6935920106212283
+          ],
+          "value": 0.2903665331205785
+        },
+        "scored_identities": 19
+      }
+    },
+    "m": {
+      "canonical_single": {
+        "auc": {
+          "bootstrap_95_ci": [
+            0.25,
+            1.0
+          ],
+          "high_identities": 4,
+          "low_identities": 4,
+          "value": 0.625
+        },
+        "identity_refusal_rate": 0.0,
+        "pairwise": {
+          "bootstrap_95_ci": [
+            0.4117647058823529,
+            0.8902704135737008
+          ],
+          "eligible_pairs": 93,
+          "value": 0.6666666666666666
+        },
+        "rho": {
+          "bootstrap_95_ci": [
+            -0.1791746323139058,
+            0.7590386205881695
+          ],
+          "value": 0.33873379887470156
+        },
+        "scored_identities": 16
+      },
+      "gallery_mean": {
+        "auc": {
+          "bootstrap_95_ci": [
+            0.25,
+            1.0
+          ],
+          "high_identities": 4,
+          "low_identities": 4,
+          "value": 0.75
+        },
+        "identity_refusal_rate": 0.0,
+        "pairwise": {
+          "bootstrap_95_ci": [
+            0.4624543539325843,
+            0.9540229885057471
+          ],
+          "eligible_pairs": 93,
+          "value": 0.7311827956989247
+        },
+        "rho": {
+          "bootstrap_95_ci": [
+            -0.04191865855524113,
+            0.9295771164771198
+          ],
+          "value": 0.5081006983120523
+        },
+        "scored_identities": 16
+      }
+    }
+  },
+  "generated_date": "2026-08-18",
+  "identity_count": 40,
+  "label_interpretation": "Independent Matchmaker editorial judgments, not scientific ground truth or universal consensus.",
+  "leave_one_out_stability": {
+    "gallery_mean": {
+      "eligible_identities": 39,
+      "median_leave_one_out_range": {
+        "bootstrap_95_ci": [
+          0.1995,
+          0.35650000000000004
+        ],
+        "value": 0.26266666666666705
+      },
+      "median_leave_one_out_sd": {
+        "bootstrap_95_ci": [
+          0.08554852424209314,
+          0.17344152606271357
+        ],
+        "value": 0.11479494601083126
+      }
+    }
+  },
+  "paired_candidate_minus_canonical": {
+    "auc": {
+      "bootstrap_95_ci": [
+        -0.25,
+        0.2022144522144511
+      ],
+      "value": -0.012345679012345623
+    },
+    "common_scored_identities": 35,
+    "identity_refusal_rate_after_minus_baseline": {
+      "bootstrap_95_ci": [
+        -0.25,
+        -0.025
+      ],
+      "value": -0.125
+    },
+    "pairwise": {
+      "bootstrap_95_ci": [
+        -0.15334615384615383,
+        0.16762860044982938
+      ],
+      "value": 0.01005025125628145
+    },
+    "rho": {
+      "bootstrap_95_ci": [
+        -0.19477873509476284,
+        0.2984721099114265
+      ],
+      "value": 0.05481640640672447
+    }
+  },
+  "phase": "holdout",
+  "schema_version": "face-aggregation-holdout.v1",
+  "selected_candidate": "gallery_mean",
+  "status": "evaluated locked validation finalist once",
+  "validation_lock_sha256": "48c60e0948fa6bbd3565c433ba854bce4bea4fd0434b6d623c1c841d7445bdde"
+}

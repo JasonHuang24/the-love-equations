@@ -1,8 +1,10 @@
-# Face Calc — trained beauty model
+# Face Calc — on-device face-rating model
 
-Drop a converted model here as **`face-beauty.onnx`** and the Face Calculator will use it
-for the headline score automatically (on-device, via onnxruntime-web). Until then the page
-runs on the transparent geometry heuristic, and the geometry stays the breakdown either way.
+The shipped **`face-beauty.onnx`** is a converted Gustrd/HCIILAB ResNet18 checkpoint trained on
+SCUT-FBP5500. The Face Calculator runs it locally through onnxruntime-web; no photo, crop, tensor,
+embedding, or score is uploaded. If the model is unavailable, the page shows descriptive geometry
+but deliberately shows no headline number. Its output is a rough, photo-sensitive estimate tied to
+one fixed rater population and image collection—not objective beauty or universal human consensus.
 
 ## The contract the page expects
 `face.html` → `MODEL_CONFIG` (top of the MediaPipe `<script type="module">`):
@@ -12,11 +14,65 @@ runs on the transparent geometry heuristic, and the geometry stays the breakdown
 | `url`        | `models/face-beauty.onnx` | where the page fetches the model |
 | `inputSize`  | `224`                  | square RGB input, **NCHW** `[1,3,224,224]` |
 | `mean`/`std` | ImageNet               | `[0.485,0.456,0.406]` / `[0.229,0.224,0.225]` |
-| `outMin/outMax` | `1.797` / `4.379`   | current anchors — p2/p98 from 400 SCUT-FBP5500 faces run through the shipped browser crop/model pipeline on 2026-07-06. See `md/face-calibration-report.md`; `face.html` `MODEL_CONFIG` is the source of truth. |
+| `outMin/outMax` | `1.797` / `4.379`   | legacy normalization bounds passed with the raw result; the headline mapping now uses the full monotone `REF_RAW` reference table in `face.html`. |
 | `inputName`/`outputName` | `null`     | `null` = use the graph's first input/output |
 
-If your model differs (e.g. 0–100 output, different normalization, 112×112 input), edit those
-five constants — no other code changes.
+A replacement with different color order, normalization, input geometry, or output semantics needs a
+separate preprocessing path and golden-tensor tests. Do not swap five constants and assume parity. A new
+model also needs a newly frozen reference-output distribution and the locked identity evaluation below.
+
+## Production preprocessing and crop contract
+
+`js/face-crop.js` is the shared, DOM-free specification used by both production crop paths and Node tests.
+For the headline model it:
+
+1. finds the finite MediaPipe landmark bounding box in the **original-resolution** source;
+2. requests a square whose side is `1.4 × max(face width, face height)`;
+3. centers it horizontally and shifts its center upward by `0.06 × face height`;
+4. translates the square inside the source whenever that side can fit, without changing scale;
+5. when the requested square cannot fit, passes only the contained source intersection to `drawImage`
+   and maps it into the 224×224 destination, making the unavoidable padding explicit; and
+6. converts RGB to ImageNet-normalized float32 NCHW.
+
+The source rectangle passed to `drawImage` is always contained. Diagnostics report requested fit,
+source containment, side, x/y translation, four padding edges, padding-area percentage, and visible-face
+percentage. The optional sex model uses the same specification with scale `1.5`, no vertical shift, and
+96×96 raw RGB.
+
+## Independent evidence and current ship decision (2026-08-18)
+
+The SCUT checkpoint's SCUT correlations are training-contaminated and optimistic. The independent
+Matchmaker labels below are one site's editorial judgments, not scientific ground truth or population
+consensus. A monotone display remap cannot improve any ordering metric.
+
+| Test | Before crop repair | After crop repair | Decision |
+| --- | ---: | ---: | --- |
+| Canonical within-sex top/bottom AUC | 0.647 [0.527, 0.759] | 0.647 [0.530, 0.757] | unchanged |
+| Canonical ≥1-point pairwise accuracy | 0.596 [0.535, 0.662] | 0.598 [0.535, 0.664] | +0.002, not material |
+| Canonical Spearman rho | 0.213 [0.064, 0.362] | 0.215 [0.070, 0.362] | +0.002, not material |
+| Gallery within-sex top/bottom AUC | 0.663 [0.538, 0.758] | 0.666 [0.544, 0.764] | +0.003, not material |
+| Gallery ≥1-point pairwise accuracy | 0.591 [0.530, 0.651] | 0.593 [0.532, 0.652] | +0.002, not material |
+| Gallery image refusal | 0.205 [0.174, 0.239] | 0.205 [0.174, 0.239] | unchanged |
+| Median within-person raw SD / range / MAD | 0.363 / 0.756 / 0.182 | 0.365 / 0.762 / 0.188 | essentially unchanged; slightly worse point estimates |
+
+The crop repair ships because it removes invalid source geometry and exposes unavoidable padding, not
+because of score spreading. It did **not** clear the preregistered material-improvement gate. The current
+model and raw-mean multi-photo rule remain; the UI rounds to half-points and percentile deciles and names
+only model-output bands.
+The frozen validation comparison selected the already-shipped raw arithmetic mean as the only aggregation
+finalist. On the one-time holdout common cohort (`n=35`), canonical-single versus gallery-mean AUC was
+0.765→0.753 (delta -0.012, paired 95% CI [-0.250, 0.202]) and ≥1-point pairwise accuracy was 0.693→0.704
+(delta +0.010 [-0.153, 0.168]); expected-female AUC regressed 0.88→0.76. That fails the preregistered ship
+gate. Median and trimmed-mean variants did not advance. The mean remains because it is existing behavior
+and demonstrably steadies repeated-photo estimates, not because the holdout proved better discrimination.
+
+
+The official ICCV 2025 FPEM/LiveBeauty candidate is **no-ship**: its official LFS checkpoint is currently
+unavailable, checkpoint/data production rights are not cleared, the release has browser/export defects,
+and it has not passed this site's locked identity holdout. See `md/face-model-candidate-evaluation.md` for
+the pinned hashes, exact three-input preprocessing, licensing audit, and PyTorch→ONNX parity gate. See
+`md/face-evaluation-preregistration.md`, `md/face-gallery-stability-after.md`, and the machine-readable
+artifacts under `data/` for the evaluation contract and full confidence intervals.
 
 ## Producing `face-beauty.onnx` — easiest path: Google Colab (no local install)
 Open <https://colab.research.google.com> → New notebook → paste this one cell → Run (Shift+Enter).
@@ -106,24 +162,25 @@ torch.onnx.export(model, torch.randn(1, 3, 224, 224), "face-beauty.onnx",
 # 4. download to your computer
 files.download("face-beauty.onnx")
 ```
-Then drop `face-beauty.onnx` into this `models/` folder and reload the Face Calc page. (~43 MB —
-fine to commit, or host on a CDN and point `MODEL_CONFIG.url` at it.)
+Then verify the exported hash and parity, document the checkpoint's production/redistribution basis, and
+drop `face-beauty.onnx` into this folder. The currently shipped browser asset has SHA-256
+`4bdf12f3c3f21306522a33872a30cdf68fd7aa04f027c4581a10ac8638424fb8`.
 
 **Local alternative (if you prefer):** `pip install torch`, save the same code (minus the
 `google.colab` lines) as `convert.py`, run `python convert.py`. Run it *inside Python* — it is not
 Windows-command-prompt code.
 
-**Sanity check after loading:** `missing_keys`/`unexpected_keys` must both be empty (step 2). SCUT-FBP5500
-scores run ~1–5, which is what `MODEL_CONFIG.outMin/outMax` assume. If real faces produce a sane spread
-(attractive high, unattractive low), you're set. If scores look random *despite* an empty-keys load, the
-preprocessing crop/channel order is off (tell Claude); if they're on a different scale, adjust the two
-output constants.
+**Sanity check after loading:** `missing_keys`/`unexpected_keys` must both be empty (step 2). Compare
+PyTorch and ONNX outputs on fixed golden tensors, then compare native ONNX Runtime and ORT-Web on the same
+locked real-photo identities. A visually wide score spread is not validation. Reject NaN/Infinity, require
+zero meaningful pair-order flips from conversion, and report maximum error plus the worst fixture. If the
+model's raw distribution differs, rebuild `REF_RAW` using training/validation only and evaluate ordering on
+the untouched identity holdout; changing display anchors alone cannot improve rank discrimination.
 
 ## Notes
-- The page crops the face box from the MediaPipe landmarks (with margin) before feeding the model,
-  so the input is a tight face — match your training crop if it was looser/tighter.
-- The score is a **black box** by design here; the geometry breakdown below it is the transparent
-  part. See `frameworks.html#bone-pill` for why a single number is a mirror, not a verdict.
+- Match the exact shared crop contract above; crop scale and edge handling are model inputs, not cosmetic UI.
+- The estimate is a **black box**; the geometry breakdown is an independent descriptive read, not a proof
+  that the model is correct. See `frameworks.html#bone-pill` for why a single number is a mirror, not a verdict.
 
 ---
 

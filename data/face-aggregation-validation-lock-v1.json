@@ -1,0 +1,309 @@
+{
+  "candidates": {
+    "canonical_single": {
+      "auc": {
+        "bootstrap_95_ci": [
+          0.20909090909090908,
+          0.7651515151515151
+        ],
+        "high_identities": 10,
+        "low_identities": 10,
+        "value": 0.47
+      },
+      "identity_refusal_rate": 0.0,
+      "pairwise": {
+        "bootstrap_95_ci": [
+          0.36495460199004975,
+          0.6888150056977104
+        ],
+        "eligible_pairs": 225,
+        "value": 0.5333333333333333
+      },
+      "rho": {
+        "bootstrap_95_ci": [
+          -0.292459439589166,
+          0.37200093548759294
+        ],
+        "value": 0.03785678546585875
+      },
+      "scored_identities": 37
+    },
+    "gallery_mean": {
+      "auc": {
+        "bootstrap_95_ci": [
+          0.27494318181818184,
+          0.8181818181818182
+        ],
+        "high_identities": 10,
+        "low_identities": 10,
+        "value": 0.55
+      },
+      "identity_refusal_rate": 0.0,
+      "pairwise": {
+        "bootstrap_95_ci": [
+          0.3733317972350231,
+          0.7443946188340808
+        ],
+        "eligible_pairs": 225,
+        "value": 0.5644444444444444
+      },
+      "rho": {
+        "bootstrap_95_ci": [
+          -0.204249820130677,
+          0.49248753690310926
+        ],
+        "value": 0.14668020951661884
+      },
+      "scored_identities": 37
+    },
+    "gallery_median": {
+      "auc": {
+        "bootstrap_95_ci": [
+          0.23636363636363636,
+          0.8181818181818182
+        ],
+        "high_identities": 10,
+        "low_identities": 10,
+        "value": 0.51
+      },
+      "identity_refusal_rate": 0.0,
+      "pairwise": {
+        "bootstrap_95_ci": [
+          0.35827330508474575,
+          0.734183780660749
+        ],
+        "eligible_pairs": 225,
+        "value": 0.5466666666666666
+      },
+      "rho": {
+        "bootstrap_95_ci": [
+          -0.22542523814317886,
+          0.4531687900450326
+        ],
+        "value": 0.12140279476982288
+      },
+      "scored_identities": 37
+    },
+    "gallery_trimmed_mean": {
+      "auc": {
+        "bootstrap_95_ci": [
+          0.25,
+          0.8071565934065934
+        ],
+        "high_identities": 10,
+        "low_identities": 10,
+        "value": 0.53
+      },
+      "identity_refusal_rate": 0.0,
+      "pairwise": {
+        "bootstrap_95_ci": [
+          0.36911595305368394,
+          0.7333333333333333
+        ],
+        "eligible_pairs": 225,
+        "value": 0.5555555555555556
+      },
+      "rho": {
+        "bootstrap_95_ci": [
+          -0.2226317140103596,
+          0.46798531844822583
+        ],
+        "value": 0.1319647192414888
+      },
+      "scored_identities": 37
+    }
+  },
+  "common_scored_identity_count": 37,
+  "generated_date": "2026-08-18",
+  "holdout_examined_by_this_artifact": false,
+  "identity_count": 40,
+  "inputs": {
+    "canonical_batch": {
+      "path": "data/face-roster-pressure-test-after.csv",
+      "sha256": "64922a34ae723ab43b5ced93b1e119be6c8c7e92715f44f5196e3c2eb5189710"
+    },
+    "gallery_batch": {
+      "path": "data/face-roster-gallery-after.csv",
+      "sha256": "5f5128631271659edcb9ba4b75d4a1fe9d78cca0727dcb05cfca92d2b56da2d6"
+    },
+    "identity_split": {
+      "path": "data/face-identity-split-v1.csv",
+      "sha256": "0005aa687c2b0bb383d857b1df59f2a5859095a6ca203957fdaf181dc5fbcd1a"
+    },
+    "preregistration": {
+      "path": "data/face-evaluation-preregistration-v1.json",
+      "sha256": "771de12837167e74dcd81534a53e1f149cea90da883e92c16c3481ee589e54ca"
+    }
+  },
+  "label_interpretation": "Independent Matchmaker editorial judgments, not scientific ground truth or universal consensus.",
+  "leave_one_out_stability": {
+    "gallery_mean": {
+      "eligible_identities": 35,
+      "median_leave_one_out_range": {
+        "bootstrap_95_ci": [
+          0.17300000000000004,
+          0.32066666666666643
+        ],
+        "value": 0.26849999999999996
+      },
+      "median_leave_one_out_sd": {
+        "bootstrap_95_ci": [
+          0.07606029680457474,
+          0.1426431379871279
+        ],
+        "value": 0.12232947314527275
+      }
+    },
+    "gallery_median": {
+      "eligible_identities": 35,
+      "median_leave_one_out_range": {
+        "bootstrap_95_ci": [
+          0.11500000000000021,
+          0.2840000000000007
+        ],
+        "value": 0.2054999999999998
+      },
+      "median_leave_one_out_sd": {
+        "bootstrap_95_ci": [
+          0.08131727983645312,
+          0.164048773235279
+        ],
+        "value": 0.12232947314527275
+      }
+    },
+    "gallery_trimmed_mean": {
+      "eligible_identities": 35,
+      "median_leave_one_out_range": {
+        "bootstrap_95_ci": [
+          0.11500000000000021,
+          0.2840000000000007
+        ],
+        "value": 0.2054999999999998
+      },
+      "median_leave_one_out_sd": {
+        "bootstrap_95_ci": [
+          0.0808576604286819,
+          0.164048773235279
+        ],
+        "value": 0.12232947314527275
+      }
+    }
+  },
+  "paired_candidate_minus_canonical": {
+    "gallery_mean": {
+      "auc": {
+        "bootstrap_95_ci": [
+          -0.10775974025974026,
+          0.2545867768595039
+        ],
+        "value": 0.08000000000000007
+      },
+      "common_scored_identities": 37,
+      "identity_refusal_rate_after_minus_baseline": {
+        "bootstrap_95_ci": [
+          -0.15,
+          0.0
+        ],
+        "value": -0.075
+      },
+      "pairwise": {
+        "bootstrap_95_ci": [
+          -0.08108396858396859,
+          0.13737244897959175
+        ],
+        "value": 0.03111111111111109
+      },
+      "rho": {
+        "bootstrap_95_ci": [
+          -0.10191277308605513,
+          0.323732600790981
+        ],
+        "value": 0.10882342405076009
+      },
+      "validation_gate": {
+        "eligible": true,
+        "primary_pass": true,
+        "refusal_pass": true,
+        "stability_pass": true
+      }
+    },
+    "gallery_median": {
+      "auc": {
+        "bootstrap_95_ci": [
+          -0.1468800430338892,
+          0.22781249999999978
+        ],
+        "value": 0.040000000000000036
+      },
+      "common_scored_identities": 37,
+      "identity_refusal_rate_after_minus_baseline": {
+        "bootstrap_95_ci": [
+          -0.175,
+          0.0
+        ],
+        "value": -0.075
+      },
+      "pairwise": {
+        "bootstrap_95_ci": [
+          -0.09756381168462851,
+          0.11521180432470747
+        ],
+        "value": 0.013333333333333308
+      },
+      "rho": {
+        "bootstrap_95_ci": [
+          -0.12199158747421673,
+          0.29159717718117034
+        ],
+        "value": 0.08354600930396414
+      },
+      "validation_gate": {
+        "eligible": true,
+        "primary_pass": true,
+        "refusal_pass": true,
+        "stability_pass": true
+      }
+    },
+    "gallery_trimmed_mean": {
+      "auc": {
+        "bootstrap_95_ci": [
+          -0.13636363636363635,
+          0.2545454545454545
+        ],
+        "value": 0.06000000000000005
+      },
+      "common_scored_identities": 37,
+      "identity_refusal_rate_after_minus_baseline": {
+        "bootstrap_95_ci": [
+          -0.175,
+          0.0
+        ],
+        "value": -0.075
+      },
+      "pairwise": {
+        "bootstrap_95_ci": [
+          -0.09724493769470403,
+          0.13223612211781574
+        ],
+        "value": 0.022222222222222254
+      },
+      "rho": {
+        "bootstrap_95_ci": [
+          -0.1123076805441335,
+          0.31888879855997493
+        ],
+        "value": 0.09410793377563006
+      },
+      "validation_gate": {
+        "eligible": true,
+        "primary_pass": true,
+        "refusal_pass": true,
+        "stability_pass": true
+      }
+    }
+  },
+  "phase": "validation",
+  "schema_version": "face-aggregation-validation-lock.v1",
+  "selected_candidate": "gallery_mean",
+  "selection_result": "one finalist locked"
+}

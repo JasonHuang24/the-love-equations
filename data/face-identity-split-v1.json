@@ -1,0 +1,78 @@
+{
+  "demographic_policy": {
+    "allowed": "Only expected_sex and explicit Matchmaker editorial ethnicity metadata.",
+    "forbidden": "Never infer race, ethnicity, or another demographic from images.",
+    "reporting_minimum": "Report an ethnicity subgroup only with >=20 eligible identities and both primary classes."
+  },
+  "frozen_date": "2026-08-18",
+  "gallery_identity_count": 199,
+  "gallery_image_count": 825,
+  "identities_without_production_gallery": [],
+  "identity_count": 199,
+  "inputs": {
+    "preserved_canonical_batch": {
+      "path": "data/face-roster-pressure-test-before.csv",
+      "sha256": "64b5444de08989123b52084dba917961043f4bf00060767e3b6d036e47fe58e3"
+    },
+    "roster_metadata": {
+      "path": "matchmaker.html",
+      "sha256": "3fc44c9a7db6e53ba593190c8338ba4fa082d36c2b4d15f0f44c54953c087d98"
+    }
+  },
+  "label_bands": {
+    "high_ge_8": "expected_looks >= 8.0",
+    "low_lt_5_5": "expected_looks < 5.5",
+    "middle_5_5_to_lt_8": "5.5 <= expected_looks < 8.0"
+  },
+  "leakage_rule": "Every canonical/gallery image for an identity inherits exactly one split.",
+  "output_csv_sha256": "0005aa687c2b0bb383d857b1df59f2a5859095a6ca203957fdaf181dc5fbcd1a",
+  "ratios": {
+    "holdout": 0.2,
+    "train": 0.6,
+    "validation": 0.2
+  },
+  "schema_version": "face-identity-split.v1",
+  "seed": "face-identity-split-v1:2026-08-18",
+  "split_counts": {
+    "holdout": 40,
+    "train": 119,
+    "validation": 40
+  },
+  "stratification": [
+    "expected_sex",
+    "fixed editorial looks band"
+  ],
+  "stratum_allocations": {
+    "f|high_ge_8": {
+      "holdout": 9,
+      "train": 26,
+      "validation": 8
+    },
+    "f|low_lt_5_5": {
+      "holdout": 4,
+      "train": 11,
+      "validation": 4
+    },
+    "f|middle_5_5_to_lt_8": {
+      "holdout": 8,
+      "train": 23,
+      "validation": 7
+    },
+    "m|high_ge_8": {
+      "holdout": 5,
+      "train": 17,
+      "validation": 6
+    },
+    "m|low_lt_5_5": {
+      "holdout": 5,
+      "train": 14,
+      "validation": 5
+    },
+    "m|middle_5_5_to_lt_8": {
+      "holdout": 9,
+      "train": 28,
+      "validation": 10
+    }
+  },
+  "unit": "identity"
+}

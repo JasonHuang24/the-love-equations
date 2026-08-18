@@ -1,0 +1,200 @@
+slug,expected_looks,expected_sex,filename,timestamp,outcome,refusal_reason,model_raw,bp,cv,sex,sex_conf,sex_source,reliability
+adele,6.5,f,adele.jpg,2026-08-18T10:26:45.288Z,refused,"No face found — try a clearer, front-facing shot.",,,,,,,
+aerith-gainsborough,8.5,f,aerith-gainsborough.jpg,2026-08-18T10:26:45.904Z,scored,,3.733,6.69,6.69,f,100%,model,non-standard framing (head turned (~20°); head tilted sideways (~17°)) — scored on your override; expect a rougher read.
+alice-lane,8.5,f,alice-lane.jpg,2026-08-18T10:26:46.132Z,scored,,3.808,6.80,6.80,f,100%,model,"small/distant face (~107px of real detail) — score is rougher than a tight, sharp headshot."
+alissa-white-gluz,7.8,f,alissa-white-gluz.jpg,2026-08-18T10:26:46.368Z,refused,"No face found — try a clearer, front-facing shot.",,,,,,,
+amber-heard,8.5,f,amber-heard.jpg,2026-08-18T10:26:46.928Z,scored,,3.904,6.98,6.98,f,100%,model,"small/distant face (~47px of real detail) — score is rougher than a tight, sharp headshot."
+amelia-dimoldenberg,7.2,f,amelia-dimoldenberg.jpg,2026-08-18T10:26:47.110Z,scored,,3.006,5.88,5.88,f,100%,model,"small/distant face (~102px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read."
+amy-schumer,4.5,f,amy-schumer.jpg,2026-08-18T10:26:47.293Z,scored,,3.745,6.71,6.71,f,100%,model,non-standard framing (head turned (~17°)) — scored on your override; expect a rougher read.
+ana-de-armas,9.4,f,ana-de-armas.jpg,2026-08-18T10:26:47.480Z,scored,,2.794,5.29,5.29,f,100%,model,
+andrew-tate,6.5,m,andrew-tate.jpg,2026-08-18T10:26:47.655Z,scored,,4.101,7.61,7.61,m,100%,model,
+angela-deem,2.5,f,angela-deem.jpg,2026-08-18T10:26:47.832Z,scored,,3.910,6.99,6.99,f,100%,model,
+anna-henrietta,7.5,f,anna-henrietta.jpg,2026-08-18T10:26:48.024Z,scored,,3.801,6.79,6.79,f,100%,model,non-standard framing (head turned (~23°)) — scored on your override; expect a rougher read.
+anna-sorokin,5.5,f,anna-sorokin.jpg,2026-08-18T10:26:48.207Z,scored,,3.558,6.48,6.48,f,100%,model,"small/distant face (~60px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~14°)) — scored on your override; expect a rougher read."
+anne-hathaway,8.3,f,anne-hathaway.jpg,2026-08-18T10:26:48.381Z,scored,,3.706,6.66,6.66,f,100%,model,"small/distant face (~50px of real detail) — score is rougher than a tight, sharp headshot."
+armie-hammer,8.0,m,armie-hammer.jpg,2026-08-18T10:26:48.550Z,scored,,3.377,6.31,6.31,m,100%,model,"small/distant face (~58px of real detail) — score is rougher than a tight, sharp headshot."
+asmr-darling,7.4,f,asmr-darling.jpg,2026-08-18T10:26:48.719Z,scored,,2.923,5.72,5.72,f,99%,model,non-standard framing (head tilted sideways (~23°)) — scored on your override; expect a rougher read.
+aubrey-oday,5.5,f,aubrey-oday.jpg,2026-08-18T10:26:48.891Z,scored,,4.224,8.19,8.19,f,100%,model,
+awkwafina,5.4,f,awkwafina.jpg,2026-08-18T10:26:49.083Z,scored,,2.868,5.58,5.58,f,100%,model,
+azealia-banks,6.0,f,azealia-banks.jpg,2026-08-18T10:26:49.269Z,scored,,2.285,3.08,3.08,f,99%,model,"small/distant face (~47px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~18°)) — scored on your override; expect a rougher read."
+bad-bunny,6.5,m,bad-bunny.jpg,2026-08-18T10:26:49.453Z,scored,,3.725,6.68,6.68,m,99%,model,
+barack-obama,7.1,m,barack-obama.jpg,2026-08-18T10:26:49.632Z,scored,,3.383,6.32,6.32,m,100%,model,
+bella-hadid,9.3,f,bella-hadid.jpg,2026-08-18T10:26:49.811Z,scored,,2.869,5.58,5.58,f,100%,model,non-standard framing (head tilted sideways (~17°)) — scored on your override; expect a rougher read.
+bella-thorne,7.5,f,bella-thorne.jpg,2026-08-18T10:26:49.998Z,refused,This angle is too far off to measure — head turned (~26°). Retake facing the camera square-on.,,,,,,,
+ben-shapiro,5.0,m,ben-shapiro.jpg,2026-08-18T10:26:50.545Z,scored,,3.524,6.45,6.45,m,100%,model,"small/distant face (~88px of real detail) — score is rougher than a tight, sharp headshot."
+beyonce,8.9,f,beyonce.jpg,2026-08-18T10:26:50.716Z,scored,,2.684,4.71,4.71,f,100%,model,non-standard framing (head turned (~17°)) — scored on your override; expect a rougher read.
+bill-gates,3.4,m,bill-gates.jpg,2026-08-18T10:26:50.895Z,scored,,2.874,5.60,5.60,m,100%,model,non-standard framing (head turned (~16°); head tilted sideways (~15°)) — scored on your override; expect a rougher read.
+billie-eilish,7.8,f,billie-eilish.jpg,2026-08-18T10:26:51.091Z,scored,,3.240,6.18,6.18,f,98%,model,non-standard framing (head tilted sideways (~11°)) — scored on your override; expect a rougher read.
+billy-mcfarland,5.5,m,billy-mcfarland.jpg,2026-08-18T10:26:51.280Z,refused,This angle is too far off to measure — head turned (~28°). Retake facing the camera square-on.,,,,,,,
+blaire-white,7.0,f,blaire-white.jpg,2026-08-18T10:26:51.822Z,scored,,2.862,5.56,5.56,f,100%,model,
+brad-pitt,9.5,m,brad-pitt.jpg,2026-08-18T10:26:52.001Z,scored,,2.745,5.03,5.03,m,100%,model,"small/distant face (~56px of real detail) — score is rougher than a tight, sharp headshot."
+bruno-mars,7.1,m,bruno-mars.jpg,2026-08-18T10:26:52.179Z,scored,,2.923,5.72,5.72,f,92%,model,non-standard framing (head turned (~17°); head tilted sideways (~13°)) — scored on your override; expect a rougher read.
+callan-exorcist,8.6,f,callan-exorcist.jpg,2026-08-18T10:26:52.365Z,scored,,3.787,6.77,6.77,f,100%,model,
+casey-anthony,4.4,f,casey-anthony.jpg,2026-08-18T10:26:52.544Z,refused,This angle is too far off to measure — head tilted sideways (~32°). Retake facing the camera square-on.,,,,,,,
+chloe-grace-moretz,7.4,f,chloe-grace-moretz.jpg,2026-08-18T10:26:53.098Z,scored,,4.201,8.08,8.08,f,100%,model,non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read.
+chris-brown,7.5,m,chris-brown.jpg,2026-08-18T10:26:53.274Z,refused,"No face found — try a clearer, front-facing shot.",,,,,,,
+chris-hemsworth,9.5,m,chris-hemsworth.jpg,2026-08-18T10:26:53.828Z,scored,,3.216,6.16,6.16,m,100%,model,"small/distant face (~69px of real detail) — score is rougher than a tight, sharp headshot."
+conor-mcgregor,7.0,m,conor-mcgregor.jpg,2026-08-18T10:26:54.000Z,scored,,2.788,5.26,5.26,m,100%,model,
+courtney-clenney,7.9,f,courtney-clenney.jpg,2026-08-18T10:26:54.196Z,scored,,3.329,6.26,6.26,f,100%,model,
+cristiano-ronaldo,9.0,m,cristiano-ronaldo.jpg,2026-08-18T10:26:54.375Z,scored,,3.486,6.41,6.41,m,100%,model,non-standard framing (head turned (~21°)) — scored on your override; expect a rougher read.
+dan-bilzerian,6.0,m,dan-bilzerian.jpg,2026-08-18T10:26:54.561Z,scored,,3.964,7.12,7.12,m,100%,model,
+danny-devito,2.5,m,danny-devito.jpg,2026-08-18T10:26:54.757Z,scored,,2.833,5.46,5.46,m,100%,model,"small/distant face (~103px of real detail) — score is rougher than a tight, sharp headshot."
+denzel-washington,8.8,m,denzel-washington.jpg,2026-08-18T10:26:54.929Z,scored,,2.687,4.72,4.72,m,100%,model,non-standard framing (head turned (~13°)) — scored on your override; expect a rougher read.
+dev-patel,8.0,m,dev-patel.jpg,2026-08-18T10:26:55.122Z,refused,This angle is too far off to measure — head turned (~30°). Retake facing the camera square-on.,,,,,,,
+dizzykitten,7.2,f,dizzykitten.jpg,2026-08-18T10:26:55.676Z,refused,This angle is too far off to measure — head turned (~25°). Retake facing the camera square-on.,,,,,,,
+dolly-parton,8.0,f,dolly-parton.jpg,2026-08-18T10:26:56.219Z,scored,,2.439,3.60,3.60,f,100%,model,
+drake,7.0,m,drake.jpg,2026-08-18T10:26:56.403Z,scored,,3.131,6.06,6.06,m,100%,model,"small/distant face (~93px of real detail) — score is rougher than a tight, sharp headshot."
+dwayne-johnson,7.5,m,dwayne-johnson.jpg,2026-08-18T10:26:56.583Z,scored,,3.306,6.24,6.24,m,75%,model,
+ed-sheeran,4.5,m,ed-sheeran.jpg,2026-08-18T10:26:56.775Z,scored,,3.837,6.85,6.85,f,66%,model,
+elizabeth-holmes,5.0,f,elizabeth-holmes.jpg,2026-08-18T10:26:56.950Z,scored,,3.603,6.53,6.53,f,100%,model,"small/distant face (~67px of real detail) — score is rougher than a tight, sharp headshot."
+elizabeth-olsen,8.0,f,elizabeth-olsen.jpg,2026-08-18T10:26:57.135Z,scored,,3.486,6.41,6.41,f,100%,model,
+elon-musk,5.5,m,elon-musk.jpg,2026-08-18T10:26:57.319Z,scored,,2.760,5.12,5.12,m,100%,model,non-standard framing (head turned (~14°)) — scored on your override; expect a rougher read.
+eminem,6.6,m,eminem.jpg,2026-08-18T10:26:57.505Z,scored,,3.237,6.18,6.18,m,100%,model,
+emma-blackery,6.5,f,emma-blackery.jpg,2026-08-18T10:26:57.687Z,scored,,4.013,7.30,7.30,f,100%,model,
+emma-stone,8.0,f,emma-stone.jpg,2026-08-18T10:26:57.859Z,scored,,2.870,5.59,5.59,f,100%,model,"small/distant face (~51px of real detail) — score is rougher than a tight, sharp headshot."
+emma-watson,8.0,f,emma-watson.jpg,2026-08-18T10:26:58.047Z,scored,,3.673,6.61,6.61,f,100%,model,non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read.
+emmy-rossum,8.0,f,emmy-rossum.jpg,2026-08-18T10:26:58.243Z,scored,,4.053,7.45,7.45,f,99%,model,non-standard framing (head turned (~18°)) — scored on your override; expect a rougher read.
+evil-addams,7.8,f,evil-addams.jpg,2026-08-18T10:26:58.438Z,scored,,4.186,7.99,7.99,f,100%,model,
+farrah-abraham,5.8,f,farrah-abraham.jpg,2026-08-18T10:26:58.620Z,scored,,2.746,5.04,5.04,f,100%,model,"small/distant face (~42px of real detail) — score is rougher than a tight, sharp headshot."
+frivolousfox,7.2,f,frivolousfox.jpg,2026-08-18T10:26:58.799Z,scored,,3.747,6.71,6.71,f,100%,model,non-standard framing (head tilted sideways (~13°)) — scored on your override; expect a rougher read.
+gab-smolders,6.5,f,gab-smolders.jpg,2026-08-18T10:26:58.984Z,refused,This angle is too far off to measure — head turned (~28°); head tilted sideways (~14°). Retake facing the camera square-on.,,,,,,,
+gal-gadot,9.0,f,gal-gadot.jpg,2026-08-18T10:26:59.540Z,scored,,3.469,6.40,6.40,f,99%,model,"small/distant face (~58px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head tilted sideways (~12°)) — scored on your override; expect a rougher read."
+george-clooney,8.5,m,george-clooney.jpg,2026-08-18T10:26:59.715Z,scored,,3.845,6.87,6.87,m,100%,model,
+george-santos,4.0,m,george-santos.jpg,2026-08-18T10:26:59.892Z,scored,,2.841,5.50,5.50,m,99%,model,"small/distant face (~55px of real detail) — score is rougher than a tight, sharp headshot."
+gibi-asmr,7.2,f,gibi-asmr.jpg,2026-08-18T10:27:00.085Z,scored,,3.983,7.18,7.18,f,100%,model,non-standard framing (head tilted sideways (~11°)) — scored on your override; expect a rougher read.
+glen-powell,8.7,m,glen-powell.jpg,2026-08-18T10:27:00.279Z,scored,,3.314,6.25,6.25,m,100%,model,
+grimes,7.0,f,grimes.jpg,2026-08-18T10:27:00.473Z,refused,This angle is too far off to measure — head turned (~32°). Retake facing the camera square-on.,,,,,,,
+hailee-steinfeld,8.0,f,hailee-steinfeld.jpg,2026-08-18T10:27:01.029Z,scored,,2.606,4.30,4.30,f,98%,model,
+harry-styles,8.0,m,harry-styles.jpg,2026-08-18T10:27:01.218Z,scored,,2.335,3.24,3.24,m,100%,model,
+hasan-piker,8.2,m,hasan-piker.jpg,2026-08-18T10:27:01.405Z,refused,This angle is too far off to measure — head turned (~32°). Retake facing the camera square-on.,,,,,,,
+henry-cavill,9.5,m,henry-cavill.jpg,2026-08-18T10:27:01.962Z,scored,,3.523,6.44,6.44,m,100%,model,"small/distant face (~55px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~21°)) — scored on your override; expect a rougher read."
+idris-elba,9.0,m,idris-elba.jpg,2026-08-18T10:27:02.145Z,scored,,2.884,5.62,5.62,m,100%,model,"small/distant face (~60px of real detail) — score is rougher than a tight, sharp headshot."
+ihascupquake,6.5,f,ihascupquake.jpg,2026-08-18T10:27:02.325Z,scored,,2.607,4.30,4.30,f,100%,model,"small/distant face (~104px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head tilted sideways (~11°)) — scored on your override; expect a rougher read."
+ishowspeed,6.0,m,ishowspeed.jpg,2026-08-18T10:27:02.511Z,scored,,2.506,3.89,3.89,m,100%,model,
+jack-black,4.5,m,jack-black.jpg,2026-08-18T10:27:02.699Z,scored,,2.287,3.09,3.09,m,100%,model,"small/distant face (~51px of real detail) — score is rougher than a tight, sharp headshot."
+jacob-elordi,9.1,m,jacob-elordi.jpg,2026-08-18T10:27:02.878Z,scored,,3.639,6.58,6.58,m,100%,model,non-standard framing (head turned (~12°)) — scored on your override; expect a rougher read.
+james-corden,4.0,m,james-corden.jpg,2026-08-18T10:27:03.082Z,scored,,2.833,5.46,5.46,m,100%,model,"small/distant face (~62px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~18°)) — scored on your override; expect a rougher read."
+jason-momoa,9.0,m,jason-momoa.jpg,2026-08-18T10:27:03.282Z,scored,,3.694,6.64,6.64,m,100%,model,
+jeff-bezos,3.0,m,jeff-bezos.jpg,2026-08-18T10:27:03.487Z,refused,This angle is too far off to measure — head turned (~33°). Retake facing the camera square-on.,,,,,,,
+jenelle-evans,5.5,f,jenelle-evans.jpg,2026-08-18T10:27:04.033Z,scored,,3.014,5.89,5.89,f,100%,model,
+jennifer-haben,8.9,f,jennifer-haben.jpg,2026-08-18T10:27:04.226Z,scored,,2.714,4.86,4.86,f,87%,model,non-standard framing (head turned (~22°); head tilted sideways (~12°)) — scored on your override; expect a rougher read.
+jennifer-lawrence,8.1,f,jennifer-lawrence.jpg,2026-08-18T10:27:04.473Z,scored,,3.638,6.58,6.58,f,100%,model,"small/distant face (~42px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~17°)) — scored on your override; expect a rougher read."
+jensen-huang,5.3,m,jensen-huang.jpg,2026-08-18T10:27:04.661Z,scored,,3.293,6.23,6.23,m,99%,model,
+jo-brand,3.0,f,jo-brand.jpg,2026-08-18T10:27:04.846Z,scored,,2.646,4.52,4.52,f,64%,model,"small/distant face (~52px of real detail) — score is rougher than a tight, sharp headshot."
+joe-exotic,3.0,m,joe-exotic.jpg,2026-08-18T10:27:05.030Z,scored,,2.228,2.83,2.83,m,100%,model,
+joe-rogan,5.5,m,joe-rogan.jpg,2026-08-18T10:27:05.221Z,scored,,3.253,6.20,6.20,m,100%,model,non-standard framing (head turned (~12°)) — scored on your override; expect a rougher read.
+john-mulaney,6.8,m,john-mulaney.jpg,2026-08-18T10:27:05.426Z,scored,,3.557,6.48,6.48,m,100%,model,
+johnny-depp,9.0,m,johnny-depp.jpg,2026-08-18T10:27:05.622Z,scored,,3.683,6.63,6.63,m,100%,model,"small/distant face (~57px of real detail) — score is rougher than a tight, sharp headshot."
+jon-gosselin,4.5,m,jon-gosselin.jpg,2026-08-18T10:27:05.807Z,scored,,2.587,4.23,4.23,m,100%,model,non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read.
+jonah-hill,5.5,m,jonah-hill.jpg,2026-08-18T10:27:05.989Z,scored,,3.377,6.31,6.31,m,100%,model,"small/distant face (~65px of real detail) — score is rougher than a tight, sharp headshot."
+jordan-peterson,6.2,m,jordan-peterson.jpg,2026-08-18T10:27:06.183Z,scored,,3.247,6.19,6.19,m,100%,model,non-standard framing (head tilted sideways (~23°)) — scored on your override; expect a rougher read.
+jungkook,8.0,m,jungkook.jpg,2026-08-18T10:27:06.375Z,scored,,4.050,7.44,7.44,f,70%,model,
+justin-bieber,7.5,m,justin-bieber.jpg,2026-08-18T10:27:06.559Z,scored,,3.973,7.15,7.15,m,100%,model,
+kai-cenat,6.3,m,kai-cenat.jpg,2026-08-18T10:27:06.749Z,refused,This angle is too far off to measure — head turned (~27°). Retake facing the camera square-on.,,,,,,,
+kanye-west,6.0,m,kanye-west.jpg,2026-08-18T10:27:07.314Z,scored,,3.621,6.56,6.56,m,100%,model,
+kato-kaelin,5.0,m,kato-kaelin.jpg,2026-08-18T10:27:07.515Z,scored,,2.257,2.96,2.96,m,100%,model,"small/distant face (~59px of real detail) — score is rougher than a tight, sharp headshot."
+keanu-reeves,8.5,m,keanu-reeves.jpg,2026-08-18T10:27:07.718Z,scored,,3.236,6.18,6.18,m,73%,model,
+keira-metz,8.0,f,keira-metz.jpg,2026-08-18T10:27:07.942Z,refused,This angle is too far off to measure — head turned (~30°); head tilted sideways (~18°). Retake facing the camera square-on.,,,,,,,
+kendrick-lamar,6.1,m,kendrick-lamar.jpg,2026-08-18T10:27:08.499Z,scored,,3.048,5.94,5.94,m,100%,model,non-standard framing (head turned (~22°)) — scored on your override; expect a rougher read.
+kevin-federline,5.5,m,kevin-federline.jpg,2026-08-18T10:27:08.710Z,scored,,3.088,6.00,6.00,m,100%,model,"small/distant face (~66px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~18°); head tilted sideways (~11°)) — scored on your override; expect a rougher read."
+kevin-hart,5.6,m,kevin-hart.jpg,2026-08-18T10:27:08.917Z,scored,,2.241,2.87,2.87,m,100%,model,
+kim-kardashian,8.5,f,kim-kardashian.jpg,2026-08-18T10:27:09.129Z,scored,,4.073,7.51,7.51,f,100%,model,"small/distant face (~64px of real detail) — score is rougher than a tight, sharp headshot."
+ksi,6.8,m,ksi.jpg,2026-08-18T10:27:09.321Z,scored,,3.230,6.17,6.17,f,86%,model,non-standard framing (head turned (~23°); head tilted sideways (~11°)) — scored on your override; expect a rougher read.
+kumail-nanjiani,6.4,m,kumail-nanjiani.jpg,2026-08-18T10:27:09.507Z,refused,This angle is too far off to measure — head turned (~26°); head tilted sideways (~13°). Retake facing the camera square-on.,,,,,,,
+kylie-jenner,7.5,f,kylie-jenner.jpg,2026-08-18T10:27:10.085Z,scored,,3.355,6.29,6.29,m,52%,model,
+lana-condor,8.0,f,lana-condor.jpg,2026-08-18T10:27:10.269Z,scored,,2.839,5.49,5.49,f,100%,model,
+lebron-james,7.0,m,lebron-james.jpg,2026-08-18T10:27:10.454Z,scored,,1.950,2.16,2.16,m,100%,model,
+lena-dunham,3.5,f,lena-dunham.jpg,2026-08-18T10:27:10.639Z,scored,,3.985,7.19,7.19,f,98%,model,non-standard framing (head tilted sideways (~11°)) — scored on your override; expect a rougher read.
+leonardo-dicaprio,9.3,m,leonardo-dicaprio.jpg,2026-08-18T10:27:10.835Z,scored,,2.688,4.73,4.73,m,100%,model,
+lewis-capaldi,4.8,m,lewis-capaldi.jpg,2026-08-18T10:27:11.026Z,scored,,3.773,6.75,6.75,m,59%,model,non-standard framing (head turned (~22°)) — scored on your override; expect a rougher read.
+lilypichu,7.0,f,lilypichu.jpg,2026-08-18T10:27:11.216Z,scored,,3.024,5.91,5.91,f,95%,model,non-standard framing (head turned (~24°); head tilted sideways (~12°)) — scored on your override; expect a rougher read.
+lionel-messi,6.5,m,lionel-messi.jpg,2026-08-18T10:27:11.408Z,scored,,3.736,6.70,6.70,m,100%,model,
+lisa-blackpink,8.9,f,lisa-blackpink.jpg,2026-08-18T10:27:11.607Z,scored,,4.065,7.49,7.49,f,100%,model,
+lizzo,5.0,f,lizzo.jpg,2026-08-18T10:27:11.795Z,scored,,2.513,3.92,3.92,f,100%,model,"small/distant face (~56px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~18°)) — scored on your override; expect a rougher read."
+logan-paul,7.3,m,logan-paul.jpg,2026-08-18T10:27:11.976Z,scored,,3.832,6.84,6.84,m,100%,model,non-standard framing (head turned (~22°)) — scored on your override; expect a rougher read.
+mama-june,3.5,f,mama-june.jpg,2026-08-18T10:27:12.178Z,scored,,3.401,6.34,6.34,f,100%,model,non-standard framing (head turned (~15°)) — scored on your override; expect a rougher read.
+margot-robbie,9.5,f,margot-robbie.jpg,2026-08-18T10:27:12.367Z,refused,This angle is too far off to measure — head turned (~29°). Retake facing the camera square-on.,,,,,,,
+marina-laswick,8.9,f,marina-laswick.jpg,2026-08-18T10:27:12.934Z,scored,,4.227,8.20,8.20,f,100%,model,non-standard framing (head turned (~20°); head tilted sideways (~10°)) — scored on your override; expect a rougher read.
+mark-zuckerberg,3.5,m,mark-zuckerberg.jpg,2026-08-18T10:27:13.132Z,refused,This angle is too far off to measure — head turned (~35°). Retake facing the camera square-on.,,,,,,,
+martin-shkreli,4.0,m,martin-shkreli.jpg,2026-08-18T10:27:13.696Z,scored,,3.010,5.89,5.89,m,100%,model,non-standard framing (head turned (~12°); head tilted sideways (~12°)) — scored on your override; expect a rougher read.
+marz,7.8,f,marz.jpg,2026-08-18T10:27:13.888Z,scored,,3.780,6.76,6.76,f,100%,model,
+maya-higa,7.4,f,maya-higa.jpg,2026-08-18T10:27:14.096Z,scored,,3.180,6.12,6.12,f,100%,model,"small/distant face (~107px of real detail) — score is rougher than a tight, sharp headshot."
+megan-fox,9.2,f,megan-fox.jpg,2026-08-18T10:27:14.291Z,scored,,3.944,7.07,7.07,f,100%,model,
+melissa-bonny,7.9,f,melissa-bonny.jpg,2026-08-18T10:27:14.484Z,scored,,2.712,4.84,4.84,f,88%,model,
+michael-b-jordan,9.0,m,michael-b-jordan.jpg,2026-08-18T10:27:14.675Z,scored,,2.815,5.38,5.38,m,100%,model,"small/distant face (~56px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~19°)) — scored on your override; expect a rougher read."
+michael-phelps,6.7,m,michael-phelps.jpg,2026-08-18T10:27:14.859Z,refused,This angle is too far off to measure — head turned (~26°). Retake facing the camera square-on.,,,,,,,
+mila-kunis,8.5,f,mila-kunis.jpg,2026-08-18T10:27:15.411Z,scored,,3.774,6.75,6.75,f,100%,model,"small/distant face (~70px of real detail) — score is rougher than a tight, sharp headshot."
+mindy-kaling,5.5,f,mindy-kaling.jpg,2026-08-18T10:27:15.602Z,scored,,3.363,6.30,6.30,f,100%,model,"small/distant face (~71px of real detail) — score is rougher than a tight, sharp headshot."
+monica-bellucci,9.5,f,monica-bellucci.jpg,2026-08-18T10:27:15.797Z,scored,,3.430,6.37,6.37,f,100%,model,non-standard framing (head tilted sideways (~13°)) — scored on your override; expect a rougher read.
+mrbeast,6.1,m,mrbeast.jpg,2026-08-18T10:27:15.990Z,scored,,3.023,5.91,5.91,m,100%,model,non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read.
+nadya-suleman,4.0,f,nadya-suleman.jpg,2026-08-18T10:27:16.190Z,refused,This angle is too far off to measure — head turned (~30°); head tilted sideways (~13°). Retake facing the camera square-on.,,,,,,,
+natalie-portman,8.0,f,natalie-portman.jpg,2026-08-18T10:27:16.750Z,scored,,3.530,6.45,6.45,f,99%,model,non-standard framing (head turned (~14°)) — scored on your override; expect a rougher read.
+neymar,7.6,m,neymar.jpg,2026-08-18T10:27:16.940Z,scored,,3.381,6.32,6.32,m,100%,model,
+nicolas-cage,7.0,m,nicolas-cage.jpg,2026-08-18T10:27:17.141Z,scored,,2.966,5.81,5.81,m,100%,model,"small/distant face (~73px of real detail) — score is rougher than a tight, sharp headshot."
+ninja,6.6,m,ninja.jpg,2026-08-18T10:27:17.335Z,scored,,2.721,4.89,4.89,m,99%,model,non-standard framing (head tilted sideways (~18°)) — scored on your override; expect a rougher read.
+paul-rudd,7.0,m,paul-rudd.jpg,2026-08-18T10:27:17.526Z,refused,This angle is too far off to measure — head turned (~30°). Retake facing the camera square-on.,,,,,,,
+pauly-shore,4.0,m,pauly-shore.jpg,2026-08-18T10:27:18.103Z,scored,,2.746,5.03,5.03,m,100%,model,"small/distant face (~57px of real detail) — score is rougher than a tight, sharp headshot."
+pedro-pascal,7.5,m,pedro-pascal.jpg,2026-08-18T10:27:18.292Z,scored,,3.107,6.03,6.03,m,73%,model,
+pete-davidson,5.0,m,pete-davidson.jpg,2026-08-18T10:27:18.499Z,scored,,3.449,6.38,6.38,f,54%,model,non-standard framing (head turned (~17°)) — scored on your override; expect a rougher read.
+pewdiepie,7.1,m,pewdiepie.jpg,2026-08-18T10:27:18.694Z,refused,This angle is too far off to measure — head turned (~34°); head tilted sideways (~12°). Retake facing the camera square-on.,,,,,,,
+philippa-eilhart,7.0,f,philippa-eilhart.jpg,2026-08-18T10:27:19.268Z,refused,This angle is too far off to measure — head turned (~29°); head tilted sideways (~20°). Retake facing the camera square-on.,,,,,,,
+piia-tamare,8.3,f,piia-tamare.jpg,2026-08-18T10:27:19.827Z,scored,,4.264,8.37,8.37,f,100%,model,non-standard framing (head turned (~23°)) — scored on your override; expect a rougher read.
+pokimane,7.4,f,pokimane.jpg,2026-08-18T10:27:20.020Z,refused,This angle is too far off to measure — head turned (~25°). Retake facing the camera square-on.,,,,,,,
+pom-klementieff,7.5,f,pom-klementieff.jpg,2026-08-18T10:27:20.593Z,refused,This angle is too far off to measure — head turned (~28°). Retake facing the camera square-on.,,,,,,,
+prince-harry,7.2,m,prince-harry.jpg,2026-08-18T10:27:21.154Z,refused,This angle is too far off to measure — head turned (~36°). Retake facing the camera square-on.,,,,,,,
+priyanka-chopra,8.8,f,priyanka-chopra.jpg,2026-08-18T10:27:21.713Z,scored,,4.104,7.62,7.62,f,100%,model,
+qtcinderella,7.0,f,qtcinderella.jpg,2026-08-18T10:27:21.903Z,scored,,3.217,6.16,6.16,f,100%,model,
+rachel-dolezal,4.0,f,rachel-dolezal.jpg,2026-08-18T10:27:22.115Z,scored,,3.192,6.13,6.13,f,96%,model,non-standard framing (head turned (~14°)) — scored on your override; expect a rougher read.
+rami-malek,6.8,m,rami-malek.jpg,2026-08-18T10:27:22.313Z,scored,,3.589,6.52,6.52,m,100%,model,
+rebel-wilson,5.4,f,rebel-wilson.jpg,2026-08-18T10:27:22.516Z,scored,,3.551,6.47,6.47,f,100%,model,
+rihanna,9.1,f,rihanna.jpg,2026-08-18T10:27:22.721Z,scored,,2.324,3.20,3.20,f,100%,model,
+robert-pattinson,8.9,m,robert-pattinson.jpg,2026-08-18T10:27:22.933Z,scored,,4.100,7.61,7.61,m,100%,model,
+roman-reigns,9.0,m,roman-reigns.jpg,2026-08-18T10:27:23.151Z,scored,,2.655,4.56,4.56,m,100%,model,
+rosa-salazar,7.0,f,rosa-salazar.jpg,2026-08-18T10:27:23.368Z,refused,This angle is too far off to measure — head turned (~27°). Retake facing the camera square-on.,,,,,,,
+roseanne-barr,3.5,f,roseanne-barr.jpg,2026-08-18T10:27:23.942Z,scored,,3.280,6.22,6.22,f,100%,model,"small/distant face (~75px of real detail) — score is rougher than a tight, sharp headshot."
+rosie-odonnell,3.8,f,rosie-odonnell.jpg,2026-08-18T10:27:24.140Z,scored,,2.956,5.79,5.79,f,100%,model,non-standard framing (head tilted sideways (~18°)) — scored on your override; expect a rougher read.
+rudy-giuliani,3.5,m,rudy-giuliani.jpg,2026-08-18T10:27:24.351Z,scored,,3.238,6.18,6.18,m,100%,model,"small/distant face (~59px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read."
+russell-brand,7.0,m,russell-brand.jpg,2026-08-18T10:27:24.545Z,scored,,4.327,8.78,8.78,m,100%,model,
+ryan-gosling,8.5,m,ryan-gosling.jpg,2026-08-18T10:27:24.761Z,scored,,2.922,5.72,5.72,m,100%,model,"small/distant face (~60px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~13°)) — scored on your override; expect a rougher read."
+ryan-reynolds,8.0,m,ryan-reynolds.jpg,2026-08-18T10:27:24.963Z,scored,,3.514,6.44,6.44,m,100%,model,
+sabrina-carpenter,8.3,f,sabrina-carpenter.jpg,2026-08-18T10:27:25.173Z,scored,,3.908,6.99,6.99,f,100%,model,non-standard framing (head turned (~18°)) — scored on your override; expect a rougher read.
+sam-bankman-fried,3.0,m,sam-bankman-fried.jpg,2026-08-18T10:27:25.385Z,refused,This angle is too far off to measure — head turned (~36°). Retake facing the camera square-on.,,,,,,,
+scarlett-johansson,9.2,f,scarlett-johansson.jpg,2026-08-18T10:27:25.950Z,scored,,3.057,5.95,5.95,f,100%,model,"small/distant face (~55px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read."
+selene-ashford,9.5,f,selene-ashford.jpg,2026-08-18T10:27:26.144Z,scored,,3.481,6.41,6.41,f,100%,model,non-standard framing (head tilted sideways (~19°)) — scored on your override; expect a rougher read.
+serena-williams,6.4,f,serena-williams.jpg,2026-08-18T10:27:26.342Z,scored,,3.285,6.22,6.22,f,100%,model,non-standard framing (head turned (~21°); head tilted sideways (~20°)) — scored on your override; expect a rougher read.
+seth-rogen,4.5,m,seth-rogen.jpg,2026-08-18T10:27:26.553Z,scored,,2.832,5.46,5.46,m,100%,model,"small/distant face (~63px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~12°)) — scored on your override; expect a rougher read."
+shaelah-mcgilton,8.4,f,shaelah-mcgilton.jpg,2026-08-18T10:27:26.751Z,scored,,3.949,7.08,7.08,f,100%,model,
+shakira,8.4,f,shakira.jpg,2026-08-18T10:27:26.967Z,scored,,3.688,6.63,6.63,f,100%,model,non-standard framing (head turned (~16°)) — scored on your override; expect a rougher read.
+shia-labeouf,6.5,m,shia-labeouf.jpg,2026-08-18T10:27:27.187Z,scored,,3.254,6.20,6.20,m,100%,model,"small/distant face (~81px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~14°)) — scored on your override; expect a rougher read."
+shohei-ohtani,7.5,m,shohei-ohtani.jpg,2026-08-18T10:27:27.390Z,refused,This angle is too far off to measure — head turned (~51°). Retake facing the camera square-on.,,,,,,,
+simone-biles,6.5,f,simone-biles.jpg,2026-08-18T10:27:27.962Z,scored,,2.150,2.58,2.58,f,100%,model,
+simu-liu,7.7,m,simu-liu.jpg,2026-08-18T10:27:28.168Z,scored,,2.497,3.84,3.84,m,100%,model,
+snoop-dogg,5.4,m,snoop-dogg.jpg,2026-08-18T10:27:28.446Z,scored,,2.497,3.84,3.84,m,100%,model,
+sofia-vergara,8.8,f,sofia-vergara.jpg,2026-08-18T10:27:28.689Z,scored,,2.774,5.19,5.19,f,100%,model,non-standard framing (head turned (~21°); head tilted sideways (~11°)) — scored on your override; expect a rougher read.
+spencer-pratt,5.5,m,spencer-pratt.jpg,2026-08-18T10:27:28.946Z,scored,,3.317,6.25,6.25,m,100%,model,
+steve-buscemi,2.5,m,steve-buscemi.jpg,2026-08-18T10:27:29.163Z,scored,,2.918,5.71,5.71,m,100%,model,"small/distant face (~63px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~12°)) — scored on your override; expect a rougher read."
+susan-boyle,3.0,f,susan-boyle.jpg,2026-08-18T10:27:29.362Z,scored,,2.934,5.74,5.74,m,82%,model,"small/distant face (~67px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~21°)) — scored on your override; expect a rougher read."
+sydney-sweeney,9.0,f,sydney-sweeney.jpg,2026-08-18T10:27:29.559Z,scored,,3.119,6.04,6.04,f,100%,model,"small/distant face (~48px of real detail) — score is rougher than a tight, sharp headshot."
+taylor-swift,7.5,f,taylor-swift.jpg,2026-08-18T10:27:29.765Z,scored,,3.584,6.51,6.51,f,100%,model,"small/distant face (~49px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head tilted sideways (~10°)) — scored on your override; expect a rougher read."
+tekashi-6ix9ine,4.0,m,tekashi-6ix9ine.jpg,2026-08-18T10:27:29.969Z,scored,,3.080,5.99,5.99,m,89%,model,
+the-weeknd,6.0,m,the-weeknd.jpg,2026-08-18T10:27:30.180Z,scored,,3.382,6.32,6.32,m,100%,model,
+tifa-lockhart,9.5,f,tifa-lockhart.jpg,2026-08-18T10:27:30.393Z,scored,,3.591,6.52,6.52,f,100%,model,non-standard framing (head turned (~22°); head tilted sideways (~18°)) — scored on your override; expect a rougher read.
+tila-tequila,5.0,f,tila-tequila.jpg,2026-08-18T10:27:30.592Z,scored,,3.289,6.23,6.23,f,100%,model,"small/distant face (~44px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~20°); head tilted sideways (~18°)) — scored on your override; expect a rougher read."
+timothee-chalamet,8.5,m,timothee-chalamet.jpg,2026-08-18T10:27:30.795Z,scored,,3.883,6.94,6.94,f,53%,model,
+tom-brady,8.0,m,tom-brady.jpg,2026-08-18T10:27:31.002Z,refused,This angle is too far off to measure — head turned (~41°). Retake facing the camera square-on.,,,,,,,
+tom-cruise,8.7,m,tom-cruise.jpg,2026-08-18T10:27:31.591Z,scored,,3.259,6.20,6.20,m,93%,model,
+tonya-harding,4.0,f,tonya-harding.jpg,2026-08-18T10:27:31.799Z,scored,,2.896,5.66,5.66,f,88%,model,"small/distant face (~91px of real detail) — score is rougher than a tight, sharp headshot."
+travis-kelce,7.0,m,travis-kelce.jpg,2026-08-18T10:27:32.013Z,scored,,3.922,7.01,7.01,m,100%,model,
+trisha-paytas,5.0,f,trisha-paytas.jpg,2026-08-18T10:27:32.231Z,scored,,2.885,5.63,5.63,f,99%,model,
+triss-merigold,8.5,f,triss-merigold.jpg,2026-08-18T10:27:32.456Z,scored,,3.480,6.41,6.41,f,100%,model,non-standard framing (head turned (~22°); head tilted sideways (~24°)) — scored on your override; expect a rougher read.
+tyson-fury,5.6,m,tyson-fury.jpg,2026-08-18T10:27:32.700Z,refused,This angle is too far off to measure — head turned (~30°); head tilted sideways (~18°). Retake facing the camera square-on.,,,,,,,
+usain-bolt,7.7,m,usain-bolt.jpg,2026-08-18T10:27:33.291Z,scored,,2.415,3.52,3.52,m,100%,model,
+valkyrae,8.0,f,valkyrae.jpg,2026-08-18T10:27:33.539Z,scored,,3.314,6.25,6.25,f,100%,model,
+vera-lux,9.0,f,vera-lux.jpg,2026-08-18T10:27:33.782Z,refused,This angle is too far off to measure — head turned (~27°); head tilted sideways (~18°). Retake facing the camera square-on.,,,,,,,
+victoria-justice,8.5,f,victoria-justice.jpg,2026-08-18T10:27:34.377Z,refused,This angle is too far off to measure — head turned (~37°); head tilted sideways (~14°). Retake facing the camera square-on.,,,,,,,
+whispersred,6.0,f,whispersred.jpg,2026-08-18T10:27:34.952Z,scored,,3.889,6.95,6.95,f,100%,model,non-standard framing (head turned (~19°); head tilted sideways (~14°)) — scored on your override; expect a rougher read.
+whoopi-goldberg,3.5,f,whoopi-goldberg.jpg,2026-08-18T10:27:35.165Z,scored,,2.549,4.07,4.07,m,94%,model,"small/distant face (~54px of real detail) — score is rougher than a tight, sharp headshot."
+will-smith,8.3,m,will-smith.jpg,2026-08-18T10:27:35.380Z,refused,This angle is too far off to measure — head turned (~49°); head tilted sideways (~12°). Retake facing the camera square-on.,,,,,,,
+xqc,5.4,m,xqc.jpg,2026-08-18T10:27:35.967Z,scored,,3.400,6.34,6.34,m,95%,model,
+zayn-malik,8.5,m,zayn-malik.jpg,2026-08-18T10:27:36.188Z,scored,,4.111,7.65,7.65,m,100%,model,
+zendaya,9.0,f,zendaya.jpg,2026-08-18T10:27:36.409Z,scored,,3.987,7.19,7.19,f,100%,model,"small/distant face (~53px of real detail) — score is rougher than a tight, sharp headshot. · non-standard framing (head turned (~15°)) — scored on your override; expect a rougher read."

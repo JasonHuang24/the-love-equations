@@ -1,0 +1,811 @@
+{
+  "bootstrap": {
+    "rounds": 1000,
+    "seed": 20260818,
+    "unit": "identity (all photos retained together)"
+  },
+  "demographic_provenance": {
+    "image_inference_used": false,
+    "limitations": "Broad editorial metadata; not controlled or independently verified demographic ground truth.",
+    "reporting_minimum_identities": 20,
+    "source": "matchmaker.html explicit editorial ethnicity field"
+  },
+  "editorial_ethnicity_subgroups": {
+    "black": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.08824999999999994,
+            0.24224999999999997
+          ],
+          "eligible_identities": 18,
+          "value": 0.13849999999999985
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.30600000000000016,
+            0.9810000000000001
+          ],
+          "eligible_identities": 18,
+          "value": 0.5865
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.20749383841102753,
+            0.48369027581641083
+          ],
+          "eligible_identities": 18,
+          "value": 0.3837981541651939
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 20,
+        "pearson_r": 0.11222666340607894,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            -0.5940364631366608,
+            0.38710898668393084
+          ],
+          "value": -0.12759641908741576
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.11861914257228315,
+            0.6949530871670703
+          ],
+          "eligible_pairs": 68,
+          "value": 0.36764705882352944
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.035342261904761925,
+            0.768048469387755
+          ],
+          "high_identities": 6,
+          "low_identities": 6,
+          "value": 0.3333333333333333
+        }
+      },
+      "identities": 22,
+      "identities_all_refused": 2,
+      "identities_with_score": 20,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.28719604863221887,
+          0.5232558139534884
+        ],
+        "value": 0.4
+      },
+      "images": {
+        "errors": 0,
+        "refused": 36,
+        "scored": 54,
+        "submitted": 90
+      }
+    },
+    "white": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.14793749999999992,
+            0.21501874999999962
+          ],
+          "eligible_identities": 110,
+          "value": 0.1825
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.7169999999999996,
+            0.8300000000000001
+          ],
+          "eligible_identities": 110,
+          "value": 0.7689999999999999
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.33449900348630834,
+            0.4244176402240291
+          ],
+          "eligible_identities": 110,
+          "value": 0.36015660869599997
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 125,
+        "pearson_r": 0.3264715296775127,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            0.1011516721451726,
+            0.4393802754542804
+          ],
+          "value": 0.2756075966899314
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.5319529979303782,
+            0.684434677839208
+          ],
+          "eligible_pairs": 2812,
+          "value": 0.6086415362731152
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.550373949579832,
+            0.8261355157871971
+          ],
+          "high_identities": 34,
+          "low_identities": 33,
+          "value": 0.6987522281639929
+        }
+      },
+      "identities": 126,
+      "identities_all_refused": 1,
+      "identities_with_score": 125,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.14447374650471215,
+          0.22353328173374615
+        ],
+        "value": 0.18129770992366412
+      },
+      "images": {
+        "errors": 0,
+        "refused": 95,
+        "scored": 429,
+        "submitted": 524
+      }
+    }
+  },
+  "expected_sex_subgroups": {
+    "f": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.14050000000000007,
+            0.242
+          ],
+          "eligible_identities": 91,
+          "value": 0.1825000000000001
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.7359999999999998,
+            0.8999999999999999
+          ],
+          "eligible_identities": 91,
+          "value": 0.8200000000000003
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.3599173516239526,
+            0.43346616553851897
+          ],
+          "eligible_identities": 91,
+          "value": 0.3962539589707591
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 98,
+        "pearson_r": 0.28246798608267204,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            -0.014463470234417573,
+            0.35584233154790895
+          ],
+          "value": 0.17456126437590716
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.4993842189502699,
+            0.6725570673182734
+          ],
+          "eligible_pairs": 3239,
+          "value": 0.5822784810126582
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.4427241379310345,
+            0.7893461538461537
+          ],
+          "high_identities": 27,
+          "low_identities": 26,
+          "value": 0.6296296296296297
+        }
+      },
+      "identities": 100,
+      "identities_all_refused": 2,
+      "identities_with_score": 98,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.15875838907375664,
+          0.2517655522640711
+        ],
+        "value": 0.2037914691943128
+      },
+      "images": {
+        "errors": 0,
+        "refused": 86,
+        "scored": 336,
+        "submitted": 422
+      }
+    },
+    "m": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.1379999999999999,
+            0.2217499999999999
+          ],
+          "eligible_identities": 84,
+          "value": 0.1885
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.5649250000000001,
+            0.7835874999999998
+          ],
+          "eligible_identities": 84,
+          "value": 0.7074999999999998
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.28879149927687353,
+            0.3835851708986327
+          ],
+          "eligible_identities": 84,
+          "value": 0.3457871337975442
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 97,
+        "pearson_r": 0.2217059462445885,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            0.02703462658508879,
+            0.41084578204767735
+          ],
+          "value": 0.21899963373807785
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.5066172887188304,
+            0.6940015824840862
+          ],
+          "eligible_pairs": 3428,
+          "value": 0.6028296382730455
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.518643722943723,
+            0.8200172413793103
+          ],
+          "high_identities": 28,
+          "low_identities": 30,
+          "value": 0.6857142857142857
+        }
+      },
+      "identities": 99,
+      "identities_all_refused": 2,
+      "identities_with_score": 97,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.15814785749404334,
+          0.2566759542800171
+        ],
+        "value": 0.20595533498759305
+      },
+      "images": {
+        "errors": 0,
+        "refused": 83,
+        "scored": 320,
+        "submitted": 403
+      }
+    }
+  },
+  "generated_date": "2026-08-18",
+  "inputs": {
+    "browser_batch_metadata": {
+      "path": "data/face-roster-gallery-after.meta.json",
+      "sha256": "126a83f86aba1a00018716dac1db5899c68f49dfd3fc93685a526f5bf5752663"
+    },
+    "gallery_batch": {
+      "path": "data/face-roster-gallery-after.csv",
+      "sha256": "5f5128631271659edcb9ba4b75d4a1fe9d78cca0727dcb05cfca92d2b56da2d6"
+    },
+    "identity_split": {
+      "path": "data/face-identity-split-v1.csv",
+      "sha256": "0005aa687c2b0bb383d857b1df59f2a5859095a6ca203957fdaf181dc5fbcd1a"
+    },
+    "runtime_pipeline_sha256": {
+      "data/face-identity-split-v1.csv": "0005aa687c2b0bb383d857b1df59f2a5859095a6ca203957fdaf181dc5fbcd1a",
+      "face.html": "df4349e649f09be308d842a454821677ad57e268161123c17aefdaca5542bc3e",
+      "js/face-crop.js": "8d61f5a29ba4bc074d6f681586b6ac46171acbd8cca6bc5605f58fecd2367f49",
+      "models/face-beauty.onnx": "4bdf12f3c3f21306522a33872a30cdf68fd7aa04f027c4581a10ac8638424fb8",
+      "models/face-sex.onnx": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb"
+    },
+    "score_mapping": {
+      "analysis_source_path": "face.html",
+      "analysis_source_sha256": "ee057fbbe84e785143f59e09d1f7febdfebd76fac58557606cc8787e2d63f1f9",
+      "display_transform": "clamp(5.5 + inverse_normal_cdf(ref_percentile(raw)) * 1.4, 1, 10)",
+      "ref_raw_points": 101,
+      "ref_raw_values_sha256": "b8e7254a804c28f34a1008e37f10ac4a34e4a55f91b6cb22d9960dd129520bec",
+      "runtime_face_html_sha256": "df4349e649f09be308d842a454821677ad57e268161123c17aefdaca5542bc3e"
+    }
+  },
+  "interpretation": {
+    "holdout": "Use only after all candidate, preprocessing, ensemble, and threshold choices are frozen.",
+    "labels": "Independent Matchmaker editorial judgments, not scientific ground truth or universal consensus."
+  },
+  "largest_within_identity_raw_gap": {
+    "absolute_raw_gap": 2.022,
+    "identity_id": "taylor-swift",
+    "image_a": "images/roster/taylor-swift/3.jpg",
+    "image_b": "images/roster/taylor-swift/7.jpg",
+    "raw_a": 2.031,
+    "raw_b": 4.053
+  },
+  "multi_photo_aggregation": [
+    {
+      "eligible_identities": 99,
+      "identity_weighted_mean_absolute_raw_error_to_all_photo_consensus": {
+        "bootstrap_95_ci": [
+          0.2796347765151515,
+          0.3251713611111111
+        ],
+        "value": 0.30251989898989895
+      },
+      "identity_weighted_mean_heldout_remainder_absolute_raw_error": {
+        "bootstrap_95_ci": [
+          0.3595942171717172,
+          0.4215377272727273
+        ],
+        "value": 0.39046868686868685
+      },
+      "median_subset_estimate_range": {
+        "bootstrap_95_ci": [
+          0.819,
+          1.0010999999999999
+        ],
+        "value": 0.8809999999999998
+      },
+      "median_subset_estimate_sd": {
+        "bootstrap_95_ci": [
+          0.3611698584692064,
+          0.43469788359273176
+        ],
+        "value": 0.3956370811741488
+      },
+      "minimum_scored_photos": 4,
+      "photos_averaged": 1
+    },
+    {
+      "eligible_identities": 99,
+      "identity_weighted_mean_absolute_raw_error_to_all_photo_consensus": {
+        "bootstrap_95_ci": [
+          0.16422502441077438,
+          0.1915531228956229
+        ],
+        "value": 0.17764915824915822
+      },
+      "identity_weighted_mean_heldout_remainder_absolute_raw_error": {
+        "bootstrap_95_ci": [
+          0.30091499999999993,
+          0.3490389478114478
+        ],
+        "value": 0.32428619528619523
+      },
+      "median_subset_estimate_range": {
+        "bootstrap_95_ci": [
+          0.5550000000000002,
+          0.7025000000000006
+        ],
+        "value": 0.6344999999999996
+      },
+      "median_subset_estimate_sd": {
+        "bootstrap_95_ci": [
+          0.19803975610943203,
+          0.23961775115100856
+        ],
+        "value": 0.22258678082941033
+      },
+      "minimum_scored_photos": 4,
+      "photos_averaged": 2
+    },
+    {
+      "eligible_identities": 99,
+      "identity_weighted_mean_absolute_raw_error_to_all_photo_consensus": {
+        "bootstrap_95_ci": [
+          0.10320423316498314,
+          0.12034320244107743
+        ],
+        "value": 0.11129949494949494
+      },
+      "identity_weighted_mean_heldout_remainder_absolute_raw_error": {
+        "bootstrap_95_ci": [
+          0.32450358585858585,
+          0.3804039478114478
+        ],
+        "value": 0.3521616161616161
+      },
+      "median_subset_estimate_range": {
+        "bootstrap_95_ci": [
+          0.29766666666666675,
+          0.4063333333333339
+        ],
+        "value": 0.33499999999999996
+      },
+      "median_subset_estimate_sd": {
+        "bootstrap_95_ci": [
+          0.1239864090520797,
+          0.15251821991948172
+        ],
+        "value": 0.14235610018281336
+      },
+      "minimum_scored_photos": 4,
+      "photos_averaged": 3
+    }
+  ],
+  "raw_averaging_rule": "Arithmetic mean of finite model_raw values, then one display mapping.",
+  "refusal_reason_counts": {
+    "Face too small (40px wide, 8% of a 500\u00d7335 frame) \u2014 use a closer, higher-res photo.": 1,
+    "No face found \u2014 try a clearer, front-facing shot.": 63,
+    "This angle is too far off to measure \u2014 head tilted sideways (~27\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head tilted sideways (~33\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head tilted sideways (~35\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~15\u00b0); head tilted sideways (~31\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~18\u00b0); head tilted sideways (~34\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~22\u00b0); head tilted sideways (~27\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~22\u00b0); head tilted sideways (~45\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~23\u00b0); head tilted sideways (~27\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~24\u00b0); head tilted sideways (~27\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~24\u00b0); head tilted sideways (~29\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~25\u00b0). Retake facing the camera square-on.": 2,
+    "This angle is too far off to measure \u2014 head turned (~25\u00b0); head tilted sideways (~18\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~26\u00b0). Retake facing the camera square-on.": 7,
+    "This angle is too far off to measure \u2014 head turned (~26\u00b0); head tilted sideways (~19\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~27\u00b0). Retake facing the camera square-on.": 6,
+    "This angle is too far off to measure \u2014 head turned (~27\u00b0); head tilted sideways (~12\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~27\u00b0); head tilted sideways (~13\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~27\u00b0); head tilted sideways (~17\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~27\u00b0); head tilted sideways (~20\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~27\u00b0); head tilted sideways (~29\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~28\u00b0). Retake facing the camera square-on.": 5,
+    "This angle is too far off to measure \u2014 head turned (~28\u00b0); head tilted sideways (~11\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~28\u00b0); head tilted sideways (~12\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~28\u00b0); head tilted sideways (~13\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~28\u00b0); head tilted sideways (~15\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~28\u00b0); head tilted sideways (~21\u00b0). Retake facing the camera square-on.": 2,
+    "This angle is too far off to measure \u2014 head turned (~29\u00b0). Retake facing the camera square-on.": 7,
+    "This angle is too far off to measure \u2014 head turned (~29\u00b0); head tilted sideways (~11\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~29\u00b0); head tilted sideways (~12\u00b0). Retake facing the camera square-on.": 2,
+    "This angle is too far off to measure \u2014 head turned (~29\u00b0); head tilted sideways (~15\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~29\u00b0); head tilted sideways (~16\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~29\u00b0); head tilted sideways (~19\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~29\u00b0); head tilted sideways (~30\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~30\u00b0). Retake facing the camera square-on.": 3,
+    "This angle is too far off to measure \u2014 head turned (~30\u00b0); head tilted sideways (~12\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~30\u00b0); head tilted sideways (~14\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~31\u00b0). Retake facing the camera square-on.": 4,
+    "This angle is too far off to measure \u2014 head turned (~31\u00b0); head tilted sideways (~10\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~31\u00b0); head tilted sideways (~14\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~32\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~32\u00b0); head tilted sideways (~12\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~33\u00b0). Retake facing the camera square-on.": 3,
+    "This angle is too far off to measure \u2014 head turned (~33\u00b0); head tilted sideways (~13\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~34\u00b0). Retake facing the camera square-on.": 2,
+    "This angle is too far off to measure \u2014 head turned (~34\u00b0); head tilted sideways (~11\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~34\u00b0); head tilted sideways (~22\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~35\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~35\u00b0); head tilted sideways (~16\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~36\u00b0). Retake facing the camera square-on.": 2,
+    "This angle is too far off to measure \u2014 head turned (~37\u00b0). Retake facing the camera square-on.": 4,
+    "This angle is too far off to measure \u2014 head turned (~38\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~39\u00b0); head tilted sideways (~21\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~40\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~40\u00b0); head tilted sideways (~11\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~41\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~41\u00b0); head tilted sideways (~12\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~42\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~42\u00b0); head tilted sideways (~17\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~44\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~45\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~45\u00b0); head tilted sideways (~14\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~46\u00b0). Retake facing the camera square-on.": 3,
+    "This angle is too far off to measure \u2014 head turned (~48\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~51\u00b0); head tilted sideways (~19\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~55\u00b0); head tilted sideways (~15\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~58\u00b0); head tilted sideways (~10\u00b0). Retake facing the camera square-on.": 1,
+    "This angle is too far off to measure \u2014 head turned (~65\u00b0); head tilted sideways (~12\u00b0). Retake facing the camera square-on.": 1
+  },
+  "schema_version": "face-gallery-stability.v2",
+  "splits": {
+    "all": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.1585000000000003,
+            0.21399999999999952
+          ],
+          "eligible_identities": 175,
+          "value": 0.1884999999999999
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.709775,
+            0.8201500000000002
+          ],
+          "eligible_identities": 175,
+          "value": 0.762
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.3430150142486477,
+            0.39899766904637624
+          ],
+          "eligible_identities": 175,
+          "value": 0.3651670850446409
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 195,
+        "pearson_r": 0.2770956777244854,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            0.12396990198003191,
+            0.3851702242296165
+          ],
+          "value": 0.255031895839249
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.5316511976396523,
+            0.6515447724931026
+          ],
+          "eligible_pairs": 6667,
+          "value": 0.5928453577321134
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.5438896791767555,
+            0.7638079445614724
+          ],
+          "high_identities": 55,
+          "low_identities": 56,
+          "value": 0.6662337662337663
+        }
+      },
+      "identities": 199,
+      "identities_all_refused": 4,
+      "identities_with_score": 195,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.17363631715601716,
+          0.2386634844868735
+        ],
+        "value": 0.20484848484848484
+      },
+      "images": {
+        "errors": 0,
+        "refused": 169,
+        "scored": 656,
+        "submitted": 825
+      }
+    },
+    "holdout": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.133,
+            0.2630000000000001
+          ],
+          "eligible_identities": 39,
+          "value": 0.23100000000000032
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.472,
+            0.8069999999999999
+          ],
+          "eligible_identities": 39,
+          "value": 0.7209999999999996
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.25093890358677606,
+            0.4425917983876341
+          ],
+          "eligible_identities": 39,
+          "value": 0.3430150142486477
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 40,
+        "pearson_r": 0.34454082823390525,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            0.06795766190235664,
+            0.6340886273129464
+          ],
+          "value": 0.3762101952277262
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.502071084125026,
+            0.8105342741935483
+          ],
+          "eligible_pairs": 269,
+          "value": 0.6617100371747212
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.4340534465534466,
+            0.9364393939393939
+          ],
+          "high_identities": 11,
+          "low_identities": 11,
+          "value": 0.7024793388429752
+        }
+      },
+      "identities": 40,
+      "identities_all_refused": 0,
+      "identities_with_score": 40,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.1227923976608187,
+          0.2485207100591716
+        ],
+        "value": 0.1834319526627219
+      },
+      "images": {
+        "errors": 0,
+        "refused": 31,
+        "scored": 138,
+        "submitted": 169
+      }
+    },
+    "train": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.17300000000000004,
+            0.22299999999999986
+          ],
+          "eligible_identities": 101,
+          "value": 0.19000000000000017
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.7359999999999998,
+            0.8730000000000002
+          ],
+          "eligible_identities": 101,
+          "value": 0.8089999999999997
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.35650105189185627,
+            0.4295401029007653
+          ],
+          "eligible_identities": 101,
+          "value": 0.380829795753081
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 115,
+        "pearson_r": 0.2896211437209344,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            0.08273127245817767,
+            0.4264826790692947
+          ],
+          "value": 0.25967434043526366
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.5096884577026269,
+            0.6789704748979752
+          ],
+          "eligible_pairs": 2327,
+          "value": 0.5956166738289643
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.5231865200348432,
+            0.8114591733870967
+          ],
+          "high_identities": 36,
+          "low_identities": 35,
+          "value": 0.6738095238095239
+        }
+      },
+      "identities": 119,
+      "identities_all_refused": 4,
+      "identities_with_score": 115,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.15927193054641212,
+          0.2485089463220676
+        ],
+        "value": 0.20204081632653062
+      },
+      "images": {
+        "errors": 0,
+        "refused": 99,
+        "scored": 391,
+        "submitted": 490
+      }
+    },
+    "validation": {
+      "cross_photo_stability_raw": {
+        "median_mad": {
+          "bootstrap_95_ci": [
+            0.050000000000000266,
+            0.2110000000000003
+          ],
+          "eligible_identities": 35,
+          "value": 0.12850000000000028
+        },
+        "median_range": {
+          "bootstrap_95_ci": [
+            0.3500000000000001,
+            0.9130000000000003
+          ],
+          "eligible_identities": 35,
+          "value": 0.6549999999999998
+        },
+        "median_sd": {
+          "bootstrap_95_ci": [
+            0.164048773235279,
+            0.4279294139613838
+          ],
+          "eligible_identities": 35,
+          "value": 0.317159791482674
+        }
+      },
+      "discrimination": {
+        "eligible_identities": 40,
+        "pearson_r": 0.19842153916391864,
+        "spearman_rho": {
+          "bootstrap_95_ci": [
+            -0.1756026248494827,
+            0.45568991481123183
+          ],
+          "value": 0.15050041790819801
+        },
+        "within_sex_pairwise_accuracy_gap_1_0": {
+          "bootstrap_95_ci": [
+            0.39715467747382643,
+            0.7404826865585
+          ],
+          "eligible_pairs": 266,
+          "value": 0.5789473684210527
+        },
+        "within_sex_top_bottom_quartile_auc": {
+          "bootstrap_95_ci": [
+            0.2866883116883117,
+            0.8225524475524475
+          ],
+          "high_identities": 11,
+          "low_identities": 11,
+          "value": 0.5867768595041323
+        }
+      },
+      "identities": 40,
+      "identities_all_refused": 0,
+      "identities_with_score": 40,
+      "image_refusal_rate": {
+        "bootstrap_95_ci": [
+          0.16248374277456648,
+          0.3139572152653548
+        ],
+        "value": 0.23493975903614459
+      },
+      "images": {
+        "errors": 0,
+        "refused": 39,
+        "scored": 127,
+        "submitted": 166
+      }
+    }
+  }
+}

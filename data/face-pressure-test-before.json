@@ -1,0 +1,176 @@
+{
+  "bootstrap": {
+    "resampling_unit": "identity/image row",
+    "rounds": 1000,
+    "seed": 20260818
+  },
+  "datasets": {
+    "Roster canonical portraits (independent editorial labels)": {
+      "n_scored": 166,
+      "pearson_r": 0.23402572273694391,
+      "spearman_bootstrap_95_ci": [
+        0.06431545618704428,
+        0.3620942387506798
+      ],
+      "spearman_rho": 0.21328322680059952,
+      "top_bottom_counts": {
+        "high": 48,
+        "low": 42
+      },
+      "within_group_pairwise_accuracy_gap_0_5": {
+        "pairs": 5915,
+        "value": 0.5779374471682164
+      },
+      "within_group_pairwise_accuracy_gap_1_0": {
+        "pairs": 4828,
+        "value": 0.5955882352941176
+      },
+      "within_group_top_bottom_quartile_auc": 0.6473214285714286
+    },
+    "SCUT balanced random-only (training-contaminated)": {
+      "n_scored": 280,
+      "pearson_r": 0.9096078710591855,
+      "spearman_bootstrap_95_ci": [
+        0.8385317677880607,
+        0.9086601541060817
+      ],
+      "spearman_rho": 0.8788501036684665,
+      "top_bottom_counts": {
+        "high": 72,
+        "low": 73
+      },
+      "within_group_pairwise_accuracy_gap_0_5": {
+        "pairs": 5631,
+        "value": 0.9596874445036405
+      },
+      "within_group_pairwise_accuracy_gap_1_0": {
+        "pairs": 3036,
+        "value": 0.9950592885375494
+      },
+      "within_group_top_bottom_quartile_auc": 0.9980974124809742
+    },
+    "SCUT balanced, tail-enriched (training-contaminated)": {
+      "n_scored": 400,
+      "pearson_r": 0.9449992038367073,
+      "spearman_bootstrap_95_ci": [
+        0.916828934816214,
+        0.9446120538946358
+      ],
+      "spearman_rho": 0.9332843409477171,
+      "top_bottom_counts": {
+        "high": 100,
+        "low": 102
+      },
+      "within_group_pairwise_accuracy_gap_0_5": {
+        "pairs": 14146,
+        "value": 0.971688109712993
+      },
+      "within_group_pairwise_accuracy_gap_1_0": {
+        "pairs": 9882,
+        "value": 0.9959522363893949
+      },
+      "within_group_top_bottom_quartile_auc": 1.0
+    }
+  },
+  "expected_sex_subgroups": {
+    "f": {
+      "n_scored": 84,
+      "pearson_r": 0.1861094124437011,
+      "spearman_bootstrap_95_ci": [
+        -0.030051730761256154,
+        0.40324375745303875
+      ],
+      "spearman_rho": 0.18711525580743402,
+      "top_bottom_counts": {
+        "high": 24,
+        "low": 21
+      },
+      "within_group_pairwise_accuracy_gap_0_5": {
+        "pairs": 2962,
+        "value": 0.5729237002025659
+      },
+      "within_group_pairwise_accuracy_gap_1_0": {
+        "pairs": 2361,
+        "value": 0.5849216433714528
+      },
+      "within_group_top_bottom_quartile_auc": 0.625
+    },
+    "m": {
+      "n_scored": 82,
+      "pearson_r": 0.2510167629164469,
+      "spearman_bootstrap_95_ci": [
+        0.008800681121906743,
+        0.3965762319620636
+      ],
+      "spearman_rho": 0.2140593631086944,
+      "top_bottom_counts": {
+        "high": 24,
+        "low": 21
+      },
+      "within_group_pairwise_accuracy_gap_0_5": {
+        "pairs": 2953,
+        "value": 0.5829664747714189
+      },
+      "within_group_pairwise_accuracy_gap_1_0": {
+        "pairs": 2467,
+        "value": 0.6057965139845967
+      },
+      "within_group_top_bottom_quartile_auc": 0.6805555555555556
+    }
+  },
+  "generated_date": "2026-08-18",
+  "inputs": {
+    "roster_batch": {
+      "path": "data/face-roster-pressure-test-before.csv",
+      "sha256": "64b5444de08989123b52084dba917961043f4bf00060767e3b6d036e47fe58e3",
+      "submitted_rows": 199
+    },
+    "scut_joined": {
+      "path": "images/calibration-scut/joined_analysis.csv",
+      "sha256": "1504d47d03e7786c448a81998c99a496107e00aec60dce49bab3e98871fdd873"
+    },
+    "scut_manifest": {
+      "path": "images/calibration-scut/sample_manifest.csv",
+      "sha256": "5a04f0d1a2ed95489eab7ee0bd457ac589ead51e2c180b689705f1d28f5cfb83"
+    }
+  },
+  "interpretation": {
+    "display_remap": "monotone score remaps cannot improve ranking metrics",
+    "roster_labels": "independent Matchmaker editorial judgments, not scientific ground truth or universal consensus",
+    "scut": "training-contaminated because the shipped Gustrd checkpoint was trained on SCUT-FBP5500"
+  },
+  "pipeline": "shipped face.html browser batch",
+  "roster_diagnostics": {
+    "display_minus_editorial": {
+      "mae": 1.7966265060240965,
+      "mean": -0.8849397590361446,
+      "median": -1.1350000000000002
+    },
+    "display_score": {
+      "median": 6.23,
+      "p10": 4.265000000000001,
+      "p90": 7.1850000000000005
+    },
+    "editorial_label": {
+      "median": 7.2,
+      "p10": 4.0,
+      "p90": 9.0
+    },
+    "reliability_cautions": 97
+  },
+  "roster_outcomes": {
+    "refused": 33,
+    "scored": 166
+  },
+  "roster_primary_confidence_intervals": {
+    "within_sex_pairwise_accuracy_gap_1_0_95_ci": [
+      0.5351773021437775,
+      0.66189941606971
+    ],
+    "within_sex_top_bottom_quartile_auc_95_ci": [
+      0.5268434343434344,
+      0.7586742183266181
+    ]
+  },
+  "schema_version": "face-pressure-test-baseline.v1"
+}

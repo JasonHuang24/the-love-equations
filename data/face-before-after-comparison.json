@@ -1,0 +1,837 @@
+{
+  "bootstrap": {
+    "rounds": 2000,
+    "seed": 20260818,
+    "unit": "identity cluster"
+  },
+  "canonical": {
+    "outcome_transitions": {
+      "refused->refused": 33,
+      "scored->scored": 166
+    },
+    "paired_common": {
+      "common_scored_identities": 166,
+      "metrics": {
+        "auc": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.5172214980517478,
+              0.7623223313592373
+            ],
+            "high_identities": 48,
+            "low_identities": 42,
+            "value": 0.6473214285714286
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.018941596194503262,
+              0.0215867512499862
+            ],
+            "value": 0.0
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.5183380962479005,
+              0.7613775510204082
+            ],
+            "high_identities": 48,
+            "low_identities": 42,
+            "value": 0.6473214285714286
+          }
+        },
+        "pairwise": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.5304016080901857,
+              0.6584534007422154
+            ],
+            "eligible_pairs": 4828,
+            "value": 0.5976594863297432
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.011383308584692792,
+              0.017223133532776814
+            ],
+            "value": 0.0020712510356255542
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.5294668763549949,
+              0.6599034832730477
+            ],
+            "eligible_pairs": 4828,
+            "value": 0.5955882352941176
+          }
+        },
+        "rho": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.06924496798422534,
+              0.35613964295381967
+            ],
+            "value": 0.21489332794236715
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.019910749508650908,
+              0.024878536121167593
+            ],
+            "value": 0.001610101141767628
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.06326643438957183,
+              0.36433533843117577
+            ],
+            "value": 0.21328322680059952
+          }
+        }
+      }
+    },
+    "pairwise_transitions": {
+      "eligible_pairs": 4828,
+      "improved": 84,
+      "regressed": 74,
+      "unchanged": 4670
+    },
+    "refusal": {
+      "after": {
+        "bootstrap_95_ci": [
+          0.11557788944723618,
+          0.22110552763819097
+        ],
+        "value": 0.1658291457286432
+      },
+      "after_minus_before": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "before": {
+        "bootstrap_95_ci": [
+          0.11557788944723618,
+          0.21608040201005024
+        ],
+        "value": 0.1658291457286432
+      }
+    },
+    "submitted": 199
+  },
+  "crop_diagnostics": {
+    "canonical": {
+      "diagnostic_complete_rows": 166,
+      "face_visible_pct": {
+        "median": 100.0,
+        "minimum": 74.57
+      },
+      "fit_capable_containment_violations": 0,
+      "maximum_absolute_shift_px": {
+        "x": 40.83,
+        "y": 214.04
+      },
+      "padded_rows": 6,
+      "partially_visible_face_rows": 26,
+      "requested_crop_does_not_fit": 6,
+      "requested_crop_fits": 160,
+      "required_columns": [
+        "source_width",
+        "source_height",
+        "analysis_width",
+        "analysis_height",
+        "crop_requested_fits",
+        "crop_source_contained",
+        "crop_side_px",
+        "crop_shift_x_px",
+        "crop_shift_y_px",
+        "crop_pad_left_px",
+        "crop_pad_top_px",
+        "crop_pad_right_px",
+        "crop_pad_bottom_px",
+        "crop_padding_area_pct",
+        "crop_face_visible_pct",
+        "capture_source",
+        "capture_trigger",
+        "guide_passed",
+        "alignment_code",
+        "camera_frame_width",
+        "camera_frame_height",
+        "guide_face_scale",
+        "guide_center_offset_display",
+        "guide_center_offset_raw",
+        "guide_eye_line_offset",
+        "guide_roll_deg",
+        "guide_yaw_deg",
+        "guide_pose_skew"
+      ],
+      "scored_rows": 166,
+      "shifted_rows": 47,
+      "source_contained_rows": 166,
+      "unavoidable_padding_area_pct": {
+        "maximum": 39.5,
+        "median": 13.145
+      }
+    },
+    "gallery": {
+      "diagnostic_complete_rows": 656,
+      "face_visible_pct": {
+        "median": 100.0,
+        "minimum": 71.47
+      },
+      "fit_capable_containment_violations": 0,
+      "maximum_absolute_shift_px": {
+        "x": 97.45,
+        "y": 95.12
+      },
+      "padded_rows": 80,
+      "partially_visible_face_rows": 23,
+      "requested_crop_does_not_fit": 80,
+      "requested_crop_fits": 576,
+      "required_columns": [
+        "source_width",
+        "source_height",
+        "analysis_width",
+        "analysis_height",
+        "crop_requested_fits",
+        "crop_source_contained",
+        "crop_side_px",
+        "crop_shift_x_px",
+        "crop_shift_y_px",
+        "crop_pad_left_px",
+        "crop_pad_top_px",
+        "crop_pad_right_px",
+        "crop_pad_bottom_px",
+        "crop_padding_area_pct",
+        "crop_face_visible_pct",
+        "capture_source",
+        "capture_trigger",
+        "guide_passed",
+        "alignment_code",
+        "camera_frame_width",
+        "camera_frame_height",
+        "guide_face_scale",
+        "guide_center_offset_display",
+        "guide_center_offset_raw",
+        "guide_eye_line_offset",
+        "guide_roll_deg",
+        "guide_yaw_deg",
+        "guide_pose_skew"
+      ],
+      "scored_rows": 656,
+      "shifted_rows": 108,
+      "source_contained_rows": 656,
+      "unavoidable_padding_area_pct": {
+        "maximum": 64.94,
+        "median": 12.43
+      }
+    }
+  },
+  "error_gallery": {
+    "canonical_rows": 166,
+    "gallery_identity_rows": 195,
+    "html_path": "md/face-crop-error-gallery.html",
+    "machine_readable_path": "data/face-crop-error-gallery.csv",
+    "sorting_metric": "before minus after absolute within-expected-sex rank-percentile error",
+    "unit": "identity"
+  },
+  "gallery": {
+    "demographic_provenance": {
+      "image_inference_used": false,
+      "minimum_common_scored_identities": 20,
+      "no_eligible_groups": false,
+      "source": "matchmaker.html explicit editorial ethnicity field"
+    },
+    "editorial_ethnicity_subgroups": {
+      "black": {
+        "common_scored_identities": 20,
+        "metrics": {
+          "auc": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.02373511904761905,
+                0.7555729166666666
+              ],
+              "high_identities": 6,
+              "low_identities": 6,
+              "value": 0.3333333333333333
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.09523809523809529,
+                0.0
+              ],
+              "value": -0.02777777777777779
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.04081632653061224,
+                0.7959183673469388
+              ],
+              "high_identities": 6,
+              "low_identities": 6,
+              "value": 0.3611111111111111
+            }
+          },
+          "pairwise": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.09371394230769231,
+                0.6668103448275854
+              ],
+              "eligible_pairs": 68,
+              "value": 0.36764705882352944
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                0.0,
+                0.0
+              ],
+              "value": 0.0
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.10711580086580086,
+                0.6727272727272727
+              ],
+              "eligible_pairs": 68,
+              "value": 0.36764705882352944
+            }
+          },
+          "rho": {
+            "after": {
+              "bootstrap_95_ci": [
+                -0.6152653782697854,
+                0.34904032630096554
+              ],
+              "value": -0.12759641908741576
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.12564247614376914,
+                0.0
+              ],
+              "value": -0.02491527709990958
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                -0.5837668400557084,
+                0.37654806207278363
+              ],
+              "value": -0.10268114198750618
+            }
+          }
+        }
+      },
+      "white": {
+        "common_scored_identities": 125,
+        "metrics": {
+          "auc": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.5455218889026199,
+                0.8324420677361853
+              ],
+              "high_identities": 34,
+              "low_identities": 33,
+              "value": 0.6987522281639929
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.004901960784313708,
+                0.024437519051005895
+              ],
+              "value": 0.007130124777183555
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.5301585179526356,
+                0.8259981447124304
+              ],
+              "high_identities": 34,
+              "low_identities": 33,
+              "value": 0.6916221033868093
+            }
+          },
+          "pairwise": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.5301437075534771,
+                0.6874333510700427
+              ],
+              "eligible_pairs": 2812,
+              "value": 0.6086415362731152
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.00623019110609937,
+                0.0074530572589798505
+              ],
+              "value": 0.00035561877667145136
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.529394861392833,
+                0.6859367668016474
+              ],
+              "eligible_pairs": 2812,
+              "value": 0.6082859174964438
+            }
+          },
+          "rho": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.1049296600228738,
+                0.4359382353947048
+              ],
+              "value": 0.2756075966899314
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.00797422035528269,
+                0.019075075256253283
+              ],
+              "value": 0.004071912715700121
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.09959818209494349,
+                0.42684819523752776
+              ],
+              "value": 0.2715356839742313
+            }
+          }
+        }
+      }
+    },
+    "expected_sex_subgroups": {
+      "f": {
+        "common_scored_identities": 98,
+        "metrics": {
+          "auc": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.4607250712250712,
+                0.7897485207100591
+              ],
+              "high_identities": 27,
+              "low_identities": 26,
+              "value": 0.6296296296296297
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.005719357565511371,
+                0.034344211822660065
+              ],
+              "value": 0.014245014245014231
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.44319692307692304,
+                0.7776503267973855
+              ],
+              "high_identities": 27,
+              "low_identities": 26,
+              "value": 0.6153846153846154
+            }
+          },
+          "pairwise": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.49501160364992974,
+                0.6663657407407407
+              ],
+              "eligible_pairs": 3239,
+              "value": 0.5822784810126582
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.0022580323793321947,
+                0.015040712328767171
+              ],
+              "value": 0.005711639394874957
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.4854680848103732,
+                0.6676530740501329
+              ],
+              "eligible_pairs": 3239,
+              "value": 0.5765668416177833
+            }
+          },
+          "rho": {
+            "after": {
+              "bootstrap_95_ci": [
+                -0.027960061063502937,
+                0.3639420107399457
+              ],
+              "value": 0.17456126437590716
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.005093532813409781,
+                0.03357075489556156
+              ],
+              "value": 0.012785961257907513
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                -0.04013528683775391,
+                0.35760429382077374
+              ],
+              "value": 0.16177530311799965
+            }
+          }
+        }
+      },
+      "m": {
+        "common_scored_identities": 97,
+        "metrics": {
+          "auc": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.5089510567296996,
+                0.8171517857142857
+              ],
+              "high_identities": 28,
+              "low_identities": 30,
+              "value": 0.6857142857142857
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.01748545454545456,
+                0.011502754539889757
+              ],
+              "value": -0.0011904761904761862
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.5122984084880637,
+                0.8328461538461537
+              ],
+              "high_identities": 28,
+              "low_identities": 30,
+              "value": 0.6869047619047619
+            }
+          },
+          "pairwise": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.5119353067666911,
+                0.6892631422743823
+              ],
+              "eligible_pairs": 3428,
+              "value": 0.6028296382730455
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.009132816213646774,
+                0.005588895842024774
+              ],
+              "value": -0.0014585764294049453
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.5117089780150997,
+                0.6945189343511526
+              ],
+              "eligible_pairs": 3428,
+              "value": 0.6042882147024504
+            }
+          },
+          "rho": {
+            "after": {
+              "bootstrap_95_ci": [
+                0.013565154209568131,
+                0.4068697670674985
+              ],
+              "value": 0.21899963373807785
+            },
+            "after_minus_before": {
+              "bootstrap_95_ci": [
+                -0.017882413437648792,
+                0.012107737474920237
+              ],
+              "value": -0.0019149594620646582
+            },
+            "before": {
+              "bootstrap_95_ci": [
+                0.020732909957387916,
+                0.4132833981537284
+              ],
+              "value": 0.2209145932001425
+            }
+          }
+        }
+      }
+    },
+    "identities": 199,
+    "image_refusal": {
+      "after": {
+        "bootstrap_95_ci": [
+          0.17121684142254892,
+          0.23902439024390243
+        ],
+        "value": 0.20484848484848484
+      },
+      "after_minus_before": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "before": {
+        "bootstrap_95_ci": [
+          0.1715293590862862,
+          0.23895384471892445
+        ],
+        "value": 0.20484848484848484
+      }
+    },
+    "images": 825,
+    "outcome_transitions": {
+      "refused->refused": 169,
+      "scored->scored": 656
+    },
+    "paired_common": {
+      "common_scored_identities": 195,
+      "metrics": {
+        "auc": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.5386423254419316,
+              0.7632954545454544
+            ],
+            "high_identities": 55,
+            "low_identities": 56,
+            "value": 0.6662337662337663
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.004929303373919611,
+              0.014105063574585738
+            ],
+            "value": 0.0035714285714286698
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.5436913580246914,
+              0.7596295248868777
+            ],
+            "high_identities": 55,
+            "low_identities": 56,
+            "value": 0.6626623376623376
+          }
+        },
+        "pairwise": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.5293757602876735,
+              0.6536738974514517
+            ],
+            "eligible_pairs": 6667,
+            "value": 0.5928453577321134
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.0033622087030025782,
+              0.00799126372000572
+            ],
+            "value": 0.0020248987550622877
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.5252031194826791,
+              0.6548192322101293
+            ],
+            "eligible_pairs": 6667,
+            "value": 0.5908204589770512
+          }
+        },
+        "rho": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.1209090844803151,
+              0.39004970432680675
+            ],
+            "value": 0.255031895839249
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.0058744580320581625,
+              0.013222225354601175
+            ],
+            "value": 0.003752148536297073
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.1122524737871552,
+              0.3826471576475756
+            ],
+            "value": 0.25127974730295194
+          }
+        }
+      }
+    },
+    "pairwise_transitions": {
+      "eligible_pairs": 6667,
+      "improved": 51,
+      "regressed": 37,
+      "unchanged": 6579
+    },
+    "refusal": {
+      "after": {
+        "bootstrap_95_ci": [
+          0.005025125628140704,
+          0.04020100502512563
+        ],
+        "value": 0.020100502512562814
+      },
+      "after_minus_before": {
+        "bootstrap_95_ci": [
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      "before": {
+        "bootstrap_95_ci": [
+          0.005025125628140704,
+          0.04020100502512563
+        ],
+        "value": 0.020100502512562814
+      }
+    },
+    "stability": {
+      "common_eligible_identities": 175,
+      "metrics": {
+        "mad": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.1585000000000003,
+              0.21399999999999952
+            ],
+            "value": 0.1884999999999999
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.005999999999999561,
+              0.022500000000000187
+            ],
+            "value": 0.006000000000000005
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.14349999999999974,
+              0.2110000000000003
+            ],
+            "value": 0.18249999999999988
+          },
+          "relative_change": 0.03287671232876721
+        },
+        "range": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.7130000000000001,
+              0.8200000000000003
+            ],
+            "value": 0.762
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.008000000000000007,
+              0.03200000000000004
+            ],
+            "value": 0.005999999999999783
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.698,
+              0.8129999999999997
+            ],
+            "value": 0.7560000000000002
+          },
+          "relative_change": 0.007936507936507686
+        },
+        "sd": {
+          "after": {
+            "bootstrap_95_ci": [
+              0.3430150142486477,
+              0.4063860028757553
+            ],
+            "value": 0.3651670850446409
+          },
+          "after_minus_before": {
+            "bootstrap_95_ci": [
+              -0.010355695011840424,
+              0.01692850332351257
+            ],
+            "value": 0.002589736974834722
+          },
+          "before": {
+            "bootstrap_95_ci": [
+              0.33449900348630834,
+              0.4066087800330927
+            ],
+            "value": 0.3625773480698062
+          },
+          "relative_change": 0.007142577959216911
+        }
+      }
+    }
+  },
+  "generated_date": "2026-08-18",
+  "inputs": {
+    "canonical_after": {
+      "path": "data/face-roster-pressure-test-after.csv",
+      "sha256": "64922a34ae723ab43b5ced93b1e119be6c8c7e92715f44f5196e3c2eb5189710"
+    },
+    "canonical_after_metadata": {
+      "path": "data/face-roster-pressure-test-after.meta.json",
+      "sha256": "431700d55137926790f0307067afc76202e8c32ced6e495e069adc08a3bab166"
+    },
+    "canonical_before": {
+      "path": "data/face-roster-pressure-test-before.csv",
+      "sha256": "64b5444de08989123b52084dba917961043f4bf00060767e3b6d036e47fe58e3"
+    },
+    "gallery_after": {
+      "path": "data/face-roster-gallery-after.csv",
+      "sha256": "5f5128631271659edcb9ba4b75d4a1fe9d78cca0727dcb05cfca92d2b56da2d6"
+    },
+    "gallery_after_metadata": {
+      "path": "data/face-roster-gallery-after.meta.json",
+      "sha256": "126a83f86aba1a00018716dac1db5899c68f49dfd3fc93685a526f5bf5752663"
+    },
+    "gallery_before": {
+      "path": "data/face-roster-gallery-before.csv",
+      "sha256": "6e4a711c1fd9f12b12d5db4b224605d072187dcb92ed7871f6f204343fd97f38"
+    },
+    "gallery_before_metadata": {
+      "path": "data/face-roster-gallery-before.meta.json",
+      "sha256": "8c9dc20a6f886e2c023cd43edf6090b5486020405ce135acd6305d16e531e88c"
+    },
+    "identity_split": {
+      "path": "data/face-identity-split-v1.csv",
+      "sha256": "0005aa687c2b0bb383d857b1df59f2a5859095a6ca203957fdaf181dc5fbcd1a"
+    }
+  },
+  "interpretation": {
+    "display_error": "Descriptive only; the model percentile scale and editorial 1-10 scale use different conventions.",
+    "display_remap": "A monotone display remap cannot change AUC, pairwise ordering, or Spearman rho.",
+    "labels": "Independent Matchmaker editorial judgments, not scientific ground truth, objective beauty, or universal consensus."
+  },
+  "runtime_provenance": {
+    "canonical_and_gallery_after_identical_scoring_page": true,
+    "canonical_storage_unchanged": true,
+    "evaluated_face_html_sha256": "df4349e649f09be308d842a454821677ad57e268161123c17aefdaca5542bc3e",
+    "face_beauty_model_sha256": "4bdf12f3c3f21306522a33872a30cdf68fd7aa04f027c4581a10ac8638424fb8",
+    "face_sex_model_sha256": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb",
+    "gallery_before_face_html_sha256": "1b4319179bb8acb07813441954802eef60144524160b838bab10f2c8031d7bf5",
+    "gallery_storage_unchanged": true,
+    "post_snapshot_non_scoring_drift_excluded": "Canonical-after and gallery-after both loaded exact scoring-page SHA-256 df4349e649f09be308d842a454821677ad57e268161123c17aefdaca5542bc3e. After both runs, face.html changed in the css/face.css cache key, user-facing claim/rounding copy, and camera lifecycle, reliability-provenance, restore-validation, and accessibility safeguards; final working-tree SHA-256 is 844cc3dca33beb636164a299d277ce75b4fd8000c00f09ef003bd0a3feb17c1c. No crop, preprocessing, model inference, raw aggregation, framing thresholds, or batch scoring logic changed after the runtime snapshot, so canonical/gallery ranking and refusal comparisons remain valid. Camera coverage was rerun separately against the final page."
+  },
+  "schema_version": "face-before-after-comparison.v1"
+}
