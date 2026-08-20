@@ -1,0 +1,46 @@
+{
+  "schema_version": "body-batch-reproduction.v1",
+  "exact_csv_bytes_identical": true,
+  "normalized_metadata_identical": true,
+  "metadata_fields_ignored": [
+    "command",
+    "generated_at"
+  ],
+  "primary": {
+    "csv": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-after.csv",
+      "sha256": "03e1322f73c82ff2cf30f3dfa8f2e697aec2dd66607ea88ec387dae4c14c7af2"
+    },
+    "metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-after.meta.json",
+      "sha256": "b987d07a3cf41d1f0855482f11d05f8aec102ccaf9689e2b418d2b08e324b842"
+    },
+    "normalized_metadata_sha256": "91b7d82cddbd9b59dde18af6bd697fe83ddf1a42e2558826cfe211bed092cea7"
+  },
+  "repeat": {
+    "csv": {
+      "path": "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\final-reproduction\\body-independent-after-repeat.csv",
+      "sha256": "03e1322f73c82ff2cf30f3dfa8f2e697aec2dd66607ea88ec387dae4c14c7af2"
+    },
+    "metadata": {
+      "path": "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\final-reproduction\\body-independent-after-repeat.meta.json",
+      "sha256": "3f905750de679ba1464fe70f8c5547d58ec728206ef43e324d005d3ed9278caf"
+    },
+    "normalized_metadata_sha256": "91b7d82cddbd9b59dde18af6bd697fe83ddf1a42e2558826cfe211bed092cea7"
+  },
+  "tool_sha256": "c38936311cd285653336f3bec6b6e24f2c8f140183674f8fa08e3b4a1373aee9",
+  "command": [
+    "C:\\Python310\\python.exe",
+    "F:\\Programming\\The Love Equations\\The Love Equations Website\\tools\\verify_body_batch_reproduction.py",
+    "--primary-csv",
+    "data\\body-independent-after.csv",
+    "--primary-metadata",
+    "data\\body-independent-after.meta.json",
+    "--repeat-csv",
+    "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\final-reproduction\\body-independent-after-repeat.csv",
+    "--repeat-metadata",
+    "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\final-reproduction\\body-independent-after-repeat.meta.json",
+    "--output",
+    "data\\body-independent-after-reproduction.json"
+  ]
+}

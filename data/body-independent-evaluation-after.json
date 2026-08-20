@@ -1,0 +1,1752 @@
+{
+  "bootstrap": {
+    "95pct_ci": {
+      "pairwise_gap_0": [
+        0.3649905732263276,
+        0.5701965263073354
+      ],
+      "pairwise_gap_0.5": [
+        0.3540645923849636,
+        0.5677222180653712
+      ],
+      "pairwise_gap_1": [
+        0.3480488490966373,
+        0.5943400370735301
+      ],
+      "pairwise_gap_2": [
+        0.35904579028112205,
+        0.6372297673660923
+      ],
+      "pearson": [
+        -0.3370930373459733,
+        0.17254250670117277
+      ],
+      "spearman": [
+        -0.3415680792745659,
+        0.23651360376436803
+      ],
+      "top_bottom_quartile_auc": [
+        0.20403698979591836,
+        0.680952380952381
+      ]
+    },
+    "clusters": 53,
+    "method": "cluster bootstrap by identity_group; clusters sampled with replacement, all rows retained",
+    "repetitions": 1000,
+    "seed": 20260818
+  },
+  "cnn_raw": {
+    "display_calibration": {
+      "linear_fit_label_from_score": {
+        "intercept": 6.93347687768672,
+        "slope": -0.059479164622454055
+      },
+      "mae_after_in_sample_linear_fit": 2.194634765319184,
+      "residual_quantiles": {
+        "0": -3.264584140415789,
+        "0.1": -2.8715946945578756,
+        "0.25": -2.2360882145494028,
+        "0.5": -0.6143917494006637,
+        "0.75": 2.525155441895439,
+        "0.9": 3.387160604437702,
+        "1": 3.7821574118856347
+      },
+      "rmse_after_in_sample_linear_fit": 2.42918562500342,
+      "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+    },
+    "label": {
+      "max": 8.29,
+      "mean": 4.552641509433962,
+      "min": 1.42,
+      "sd": 2.4329678676606927
+    },
+    "label_q25": 2.3,
+    "label_q75": 7.24,
+    "n": 53,
+    "pairwise": {
+      "0": {
+        "accuracy": 0.4629360465116279,
+        "pairs": 1376
+      },
+      "0.5": {
+        "accuracy": 0.4531772575250836,
+        "pairs": 1196
+      },
+      "1": {
+        "accuracy": 0.462671905697446,
+        "pairs": 1018
+      },
+      "2": {
+        "accuracy": 0.49104859335038364,
+        "pairs": 782
+      }
+    },
+    "pearson": -0.05573816327851126,
+    "score": {
+      "max": 44.616,
+      "mean": 40.028056603773585,
+      "median": 39.429,
+      "min": 36.7,
+      "q01": 36.752520000000004,
+      "q25": 37.886,
+      "q75": 42.267,
+      "q99": 44.51304,
+      "sd": 2.2799439285979664
+    },
+    "spearman": -0.0697496271179322,
+    "top_bottom_quartile_auc": 0.4489795918367347,
+    "top_bottom_quartile_n": 28
+  },
+  "cohort_composition": {
+    "body_exposure": {
+      "clothed": 53
+    },
+    "demographic_code": {
+      "synthetic": 53
+    },
+    "framing": {
+      "full": 53
+    },
+    "framing_quality": {
+      "clean": 53
+    },
+    "gate_band": {
+      "pass": 53
+    },
+    "geom_cues": {
+      "legTorso+symmetry": 2,
+      "shoulderHip+legTorso+symmetry": 2,
+      "whr+vTaper+shoulderHip+legTorso+symmetry": 49
+    },
+    "instrument": {
+      "cnn": 53
+    },
+    "label_sex": {
+      "f": 53
+    },
+    "override": {
+      "unknown": 53
+    },
+    "routing": {
+      "clothed\u2192model": 53
+    },
+    "variant": {
+      "synthetic_body_only": 53
+    }
+  },
+  "command": [
+    "C:\\Python310\\python.exe",
+    "F:\\Programming\\The Love Equations\\The Love Equations Website\\tools\\evaluate_body_accuracy.py",
+    "--input",
+    "data\\body-independent-after.csv",
+    "--batch-metadata",
+    "data\\body-independent-after.meta.json",
+    "--dataset-metadata",
+    "data\\body-independent-manifest.meta.json",
+    "--evaluation-lock",
+    "data\\body-evaluation-lock-v1.json",
+    "--evaluation-phase",
+    "after",
+    "--output-json",
+    "data\\body-independent-evaluation-after.json",
+    "--output-md",
+    "md\\body-independent-evaluation-after.md",
+    "--bootstrap",
+    "1000",
+    "--seed",
+    "20260818"
+  ],
+  "continuous_pipeline_score": {
+    "display_calibration": {
+      "linear_fit_label_from_score": {
+        "intercept": 11.098368876999267,
+        "slope": -0.8829143880104884
+      },
+      "mae_after_in_sample_linear_fit": 2.1912224093617256,
+      "residual_quantiles": {
+        "0": -3.3673350098850086,
+        "0.1": -2.7086115137980866,
+        "0.25": -2.098661787236828,
+        "0.5": -0.6454355567624912,
+        "0.75": 2.5435844790411792,
+        "0.9": 3.390963423054369,
+        "1": 3.7976347524799206
+      },
+      "rmse_after_in_sample_linear_fit": 2.421094006579707,
+      "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+    },
+    "label": {
+      "max": 8.29,
+      "mean": 4.552641509433962,
+      "min": 1.42,
+      "sd": 2.4329678676606927
+    },
+    "label_q25": 2.3,
+    "label_q75": 7.24,
+    "n": 53,
+    "pairwise": {
+      "0": {
+        "accuracy": 0.4654796511627907,
+        "pairs": 1376
+      },
+      "0.5": {
+        "accuracy": 0.45735785953177255,
+        "pairs": 1196
+      },
+      "1": {
+        "accuracy": 0.46660117878192536,
+        "pairs": 1018
+      },
+      "2": {
+        "accuracy": 0.4936061381074169,
+        "pairs": 782
+      }
+    },
+    "pearson": -0.09867616500602144,
+    "score": {
+      "ceiling_n": 0,
+      "floor_n": 0,
+      "max": 7.98,
+      "mean": 7.413773584905661,
+      "median": 7.38,
+      "min": 7.07,
+      "q01": 7.075200000000001,
+      "q25": 7.13,
+      "q75": 7.66,
+      "q99": 7.9696,
+      "saturation_definition": {
+        "ceiling": 10.0,
+        "floor": 1.0
+      },
+      "sd": 0.2719130439187981
+    },
+    "spearman": -0.06267905448568309,
+    "top_bottom_quartile_auc": 0.45408163265306123,
+    "top_bottom_quartile_n": 28
+  },
+  "crop_padding_diagnostic": {
+    "by_outcome": {
+      "refused": {
+        "crop_outside_rows": 0,
+        "instrumented_rows": 0,
+        "padding": {
+          "max": null,
+          "mean": null,
+          "median": null,
+          "min": null,
+          "n": 0,
+          "nonzero": 0,
+          "p90": null,
+          "q25": null,
+          "q75": null
+        },
+        "rows": 8
+      },
+      "scored": {
+        "crop_outside_rows": 53,
+        "instrumented_rows": 53,
+        "padding": {
+          "max": 0.57675847,
+          "mean": 0.5537207671698113,
+          "median": 0.55993043,
+          "min": 0.46008464,
+          "n": 53,
+          "nonzero": 53,
+          "p90": 0.57055852,
+          "q25": 0.54347545,
+          "q75": 0.56815948
+        },
+        "rows": 53
+      }
+    },
+    "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+    "crop_inside_rows": 0,
+    "crop_outside_rate_instrumented": 1.0,
+    "crop_outside_rows": 53,
+    "instrumented_rows": 53,
+    "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+    "outcome_sensitivity": {
+      "crop_inside": {
+        "n": 0,
+        "refusal_rate": null,
+        "refused_or_error": 0
+      },
+      "crop_outside": {
+        "n": 53,
+        "refusal_rate": 0.0,
+        "refused_or_error": 0
+      },
+      "no_diagnostic": {
+        "n": 8,
+        "refusal_rate": 1.0,
+        "refused_or_error": 8
+      }
+    },
+    "padding_fraction": {
+      "max": 0.57675847,
+      "mean": 0.5537207671698113,
+      "median": 0.55993043,
+      "min": 0.46008464,
+      "n": 53,
+      "nonzero": 53,
+      "p90": 0.57055852,
+      "q25": 0.54347545,
+      "q75": 0.56815948
+    },
+    "rows": 61,
+    "score_sensitivity": {
+      "crop_inside_scores": {
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "n": 0
+      },
+      "crop_outside_scores": {
+        "max": 7.98,
+        "mean": 7.413773584905661,
+        "median": 7.38,
+        "min": 7.07,
+        "n": 53
+      },
+      "outside_minus_inside_mean": null,
+      "padding_vs_continuous_score_pearson": -0.2623545241621512,
+      "padding_vs_continuous_score_spearman": -0.35584613595546055,
+      "scored_instrumented_rows": 53
+    },
+    "unavailable_rows": 8
+  },
+  "dataset": {
+    "cases": 61,
+    "cluster": {
+      "definition": "Each rendered stimulus is a distinct body; resample the 61 stimuli.",
+      "field": "identity_group"
+    },
+    "cohort": {
+      "construction": "One DAZ Genesis base model manipulated on a single thinness/fatness continuum; heads removed; white underwear and undershirt.",
+      "sex": "female-presenting synthetic bodies only"
+    },
+    "dataset": "Moussally et al. body-only computer-generated pictures of women",
+    "doi": "10.3758/s13428-016-0703-7",
+    "excluded_labels": [],
+    "identity": {
+      "definition": "Each rendered stimulus appears once, so this set cannot measure multi-photo identity stability.",
+      "field": "body_id"
+    },
+    "label": {
+      "body_specific": true,
+      "definition": "mean body valence from attractiveness, beauty, and harmony judgments",
+      "field": "attractiveness_mean",
+      "independence": "The shipped CNN was trained on Connor full-body photographs, not these 61 Moussally synthetic body-only stimuli; no result from this set selected the shipped model.",
+      "independent_of_shipped_model": true,
+      "limitation": "The valence aggregate includes attractiveness, beauty, and harmony and is not an attractiveness-only judgment.",
+      "pairwise_gaps": [
+        0,
+        0.5,
+        1,
+        2
+      ],
+      "raters": "N=77-82 young women per stimulus because of missing data",
+      "scale": {
+        "higher_is_more_positive": true,
+        "maximum": 9,
+        "minimum": 1
+      },
+      "source_name": "Valence M"
+    },
+    "license": {
+      "repository_policy": "no source images committed; only hashes, factual labels, and aggregates",
+      "restriction": "do not distribute stimuli without explicit author consent",
+      "status": "copyright retained by authors"
+    },
+    "limitations": [
+      "Synthetic female-presenting bodies from one generated shape continuum do not represent natural photographic diversity.",
+      "The dataset has no male bodies and no legitimate human demographic subgroup labels.",
+      "Each body appears once, so it cannot estimate multi-photo identity stability.",
+      "The body-valence aggregate is body-specific but not attractiveness-only."
+    ],
+    "manifest_sha256": "c9c5717fa3f866ec8e5f5d3143dadcc5d1ca5fe43d8305420b24b431967c00be",
+    "schema_version": "body-independent-manifest.v2",
+    "selected_image_directory": "Low Resolution - R = 200",
+    "source_stimuli": 61,
+    "sources": {
+      "archive": {
+        "sha256": "f011966cb22ef9a8625b2ffa4684a39b70b2c587468dd5ca5d56f4bab658e647",
+        "url": "https://www.unige.ch/fapse/PSY/groups/upnc/BodyImageStimuli.zip"
+      },
+      "ratings_pdf": {
+        "sha256": "967aaf5655663ce80a8c77cc63b03bd029fb815950b66f5b364dc2f2fb2ec4d7",
+        "url": "https://static-content.springer.com/esm/art%3A10.3758%2Fs13428-016-0703-7/MediaObjects/13428_2016_703_MOESM2_ESM.pdf"
+      },
+      "stimulus_information_pdf": {
+        "sha256": "b7ff80919364016ed55defeb26ddaee6228231f988ca9f2c6e2402840a97546d",
+        "url": "https://www.unige.ch/fapse/psychoclinique/download_file/view/295/338"
+      }
+    },
+    "subgroup_fields": [],
+    "usable_labels": 61
+  },
+  "discrimination": {
+    "cnn_raw_model_route": {
+      "n": 53,
+      "pairwise": {
+        "0": {
+          "accuracy": 0.4629360465116279,
+          "pairs": 1376
+        },
+        "0.5": {
+          "accuracy": 0.4531772575250836,
+          "pairs": 1196
+        },
+        "1": {
+          "accuracy": 0.462671905697446,
+          "pairs": 1018
+        },
+        "2": {
+          "accuracy": 0.49104859335038364,
+          "pairs": 782
+        }
+      },
+      "pearson": -0.05573816327851126,
+      "spearman": -0.0697496271179322,
+      "top_bottom_quartile_auc": 0.4489795918367347,
+      "top_bottom_quartile_n": 28
+    },
+    "continuous_pipeline_score_locked_primary": {
+      "n": 53,
+      "pairwise": {
+        "0": {
+          "accuracy": 0.4654796511627907,
+          "pairs": 1376
+        },
+        "0.5": {
+          "accuracy": 0.45735785953177255,
+          "pairs": 1196
+        },
+        "1": {
+          "accuracy": 0.46660117878192536,
+          "pairs": 1018
+        },
+        "2": {
+          "accuracy": 0.4936061381074169,
+          "pairs": 782
+        }
+      },
+      "pearson": -0.09867616500602144,
+      "spearman": -0.06267905448568309,
+      "top_bottom_quartile_auc": 0.45408163265306123,
+      "top_bottom_quartile_n": 28
+    },
+    "public_half_point_display": {
+      "n": 53,
+      "pairwise": {
+        "0": {
+          "accuracy": 0.4578488372093023,
+          "pairs": 1376
+        },
+        "0.5": {
+          "accuracy": 0.451505016722408,
+          "pairs": 1196
+        },
+        "1": {
+          "accuracy": 0.4494106090373281,
+          "pairs": 1018
+        },
+        "2": {
+          "accuracy": 0.4533248081841432,
+          "pairs": 782
+        }
+      },
+      "pearson": -0.11902290651257155,
+      "spearman": -0.12769941931207243,
+      "top_bottom_quartile_auc": 0.41581632653061223,
+      "top_bottom_quartile_n": 28
+    }
+  },
+  "display_calibration": {
+    "linear_fit_label_from_score": {
+      "intercept": 11.192713310580206,
+      "slope": -0.8966211604095568
+    },
+    "mae_after_in_sample_linear_fit": 2.1807379741129496,
+    "residual_quantiles": {
+      "0": -3.436365187713309,
+      "0.1": -2.702392491467575,
+      "0.25": -2.138054607508531,
+      "0.5": -0.6263651877133087,
+      "0.75": 2.401945392491469,
+      "0.9": 3.485945392491469,
+      "1": 3.821945392491468
+    },
+    "rmse_after_in_sample_linear_fit": 2.4156731363441883,
+    "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+  },
+  "evaluation_phase": "after",
+  "identity_stability": {
+    "evidence_type": "no scored identity has multiple images",
+    "identities": 53,
+    "identities_with_multiple_images": 0,
+    "identity_definition": "Each rendered stimulus appears once, so this set cannot measure multi-photo identity stability.",
+    "identity_field": "body_id",
+    "limitation": "This diagnostic is not general multi-photo identity stability unless dataset metadata establishes natural repeat photographs across poses, angles, sessions, or days.",
+    "multiple_image_clusters_with_headswap_composites": 0,
+    "natural_repeat_photography": false,
+    "within_identity_display_range_mean": null,
+    "within_identity_display_range_p90": null,
+    "within_identity_display_sd_mean": null,
+    "within_identity_display_sd_median": null,
+    "within_identity_display_sd_p90": null
+  },
+  "inputs": {
+    "batch_csv": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-after.csv",
+      "sha256": "03e1322f73c82ff2cf30f3dfa8f2e697aec2dd66607ea88ec387dae4c14c7af2"
+    },
+    "batch_metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-after.meta.json",
+      "sha256": "b987d07a3cf41d1f0855482f11d05f8aec102ccaf9689e2b418d2b08e324b842"
+    },
+    "dataset_metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-manifest.meta.json",
+      "sha256": "e29c83e1bde8c6cbdc6d933e3a7b2e8830034930b2bedef1e0a88ca4da5176b1"
+    },
+    "evaluation_lock": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-evaluation-lock-v1.json",
+      "phase": "after",
+      "sha256": "6cc28bb1861b4441cb460e57393c3f8b6b4c0a5a2fecefcd4734c289e2aacff5"
+    }
+  },
+  "instruments": {
+    "cnn": 53,
+    "none": 8
+  },
+  "interpretation": {
+    "body_specific": true,
+    "calibration_limit": "In-sample residual/calibration summaries are descriptive and do not validate a remap.",
+    "ground_truth": "mean body valence from attractiveness, beauty, and harmony judgments",
+    "independence": "The shipped CNN was trained on Connor full-body photographs, not these 61 Moussally synthetic body-only stimuli; no result from this set selected the shipped model.",
+    "independent_of_shipped_model": true,
+    "mapping_limit": "Strictly monotone calibration leaves rank correlation, AUC, and pairwise ordering unchanged; quantization can introduce ties but adds no attractiveness intelligence."
+  },
+  "numeric_display_rows": 53,
+  "outcomes": {
+    "refused": 8,
+    "scored": 53
+  },
+  "overall_display": {
+    "display_calibration": {
+      "linear_fit_label_from_score": {
+        "intercept": 11.192713310580206,
+        "slope": -0.8966211604095568
+      },
+      "mae_after_in_sample_linear_fit": 2.1807379741129496,
+      "residual_quantiles": {
+        "0": -3.436365187713309,
+        "0.1": -2.702392491467575,
+        "0.25": -2.138054607508531,
+        "0.5": -0.6263651877133087,
+        "0.75": 2.401945392491469,
+        "0.9": 3.485945392491469,
+        "1": 3.821945392491468
+      },
+      "rmse_after_in_sample_linear_fit": 2.4156731363441883,
+      "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+    },
+    "label": {
+      "max": 8.29,
+      "mean": 4.552641509433962,
+      "min": 1.42,
+      "sd": 2.4329678676606927
+    },
+    "label_q25": 2.3,
+    "label_q75": 7.24,
+    "n": 53,
+    "pairwise": {
+      "0": {
+        "accuracy": 0.4578488372093023,
+        "pairs": 1376
+      },
+      "0.5": {
+        "accuracy": 0.451505016722408,
+        "pairs": 1196
+      },
+      "1": {
+        "accuracy": 0.4494106090373281,
+        "pairs": 1018
+      },
+      "2": {
+        "accuracy": 0.4533248081841432,
+        "pairs": 782
+      }
+    },
+    "pearson": -0.11902290651257155,
+    "score": {
+      "ceiling_n": 0,
+      "floor_n": 0,
+      "max": 8.0,
+      "mean": 7.40566037735849,
+      "median": 7.5,
+      "min": 7.0,
+      "q01": 7.0,
+      "q25": 7.0,
+      "q75": 7.5,
+      "q99": 8.0,
+      "saturation_definition": {
+        "ceiling": 10.0,
+        "floor": 1.0
+      },
+      "sd": 0.322966844691013
+    },
+    "spearman": -0.12769941931207243,
+    "top_bottom_quartile_auc": 0.41581632653061223,
+    "top_bottom_quartile_n": 28
+  },
+  "page_scored_without_numeric_display": 0,
+  "pairwise_label_gaps": [
+    0.0,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "public_display_bootstrap": {
+    "95pct_ci": {
+      "pairwise_gap_0": [
+        0.3726660516605166,
+        0.5421207193544569
+      ],
+      "pairwise_gap_0.5": [
+        0.3584310015138236,
+        0.5413579817109966
+      ],
+      "pairwise_gap_1": [
+        0.35059223086235797,
+        0.5491743812582656
+      ],
+      "pairwise_gap_2": [
+        0.3446262493804322,
+        0.5693941913117305
+      ],
+      "pearson": [
+        -0.3511452061353432,
+        0.1319393966153681
+      ],
+      "spearman": [
+        -0.4000099571451434,
+        0.14336188624243068
+      ],
+      "top_bottom_quartile_auc": [
+        0.2380739795918367,
+        0.6199335984393758
+      ]
+    },
+    "clusters": 53,
+    "method": "cluster bootstrap by identity_group; clusters sampled with replacement, all rows retained",
+    "repetitions": 1000,
+    "seed": 20260818
+  },
+  "public_half_point_display": {
+    "display_calibration": {
+      "linear_fit_label_from_score": {
+        "intercept": 11.192713310580206,
+        "slope": -0.8966211604095568
+      },
+      "mae_after_in_sample_linear_fit": 2.1807379741129496,
+      "residual_quantiles": {
+        "0": -3.436365187713309,
+        "0.1": -2.702392491467575,
+        "0.25": -2.138054607508531,
+        "0.5": -0.6263651877133087,
+        "0.75": 2.401945392491469,
+        "0.9": 3.485945392491469,
+        "1": 3.821945392491468
+      },
+      "rmse_after_in_sample_linear_fit": 2.4156731363441883,
+      "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+    },
+    "label": {
+      "max": 8.29,
+      "mean": 4.552641509433962,
+      "min": 1.42,
+      "sd": 2.4329678676606927
+    },
+    "label_q25": 2.3,
+    "label_q75": 7.24,
+    "n": 53,
+    "pairwise": {
+      "0": {
+        "accuracy": 0.4578488372093023,
+        "pairs": 1376
+      },
+      "0.5": {
+        "accuracy": 0.451505016722408,
+        "pairs": 1196
+      },
+      "1": {
+        "accuracy": 0.4494106090373281,
+        "pairs": 1018
+      },
+      "2": {
+        "accuracy": 0.4533248081841432,
+        "pairs": 782
+      }
+    },
+    "pearson": -0.11902290651257155,
+    "score": {
+      "ceiling_n": 0,
+      "floor_n": 0,
+      "max": 8.0,
+      "mean": 7.40566037735849,
+      "median": 7.5,
+      "min": 7.0,
+      "q01": 7.0,
+      "q25": 7.0,
+      "q75": 7.5,
+      "q99": 8.0,
+      "saturation_definition": {
+        "ceiling": 10.0,
+        "floor": 1.0
+      },
+      "sd": 0.322966844691013
+    },
+    "spearman": -0.12769941931207243,
+    "top_bottom_quartile_auc": 0.41581632653061223,
+    "top_bottom_quartile_n": 28
+  },
+  "refusal_causes": {
+    "no-body": 5,
+    "pose-quality:profile": 3
+  },
+  "refusal_selectivity": {
+    "all_labels": {
+      "image_ids": [
+        "T300",
+        "T290",
+        "T280",
+        "T270",
+        "T260",
+        "T250",
+        "T240",
+        "T230",
+        "T220",
+        "T210",
+        "T200",
+        "T190",
+        "T180",
+        "T170",
+        "T160",
+        "T150",
+        "T140",
+        "T130",
+        "T120",
+        "T110",
+        "T100",
+        "T090",
+        "T080",
+        "T070",
+        "T060",
+        "T050",
+        "T040",
+        "T030",
+        "T020",
+        "T010",
+        "N000",
+        "H010",
+        "H020",
+        "H030",
+        "H040",
+        "H050",
+        "H060",
+        "H070",
+        "H080",
+        "H090",
+        "H100",
+        "H110",
+        "H120",
+        "H130",
+        "H140",
+        "H150",
+        "H160",
+        "H170",
+        "H180",
+        "H190",
+        "H200",
+        "H210",
+        "H220",
+        "H230",
+        "H240",
+        "H250",
+        "H260",
+        "H270",
+        "H280",
+        "H290",
+        "H300"
+      ],
+      "max": 8.29,
+      "mean": 4.139344262295082,
+      "median": 3.4,
+      "min": 1.17,
+      "n": 61,
+      "q25": 1.76,
+      "q75": 6.58
+    },
+    "label_quartile_thresholds": {
+      "median": 3.4,
+      "q25": 1.76,
+      "q75": 6.58
+    },
+    "numeric_score": {
+      "image_ids": [
+        "T300",
+        "T290",
+        "T280",
+        "T270",
+        "T260",
+        "T250",
+        "T240",
+        "T230",
+        "T220",
+        "T210",
+        "T200",
+        "T190",
+        "T180",
+        "T170",
+        "T160",
+        "T150",
+        "T140",
+        "T130",
+        "T120",
+        "T110",
+        "T100",
+        "T090",
+        "T080",
+        "T070",
+        "T060",
+        "T050",
+        "T040",
+        "T030",
+        "T020",
+        "T010",
+        "N000",
+        "H010",
+        "H020",
+        "H030",
+        "H040",
+        "H050",
+        "H060",
+        "H070",
+        "H080",
+        "H090",
+        "H100",
+        "H110",
+        "H120",
+        "H130",
+        "H140",
+        "H150",
+        "H160",
+        "H170",
+        "H180",
+        "H210",
+        "H220",
+        "H230",
+        "H240"
+      ],
+      "max": 8.29,
+      "mean": 4.552641509433962,
+      "median": 3.99,
+      "min": 1.42,
+      "n": 53,
+      "q25": 2.3,
+      "q75": 7.24
+    },
+    "refusal_by_label_quartile": {
+      "q1_lowest": {
+        "refusal_rate": 0.4375,
+        "refused_error_or_non_numeric": 7,
+        "refused_image_ids": [
+          "H190",
+          "H250",
+          "H260",
+          "H270",
+          "H280",
+          "H290",
+          "H300"
+        ],
+        "submitted": 16
+      },
+      "q2": {
+        "refusal_rate": 0.06666666666666667,
+        "refused_error_or_non_numeric": 1,
+        "refused_image_ids": [
+          "H200"
+        ],
+        "submitted": 15
+      },
+      "q3": {
+        "refusal_rate": 0.0,
+        "refused_error_or_non_numeric": 0,
+        "refused_image_ids": [],
+        "submitted": 15
+      },
+      "q4_highest": {
+        "refusal_rate": 0.0,
+        "refused_error_or_non_numeric": 0,
+        "refused_image_ids": [],
+        "submitted": 15
+      }
+    },
+    "refused_error_or_non_numeric": {
+      "image_ids": [
+        "H190",
+        "H200",
+        "H250",
+        "H260",
+        "H270",
+        "H280",
+        "H290",
+        "H300"
+      ],
+      "max": 1.8,
+      "mean": 1.40125,
+      "median": 1.3050000000000002,
+      "min": 1.17,
+      "n": 8,
+      "q25": 1.255,
+      "q75": 1.4675
+    },
+    "refused_labels_by_image_id": {
+      "H190": 1.76,
+      "H200": 1.8,
+      "H250": 1.37,
+      "H260": 1.27,
+      "H270": 1.34,
+      "H280": 1.24,
+      "H290": 1.26,
+      "H300": 1.17
+    },
+    "selection_warning": "Discrimination on finite accepted rows can be selection-biased when refusal depends on label; report refusal behavior alongside accepted-row metrics."
+  },
+  "routing_decisions": {
+    "clothed\u2192model": 53,
+    "unknown": 8
+  },
+  "rows": 61,
+  "schema_version": "body-accuracy-evaluation.v2",
+  "score_precision": {
+    "continuous_pipeline_score": "two-decimal batch bp from the internal percentile-to-score mapping",
+    "public_half_point_display": "headline precision; explicit public_score when emitted, otherwise Math.round(bp*2)/2",
+    "public_score_sources": {
+      "explicit_batch_column": 53
+    }
+  },
+  "script_sha256": "76173ca08b9f6a6a7fa74a17ad5160a56bad37781c43f9cbd32ca3315ce505b7",
+  "subgroup_provenance": {
+    "demographic_code": {
+      "definition": "Values are unverified codes parsed from a filename token; the dataset metadata supplies no source-backed meaning.",
+      "status": "not legitimate demographic ground truth and not fairness evidence"
+    }
+  },
+  "subgroups": {
+    "body_exposure": {
+      "clothed": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "demographic_code": {
+      "synthetic": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "framing": {
+      "full": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "framing_quality": {
+      "clean": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "gate_band": {
+      "pass": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "geom_cues": {
+      "legTorso+symmetry": {
+        "metrics_meaningful": false,
+        "n": 2,
+        "small_sample": true
+      },
+      "shoulderHip+legTorso+symmetry": {
+        "metrics_meaningful": false,
+        "n": 2,
+        "small_sample": true
+      },
+      "whr+vTaper+shoulderHip+legTorso+symmetry": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 18.98914506219517,
+            "slope": -1.908756335220585
+          },
+          "mae_after_in_sample_linear_fit": 2.126735984633093,
+          "residual_quantiles": {
+            "0": -3.0324865051415184,
+            "0.1": -2.5736476747451946,
+            "0.25": -2.1026337176444603,
+            "0.5": -0.7597123920723989,
+            "0.75": 2.5602876079276013,
+            "0.9": 3.330074149798335,
+            "1": 3.6519652687202466
+          },
+          "rmse_after_in_sample_linear_fit": 2.3112247071715224,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.79734693877551,
+          "min": 1.42,
+          "sd": 2.3682584452096767
+        },
+        "label_q25": 2.51,
+        "label_q75": 7.26,
+        "metrics_meaningful": true,
+        "n": 49,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.40893617021276596,
+            "pairs": 1175
+          },
+          "0.5": {
+            "accuracy": 0.3955078125,
+            "pairs": 1024
+          },
+          "1": {
+            "accuracy": 0.41122565864833904,
+            "pairs": 873
+          },
+          "2": {
+            "accuracy": 0.44069069069069067,
+            "pairs": 666
+          }
+        },
+        "pearson": -0.21814023045046366,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.435102040816326,
+          "median": 7.39,
+          "min": 7.07,
+          "q01": 7.0796,
+          "q25": 7.22,
+          "q75": 7.67,
+          "q99": 7.9704,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2706539506754765
+        },
+        "small_sample": false,
+        "spearman": -0.21545105346017784,
+        "top_bottom_quartile_auc": 0.3136094674556213,
+        "top_bottom_quartile_n": 26
+      }
+    },
+    "instrument": {
+      "cnn": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "label_sex": {
+      "f": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "override": {
+      "unknown": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "routing": {
+      "clothed\u2192model": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    },
+    "variant": {
+      "synthetic_body_only": {
+        "display_calibration": {
+          "linear_fit_label_from_score": {
+            "intercept": 11.098368876999267,
+            "slope": -0.8829143880104884
+          },
+          "mae_after_in_sample_linear_fit": 2.1912224093617256,
+          "residual_quantiles": {
+            "0": -3.3673350098850086,
+            "0.1": -2.7086115137980866,
+            "0.25": -2.098661787236828,
+            "0.5": -0.6454355567624912,
+            "0.75": 2.5435844790411792,
+            "0.9": 3.390963423054369,
+            "1": 3.7976347524799206
+          },
+          "rmse_after_in_sample_linear_fit": 2.421094006579707,
+          "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+        },
+        "label": {
+          "max": 8.29,
+          "mean": 4.552641509433962,
+          "min": 1.42,
+          "sd": 2.4329678676606927
+        },
+        "label_q25": 2.3,
+        "label_q75": 7.24,
+        "metrics_meaningful": true,
+        "n": 53,
+        "pairwise": {
+          "0": {
+            "accuracy": 0.4654796511627907,
+            "pairs": 1376
+          },
+          "0.5": {
+            "accuracy": 0.45735785953177255,
+            "pairs": 1196
+          },
+          "1": {
+            "accuracy": 0.46660117878192536,
+            "pairs": 1018
+          },
+          "2": {
+            "accuracy": 0.4936061381074169,
+            "pairs": 782
+          }
+        },
+        "pearson": -0.09867616500602144,
+        "score": {
+          "ceiling_n": 0,
+          "floor_n": 0,
+          "max": 7.98,
+          "mean": 7.413773584905661,
+          "median": 7.38,
+          "min": 7.07,
+          "q01": 7.075200000000001,
+          "q25": 7.13,
+          "q75": 7.66,
+          "q99": 7.9696,
+          "saturation_definition": {
+            "ceiling": 10.0,
+            "floor": 1.0
+          },
+          "sd": 0.2719130439187981
+        },
+        "small_sample": false,
+        "spearman": -0.06267905448568309,
+        "top_bottom_quartile_auc": 0.45408163265306123,
+        "top_bottom_quartile_n": 28
+      }
+    }
+  }
+}

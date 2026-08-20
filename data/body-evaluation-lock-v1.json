@@ -1,0 +1,66 @@
+{
+  "schema_version": "body-evaluation-lock.v1",
+  "locked_on": "2026-08-18",
+  "baseline": {
+    "git_commit": "11bb0b98391bbd9a1d3eab67553c1034d68f30e4",
+    "branch_source": "codex/face-calculator-reliability",
+    "body_html_sha256": "af651aefcd3e5608681aa211c4dcd4bbbe014c2118124a46e8f1bceb7a10f092",
+    "model_sha256": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2"
+  },
+  "independent_test": {
+    "dataset": "Moussally et al. body-only computer-generated pictures of women",
+    "doi": "10.3758/s13428-016-0703-7",
+    "manifest": "data/body-independent-manifest.csv",
+    "manifest_sha256": "c9c5717fa3f866ec8e5f5d3143dadcc5d1ca5fe43d8305420b24b431967c00be",
+    "rows": 61,
+    "label": "Valence M: mean of attractiveness, beauty, and harmony ratings on a 1-9 scale",
+    "independent_of_shipped_model": true,
+    "limitations": [
+      "Body-specific, but the label is not attractiveness-only.",
+      "All stimuli are synthetic female bodies on one shape continuum.",
+      "This set cannot by itself justify a production-model replacement across sexes, clothing, poses, cameras, or demographics."
+    ]
+  },
+  "diagnostic_validation": {
+    "dataset": "Connor Full-Body Photo Database",
+    "role": "training-contaminated pipeline and preprocessing diagnostic only",
+    "archive_sha256": "71577e780ca5a9ba7a54653b55cca14bbbefe1be1783362ee9a9c0f581a950e8",
+    "not_eligible_as_independent_test": true
+  },
+  "metrics": {
+    "primary": "Spearman rank correlation on all finite independent-test rows",
+    "secondary": [
+      "Pearson correlation",
+      "top-vs-bottom-quartile AUC",
+      "exact pairwise ordering accuracy at multiple label gaps",
+      "refusal and final-route distribution",
+      "score range and floor/ceiling saturation",
+      "paired residual and stability summaries"
+    ],
+    "confidence_intervals": "1000 fixed-seed bootstrap repetitions; paired for before/after deltas"
+  },
+  "candidate_policy": {
+    "selection_data": "No scoring candidate may be selected on the independent test. A candidate must first be fixed on separate development data.",
+    "test_access": "Evaluate a fixed candidate once on identical independent-test rows.",
+    "minimum_spearman_gain": 0.03,
+    "minimum_spearman_delta_ci_lower_bound": -0.01,
+    "maximum_auc_degradation": 0.02,
+    "maximum_pairwise_degradation_at_any_registered_gap": 0.02,
+    "maximum_refusal_rate_increase": 0.05,
+    "subgroup_and_stability_rule": "Reject if a legitimately measured subgroup or registered stability slice worsens materially.",
+    "model_replacement_rule": "This independent set is too narrow to authorize replacement by itself; a broader body-specific locked test is required.",
+    "calibration_rule": "A monotone percentile/display remap receives no credit for Spearman, AUC, or pairwise ordering because it cannot change rank."
+  },
+  "engineering_change_policy": {
+    "allowed_without_claiming_better_discrimination": [
+      "capture and camera lifecycle fixes",
+      "input and restore sanitization",
+      "async generation ownership and stale-result prevention",
+      "route/provenance correction",
+      "model cache/version binding and bounded failure handling",
+      "accessibility and responsive-layout corrections",
+      "refusing a route that has no surviving score cue"
+    ],
+    "score_behavior_expectation": "Common finite rows should remain numerically identical unless a pre-registered scoring candidate wins."
+  }
+}

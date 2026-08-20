@@ -1,0 +1,134 @@
+{
+  "schema_version": "body-production-batch.v1",
+  "generated_at": "2026-08-18T21:21:43.981Z",
+  "command": "C:\\Users\\sourd\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe \"F:\\\\Programming\\\\The Love Equations\\\\The Love Equations Website\\\\tools\\\\run_body_batch.mjs\" --base http://127.0.0.1:8766/body.html?debug --pipeline-root C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-base-11bb0b9 --photos C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\connor\\full_body_photo_database\\photos --labels \"C:\\\\Users\\\\sourd\\\\AppData\\\\Local\\\\Temp\\\\codex-body-evaluation-cache\\\\connor\\\\full_body_photo_database\\\\rating data\\\\aggregated_photo_ratings.csv\" --out data\\body-connor-before.csv --metadata-out data\\body-connor-before.meta.json --playwright-module C:\\Users\\sourd\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright\\index.mjs --browser-executable \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\" --timeout-minutes 180",
+  "base_url": "http://127.0.0.1:8766/body.html?debug",
+  "dataset": {
+    "name": "Connor Full-Body Photo Database",
+    "source_url": "https://osf.io/download/khm9a/",
+    "archive_sha256": "71577e780ca5a9ba7a54653b55cca14bbbefe1be1783362ee9a9c0f581a950e8",
+    "labels_sha256": "3ba0c36ed8d74a94753dc9c26dc568f7556f0f439cd952ef0a4188600d30db3f",
+    "source_stimuli": 726,
+    "usable_labels": 724,
+    "excluded_labels": [
+      {
+        "image_id": "WF111",
+        "reason": "missing attractiveness_mean"
+      },
+      {
+        "image_id": "WF112",
+        "reason": "missing attractiveness_mean"
+      }
+    ],
+    "processed_cases": 724,
+    "label": {
+      "field": "attractiveness_mean",
+      "definition": "mean holistic attractiveness rating of the full person",
+      "body_specific": false,
+      "independent_of_shipped_model": false,
+      "independence": "training-contaminated/model-selection diagnostic; not a locked independent test",
+      "pairwise_gaps": [
+        0,
+        5,
+        10,
+        20,
+        30
+      ]
+    },
+    "cluster": {
+      "field": "body_id",
+      "definition": "Original and head-swap rows sharing the same body token are one cluster."
+    },
+    "license": {
+      "status": "no license declared in the OSF node/API inspected for this audit",
+      "repository_policy": "no source photographs committed; only manifests, hashes, and aggregate results"
+    },
+    "training_contaminated": true
+  },
+  "page_columns": [
+    "filename",
+    "timestamp",
+    "outcome",
+    "refusal",
+    "cause",
+    "pose_warning",
+    "sil_retry",
+    "routing",
+    "skin_frac",
+    "framing",
+    "person_frac",
+    "override",
+    "gate_band",
+    "gate_tilt",
+    "gate_yaw",
+    "skel_symmetry",
+    "model_raw",
+    "geom_bp_m",
+    "geom_cv_m",
+    "geom_bp_f",
+    "geom_cv_f",
+    "geom_cues",
+    "bp",
+    "bp_band",
+    "cv",
+    "cv_band",
+    "sex",
+    "sex_conf",
+    "sex_source",
+    "reliability",
+    "tier0_ffmi",
+    "tier0_bf",
+    "crosscheck"
+  ],
+  "outcome_counts": {
+    "scored": 723,
+    "refused": 1
+  },
+  "refusal_counts": {
+    "pose-quality:profile": 1
+  },
+  "route_counts": {
+    "clothed→model": 658,
+    "bare→geometry": 59,
+    "clothed→geometry": 6,
+    "unknown": 1
+  },
+  "storage_before_sha256": "10c9f4d35a7a4bdfe0e287341f50af28484bcc27d338ff8a689c4a185a8f3afd",
+  "storage_after_sha256": "10c9f4d35a7a4bdfe0e287341f50af28484bcc27d338ff8a689c4a185a8f3afd",
+  "storage_unchanged": true,
+  "storage_fixture": {
+    "love_equations": true,
+    "unrelated_local_storage": true,
+    "session_storage": true
+  },
+  "final_status": "Done · 724 images · 723 scored, 1 refused · localStorage unchanged ✓",
+  "pipeline_root": "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-base-11bb0b9",
+  "pipeline_sha256": {
+    "body.html": "af651aefcd3e5608681aa211c4dcd4bbbe014c2118124a46e8f1bceb7a10f092",
+    "css/body.css": "6f73432566803d6309078a10e2abfc3404c244e16f8fc333fbe074699a595326",
+    "js/body-pose-worker.js": "c987806844eca1ff4bc6df26c6a42882d3cd7013e13fa73817993bbe792c9e4c",
+    "js/body-arm-band.js": "4ff2541455942d99a561a4afe89701be5be3342fa8852d2406cf4b6f6af05b6d",
+    "js/body-camera-guide.js": null,
+    "js/body-state.js": null,
+    "js/composite-score.js": "aa010172a767285a56c573b8ccadeab1a30a8b5b2be0ce7801327dd2fb96a251",
+    "models/body-beauty.onnx": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2",
+    "models/face-sex.onnx": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb"
+  },
+  "served_pipeline_sha256": {
+    "body.html": "af651aefcd3e5608681aa211c4dcd4bbbe014c2118124a46e8f1bceb7a10f092",
+    "css/body.css": "6f73432566803d6309078a10e2abfc3404c244e16f8fc333fbe074699a595326",
+    "js/body-pose-worker.js": "c987806844eca1ff4bc6df26c6a42882d3cd7013e13fa73817993bbe792c9e4c",
+    "js/body-arm-band.js": "4ff2541455942d99a561a4afe89701be5be3342fa8852d2406cf4b6f6af05b6d",
+    "js/body-camera-guide.js": null,
+    "js/body-state.js": null,
+    "js/composite-score.js": "aa010172a767285a56c573b8ccadeab1a30a8b5b2be0ce7801327dd2fb96a251",
+    "models/body-beauty.onnx": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2",
+    "models/face-sex.onnx": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb"
+  },
+  "served_pipeline_matches_root": true,
+  "normalized_runtime_fields": [
+    "timestamp"
+  ],
+  "tool_sha256": "7c19078a71013b461568216836a65db06d9e303f8224cae8c0268980bb55dcbe",
+  "output_csv_sha256": "0de0edfcd7c93a655e518fbff5d3c45134df230751e67bbceac96134c39cb5fc"
+}

@@ -8,6 +8,7 @@
     "test:smv": "node tests/smv-panel.mjs",
     "verify:matchmaker": "python tools/verify_matchmaker.py",
     "test:face": "node tests/face-core.test.mjs && node tests/face-crop.test.mjs && node tests/face-camera-guide.test.mjs && node tests/face-camera-integration.test.mjs && node tests/face-batch.test.mjs && node tests/face-evaluation.test.mjs",
-    "test:all": "npm run test:lab && npm run test:smv && npm run test:face && npm run verify:matchmaker"
+    "test:body": "node tests/body-core.test.mjs && node tests/body-arm-band.test.mjs && node tests/body-state.test.mjs && node tests/body-persistence.test.mjs && node tests/body-camera-guide.test.mjs && node tests/body-camera-integration.test.mjs && node tests/body-camera-coverage.test.mjs && node tests/body-batch.test.mjs && node tests/body-connor-evaluation.test.mjs && node tests/body-evaluation.test.mjs && node tests/body-after-evaluation.test.mjs && node tests/body-training.test.mjs && node tests/body-training-baseline.test.mjs",
+    "test:all": "npm run test:lab && npm run test:smv && npm run test:face && npm run test:body && npm run verify:matchmaker"
   }
 }

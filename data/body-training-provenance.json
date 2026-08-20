@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theloveequations.com/schemas/body-training-provenance.v1.json",
+  "title": "Body CNN training provenance",
+  "description": "Schema and non-result example for a locked-manifest candidate run. The example is not evidence that retraining occurred or improved subjective discrimination.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "script",
+    "dataset",
+    "split_manifest",
+    "preprocessing",
+    "config",
+    "gate",
+    "environment",
+    "selection",
+    "test",
+    "export",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": "body-training-provenance.v1"},
+    "status": {"type": "string", "minLength": 1},
+    "script": {
+      "type": "object",
+      "required": ["version", "sha256"],
+      "properties": {
+        "version": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "dataset": {
+      "type": "object",
+      "required": [
+        "name",
+        "source_url",
+        "archive_sha256",
+        "labels_sha256",
+        "training_contaminated_for_shipped_model",
+        "license",
+        "selection"
+      ],
+      "properties": {
+        "archive_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "labels_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "training_contaminated_for_shipped_model": {"const": true},
+        "license": {
+          "type": "object",
+          "required": ["declared", "redistribution_assumed", "note"],
+          "properties": {
+            "declared": {"const": false},
+            "redistribution_assumed": {"const": false},
+            "note": {"type": "string", "minLength": 1}
+          }
+        },
+        "selection": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "split_manifest": {
+      "type": "object",
+      "required": ["sha256", "counts"],
+      "properties": {
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "counts": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "preprocessing": {
+      "type": "object",
+      "required": ["mode", "warning", "input_size", "normalization"],
+      "properties": {
+        "mode": {"enum": ["full-letterbox", "pose-crop-manifest"]},
+        "crop_manifest_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "warning": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "config": {
+      "type": "object",
+      "required": ["seeds", "epochs", "batch_size", "device"],
+      "properties": {
+        "seeds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 0}
+        }
+      },
+      "additionalProperties": true
+    },
+    "gate": {
+      "type": "object",
+      "required": [
+        "registered_before_training_at",
+        "min_dev_spearman",
+        "min_test_spearman",
+        "candidate_export_requires_all_available_thresholds",
+        "production_model_replacement"
+      ],
+      "properties": {
+        "candidate_export_requires_all_available_thresholds": {"const": true},
+        "production_model_replacement": {"const": "forbidden by this script"}
+      },
+      "additionalProperties": true
+    },
+    "environment": {
+      "type": "object",
+      "required": ["packages", "environment_lock"],
+      "properties": {
+        "packages": {
+          "type": "object",
+          "required": [
+            "torch",
+            "torchvision",
+            "onnx",
+            "onnxruntime",
+            "onnxscript",
+            "Pillow",
+            "numpy",
+            "scipy",
+            "pandas"
+          ],
+          "additionalProperties": {"type": ["string", "null"]}
+        },
+        "environment_lock": {
+          "type": ["object", "null"],
+          "required": [
+            "path",
+            "sha256",
+            "format",
+            "required_distributions"
+          ],
+          "properties": {
+            "path": {"type": "string", "minLength": 1},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "format": {"const": "pip-freeze-exact-pins"},
+            "required_distributions": {"type": "object"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "selection": {"type": ["object", "null"]},
+    "test": {"type": ["object", "null"]},
+    "export": {"type": ["object", "null"]},
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": true,
+  "examples": [
+    {
+      "schema_version": "body-training-provenance.v1",
+      "status": "example-not-a-training-result",
+      "script": {
+        "version": "2.0.0",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "dataset": {
+        "name": "Connor Full-Body Photo Database",
+        "source_url": "https://osf.io/download/khm9a/",
+        "archive_sha256": "71577e780ca5a9ba7a54653b55cca14bbbefe1be1783362ee9a9c0f581a950e8",
+        "labels_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "training_contaminated_for_shipped_model": true,
+        "license": {
+          "declared": false,
+          "redistribution_assumed": false,
+          "note": "The OSF node and archive expose no declared license; public download access is not treated as redistribution permission."
+        },
+        "selection": {
+          "label_source": "aggregated_photo_ratings.csv",
+          "label_field": "attractiveness mean",
+          "missing_or_non_finite_labels": "excluded",
+          "head_swap_composites": "included",
+          "unmatched_ratings_or_images": "fail closed; partial corpus forbidden"
+        }
+      },
+      "split_manifest": {
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "counts": {}
+      },
+      "preprocessing": {
+        "mode": "full-letterbox",
+        "crop_manifest_sha256": null,
+        "warning": "Historical transform; known mismatch with the production pose crop.",
+        "input_size": 224,
+        "normalization": {
+          "mean": [0.485, 0.456, 0.406],
+          "std": [0.229, 0.224, 0.225]
+        }
+      },
+      "config": {
+        "seeds": [1337, 2027, 4099],
+        "epochs": 40,
+        "batch_size": 16,
+        "device": "cuda"
+      },
+      "gate": {
+        "registered_before_training_at": "example-only",
+        "min_dev_spearman": 0.3,
+        "min_test_spearman": 0.3,
+        "min_test_spearman_delta_vs_baseline": 0.02,
+        "candidate_export_requires_all_available_thresholds": true,
+        "production_model_replacement": "forbidden by this script"
+      },
+      "environment": {
+        "packages": {
+          "torch": null,
+          "torchvision": null,
+          "onnx": null,
+          "onnxruntime": null,
+          "onnxscript": null,
+          "Pillow": null,
+          "numpy": null,
+          "scipy": null,
+          "pandas": null
+        },
+        "environment_lock": null
+      },
+      "selection": null,
+      "test": null,
+      "export": null,
+      "limitations": [
+        "This is a schema example, not a completed training run.",
+        "Connor is contaminated for evaluation of the shipped model.",
+        "A REF_RAW remap cannot improve ordering."
+      ]
+    }
+  ]
+}

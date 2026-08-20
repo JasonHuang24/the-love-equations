@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+064e6e7fed71",
-  "generatedAt": "2026-08-15T01:56:44.000Z",
+  "indexVersion": "1.0.0+c3974c25521e",
+  "generatedAt": "2026-08-18T17:01:08.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -221,7 +221,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "ef281406db4cb9dc3dd4c68b5c287f8eb7900eb2401fd6a7881581d0405dc1ac",
+      "sha256": "b75607ce9e5451d3fde3cbdb0d88fc744876dc3fc6df581ab29a56c231c77c40",
       "conceptCount": 1
     },
     {
@@ -232,7 +232,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "af651aefcd3e5608681aa211c4dcd4bbbe014c2118124a46e8f1bceb7a10f092",
+      "sha256": "d75ec65acc0d766bef409676f82e10864d1fb6293ee2d4707ff2ab555ae8577d",
       "conceptCount": 1
     },
     {
@@ -25197,7 +25197,7 @@
       "anchor": "",
       "category": "Instruments",
       "subcategory": "Face Calculator",
-      "synopsis": "Drop in a face — on your device, nothing uploaded — and it reads everything it can from the photo, then scores it on one scale: a percentile of a stated reference population, 5.5 being its median. No sliders. It pairs with the Body Calc, and the two combine into an Overall looks rating below.",
+      "synopsis": "Drop in a clear, front-facing photo — processed on your device, never uploaded — for a rough, photo-sensitive model estimate. It locates this photo among outputs for one fixed rated dataset; it is not objective beauty or universal consensus. Add up to three photos for a steadier read. It pairs with the Body Calc below.",
       "evidenceType": "Instrument",
       "contentType": "On-device instrument",
       "verdict": "",
@@ -25228,7 +25228,7 @@
       "anchor": "",
       "category": "Instruments",
       "subcategory": "Body Calculator",
-      "synopsis": "Drop in a full-body photo — on your device, nothing uploaded — and it reads the frame it can from the silhouette, then scores it on one scale: a percentile of a stated reference population, 5.5 being its median. No sliders. It pairs with the Face Calc, and the two combine into an Overall looks rating below.",
+      "synopsis": "Drop in a full-body photo — on your device, nothing uploaded — and it reads the frame it can from the silhouette, then scores it on one scale: a percentile under a preserved legacy reference mapping, with 5.5 as that mapping’s median. No sliders. It pairs with the Face Calc, and the two combine into an Overall looks rating below.",
       "evidenceType": "Instrument",
       "contentType": "On-device instrument",
       "verdict": "",

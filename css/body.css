@@ -1,6 +1,6 @@
 /* ── body.html — page styles (extracted from inline <style>) ── */
 
-.bc-content { padding-bottom: 3rem; }
+.bc-content { padding-bottom: 3rem; max-width: min(var(--container), 90rem); }
 
 .bc-caveat {
   border: 0.5px solid var(--border);
@@ -13,7 +13,7 @@
 .bc-caveat strong { color: var(--text); }
 .bc-caveat a { color: var(--scarlet-dim); }
 
-.bc-grid { display: grid; grid-template-columns: minmax(0, 360px) 1fr; gap: 1.4rem; align-items: start; }
+.bc-grid { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 760px); gap: 1.4rem; align-items: start; justify-content: center; }
 
 .bc-panel {
   border: 0.5px solid var(--border); border-radius: var(--radius-lg);
@@ -34,6 +34,7 @@
   display: inline-flex; align-items: center; gap: 5px;
 }
 .bc-src.active { background: var(--scarlet); color: #fffaf3; border-color: var(--scarlet); }
+.bc-src:focus-visible { outline: 2px solid var(--scarlet); outline-offset: 2px; }
 
 .bc-drop {
   border: 1.5px dashed var(--border); border-radius: var(--radius-md);
@@ -54,6 +55,11 @@
 .bc-stage { position: relative; margin-top: 0.9rem; border-radius: var(--radius-md); overflow: hidden; background: #2c2622; min-height: 180px; display: none; }
 .bc-stage.show { display: block; }
 .bc-stage canvas, .bc-stage video { width: 100%; display: block; max-height: 60vh; object-fit: contain; }
+.bc-stage.is-camera {
+  width: min(100%, var(--bc-camera-width-cap, 100%)); min-height: 0;
+  aspect-ratio: var(--bc-feed-ratio, 4 / 3); margin-inline: auto;
+}
+.bc-stage.is-camera video { width: 100%; height: 100%; max-height: none; object-fit: contain; }
 .bc-stage video { transform: scaleX(-1); }
 .bc-status { font-size: 12px; color: var(--text-dim); margin-top: 0.6rem; min-height: 1.2em; }
 .bc-status.err { color: var(--scarlet); }
@@ -259,7 +265,7 @@
   margin-top: 0.5rem; border-top: 0.5px solid rgba(196,30,58,0.2); padding-top: 0.4rem;
 }
 
-@media (max-width: 880px) { .bc-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1200px) { .bc-grid { grid-template-columns: minmax(0, 760px); } }
 
 /* ── DEBUG · Batch mode (localhost / ?debug only; a calibration surface, deliberately muted) ── */
 .bc-batch {
@@ -350,12 +356,17 @@
 /* ── Camera alignment guide (standard framing) — absolute over the live video, never interactive ── */
 .bc-guide { position: absolute; inset: 0; pointer-events: none; }
 .bc-guide svg { width: 100%; height: 100%; display: block; }
-.bc-guide .g-mid   { stroke: rgba(255,255,255,0.35); stroke-width: 0.4; stroke-dasharray: 2 2; }
-.bc-guide .g-shape { fill: none; stroke: rgba(255,255,255,0.75); stroke-width: 0.7; stroke-dasharray: 3 2; }
-.bc-guide .g-bar   { stroke: var(--scarlet); stroke-width: 0.7; stroke-dasharray: 2.4 1.6; opacity: 0.85; }
+.bc-guide .g-mid   { stroke: rgba(255,255,255,0.55); stroke-width: 0.45; stroke-dasharray: 2 2; }
+.bc-guide .g-shape { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 0.8; stroke-dasharray: 3 2; transition: stroke 140ms ease; }
+.bc-guide .g-bar   { stroke: #ff5c72; stroke-width: 0.8; stroke-dasharray: 2.4 1.6; opacity: 1; transition: stroke 140ms ease; }
+.bc-guide.is-ready .g-shape, .bc-guide.is-ready .g-bar { stroke: #55e6a5; }
 .bc-guide-tip {
-  position: absolute; left: 0; right: 0; bottom: 0.5rem; text-align: center;
-  color: #fff; font-size: 12px; text-shadow: 0 1px 3px rgba(0,0,0,0.85); padding: 0 1rem;
+  position: absolute; left: 50%; right: auto; top: 0.55rem; text-align: center;
+  width: min(calc(100% - 1.1rem), 60ch); transform: translateX(-50%); box-sizing: border-box;
+  color: #fff; font-size: 12px; line-height: 1.4; font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9); padding: 0.42rem 0.6rem;
+  background: rgba(20,16,14,0.8); border: 1px solid rgba(255,255,255,0.45);
+  border-radius: 999px;
 }
 
 /* ── Framing gate — the not-scored-yet prompt for a degraded (overridable) photo ── */
@@ -373,12 +384,12 @@
 
 /* ── Camera-app capture: round shutter overlaid on the live preview + the auto-snap toggle ── */
 .bc-shutter {
-  position: absolute; bottom: 0.9rem; left: 50%; transform: translateX(-50%);
-  width: 54px; height: 54px; border-radius: 50%;
+  position: absolute; bottom: 0.8rem; right: 0.8rem;
+  width: 52px; height: 52px; border-radius: 50%;
   background: var(--scarlet); border: 3px solid #fff;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.55); cursor: pointer; padding: 0;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.65); cursor: pointer; padding: 0; transition: transform 100ms ease;
 }
-.bc-shutter:active { transform: translateX(-50%) scale(0.9); }
+.bc-shutter:active { transform: scale(0.9); }
 .bc-shutter:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .bc-autosnap { display: flex; align-items: flex-start; gap: 0.45rem; margin-top: 0.6rem; font-size: 12.5px; color: var(--text-dim); line-height: 1.5; cursor: pointer; }
 .bc-autosnap input { margin-top: 2px; accent-color: var(--scarlet); }
@@ -392,4 +403,32 @@
 .bc-url-row input {
   flex: 1; border: 0.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12.5px;
   background: #fff; color: var(--text); font-family: inherit;
+}
+
+@media (max-width: 480px) {
+  .bc-guide-tip { top: 0.4rem; width: calc(100% - 0.8rem); font-size: 12px; padding: 0.35rem 0.5rem; }
+  .bc-shutter { right: 0.6rem; bottom: 0.6rem; width: 48px; height: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bc-guide .g-shape,
+  .bc-guide .g-bar,
+  .bc-shutter { transition: none; }
+}
+
+/* The global 16-link nav only compresses through 1700px. On this page its full
+   desktop spacing is still 24px wider than the 1701px boundary. Carry the same
+   compact treatment through the narrow transition band to prevent page scroll. */
+@media (min-width: 1701px) and (max-width: 1760px) {
+  body[data-page="body"] .nav { padding-inline: 1.25rem; }
+  body[data-page="body"] .nav-logo { font-size: 18px; }
+  body[data-page="body"] .nav-links { gap: 0; }
+  body[data-page="body"] .nav-link { padding-inline: 6px; font-size: 12.5px; letter-spacing: 0; }
+}
+
+/* Long explanatory/result copy stays readable even when the calculator column
+   has room to grow on tablet, wide desktop, and 4K canvases. */
+.bc-inputs-lead, .bc-note-line, .bc-missing, .bc-gate-note,
+.bc-sexnote, .bc-meas-val, .bc-t0-math {
+  max-width: 75ch;
 }

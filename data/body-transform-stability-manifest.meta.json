@@ -1,0 +1,176 @@
+{
+  "schema_version": "body-transform-stability-dataset.v1",
+  "dataset": "Deterministic synthetic transforms of the Moussally body-only independent stimuli",
+  "cases": 216,
+  "manifest_sha256": "41cb0d67b37b24cb9beb9f25c3318c0032b94de939edad25ca875fee67cff8d0",
+  "source_dataset_metadata_sha256": "e29c83e1bde8c6cbdc6d933e3a7b2e8830034930b2bedef1e0a88ca4da5176b1",
+  "source_manifest_sha256": "c9c5717fa3f866ec8e5f5d3143dadcc5d1ca5fe43d8305420b24b431967c00be",
+  "source_batch_sha256": "561b635b520a24d771cc4bd715887ebfc5fd0130394dc246f618b2efdb4738cd",
+  "source_batch_metadata_sha256": "b933e2b8237219962b37d0132de9794d87a47515bfed2197e3a585f24f0ef1a0",
+  "selection": {
+    "method": "Three deterministic label-ordered samples per quartile; a scored/refused mix is forced where both exist.",
+    "source_cases": 61,
+    "selected_cases": 12,
+    "selected_ids": [
+      "T290",
+      "H260",
+      "H230",
+      "T220",
+      "H200",
+      "T230",
+      "T200",
+      "T170",
+      "H030",
+      "T130",
+      "T070",
+      "T040"
+    ],
+    "selected_by_quartile": {
+      "1": 3,
+      "2": 3,
+      "3": 3,
+      "4": 3
+    },
+    "selected_by_frozen_outcome": {
+      "scored": 10,
+      "refused": 2
+    }
+  },
+  "transforms": {
+    "original": {
+      "family": "control",
+      "description": "Unmodified source bytes."
+    },
+    "mirror": {
+      "family": "mirror",
+      "description": "Horizontal mirror."
+    },
+    "crop_center_10": {
+      "family": "crop",
+      "description": "Crop 10% from every edge."
+    },
+    "crop_legs_20": {
+      "family": "crop",
+      "description": "Crop the bottom 20% of the frame."
+    },
+    "pad_wide_black": {
+      "family": "padding_aspect",
+      "description": "Black side padding to 1.4x width."
+    },
+    "pad_tall_black": {
+      "family": "padding_aspect",
+      "description": "Black top/bottom padding to 1.3x height."
+    },
+    "canvas_light_gray": {
+      "family": "background_canvas",
+      "description": "Light-gray canvas with 12.5% padding per edge."
+    },
+    "aspect_squeeze_80": {
+      "family": "padding_aspect",
+      "description": "Resample width to 80% without preserving aspect."
+    },
+    "resolution_256": {
+      "family": "resolution",
+      "description": "Downsample longest edge to 256 pixels."
+    },
+    "brightness_70": {
+      "family": "lighting",
+      "description": "Global brightness multiplier 0.70."
+    },
+    "brightness_130": {
+      "family": "lighting",
+      "description": "Global brightness multiplier 1.30."
+    },
+    "contrast_70": {
+      "family": "lighting",
+      "description": "Global contrast multiplier 0.70."
+    },
+    "contrast_130": {
+      "family": "lighting",
+      "description": "Global contrast multiplier 1.30."
+    },
+    "side_lighting": {
+      "family": "lighting",
+      "description": "Deterministic left-to-right 0.60x to 1.30x luminance gradient."
+    },
+    "jpeg_q35": {
+      "family": "jpeg",
+      "description": "JPEG re-encode at quality 35."
+    },
+    "rotate_3": {
+      "family": "rotation_camera_like",
+      "description": "Rotate +3 degrees in-place with black fill."
+    },
+    "perspective_mild": {
+      "family": "rotation_camera_like",
+      "description": "Mild deterministic perspective-like quadrilateral warp."
+    },
+    "gaussian_blur_1_5": {
+      "family": "rotation_camera_like",
+      "description": "Gaussian blur radius 1.5 as a camera-focus proxy."
+    }
+  },
+  "label": {
+    "body_specific": true,
+    "definition": "mean body valence from attractiveness, beauty, and harmony judgments",
+    "field": "attractiveness_mean",
+    "independence": "The shipped CNN was trained on Connor full-body photographs, not these 61 Moussally synthetic body-only stimuli; no result from this set selected the shipped model.",
+    "independent_of_shipped_model": true,
+    "limitation": "The valence aggregate includes attractiveness, beauty, and harmony and is not an attractiveness-only judgment.",
+    "pairwise_gaps": [
+      0,
+      0.5,
+      1,
+      2
+    ],
+    "raters": "N=77-82 young women per stimulus because of missing data",
+    "scale": {
+      "higher_is_more_positive": true,
+      "maximum": 9,
+      "minimum": 1
+    },
+    "source_name": "Valence M",
+    "cluster_field": "source_image_id"
+  },
+  "provenance": {
+    "source": null,
+    "copyright_and_cache": "Source and derivative image files remain in an external cache and are not committed. The manifest commits hashes only."
+  },
+  "generation": {
+    "tool_sha256": "876e6c8eac3e18614cdf9c816c6e0956d8eb0aa48e923facb4cd4c8de1a1562f",
+    "python": "3.10.7",
+    "pillow": "12.3.0",
+    "numpy": "2.2.6",
+    "command": [
+      "C:\\Python310\\python.exe",
+      "F:\\Programming\\The Love Equations\\The Love Equations Website\\tools\\audit_body_transform_stability.py",
+      "prepare",
+      "--source-manifest",
+      "data\\body-independent-manifest.csv",
+      "--source-batch",
+      "data\\body-independent-before.csv",
+      "--source-batch-metadata",
+      "data\\body-independent-before.meta.json",
+      "--source-metadata",
+      "data\\body-independent-manifest.meta.json",
+      "--photos",
+      "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-image-stimuli\\Low Resolution - R = 200",
+      "--cache-dir",
+      "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-transform-stability",
+      "--manifest-out",
+      "data\\body-transform-stability-manifest.csv",
+      "--metadata-out",
+      "data\\body-transform-stability-manifest.meta.json"
+    ],
+    "external_cache_root": "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-transform-stability"
+  },
+  "scope": {
+    "intended_use": "Engineering stability diagnostic, not a new subjective-accuracy test and not candidate tuning.",
+    "limitations": [
+      "All sources are synthetic female bodies on one shape continuum.",
+      "Pixel transforms do not create independent human judgments.",
+      "Synthetic transforms do not prove physical sensor rotation, autofocus, exposure, browser permission behavior, real motion, new poses, or arm placement.",
+      "No clothed, bare-torso, male, or demographic breadth is supplied by this set."
+    ]
+  }
+}

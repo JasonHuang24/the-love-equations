@@ -274,6 +274,10 @@ function analyze(message){
     }
     self.postMessage({type:'landmarks',id,landmarks});
     quality=assessPose(landmarks,bitmap.width,bitmap.height);
+    // Publish the authoritative gate before segmentation. If the slower outline task
+    // times out or crashes, the host can preserve this exact full/torso/pass/degraded
+    // verdict instead of inventing a permissive fallback from early landmarks.
+    self.postMessage({type:'quality',id,quality});
     if (!quality.ok){
       self.postMessage({type:'result',id,landmarks,silhouette:null,quality,warning:quality.message,recycle:false,
         elapsedMs:performance.now()-startedAt});
@@ -320,6 +324,7 @@ function analyze(message){
 // ── Worker → host message protocol (sole consumer: body.html) ──
 //   ready      {segmentation}                         tasks initialised; segmentation = silhouette available
 //   trace      {id, stage, elapsedMs}                 per-stage timing probe
+//   quality    {id, quality}                          early authoritative assessPose result
 //   landmarks  {id, landmarks}                        early partial — skeleton only; lets the host render a
 //                                                      fallback if the later silhouette step fails
 //   result     {id, landmarks, silhouette, quality,   full analysis (landmarks and/or silhouette may be null

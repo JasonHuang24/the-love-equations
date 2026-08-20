@@ -1,0 +1,67 @@
+{
+  "schema_version": "body-canvas-padding-audit.v1",
+  "claim": "Canvas2D clips an out-of-bounds source rectangle and leaves the uncovered destination pixels transparent black; the production RGB preprocessor reads those pixels as zero-valued black.",
+  "expected_geometry": {
+    "in_bounds_fraction": 0.25,
+    "padding_fraction": 0.75
+  },
+  "observed": {
+    "source": {
+      "width": 4,
+      "height": 4,
+      "rgba": [
+        200,
+        10,
+        20,
+        255
+      ]
+    },
+    "source_rectangle": {
+      "x": -2,
+      "y": -2,
+      "width": 4,
+      "height": 4
+    },
+    "destination": {
+      "width": 8,
+      "height": 8,
+      "pixels": 64
+    },
+    "transparent_pixels": 48,
+    "source_color_pixels": 16,
+    "unexpected_pixels": 0,
+    "transparent_fraction": 0.75,
+    "samples": {
+      "top_left": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "center": [
+        200,
+        10,
+        20,
+        255
+      ],
+      "bottom_right": [
+        200,
+        10,
+        20,
+        255
+      ]
+    }
+  },
+  "passed": true,
+  "browser": {
+    "engine": "chromium",
+    "version": "151.0.7922.169",
+    "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+  },
+  "limitations": [
+    "This deterministic synthetic Canvas2D fixture proves the browser clipping/padding behavior, not the frequency or score impact of out-of-bounds pose crops in any population.",
+    "Dataset incidence and outcome sensitivity are reported separately from production batch instrumentation."
+  ],
+  "command": "C:\\Users\\sourd\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe \"F:\\\\Programming\\\\The Love Equations\\\\The Love Equations Website\\\\tools\\\\audit_body_canvas_padding.mjs\" --playwright-module C:\\Users\\sourd\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright\\index.mjs --browser-executable \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\" --output data\\body-canvas-padding-audit.json",
+  "tool_sha256": "6f2c1d27e66a32e1a94dd1c1c8d8ac28038cdb658cf79c23cf2462d317cf78c3"
+}

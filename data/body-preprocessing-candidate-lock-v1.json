@@ -1,0 +1,49 @@
+{
+  "schema_version": "body-preprocessing-candidate-lock.v1",
+  "locked_on": "2026-08-18",
+  "parent_evaluation_lock": "data/body-evaluation-lock-v1.json",
+  "parent_evaluation_lock_sha256": "6cc28bb1861b4441cb460e57393c3f8b6b4c0a5a2fecefcd4734c289e2aacff5",
+  "question": "Does replacing the browser pose-derived 1.15x square crop with the training script's full-image black letterbox improve ordering and stability?",
+  "baseline": {
+    "name": "production-pose-crop",
+    "preprocessing": "confident pose-landmark bounding square x1.15, Canvas2D resize, ImageNet normalization"
+  },
+  "candidate": {
+    "name": "training-full-letterbox",
+    "preprocessing": "EXIF-transposed full RGB image, centered black square letterbox, bilinear 224 resize, ImageNet normalization",
+    "fixed_before_locked_candidate_evaluation": true,
+    "weights_unchanged": true,
+    "model_sha256": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2"
+  },
+  "development_selection": {
+    "dataset": "Connor Full-Body Photo Database",
+    "role": "training-contaminated preprocessing diagnostic, not independent accuracy evidence",
+    "rows": 658,
+    "artifact": "data/body-preprocessing-before.json",
+    "production_pose_crop_spearman": 0.5901638201455451,
+    "training_full_letterbox_spearman": 0.9142166126140461,
+    "warning": "The model was trained on Connor and this comparison is therefore optimistic; it can motivate one fixed candidate but cannot establish a production gain."
+  },
+  "locked_candidate_test": {
+    "dataset": "Moussally et al. body-only computer-generated pictures of women",
+    "manifest_sha256": "c9c5717fa3f866ec8e5f5d3143dadcc5d1ca5fe43d8305420b24b431967c00be",
+    "cohort": "Rows accepted by the frozen production CNN route, compared identically for both preprocessing paths",
+    "metrics": [
+      "Spearman rank correlation",
+      "Pearson correlation",
+      "top-vs-bottom-quartile AUC",
+      "pairwise ordering at registered 0, 0.5, 1, and 2 label gaps",
+      "paired prediction shift and saturation"
+    ],
+    "test_access": "One fixed-candidate evaluation; do not tune the crop or letterbox using these results."
+  },
+  "acceptance": {
+    "minimum_spearman_gain": 0.03,
+    "minimum_spearman_delta_ci_lower_bound": -0.01,
+    "maximum_auc_degradation": 0.02,
+    "maximum_pairwise_degradation_at_any_registered_gap": 0.02,
+    "stability_requirement": "No material regression under mirror, crop, padding, resolution, lighting, background, and camera-like transforms.",
+    "scope_requirement": "The narrow synthetic-female holdout cannot by itself authorize a site-wide production change; broader clothed/bare and male/female body-specific evidence is also required."
+  },
+  "interpretation": "This is a preprocessing candidate, not a calibration remap. It can change ordering. A later monotone REF_RAW remap still could not improve rank correlation, AUC, or pairwise ordering."
+}

@@ -1,0 +1,468 @@
+{
+  "schema_version": "body-before-after-comparison.v1",
+  "rows": 61,
+  "identical_accepted_rows": 53,
+  "registered_gaps": [
+    0.0,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "identical_accepted_continuous": {
+    "before": {
+      "n": 53,
+      "spearman": -0.06267905448568309,
+      "pearson": -0.09867616500602139,
+      "top_bottom_quartile_auc": 0.45408163265306123,
+      "top_bottom_quartile_n": 28,
+      "label_q25": 2.3,
+      "label_q75": 7.24,
+      "pairwise": {
+        "0": {
+          "accuracy": 0.4654796511627907,
+          "pairs": 1376
+        },
+        "0.5": {
+          "accuracy": 0.45735785953177255,
+          "pairs": 1196
+        },
+        "1": {
+          "accuracy": 0.46660117878192536,
+          "pairs": 1018
+        },
+        "2": {
+          "accuracy": 0.4936061381074169,
+          "pairs": 782
+        }
+      },
+      "score": {
+        "min": 7.07,
+        "max": 7.98,
+        "mean": 7.413773584905661,
+        "sd": 0.2719130439187981,
+        "q01": 7.075200000000001,
+        "q25": 7.13,
+        "median": 7.38,
+        "q75": 7.66,
+        "q99": 7.9696,
+        "floor_n": 0,
+        "ceiling_n": 0,
+        "saturation_definition": {
+          "floor": 1.0,
+          "ceiling": 10.0
+        }
+      },
+      "label": {
+        "min": 1.42,
+        "max": 8.29,
+        "mean": 4.552641509433962,
+        "sd": 2.4329678676606927
+      },
+      "display_calibration": {
+        "linear_fit_label_from_score": {
+          "intercept": 11.098368876999267,
+          "slope": -0.8829143880104882
+        },
+        "rmse_after_in_sample_linear_fit": 2.421094006579707,
+        "mae_after_in_sample_linear_fit": 2.191222409361726,
+        "residual_quantiles": {
+          "0": -3.3673350098850103,
+          "0.1": -2.7086115137980884,
+          "0.25": -2.09866178723683,
+          "0.5": -0.645435556762493,
+          "0.75": 2.5435844790411775,
+          "0.9": 3.3909634230543673,
+          "1": 3.7976347524799188
+        },
+        "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+      }
+    },
+    "after": {
+      "n": 53,
+      "spearman": -0.06267905448568309,
+      "pearson": -0.09867616500602139,
+      "top_bottom_quartile_auc": 0.45408163265306123,
+      "top_bottom_quartile_n": 28,
+      "label_q25": 2.3,
+      "label_q75": 7.24,
+      "pairwise": {
+        "0": {
+          "accuracy": 0.4654796511627907,
+          "pairs": 1376
+        },
+        "0.5": {
+          "accuracy": 0.45735785953177255,
+          "pairs": 1196
+        },
+        "1": {
+          "accuracy": 0.46660117878192536,
+          "pairs": 1018
+        },
+        "2": {
+          "accuracy": 0.4936061381074169,
+          "pairs": 782
+        }
+      },
+      "score": {
+        "min": 7.07,
+        "max": 7.98,
+        "mean": 7.413773584905661,
+        "sd": 0.2719130439187981,
+        "q01": 7.075200000000001,
+        "q25": 7.13,
+        "median": 7.38,
+        "q75": 7.66,
+        "q99": 7.9696,
+        "floor_n": 0,
+        "ceiling_n": 0,
+        "saturation_definition": {
+          "floor": 1.0,
+          "ceiling": 10.0
+        }
+      },
+      "label": {
+        "min": 1.42,
+        "max": 8.29,
+        "mean": 4.552641509433962,
+        "sd": 2.4329678676606927
+      },
+      "display_calibration": {
+        "linear_fit_label_from_score": {
+          "intercept": 11.098368876999267,
+          "slope": -0.8829143880104882
+        },
+        "rmse_after_in_sample_linear_fit": 2.421094006579707,
+        "mae_after_in_sample_linear_fit": 2.191222409361726,
+        "residual_quantiles": {
+          "0": -3.3673350098850103,
+          "0.1": -2.7086115137980884,
+          "0.25": -2.09866178723683,
+          "0.5": -0.645435556762493,
+          "0.75": 2.5435844790411775,
+          "0.9": 3.3909634230543673,
+          "1": 3.7976347524799188
+        },
+        "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+      }
+    },
+    "delta_after_minus_before": {
+      "spearman": 0.0,
+      "pearson": 0.0,
+      "top_bottom_quartile_auc": 0.0,
+      "pairwise": {
+        "0": 0.0,
+        "0.5": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      }
+    }
+  },
+  "identical_accepted_public_half_point": {
+    "before": {
+      "n": 53,
+      "spearman": -0.12769941931207243,
+      "pearson": -0.11902290651257147,
+      "top_bottom_quartile_auc": 0.41581632653061223,
+      "top_bottom_quartile_n": 28,
+      "label_q25": 2.3,
+      "label_q75": 7.24,
+      "pairwise": {
+        "0": {
+          "accuracy": 0.4578488372093023,
+          "pairs": 1376
+        },
+        "0.5": {
+          "accuracy": 0.451505016722408,
+          "pairs": 1196
+        },
+        "1": {
+          "accuracy": 0.4494106090373281,
+          "pairs": 1018
+        },
+        "2": {
+          "accuracy": 0.4533248081841432,
+          "pairs": 782
+        }
+      },
+      "score": {
+        "min": 7.0,
+        "max": 8.0,
+        "mean": 7.40566037735849,
+        "sd": 0.322966844691013,
+        "q01": 7.0,
+        "q25": 7.0,
+        "median": 7.5,
+        "q75": 7.5,
+        "q99": 8.0,
+        "floor_n": 0,
+        "ceiling_n": 0,
+        "saturation_definition": {
+          "floor": 1.0,
+          "ceiling": 10.0
+        }
+      },
+      "label": {
+        "min": 1.42,
+        "max": 8.29,
+        "mean": 4.552641509433962,
+        "sd": 2.4329678676606927
+      },
+      "display_calibration": {
+        "linear_fit_label_from_score": {
+          "intercept": 11.192713310580206,
+          "slope": -0.8966211604095564
+        },
+        "rmse_after_in_sample_linear_fit": 2.4156731363441883,
+        "mae_after_in_sample_linear_fit": 2.18073797411295,
+        "residual_quantiles": {
+          "0": -3.4363651877133115,
+          "0.1": -2.702392491467577,
+          "0.25": -2.1380546075085327,
+          "0.5": -0.6263651877133114,
+          "0.75": 2.4019453924914673,
+          "0.9": 3.4859453924914674,
+          "1": 3.8219453924914664
+        },
+        "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+      }
+    },
+    "after": {
+      "n": 53,
+      "spearman": -0.12769941931207243,
+      "pearson": -0.11902290651257147,
+      "top_bottom_quartile_auc": 0.41581632653061223,
+      "top_bottom_quartile_n": 28,
+      "label_q25": 2.3,
+      "label_q75": 7.24,
+      "pairwise": {
+        "0": {
+          "accuracy": 0.4578488372093023,
+          "pairs": 1376
+        },
+        "0.5": {
+          "accuracy": 0.451505016722408,
+          "pairs": 1196
+        },
+        "1": {
+          "accuracy": 0.4494106090373281,
+          "pairs": 1018
+        },
+        "2": {
+          "accuracy": 0.4533248081841432,
+          "pairs": 782
+        }
+      },
+      "score": {
+        "min": 7.0,
+        "max": 8.0,
+        "mean": 7.40566037735849,
+        "sd": 0.322966844691013,
+        "q01": 7.0,
+        "q25": 7.0,
+        "median": 7.5,
+        "q75": 7.5,
+        "q99": 8.0,
+        "floor_n": 0,
+        "ceiling_n": 0,
+        "saturation_definition": {
+          "floor": 1.0,
+          "ceiling": 10.0
+        }
+      },
+      "label": {
+        "min": 1.42,
+        "max": 8.29,
+        "mean": 4.552641509433962,
+        "sd": 2.4329678676606927
+      },
+      "display_calibration": {
+        "linear_fit_label_from_score": {
+          "intercept": 11.192713310580206,
+          "slope": -0.8966211604095564
+        },
+        "rmse_after_in_sample_linear_fit": 2.4156731363441883,
+        "mae_after_in_sample_linear_fit": 2.18073797411295,
+        "residual_quantiles": {
+          "0": -3.4363651877133115,
+          "0.1": -2.702392491467577,
+          "0.25": -2.1380546075085327,
+          "0.5": -0.6263651877133114,
+          "0.75": 2.4019453924914673,
+          "0.9": 3.4859453924914674,
+          "1": 3.8219453924914664
+        },
+        "warning": "Descriptive in-sample display fit only; not evidence of improved ordering."
+      }
+    },
+    "delta_after_minus_before": {
+      "spearman": 0.0,
+      "pearson": 0.0,
+      "top_bottom_quartile_auc": 0.0,
+      "pairwise": {
+        "0": 0.0,
+        "0.5": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      }
+    }
+  },
+  "continuous_paired_bootstrap": {
+    "method": "paired identity-cluster bootstrap on rows accepted by both snapshots",
+    "repetitions": 1000,
+    "seed": 20260818,
+    "clusters": 53,
+    "delta_95pct_ci_after_minus_before": {
+      "pairwise_0": [
+        0.0,
+        0.0
+      ],
+      "pairwise_0.5": [
+        0.0,
+        0.0
+      ],
+      "pairwise_1": [
+        0.0,
+        0.0
+      ],
+      "pairwise_2": [
+        0.0,
+        0.0
+      ],
+      "pearson": [
+        0.0,
+        0.0
+      ],
+      "spearman": [
+        0.0,
+        0.0
+      ],
+      "top_bottom_quartile_auc": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "public_paired_bootstrap": {
+    "method": "paired identity-cluster bootstrap on rows accepted by both snapshots",
+    "repetitions": 1000,
+    "seed": 20260818,
+    "clusters": 53,
+    "delta_95pct_ci_after_minus_before": {
+      "pairwise_0": [
+        0.0,
+        0.0
+      ],
+      "pairwise_0.5": [
+        0.0,
+        0.0
+      ],
+      "pairwise_1": [
+        0.0,
+        0.0
+      ],
+      "pairwise_2": [
+        0.0,
+        0.0
+      ],
+      "pearson": [
+        0.0,
+        0.0
+      ],
+      "spearman": [
+        0.0,
+        0.0
+      ],
+      "top_bottom_quartile_auc": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "prediction_shift": {
+    "continuous": {
+      "n": 53,
+      "exactly_unchanged": 53,
+      "mean_signed": 0.0,
+      "mean_absolute": 0.0,
+      "maximum_absolute": 0.0
+    },
+    "public_half_point": {
+      "n": 53,
+      "exactly_unchanged": 53,
+      "mean_signed": 0.0,
+      "mean_absolute": 0.0,
+      "maximum_absolute": 0.0
+    }
+  },
+  "refusals": {
+    "before_rate": 0.1311475409836066,
+    "after_rate": 0.1311475409836066,
+    "delta_after_minus_before": 0.0,
+    "transitions": {
+      "accepted -> accepted": 53,
+      "refused_or_non_numeric -> refused_or_non_numeric": 8
+    }
+  },
+  "decision": {
+    "registered_metric_screen_passed": false,
+    "meaningful_independent_subjective_discrimination_gain": false,
+    "model_replacement_authorized": false,
+    "summary": "The final pipeline did not demonstrate a registered meaningful gain in independent subjective-attractiveness discrimination; any accepted changes are reliability or consistency improvements.",
+    "scope_reason": "This independent set is too narrow to authorize replacement by itself; a broader body-specific locked test is required."
+  },
+  "provenance": {
+    "before_csv": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-before.csv",
+      "sha256": "561b635b520a24d771cc4bd715887ebfc5fd0130394dc246f618b2efdb4738cd"
+    },
+    "before_metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-before.meta.json",
+      "sha256": "40d8159e54fb18f43fa214cbdd9afb1f75f9a319e256c87a0b4e9690c54d77fa"
+    },
+    "after_csv": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-after.csv",
+      "sha256": "03e1322f73c82ff2cf30f3dfa8f2e697aec2dd66607ea88ec387dae4c14c7af2"
+    },
+    "after_metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-after.meta.json",
+      "sha256": "b987d07a3cf41d1f0855482f11d05f8aec102ccaf9689e2b418d2b08e324b842"
+    },
+    "dataset_metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-independent-manifest.meta.json",
+      "sha256": "e29c83e1bde8c6cbdc6d933e3a7b2e8830034930b2bedef1e0a88ca4da5176b1"
+    },
+    "evaluation_lock": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-evaluation-lock-v1.json",
+      "sha256": "6cc28bb1861b4441cb460e57393c3f8b6b4c0a5a2fecefcd4734c289e2aacff5"
+    },
+    "manifest_sha256": "c9c5717fa3f866ec8e5f5d3143dadcc5d1ca5fe43d8305420b24b431967c00be",
+    "before_page_sha256": "af651aefcd3e5608681aa211c4dcd4bbbe014c2118124a46e8f1bceb7a10f092",
+    "after_page_sha256": "d75ec65acc0d766bef409676f82e10864d1fb6293ee2d4707ff2ab555ae8577d",
+    "model_sha256": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2",
+    "tool_sha256": "635100732fa26d6918739f7cd48e7b900896b984f0acea3e2c8fabda6d5e5302",
+    "command": [
+      "C:\\Python310\\python.exe",
+      "F:\\Programming\\The Love Equations\\The Love Equations Website\\tools\\compare_body_evaluations.py",
+      "--before",
+      "data\\body-independent-before.csv",
+      "--before-metadata",
+      "data\\body-independent-before.meta.json",
+      "--after",
+      "data\\body-independent-after.csv",
+      "--after-metadata",
+      "data\\body-independent-after.meta.json",
+      "--dataset-metadata",
+      "data\\body-independent-manifest.meta.json",
+      "--evaluation-lock",
+      "data\\body-evaluation-lock-v1.json",
+      "--output-json",
+      "data\\body-before-after-evaluation.json",
+      "--output-md",
+      "md\\body-before-after-evaluation.md",
+      "--bootstrap",
+      "1000",
+      "--seed",
+      "20260818"
+    ]
+  }
+}

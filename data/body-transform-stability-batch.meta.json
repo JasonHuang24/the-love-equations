@@ -1,0 +1,319 @@
+{
+  "schema_version": "body-production-manifest-batch.v1",
+  "generated_at": "2026-08-20T06:48:25.893Z",
+  "command": [
+    "C:\\Users\\sourd\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "F:\\Programming\\The Love Equations\\The Love Equations Website\\tools\\run_body_manifest_batch.mjs",
+    "--base",
+    "http://127.0.0.1:8765/body.html?debug",
+    "--pipeline-root",
+    ".",
+    "--manifest",
+    "data\\body-transform-stability-manifest.csv",
+    "--dataset-metadata",
+    "data\\body-transform-stability-manifest.meta.json",
+    "--photos",
+    "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-transform-stability",
+    "--out",
+    "data\\body-transform-stability-batch.csv",
+    "--metadata-out",
+    "data\\body-transform-stability-batch.meta.json",
+    "--playwright-module",
+    "C:\\Users\\sourd\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\node_modules\\playwright\\index.mjs",
+    "--browser-executable",
+    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "--timeout-minutes",
+    "180"
+  ],
+  "base_url": "http://127.0.0.1:8765/body.html?debug",
+  "dataset": {
+    "schema_version": "body-transform-stability-dataset.v1",
+    "dataset": "Deterministic synthetic transforms of the Moussally body-only independent stimuli",
+    "cases": 216,
+    "manifest_sha256": "41cb0d67b37b24cb9beb9f25c3318c0032b94de939edad25ca875fee67cff8d0",
+    "source_dataset_metadata_sha256": "e29c83e1bde8c6cbdc6d933e3a7b2e8830034930b2bedef1e0a88ca4da5176b1",
+    "source_manifest_sha256": "c9c5717fa3f866ec8e5f5d3143dadcc5d1ca5fe43d8305420b24b431967c00be",
+    "source_batch_sha256": "561b635b520a24d771cc4bd715887ebfc5fd0130394dc246f618b2efdb4738cd",
+    "source_batch_metadata_sha256": "b933e2b8237219962b37d0132de9794d87a47515bfed2197e3a585f24f0ef1a0",
+    "selection": {
+      "method": "Three deterministic label-ordered samples per quartile; a scored/refused mix is forced where both exist.",
+      "source_cases": 61,
+      "selected_cases": 12,
+      "selected_ids": [
+        "T290",
+        "H260",
+        "H230",
+        "T220",
+        "H200",
+        "T230",
+        "T200",
+        "T170",
+        "H030",
+        "T130",
+        "T070",
+        "T040"
+      ],
+      "selected_by_quartile": {
+        "1": 3,
+        "2": 3,
+        "3": 3,
+        "4": 3
+      },
+      "selected_by_frozen_outcome": {
+        "scored": 10,
+        "refused": 2
+      }
+    },
+    "transforms": {
+      "original": {
+        "family": "control",
+        "description": "Unmodified source bytes."
+      },
+      "mirror": {
+        "family": "mirror",
+        "description": "Horizontal mirror."
+      },
+      "crop_center_10": {
+        "family": "crop",
+        "description": "Crop 10% from every edge."
+      },
+      "crop_legs_20": {
+        "family": "crop",
+        "description": "Crop the bottom 20% of the frame."
+      },
+      "pad_wide_black": {
+        "family": "padding_aspect",
+        "description": "Black side padding to 1.4x width."
+      },
+      "pad_tall_black": {
+        "family": "padding_aspect",
+        "description": "Black top/bottom padding to 1.3x height."
+      },
+      "canvas_light_gray": {
+        "family": "background_canvas",
+        "description": "Light-gray canvas with 12.5% padding per edge."
+      },
+      "aspect_squeeze_80": {
+        "family": "padding_aspect",
+        "description": "Resample width to 80% without preserving aspect."
+      },
+      "resolution_256": {
+        "family": "resolution",
+        "description": "Downsample longest edge to 256 pixels."
+      },
+      "brightness_70": {
+        "family": "lighting",
+        "description": "Global brightness multiplier 0.70."
+      },
+      "brightness_130": {
+        "family": "lighting",
+        "description": "Global brightness multiplier 1.30."
+      },
+      "contrast_70": {
+        "family": "lighting",
+        "description": "Global contrast multiplier 0.70."
+      },
+      "contrast_130": {
+        "family": "lighting",
+        "description": "Global contrast multiplier 1.30."
+      },
+      "side_lighting": {
+        "family": "lighting",
+        "description": "Deterministic left-to-right 0.60x to 1.30x luminance gradient."
+      },
+      "jpeg_q35": {
+        "family": "jpeg",
+        "description": "JPEG re-encode at quality 35."
+      },
+      "rotate_3": {
+        "family": "rotation_camera_like",
+        "description": "Rotate +3 degrees in-place with black fill."
+      },
+      "perspective_mild": {
+        "family": "rotation_camera_like",
+        "description": "Mild deterministic perspective-like quadrilateral warp."
+      },
+      "gaussian_blur_1_5": {
+        "family": "rotation_camera_like",
+        "description": "Gaussian blur radius 1.5 as a camera-focus proxy."
+      }
+    },
+    "label": {
+      "body_specific": true,
+      "definition": "mean body valence from attractiveness, beauty, and harmony judgments",
+      "field": "attractiveness_mean",
+      "independence": "The shipped CNN was trained on Connor full-body photographs, not these 61 Moussally synthetic body-only stimuli; no result from this set selected the shipped model.",
+      "independent_of_shipped_model": true,
+      "limitation": "The valence aggregate includes attractiveness, beauty, and harmony and is not an attractiveness-only judgment.",
+      "pairwise_gaps": [
+        0,
+        0.5,
+        1,
+        2
+      ],
+      "raters": "N=77-82 young women per stimulus because of missing data",
+      "scale": {
+        "higher_is_more_positive": true,
+        "maximum": 9,
+        "minimum": 1
+      },
+      "source_name": "Valence M",
+      "cluster_field": "source_image_id"
+    },
+    "provenance": {
+      "source": null,
+      "copyright_and_cache": "Source and derivative image files remain in an external cache and are not committed. The manifest commits hashes only."
+    },
+    "generation": {
+      "tool_sha256": "876e6c8eac3e18614cdf9c816c6e0956d8eb0aa48e923facb4cd4c8de1a1562f",
+      "python": "3.10.7",
+      "pillow": "12.3.0",
+      "numpy": "2.2.6",
+      "command": [
+        "C:\\Python310\\python.exe",
+        "F:\\Programming\\The Love Equations\\The Love Equations Website\\tools\\audit_body_transform_stability.py",
+        "prepare",
+        "--source-manifest",
+        "data\\body-independent-manifest.csv",
+        "--source-batch",
+        "data\\body-independent-before.csv",
+        "--source-batch-metadata",
+        "data\\body-independent-before.meta.json",
+        "--source-metadata",
+        "data\\body-independent-manifest.meta.json",
+        "--photos",
+        "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-image-stimuli\\Low Resolution - R = 200",
+        "--cache-dir",
+        "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-transform-stability",
+        "--manifest-out",
+        "data\\body-transform-stability-manifest.csv",
+        "--metadata-out",
+        "data\\body-transform-stability-manifest.meta.json"
+      ],
+      "external_cache_root": "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-transform-stability"
+    },
+    "scope": {
+      "intended_use": "Engineering stability diagnostic, not a new subjective-accuracy test and not candidate tuning.",
+      "limitations": [
+        "All sources are synthetic female bodies on one shape continuum.",
+        "Pixel transforms do not create independent human judgments.",
+        "Synthetic transforms do not prove physical sensor rotation, autofocus, exposure, browser permission behavior, real motion, new poses, or arm placement.",
+        "No clothed, bare-torso, male, or demographic breadth is supplied by this set."
+      ]
+    }
+  },
+  "dataset_metadata": "data\\body-transform-stability-manifest.meta.json",
+  "dataset_metadata_sha256": "3cc4eedec411565dc069d78de969daa94576dda1ca399f3b93d3f8853e13b457",
+  "manifest": "data\\body-transform-stability-manifest.csv",
+  "manifest_sha256": "41cb0d67b37b24cb9beb9f25c3318c0032b94de939edad25ca875fee67cff8d0",
+  "tool_sha256": "c0e14e4a7bfd5b4006c9a4604b957de3850bed54c5161c31c598cbd13e2b595e",
+  "cases": 216,
+  "page_columns": [
+    "filename",
+    "timestamp",
+    "outcome",
+    "refusal",
+    "cause",
+    "pose_warning",
+    "sil_retry",
+    "routing",
+    "attempted_route",
+    "final_route",
+    "model_scheduled",
+    "skin_frac",
+    "framing",
+    "person_frac",
+    "override",
+    "crop_side_px",
+    "crop_padding_fraction",
+    "crop_outside",
+    "gate_band",
+    "gate_tilt",
+    "gate_yaw",
+    "skel_symmetry",
+    "model_raw",
+    "geom_bp_m",
+    "geom_cv_m",
+    "geom_bp_f",
+    "geom_cv_f",
+    "geom_cues",
+    "public_score",
+    "bp",
+    "bp_continuous",
+    "bp_band",
+    "cv",
+    "cv_continuous",
+    "cv_band",
+    "sex",
+    "sex_conf",
+    "sex_source",
+    "reliability",
+    "tier0_ffmi",
+    "tier0_bf",
+    "crosscheck",
+    "storage_invariant"
+  ],
+  "outcome_counts": {
+    "refused": 26,
+    "scored": 190
+  },
+  "route_counts": {
+    "clothed→geometry": 19,
+    "clothed→model": 172,
+    "unknown": 25
+  },
+  "refusal_counts": {
+    "geometry-no-cues": 1,
+    "no-body": 11,
+    "pose-quality:profile": 14
+  },
+  "storage_before_sha256": "10c9f4d35a7a4bdfe0e287341f50af28484bcc27d338ff8a689c4a185a8f3afd",
+  "storage_after_sha256": "10c9f4d35a7a4bdfe0e287341f50af28484bcc27d338ff8a689c4a185a8f3afd",
+  "storage_unchanged": true,
+  "storage_fixture": {
+    "love_equations": true,
+    "unrelated_local_storage": true,
+    "session_storage": true
+  },
+  "browser_errors": [],
+  "browser_diagnostics": [
+    "console: Failed to load resource: the server responded with a status of 404 (File not found)",
+    "console: INFO: Created TensorFlow Lite XNNPACK delegate for CPU.",
+    "console: INFO: Created TensorFlow Lite XNNPACK delegate for CPU."
+  ],
+  "final_status": "Done · 216 images · 190 scored, 26 refused · localStorage + sessionStorage unchanged after every image ✓",
+  "pipeline_root": "F:\\Programming\\The Love Equations\\The Love Equations Website",
+  "pipeline_sha256": {
+    "body.html": "d75ec65acc0d766bef409676f82e10864d1fb6293ee2d4707ff2ab555ae8577d",
+    "css/body.css": "ad448fcac0cc8647164fa06370d230e8507a4fee543de28d33f05f3522976cb6",
+    "js/body-pose-worker.js": "250371edcad18ed057a2f99fa78d385d412be0e433a672d83cf7b21d4cc23601",
+    "js/body-arm-band.js": "4ff2541455942d99a561a4afe89701be5be3342fa8852d2406cf4b6f6af05b6d",
+    "js/body-camera-guide.js": "ee848bbb2376232b089838a6299940048957acfa246343dc34f0531aa8b4173b",
+    "js/body-state.js": "795b07458e190e4c132f60a11d3a7f12b29b34aa9a26664bb950cf43a34673b1",
+    "js/body-model-integrity.js": "4bd987f968e6671c29f194ce7e55ac912bdc60ec11661128375468d57e17b66b",
+    "js/composite-score.js": "344cb5e1d426f004b37e2360311875b6bf58ca63c4cddbbaa54bec5fd088fde9",
+    "models/body-beauty.onnx": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2",
+    "models/face-sex.onnx": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb"
+  },
+  "served_pipeline_sha256": {
+    "body.html": "d75ec65acc0d766bef409676f82e10864d1fb6293ee2d4707ff2ab555ae8577d",
+    "css/body.css": "ad448fcac0cc8647164fa06370d230e8507a4fee543de28d33f05f3522976cb6",
+    "js/body-pose-worker.js": "250371edcad18ed057a2f99fa78d385d412be0e433a672d83cf7b21d4cc23601",
+    "js/body-arm-band.js": "4ff2541455942d99a561a4afe89701be5be3342fa8852d2406cf4b6f6af05b6d",
+    "js/body-camera-guide.js": "ee848bbb2376232b089838a6299940048957acfa246343dc34f0531aa8b4173b",
+    "js/body-state.js": "795b07458e190e4c132f60a11d3a7f12b29b34aa9a26664bb950cf43a34673b1",
+    "js/body-model-integrity.js": "4bd987f968e6671c29f194ce7e55ac912bdc60ec11661128375468d57e17b66b",
+    "js/composite-score.js": "344cb5e1d426f004b37e2360311875b6bf58ca63c4cddbbaa54bec5fd088fde9",
+    "models/body-beauty.onnx": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2",
+    "models/face-sex.onnx": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb"
+  },
+  "served_pipeline_matches_root": true,
+  "normalized_runtime_fields": [
+    "timestamp"
+  ],
+  "output_csv_sha256": "f1f9ac8ac0125c859062294a9480454250c5e8443779f5c314df858ea998ab27",
+  "runtime": {
+    "node": "v24.19.0",
+    "browser": "151.0.7922.169"
+  }
+}

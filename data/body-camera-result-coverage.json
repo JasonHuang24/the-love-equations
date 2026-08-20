@@ -1,0 +1,4230 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-20T06:32:04.549Z",
+  "browser": {
+    "name": "Chromium",
+    "version": "151.0.7922.169",
+    "headless": true,
+    "deviceScaleFactor": 1,
+    "reducedMotion": "reduce"
+  },
+  "methodology": {
+    "kind": "deterministic production-page populated-state render; valid synthetic metrics, no image or rating claim",
+    "command": "CODEX_NODE_MODULES=<bundled-node_modules> node tools/body_camera_result_coverage_audit.mjs",
+    "notTested": [
+      "physical sensors",
+      "rotation metadata",
+      "autofocus",
+      "exposure",
+      "native permission UI",
+      "browser chrome",
+      "real-device motion",
+      "subjective attractiveness accuracy"
+    ]
+  },
+  "inventory": {
+    "viewportConfigurations": 19,
+    "requiredViewportClasses": 7,
+    "boundaryWidths": [
+      979,
+      980,
+      981,
+      1023,
+      1024,
+      1025,
+      1199,
+      1200,
+      1201,
+      1759,
+      1760,
+      1761
+    ],
+    "widthModes": 2,
+    "renderedStates": 3,
+    "expectedCases": 114
+  },
+  "viewports": [
+    {
+      "name": "mobile-portrait-390x844",
+      "width": 390,
+      "height": 844,
+      "class": "mobile portrait",
+      "required": true
+    },
+    {
+      "name": "tablet-820x1180",
+      "width": 820,
+      "height": 1180,
+      "class": "tablet",
+      "required": true
+    },
+    {
+      "name": "desktop-1366x768",
+      "width": 1366,
+      "height": 768,
+      "class": "standard desktop",
+      "required": true
+    },
+    {
+      "name": "desktop-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "class": "1080p",
+      "required": true
+    },
+    {
+      "name": "desktop-2560x1440",
+      "width": 2560,
+      "height": 1440,
+      "class": "1440p",
+      "required": true
+    },
+    {
+      "name": "desktop-1920x1200",
+      "width": 1920,
+      "height": 1200,
+      "class": "16:10 desktop",
+      "required": true
+    },
+    {
+      "name": "desktop-3840x2160",
+      "width": 3840,
+      "height": 2160,
+      "class": "4K",
+      "required": true
+    },
+    {
+      "name": "boundary-979x1000",
+      "width": 979,
+      "height": 1000,
+      "class": "squeeze boundary 979px",
+      "required": false
+    },
+    {
+      "name": "boundary-980x1000",
+      "width": 980,
+      "height": 1000,
+      "class": "squeeze boundary 980px",
+      "required": false
+    },
+    {
+      "name": "boundary-981x1000",
+      "width": 981,
+      "height": 1000,
+      "class": "squeeze boundary 981px",
+      "required": false
+    },
+    {
+      "name": "boundary-1023x1000",
+      "width": 1023,
+      "height": 1000,
+      "class": "squeeze boundary 1023px",
+      "required": false
+    },
+    {
+      "name": "boundary-1024x1000",
+      "width": 1024,
+      "height": 1000,
+      "class": "squeeze boundary 1024px",
+      "required": false
+    },
+    {
+      "name": "boundary-1025x1000",
+      "width": 1025,
+      "height": 1000,
+      "class": "squeeze boundary 1025px",
+      "required": false
+    },
+    {
+      "name": "boundary-1199x1000",
+      "width": 1199,
+      "height": 1000,
+      "class": "squeeze boundary 1199px",
+      "required": false
+    },
+    {
+      "name": "boundary-1200x1000",
+      "width": 1200,
+      "height": 1000,
+      "class": "squeeze boundary 1200px",
+      "required": false
+    },
+    {
+      "name": "boundary-1201x1000",
+      "width": 1201,
+      "height": 1000,
+      "class": "squeeze boundary 1201px",
+      "required": false
+    },
+    {
+      "name": "boundary-1759x1000",
+      "width": 1759,
+      "height": 1000,
+      "class": "squeeze boundary 1759px",
+      "required": false
+    },
+    {
+      "name": "boundary-1760x1000",
+      "width": 1760,
+      "height": 1000,
+      "class": "squeeze boundary 1760px",
+      "required": false
+    },
+    {
+      "name": "boundary-1761x1000",
+      "width": 1761,
+      "height": 1000,
+      "class": "squeeze boundary 1761px",
+      "required": false
+    }
+  ],
+  "modes": [
+    "original",
+    "wide"
+  ],
+  "states": [
+    "step2-unresolved",
+    "gate-prompt",
+    "mixed-route-long"
+  ],
+  "artifactBinding": {
+    "algorithm": "sha256",
+    "files": [
+      {
+        "path": "body.html",
+        "sha256": "d75ec65acc0d766bef409676f82e10864d1fb6293ee2d4707ff2ab555ae8577d",
+        "bytes": 297217
+      },
+      {
+        "path": "css/styles.css",
+        "sha256": "b17ff516ec61893c4984a3782b5cd8ddde8c4012eb4ff97617ec0fee73a412bc",
+        "bytes": 30376
+      },
+      {
+        "path": "css/body.css",
+        "sha256": "ad448fcac0cc8647164fa06370d230e8507a4fee543de28d33f05f3522976cb6",
+        "bytes": 26481
+      },
+      {
+        "path": "js/body-state.js",
+        "sha256": "795b07458e190e4c132f60a11d3a7f12b29b34aa9a26664bb950cf43a34673b1",
+        "bytes": 23881
+      },
+      {
+        "path": "js/body-camera-guide.js",
+        "sha256": "ee848bbb2376232b089838a6299940048957acfa246343dc34f0531aa8b4173b",
+        "bytes": 25171
+      },
+      {
+        "path": "tools/body_camera_result_coverage_audit.mjs",
+        "sha256": "f42a414a8a8c73ce331c0f898669b34b481ce0eb027947ec5c833ca3ed5f5c63",
+        "bytes": 18480
+      }
+    ]
+  },
+  "summary": {
+    "cases": 114,
+    "casesPassed": 114,
+    "screenshots": 4,
+    "storageInvariant": true,
+    "runtimeErrors": 0,
+    "failures": 0,
+    "pass": true
+  },
+  "screenshots": [
+    {
+      "viewport": "mobile-portrait-390x844",
+      "mode": "original",
+      "state": "step2-unresolved",
+      "path": "md/body-camera-coverage-screenshots/mobile-portrait-390x844--original--step2-unresolved.png",
+      "sha256": "a42fbbc65640006782f7712db476b2fbe42c650706dd5dfde475584407b80314",
+      "bytes": 203146
+    },
+    {
+      "viewport": "desktop-3840x2160",
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "path": "md/body-camera-coverage-screenshots/desktop-3840x2160--wide--mixed-route-long.png",
+      "sha256": "3e05d69d33ad19152b01e7835d24ba47355e3ee6c027e322b56adad16a668500",
+      "bytes": 1020289
+    },
+    {
+      "viewport": "boundary-980x1000",
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "path": "md/body-camera-coverage-screenshots/boundary-980x1000--wide--mixed-route-long.png",
+      "sha256": "4bcf438e1bf774a0ff4c953340a7f16c488975e4aedec3567ebe582ca59dac72",
+      "bytes": 988119
+    },
+    {
+      "viewport": "boundary-1024x1000",
+      "mode": "original",
+      "state": "gate-prompt",
+      "path": "md/body-camera-coverage-screenshots/boundary-1024x1000--original--gate-prompt.png",
+      "sha256": "95ae46602128fa8917f2b9a60fe9aa6061febedef2fba0b96f0213a9a20c02bf",
+      "bytes": 115173
+    }
+  ],
+  "failures": [],
+  "cases": [
+    {
+      "viewport": "mobile-portrait-390x844",
+      "width": 390,
+      "height": 844,
+      "required": true,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 51.41,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "mobile-portrait-390x844",
+      "width": 390,
+      "height": 844,
+      "required": true,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 51.41,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "mobile-portrait-390x844",
+      "width": 390,
+      "height": 844,
+      "required": true,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 58.76,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "mobile-portrait-390x844",
+      "width": 390,
+      "height": 844,
+      "required": true,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 51.41,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "mobile-portrait-390x844",
+      "width": 390,
+      "height": 844,
+      "required": true,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 51.41,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "mobile-portrait-390x844",
+      "width": 390,
+      "height": 844,
+      "required": true,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 58.76,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "tablet-820x1180",
+      "width": 820,
+      "height": 1180,
+      "required": true,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "tablet-820x1180",
+      "width": 820,
+      "height": 1180,
+      "required": true,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "tablet-820x1180",
+      "width": 820,
+      "height": 1180,
+      "required": true,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "tablet-820x1180",
+      "width": 820,
+      "height": 1180,
+      "required": true,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "tablet-820x1180",
+      "width": 820,
+      "height": 1180,
+      "required": true,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "tablet-820x1180",
+      "width": 820,
+      "height": 1180,
+      "required": true,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1366x768",
+      "width": 1366,
+      "height": 768,
+      "required": true,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1366x768",
+      "width": 1366,
+      "height": 768,
+      "required": true,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1366x768",
+      "width": 1366,
+      "height": 768,
+      "required": true,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1366x768",
+      "width": 1366,
+      "height": 768,
+      "required": true,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1366x768",
+      "width": 1366,
+      "height": 768,
+      "required": true,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1366x768",
+      "width": 1366,
+      "height": 768,
+      "required": true,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 59.78,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "required": true,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "required": true,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "required": true,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "required": true,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "required": true,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "required": true,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-2560x1440",
+      "width": 2560,
+      "height": 1440,
+      "required": true,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-2560x1440",
+      "width": 2560,
+      "height": 1440,
+      "required": true,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-2560x1440",
+      "width": 2560,
+      "height": 1440,
+      "required": true,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-2560x1440",
+      "width": 2560,
+      "height": 1440,
+      "required": true,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-2560x1440",
+      "width": 2560,
+      "height": 1440,
+      "required": true,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-2560x1440",
+      "width": 2560,
+      "height": 1440,
+      "required": true,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1200",
+      "width": 1920,
+      "height": 1200,
+      "required": true,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1200",
+      "width": 1920,
+      "height": 1200,
+      "required": true,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1200",
+      "width": 1920,
+      "height": 1200,
+      "required": true,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1200",
+      "width": 1920,
+      "height": 1200,
+      "required": true,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1200",
+      "width": 1920,
+      "height": 1200,
+      "required": true,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-1920x1200",
+      "width": 1920,
+      "height": 1200,
+      "required": true,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-3840x2160",
+      "width": 3840,
+      "height": 2160,
+      "required": true,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-3840x2160",
+      "width": 3840,
+      "height": 2160,
+      "required": true,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-3840x2160",
+      "width": 3840,
+      "height": 2160,
+      "required": true,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-3840x2160",
+      "width": 3840,
+      "height": 2160,
+      "required": true,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-3840x2160",
+      "width": 3840,
+      "height": 2160,
+      "required": true,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "desktop-3840x2160",
+      "width": 3840,
+      "height": 2160,
+      "required": true,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-979x1000",
+      "width": 979,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-979x1000",
+      "width": 979,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-979x1000",
+      "width": 979,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-979x1000",
+      "width": 979,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-979x1000",
+      "width": 979,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-979x1000",
+      "width": 979,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-980x1000",
+      "width": 980,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-980x1000",
+      "width": 980,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-980x1000",
+      "width": 980,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-980x1000",
+      "width": 980,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-980x1000",
+      "width": 980,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-980x1000",
+      "width": 980,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-981x1000",
+      "width": 981,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-981x1000",
+      "width": 981,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-981x1000",
+      "width": 981,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-981x1000",
+      "width": 981,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 76.57,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-981x1000",
+      "width": 981,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 76.57,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-981x1000",
+      "width": 981,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1023x1000",
+      "width": 1023,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1023x1000",
+      "width": 1023,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1023x1000",
+      "width": 1023,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1023x1000",
+      "width": 1023,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1023x1000",
+      "width": 1023,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1023x1000",
+      "width": 1023,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1024x1000",
+      "width": 1024,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1024x1000",
+      "width": 1024,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1024x1000",
+      "width": 1024,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1024x1000",
+      "width": 1024,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1024x1000",
+      "width": 1024,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1024x1000",
+      "width": 1024,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1025x1000",
+      "width": 1025,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1025x1000",
+      "width": 1025,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1025x1000",
+      "width": 1025,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1025x1000",
+      "width": 1025,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1025x1000",
+      "width": 1025,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1025x1000",
+      "width": 1025,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1199x1000",
+      "width": 1199,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1199x1000",
+      "width": 1199,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1199x1000",
+      "width": 1199,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1199x1000",
+      "width": 1199,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1199x1000",
+      "width": 1199,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1199x1000",
+      "width": 1199,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1200x1000",
+      "width": 1200,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1200x1000",
+      "width": 1200,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1200x1000",
+      "width": 1200,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1200x1000",
+      "width": 1200,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1200x1000",
+      "width": 1200,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1200x1000",
+      "width": 1200,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1201x1000",
+      "width": 1201,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1201x1000",
+      "width": 1201,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1201x1000",
+      "width": 1201,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1201x1000",
+      "width": 1201,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 43.32,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1201x1000",
+      "width": 1201,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 43.32,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1201x1000",
+      "width": 1201,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 49.51,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1759x1000",
+      "width": 1759,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1759x1000",
+      "width": 1759,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1759x1000",
+      "width": 1759,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1759x1000",
+      "width": 1759,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1759x1000",
+      "width": 1759,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1759x1000",
+      "width": 1759,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1760x1000",
+      "width": 1760,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1760x1000",
+      "width": 1760,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1760x1000",
+      "width": 1760,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1760x1000",
+      "width": 1760,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1760x1000",
+      "width": 1760,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1760x1000",
+      "width": 1760,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1761x1000",
+      "width": 1761,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1761x1000",
+      "width": 1761,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1761x1000",
+      "width": 1761,
+      "height": 1000,
+      "required": false,
+      "mode": "original",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1761x1000",
+      "width": 1761,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "step2-unresolved",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 50.2,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1761x1000",
+      "width": 1761,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "gate-prompt",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170"
+      ],
+      "measurementRows": 0,
+      "bfTiles": 14,
+      "routes": [],
+      "badgeText": "",
+      "longReliabilityRendered": false,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    },
+    {
+      "viewport": "boundary-1761x1000",
+      "width": 1761,
+      "height": 1000,
+      "required": false,
+      "mode": "wide",
+      "state": "mixed-route-long",
+      "overflowPx": 0,
+      "clipped": [],
+      "maxApproxCharsPerLine": 77.75,
+      "unnamedControls": [],
+      "inputValues": [
+        "5",
+        "10",
+        "170",
+        "14.5"
+      ],
+      "measurementRows": 12,
+      "bfTiles": 7,
+      "routes": [
+        "geometry",
+        "model",
+        "geometry"
+      ],
+      "badgeText": "Hybrid · self-reported inputs × a mixed trained-model + silhouette photo set",
+      "longReliabilityRendered": true,
+      "checks": {
+        "noHorizontalOverflow": true,
+        "noClippedContainers": true,
+        "readableLineLength": true,
+        "populatedStep2": true,
+        "bodyFatGridFits": true,
+        "sexControlsFit": true,
+        "visibleControlNames": true,
+        "expectedState": true
+      },
+      "pass": true
+    }
+  ],
+  "reproducibility": {
+    "ignoredFields": [
+      "generatedAt",
+      "reproducibility"
+    ],
+    "normalizedSha256": "4eb13d0789beabc39ad520289b9d04b37565b0b2cbdc710ace2ffdfd4f7b1f34"
+  }
+}

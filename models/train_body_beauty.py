@@ -1,407 +1,1594 @@
-"""
-train_body_beauty.py — produce models/body-beauty.onnx for the Body Calculator.
+"""Train a reproducible, leakage-aware Body Calculator CNN candidate.
 
-WHAT THIS DOES
-  Fine-tunes a torchvision ResNet18 (ImageNet-pretrained) to regress a single
-  "attractiveness" score from a full-body photo, then exports it to ONNX with the
-  EXACT contract body.html expects, and prints the MODEL_CONFIG.outMin/outMax to set.
+This program stages a candidate and never replaces models/body-beauty.onnx.
 
-  Dataset: the Connor full-body stimulus set (OSF project egj7c) — 726 clothed
-  full-body images, "attractiveness" is one of 24 rated traits, ~490k ratings from
-  ~3,311 US adults. Publicly downloadable; cite Connor et al. (2020), Pers. Soc.
-  Psychol. Bull. 47(1):89-105.  https://osf.io/egj7c/  ·  paulconnorpsych.com/stimuli
+Workflow:
+  python models/train_body_beauty.py --dry-run
+  python models/train_body_beauty.py --smoke \
+    --environment-lock data/body-training-environment-lock.txt
+  python models/train_body_beauty.py --prepare-manifest \
+    --manifest data/body-training-manifest.json
+  python models/train_body_beauty.py \
+    --environment-lock data/body-training-environment-lock.txt \
+    --manifest data/body-training-manifest.json \
+    --seeds 1337,2027,4099 \
+    --candidate-out models/body-beauty.candidate.onnx \
+    --run-report data/body-training-run.json
 
-WHERE TO RUN
-  Google Colab (free GPU) is easiest: New notebook -> Runtime -> Change runtime type ->
-  GPU -> in a FIRST cell run `!pip install onnx onnxruntime` (Colab ships torch/torchvision
-  /pandas/pillow/scipy but NOT onnx, which torch.onnx.export needs to write the file) ->
-  paste this whole file into the next cell -> run.  Or locally:
-  `pip install torch torchvision onnx onnxscript onnxruntime pandas pillow scipy`
-  then `python train_body_beauty.py`.  Smoke-test the export path with no data:
-  `python train_body_beauty.py --smoke`.
+The Connor corpus is training/model-selection contaminated for the shipped model.
+Epoch and seed selection use dev only. The selected candidate gets one locked-test
+inference pass after selection. Export requires preregistered gates and asserted
+PyTorch/ONNX parity.
 
-HONESTY / STATUS
-  - The TRAINING + EXPORT mechanics here mirror the proven face-beauty recipe in
-    models/README.md (same ResNet -> ONNX -> onnxruntime-web path).
-  - The DATA-LOADING (STEP 1) is wired to the Connor OSF schema VERIFIED against the
-    live files (2026-06-19): one 375 MB zip → `aggregated_photo_ratings.csv` (WIDE,
-    726 rows) with columns `photo` + `attractiveness_mean`, a 0–100 scale, target id =
-    filename stem with '-'->'.', and head-swap composites flagged by a '.' in the id.
-    The script still prints the columns + match count so you can confirm before trusting it.
-  - N=726 is small. We fine-tune (not train from scratch), augment, and report a
-    held-out Pearson/Spearman. If the correlation is weak, DO NOT SHIP the model —
-    the geometry fallback is better than a noisy black box (the page degrades to it
-    automatically when models/body-beauty.onnx is absent).
+full-letterbox preserves the historical training transform but does not match the
+production pose-derived 1.15x square person crop. pose-crop-manifest consumes frozen
+production crop rectangles. Neither mode alone proves browser/Pillow pixel parity.
+
+Do not tune outMin/outMax. A winning checkpoint needs a newly frozen independent
+production-reference batch and regenerated REF_RAW. That monotone remap changes
+calibration/display only; it cannot improve rank correlation, AUC, or pairwise order.
 """
 
-import os, sys, glob, math, argparse, urllib.request, zipfile
+from __future__ import annotations
 
-# ----------------------------------------------------------------------------------
-# CONFIG  — the only block you should normally need to touch.  Verify the data-schema
-# names against what STEP 1 prints for the actual OSF files.
-# ----------------------------------------------------------------------------------
-CFG = dict(
-    # --- data source (VERIFIED against the live OSF files, 2026-06-19) ---
-    osf_zip_url   = "https://osf.io/download/khm9a/",   # "Full-Body Photo Database" zip (osf.io/egj7c, ~375 MB)
-    data_dir      = "connor_data",    # local folder the zip downloads + extracts into
+import argparse
+import csv
+import datetime as dt
+import hashlib
+import importlib.metadata
+import json
+import math
+import os
+import platform
+import random
+import subprocess
+import sys
+import tempfile
+import urllib.request
+import zipfile
+from pathlib import Path
+from typing import Any, Iterable
 
-    # --- ratings-CSV schema (verified; override only if the printed columns differ) ---
-    use_long      = False,            # False = aggregated_photo_ratings.csv (WIDE, 726 rows, ready);
-                                      # True  = photo_ratings.csv (LONG, ~498k rows) filtered to trait=='attractiveness'
-    ratings_csv   = "aggregated_photo_ratings.csv",   # WIDE file (auto-found under data_dir)
-    attr_col      = "attractiveness_mean",            # WIDE column; ignored when use_long=True (uses trait/rating)
-    image_col     = "photo",                          # both files: target id = the image filename stem with '-' -> '.'
-
-    # --- which images to use ---
-    drop_headswaps = False,           # composites (head-swaps) have a '.' in the photo id — 272 of 726. Keeping them
-                                      # is defensible for a *body* scorer (decorrelates face from body); True drops them.
-
-    # --- training ---
-    img_size      = 224,
-    mean          = [0.485, 0.456, 0.406],   # ImageNet — MUST match body.html MODEL_CONFIG
-    std           = [0.229, 0.224, 0.225],
-    val_frac      = 0.15,
-    epochs        = 40,
-    batch_size    = 16,
-    lr_head       = 1e-3,             # fc + layer4
-    lr_backbone   = 1e-4,             # earlier blocks (unfrozen at half-time)
-    weight_decay  = 1e-4,
-    seed          = 1337,
-    out_onnx      = "body-beauty.onnx",
-    calib_lo_pct  = 2.0,              # outMin = this percentile of held-out predictions
-    calib_hi_pct  = 98.0,            # outMax = this percentile
+SCRIPT_VERSION = "2.0.0"
+MANIFEST_SCHEMA = "body-training-manifest.v1"
+PROVENANCE_SCHEMA = "body-training-provenance.v1"
+DRY_SCHEMA = "body-training-dry-run.v1"
+OSF_URL = "https://osf.io/download/khm9a/"
+OSF_ARCHIVE_SHA256 = "71577e780ca5a9ba7a54653b55cca14bbbefe1be1783362ee9a9c0f581a950e8"
+SHIPPED_MODEL = Path(__file__).resolve().with_name("body-beauty.onnx")
+MEAN = [0.485, 0.456, 0.406]
+STD = [0.229, 0.224, 0.225]
+IMAGE_SIZE = 224
+FULL_LETTERBOX_WARNING = (
+    "does not match production: body.html uses a pose-derived 1.15x square person "
+    "crop and may sample beyond the source image into black padding"
+)
+POSE_CROP_WARNING = (
+    "uses frozen production crop rectangles, but Pillow bilinear sampling is not "
+    "proof of bit-identical browser canvas preprocessing"
+)
+REQUIRED_TRAINING_DISTRIBUTIONS = (
+    "torch",
+    "torchvision",
+    "onnx",
+    "onnxruntime",
+    "onnxscript",
+    "Pillow",
+    "numpy",
+    "scipy",
+    "pandas",
 )
 
+
+class ContractError(RuntimeError):
+    """A dataset, evaluation, or release contract was violated."""
+
+
+def utc_now() -> str:
+    return dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def valid_sha256(value: str) -> bool:
+    return len(value) == 64 and all(char in "0123456789abcdef" for char in value.lower())
+
+
+def canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def json_safe(value: Any) -> Any:
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    if isinstance(value, dict):
+        return {str(key): json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [json_safe(item) for item in value]
+    return value
+
+
+def atomic_json(path: Path, value: Any, *, overwrite: bool) -> None:
+    path = path.resolve()
+    if path.exists() and not overwrite:
+        raise ContractError(f"refusing to overwrite existing file: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(json_safe(value), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="\n", dir=path.parent, delete=False) as handle:
+        handle.write(payload)
+        temporary = Path(handle.name)
+    os.replace(temporary, path)
+
+
+def parse_seeds(raw: str) -> list[int]:
+    try:
+        seeds = [int(part.strip()) for part in raw.split(",") if part.strip()]
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("--seeds must be comma-separated integers") from exc
+    if not seeds or len(seeds) != len(set(seeds)):
+        raise argparse.ArgumentTypeError("--seeds must contain unique integers")
+    if any(seed < 0 or seed > 2**32 - 1 for seed in seeds):
+        raise argparse.ArgumentTypeError("seeds must be in [0, 2^32-1]")
+    return seeds
+
+
+def identity_tokens(image_id: str) -> list[str]:
+    tokens = [token.strip().upper() for token in str(image_id).split(".") if token.strip()]
+    if not tokens or any("/" in token or "\\" in token for token in tokens):
+        raise ContractError(f"malformed image id: {image_id!r}")
+    return tokens
+
+
 def is_headswap(image_id: str) -> bool:
-    """Connor composites (a head swapped onto a different body) are encoded by a separator:
-    the photo id joins two ids with a '.' (e.g. 'WM77.BM51'); originals have no '.'.
-    Verified counts: 272 composites / 454 originals / 726 total."""
-    return "." in str(image_id)
+    return len(identity_tokens(image_id)) > 1
 
 
-def group_id_map(ids):
-    """Union-find over the raw id tokens so any two images that share a HEAD or a BODY land in the
-    same group. A composite id joins two underlying ids with '.', e.g. 'WM77.BM51' shares head 'WM77'
-    with every 'WM77.*' and body 'BM51' with every '*.BM51'; an original 'BM29' is its own single token.
-    Returns a parallel list of group roots. Splitting train/val by these groups (a grouped HOLDOUT — one
-    split, not k-fold cross-validation) stops the same underlying head or body appearing on BOTH sides of the
-    split — which would let the model memorize a body/head in training and be 'tested' on it again, inflating
-    the held-out Pearson/Spearman. This is why the ungrouped 0.606 was optimistic; expect the grouped number
-    to be lower but HONEST. Note: it's still a single split with the best epoch chosen on that same val set,
-    so treat the number as a rough generalization read, not a cross-validated or independent-test estimate."""
-    parent = {}
-    def find(x):
-        parent.setdefault(x, x)
-        root = x
-        while parent[root] != root:
-            root = parent[root]
-        while parent[x] != root:
-            parent[x], x = root, parent[x]
+class UnionFind:
+    def __init__(self) -> None:
+        self.parent: dict[str, str] = {}
+
+    def find(self, item: str) -> str:
+        self.parent.setdefault(item, item)
+        root = item
+        while self.parent[root] != root:
+            root = self.parent[root]
+        while self.parent[item] != root:
+            parent = self.parent[item]
+            self.parent[item] = root
+            item = parent
         return root
-    def union(a, b):
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[ra] = rb
-    toks_per = []
-    for pid in ids:
-        toks = str(pid).split(".")
-        toks_per.append(toks)
-        for t in toks[1:]:
-            union(toks[0], t)
-    return [find(toks[0]) for toks in toks_per]
+
+    def union(self, left: str, right: str) -> None:
+        left_root, right_root = self.find(left), self.find(right)
+        if left_root != right_root:
+            smaller, larger = sorted((left_root, right_root))
+            self.parent[larger] = smaller
 
 
-# ==================================================================================
-# Everything below is the machinery. Read it, but you normally edit only CONFIG.
-# ==================================================================================
+def connected_components(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    union_find = UnionFind()
+    row_tokens: dict[str, list[str]] = {}
+    for row in rows:
+        image_id = str(row["image_id"])
+        tokens = identity_tokens(image_id)
+        row_tokens[image_id] = tokens
+        union_find.find(tokens[0])
+        for token in tokens[1:]:
+            union_find.union(tokens[0], token)
 
-def smoke_test():
-    """Verify the model build + ONNX export + onnxruntime parity with NO dataset.
-    Proves the artifact will load in onnxruntime-web before you spend a training run."""
-    import torch, torch.nn as nn, torchvision as tv
-    import numpy as np
-    print("[smoke] building resnet18 -> 1-scalar head")
-    model = tv.models.resnet18(weights=None)
-    model.fc = nn.Linear(model.fc.in_features, 1)
-    model.eval()
-    dummy = torch.randn(1, 3, CFG["img_size"], CFG["img_size"])
-    torch.onnx.export(model, dummy, CFG["out_onnx"],
-                      input_names=["input"], output_names=["score"],
-                      opset_version=12, dynamo=False)
-    print(f"[smoke] exported {CFG['out_onnx']}")
-    import onnxruntime as ort
-    sess = ort.InferenceSession(CFG["out_onnx"], providers=["CPUExecutionProvider"])
-    print("[smoke] onnx input :", sess.get_inputs()[0].name, sess.get_inputs()[0].shape)
-    print("[smoke] onnx output:", sess.get_outputs()[0].name, sess.get_outputs()[0].shape)
-    with torch.no_grad():
-        t = float(model(dummy).flatten()[0])
-    o = float(sess.run(None, {"input": dummy.numpy()})[0].flatten()[0])
-    print(f"[smoke] torch={t:.6f}  onnx={o:.6f}  |diff|={abs(t-o):.2e}")
-    assert abs(t - o) < 1e-4, "torch/onnx mismatch — export is broken"
-    print("[smoke] PASS — export mechanics are sound. The page reads output[0] as the raw score.")
+    tokens_by_root: dict[str, set[str]] = {}
+    for token in sorted(union_find.parent):
+        tokens_by_root.setdefault(union_find.find(token), set()).add(token)
+
+    component_for_token: dict[str, str] = {}
+    for tokens in tokens_by_root.values():
+        component_id = "cc-" + sha256_bytes("\n".join(sorted(tokens)).encode())[:16]
+        for token in tokens:
+            component_for_token[token] = component_id
+
+    components: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        tokens = row_tokens[str(row["image_id"])]
+        component_id = component_for_token[tokens[0]]
+        component = components.setdefault(component_id, {"tokens": set(), "rows": []})
+        component["tokens"].update(tokens)
+        component["rows"].append(row)
+    return components
 
 
-def fetch_osf(zip_url, dest):
-    """Download the Connor Full-Body Photo Database zip (~375 MB) and extract it.
-    Skips if already extracted. On download failure, prints manual instructions."""
-    if glob.glob(os.path.join(dest, "**", "photos", "*.png"), recursive=True):
-        print(f"[data] images already extracted under {dest}/ — skipping download")
-        return
-    os.makedirs(dest, exist_ok=True)
-    zpath = os.path.join(dest, "full_body_photo_database.zip")
-    if not os.path.exists(zpath):
-        print(f"[data] downloading {zip_url}  (~375 MB, one-time)…")
+def assign_splits(
+    components: dict[str, dict[str, Any]], split_seed: int, dev_frac: float, test_frac: float
+) -> dict[str, str]:
+    if len(components) < 3:
+        raise ContractError(
+            f"only {len(components)} connected identity components; three-way split is impossible"
+        )
+    names = ("train", "dev", "test")
+    fractions = {"train": 1.0 - dev_frac - test_frac, "dev": dev_frac, "test": test_frac}
+    total = sum(len(component["rows"]) for component in components.values())
+    targets = {name: total * fractions[name] for name in names}
+    counts = {name: 0 for name in names}
+    assignments: dict[str, str] = {}
+
+    def order(item: tuple[str, dict[str, Any]]) -> tuple[int, str]:
+        component_id, component = item
+        return (-len(component["rows"]), sha256_bytes(f"{split_seed}:{component_id}".encode()))
+
+    ordered = sorted(components.items(), key=order)
+    for index, (component_id, component) in enumerate(ordered):
+        size = len(component["rows"])
+        empty = [name for name in names if counts[name] == 0]
+        remaining = len(ordered) - index - 1
+        choices = empty if empty and remaining < len(empty) else list(names)
+
+        def objective(name: str) -> tuple[float, str]:
+            hypothetical = dict(counts)
+            hypothetical[name] += size
+            error = sum(
+                ((hypothetical[split] - targets[split]) / max(targets[split], 1.0)) ** 2
+                for split in names
+            )
+            return error, sha256_bytes(f"{split_seed}:{component_id}:{name}".encode())
+
+        selected = min(choices, key=objective)
+        assignments[component_id] = selected
+        counts[selected] += size
+    if any(counts[name] == 0 for name in names):
+        raise ContractError(f"split construction produced an empty split: {counts}")
+    return assignments
+
+
+def build_manifest(
+    rows: list[dict[str, Any]],
+    *,
+    source_url: str,
+    archive_sha256: str,
+    labels_sha256: str,
+    split_seed: int,
+    dev_frac: float,
+    test_frac: float,
+    preprocessing_mode: str,
+    crop_manifest_sha256: str | None,
+    label_source: str,
+    drop_headswaps: bool,
+) -> dict[str, Any]:
+    components = connected_components(rows)
+    assignments = assign_splits(components, split_seed, dev_frac, test_frac)
+    component_for_image = {
+        str(row["image_id"]): component_id
+        for component_id, component in components.items()
+        for row in component["rows"]
+    }
+    entries: list[dict[str, Any]] = []
+    for row in sorted(rows, key=lambda item: (str(item["image_id"]), str(item["image_relpath"]))):
+        image_id = str(row["image_id"])
+        component_id = component_for_image[image_id]
+        entry: dict[str, Any] = {
+            "image_id": image_id,
+            "image_relpath": str(row["image_relpath"]).replace("\\", "/"),
+            "image_sha256": str(row["image_sha256"]),
+            "score": float(row["score"]),
+            "identity_tokens": identity_tokens(image_id),
+            "identity_component": component_id,
+            "variant": "head-swap" if is_headswap(image_id) else "original",
+            "split": assignments[component_id],
+        }
+        if preprocessing_mode == "pose-crop-manifest":
+            entry["crop_rect_px"] = [float(value) for value in row["crop_rect_px"]]
+            entry["source_dimensions"] = [int(value) for value in row["source_dimensions"]]
+        entries.append(entry)
+    names = ("train", "dev", "test")
+    manifest = {
+        "schema_version": MANIFEST_SCHEMA,
+        "dataset": {
+            "name": "Connor Full-Body Photo Database",
+            "source_url": source_url,
+            "archive_sha256": archive_sha256,
+            "labels_sha256": labels_sha256,
+            "training_contaminated_for_shipped_model": True,
+            "license": {
+                "declared": False,
+                "redistribution_assumed": False,
+                "note": (
+                    "The OSF node and archive expose no declared license; public "
+                    "download access is not treated as redistribution permission."
+                ),
+            },
+            "selection": {
+                "label_source": label_source,
+                "label_field": "attractiveness mean",
+                "missing_or_non_finite_labels": "excluded",
+                "head_swap_composites": "excluded" if drop_headswaps else "included",
+                "unmatched_ratings_or_images": "fail closed; partial corpus forbidden",
+            },
+        },
+        "split_policy": {
+            "algorithm": "connected-identity-greedy-v1",
+            "split_seed": split_seed,
+            "fractions": {
+                "train": 1.0 - dev_frac - test_frac,
+                "dev": dev_frac,
+                "test": test_frac,
+            },
+            "checkpoint_selection_split": "dev",
+            "test_access_policy": "one inference pass after seed/checkpoint selection",
+        },
+        "preprocessing": {
+            "mode": preprocessing_mode,
+            "crop_manifest_sha256": crop_manifest_sha256,
+            "warning": (
+                FULL_LETTERBOX_WARNING
+                if preprocessing_mode == "full-letterbox"
+                else POSE_CROP_WARNING
+            ),
+            "input_size": IMAGE_SIZE,
+            "normalization": {"mean": MEAN, "std": STD},
+        },
+        "counts": {
+            "rows": len(entries),
+            "components": len(components),
+            "splits": {name: sum(entry["split"] == name for entry in entries) for name in names},
+            "split_components": {
+                name: len(
+                    {
+                        entry["identity_component"]
+                        for entry in entries
+                        if entry["split"] == name
+                    }
+                )
+                for name in names
+            },
+        },
+        "entries": entries,
+    }
+    assert_manifest(manifest)
+    return manifest
+
+
+def assert_manifest(manifest: dict[str, Any]) -> None:
+    if manifest.get("schema_version") != MANIFEST_SCHEMA:
+        raise ContractError("unsupported manifest schema")
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not entries:
+        raise ContractError("manifest contains no entries")
+    seen_ids: set[str] = set()
+    token_splits: dict[str, str] = {}
+    component_splits: dict[str, str] = {}
+    for entry in entries:
+        image_id = str(entry.get("image_id", ""))
+        if image_id in seen_ids:
+            raise ContractError(f"duplicate manifest image id: {image_id}")
+        seen_ids.add(image_id)
+        split = entry.get("split")
+        if split not in {"train", "dev", "test"}:
+            raise ContractError(f"invalid split for {image_id}: {split}")
+        component = str(entry.get("identity_component", ""))
+        prior_component = component_splits.setdefault(component, split)
+        if prior_component != split:
+            raise ContractError(f"identity component {component} crosses splits")
+        expected_tokens = identity_tokens(image_id)
+        if entry.get("identity_tokens") != expected_tokens:
+            raise ContractError(f"identity tokens changed for {image_id}")
+        for token in expected_tokens:
+            prior = token_splits.setdefault(token, split)
+            if prior != split:
+                raise ContractError(f"identity leakage: token {token} appears in {prior} and {split}")
+        score = entry.get("score")
+        if not isinstance(score, (int, float)) or not math.isfinite(float(score)):
+            raise ContractError(f"non-finite score for {image_id}")
+        if not valid_sha256(str(entry.get("image_sha256", ""))):
+            raise ContractError(f"invalid image hash for {image_id}")
+    if set(token_splits.values()) != {"train", "dev", "test"}:
+        raise ContractError("manifest must contain train, dev, and test identities")
+
+
+def manifest_sha256(manifest: dict[str, Any]) -> str:
+    return sha256_bytes(canonical_json(manifest).encode())
+
+
+def find_images(root: Path) -> list[Path]:
+    extensions = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+    return sorted(
+        path for path in root.rglob("*")
+        if path.is_file() and path.suffix.lower() in extensions
+    )
+
+
+def safe_extract(archive: Path, destination: Path) -> None:
+    destination = destination.resolve()
+    with zipfile.ZipFile(archive) as bundle:
+        for member in bundle.infolist():
+            target = (destination / member.filename).resolve()
+            try:
+                target.relative_to(destination)
+            except ValueError as exc:
+                raise ContractError(f"unsafe archive path: {member.filename}") from exc
+        bundle.extractall(destination)
+
+
+def fetch_osf(url: str, destination: Path, expected_sha256: str) -> dict[str, str]:
+    if not valid_sha256(expected_sha256):
+        raise ContractError("archive SHA-256 must contain 64 hexadecimal characters")
+    destination.mkdir(parents=True, exist_ok=True)
+    archive = destination / "full_body_photo_database.zip"
+    if not archive.exists():
+        partial = archive.with_suffix(".zip.part")
+        if partial.exists():
+            partial.unlink()
+        print(f"[data] downloading {url} (~375 MB)")
         try:
-            urllib.request.urlretrieve(zip_url, zpath)
-        except Exception as e:
-            print("\n[data] download failed:", e)
-            print(f"      Manually download the 'full_body_photo_database.zip' from "
-                  f"https://osf.io/egj7c/ into ./{dest}/ and re-run.")
-            sys.exit(1)
-    print("[data] extracting zip…")
-    with zipfile.ZipFile(zpath) as z:
-        z.extractall(dest)
-    print("[data] extracted.")
-
-
-def find_images(root):
-    exts = ("*.jpg", "*.jpeg", "*.png", "*.bmp", "*.webp")
-    files = []
-    for e in exts:
-        files += glob.glob(os.path.join(root, "**", e), recursive=True)
-    return sorted(files)
-
-
-def build_label_table(root):
-    """Return a list of (image_path, score_float) from the Connor files. Verified schema;
-    prints the columns + match count so you can confirm before trusting the labels."""
-    import pandas as pd
-
-    images = find_images(root)
+            urllib.request.urlretrieve(url, partial)
+        except Exception:
+            if partial.exists():
+                partial.unlink()
+            raise
+        actual = sha256_file(partial)
+        if actual != expected_sha256.lower():
+            partial.unlink()
+            raise ContractError(f"archive hash mismatch: expected {expected_sha256}, got {actual}")
+        os.replace(partial, archive)
+    actual = sha256_file(archive)
+    if actual != expected_sha256.lower():
+        raise ContractError(
+            f"existing archive hash mismatch: expected {expected_sha256}, got {actual}; "
+            "quarantine it and download a verified copy"
+        )
+    images = find_images(destination)
     if not images:
-        sys.exit(f"[data] no images found under {root}/ — check the download")
-    by_base = {}                                  # filename stem (lowercased) -> path
-    for p in images:
-        by_base.setdefault(os.path.splitext(os.path.basename(p))[0].lower(), p)
-    print(f"[data] found {len(images)} image files")
+        safe_extract(archive, destination)
+        images = find_images(destination)
+    if not images:
+        raise ContractError("verified archive extracted without supported images")
+    print(f"[data] archive verified: {actual}; images={len(images)}")
+    return {"path": str(archive.resolve()), "sha256": actual, "url": url}
 
-    # locate the ratings CSV (verified name; fall back to any matching csv)
-    want = "photo_ratings.csv" if CFG["use_long"] else CFG["ratings_csv"]
-    hits = glob.glob(os.path.join(root, "**", want), recursive=True) or \
-           glob.glob(os.path.join(root, "**", "*.csv"), recursive=True)
-    if not hits:
-        sys.exit(f"[data] no ratings CSV ('{want}') under {root}/")
-    csv = hits[0]
-    df = pd.read_csv(csv)
-    print(f"[data] ratings file: {csv}")
-    print(f"[data] columns: {list(df.columns)}")
 
-    ic = CFG["image_col"]
-    if CFG["use_long"]:
-        # LONG: key/value rows — keep trait=='attractiveness', value is in 'rating', group per image
-        for need in ("trait", "rating", ic):
-            if need not in df.columns:
-                sys.exit(f"[data] LONG file missing '{need}' — check the columns above / set CFG")
-        a = df[df["trait"].astype(str).str.lower() == "attractiveness"].copy()
-        a["rating"] = pd.to_numeric(a["rating"], errors="coerce")
-        grp = a.dropna(subset=["rating"]).groupby(ic)["rating"].mean()
+def locate_ratings(root: Path, use_long: bool) -> Path:
+    wanted = "photo_ratings.csv" if use_long else "aggregated_photo_ratings.csv"
+    hits = sorted(root.rglob(wanted))
+    if len(hits) != 1:
+        raise ContractError(f"expected one {wanted!r}; found {len(hits)}")
+    return hits[0]
+
+
+def build_label_rows(
+    root: Path, *, use_long: bool, drop_headswaps: bool
+) -> tuple[list[dict[str, Any]], Path]:
+    try:
+        import pandas as pd
+    except ImportError as exc:
+        raise ContractError("pandas is required for corpus preparation") from exc
+
+    by_stem: dict[str, Path] = {}
+    for path in find_images(root):
+        stem = path.stem.lower()
+        if stem in by_stem and by_stem[stem] != path:
+            raise ContractError(f"duplicate image stem: {stem}")
+        by_stem[stem] = path
+    ratings = locate_ratings(root, use_long)
+    frame = pd.read_csv(ratings)
+    if use_long:
+        required = {"trait", "rating", "photo"}
+        if not required.issubset(frame.columns):
+            raise ContractError(f"long ratings file lacks {sorted(required - set(frame.columns))}")
+        selected = frame[frame["trait"].astype(str).str.lower() == "attractiveness"].copy()
+        selected["rating"] = pd.to_numeric(selected["rating"], errors="coerce")
+        labels = selected.dropna(subset=["rating"]).groupby("photo")["rating"].mean()
     else:
-        # WIDE: one row per image, attractiveness_mean
-        ac = CFG["attr_col"]
-        if ac not in df.columns or ic not in df.columns:        # graceful fallback if names shifted
-            ac = next((c for c in df.columns if "attract" in str(c).lower() and "mean" in str(c).lower()), ac)
-            ic = next((c for c in df.columns if str(c).lower() == "photo"), ic)
-            if ac not in df.columns or ic not in df.columns:
-                sys.exit(f"[data] expected '{CFG['attr_col']}'/'{CFG['image_col']}' not found — set CFG from the header above")
-        df[ac] = pd.to_numeric(df[ac], errors="coerce")
-        grp = df.dropna(subset=[ac]).set_index(ic)[ac]
-    print(f"[data] {len(grp)} images with a score; native label range "
-          f"[{grp.min():.2f}, {grp.max():.2f}]  (Connor attractiveness is a 0–100 slider)")
+        required = {"attractiveness_mean", "photo"}
+        if not required.issubset(frame.columns):
+            raise ContractError(f"wide ratings file lacks {sorted(required - set(frame.columns))}")
+        frame["attractiveness_mean"] = pd.to_numeric(
+            frame["attractiveness_mean"], errors="coerce"
+        )
+        if frame["photo"].duplicated().any():
+            raise ContractError("wide ratings file contains duplicate photo ids")
+        labels = frame.dropna(subset=["attractiveness_mean"]).set_index("photo")[
+            "attractiveness_mean"
+        ]
 
-    rows, missed, comps = [], 0, 0
-    for pid, score in grp.items():
-        if is_headswap(pid):
-            comps += 1
-            if CFG["drop_headswaps"]:
-                continue
-        stem = str(pid).replace(".", "-").lower()    # CSV id 'BM29.BM33' -> file stem 'BM29-BM33'
-        path = by_base.get(stem)
+    rows: list[dict[str, Any]] = []
+    missed: list[str] = []
+    for raw_id, raw_score in labels.items():
+        image_id = str(raw_id).strip()
+        if drop_headswaps and is_headswap(image_id):
+            continue
+        score = float(raw_score)
+        if not math.isfinite(score):
+            continue
+        path = by_stem.get(image_id.replace(".", "-").lower())
         if path is None:
-            missed += 1; continue
-        rows.append((path, float(score), str(pid)))    # carry the id so we can group-split by body identity
+            missed.append(image_id)
+            continue
+        rows.append(
+            {
+                "image_id": image_id,
+                "image_relpath": path.relative_to(root).as_posix(),
+                "image_sha256": sha256_file(path),
+                "score": score,
+            }
+        )
     if missed:
-        print(f"[data] WARNING: {missed} ids had no matching image file "
-              f"(check the '.'->'-' filename mapping if this is large)")
+        raise ContractError(
+            f"{len(missed)} rating ids lack an image (first {missed[0]!r}); refusing a partial corpus"
+        )
     if len(rows) < 50:
-        sys.exit(f"[data] only {len(rows)} image<->label matches — the id/filename mapping is likely off")
-    print(f"[data] {len(rows)} usable (image, score) pairs  ·  {comps} composites/head-swaps "
-          f"in the set (drop_headswaps={CFG['drop_headswaps']})")
+        raise ContractError(f"only {len(rows)} matched rows")
+    if len({row["image_id"] for row in rows}) != len(rows):
+        raise ContractError("duplicate image ids after mapping")
+    print(
+        f"[data] ratings={ratings}; rows={len(rows)}; "
+        f"head-swaps={sum(is_headswap(row['image_id']) for row in rows)}"
+    )
+    return rows, ratings
+
+
+def attach_pose_crops(rows: list[dict[str, Any]], path: Path) -> str:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("schema_version") != "body-pose-crops.v1":
+        raise ContractError("pose crop manifest schema must be body-pose-crops.v1")
+    entries = payload.get("entries")
+    if not isinstance(entries, list):
+        raise ContractError("pose crop manifest entries must be an array")
+    by_id = {str(entry.get("image_id")): entry for entry in entries}
+    if len(by_id) != len(entries):
+        raise ContractError("duplicate image ids in pose crop manifest")
+    for row in rows:
+        image_id = str(row["image_id"])
+        entry = by_id.get(image_id)
+        if entry is None:
+            raise ContractError(f"missing pose crop for {image_id}")
+        if entry.get("source_sha256") != row["image_sha256"]:
+            raise ContractError(f"pose crop source hash mismatch for {image_id}")
+        rect = entry.get("crop_rect_px")
+        dimensions = entry.get("source_dimensions")
+        finite_rect = (
+            isinstance(rect, list)
+            and len(rect) == 4
+            and all(
+                isinstance(value, (int, float)) and math.isfinite(float(value))
+                for value in rect
+            )
+        )
+        if not finite_rect or float(rect[2]) <= 0 or float(rect[3]) <= 0:
+            raise ContractError(f"invalid pose crop for {image_id}")
+        if abs(float(rect[2]) - float(rect[3])) > max(float(rect[2]), float(rect[3])) * 0.01:
+            raise ContractError(f"pose crop for {image_id} is not square")
+        if (
+            not isinstance(dimensions, list)
+            or len(dimensions) != 2
+            or any(not isinstance(value, int) or value <= 0 for value in dimensions)
+        ):
+            raise ContractError(f"invalid source dimensions for {image_id}")
+        row["crop_rect_px"] = [float(value) for value in rect]
+        row["source_dimensions"] = dimensions
+    return sha256_file(path)
+
+
+def synthetic_rows() -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for index in range(12):
+        left, right = f"A{index:02d}", f"B{index:02d}"
+        for offset, image_id in enumerate((left, right, f"{left}.{right}")):
+            rows.append(
+                {
+                    "image_id": image_id,
+                    "image_relpath": f"synthetic/{image_id.replace('.', '-')}.png",
+                    "image_sha256": sha256_bytes(f"image:{image_id}".encode()),
+                    "score": float(25 + index * 3 + offset),
+                }
+            )
     return rows
 
 
-def letterbox_square(pil_img):
-    """Pad to a centered square with BLACK — matches body.html, which draws a square
-    crop into a transparent (->black) canvas, so a tall person gets black side-bars.
-    A faithful-but-heavier alternative is to run MediaPipe Pose on each training image
-    and crop the same landmark bbox x1.15; letterboxing the (already full-body, plain-
-    background) Connor images is a close approximation. This is the main train/inference
-    distribution-shift knob — note it if scores look off."""
+def validate_args(args: argparse.Namespace) -> None:
+    if not valid_sha256(args.archive_sha256):
+        raise ContractError("archive SHA-256 must contain 64 hexadecimal characters")
+    if not (
+        0 < args.dev_frac < 0.5
+        and 0 < args.test_frac < 0.5
+        and args.dev_frac + args.test_frac < 0.5
+    ):
+        raise ContractError("dev/test fractions must leave more than half for train")
+    if (
+        args.preprocessing_mode == "pose-crop-manifest"
+        and not args.pose_crop_manifest
+        and not args.dry_run
+    ):
+        raise ContractError("pose-crop-manifest mode requires --pose-crop-manifest")
+    if args.preprocessing_mode == "full-letterbox" and args.pose_crop_manifest:
+        raise ContractError("--pose-crop-manifest requires pose-crop-manifest mode")
+    if args.epochs < 1 or args.batch_size < 1 or args.num_workers < 0:
+        raise ContractError("epochs and batch size must be positive")
+    if not (-1 <= args.min_dev_spearman <= 1 and -1 <= args.min_test_spearman <= 1):
+        raise ContractError("Spearman gates must be in [-1, 1]")
+    if Path(args.candidate_out).resolve() == SHIPPED_MODEL:
+        raise ContractError(
+            "this script never writes models/body-beauty.onnx; stage a candidate and "
+            "complete browser/subgroup/stability acceptance first"
+        )
+    if args.num_workers and os.name == "nt":
+        raise ContractError("use --num-workers 0 on Windows for deterministic transforms")
+    is_training = not (args.dry_run or args.smoke or args.prepare_manifest)
+    if is_training:
+        if not args.environment_lock:
+            raise ContractError(
+                "training requires --environment-lock from an archived "
+                "'python -m pip freeze --all' environment"
+            )
+        # Fail before prepare_inputs can read or download the corpus.
+        verify_environment_lock(Path(args.environment_lock))
+    elif args.smoke and args.environment_lock:
+        verify_environment_lock(Path(args.environment_lock))
+
+
+def prepare_inputs(args: argparse.Namespace) -> tuple[dict[str, Any], Path]:
+    data_root = Path(args.data_dir).resolve()
+    archive = fetch_osf(args.archive_url, data_root, args.archive_sha256)
+    rows, ratings = build_label_rows(
+        data_root, use_long=args.use_long, drop_headswaps=args.drop_headswaps
+    )
+    crop_hash = None
+    if args.preprocessing_mode == "pose-crop-manifest":
+        crop_hash = attach_pose_crops(rows, Path(args.pose_crop_manifest).resolve())
+    manifest = build_manifest(
+        rows,
+        source_url=args.archive_url,
+        archive_sha256=archive["sha256"],
+        labels_sha256=sha256_file(ratings),
+        split_seed=args.split_seed,
+        dev_frac=args.dev_frac,
+        test_frac=args.test_frac,
+        preprocessing_mode=args.preprocessing_mode,
+        crop_manifest_sha256=crop_hash,
+        label_source=ratings.name,
+        drop_headswaps=args.drop_headswaps,
+    )
+    return manifest, data_root
+
+
+def lock_or_verify_manifest(
+    path: Path,
+    expected: dict[str, Any],
+    *,
+    prepare: bool,
+    regenerate: bool,
+) -> dict[str, Any]:
+    path = path.resolve()
+    if not path.exists():
+        if not prepare:
+            raise ContractError(
+                f"locked manifest missing: {path}; run --prepare-manifest, review it, then train"
+            )
+        atomic_json(path, expected, overwrite=False)
+        print(f"[manifest] locked {path}; sha256={manifest_sha256(expected)}")
+        return expected
+    actual = json.loads(path.read_text(encoding="utf-8"))
+    assert_manifest(actual)
+    if canonical_json(actual) != canonical_json(expected):
+        if prepare and regenerate:
+            atomic_json(path, expected, overwrite=True)
+            print(
+                f"[manifest] explicitly regenerated {path}; sha256={manifest_sha256(expected)}"
+            )
+            return expected
+        raise ContractError(
+            "locked manifest differs from verified corpus/config; investigate first. "
+            "Only then use --prepare-manifest --regenerate-manifest"
+        )
+    print(f"[manifest] verified sha256={manifest_sha256(actual)}")
+    return actual
+
+
+def git_context() -> dict[str, Any]:
+    try:
+        commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], check=True, capture_output=True, text=True
+        ).stdout.strip()
+        dirty = bool(
+            subprocess.run(
+                ["git", "status", "--porcelain"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+        )
+        return {"commit": commit, "dirty": dirty}
+    except Exception:
+        return {"commit": None, "dirty": None}
+
+
+def installed_distribution_versions() -> dict[str, str | None]:
+    versions: dict[str, str | None] = {}
+    for distribution in REQUIRED_TRAINING_DISTRIBUTIONS:
+        try:
+            versions[distribution] = importlib.metadata.version(distribution)
+        except importlib.metadata.PackageNotFoundError:
+            versions[distribution] = None
+    return versions
+
+
+def verify_environment_lock(path: Path) -> dict[str, Any]:
+    resolved = path.resolve()
+    if not resolved.is_file():
+        raise ContractError(f"environment lock missing: {resolved}")
+    text = resolved.read_text(encoding="utf-8")
+    pinned: dict[str, str] = {}
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "==" not in line:
+            continue
+        name, version = line.split("==", 1)
+        normalized = name.strip().lower().replace("_", "-")
+        if normalized and version.strip():
+            pinned[normalized] = version.strip()
+
+    installed = installed_distribution_versions()
+    mismatches: list[str] = []
+    for distribution, actual in installed.items():
+        normalized = distribution.lower().replace("_", "-")
+        expected = pinned.get(normalized)
+        if expected is None:
+            mismatches.append(f"{distribution}: exact == pin missing")
+        elif actual != expected:
+            mismatches.append(f"{distribution}: lock={expected}, installed={actual}")
+    if mismatches:
+        raise ContractError(
+            "environment lock does not match required installed distributions: "
+            + "; ".join(mismatches)
+        )
+    return {
+        "path": str(resolved),
+        "sha256": sha256_file(resolved),
+        "format": "pip-freeze-exact-pins",
+        "required_distributions": installed,
+    }
+
+
+def environment_context(
+    torch: Any = None,
+    torchvision: Any = None,
+    environment_lock: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    context: dict[str, Any] = {
+        "python": sys.version,
+        "executable": sys.executable,
+        "platform": platform.platform(),
+        "machine": platform.machine(),
+        "git": git_context(),
+        "packages": installed_distribution_versions(),
+        "environment_lock": environment_lock,
+    }
+    if torch is not None:
+        context.update(
+            {
+                "torch": torch.__version__,
+                "torchvision": getattr(torchvision, "__version__", None),
+                "cuda_available": torch.cuda.is_available(),
+                "cuda_version": torch.version.cuda,
+                "cudnn_version": (
+                    torch.backends.cudnn.version()
+                    if torch.backends.cudnn.is_available()
+                    else None
+                ),
+                "devices": [
+                    torch.cuda.get_device_name(index)
+                    for index in range(torch.cuda.device_count())
+                ],
+                "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
+            }
+        )
+    return context
+
+
+def initialization_context(torch: Any, weights: Any) -> dict[str, Any]:
+    url = getattr(weights, "url", None)
+    cached = Path(torch.hub.get_dir()) / "checkpoints" / Path(url).name if url else None
+    return {
+        "torchvision_weights": str(weights),
+        "source_url": url,
+        "cached_checkpoint": str(cached) if cached else None,
+        "cached_checkpoint_sha256": (
+            sha256_file(cached) if cached and cached.exists() else None
+        ),
+    }
+
+
+def letterbox_square(image: Any) -> Any:
     from PIL import Image
-    w, h = pil_img.size
-    s = max(w, h)
-    canvas = Image.new("RGB", (s, s), (0, 0, 0))
-    canvas.paste(pil_img, ((s - w) // 2, (s - h) // 2))
+
+    width, height = image.size
+    side = max(width, height)
+    canvas = Image.new("RGB", (side, side), (0, 0, 0))
+    canvas.paste(image, ((side - width) // 2, (side - height) // 2))
     return canvas
 
 
-def main():
-    import numpy as np, torch, torch.nn as nn, torchvision as tv
-    from torch.utils.data import Dataset, DataLoader
-    from torchvision import transforms as T
+def pose_crop_square(image: Any, entry: dict[str, Any], size: int) -> Any:
     from PIL import Image
-    try:
-        from scipy.stats import pearsonr, spearmanr
-    except Exception:
-        pearsonr = spearmanr = None
 
-    torch.manual_seed(CFG["seed"]); np.random.seed(CFG["seed"])
-    dev = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"[train] device = {dev}")
+    if list(image.size) != list(entry["source_dimensions"]):
+        raise ContractError(
+            f"source dimensions changed for {entry['image_id']}: "
+            f"expected {entry['source_dimensions']}, got {image.size}"
+        )
+    x, y, width, height = [float(value) for value in entry["crop_rect_px"]]
+    return image.transform(
+        (size, size),
+        Image.Transform.EXTENT,
+        (x, y, x + width, y + height),
+        resample=Image.Resampling.BILINEAR,
+        fillcolor=(0, 0, 0),
+    )
 
-    fetch_osf(CFG["osf_zip_url"], CFG["data_dir"])
-    rows = build_label_table(CFG["data_dir"])
 
-    norm = T.Normalize(CFG["mean"], CFG["std"])
-    S = CFG["img_size"]
-    train_tf = T.Compose([
-        T.Lambda(letterbox_square),
-        T.Resize((S, S)),
-        T.RandomHorizontalFlip(),
-        T.ColorJitter(0.2, 0.2, 0.2, 0.02),
-        T.RandomAffine(degrees=4, translate=(0.03, 0.03), scale=(0.95, 1.05)),
-        T.ToTensor(), norm,
-    ])
-    eval_tf = T.Compose([T.Lambda(letterbox_square), T.Resize((S, S)), T.ToTensor(), norm])
+def metrics(predictions: Any, targets: Any, scipy_stats: Any) -> dict[str, Any]:
+    import numpy as np
 
-    class BodyDS(Dataset):
-        def __init__(self, items, tf): self.items, self.tf = items, tf
-        def __len__(self): return len(self.items)
-        def __getitem__(self, i):
-            path, score = self.items[i]
-            img = Image.open(path).convert("RGB")
-            return self.tf(img), torch.tensor([score], dtype=torch.float32)
+    predictions = np.asarray(predictions, dtype=np.float64)
+    targets = np.asarray(targets, dtype=np.float64)
+    if len(predictions) != len(targets) or len(predictions) < 3:
+        raise ContractError("metrics require equal arrays with at least three rows")
+    return {
+        "n": len(predictions),
+        "rmse": float(np.sqrt(np.mean((predictions - targets) ** 2))),
+        "pearson": float(scipy_stats.pearsonr(predictions, targets).statistic),
+        "spearman": float(scipy_stats.spearmanr(predictions, targets).statistic),
+    }
 
-    # GROUPED split by body identity (Codex review): no underlying head/body crosses the train/val line,
-    # so the held-out Pearson/Spearman measures real generalization, not memorized stimuli. The dataset uses
-    # (path, score) pairs; the third tuple element is the id we group on.
-    gids  = group_id_map([r[2] for r in rows])
-    pairs = [(r[0], r[1]) for r in rows]
-    uniq  = sorted(set(gids))
-    gperm = np.random.permutation(len(uniq))
-    n_val_g = max(1, int(round(len(uniq) * CFG["val_frac"])))
-    val_groups  = set(uniq[gperm[i]] for i in range(n_val_g))
-    val_items   = [pairs[i] for i in range(len(pairs)) if gids[i] in val_groups]
-    train_items = [pairs[i] for i in range(len(pairs)) if gids[i] not in val_groups]
-    if len(val_items) < 20 or len(train_items) < 20:
-        print(f"[train] *** WARNING: grouped split is imbalanced ({len(train_items)}/{len(val_items)}) — the "
-              f"head-swap components merged into few large groups. The number is honest but the val set is "
-              f"small; treat the correlation as a rough read. ***")
-    print(f"[train] grouped split by body identity: {len(uniq)} groups -> "
-          f"{len(train_items)} train / {len(val_items)} val (no head/body crosses the split)")
-    tl = DataLoader(BodyDS(train_items, train_tf), batch_size=CFG["batch_size"], shuffle=True,  num_workers=2, drop_last=True)
-    vl = DataLoader(BodyDS(val_items,   eval_tf),  batch_size=CFG["batch_size"], shuffle=False, num_workers=2)
 
-    model = tv.models.resnet18(weights=tv.models.ResNet18_Weights.IMAGENET1K_V1)
-    model.fc = nn.Linear(model.fc.in_features, 1)
-    model = model.to(dev)
+def bootstrap_spearman(
+    predictions: Any,
+    targets: Any,
+    scipy_stats: Any,
+    *,
+    seed: int,
+    iterations: int,
+) -> list[float] | None:
+    import numpy as np
 
-    # phase 1: train head + layer4 only; phase 2 (after half the epochs): unfreeze all
-    def set_trainable(full):
-        for n, p in model.named_parameters():
-            p.requires_grad = full or n.startswith(("fc.", "layer4."))
-    set_trainable(False)
-    opt = torch.optim.AdamW([
-        {"params": [p for n, p in model.named_parameters() if n.startswith(("fc.", "layer4."))], "lr": CFG["lr_head"]},
-        {"params": [p for n, p in model.named_parameters() if not n.startswith(("fc.", "layer4."))], "lr": CFG["lr_backbone"]},
-    ], weight_decay=CFG["weight_decay"])
-    lossf = nn.MSELoss()    # raw 0–100 attractiveness target; outMin/outMax come out in interpretable 0–100 units
+    if iterations <= 0:
+        return None
+    predictions = np.asarray(predictions, dtype=np.float64)
+    targets = np.asarray(targets, dtype=np.float64)
+    generator = np.random.default_rng(seed)
+    values = []
+    for _ in range(iterations):
+        indices = generator.integers(0, len(predictions), len(predictions))
+        value = float(
+            scipy_stats.spearmanr(predictions[indices], targets[indices]).statistic
+        )
+        if math.isfinite(value):
+            values.append(value)
+    if len(values) < max(100, iterations // 2):
+        return None
+    return [float(value) for value in np.percentile(values, [2.5, 97.5])]
 
-    best = {"sp": -2, "state": None, "preds": None, "tgts": None}
-    for ep in range(CFG["epochs"]):
-        if ep == CFG["epochs"] // 2:
-            set_trainable(True); print("[train] unfreezing full backbone")
-        model.train()
-        for x, y in tl:
-            x, y = x.to(dev), y.to(dev)
-            opt.zero_grad(); loss = lossf(model(x), y); loss.backward(); opt.step()
 
-        model.eval(); P, Tg = [], []
-        with torch.no_grad():
-            for x, y in vl:
-                P += model(x.to(dev)).cpu().flatten().tolist(); Tg += y.flatten().tolist()
-        P, Tg = np.array(P), np.array(Tg)
-        rmse = float(np.sqrt(((P - Tg) ** 2).mean()))
-        pr = pearsonr(P, Tg)[0] if pearsonr else float("nan")
-        sp = spearmanr(P, Tg)[0] if spearmanr else float("nan")
-        print(f"[ep {ep:02d}] val RMSE={rmse:.3f}  Pearson={pr:.3f}  Spearman={sp:.3f}")
-        # NaN Spearman (scipy absent, or a constant-prediction epoch) never beats -2, so without
-        # a fallback `best` stays empty for the whole run and the export crashes at the end.
-        # Selection: a valid-Spearman checkpoint always outranks a NaN one; among valid, highest
-        # Spearman; if the whole run is NaN (no scipy), lowest RMSE.
-        prev_valid = best["state"] is not None and best["sp"] == best["sp"]
-        if sp == sp:
-            improved = (not prev_valid) or sp > best["sp"]
+def load_baseline(path: Path, test_ids: list[str]) -> dict[str, float]:
+    if path.suffix.lower() == ".json":
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            mapping = {str(key): float(value) for key, value in payload.items()}
+        elif isinstance(payload, list):
+            mapping = {
+                str(row["image_id"]): float(row["prediction"]) for row in payload
+            }
         else:
-            improved = best["state"] is None or (not prev_valid and rmse < best.get("rmse", float("inf")))
-        if improved:
-            best = {"sp": sp, "pr": pr, "rmse": rmse,
-                    "state": {k: v.cpu().clone() for k, v in model.state_dict().items()},
-                    "preds": P, "tgts": Tg}
+            raise ContractError("baseline JSON must be an object or row array")
+    else:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            if not reader.fieldnames or not {"image_id", "prediction"}.issubset(reader.fieldnames):
+                raise ContractError("baseline CSV needs image_id,prediction columns")
+            mapping = {str(row["image_id"]): float(row["prediction"]) for row in reader}
+    if set(mapping) != set(test_ids):
+        missing = sorted(set(test_ids) - set(mapping))
+        extra = sorted(set(mapping) - set(test_ids))
+        raise ContractError(
+            f"baseline must match locked test ids; missing={missing[:3]} extra={extra[:3]}"
+        )
+    if any(not math.isfinite(value) for value in mapping.values()):
+        raise ContractError("baseline contains non-finite predictions")
+    return mapping
 
-    print(f"\n[train] BEST  Spearman={best['sp']:.3f}  Pearson={best.get('pr',float('nan')):.3f}  RMSE={best['rmse']:.3f}")
-    if not (best["sp"] == best["sp"]) or best["sp"] < 0.30:
-        print("[train] *** WEAK correlation. Do NOT ship this model — the geometry fallback is")
-        print("        more honest than a noisy black box. Get more/cleaner data or stop here. ***")
-    model.load_state_dict(best["state"]); model.eval().cpu()
 
-    # ---- export ONNX (same contract as face-beauty.onnx) ----
-    torch.onnx.export(model, torch.randn(1, 3, S, S), CFG["out_onnx"],
-                      input_names=["input"], output_names=["score"],
-                      opset_version=12, dynamo=False)
-    print(f"[onnx] wrote {CFG['out_onnx']}")
+def run_smoke(args: argparse.Namespace) -> int:
     try:
+        import numpy as np
         import onnxruntime as ort
-        sess = ort.InferenceSession(CFG["out_onnx"], providers=["CPUExecutionProvider"])
-        d = torch.randn(1, 3, S, S)
-        with torch.no_grad(): t = float(model(d).flatten()[0])
-        o = float(sess.run(None, {"input": d.numpy()})[0].flatten()[0])
-        print(f"[onnx] parity check  torch={t:.5f}  onnx={o:.5f}  |diff|={abs(t-o):.2e}")
-    except Exception as e:
-        print("[onnx] (skipped parity check — onnxruntime not installed):", e)
+        import torch
+        import torch.nn as nn
+        import torchvision as tv
+    except ImportError as exc:
+        raise ContractError(
+            "--smoke needs torch, torchvision, onnx, onnxscript, and onnxruntime"
+        ) from exc
+    torch.manual_seed(args.seeds[0])
+    model = tv.models.resnet18(weights=None)
+    model.fc = nn.Linear(model.fc.in_features, 1)
+    model.eval()
+    dummy = torch.randn(4, 3, IMAGE_SIZE, IMAGE_SIZE)
+    with tempfile.TemporaryDirectory(prefix="body-training-smoke-") as temporary:
+        output = Path(temporary) / "smoke.onnx"
+        torch.onnx.export(
+            model,
+            dummy[:1],
+            output,
+            input_names=["input"],
+            output_names=["score"],
+            dynamic_axes={"input": {0: "batch"}, "score": {0: "batch"}},
+            opset_version=12,
+            dynamo=False,
+        )
+        session = ort.InferenceSession(str(output), providers=["CPUExecutionProvider"])
+        with torch.no_grad():
+            torch_values = model(dummy).detach().cpu().numpy()
+        onnx_values = session.run(
+            None, {session.get_inputs()[0].name: dummy.numpy()}
+        )[0]
+        np.testing.assert_allclose(
+            torch_values, onnx_values, rtol=args.parity_rtol, atol=args.parity_atol
+        )
+        max_abs = float(np.max(np.abs(torch_values - onnx_values)))
+    print(
+        f"[smoke] PASS; asserted PyTorch/ONNX parity across 4 rows; max_abs={max_abs:.3e}"
+    )
+    return 0
 
-    # ---- calibration: outMin/outMax from held-out prediction quantiles ----
-    lo = float(np.percentile(best["preds"], CFG["calib_lo_pct"]))
-    hi = float(np.percentile(best["preds"], CFG["calib_hi_pct"]))
-    print("\n" + "=" * 70)
-    print("DROP-IN INSTRUCTIONS")
-    print("=" * 70)
-    print(f"1. Put {CFG['out_onnx']} in the repo's  models/  folder.")
-    print(f"2. In body.html MODEL_CONFIG set:")
-    print(f"       outMin: {lo:.3f},   outMax: {hi:.3f}")
-    print(f"   (held-out {CFG['calib_lo_pct']:.0f}th/{CFG['calib_hi_pct']:.0f}th pct of predictions, native label scale)")
-    print(f"3. Reload the Body Calc. Sanity-check: lean/athletic bodies should land high,")
-    print(f"   soft/unbuilt low, with a real spread — not a dead band. If the scale looks off,")
-    print(f"   nudge outMin/outMax; if it's random despite a good Spearman, the crop/channel")
-    print(f"   order is off (the page feeds RGB, square black-letterboxed, ImageNet-normalized).")
-    print("=" * 70)
+
+def train_candidate(
+    args: argparse.Namespace, manifest: dict[str, Any], data_root: Path
+) -> int:
+    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+    try:
+        import numpy as np
+        import onnxruntime as ort
+        import torch
+        import torch.nn as nn
+        import torchvision as tv
+        from PIL import Image
+        from scipy import stats as scipy_stats
+        from torch.utils.data import DataLoader, Dataset
+        from torchvision import transforms
+    except ImportError as exc:
+        raise ContractError(
+            "training needs torch, torchvision, onnx, onnxscript, onnxruntime, "
+            "pandas, Pillow, scipy, and numpy"
+        ) from exc
+
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+    if args.device == "cuda" and not torch.cuda.is_available():
+        raise ContractError("CUDA requested but unavailable")
+    device = (
+        "cuda"
+        if args.device == "auto" and torch.cuda.is_available()
+        else ("cpu" if args.device == "auto" else args.device)
+    )
+
+    report_path = Path(args.run_report).resolve()
+    candidate_path = Path(args.candidate_out).resolve()
+    if candidate_path.exists() and not args.overwrite_candidate:
+        raise ContractError(f"candidate exists; use --overwrite-candidate: {candidate_path}")
+    if report_path.exists() and not args.overwrite_report:
+        raise ContractError(f"run report exists; use --overwrite-report: {report_path}")
+
+    environment_lock = verify_environment_lock(Path(args.environment_lock))
+
+    script_path = Path(__file__).resolve()
+    gate = {
+        "registered_before_training_at": utc_now(),
+        "min_dev_spearman": args.min_dev_spearman,
+        "min_test_spearman": args.min_test_spearman,
+        "min_test_spearman_delta_vs_baseline": (
+            args.min_test_spearman_delta if args.baseline_predictions else None
+        ),
+        "candidate_export_requires_all_available_thresholds": True,
+        "production_model_replacement": "forbidden by this script",
+    }
+    report: dict[str, Any] = {
+        "schema_version": PROVENANCE_SCHEMA,
+        "status": "running-dev-selection; locked test not accessed",
+        "started_at": utc_now(),
+        "command": [sys.executable, *sys.argv],
+        "script": {
+            "path": str(script_path),
+            "version": SCRIPT_VERSION,
+            "sha256": sha256_file(script_path),
+        },
+        "dataset": manifest["dataset"],
+        "split_manifest": {
+            "path": str(Path(args.manifest).resolve()),
+            "sha256": manifest_sha256(manifest),
+            "counts": manifest["counts"],
+        },
+        "preprocessing": manifest["preprocessing"],
+        "config": {
+            "seeds": args.seeds,
+            "epochs": args.epochs,
+            "batch_size": args.batch_size,
+            "learning_rates": {
+                "head_layer4": args.lr_head,
+                "backbone": args.lr_backbone,
+            },
+            "weight_decay": args.weight_decay,
+            "device": device,
+            "num_workers": args.num_workers,
+            "bootstrap_iterations": args.bootstrap_iterations,
+        },
+        "gate": gate,
+        "environment": environment_context(torch, tv, environment_lock),
+        "selection": None,
+        "test": None,
+        "export": None,
+        "limitations": [
+            "Connor is training/model-selection contaminated for the shipped model.",
+            "Passing does not establish independent attractiveness discrimination.",
+            "Browser preprocessing, subgroup, route, and stability need separate tests.",
+            "A monotone REF_RAW remap cannot improve ordering metrics.",
+        ],
+    }
+    # Durable proof that gates existed before any locked-test access.
+    atomic_json(report_path, report, overwrite=args.overwrite_report)
+
+    by_split = {
+        name: [entry for entry in manifest["entries"] if entry["split"] == name]
+        for name in ("train", "dev", "test")
+    }
+    size = int(manifest["preprocessing"]["input_size"])
+    normalization = transforms.Normalize(MEAN, STD)
+    train_transform = transforms.Compose(
+        [
+            transforms.Resize((size, size)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(0.2, 0.2, 0.2, 0.02),
+            transforms.RandomAffine(
+                degrees=4, translate=(0.03, 0.03), scale=(0.95, 1.05)
+            ),
+            transforms.ToTensor(),
+            normalization,
+        ]
+    )
+    eval_transform = transforms.Compose(
+        [transforms.Resize((size, size)), transforms.ToTensor(), normalization]
+    )
+
+    class BodyDataset(Dataset):
+        def __init__(self, entries: list[dict[str, Any]], transform: Any):
+            self.entries = entries
+            self.transform = transform
+
+        def __len__(self) -> int:
+            return len(self.entries)
+
+        def __getitem__(self, index: int) -> tuple[Any, Any, str]:
+            entry = self.entries[index]
+            path = (data_root / entry["image_relpath"]).resolve()
+            try:
+                path.relative_to(data_root)
+            except ValueError as exc:
+                raise ContractError(f"manifest path escapes data root: {path}") from exc
+            image = Image.open(path).convert("RGB")
+            if manifest["preprocessing"]["mode"] == "full-letterbox":
+                image = letterbox_square(image)
+            else:
+                image = pose_crop_square(image, entry, size)
+            return (
+                self.transform(image),
+                torch.tensor([entry["score"]], dtype=torch.float32),
+                entry["image_id"],
+            )
+
+    def loader(split: str, training: bool, seed: int) -> Any:
+        generator = torch.Generator().manual_seed(seed)
+        return DataLoader(
+            BodyDataset(
+                by_split[split], train_transform if training else eval_transform
+            ),
+            batch_size=args.batch_size,
+            shuffle=training,
+            num_workers=args.num_workers,
+            generator=generator,
+            drop_last=False,
+        )
+
+    weights = tv.models.ResNet18_Weights.IMAGENET1K_V1
+    report["model_initialization"] = initialization_context(torch, weights)
+
+    def new_model() -> Any:
+        model = tv.models.resnet18(weights=weights)
+        model.fc = nn.Linear(model.fc.in_features, 1)
+        return model
+
+    def evaluate(model: Any, data_loader: Any) -> tuple[Any, Any, list[str], dict[str, Any]]:
+        model.eval()
+        predictions: list[float] = []
+        targets: list[float] = []
+        ids: list[str] = []
+        with torch.no_grad():
+            for images, labels, image_ids in data_loader:
+                predictions.extend(
+                    model(images.to(device)).detach().cpu().flatten().tolist()
+                )
+                targets.extend(labels.flatten().tolist())
+                ids.extend(list(image_ids))
+        return (
+            np.asarray(predictions),
+            np.asarray(targets),
+            ids,
+            metrics(predictions, targets, scipy_stats),
+        )
+
+    candidates: list[dict[str, Any]] = []
+    for seed in args.seeds:
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+        model = new_model().to(device)
+
+        def set_trainable(full: bool) -> None:
+            for name, parameter in model.named_parameters():
+                parameter.requires_grad = full or name.startswith(("fc.", "layer4."))
+
+        set_trainable(False)
+        optimizer = torch.optim.AdamW(
+            [
+                {
+                    "params": [
+                        parameter
+                        for name, parameter in model.named_parameters()
+                        if name.startswith(("fc.", "layer4."))
+                    ],
+                    "lr": args.lr_head,
+                },
+                {
+                    "params": [
+                        parameter
+                        for name, parameter in model.named_parameters()
+                        if not name.startswith(("fc.", "layer4."))
+                    ],
+                    "lr": args.lr_backbone,
+                },
+            ],
+            weight_decay=args.weight_decay,
+        )
+        loss_function = nn.MSELoss()
+        train_loader = loader("train", True, seed)
+        dev_loader = loader("dev", False, seed)
+        best: dict[str, Any] | None = None
+        epoch_log = []
+        for epoch in range(args.epochs):
+            if epoch == args.epochs // 2:
+                set_trainable(True)
+            model.train()
+            losses = []
+            for images, labels, _ in train_loader:
+                images, labels = images.to(device), labels.to(device)
+                optimizer.zero_grad(set_to_none=True)
+                loss = loss_function(model(images), labels)
+                loss.backward()
+                optimizer.step()
+                losses.append(float(loss.detach().cpu()))
+            _, _, _, dev_metrics = evaluate(model, dev_loader)
+            epoch_log.append(
+                {
+                    "epoch": epoch,
+                    "train_mse": float(np.mean(losses)),
+                    "dev": dev_metrics,
+                }
+            )
+            rank = (
+                dev_metrics["spearman"]
+                if math.isfinite(dev_metrics["spearman"])
+                else -math.inf
+            )
+            best_rank = best["rank"] if best else -math.inf
+            if (
+                best is None
+                or rank > best_rank
+                or (
+                    rank == best_rank
+                    and dev_metrics["rmse"] < best["metrics"]["rmse"]
+                )
+            ):
+                best = {
+                    "rank": rank,
+                    "epoch": epoch,
+                    "metrics": dev_metrics,
+                    "state": {
+                        name: value.detach().cpu().clone()
+                        for name, value in model.state_dict().items()
+                    },
+                }
+            print(
+                f"[seed {seed} ep {epoch:02d}] dev "
+                f"RMSE={dev_metrics['rmse']:.3f} "
+                f"Pearson={dev_metrics['pearson']:.3f} "
+                f"Spearman={dev_metrics['spearman']:.3f}"
+            )
+        if best is None:
+            raise ContractError(f"seed {seed} produced no checkpoint")
+        candidates.append(
+            {
+                "seed": seed,
+                "best_epoch": best["epoch"],
+                "dev": best["metrics"],
+                "state": best["state"],
+                "epochs": epoch_log,
+            }
+        )
+        del model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+    selected = max(
+        candidates,
+        key=lambda item: (
+            item["dev"]["spearman"]
+            if math.isfinite(item["dev"]["spearman"])
+            else -math.inf,
+            -item["dev"]["rmse"],
+            -item["seed"],
+        ),
+    )
+    report["selection"] = {
+        "policy": "highest dev Spearman; dev RMSE then lower seed break ties",
+        "candidates": [
+            {key: value for key, value in item.items() if key != "state"}
+            for item in candidates
+        ],
+        "selected_seed": selected["seed"],
+        "selected_epoch": selected["best_epoch"],
+        "selected_dev": selected["dev"],
+    }
+    if (
+        not math.isfinite(selected["dev"]["spearman"])
+        or selected["dev"]["spearman"] < args.min_dev_spearman
+    ):
+        report["status"] = "rejected-on-dev; locked test not accessed; no ONNX exported"
+        report["finished_at"] = utc_now()
+        atomic_json(report_path, report, overwrite=True)
+        print("[gate] REJECTED on dev; test untouched; no export")
+        return 2
+
+    selected_model = new_model()
+    selected_model.load_state_dict(selected["state"])
+    selected_model = selected_model.to(device).eval()
+    test_access_count = 0
+
+    def locked_test_once() -> tuple[Any, Any, list[str], dict[str, Any]]:
+        nonlocal test_access_count
+        if test_access_count:
+            raise ContractError("locked test requested more than once")
+        test_access_count += 1
+        return evaluate(selected_model, loader("test", False, args.split_seed))
+
+    test_predictions, test_targets, test_ids, test_metrics = locked_test_once()
+    test_metrics["spearman_bootstrap_95ci"] = bootstrap_spearman(
+        test_predictions,
+        test_targets,
+        scipy_stats,
+        seed=args.split_seed + 991,
+        iterations=args.bootstrap_iterations,
+    )
+    baseline = None
+    if args.baseline_predictions:
+        baseline_path = Path(args.baseline_predictions).resolve()
+        baseline_map = load_baseline(baseline_path, test_ids)
+        baseline_values = np.asarray([baseline_map[image_id] for image_id in test_ids])
+        baseline = metrics(baseline_values, test_targets, scipy_stats)
+        baseline.update(
+            {
+                "source_path": str(baseline_path),
+                "source_sha256": sha256_file(baseline_path),
+                "spearman_delta_candidate_minus_baseline": (
+                    test_metrics["spearman"] - baseline["spearman"]
+                ),
+            }
+        )
+    report["test"] = {
+        "access_count": test_access_count,
+        "accessed_after_selection": True,
+        "metrics": test_metrics,
+        "baseline": baseline,
+        "prediction_binding_sha256": sha256_bytes(
+            canonical_json(
+                [
+                    {"image_id": image_id, "prediction": float(prediction)}
+                    for image_id, prediction in zip(test_ids, test_predictions)
+                ]
+            ).encode()
+        ),
+    }
+
+    failures = []
+    if (
+        not math.isfinite(test_metrics["spearman"])
+        or test_metrics["spearman"] < args.min_test_spearman
+    ):
+        failures.append(
+            f"test Spearman {test_metrics['spearman']:.4f} < {args.min_test_spearman:.4f}"
+        )
+    if (
+        baseline is not None
+        and baseline["spearman_delta_candidate_minus_baseline"]
+        < args.min_test_spearman_delta
+    ):
+        failures.append(
+            "test Spearman delta "
+            f"{baseline['spearman_delta_candidate_minus_baseline']:.4f} "
+            f"< {args.min_test_spearman_delta:.4f}"
+        )
+    if failures:
+        report["status"] = "rejected-on-locked-test; no ONNX exported"
+        report["gate"]["failures"] = failures
+        report["finished_at"] = utc_now()
+        atomic_json(report_path, report, overwrite=True)
+        print("[gate] REJECTED: " + "; ".join(failures))
+        return 2
+
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = candidate_path.with_name(candidate_path.name + ".tmp.onnx")
+    if temporary_path.exists():
+        temporary_path.unlink()
+    selected_model = selected_model.cpu().eval()
+    # Parity uses dev inputs, not a second access to the locked test set.
+    parity_loader = loader("dev", False, args.split_seed)
+    parity_images, _, _ = next(iter(parity_loader))
+    parity_images = parity_images[: min(args.batch_size, len(parity_images))]
+    torch.onnx.export(
+        selected_model,
+        parity_images[:1],
+        temporary_path,
+        input_names=["input"],
+        output_names=["score"],
+        dynamic_axes={"input": {0: "batch"}, "score": {0: "batch"}},
+        opset_version=12,
+        dynamo=False,
+    )
+    try:
+        session = ort.InferenceSession(
+            str(temporary_path), providers=["CPUExecutionProvider"]
+        )
+        with torch.no_grad():
+            torch_values = selected_model(parity_images).detach().cpu().numpy()
+        onnx_values = session.run(
+            None, {session.get_inputs()[0].name: parity_images.numpy()}
+        )[0]
+        np.testing.assert_allclose(
+            torch_values, onnx_values, rtol=args.parity_rtol, atol=args.parity_atol
+        )
+        max_abs = float(np.max(np.abs(torch_values - onnx_values)))
+    except Exception:
+        if temporary_path.exists():
+            temporary_path.unlink()
+        raise
+    if candidate_path.exists() and not args.overwrite_candidate:
+        temporary_path.unlink()
+        raise ContractError(f"candidate appeared during run: {candidate_path}")
+    os.replace(temporary_path, candidate_path)
+    report["status"] = (
+        "candidate-exported; independent acceptance and REF_RAW regeneration required"
+    )
+    report["export"] = {
+        "path": str(candidate_path),
+        "sha256": sha256_file(candidate_path),
+        "input_contract": {
+            "shape": [None, 3, size, size],
+            "dtype": "float32",
+            "normalization": manifest["preprocessing"]["normalization"],
+        },
+        "pytorch_onnx_parity": {
+            "split": "dev",
+            "rows": len(parity_images),
+            "rtol": args.parity_rtol,
+            "atol": args.parity_atol,
+            "max_abs": max_abs,
+            "asserted": True,
+        },
+        "production_replacement_performed": False,
+    }
+    report["calibration_handoff"] = {
+        "action": (
+            "Regenerate body.html REF_RAW from a frozen independent, sex-balanced "
+            "production-pipeline reference manifest; never from Connor train/dev/test."
+        ),
+        "forbidden_shortcut": (
+            "Do not tune or print outMin/outMax and do not nudge anchors by eye."
+        ),
+        "interpretation": (
+            "Reference remapping changes calibration/display only; it cannot improve "
+            "rank correlation, AUC, or pairwise ordering."
+        ),
+    }
+    report["finished_at"] = utc_now()
+    atomic_json(report_path, report, overwrite=True)
+    print(f"[export] staged {candidate_path}; sha256={report['export']['sha256']}")
+    print(
+        "[handoff] Do not replace the shipped model. Run independent browser, subgroup, "
+        "route, and stability evaluation first."
+    )
+    print(
+        "[handoff] If accepted, regenerate REF_RAW from the frozen production reference; "
+        "never hand-tune outMin/outMax."
+    )
+    return 0
+
+
+def run_dry(args: argparse.Namespace) -> int:
+    manifest = build_manifest(
+        synthetic_rows(),
+        source_url=args.archive_url,
+        archive_sha256=args.archive_sha256.lower(),
+        labels_sha256=sha256_bytes(b"synthetic-labels"),
+        split_seed=args.split_seed,
+        dev_frac=args.dev_frac,
+        test_frac=args.test_frac,
+        preprocessing_mode="full-letterbox",
+        crop_manifest_sha256=None,
+        label_source="synthetic-labels",
+        drop_headswaps=False,
+    )
+    report = {
+        "schema_version": DRY_SCHEMA,
+        "status": "validated-with-synthetic-metadata; no corpus read; no training performed",
+        "script_version": SCRIPT_VERSION,
+        "archive_sha256": args.archive_sha256.lower(),
+        "manifest_sha256": manifest_sha256(manifest),
+        "manifest": manifest,
+        "invariants": {
+            "connected_identity_leakage": False,
+            "all_three_splits_nonempty": True,
+            "manifest_precedes_training": True,
+            "dev_selects_checkpoint_and_seed": True,
+            "locked_test_access_limit": 1,
+            "onnx_export_requires_thresholds": True,
+            "shipped_model_write_forbidden": True,
+            "onnx_parity_must_be_asserted": True,
+        },
+        "commands": {
+            "prepare": (
+                "python models/train_body_beauty.py --prepare-manifest "
+                "--manifest data/body-training-manifest.json"
+            ),
+            "train": (
+                "python models/train_body_beauty.py "
+                "--environment-lock data/body-training-environment-lock.txt "
+                "--manifest data/body-training-manifest.json "
+                "--seeds 1337,2027,4099 "
+                "--candidate-out models/body-beauty.candidate.onnx "
+                "--run-report data/body-training-run.json"
+            ),
+            "smoke": "python models/train_body_beauty.py --smoke "
+            "--environment-lock data/body-training-environment-lock.txt",
+        },
+    }
+    if args.dry_run_output:
+        atomic_json(Path(args.dry_run_output), report, overwrite=args.overwrite_report)
+        print(f"[dry-run] PASS; wrote {Path(args.dry_run_output).resolve()}")
+    else:
+        print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+def parser() -> argparse.ArgumentParser:
+    result = argparse.ArgumentParser(
+        description="Train a gated Body CNN candidate from a locked identity split."
+    )
+    modes = result.add_mutually_exclusive_group()
+    modes.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="stdlib-only deterministic contract test; no corpus or ML packages",
+    )
+    modes.add_argument(
+        "--smoke",
+        action="store_true",
+        help="corpus-free asserted PyTorch/ONNX parity test",
+    )
+    modes.add_argument(
+        "--prepare-manifest",
+        action="store_true",
+        help="verify corpus and lock split manifest; do not train",
+    )
+    result.add_argument("--data-dir", default="connor_data")
+    result.add_argument("--manifest", default="data/body-training-manifest.json")
+    result.add_argument(
+        "--regenerate-manifest",
+        action="store_true",
+        help="with --prepare-manifest only, explicitly replace a changed manifest",
+    )
+    result.add_argument("--archive-url", default=OSF_URL)
+    result.add_argument("--archive-sha256", default=OSF_ARCHIVE_SHA256)
+    result.add_argument("--use-long", action="store_true")
+    result.add_argument("--drop-headswaps", action="store_true")
+    result.add_argument(
+        "--preprocessing-mode",
+        choices=("full-letterbox", "pose-crop-manifest"),
+        default="full-letterbox",
+    )
+    result.add_argument("--pose-crop-manifest")
+    result.add_argument("--split-seed", type=int, default=74021)
+    result.add_argument("--dev-frac", type=float, default=0.15)
+    result.add_argument("--test-frac", type=float, default=0.15)
+    result.add_argument("--seeds", type=parse_seeds, default=parse_seeds("1337"))
+    result.add_argument("--epochs", type=int, default=40)
+    result.add_argument("--batch-size", type=int, default=16)
+    result.add_argument("--lr-head", type=float, default=1e-3)
+    result.add_argument("--lr-backbone", type=float, default=1e-4)
+    result.add_argument("--weight-decay", type=float, default=1e-4)
+    result.add_argument("--num-workers", type=int, default=0)
+    result.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
+    result.add_argument("--min-dev-spearman", type=float, default=0.30)
+    result.add_argument("--min-test-spearman", type=float, default=0.30)
+    result.add_argument("--min-test-spearman-delta", type=float, default=0.02)
+    result.add_argument(
+        "--baseline-predictions",
+        help="optional locked-test image_id,prediction CSV/JSON from shipped model",
+    )
+    result.add_argument("--bootstrap-iterations", type=int, default=2000)
+    result.add_argument("--candidate-out", default="models/body-beauty.candidate.onnx")
+    result.add_argument("--run-report", default="data/body-training-run.json")
+    result.add_argument(
+        "--environment-lock",
+        help=(
+            "archived pip-freeze lock; required for training and verified against "
+            "torch/torchvision/ONNX/Pillow/NumPy/SciPy/pandas"
+        ),
+    )
+    result.add_argument("--dry-run-output")
+    result.add_argument("--overwrite-candidate", action="store_true")
+    result.add_argument("--overwrite-report", action="store_true")
+    result.add_argument("--parity-rtol", type=float, default=1e-4)
+    result.add_argument("--parity-atol", type=float, default=1e-4)
+    return result
+
+
+def main(argv: Iterable[str] | None = None) -> int:
+    args = parser().parse_args(list(argv) if argv is not None else None)
+    try:
+        validate_args(args)
+        if args.regenerate_manifest and not args.prepare_manifest:
+            raise ContractError("--regenerate-manifest requires --prepare-manifest")
+        warning = (
+            FULL_LETTERBOX_WARNING
+            if args.preprocessing_mode == "full-letterbox"
+            else POSE_CROP_WARNING
+        )
+        print(f"[preprocessing] {args.preprocessing_mode}: WARNING: {warning}")
+        if args.dry_run:
+            return run_dry(args)
+        if args.smoke:
+            return run_smoke(args)
+        expected_manifest, data_root = prepare_inputs(args)
+        locked_manifest = lock_or_verify_manifest(
+            Path(args.manifest),
+            expected_manifest,
+            prepare=args.prepare_manifest,
+            regenerate=args.regenerate_manifest,
+        )
+        if args.prepare_manifest:
+            print("[manifest] preparation complete; review and preserve it before training")
+            return 0
+        return train_candidate(args, locked_manifest, data_root)
+    except ContractError as exc:
+        print(f"[error] {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--smoke", action="store_true", help="verify ONNX export with no dataset")
-    # parse_known_args (not parse_args) so the script also runs when pasted straight into a Colab/Jupyter
-    # cell, where sys.argv carries the kernel's own args (e.g. '-f /root/.../kernel-xxxx.json'). Those are
-    # ignored instead of raising "unrecognized arguments". As a file (`python train_body_beauty.py [--smoke]`)
-    # it behaves exactly as before.
-    args, _ = ap.parse_known_args()
-    smoke_test() if args.smoke else main()
+    raise SystemExit(main())

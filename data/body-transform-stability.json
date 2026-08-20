@@ -1,0 +1,3889 @@
+{
+  "schema_version": "body-transform-stability-evaluation.v1",
+  "interpretation": {
+    "instrument": "Current production routing/pose crop versus the locked training-style full-image black-letterbox candidate with identical ONNX weights.",
+    "discrimination": "Preprocessing can change ordering; these synthetic same-stimulus transforms measure consistency, not independent attractiveness discrimination.",
+    "calibration": "Public half-point display metrics are separate. A monotone remap cannot improve rank/AUC/pairwise ordering and adds no attractiveness intelligence.",
+    "candidate_decision": "Rejected for production: the narrow accuracy screen passed, but the registered synthetic stability screen showed material regressions and broader body-specific scope is absent."
+  },
+  "overview": {
+    "rows": 216,
+    "sources": 12,
+    "transforms": 18,
+    "current_scored": 190,
+    "current_refused": 26,
+    "current_refusal_rate": 0.12037037037037036,
+    "current_interval_midpoint_rows": 8,
+    "current_delta": {
+      "n": 161,
+      "mean_signed": 0.14108695652173894,
+      "mean_absolute": 0.34077639751552785,
+      "maximum_absolute": 4.09,
+      "rmse": 0.546275219012205
+    },
+    "candidate_delta": {
+      "n": 204,
+      "mean_signed": 0.17795438976940822,
+      "mean_absolute": 0.23001217423507106,
+      "maximum_absolute": 1.403176017707275,
+      "rmse": 0.3790500104063244
+    },
+    "candidate_delta_common_current_pairs": {
+      "n": 161,
+      "mean_signed": 0.19840836175549464,
+      "mean_absolute": 0.2505125773963906,
+      "maximum_absolute": 1.403176017707275,
+      "rmse": 0.4102125951784408
+    },
+    "current_public_changed_rate": 0.5900621118012422,
+    "candidate_public_changed_rate": 0.39215686274509803
+  },
+  "crop_padding_diagnostic": {
+    "rows": 216,
+    "instrumented_rows": 191,
+    "unavailable_rows": 25,
+    "crop_outside_rows": 191,
+    "crop_inside_rows": 0,
+    "crop_outside_rate_instrumented": 1.0,
+    "padding_fraction": {
+      "n": 191,
+      "min": 0.34265451,
+      "q25": 0.524089775,
+      "median": 0.54401284,
+      "q75": 0.56291314,
+      "p90": 0.57265251,
+      "max": 0.6586466,
+      "mean": 0.5264982308376963,
+      "nonzero": 191
+    },
+    "by_outcome": {
+      "refused": {
+        "rows": 26,
+        "instrumented_rows": 1,
+        "crop_outside_rows": 1,
+        "padding": {
+          "n": 1,
+          "min": 0.59245425,
+          "q25": 0.59245425,
+          "median": 0.59245425,
+          "q75": 0.59245425,
+          "p90": 0.59245425,
+          "max": 0.59245425,
+          "mean": 0.59245425,
+          "nonzero": 1
+        }
+      },
+      "scored": {
+        "rows": 190,
+        "instrumented_rows": 190,
+        "crop_outside_rows": 190,
+        "padding": {
+          "n": 190,
+          "min": 0.34265451,
+          "q25": 0.5240619475,
+          "median": 0.54357217,
+          "q75": 0.5627660800000001,
+          "p90": 0.571230456,
+          "max": 0.6586466,
+          "mean": 0.5261510938947369,
+          "nonzero": 190
+        }
+      }
+    },
+    "outcome_sensitivity": {
+      "crop_outside": {
+        "n": 191,
+        "refused_or_error": 1,
+        "refusal_rate": 0.005235602094240838
+      },
+      "crop_inside": {
+        "n": 0,
+        "refused_or_error": 0,
+        "refusal_rate": null
+      },
+      "no_diagnostic": {
+        "n": 25,
+        "refused_or_error": 25,
+        "refusal_rate": 1.0
+      }
+    },
+    "score_sensitivity": {
+      "scored_instrumented_rows": 190,
+      "padding_vs_continuous_score_spearman": 0.0066255211696319705,
+      "padding_vs_continuous_score_pearson": 0.14573616156866812,
+      "crop_outside_scores": {
+        "n": 190,
+        "min": 2.94,
+        "median": 7.425,
+        "max": 9.01,
+        "mean": 7.386763157894737
+      },
+      "crop_inside_scores": {
+        "n": 0,
+        "min": null,
+        "median": null,
+        "max": null,
+        "mean": null
+      },
+      "outside_minus_inside_mean": null
+    },
+    "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+    "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+    "paired_score_delta_sensitivity": {
+      "crop_outside": {
+        "n": 161,
+        "mean_signed": 0.14108695652173905,
+        "mean_absolute": 0.3407763975155279,
+        "maximum_absolute": 4.09
+      },
+      "crop_inside": {
+        "n": 0,
+        "mean_signed": null,
+        "mean_absolute": null,
+        "maximum_absolute": null
+      }
+    },
+    "paired_padding_change_sensitivity": {
+      "n": 161,
+      "padding_fraction_delta": {
+        "n": 161,
+        "min": -0.18468067999999993,
+        "q25": -0.016367700000000096,
+        "median": 0.00018681999999992094,
+        "q75": 0.00755869000000009,
+        "p90": 0.021579369999999987,
+        "max": 0.11509572000000001,
+        "mean": -0.020081525652173925,
+        "nonzero": 82
+      },
+      "padding_delta_vs_score_delta_spearman": 0.20123230566589492,
+      "padding_delta_vs_score_delta_pearson": 0.25139114808415136,
+      "interpretation": "Within-source synthetic transforms quantify association between a changed production padding fraction and score change; transforms also change pixels/framing, so this is sensitivity evidence, not a randomized causal estimate."
+    }
+  },
+  "by_transform": {
+    "original": {
+      "sources": 12,
+      "current_scored": 10,
+      "current_refused": 2,
+      "route_transitions": 0,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.0,
+        "mean_absolute": 0.0,
+        "maximum_absolute": 0.0,
+        "rmse": 0.0
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.0,
+        "mean_absolute": 0.0,
+        "maximum_absolute": 0.0,
+        "rmse": 0.0
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": 0.0,
+        "mean_absolute": 0.0,
+        "maximum_absolute": 0.0,
+        "rmse": 0.0
+      },
+      "current_public_changed": 0,
+      "candidate_public_changed": 0,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 1.0,
+        "pairwise_order_agreement": 1.0,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 1.0,
+        "pairwise_order_agreement": 1.0,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 1.0,
+        "pairwise_order_agreement": 1.0,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 1.0,
+        "pairwise_order_agreement": 1.0,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 1.0,
+        "pairwise_order_agreement": 1.0,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 10,
+        "unavailable_rows": 2,
+        "crop_outside_rows": 10,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 10,
+          "min": 0.52733519,
+          "q25": 0.5380250425,
+          "median": 0.542273565,
+          "q75": 0.55819325,
+          "p90": 0.5665765690000001,
+          "max": 0.56815948,
+          "mean": 0.5465862290000001,
+          "nonzero": 10
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 2,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 10,
+            "instrumented_rows": 10,
+            "crop_outside_rows": 10,
+            "padding": {
+              "n": 10,
+              "min": 0.52733519,
+              "q25": 0.5380250425,
+              "median": 0.542273565,
+              "q75": 0.55819325,
+              "p90": 0.5665765690000001,
+              "max": 0.56815948,
+              "mean": 0.5465862290000001,
+              "nonzero": 10
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 2,
+            "refused_or_error": 2,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 10,
+          "padding_vs_continuous_score_spearman": -0.4846990641204806,
+          "padding_vs_continuous_score_pearson": -0.48033632428566014,
+          "crop_outside_scores": {
+            "n": 10,
+            "min": 7.08,
+            "median": 7.13,
+            "max": 7.98,
+            "mean": 7.3469999999999995
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.0,
+            "mean_absolute": 0.0,
+            "maximum_absolute": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "mirror": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.15999999999999986,
+        "mean_absolute": 0.2580000000000001,
+        "maximum_absolute": 0.7599999999999998,
+        "rmse": 0.32053080975157444
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.18432083535876828,
+        "mean_absolute": 0.26816365308257756,
+        "maximum_absolute": 0.5872924190878974,
+        "rmse": 0.3123519109154212
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": 0.24917799386768563,
+        "mean_absolute": 0.29380339226192936,
+        "maximum_absolute": 0.5872924190878974,
+        "rmse": 0.33593597961712995
+      },
+      "current_public_changed": 5,
+      "candidate_public_changed": 6,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.7301163117764201,
+        "pairwise_order_agreement": 0.8333333333333334,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.33003772075225213,
+        "pairwise_order_agreement": 0.6481481481481481,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.5594405594405595,
+        "pairwise_order_agreement": 0.696969696969697,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.23636363636363636,
+        "pairwise_order_agreement": 0.5555555555555556,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6442354241315424,
+        "pairwise_order_agreement": 0.8793103448275862,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.54092595,
+          "q25": 0.54576981,
+          "median": 0.54786362,
+          "q75": 0.563075655,
+          "p90": 0.56743694,
+          "max": 0.568345,
+          "mean": 0.5527455081818182,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.54092595,
+              "q25": 0.54576981,
+              "median": 0.54786362,
+              "q75": 0.563075655,
+              "p90": 0.56743694,
+              "max": 0.568345,
+              "mean": 0.5527455081818182,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": -0.21818181818181817,
+          "padding_vs_continuous_score_pearson": -0.21131589619156432,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 7.2,
+            "median": 7.48,
+            "max": 7.89,
+            "mean": 7.488181818181818
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.15999999999999986,
+            "mean_absolute": 0.2580000000000001,
+            "maximum_absolute": 0.7599999999999998
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "crop_center_10": {
+      "sources": 12,
+      "current_scored": 5,
+      "current_refused": 7,
+      "route_transitions": 10,
+      "current_delta": {
+        "n": 5,
+        "mean_signed": -0.6309999999999999,
+        "mean_absolute": 0.6309999999999999,
+        "maximum_absolute": 0.8650000000000002,
+        "rmse": 0.6426468703728354
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.18009732252709734,
+        "mean_absolute": 0.18009732252709734,
+        "maximum_absolute": 0.4078187410976293,
+        "rmse": 0.20894934498783033
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 5,
+        "mean_signed": 0.16194986354603352,
+        "mean_absolute": 0.16194986354603352,
+        "maximum_absolute": 0.4078187410976293,
+        "rmse": 0.20988827594017714
+      },
+      "current_public_changed": 5,
+      "candidate_public_changed": 5,
+      "current_ordering": {
+        "paired_sources": 5,
+        "spearman_vs_original": -0.5263157894736842,
+        "pairwise_order_agreement": 0.2777777777777778,
+        "pairwise_pairs": 9
+      },
+      "current_public_ordering": {
+        "paired_sources": 5,
+        "spearman_vs_original": null,
+        "pairwise_order_agreement": 0.5,
+        "pairwise_pairs": 4
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.8391608391608392,
+        "pairwise_order_agreement": 0.8484848484848485,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 5,
+        "spearman_vs_original": 0.9,
+        "pairwise_order_agreement": 0.9,
+        "pairwise_pairs": 10
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6018522723066709,
+        "pairwise_order_agreement": 0.8448275862068966,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 5,
+        "unavailable_rows": 7,
+        "crop_outside_rows": 5,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 5,
+          "min": 0.59251964,
+          "q25": 0.59251964,
+          "median": 0.59251964,
+          "q75": 0.59251964,
+          "p90": 0.59251964,
+          "max": 0.59251964,
+          "mean": 0.59251964,
+          "nonzero": 5
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 7,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 5,
+            "instrumented_rows": 5,
+            "crop_outside_rows": 5,
+            "padding": {
+              "n": 5,
+              "min": 0.59251964,
+              "q25": 0.59251964,
+              "median": 0.59251964,
+              "q75": 0.59251964,
+              "p90": 0.59251964,
+              "max": 0.59251964,
+              "mean": 0.59251964,
+              "nonzero": 5
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 5,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 7,
+            "refused_or_error": 7,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 5,
+          "padding_vs_continuous_score_spearman": null,
+          "padding_vs_continuous_score_pearson": null,
+          "crop_outside_scores": {
+            "n": 5,
+            "min": 6.525,
+            "median": 6.535,
+            "max": 6.59,
+            "mean": 6.543000000000001
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 5,
+            "mean_signed": -0.6309999999999999,
+            "mean_absolute": 0.6309999999999999,
+            "maximum_absolute": 0.8650000000000002
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "crop_legs_20": {
+      "sources": 12,
+      "current_scored": 12,
+      "current_refused": 0,
+      "route_transitions": 12,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": -0.6170000000000002,
+        "mean_absolute": 0.725,
+        "maximum_absolute": 4.09,
+        "rmse": 1.3616350465524893
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": -0.12929163008335812,
+        "mean_absolute": 0.1407465306941443,
+        "maximum_absolute": 0.34970765346962907,
+        "rmse": 0.16090612227531126
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": -0.14323119474556228,
+        "mean_absolute": 0.14323119474556228,
+        "maximum_absolute": 0.34970765346962907,
+        "rmse": 0.16451529592811318
+      },
+      "current_public_changed": 7,
+      "candidate_public_changed": 2,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.6196785503312473,
+        "pairwise_order_agreement": 0.7380952380952381,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.37490813101603976,
+        "pairwise_order_agreement": 0.6851851851851852,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.7692307692307693,
+        "pairwise_order_agreement": 0.8181818181818182,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.6,
+        "pairwise_order_agreement": 0.7333333333333333,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.697277051246695,
+        "pairwise_order_agreement": 0.8275862068965517,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 12,
+        "unavailable_rows": 0,
+        "crop_outside_rows": 12,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 12,
+          "min": 0.36548752,
+          "q25": 0.488777535,
+          "median": 0.49042492,
+          "q75": 0.49042492,
+          "p90": 0.49042492,
+          "max": 0.49042492,
+          "mean": 0.4704124725,
+          "nonzero": 12
+        },
+        "by_outcome": {
+          "scored": {
+            "rows": 12,
+            "instrumented_rows": 12,
+            "crop_outside_rows": 12,
+            "padding": {
+              "n": 12,
+              "min": 0.36548752,
+              "q25": 0.488777535,
+              "median": 0.49042492,
+              "q75": 0.49042492,
+              "p90": 0.49042492,
+              "max": 0.49042492,
+              "mean": 0.4704124725,
+              "nonzero": 12
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 12,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 12,
+          "padding_vs_continuous_score_spearman": 0.7251369346656845,
+          "padding_vs_continuous_score_pearson": 0.7465255778438963,
+          "crop_outside_scores": {
+            "n": 12,
+            "min": 2.94,
+            "median": 6.91,
+            "max": 7.72,
+            "mean": 6.1499999999999995
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": -0.6170000000000002,
+            "mean_absolute": 0.725,
+            "maximum_absolute": 4.09
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "pad_wide_black": {
+      "sources": 12,
+      "current_scored": 12,
+      "current_refused": 0,
+      "route_transitions": 2,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": -0.01100000000000012,
+        "mean_absolute": 0.16300000000000026,
+        "maximum_absolute": 0.33000000000000007,
+        "rmse": 0.20520721234888423
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": -0.0012222045243582464,
+        "mean_absolute": 0.005890804952079683,
+        "maximum_absolute": 0.012852983823972153,
+        "rmse": 0.0067918062831023055
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": -0.00044514048972361665,
+        "mean_absolute": 0.00604746100298934,
+        "maximum_absolute": 0.012852983823972153,
+        "rmse": 0.007015572864250411
+      },
+      "current_public_changed": 2,
+      "candidate_public_changed": 0,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.5969485095907018,
+        "pairwise_order_agreement": 0.7380952380952381,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.7590721152765896,
+        "pairwise_order_agreement": 0.8888888888888888,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.993006993006993,
+        "pairwise_order_agreement": 0.9848484848484849,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.9878787878787879,
+        "pairwise_order_agreement": 0.9777777777777777,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 1.0,
+        "pairwise_order_agreement": 1.0,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 12,
+        "unavailable_rows": 0,
+        "crop_outside_rows": 12,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 12,
+          "min": 0.34265451,
+          "q25": 0.35592688,
+          "median": 0.36561771499999995,
+          "q75": 0.3921426425,
+          "p90": 0.396657551,
+          "max": 0.40845962,
+          "mean": 0.37126964916666666,
+          "nonzero": 12
+        },
+        "by_outcome": {
+          "scored": {
+            "rows": 12,
+            "instrumented_rows": 12,
+            "crop_outside_rows": 12,
+            "padding": {
+              "n": 12,
+              "min": 0.34265451,
+              "q25": 0.35592688,
+              "median": 0.36561771499999995,
+              "q75": 0.3921426425,
+              "p90": 0.396657551,
+              "max": 0.40845962,
+              "mean": 0.37126964916666666,
+              "nonzero": 12
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 12,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 12,
+          "padding_vs_continuous_score_spearman": 0.22066583752657906,
+          "padding_vs_continuous_score_pearson": 0.023009856097923238,
+          "crop_outside_scores": {
+            "n": 12,
+            "min": 6.95,
+            "median": 7.385,
+            "max": 7.8,
+            "mean": 7.3133333333333335
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": -0.01100000000000012,
+            "mean_absolute": 0.16300000000000026,
+            "maximum_absolute": 0.33000000000000007
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "pad_tall_black": {
+      "sources": 12,
+      "current_scored": 10,
+      "current_refused": 2,
+      "route_transitions": 2,
+      "current_delta": {
+        "n": 9,
+        "mean_signed": 0.17333333333333328,
+        "mean_absolute": 0.25333333333333335,
+        "maximum_absolute": 0.4400000000000004,
+        "rmse": 0.2859292841867645
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.8413819591154087,
+        "mean_absolute": 0.8413819591154087,
+        "maximum_absolute": 1.2916689065602291,
+        "rmse": 0.916030339100756
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 9,
+        "mean_signed": 0.9935875584560256,
+        "mean_absolute": 0.9935875584560256,
+        "maximum_absolute": 1.2916689065602291,
+        "rmse": 1.0319489877646
+      },
+      "current_public_changed": 7,
+      "candidate_public_changed": 12,
+      "current_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.6950150912113306,
+        "pairwise_order_agreement": 0.8181818181818182,
+        "pairwise_pairs": 33
+      },
+      "current_public_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.3786200927092679,
+        "pairwise_order_agreement": 0.6521739130434783,
+        "pairwise_pairs": 23
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.5244755244755245,
+        "pairwise_order_agreement": 0.6818181818181818,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 9,
+        "spearman_vs_original": -0.13333333333333333,
+        "pairwise_order_agreement": 0.4166666666666667,
+        "pairwise_pairs": 36
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.7186994682200862,
+        "pairwise_order_agreement": 0.9482758620689655,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 10,
+        "unavailable_rows": 2,
+        "crop_outside_rows": 10,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 10,
+          "min": 0.49467455,
+          "q25": 0.52329074,
+          "median": 0.5264150350000001,
+          "q75": 0.52853919,
+          "p90": 0.529481805,
+          "max": 0.53011914,
+          "mean": 0.521630426,
+          "nonzero": 10
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 2,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 10,
+            "instrumented_rows": 10,
+            "crop_outside_rows": 10,
+            "padding": {
+              "n": 10,
+              "min": 0.49467455,
+              "q25": 0.52329074,
+              "median": 0.5264150350000001,
+              "q75": 0.52853919,
+              "p90": 0.529481805,
+              "max": 0.53011914,
+              "mean": 0.521630426,
+              "nonzero": 10
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 2,
+            "refused_or_error": 2,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 10,
+          "padding_vs_continuous_score_spearman": -0.04242424242424243,
+          "padding_vs_continuous_score_pearson": 0.28249190559340415,
+          "crop_outside_scores": {
+            "n": 10,
+            "min": 6.85,
+            "median": 7.494999999999999,
+            "max": 7.94,
+            "mean": 7.4799999999999995
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 9,
+            "mean_signed": 0.17333333333333328,
+            "mean_absolute": 0.25333333333333335,
+            "maximum_absolute": 0.4400000000000004
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "canvas_light_gray": {
+      "sources": 12,
+      "current_scored": 10,
+      "current_refused": 2,
+      "route_transitions": 2,
+      "current_delta": {
+        "n": 9,
+        "mean_signed": 0.2966666666666666,
+        "mean_absolute": 0.2966666666666666,
+        "maximum_absolute": 0.7599999999999998,
+        "rmse": 0.3827822125206738
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.1735573982768107,
+        "mean_absolute": 0.28530223928594706,
+        "maximum_absolute": 0.4264301732418394,
+        "rmse": 0.30248815101518284
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 9,
+        "mean_signed": 0.22402919774232188,
+        "mean_absolute": 0.3238236600165634,
+        "maximum_absolute": 0.4264301732418394,
+        "rmse": 0.3316953697214091
+      },
+      "current_public_changed": 7,
+      "candidate_public_changed": 8,
+      "current_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.8645309671165333,
+        "pairwise_order_agreement": 0.8787878787878788,
+        "pairwise_pairs": 33
+      },
+      "current_public_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.7364853795464743,
+        "pairwise_order_agreement": 0.875,
+        "pairwise_pairs": 20
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.5664335664335665,
+        "pairwise_order_agreement": 0.696969696969697,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.36666666666666664,
+        "pairwise_order_agreement": 0.6111111111111112,
+        "pairwise_pairs": 36
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6583735792233816,
+        "pairwise_order_agreement": 0.8448275862068966,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 10,
+        "unavailable_rows": 2,
+        "crop_outside_rows": 10,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 10,
+          "min": 0.34801585,
+          "q25": 0.385441715,
+          "median": 0.391306455,
+          "q75": 0.39736815000000003,
+          "p90": 0.399506437,
+          "max": 0.40093462,
+          "mean": 0.385414217,
+          "nonzero": 10
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 2,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 10,
+            "instrumented_rows": 10,
+            "crop_outside_rows": 10,
+            "padding": {
+              "n": 10,
+              "min": 0.34801585,
+              "q25": 0.385441715,
+              "median": 0.391306455,
+              "q75": 0.39736815000000003,
+              "p90": 0.399506437,
+              "max": 0.40093462,
+              "mean": 0.385414217,
+              "nonzero": 10
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 2,
+            "refused_or_error": 2,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 10,
+          "padding_vs_continuous_score_spearman": 0.6,
+          "padding_vs_continuous_score_pearson": 0.7470534245403854,
+          "crop_outside_scores": {
+            "n": 10,
+            "min": 7.08,
+            "median": 7.6,
+            "max": 8.02,
+            "mean": 7.598000000000001
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 9,
+            "mean_signed": 0.2966666666666666,
+            "mean_absolute": 0.2966666666666666,
+            "maximum_absolute": 0.7599999999999998
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "aspect_squeeze_80": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 3,
+      "current_delta": {
+        "n": 9,
+        "mean_signed": 1.0111111111111108,
+        "mean_absolute": 1.033333333333333,
+        "maximum_absolute": 1.7499999999999991,
+        "rmse": 1.16028732073856
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.9160981096756059,
+        "mean_absolute": 0.9160981096756059,
+        "maximum_absolute": 1.403176017707275,
+        "rmse": 1.0192376429605925
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 9,
+        "mean_signed": 1.0537212223989272,
+        "mean_absolute": 1.0537212223989272,
+        "maximum_absolute": 1.403176017707275,
+        "rmse": 1.1242852102001042
+      },
+      "current_public_changed": 7,
+      "candidate_public_changed": 10,
+      "current_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.44074127735352675,
+        "pairwise_order_agreement": 0.696969696969697,
+        "pairwise_pairs": 33
+      },
+      "current_public_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.19075675652968382,
+        "pairwise_order_agreement": 0.6,
+        "pairwise_pairs": 20
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.4755244755244755,
+        "pairwise_order_agreement": 0.6515151515151515,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.2,
+        "pairwise_order_agreement": 0.5277777777777778,
+        "pairwise_pairs": 36
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6800833544382314,
+        "pairwise_order_agreement": 0.9137931034482759,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.55700679,
+          "q25": 0.5951129900000001,
+          "median": 0.60388302,
+          "q75": 0.6506578199999999,
+          "p90": 0.65473821,
+          "max": 0.6586466,
+          "mean": 0.6175828,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.55700679,
+              "q25": 0.5951129900000001,
+              "median": 0.60388302,
+              "q75": 0.6506578199999999,
+              "p90": 0.65473821,
+              "max": 0.6586466,
+              "mean": 0.6175828,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": -0.6818181818181818,
+          "padding_vs_continuous_score_pearson": -0.5753285943806491,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 2.94,
+            "median": 8.25,
+            "max": 9.01,
+            "mean": 7.773636363636364
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 9,
+            "mean_signed": 1.0111111111111108,
+            "mean_absolute": 1.033333333333333,
+            "maximum_absolute": 1.7499999999999991
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "resolution_256": {
+      "sources": 12,
+      "current_scored": 10,
+      "current_refused": 2,
+      "route_transitions": 0,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.2119999999999999,
+        "mean_absolute": 0.27600000000000013,
+        "maximum_absolute": 0.8100000000000005,
+        "rmse": 0.34606357797375925
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": -0.01632759608242229,
+        "mean_absolute": 0.04163139482911604,
+        "maximum_absolute": 0.24668605583222103,
+        "rmse": 0.07695337546174517
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": -0.02046989902413827,
+        "mean_absolute": 0.042297901936567864,
+        "maximum_absolute": 0.24668605583222103,
+        "rmse": 0.0825165566467236
+      },
+      "current_public_changed": 8,
+      "candidate_public_changed": 1,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.4601573393548866,
+        "pairwise_order_agreement": 0.6666666666666666,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.4231636330280053,
+        "pairwise_order_agreement": 0.7037037037037037,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.916083916083916,
+        "pairwise_order_agreement": 0.9090909090909091,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.8545454545454545,
+        "pairwise_order_agreement": 0.8666666666666667,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.8528028654224418,
+        "pairwise_order_agreement": 0.8448275862068966,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 10,
+        "unavailable_rows": 2,
+        "crop_outside_rows": 10,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 10,
+          "min": 0.47024644,
+          "q25": 0.5470757225,
+          "median": 0.5524163550000001,
+          "q75": 0.5608046425,
+          "p90": 0.564855595,
+          "max": 0.56904208,
+          "mean": 0.5436981519999999,
+          "nonzero": 10
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 2,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 10,
+            "instrumented_rows": 10,
+            "crop_outside_rows": 10,
+            "padding": {
+              "n": 10,
+              "min": 0.47024644,
+              "q25": 0.5470757225,
+              "median": 0.5524163550000001,
+              "q75": 0.5608046425,
+              "p90": 0.564855595,
+              "max": 0.56904208,
+              "mean": 0.5436981519999999,
+              "nonzero": 10
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 2,
+            "refused_or_error": 2,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 10,
+          "padding_vs_continuous_score_spearman": -0.5636363636363636,
+          "padding_vs_continuous_score_pearson": -0.1697013083753236,
+          "crop_outside_scores": {
+            "n": 10,
+            "min": 7.1,
+            "median": 7.475,
+            "max": 8.0,
+            "mean": 7.559
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.2119999999999999,
+            "mean_absolute": 0.27600000000000013,
+            "maximum_absolute": 0.8100000000000005
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "brightness_70": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.23499999999999996,
+        "mean_absolute": 0.285,
+        "maximum_absolute": 0.6399999999999997,
+        "rmse": 0.34841067721870983
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.28783127630338656,
+        "mean_absolute": 0.28783127630338656,
+        "maximum_absolute": 0.4430238863707938,
+        "rmse": 0.31316847852968904
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": 0.31879767728073194,
+        "mean_absolute": 0.31879767728073194,
+        "maximum_absolute": 0.4430238863707938,
+        "rmse": 0.33686808913524635
+      },
+      "current_public_changed": 6,
+      "candidate_public_changed": 8,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.5061824833734444,
+        "pairwise_order_agreement": 0.7142857142857143,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.677220258166959,
+        "pairwise_order_agreement": 0.7962962962962963,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.48951048951048953,
+        "pairwise_order_agreement": 0.6515151515151515,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.11515151515151516,
+        "pairwise_order_agreement": 0.4888888888888889,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6583735792233816,
+        "pairwise_order_agreement": 0.8448275862068966,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.52403412,
+          "q25": 0.5341997300000001,
+          "median": 0.54874603,
+          "q75": 0.55625623,
+          "p90": 0.56611787,
+          "max": 0.56640394,
+          "mean": 0.5458209163636364,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.52403412,
+              "q25": 0.5341997300000001,
+              "median": 0.54874603,
+              "q75": 0.55625623,
+              "p90": 0.56611787,
+              "max": 0.56640394,
+              "mean": 0.5458209163636364,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": -0.7853963157608237,
+          "padding_vs_continuous_score_pearson": -0.6572468975824366,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 7.09,
+            "median": 7.46,
+            "max": 8.16,
+            "mean": 7.5672727272727265
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.23499999999999996,
+            "mean_absolute": 0.285,
+            "maximum_absolute": 0.6399999999999997
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "brightness_130": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.33099999999999996,
+        "mean_absolute": 0.3510000000000001,
+        "maximum_absolute": 0.8799999999999999,
+        "rmse": 0.4397612988883857
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.24750968975968535,
+        "mean_absolute": 0.25327743610304704,
+        "maximum_absolute": 0.4193039389537869,
+        "rmse": 0.2899065100144549
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": 0.2897999783589739,
+        "mean_absolute": 0.29173670229190274,
+        "maximum_absolute": 0.4193039389537869,
+        "rmse": 0.31599234640938495
+      },
+      "current_public_changed": 7,
+      "candidate_public_changed": 8,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.7178454493936232,
+        "pairwise_order_agreement": 0.8095238095238095,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.45621000867633416,
+        "pairwise_order_agreement": 0.7222222222222222,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.7482517482517482,
+        "pairwise_order_agreement": 0.8181818181818182,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.5636363636363636,
+        "pairwise_order_agreement": 0.7333333333333333,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.7575757575757576,
+        "pairwise_order_agreement": 0.8620689655172413,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.51979921,
+          "q25": 0.5253559999999999,
+          "median": 0.5376766,
+          "q75": 0.56002182,
+          "p90": 0.56788889,
+          "max": 0.56803445,
+          "mean": 0.5425185927272728,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.51979921,
+              "q25": 0.5253559999999999,
+              "median": 0.5376766,
+              "q75": 0.56002182,
+              "p90": 0.56788889,
+              "max": 0.56803445,
+              "mean": 0.5425185927272728,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": -0.5,
+          "padding_vs_continuous_score_pearson": -0.3632326679825255,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 7.23,
+            "median": 7.73,
+            "max": 8.01,
+            "mean": 7.6445454545454545
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.33099999999999996,
+            "mean_absolute": 0.3510000000000001,
+            "maximum_absolute": 0.8799999999999999
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "contrast_70": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.17299999999999977,
+        "mean_absolute": 0.26099999999999984,
+        "maximum_absolute": 0.8300000000000001,
+        "rmse": 0.3492134018046844
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.20869830470116776,
+        "mean_absolute": 0.21115177323149315,
+        "maximum_absolute": 0.3298931550583575,
+        "rmse": 0.22945701872286703
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": 0.22651396472720978,
+        "mean_absolute": 0.22945812696360024,
+        "maximum_absolute": 0.3298931550583575,
+        "rmse": 0.24547558623277754
+      },
+      "current_public_changed": 6,
+      "candidate_public_changed": 7,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.646181376361069,
+        "pairwise_order_agreement": 0.7619047619047619,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.46825396825396826,
+        "pairwise_order_agreement": 0.7222222222222222,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6433566433566433,
+        "pairwise_order_agreement": 0.7575757575757576,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.38181818181818183,
+        "pairwise_order_agreement": 0.6444444444444445,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6219636990815515,
+        "pairwise_order_agreement": 0.8448275862068966,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.51069653,
+          "q25": 0.53742938,
+          "median": 0.54941396,
+          "q75": 0.562070435,
+          "p90": 0.56264461,
+          "max": 0.56672573,
+          "mean": 0.5469853390909091,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.51069653,
+              "q25": 0.53742938,
+              "median": 0.54941396,
+              "q75": 0.562070435,
+              "p90": 0.56264461,
+              "max": 0.56672573,
+              "mean": 0.5469853390909091,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": -0.3006841514016154,
+          "padding_vs_continuous_score_pearson": -0.22737661548450255,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 7.09,
+            "median": 7.39,
+            "max": 8.0,
+            "mean": 7.520909090909091
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.17299999999999977,
+            "mean_absolute": 0.26099999999999984,
+            "maximum_absolute": 0.8300000000000001
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "contrast_130": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.17399999999999993,
+        "mean_absolute": 0.30799999999999994,
+        "maximum_absolute": 1.0699999999999994,
+        "rmse": 0.4316248370981447
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": -0.03191564701710958,
+        "mean_absolute": 0.07063541630268848,
+        "maximum_absolute": 0.14318811310197166,
+        "rmse": 0.07841381155984302
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": -0.045254073869402146,
+        "mean_absolute": 0.07389169648979647,
+        "maximum_absolute": 0.14318811310197166,
+        "rmse": 0.08090561415435465
+      },
+      "current_public_changed": 6,
+      "candidate_public_changed": 1,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.6319494127140443,
+        "pairwise_order_agreement": 0.7619047619047619,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.2834733547569204,
+        "pairwise_order_agreement": 0.6296296296296297,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.972027972027972,
+        "pairwise_order_agreement": 0.9545454545454546,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.9515151515151515,
+        "pairwise_order_agreement": 0.9333333333333333,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.8528028654224418,
+        "pairwise_order_agreement": 0.8448275862068966,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.51216996,
+          "q25": 0.52907764,
+          "median": 0.5431315,
+          "q75": 0.55648655,
+          "p90": 0.56894581,
+          "max": 0.57038986,
+          "mean": 0.5437957218181818,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.51216996,
+              "q25": 0.52907764,
+              "median": 0.5431315,
+              "q75": 0.55648655,
+              "p90": 0.56894581,
+              "max": 0.57038986,
+              "mean": 0.5437957218181818,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": -0.5636363636363636,
+          "padding_vs_continuous_score_pearson": -0.32391339484556747,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 7.13,
+            "median": 7.46,
+            "max": 8.2,
+            "mean": 7.510909090909092
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.17399999999999993,
+            "mean_absolute": 0.30799999999999994,
+            "maximum_absolute": 1.0699999999999994
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "side_lighting": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": -0.04800000000000004,
+        "mean_absolute": 0.15,
+        "maximum_absolute": 0.5700000000000003,
+        "rmse": 0.22516660498395413
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": -0.06244504396365421,
+        "mean_absolute": 0.07773538725592093,
+        "maximum_absolute": 0.2277452350851803,
+        "rmse": 0.09350529857377664
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": -0.0606173890535322,
+        "mean_absolute": 0.07896580100425225,
+        "maximum_absolute": 0.2277452350851803,
+        "rmse": 0.09622440041697056
+      },
+      "current_public_changed": 2,
+      "candidate_public_changed": 2,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.6111227543167195,
+        "pairwise_order_agreement": 0.7380952380952381,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.6785714285714286,
+        "pairwise_order_agreement": 0.8333333333333334,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.916083916083916,
+        "pairwise_order_agreement": 0.8939393939393939,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.8545454545454545,
+        "pairwise_order_agreement": 0.8444444444444444,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.697277051246695,
+        "pairwise_order_agreement": 0.8275862068965517,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.52503605,
+          "q25": 0.53323207,
+          "median": 0.54733883,
+          "q75": 0.562302995,
+          "p90": 0.56799458,
+          "max": 0.56977094,
+          "mean": 0.5466044463636364,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.52503605,
+              "q25": 0.53323207,
+              "median": 0.54733883,
+              "q75": 0.562302995,
+              "p90": 0.56799458,
+              "max": 0.56977094,
+              "mean": 0.5466044463636364,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": -0.2054815942397504,
+          "padding_vs_continuous_score_pearson": -0.27139104798231967,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 7.12,
+            "median": 7.16,
+            "max": 7.82,
+            "mean": 7.3127272727272725
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": -0.04800000000000004,
+            "mean_absolute": 0.15,
+            "maximum_absolute": 0.5700000000000003
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "jpeg_q35": {
+      "sources": 12,
+      "current_scored": 12,
+      "current_refused": 0,
+      "route_transitions": 2,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.125,
+        "mean_absolute": 0.14099999999999985,
+        "maximum_absolute": 0.6599999999999993,
+        "rmse": 0.24688053791256998
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": -0.009015292966076874,
+        "mean_absolute": 0.036108593095534124,
+        "maximum_absolute": 0.09736684203119861,
+        "rmse": 0.04229490363503354
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": -0.022793018754759586,
+        "mean_absolute": 0.03135564451917361,
+        "maximum_absolute": 0.049500733887572146,
+        "rmse": 0.03388974441837713
+      },
+      "current_public_changed": 3,
+      "candidate_public_changed": 2,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.5617390974022372,
+        "pairwise_order_agreement": 0.7380952380952381,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.493164730335783,
+        "pairwise_order_agreement": 0.7592592592592593,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.993006993006993,
+        "pairwise_order_agreement": 0.9848484848484849,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.9878787878787879,
+        "pairwise_order_agreement": 0.9777777777777777,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.5749595745760689,
+        "pairwise_order_agreement": 0.6724137931034483,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 12,
+        "unavailable_rows": 0,
+        "crop_outside_rows": 12,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 12,
+          "min": 0.49760084,
+          "q25": 0.5329832075000001,
+          "median": 0.5420069599999999,
+          "q75": 0.5600271725,
+          "p90": 0.5687500520000001,
+          "max": 0.57080469,
+          "mean": 0.5416757525,
+          "nonzero": 12
+        },
+        "by_outcome": {
+          "scored": {
+            "rows": 12,
+            "instrumented_rows": 12,
+            "crop_outside_rows": 12,
+            "padding": {
+              "n": 12,
+              "min": 0.49760084,
+              "q25": 0.5329832075000001,
+              "median": 0.5420069599999999,
+              "q75": 0.5600271725,
+              "p90": 0.5687500520000001,
+              "max": 0.57080469,
+              "mean": 0.5416757525,
+              "nonzero": 12
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 12,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 12,
+          "padding_vs_continuous_score_spearman": -0.18596605704296354,
+          "padding_vs_continuous_score_pearson": -0.1583028514582162,
+          "crop_outside_scores": {
+            "n": 12,
+            "min": 7.12,
+            "median": 7.395,
+            "max": 7.94,
+            "mean": 7.4383333333333335
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.125,
+            "mean_absolute": 0.14099999999999985,
+            "maximum_absolute": 0.6599999999999993
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "rotate_3": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 3,
+      "current_delta": {
+        "n": 9,
+        "mean_signed": 0.18777777777777763,
+        "mean_absolute": 0.30555555555555547,
+        "maximum_absolute": 0.5499999999999998,
+        "rmse": 0.3265135695665818
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.11254588226876128,
+        "mean_absolute": 0.14828865975129082,
+        "maximum_absolute": 0.3000796659560292,
+        "rmse": 0.17386513417297939
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 9,
+        "mean_signed": 0.15406747380024527,
+        "mean_absolute": 0.1742238392545784,
+        "maximum_absolute": 0.3000796659560292,
+        "rmse": 0.19563376136484903
+      },
+      "current_public_changed": 6,
+      "candidate_public_changed": 5,
+      "current_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.30770354697811103,
+        "pairwise_order_agreement": 0.6060606060606061,
+        "pairwise_pairs": 33
+      },
+      "current_public_ordering": {
+        "paired_sources": 9,
+        "spearman_vs_original": null,
+        "pairwise_order_agreement": 0.5,
+        "pairwise_pairs": 18
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6293706293706294,
+        "pairwise_order_agreement": 0.7575757575757576,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 9,
+        "spearman_vs_original": 0.4166666666666667,
+        "pairwise_order_agreement": 0.6666666666666666,
+        "pairwise_pairs": 36
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.6571470397424246,
+        "pairwise_order_agreement": 0.896551724137931,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.47836407,
+          "q25": 0.5312564550000001,
+          "median": 0.55483279,
+          "q75": 0.56599595,
+          "p90": 0.56847636,
+          "max": 0.5700523,
+          "mean": 0.5417821936363636,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.47836407,
+              "q25": 0.5312564550000001,
+              "median": 0.55483279,
+              "q75": 0.56599595,
+              "p90": 0.56847636,
+              "max": 0.5700523,
+              "mean": 0.5417821936363636,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": 0.49315582617540094,
+          "padding_vs_continuous_score_pearson": 0.5250835323870211,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 6.93,
+            "median": 7.43,
+            "max": 7.68,
+            "mean": 7.391818181818182
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 9,
+            "mean_signed": 0.18777777777777763,
+            "mean_absolute": 0.30555555555555547,
+            "maximum_absolute": 0.5499999999999998
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "perspective_mild": {
+      "sources": 12,
+      "current_scored": 10,
+      "current_refused": 2,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.27699999999999997,
+        "mean_absolute": 0.30700000000000005,
+        "maximum_absolute": 0.6999999999999993,
+        "rmse": 0.3688224505097269
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.08801729288388664,
+        "mean_absolute": 0.10757537911133253,
+        "maximum_absolute": 0.2347268481104301,
+        "rmse": 0.12868938625829168
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": 0.10209407850317076,
+        "mean_absolute": 0.1149095051668552,
+        "maximum_absolute": 0.2347268481104301,
+        "rmse": 0.1371330229028108
+      },
+      "current_public_changed": 7,
+      "candidate_public_changed": 2,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.803741486073202,
+        "pairwise_order_agreement": 0.8333333333333334,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.6095579107524128,
+        "pairwise_order_agreement": 0.7962962962962963,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.7412587412587412,
+        "pairwise_order_agreement": 0.8181818181818182,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.5636363636363636,
+        "pairwise_order_agreement": 0.7555555555555555,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.7733089512004462,
+        "pairwise_order_agreement": 0.9482758620689655,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.53489388,
+          "q25": 0.5563879899999999,
+          "median": 0.56648401,
+          "q75": 0.57772917,
+          "p90": 0.57936573,
+          "max": 0.59245425,
+          "mean": 0.5661440863636363,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 2,
+            "instrumented_rows": 1,
+            "crop_outside_rows": 1,
+            "padding": {
+              "n": 1,
+              "min": 0.59245425,
+              "q25": 0.59245425,
+              "median": 0.59245425,
+              "q75": 0.59245425,
+              "p90": 0.59245425,
+              "max": 0.59245425,
+              "mean": 0.59245425,
+              "nonzero": 1
+            }
+          },
+          "scored": {
+            "rows": 10,
+            "instrumented_rows": 10,
+            "crop_outside_rows": 10,
+            "padding": {
+              "n": 10,
+              "min": 0.53489388,
+              "q25": 0.555844895,
+              "median": 0.563566515,
+              "q75": 0.57540321,
+              "p90": 0.5791609799999999,
+              "max": 0.57936573,
+              "mean": 0.5635130700000001,
+              "nonzero": 10
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 1,
+            "refusal_rate": 0.09090909090909091
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 10,
+          "padding_vs_continuous_score_spearman": -0.41818181818181815,
+          "padding_vs_continuous_score_pearson": -0.3656407294759368,
+          "crop_outside_scores": {
+            "n": 10,
+            "min": 7.11,
+            "median": 7.565,
+            "max": 8.17,
+            "mean": 7.624
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.27699999999999997,
+            "mean_absolute": 0.30700000000000005,
+            "maximum_absolute": 0.6999999999999993
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    },
+    "gaussian_blur_1_5": {
+      "sources": 12,
+      "current_scored": 11,
+      "current_refused": 1,
+      "route_transitions": 1,
+      "current_delta": {
+        "n": 10,
+        "mean_signed": 0.07399999999999993,
+        "mean_absolute": 0.24600000000000016,
+        "maximum_absolute": 0.7399999999999993,
+        "rmse": 0.30919249667480614
+      },
+      "candidate_delta": {
+        "n": 12,
+        "mean_signed": 0.035383969846339625,
+        "mean_absolute": 0.03829102667953584,
+        "maximum_absolute": 0.07243189383502724,
+        "rmse": 0.04197012940452616
+      },
+      "candidate_delta_common_current_pairs": {
+        "n": 10,
+        "mean_signed": 0.03696180853202256,
+        "mean_absolute": 0.03696180853202256,
+        "maximum_absolute": 0.05184180428518914,
+        "rmse": 0.03948073788916795
+      },
+      "current_public_changed": 4,
+      "candidate_public_changed": 1,
+      "current_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.5169451010888552,
+        "pairwise_order_agreement": 0.7261904761904762,
+        "pairwise_pairs": 42
+      },
+      "current_public_ordering": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.4094615124266628,
+        "pairwise_order_agreement": 0.7037037037037037,
+        "pairwise_pairs": 27
+      },
+      "candidate_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.972027972027972,
+        "pairwise_order_agreement": 0.9545454545454546,
+        "pairwise_pairs": 66
+      },
+      "candidate_ordering_common_current_pairs": {
+        "paired_sources": 10,
+        "spearman_vs_original": 0.9515151515151515,
+        "pairwise_order_agreement": 0.9333333333333333,
+        "pairwise_pairs": 45
+      },
+      "candidate_public_ordering": {
+        "paired_sources": 12,
+        "spearman_vs_original": 0.8174238913695993,
+        "pairwise_order_agreement": 0.8448275862068966,
+        "pairwise_pairs": 29
+      },
+      "crop_padding": {
+        "rows": 12,
+        "instrumented_rows": 11,
+        "unavailable_rows": 1,
+        "crop_outside_rows": 11,
+        "crop_inside_rows": 0,
+        "crop_outside_rate_instrumented": 1.0,
+        "padding_fraction": {
+          "n": 11,
+          "min": 0.48535467,
+          "q25": 0.538417515,
+          "median": 0.54304511,
+          "q75": 0.55753911,
+          "p90": 0.56944911,
+          "max": 0.57107245,
+          "mean": 0.5437457736363637,
+          "nonzero": 11
+        },
+        "by_outcome": {
+          "refused": {
+            "rows": 1,
+            "instrumented_rows": 0,
+            "crop_outside_rows": 0,
+            "padding": {
+              "n": 0,
+              "min": null,
+              "q25": null,
+              "median": null,
+              "q75": null,
+              "p90": null,
+              "max": null,
+              "mean": null,
+              "nonzero": 0
+            }
+          },
+          "scored": {
+            "rows": 11,
+            "instrumented_rows": 11,
+            "crop_outside_rows": 11,
+            "padding": {
+              "n": 11,
+              "min": 0.48535467,
+              "q25": 0.538417515,
+              "median": 0.54304511,
+              "q75": 0.55753911,
+              "p90": 0.56944911,
+              "max": 0.57107245,
+              "mean": 0.5437457736363637,
+              "nonzero": 11
+            }
+          }
+        },
+        "outcome_sensitivity": {
+          "crop_outside": {
+            "n": 11,
+            "refused_or_error": 0,
+            "refusal_rate": 0.0
+          },
+          "crop_inside": {
+            "n": 0,
+            "refused_or_error": 0,
+            "refusal_rate": null
+          },
+          "no_diagnostic": {
+            "n": 1,
+            "refused_or_error": 1,
+            "refusal_rate": 1.0
+          }
+        },
+        "score_sensitivity": {
+          "scored_instrumented_rows": 11,
+          "padding_vs_continuous_score_spearman": 0.013667461427346156,
+          "padding_vs_continuous_score_pearson": 0.067925267871749,
+          "crop_outside_scores": {
+            "n": 11,
+            "min": 7.15,
+            "median": 7.37,
+            "max": 7.85,
+            "mean": 7.414545454545455
+          },
+          "crop_inside_scores": {
+            "n": 0,
+            "min": null,
+            "median": null,
+            "max": null,
+            "mean": null
+          },
+          "outside_minus_inside_mean": null
+        },
+        "interpretation": "Descriptive association only. Padding is produced by pose/framing geometry and is not randomized, so score or refusal differences are not causal evidence.",
+        "comparison_limitation": "Every instrumented crop extended outside the image; there is no inside-crop control group, so outside-versus-inside outcome or mean-score effects are unidentifiable.",
+        "paired_score_delta_sensitivity": {
+          "crop_outside": {
+            "n": 10,
+            "mean_signed": 0.07399999999999993,
+            "mean_absolute": 0.24600000000000016,
+            "maximum_absolute": 0.7399999999999993
+          },
+          "crop_inside": {
+            "n": 0,
+            "mean_signed": null,
+            "mean_absolute": null,
+            "maximum_absolute": null
+          }
+        }
+      }
+    }
+  },
+  "route_transitions": {
+    "clothed→model -> clothed→geometry": 15,
+    "clothed→model -> refused": 9,
+    "refused -> clothed→geometry": 4,
+    "refused -> clothed→model": 16
+  },
+  "candidate_stability_screen": {
+    "passed": false,
+    "descriptive_material_thresholds": {
+      "mae_regression": 0.1,
+      "rank_retention_regression": 0.1
+    },
+    "material_regressions": [
+      {
+        "transform": "mirror",
+        "issues": [
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.4937526754127838
+          }
+        ]
+      },
+      {
+        "transform": "pad_tall_black",
+        "issues": [
+          {
+            "metric": "mean_absolute_delta",
+            "candidate_minus_current": 0.7402542251226922
+          },
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.828348424544664
+          }
+        ]
+      },
+      {
+        "transform": "canvas_light_gray",
+        "issues": [
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.4978643004498667
+          }
+        ]
+      },
+      {
+        "transform": "aspect_squeeze_80",
+        "issues": [
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.24074127735352674
+          }
+        ]
+      },
+      {
+        "transform": "brightness_70",
+        "issues": [
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.39103096822192923
+          }
+        ]
+      },
+      {
+        "transform": "brightness_130",
+        "issues": [
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.15420908575725956
+          }
+        ]
+      },
+      {
+        "transform": "contrast_70",
+        "issues": [
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.26436319454288715
+          }
+        ]
+      },
+      {
+        "transform": "perspective_mild",
+        "issues": [
+          {
+            "metric": "rank_retention",
+            "candidate_minus_current": -0.24010512243683835
+          }
+        ]
+      }
+    ],
+    "comparison_basis": "Candidate and production metrics use the identical sources with finite production originals and transforms."
+  },
+  "refusal_reasons": {
+    "No body found — use a clear, full-body, front-facing photo.": 10,
+    "The geometry route produced no scored body cue. Retake with your full outline visible, arms a few inches out, and stronger contrast from the background.": 1,
+    "This body is too side-on for frontal width ratios. Use a front-facing photo.": 13
+  },
+  "slices": {
+    "transform_family": {
+      "background_canvas": {
+        "rows": 12,
+        "current_scored": 10,
+        "current_refusal_rate": 0.16666666666666666,
+        "current_route_transitions": 2,
+        "current_delta": {
+          "n": 9,
+          "mean_signed": 0.2966666666666666,
+          "mean_absolute": 0.2966666666666666,
+          "maximum_absolute": 0.7599999999999998,
+          "rmse": 0.3827822125206738
+        },
+        "candidate_delta": {
+          "n": 12,
+          "mean_signed": 0.1735573982768107,
+          "mean_absolute": 0.28530223928594706,
+          "maximum_absolute": 0.4264301732418394,
+          "rmse": 0.30248815101518284
+        }
+      },
+      "crop": {
+        "rows": 24,
+        "current_scored": 17,
+        "current_refusal_rate": 0.2916666666666667,
+        "current_route_transitions": 22,
+        "current_delta": {
+          "n": 15,
+          "mean_signed": -0.6216666666666668,
+          "mean_absolute": 0.6936666666666665,
+          "maximum_absolute": 4.09,
+          "rmse": 1.1720487760043663
+        },
+        "candidate_delta": {
+          "n": 24,
+          "mean_signed": 0.025402846221869613,
+          "mean_absolute": 0.16042192661062082,
+          "maximum_absolute": 0.4078187410976293,
+          "rmse": 0.1864813783686199
+        }
+      },
+      "jpeg": {
+        "rows": 12,
+        "current_scored": 12,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 2,
+        "current_delta": {
+          "n": 10,
+          "mean_signed": 0.125,
+          "mean_absolute": 0.14099999999999985,
+          "maximum_absolute": 0.6599999999999993,
+          "rmse": 0.24688053791256998
+        },
+        "candidate_delta": {
+          "n": 12,
+          "mean_signed": -0.009015292966076874,
+          "mean_absolute": 0.036108593095534124,
+          "maximum_absolute": 0.09736684203119861,
+          "rmse": 0.04229490363503354
+        }
+      },
+      "lighting": {
+        "rows": 60,
+        "current_scored": 55,
+        "current_refusal_rate": 0.08333333333333333,
+        "current_route_transitions": 5,
+        "current_delta": {
+          "n": 50,
+          "mean_signed": 0.17299999999999988,
+          "mean_absolute": 0.27099999999999996,
+          "maximum_absolute": 1.0699999999999994,
+          "rmse": 0.3670776484614665
+        },
+        "candidate_delta": {
+          "n": 60,
+          "mean_signed": 0.12993571595669517,
+          "mean_absolute": 0.18012625783930725,
+          "maximum_absolute": 0.4430238863707938,
+          "rmse": 0.22345593330196506
+        }
+      },
+      "mirror": {
+        "rows": 12,
+        "current_scored": 11,
+        "current_refusal_rate": 0.08333333333333333,
+        "current_route_transitions": 1,
+        "current_delta": {
+          "n": 10,
+          "mean_signed": 0.15999999999999986,
+          "mean_absolute": 0.2580000000000001,
+          "maximum_absolute": 0.7599999999999998,
+          "rmse": 0.32053080975157444
+        },
+        "candidate_delta": {
+          "n": 12,
+          "mean_signed": 0.18432083535876828,
+          "mean_absolute": 0.26816365308257756,
+          "maximum_absolute": 0.5872924190878974,
+          "rmse": 0.3123519109154212
+        }
+      },
+      "padding_aspect": {
+        "rows": 36,
+        "current_scored": 33,
+        "current_refusal_rate": 0.08333333333333333,
+        "current_route_transitions": 7,
+        "current_delta": {
+          "n": 28,
+          "mean_signed": 0.37678571428571417,
+          "mean_absolute": 0.4717857142857143,
+          "maximum_absolute": 1.7499999999999991,
+          "rmse": 0.688510296634283
+        },
+        "candidate_delta": {
+          "n": 36,
+          "mean_signed": 0.5854192880888855,
+          "mean_absolute": 0.5877902912476982,
+          "maximum_absolute": 1.403176017707275,
+          "rmse": 0.7912022673571947
+        }
+      },
+      "resolution": {
+        "rows": 12,
+        "current_scored": 10,
+        "current_refusal_rate": 0.16666666666666666,
+        "current_route_transitions": 0,
+        "current_delta": {
+          "n": 10,
+          "mean_signed": 0.2119999999999999,
+          "mean_absolute": 0.27600000000000013,
+          "maximum_absolute": 0.8100000000000005,
+          "rmse": 0.34606357797375925
+        },
+        "candidate_delta": {
+          "n": 12,
+          "mean_signed": -0.01632759608242229,
+          "mean_absolute": 0.04163139482911604,
+          "maximum_absolute": 0.24668605583222103,
+          "rmse": 0.07695337546174517
+        }
+      },
+      "rotation_camera_like": {
+        "rows": 36,
+        "current_scored": 32,
+        "current_refusal_rate": 0.1111111111111111,
+        "current_route_transitions": 5,
+        "current_delta": {
+          "n": 29,
+          "mean_signed": 0.17931034482758612,
+          "mean_absolute": 0.2855172413793104,
+          "maximum_absolute": 0.7399999999999993,
+          "rmse": 0.33609317263171995
+        },
+        "candidate_delta": {
+          "n": 36,
+          "mean_signed": 0.07864904833299585,
+          "mean_absolute": 0.09805168851405306,
+          "maximum_absolute": 0.3000796659560292,
+          "rmse": 0.127215741660583
+        }
+      }
+    },
+    "label_quartile": {
+      "1": {
+        "rows": 51,
+        "current_scored": 36,
+        "current_refusal_rate": 0.29411764705882354,
+        "current_route_transitions": 12,
+        "current_delta": {
+          "n": 30,
+          "mean_signed": -0.1296666666666669,
+          "mean_absolute": 0.30833333333333335,
+          "maximum_absolute": 4.09,
+          "rmse": 0.7812447333155811
+        },
+        "candidate_delta": {
+          "n": 51,
+          "mean_signed": 0.06419577623772407,
+          "mean_absolute": 0.15316078180223752,
+          "maximum_absolute": 1.0961036473310717,
+          "rmse": 0.2564525340692334
+        }
+      },
+      "2": {
+        "rows": 51,
+        "current_scored": 45,
+        "current_refusal_rate": 0.11764705882352941,
+        "current_route_transitions": 18,
+        "current_delta": {
+          "n": 32,
+          "mean_signed": 0.025624999999999815,
+          "mean_absolute": 0.2774999999999999,
+          "maximum_absolute": 1.2999999999999998,
+          "rmse": 0.39308078050192174
+        },
+        "candidate_delta": {
+          "n": 51,
+          "mean_signed": 0.2134034725067917,
+          "mean_absolute": 0.26384027719107495,
+          "maximum_absolute": 1.403176017707275,
+          "rmse": 0.42364188857034357
+        }
+      },
+      "3": {
+        "rows": 51,
+        "current_scored": 51,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 6,
+        "current_delta": {
+          "n": 51,
+          "mean_signed": 0.2922549019607844,
+          "mean_absolute": 0.3971568627450982,
+          "maximum_absolute": 1.6399999999999997,
+          "rmse": 0.5182006008729612
+        },
+        "candidate_delta": {
+          "n": 51,
+          "mean_signed": 0.20099580857228275,
+          "mean_absolute": 0.2479138000997886,
+          "maximum_absolute": 1.3253588409939976,
+          "rmse": 0.4190122509121988
+        }
+      },
+      "4": {
+        "rows": 51,
+        "current_scored": 48,
+        "current_refusal_rate": 0.058823529411764705,
+        "current_route_transitions": 8,
+        "current_delta": {
+          "n": 48,
+          "mean_signed": 0.2266666666666665,
+          "mean_absolute": 0.3433333333333332,
+          "maximum_absolute": 1.7499999999999991,
+          "rmse": 0.48078169855628505
+        },
+        "candidate_delta": {
+          "n": 51,
+          "mean_signed": 0.2332225017608341,
+          "mean_absolute": 0.25513383784718274,
+          "maximum_absolute": 1.2584821049009385,
+          "rmse": 0.392306032530284
+        }
+      }
+    },
+    "baseline_outcome": {
+      "refused": {
+        "rows": 34,
+        "current_scored": 19,
+        "current_refusal_rate": 0.4411764705882353,
+        "current_route_transitions": 20,
+        "current_delta": {
+          "n": 0,
+          "mean_signed": null,
+          "mean_absolute": null,
+          "maximum_absolute": null,
+          "rmse": null
+        },
+        "candidate_delta": {
+          "n": 34,
+          "mean_signed": 0.05335080489292565,
+          "mean_absolute": 0.11758726734683712,
+          "maximum_absolute": 0.5211962257564329,
+          "rmse": 0.16242603141200293
+        }
+      },
+      "scored": {
+        "rows": 170,
+        "current_scored": 161,
+        "current_refusal_rate": 0.052941176470588235,
+        "current_route_transitions": 24,
+        "current_delta": {
+          "n": 161,
+          "mean_signed": 0.14108695652173894,
+          "mean_absolute": 0.34077639751552785,
+          "maximum_absolute": 4.09,
+          "rmse": 0.546275219012205
+        },
+        "candidate_delta": {
+          "n": 170,
+          "mean_signed": 0.20287510674470477,
+          "mean_absolute": 0.25249715561271785,
+          "maximum_absolute": 1.403176017707275,
+          "rmse": 0.40882545093326916
+        }
+      }
+    },
+    "current_route": {
+      "clothed→geometry": {
+        "rows": 19,
+        "current_scored": 18,
+        "current_refusal_rate": 0.05263157894736842,
+        "current_route_transitions": 19,
+        "current_delta": {
+          "n": 15,
+          "mean_signed": -0.6216666666666668,
+          "mean_absolute": 0.6936666666666665,
+          "maximum_absolute": 4.09,
+          "rmse": 1.1720487760043663
+        },
+        "candidate_delta": {
+          "n": 19,
+          "mean_signed": -0.032842618333128994,
+          "mean_absolute": 0.14331531311016232,
+          "maximum_absolute": 0.4078187410976293,
+          "rmse": 0.17214401975742855
+        }
+      },
+      "clothed→model": {
+        "rows": 162,
+        "current_scored": 162,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 16,
+        "current_delta": {
+          "n": 146,
+          "mean_signed": 0.2194520547945204,
+          "mean_absolute": 0.30452054794520544,
+          "maximum_absolute": 1.7499999999999991,
+          "rmse": 0.43352331627425134
+        },
+        "candidate_delta": {
+          "n": 162,
+          "mean_signed": 0.2077207486459975,
+          "mean_absolute": 0.2478592393599387,
+          "maximum_absolute": 1.403176017707275,
+          "rmse": 0.40872339841663735
+        }
+      },
+      "refused": {
+        "rows": 23,
+        "current_scored": 0,
+        "current_refusal_rate": 1.0,
+        "current_route_transitions": 9,
+        "current_delta": {
+          "n": 0,
+          "mean_signed": null,
+          "mean_absolute": null,
+          "maximum_absolute": null,
+          "rmse": null
+        },
+        "candidate_delta": {
+          "n": 23,
+          "mean_signed": 0.1424323469842233,
+          "mean_absolute": 0.17592590515440606,
+          "maximum_absolute": 0.9563212627367736,
+          "rmse": 0.27063369702387546
+        }
+      }
+    },
+    "current_sex": {
+      "f": {
+        "rows": 89,
+        "current_scored": 89,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 17,
+        "current_delta": {
+          "n": 79,
+          "mean_signed": 0.10632911392405055,
+          "mean_absolute": 0.3235443037974684,
+          "maximum_absolute": 4.09,
+          "rmse": 0.5952512500053329
+        },
+        "candidate_delta": {
+          "n": 89,
+          "mean_signed": 0.13984651728182645,
+          "mean_absolute": 0.20983440521790764,
+          "maximum_absolute": 1.2401275003734025,
+          "rmse": 0.31873994224913377
+        }
+      },
+      "m": {
+        "rows": 8,
+        "current_scored": 8,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 1,
+        "current_delta": {
+          "n": 7,
+          "mean_signed": 0.6814285714285714,
+          "mean_absolute": 0.6814285714285714,
+          "maximum_absolute": 1.7499999999999991,
+          "rmse": 0.8959830993304025
+        },
+        "candidate_delta": {
+          "n": 8,
+          "mean_signed": 0.49275714705877294,
+          "mean_absolute": 0.5287498700751413,
+          "maximum_absolute": 1.403176017707275,
+          "rmse": 0.8143845544023871
+        }
+      },
+      "unknown": {
+        "rows": 107,
+        "current_scored": 83,
+        "current_refusal_rate": 0.22429906542056074,
+        "current_route_transitions": 26,
+        "current_delta": {
+          "n": 75,
+          "mean_signed": 0.12726666666666656,
+          "mean_absolute": 0.3271333333333332,
+          "maximum_absolute": 1.6399999999999997,
+          "rmse": 0.43869465462893426
+        },
+        "candidate_delta": {
+          "n": 107,
+          "mean_signed": 0.18611493736828524,
+          "mean_absolute": 0.22446002354167816,
+          "maximum_absolute": 1.3353599797713507,
+          "rmse": 0.37395026507115664
+        }
+      }
+    },
+    "current_framing": {
+      "full": {
+        "rows": 162,
+        "current_scored": 162,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 16,
+        "current_delta": {
+          "n": 146,
+          "mean_signed": 0.2194520547945204,
+          "mean_absolute": 0.30452054794520544,
+          "maximum_absolute": 1.7499999999999991,
+          "rmse": 0.43352331627425134
+        },
+        "candidate_delta": {
+          "n": 162,
+          "mean_signed": 0.2077207486459975,
+          "mean_absolute": 0.2478592393599387,
+          "maximum_absolute": 1.403176017707275,
+          "rmse": 0.40872339841663735
+        }
+      },
+      "torso": {
+        "rows": 19,
+        "current_scored": 18,
+        "current_refusal_rate": 0.05263157894736842,
+        "current_route_transitions": 19,
+        "current_delta": {
+          "n": 15,
+          "mean_signed": -0.6216666666666668,
+          "mean_absolute": 0.6936666666666665,
+          "maximum_absolute": 4.09,
+          "rmse": 1.1720487760043663
+        },
+        "candidate_delta": {
+          "n": 19,
+          "mean_signed": -0.032842618333128994,
+          "mean_absolute": 0.14331531311016232,
+          "maximum_absolute": 0.4078187410976293,
+          "rmse": 0.17214401975742855
+        }
+      },
+      "unknown": {
+        "rows": 23,
+        "current_scored": 0,
+        "current_refusal_rate": 1.0,
+        "current_route_transitions": 9,
+        "current_delta": {
+          "n": 0,
+          "mean_signed": null,
+          "mean_absolute": null,
+          "maximum_absolute": null,
+          "rmse": null
+        },
+        "candidate_delta": {
+          "n": 23,
+          "mean_signed": 0.1424323469842233,
+          "mean_absolute": 0.17592590515440606,
+          "maximum_absolute": 0.9563212627367736,
+          "rmse": 0.27063369702387546
+        }
+      }
+    },
+    "current_cues": {
+      "legTorso+symmetry": {
+        "rows": 15,
+        "current_scored": 15,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 8,
+        "current_delta": {
+          "n": 7,
+          "mean_signed": 0.14428571428571427,
+          "mean_absolute": 0.14428571428571427,
+          "maximum_absolute": 0.33999999999999986,
+          "rmse": 0.19015031647920763
+        },
+        "candidate_delta": {
+          "n": 15,
+          "mean_signed": -0.013152304623204063,
+          "mean_absolute": 0.11656238072964159,
+          "maximum_absolute": 0.39722715047506796,
+          "rmse": 0.1527783260031024
+        }
+      },
+      "none": {
+        "rows": 24,
+        "current_scored": 0,
+        "current_refusal_rate": 1.0,
+        "current_route_transitions": 10,
+        "current_delta": {
+          "n": 0,
+          "mean_signed": null,
+          "mean_absolute": null,
+          "maximum_absolute": null,
+          "rmse": null
+        },
+        "candidate_delta": {
+          "n": 24,
+          "mean_signed": 0.13427802485795345,
+          "mean_absolute": 0.170815300108233,
+          "maximum_absolute": 0.9563212627367736,
+          "rmse": 0.2651585684036419
+        }
+      },
+      "shoulderHip": {
+        "rows": 1,
+        "current_scored": 1,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 1,
+        "current_delta": {
+          "n": 0,
+          "mean_signed": null,
+          "mean_absolute": null,
+          "maximum_absolute": null,
+          "rmse": null
+        },
+        "candidate_delta": {
+          "n": 1,
+          "mean_signed": -0.1879170172093918,
+          "mean_absolute": 0.1879170172093918,
+          "maximum_absolute": 0.1879170172093918,
+          "rmse": 0.1879170172093918
+        }
+      },
+      "shoulderHip+legTorso+symmetry": {
+        "rows": 10,
+        "current_scored": 10,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 4,
+        "current_delta": {
+          "n": 6,
+          "mean_signed": 0.1816666666666665,
+          "mean_absolute": 0.20833333333333318,
+          "maximum_absolute": 0.3799999999999999,
+          "rmse": 0.2390606617576383
+        },
+        "candidate_delta": {
+          "n": 10,
+          "mean_signed": 0.05074819784484692,
+          "mean_absolute": 0.09372975851940116,
+          "maximum_absolute": 0.190944263280306,
+          "rmse": 0.11323242057215473
+        }
+      },
+      "vTaper": {
+        "rows": 2,
+        "current_scored": 2,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 2,
+        "current_delta": {
+          "n": 1,
+          "mean_signed": -4.09,
+          "mean_absolute": 4.09,
+          "maximum_absolute": 4.09,
+          "rmse": 4.09
+        },
+        "candidate_delta": {
+          "n": 2,
+          "mean_signed": 0.002575285695081586,
+          "mean_absolute": 0.16843659329185057,
+          "maximum_absolute": 0.17101187898693215,
+          "rmse": 0.1684562793610721
+        }
+      },
+      "vTaper+legTorso+symmetry": {
+        "rows": 4,
+        "current_scored": 4,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 3,
+        "current_delta": {
+          "n": 1,
+          "mean_signed": -0.09999999999999964,
+          "mean_absolute": 0.09999999999999964,
+          "maximum_absolute": 0.09999999999999964,
+          "rmse": 0.09999999999999964
+        },
+        "candidate_delta": {
+          "n": 4,
+          "mean_signed": 0.03145776113730414,
+          "mean_absolute": 0.08699622058254453,
+          "maximum_absolute": 0.14921162006609112,
+          "rmse": 0.10097919494295372
+        }
+      },
+      "whr+vTaper+shoulderHip": {
+        "rows": 15,
+        "current_scored": 15,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 15,
+        "current_delta": {
+          "n": 14,
+          "mean_signed": -0.3739285714285715,
+          "mean_absolute": 0.4510714285714285,
+          "maximum_absolute": 0.8650000000000002,
+          "rmse": 0.5262654816182202
+        },
+        "candidate_delta": {
+          "n": 15,
+          "mean_signed": -0.02586479456426461,
+          "mean_absolute": 0.14299529075024922,
+          "maximum_absolute": 0.4078187410976293,
+          "rmse": 0.17666013045756226
+        }
+      },
+      "whr+vTaper+shoulderHip+legTorso+symmetry": {
+        "rows": 133,
+        "current_scored": 133,
+        "current_refusal_rate": 0.0,
+        "current_route_transitions": 1,
+        "current_delta": {
+          "n": 132,
+          "mean_signed": 0.22757575757575743,
+          "mean_absolute": 0.3189393939393939,
+          "maximum_absolute": 1.7499999999999991,
+          "rmse": 0.4508712105300674
+        },
+        "candidate_delta": {
+          "n": 133,
+          "mean_signed": 0.24973483328572907,
+          "mean_absolute": 0.2790938240439193,
+          "maximum_absolute": 1.403176017707275,
+          "rmse": 0.4467405683001982
+        }
+      }
+    }
+  },
+  "provenance": {
+    "input_csv": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-transform-stability-batch.csv",
+      "sha256": "f1f9ac8ac0125c859062294a9480454250c5e8443779f5c314df858ea998ab27"
+    },
+    "batch_metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-transform-stability-batch.meta.json",
+      "sha256": "5ab53d615bb180a0802e68b0f2490c3bdd05ff039a02d7f15ae047238dc1e5b3"
+    },
+    "dataset_metadata": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-transform-stability-manifest.meta.json",
+      "sha256": "3cc4eedec411565dc069d78de969daa94576dda1ca399f3b93d3f8853e13b457"
+    },
+    "manifest_sha256": "41cb0d67b37b24cb9beb9f25c3318c0032b94de939edad25ca875fee67cff8d0",
+    "model": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\models\\body-beauty.onnx",
+      "sha256": "6a75d194ecd3be4651fe4b048c9256a70d82f10922869e240a36982667cbb1f2"
+    },
+    "mapping_page": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\body.html",
+      "sha256": "d75ec65acc0d766bef409676f82e10864d1fb6293ee2d4707ff2ab555ae8577d"
+    },
+    "candidate_lock": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-preprocessing-candidate-lock-v1.json",
+      "sha256": "4c67cacbc32386b27b034f0954052252c1180d1a81d3e2c6b17885294c7599e1"
+    },
+    "evaluation_lock": {
+      "path": "F:\\Programming\\The Love Equations\\The Love Equations Website\\data\\body-evaluation-lock-v1.json",
+      "sha256": "6cc28bb1861b4441cb460e57393c3f8b6b4c0a5a2fecefcd4734c289e2aacff5"
+    },
+    "tool_sha256": "876e6c8eac3e18614cdf9c816c6e0956d8eb0aa48e923facb4cd4c8de1a1562f",
+    "rows_output": {
+      "path": "data\\body-transform-stability.csv",
+      "sha256": "5ab7bc0ccdf538a6d297e37ca19326367f6db86c2db5d1ece46ad7fbbb194f41"
+    },
+    "command": [
+      "tools\\audit_body_transform_stability.py",
+      "analyze",
+      "--input",
+      "data\\body-transform-stability-batch.csv",
+      "--batch-metadata",
+      "data\\body-transform-stability-batch.meta.json",
+      "--dataset-metadata",
+      "data\\body-transform-stability-manifest.meta.json",
+      "--photos",
+      "C:\\Users\\sourd\\AppData\\Local\\Temp\\codex-body-evaluation-cache\\body-transform-stability",
+      "--model",
+      "models\\body-beauty.onnx",
+      "--mapping-page",
+      "body.html",
+      "--candidate-lock",
+      "data\\body-preprocessing-candidate-lock-v1.json",
+      "--evaluation-lock",
+      "data\\body-evaluation-lock-v1.json",
+      "--output-json",
+      "data\\body-transform-stability.json",
+      "--rows-output",
+      "data\\body-transform-stability.csv",
+      "--output-md",
+      "md\\body-transform-stability.md"
+    ]
+  },
+  "limitations": [
+    "All sources are synthetic female bodies on one shape continuum.",
+    "Pixel transforms do not create independent human judgments.",
+    "Synthetic transforms do not prove physical sensor rotation, autofocus, exposure, browser permission behavior, real motion, new poses, or arm placement.",
+    "No clothed, bare-torso, male, or demographic breadth is supplied by this set."
+  ]
+}

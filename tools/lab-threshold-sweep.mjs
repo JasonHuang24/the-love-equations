@@ -571,7 +571,7 @@ function renderMarkdown(identity, census, crossings, rulings = {}) {
   lines.push('this file is committed. The excerpts are capped at a fragment each and appear only');
   lines.push('because a ruling cannot be reached without seeing the sentence. The machine-readable');
   lines.push('record in `tests/fixtures/threshold-neighbors.json` carries none — it is IDs and scores.');
-  lines.push('Regenerate with `--excerpt-chars 0` to produce this sheet without source text.', '');
+  lines.push('Regenerate with `--excerpt-chars 0` to produce this sheet without source text.');
   return `${lines.join('\n')}\n`;
 }
 

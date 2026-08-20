@@ -1,0 +1,70 @@
+{
+  "cases": 61,
+  "cluster": {
+    "definition": "Each rendered stimulus is a distinct body; resample the 61 stimuli.",
+    "field": "identity_group"
+  },
+  "cohort": {
+    "construction": "One DAZ Genesis base model manipulated on a single thinness/fatness continuum; heads removed; white underwear and undershirt.",
+    "sex": "female-presenting synthetic bodies only"
+  },
+  "dataset": "Moussally et al. body-only computer-generated pictures of women",
+  "doi": "10.3758/s13428-016-0703-7",
+  "excluded_labels": [],
+  "identity": {
+    "definition": "Each rendered stimulus appears once, so this set cannot measure multi-photo identity stability.",
+    "field": "body_id"
+  },
+  "label": {
+    "body_specific": true,
+    "definition": "mean body valence from attractiveness, beauty, and harmony judgments",
+    "field": "attractiveness_mean",
+    "independence": "The shipped CNN was trained on Connor full-body photographs, not these 61 Moussally synthetic body-only stimuli; no result from this set selected the shipped model.",
+    "independent_of_shipped_model": true,
+    "limitation": "The valence aggregate includes attractiveness, beauty, and harmony and is not an attractiveness-only judgment.",
+    "pairwise_gaps": [
+      0,
+      0.5,
+      1,
+      2
+    ],
+    "raters": "N=77-82 young women per stimulus because of missing data",
+    "scale": {
+      "higher_is_more_positive": true,
+      "maximum": 9,
+      "minimum": 1
+    },
+    "source_name": "Valence M"
+  },
+  "license": {
+    "repository_policy": "no source images committed; only hashes, factual labels, and aggregates",
+    "restriction": "do not distribute stimuli without explicit author consent",
+    "status": "copyright retained by authors"
+  },
+  "limitations": [
+    "Synthetic female-presenting bodies from one generated shape continuum do not represent natural photographic diversity.",
+    "The dataset has no male bodies and no legitimate human demographic subgroup labels.",
+    "Each body appears once, so it cannot estimate multi-photo identity stability.",
+    "The body-valence aggregate is body-specific but not attractiveness-only."
+  ],
+  "manifest_sha256": "c9c5717fa3f866ec8e5f5d3143dadcc5d1ca5fe43d8305420b24b431967c00be",
+  "schema_version": "body-independent-manifest.v2",
+  "selected_image_directory": "Low Resolution - R = 200",
+  "source_stimuli": 61,
+  "sources": {
+    "archive": {
+      "sha256": "f011966cb22ef9a8625b2ffa4684a39b70b2c587468dd5ca5d56f4bab658e647",
+      "url": "https://www.unige.ch/fapse/PSY/groups/upnc/BodyImageStimuli.zip"
+    },
+    "ratings_pdf": {
+      "sha256": "967aaf5655663ce80a8c77cc63b03bd029fb815950b66f5b364dc2f2fb2ec4d7",
+      "url": "https://static-content.springer.com/esm/art%3A10.3758%2Fs13428-016-0703-7/MediaObjects/13428_2016_703_MOESM2_ESM.pdf"
+    },
+    "stimulus_information_pdf": {
+      "sha256": "b7ff80919364016ed55defeb26ddaee6228231f988ca9f2c6e2402840a97546d",
+      "url": "https://www.unige.ch/fapse/psychoclinique/download_file/view/295/338"
+    }
+  },
+  "subgroup_fields": [],
+  "usable_labels": 61
+}

@@ -27,33 +27,102 @@
   // Provisional, tunable: face vs. body share of "overall looks" (one constant re-weights everywhere).
   var FACE_WEIGHT = 0.5;
 
-  function readScore(key) {
-    try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }
-    catch (e) { return null; }
-  }
-  function writeScore(key, obj) { try { localStorage.setItem(key, JSON.stringify(obj)); } catch (e) {} }
+  var SCORE_MIN = 1;
+  var SCORE_MAX = 10;
+  var MIN_TIMESTAMP = Date.UTC(2020, 0, 1);
+  var MAX_FUTURE_SKEW = 5 * 60 * 1000;
+  var FACE_SOURCES = ['model', 'heuristic'];
+  var BODY_SOURCES = ['model', 'geometry', 'hybrid'];
+  var BODY_SEX_SOURCES = ['manual', 'model', 'guess', 'unknown', 'unconfirmed'];
+
   function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
   function num(x) { return typeof x === 'number' && isFinite(x); }
+  function plainObject(value) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+    var proto = Object.getPrototypeOf(value);
+    return proto === Object.prototype || proto === null;
+  }
+  function bounded(value, low, high) { return num(value) && value >= low && value <= high; }
+  function timestamp(value) {
+    return Number.isSafeInteger(value) && value >= MIN_TIMESTAMP && value <= Date.now() + MAX_FUTURE_SKEW;
+  }
+  function allowed(value, values) { return values.indexOf(value) >= 0; }
 
-  // A persisted score is trustworthy only if it names the CURRENT convention (percentile-v3.1, the
-  // 2026-08-14 5.5-median anchor — an older 5.0-median score blended in would silently mix two scales,
-  // the same class of defect that retired the v2 keys), both score fields agree and are finite, and the
-  // floor sits below the max. Guards against stale / partial / hand-edited payloads.
-  function validScore(o) {
-    return !!o && typeof o === 'object'
-      && o.convention === 'percentile-v3.1'
-      && num(o.bp) && num(o.cv) && num(o.bpMax) && num(o.cvMax) && num(o.floor)
-      && o.bpMax > o.floor && o.cvMax > o.floor;
+  function validNeedsSex(o, kind) {
+    return kind === 'body' && plainObject(o)
+      && o.schemaVersion === 3 && o.needsSex === true
+      && allowed(o.sexSource, ['guess', 'unknown', 'unconfirmed'])
+      && timestamp(o.ts);
   }
 
-  // The exact number the calc displays (bp === cv on the single scale; no normalisation).
-  function rawScore(calc) {
-    if (!validScore(calc) || calc.needsSex) return null;
+  // Read only the current single-scale contract. Face keeps its shipped field set (its
+  // convention is the version); Body additionally requires schemaVersion 3 and coherent
+  // sex-confirmation semantics. Neither route may smuggle an arbitrary source label.
+  function validScore(o, kind) {
+    if (!plainObject(o) || o.needsSex === true || o.convention !== 'percentile-v3.1') return false;
+    if (kind !== 'face' && kind !== 'body') return false;
+    if (kind === 'body' && o.schemaVersion !== 3) return false;
+    if (kind === 'face' && Object.prototype.hasOwnProperty.call(o, 'schemaVersion') && o.schemaVersion !== 3) return false;
+    var sources = kind === 'face' ? FACE_SOURCES : BODY_SOURCES;
+    if (!allowed(o.source, sources)
+        || !bounded(o.bp, SCORE_MIN, SCORE_MAX) || !bounded(o.cv, SCORE_MIN, SCORE_MAX)
+        || Math.abs(o.bp - o.cv) > 1e-9
+        || (kind === 'body' && (!Number.isInteger(o.bp * 2) || !Number.isInteger(o.cv * 2)))
+        || o.floor !== SCORE_MIN || o.bpMax !== SCORE_MAX || o.cvMax !== SCORE_MAX
+        || !bounded(o.band, 0, SCORE_MAX - SCORE_MIN)
+        || !Number.isInteger(o.photos) || o.photos < 1 || o.photos > 3
+        || !timestamp(o.ts)
+        || (o.sex != null && o.sex !== 'm' && o.sex !== 'f')
+        || typeof o.framingOverride !== 'boolean') return false;
+
+    if (kind === 'face') return true;
+
+    if (!allowed(o.sexSource, BODY_SEX_SOURCES) || typeof o.sexConfirmed !== 'boolean') return false;
+    var hasInputs = Object.prototype.hasOwnProperty.call(o, 'inputs');
+    if (o.source === 'hybrid') {
+      if (!plainObject(o.inputs)
+          || !bounded(o.inputs.ffmi, 0, 60)
+          || !bounded(o.inputs.bf, 1, 75)
+          || !allowed(o.inputs.bfSource, ['measured', 'picker'])
+          || !bounded(o.inputs.weight, 0, 1)) return false;
+    } else if (hasInputs) return false;
+    var confirmed = o.sexConfirmed === true;
+    if (confirmed && (!o.sex || (o.sexSource !== 'manual' && o.sexSource !== 'model'))) return false;
+    if (!confirmed && (o.source === 'geometry' || o.source === 'hybrid')) return false;
+    var reason = o.overrideReason;
+    if (reason !== '' && reason !== 'framing' && reason !== 'outline' && reason !== 'framing+outline') return false;
+    if (o.framingOverride !== (reason !== '')) return false;
+    return true;
+  }
+
+  function readScore(key, kind) {
+    var parsed = null, hadRaw = false;
+    try {
+      var raw = localStorage.getItem(key);
+      hadRaw = raw != null;
+      if (raw && raw.length > 10000) throw new Error('oversized score record');
+      parsed = raw ? JSON.parse(raw) : null;
+    } catch (e) {}
+    if (validScore(parsed, kind) || validNeedsSex(parsed, kind)) return parsed;
+    if (hadRaw) try { localStorage.removeItem(key); } catch (e) {}
+    return null;
+  }
+  function writeScore(key, obj, kind) {
+    if (!validScore(obj, kind) && !validNeedsSex(obj, kind)) {
+      try { localStorage.removeItem(key); } catch (e) {}
+      return false;
+    }
+    try { localStorage.setItem(key, JSON.stringify(obj)); return true; }
+    catch (e) { try { localStorage.removeItem(key); } catch (_) {} return false; }
+  }
+
+  // The exact saved number (Body is public half-point precision; Face remains backward-compatible).
+  function rawScore(calc, kind) {
+    if (!validScore(calc, kind)) return null;
     return calc.cv;
   }
-  // Blend the two scores (weighted average of the displayed numbers).
   function overall(face, body) {
-    var f = rawScore(face), b = rawScore(body);
+    var f = rawScore(face, 'face'), b = rawScore(body, 'body');
     if (f == null || b == null) return null;
     return FACE_WEIGHT * f + (1 - FACE_WEIGHT) * b;
   }
@@ -86,8 +155,8 @@
       : s === 'geometry' ? 'silhouette geometry'
       : s === 'heuristic' ? 'geometry heuristic'
       : s === 'measured' ? 'measured numbers (no photo)'           // Body Calc numbers-only path (objective spine, no photo blended)
-      : s === 'hybrid' ? 'hybrid read (measured &times; photo)'   // Body Calc objective-spine blend (bodyScore.v2 additive source)
-      : (s || '—');
+      : s === 'hybrid' ? 'hybrid read (measured &times; photo)'   // Body Calc objective-spine blend
+      : 'unrecognized source';
   }
   var ACCENT = '#0F6E56';   // the conventional accent — the only scale left
 
@@ -95,18 +164,18 @@
     var host = document.getElementById('composite-result');
     if (!host) return;
 
-    var face = readScore(FACE_KEY);
-    var body = readScore(BODY_KEY);
-    var haveFace = validScore(face);
-    var bodyNeedsSex = !!(body && body.needsSex);
-    var haveBody = validScore(body) && !bodyNeedsSex;
+    var face = readScore(FACE_KEY, 'face');
+    var body = readScore(BODY_KEY, 'body');
+    var haveFace = validScore(face, 'face');
+    var bodyNeedsSex = validNeedsSex(body, 'body');
+    var haveBody = validScore(body, 'body') && !bodyNeedsSex;
 
     if (haveFace && haveBody) {
       var fsex = face.sex || null, bsex = body.sex || null;
       var sexConflict = !!(fsex && bsex && fsex !== bsex);   // the ladder is sex-neutral; the conflict still gets flagged
       var sexWord = function (s) { return s === 'm' ? 'male' : 'female'; };
       var o = overall(face, body);
-      var fS = rawScore(face), bS = rawScore(body);
+      var fS = rawScore(face, 'face'), bS = rawScore(body, 'body');
       var wF = Math.round(FACE_WEIGHT * 100), wB = 100 - wF;
       var conflictNote = sexConflict
         ? '<div class="composite-note" style="color:var(--scarlet)"><strong>The two reads disagree on sex</strong> &mdash; face read ' + sexWord(fsex) + ', body read ' + sexWord(bsex) + '. The blend assumes <strong>one person</strong>; if that’s right, set the sex on each calc so they match.</div>'
@@ -116,7 +185,7 @@
       // to-standard read — the caveat rides the payload so the blend stays as honest as the calc panel.
       // Name the actual override cause: the body's rate-anyway flag can mean non-standard framing OR an
       // unreadable outline (bodyScore.v3 overrideReason: 'framing' | 'outline' | 'framing+outline'); the
-      // face's only override is framing. Older body payloads without overrideReason read as framing.
+      // face's only override is framing. Body payloads are schema-bound and always name the cause.
       var bodyCause = body.overrideReason === 'outline' ? 'unreadable outline'
         : body.overrideReason === 'framing+outline' ? 'non-standard framing and an unreadable outline'
         : 'non-standard framing';
@@ -157,16 +226,16 @@
     }
     // A lone half is shown as ITS OWN point score, explicitly labelled as one half — never as an Overall.
     // Half of the blend is not a smaller Overall, it is a different measurement.
-    function halfValue(calc) {
-      var s = rawScore(calc);
+    function halfValue(calc, kind) {
+      var s = rawScore(calc, kind);
       if (s == null) return '—';
       return fmt(s) + ' / 10';
     }
     var faceRow = haveFace
-      ? rowDone('Face Calc', halfValue(face), ago(face.ts))
+      ? rowDone('Face Calc', halfValue(face, 'face'), ago(face.ts))
       : rowTodo('Face Calc', 'face.html', 'score a face');
     var bodyRow = haveBody
-      ? rowDone('Body Calc', halfValue(body), ago(body.ts))
+      ? rowDone('Body Calc', halfValue(body, 'body'), ago(body.ts))
       : rowTodo('Body Calc', 'body.html', bodyNeedsSex ? 'set a sex to resolve its score' : 'score a body');
 
     var anyScored = haveFace || haveBody;
@@ -190,8 +259,8 @@
   }
 
   window.leComposite = {
-    saveFace: function (obj) { writeScore(FACE_KEY, obj); render(); },
-    saveBody: function (obj) { writeScore(BODY_KEY, obj); render(); },
+    saveFace: function (obj) { writeScore(FACE_KEY, obj, 'face'); render(); },
+    saveBody: function (obj) { writeScore(BODY_KEY, obj, 'body'); render(); },
     // a calc invalidates its own result (failed/cleared photo) → drop its composite score so the blend
     // never shows a number for an emptied calculator
     clearFace: function () { try { localStorage.removeItem(FACE_KEY); } catch (e) {} render(); },
