@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "le-lab.unmatched-umbrella-adversarial/1.1.0",
+  "frozenAt": "2026-08-30T23:57:00-06:00",
+  "taxonomyVersion": "1.1.0",
+  "reviewStandard": "Direct classification is future-safety evidence. liveState records whether the current gate/matcher exposes the fragment to post-match triage; only unmatched cases are user-visible umbrella results.",
+  "cases": [
+    { "id": "ai-customer-support", "text": "The Character.AI customer-support chatbot provides emotional-support documentation for service accounts.", "directPrimary": "unclassified", "directReason": "outside-human-relational-frame", "liveState": "excluded" },
+    { "id": "transcript-sponsor", "text": "HOST: Our sponsor’s AI companion supports workplace relationships; visit the link in the show notes.", "directPrimary": "unclassified", "directReason": "insufficient-evidence", "liveState": "unmatched" },
+    { "id": "punctuated-title", "text": "Character.AI Companions, Attachment, and Emotional Support?", "directPrimary": "unclassified", "directReason": "insufficient-evidence", "liveState": "no-claim" },
+    { "id": "methods-briefly-rated-ai", "text": "Participants briefly rated AI companions for emotional support in the methods survey.", "directPrimary": "unclassified", "directReason": "descriptive-fact-no-relational-mechanism", "liveState": "excluded" },
+    { "id": "table-family-terms", "text": "Table 4 lists donors, surrogates, intended parents, legal parenthood, means, and standard deviations.", "directPrimary": "unclassified", "directReason": "descriptive-fact-no-relational-mechanism", "liveState": "excluded" },
+    { "id": "character-ai-substantive", "text": "A Character.AI romantic partner offered attachment and companionship without reciprocal needs or welfare.", "directPrimary": "asymmetric-nonhuman-relationships", "directReason": "existing-doctrine-retrieval-miss", "liveState": "mapped" },
+    { "id": "replika-substantive", "text": "A Replika partner can offer attachment and emotional support while lacking consent, agency, welfare, or any ability to leave the user.", "directPrimary": "asymmetric-nonhuman-relationships", "directReason": "existing-doctrine-retrieval-miss", "liveState": "unmatched", "nearestContains": "frameworks:synthetic-reciprocity" },
+    { "id": "authority-gate-excluded", "text": "The workplace bans romances between managers and direct reports and requires HR disclosure when a reporting line changes.", "directPrimary": "institutional-authority-governance", "directReason": "existing-doctrine-retrieval-miss", "liveState": "excluded" },
+    { "id": "authority-live-nonmatch", "text": "A romantic relationship crossed evaluative authority and changed the reporting line.", "directPrimary": "institutional-authority-governance", "directReason": "existing-doctrine-retrieval-miss", "liveState": "unmatched", "nearestContains": "frameworks:authority-firewall" },
+    { "id": "legal-parenthood-recognition", "text": "A parental order grants the intended parents legal parenthood and recognition on the child’s birth certificate.", "directPrimary": "external-recognition-administrative-access", "directReason": "possible-doctrine-gap", "liveState": "excluded" },
+    { "id": "means-ordinary", "text": "What this relationship means is left unresolved by the essay.", "directPrimary": "unclassified", "directReason": "insufficient-evidence", "liveState": "unmatched" },
+    { "id": "means-statistical", "text": "Table 2 reports means, standard deviations, and confidence intervals.", "directPrimary": "unclassified", "directReason": "descriptive-fact-no-relational-mechanism", "liveState": "excluded" },
+    { "id": "one-in-which", "text": "A longitudinal study is needed, one in which people report outcomes later.", "directPrimary": "unclassified", "directReason": "insufficient-evidence", "liveState": "excluded" },
+    { "id": "one-in-n", "text": "Nearly one in three respondents reported the outcome.", "directPrimary": "unclassified", "directReason": "descriptive-fact-no-relational-mechanism", "liveState": "excluded" },
+    { "id": "rbac-collision", "text": "RBAC assigns parent-child roles to cloud service accounts and grants database access through reporting lines.", "directPrimary": "unclassified", "directReason": "outside-human-relational-frame", "liveState": "excluded" },
+    { "id": "database-cloud-collision", "text": "The cloud service account supports relationships between database tables.", "directPrimary": "unclassified", "directReason": "outside-human-relational-frame", "liveState": "excluded" },
+    { "id": "parent-child-technical", "text": "The parent-child process tree assigns a support role to each worker node.", "directPrimary": "unclassified", "directReason": "outside-human-relational-frame", "liveState": "excluded" },
+    { "id": "role-scope-enumeration", "text": "This report covers patients, donors, intended parents, surrogates, and fertility-clinic staff.", "directPrimary": "unclassified", "directReason": "descriptive-fact-no-relational-mechanism", "liveState": "excluded" },
+    { "id": "role-explicit-split", "text": "Donor conception separates genetic contribution, gestation, and day-to-day social parenthood among different people.", "directPrimary": "role-unbundling-family-formation", "directReason": "possible-doctrine-gap", "liveState": "unmatched" },
+    { "id": "role-procedure", "text": "Surrogates and intended parents attend routine blood testing, counselling, and clinic appointments before treatment.", "directPrimary": "unclassified", "directReason": "descriptive-fact-no-relational-mechanism", "liveState": "excluded" }
+  ]
+}

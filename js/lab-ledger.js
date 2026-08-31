@@ -4,6 +4,14 @@
 // judgements with separate destinations.
 export const LEDGER_COLUMN_COUNT = 8;
 
+export function unmatchedLedgerLabel(triage) {
+  if (!triage?.schemaVersion || typeof triage.abstained !== 'boolean') return 'Unmatched';
+  if (triage.abstained === true) return 'Unmatched — Unclassified';
+  return triage.primaryUmbrella?.label
+    ? `Unmatched — ${triage.primaryUmbrella.label}`
+    : 'Unmatched';
+}
+
 export function ledgerFilterIsActive(controlFilter, activeFilter) {
   return controlFilter === activeFilter;
 }

@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "le-lab.unmatched-umbrella-evaluation/1.1.0",
+  "frozenAt": "2026-08-30T23:44:00-06:00",
+  "status": "sealed-after-1.1-standard-reconciliation-before-final-tuning",
+  "extends": "unmatched-umbrella-evaluation.json",
+  "sourceRecord": "Review findings and md/pressure-tests.md",
+  "review": {
+    "reviewedBy": "Codex manual review",
+    "standard": "Every negative-control case must abstain. Supported cases are evaluated on primary territory, optional secondary territory, and unmatched-reason precedence independently.",
+    "historicalCorrection": "brief-03 describes the brief/nonrelationship mechanism and expects a supported umbrella; its 1.0 negative-control kind contradicted the fixture standard. The 1.0 fixture remains byte-unchanged and this successor reclassifies only its case kind.",
+    "standardReconciliation": "The inherited access-05 and access-06 secondary labels were removed before final tuning because their exact fragments name family categories but do not state separation, substitution, comparison, or unbundling. Retaining those labels would contradict the 1.1 explicit-mechanism standard.",
+    "mutationPolicy": "Sealed before taxonomy 1.1 implementation. Do not tune this fixture in place; create a new version for later changes."
+  },
+  "caseCorrections": [
+    { "id": "brief-03", "kind": "positive" },
+    { "id": "asym-01", "expected": { "unmatchedReasonId": "existing-doctrine-retrieval-miss" } },
+    { "id": "asym-02", "expected": { "unmatchedReasonId": "existing-doctrine-retrieval-miss" } },
+    { "id": "authority-01", "expected": { "unmatchedReasonId": "existing-doctrine-retrieval-miss" } },
+    { "id": "authority-02", "expected": { "unmatchedReasonId": "existing-doctrine-retrieval-miss" } },
+    { "id": "authority-06", "expected": { "unmatchedReasonId": "existing-doctrine-retrieval-miss" } },
+    { "id": "access-05", "expected": { "secondaryUmbrellaId": null } },
+    { "id": "access-06", "expected": { "secondaryUmbrellaId": null } }
+  ],
+  "cases": [
+    {
+      "id": "roles-11-scope-enumeration",
+      "kind": "negative-control",
+      "text": "This report covers patients, donors, intended parents, surrogates, and fertility-clinic staff.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "roles-12-procedural-testing",
+      "kind": "negative-control",
+      "text": "Surrogates and intended parents attend routine blood testing, counselling, and clinic appointments before treatment.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "roles-13-procedural-eligibility",
+      "kind": "negative-control",
+      "text": "Donors and intended parents must meet the clinic eligibility criteria and complete the required consent forms.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "roles-14-explicit-separation",
+      "kind": "positive",
+      "text": "Donor conception separates genetic contribution, gestation, and day-to-day social parenthood among different people.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "roles-15-substitution",
+      "kind": "positive",
+      "text": "A known donor supplies the genetic role while the intended parents replace that contribution with the social and caregiving parent roles.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "access-11-legal-parenthood",
+      "kind": "positive",
+      "text": "A parental order grants the intended parents legal parenthood and recognition on the child's birth certificate.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "access-12-transfer-with-split",
+      "kind": "positive",
+      "text": "The parental order transfers legal parenthood from the surrogate to the intended parents, separating gestational and legally recognized parent roles.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": "role-unbundling-family-formation", "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "owned-asym-retrieval",
+      "kind": "positive",
+      "text": "A Replika partner can offer attachment and emotional support while lacking consent, agency, welfare, or any ability to leave the user.",
+      "expected": { "primaryUmbrellaId": "asymmetric-nonhuman-relationships", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "existing-doctrine-retrieval-miss" }
+    },
+    {
+      "id": "owned-authority-retrieval",
+      "kind": "positive",
+      "text": "The workplace bans romances between managers and direct reports and requires HR disclosure when a reporting line changes.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "existing-doctrine-retrieval-miss" }
+    },
+    {
+      "id": "owned-authority-boundary",
+      "kind": "ambiguous",
+      "text": "The ban does not cover coworkers outside the reporting line unless one can evaluate the other's pay or promotion.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "adversarial-method-ai",
+      "kind": "negative-control",
+      "text": "Participants briefly rated AI companions for emotional support in the methods survey.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "adversarial-table-family",
+      "kind": "negative-control",
+      "text": "Table 4 lists donors, surrogates, intended parents, legal parenthood, means, and standard deviations.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "adversarial-title-punctuation",
+      "kind": "negative-control",
+      "text": "Character.AI Companions, Attachment, and Emotional Support?",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    },
+    {
+      "id": "adversarial-transcript-sponsor",
+      "kind": "negative-control",
+      "text": "HOST: Our sponsor's AI companion supports workplace relationships; visit the link in the show notes.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    },
+    {
+      "id": "adversarial-customer-support",
+      "kind": "negative-control",
+      "text": "The Character.AI customer-support chatbot provides emotional-support documentation for service accounts.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "adversarial-rbac-family",
+      "kind": "negative-control",
+      "text": "RBAC assigns parent-child roles to cloud service accounts and grants database access through reporting lines.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "outside-human-relational-frame" }
+    }
+  ]
+}

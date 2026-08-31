@@ -6637,3 +6637,12 @@ Right! I think I have mentioned this in a column before…") is claim-like by th
 detector and off-domain by the gate. Not investigated further this run; flagged
 because it is the register a live Lab user is most likely to paste and the one
 the corpus is now least able to speak for.
+
+---
+
+# pt11 — unmatched umbrellas
+
+The implementation, multi-phase source ledger, frozen evaluation, category
+precision/abstention results, taxonomy decisions, invariance proof, and
+closeout are recorded in
+[`md/unmatched-umbrella-pressure-test.md`](unmatched-umbrella-pressure-test.md).

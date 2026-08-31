@@ -2020,7 +2020,7 @@
 
 .lab-result-columns blockquote,
 .lab-pressure-card > blockquote,
-.lab-research-card > blockquote {
+.lab-unmatched-details > blockquote {
   margin: 0;
   padding: 0.9rem 1rem;
   border-left: 3px solid var(--scarlet);
@@ -2156,6 +2156,115 @@
 }
 
 .lab-unmapped-reason { margin: 0.8rem 0 0; color: var(--text-muted); font-size: 11.5px; line-height: 1.6; }
+
+.lab-research-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.lab-unmatched-disclosure > summary {
+  min-width: 0;
+  padding: clamp(0.9rem, 2.5vw, 1.2rem);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.lab-unmatched-disclosure > summary::-webkit-details-marker { display: none; }
+
+.lab-unmatched-disclosure > summary::after {
+  content: '+';
+  flex: 0 0 auto;
+  color: var(--scarlet);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.lab-unmatched-disclosure[open] > summary {
+  border-bottom: 0.5px solid var(--border-light);
+  background: rgba(250, 230, 232, 0.18);
+}
+
+.lab-unmatched-disclosure[open] > summary::after { content: '−'; }
+
+.lab-unmatched-disclosure > summary:focus-visible {
+  outline: 3px solid rgba(196, 30, 58, 0.35);
+  outline-offset: -3px;
+}
+
+.lab-unmatched-summary-copy {
+  min-width: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.lab-unmatched-summary-copy > strong {
+  min-width: 12rem;
+  flex: 1 1 22rem;
+  color: var(--text);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(0.98rem, 1.7vw, 1.12rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.lab-unmatched-disclosure .lab-segment-ref {
+  flex: 0 1 auto;
+  margin-left: 0;
+  overflow-wrap: anywhere;
+}
+
+.lab-unmatched-details {
+  min-width: 0;
+  padding: clamp(1rem, 3vw, 1.35rem);
+}
+
+.lab-unmatched-details > blockquote,
+.lab-umbrella-rationale,
+.lab-umbrella-doctrine-note,
+.lab-research-grid dd { overflow-wrap: anywhere; }
+
+.lab-umbrella-rationale {
+  margin: 0.7rem 0 0;
+  color: var(--text);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+.lab-umbrella-doctrine-note {
+  margin: 0.8rem 0 0;
+  padding: 0.65rem 0.8rem;
+  border-left: 3px solid var(--lab-amber);
+  background: var(--lab-amber-pale);
+  color: #69440c;
+  font-size: 10.75px;
+  line-height: 1.55;
+}
+
+.lab-unmatched-ledger-label,
+.lab-nearest-nonmatch {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.lab-unmatched-ledger-label {
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.lab-nearest-nonmatch {
+  margin-top: 0.3rem;
+  color: var(--text-dim);
+  font-size: 10px;
+  line-height: 1.4;
+}
 
 /* Rendered only when the payload's own domain verdict is "uncertain" — the
    card must not sound more sure of a passage than the engine was. Same amber
@@ -2436,6 +2545,19 @@
     white-space: normal;
   }
   .lab-tab:last-child { grid-column: 1 / -1; }
+  .lab-unmatched-disclosure > summary {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .lab-unmatched-summary-copy { flex-basis: calc(100% - 2rem); }
+  .lab-unmatched-summary-copy > strong {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+  .lab-unmatched-disclosure .lab-segment-ref {
+    flex-basis: calc(100% - 2rem);
+    order: 2;
+  }
   .lab-tab.is-active,
   .lab-tab[aria-selected="true"] {
     border-color: rgba(196, 30, 58, 0.28);

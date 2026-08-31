@@ -156,7 +156,7 @@ for phrase in (
     "Original text remains intact in Source.",
     "Coverage is unavailable because no relationship claims were found.",
     "coverage not applicable",
-    "Analysis 2.2 · Queue 2.1",
+    "Analysis 2.6 · Queue 2.3",
     "provisional",
     "Add back in",
     "Leave out",

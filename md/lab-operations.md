@@ -444,7 +444,7 @@ failure layer, checks both frozen benchmarks for the same passage, and drafts
 the fixture stub a human would commit. It refuses to write into
 `tests/fixtures/`.
 
-## Research queue — `le-lab.research-queue/2.2`
+## Research queue — `le-lab.research-queue/2.3`
 
 The standalone queue export references its parent analysis, source, extraction
 warnings, analyzer mode, and canon version. Each candidate keeps its source
@@ -454,12 +454,58 @@ flags. Every item is labeled **research candidate — not LE doctrine**.
 Research Queue v2 follows the analysis-v2 domain-filtered population and cannot
 be interpreted as a v1 queue with merely additive metadata.
 
+Queue 2.3 adds `umbrellaTaxonomy` at the queue root and
+`unmatchedTriage` on every item. This is a second, post-match dimension:
+`primaryUmbrella` (plus an optional `secondaryUmbrella`) names the
+relational territory, while `unmatchedReason` says why doctrine matching did
+not clear. Each item also carries the triage/taxonomy schema versions,
+confidence, explicit `abstained` state, matched signals, a plain-language
+rationale, and an in-band doctrine-status warning. The exact source excerpt and
+its existing location boundaries remain the authority. `nearestConcepts`
+remain nonmatches and are explicitly labeled that way.
+
+The dependency direction is one-way and guarded: `researchItemFor` invokes
+the deterministic umbrella classifier only for the final `unmappedClaims`
+population. The classifier receives the source fragment alone. It receives no
+canon entry, retrieval candidate, lexical score, gate result, exclusion,
+alignment, or ownership field and therefore cannot promote, suppress, or
+reroute a doctrine match. Low-signal text returns the `unclassified` umbrella
+with `abstained: true`; generic relationship words never clear a subject
+umbrella on their own.
+
+Taxonomy 1.1 adds explanatory `currentDoctrineOwners` for the Asymmetric and
+Institutional umbrellas (`frameworks:synthetic-reciprocity` and
+`frameworks:authority-firewall`). This registry belongs only to unmatched
+triage. It is not imported by the matcher. Reason precedence is
+outside-human/furniture, descriptive evidence, boundary/moderator/directional
+evidence, existing-doctrine retrieval miss, possible doctrine gap, then
+insufficient evidence. A boundary statement is therefore not flattened into a
+retrieval miss merely because its subject umbrella has a current owner.
+
+Role unbundling requires an explicit separation, substitution, comparison, or
+unbundling mechanism. Assisted reproduction, surrogacy, donors, intended
+parents, or parenthood words alone do not qualify. Legal parenthood,
+recognition, consent, eligibility, and access prefer External recognition when
+the exact fragment states that mechanism. Statistical and procedural uses of
+`separate`, `role`, and family vocabulary are guarded as furniture.
+
+JSON keeps each queue excerpt byte-exact. Markdown uses a dedicated excerpt
+serializer: it preserves spaces, tabs, line breaks, and blank lines, emits
+every source line in the blockquote, and encodes only `&`, `<`, and `>`. The
+ordinary heading and metadata serializer still performs its existing
+whitespace normalization. In the ledger, an old result with no
+`unmatchedTriage` renders plain `Unmatched`; `Unmatched — Unclassified` is
+reserved for a real versioned triage record with `abstained: true`.
+
 Two revisions after this section was first written, both recorded in the
 constant's own comment (`js/lab-analyzer.js`, `RESEARCH_QUEUE_SCHEMA_VERSION`):
 2.1 (v2.2.0) put a provenance block on the queue object itself, so a queue
 lifted out of an analysis is self-describing on its own; 2.2 (v2.6.10) changed
 the item shape — `scoredConceptTotal` and `nearbyBandTotal` say what the three
-nearest concepts are three OF. This heading sat at 2.0 while production shipped
+nearest concepts are three OF; 2.3 (v2.7.1) adds the versioned post-match
+umbrella taxonomy and item triage described above. Analyzer v2.7.2 retains the
+2.3 queue shape while advancing the taxonomy/triage payload to 1.1 and
+tightening its explanatory rules. This heading sat at 2.0 while production shipped
 both; the drift was caught by the 2026-08-07 cold review (finding 7) and the
 analyzer's live export version is asserted against the constant in
 `tests/lab-analyzer.test.mjs`, so the contract a consumer receives is the

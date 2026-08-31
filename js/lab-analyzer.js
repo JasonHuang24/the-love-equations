@@ -19,6 +19,11 @@
  * data loss.
  */
 
+import {
+  classifyUnmatchedPassage,
+  UNMATCHED_UMBRELLA_TAXONOMY,
+} from './lab-unmatched-umbrellas.js?v=2.7.2';
+
 // Bumped to 2.4 at v2.4.0, again because the analyzer DECIDES differently, in
 // three separate ways: retrieval keeps every exact hit instead of ranking it
 // away, stance reads which canon surface an overlap came from (so asserting an
@@ -32,11 +37,12 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 // Held at 2.1 through v2.3.0: the gate change alters how many items reach the
 // queue, but not the shape of a queue item. Moved to 2.2 at v2.6.10, which
 // does change the item shape: `scoredConceptTotal` and `nearbyBandTotal` say
-// what the three nearest concepts are three OF.
-export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.2';
+// what the three nearest concepts are three OF. Moved to 2.3 at v2.7.1 for
+// post-match unmatched-triage metadata and its versioned taxonomy.
+export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.3';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.7.0';
+export const ANALYZER_VERSION = '2.7.2';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',
@@ -3597,6 +3603,11 @@ function researchItemFor(result) {
     },
     excerpt: result.unit.text,
     whyUnmapped: reason,
+    // This classifier runs only after matching has produced an unmapped
+    // result. It receives the exact source fragment, not candidates or scores,
+    // and therefore cannot change doctrine ownership, gates, or matching.
+    unmatchedTriage: classifyUnmatchedPassage(result.unit.text),
+    nearestConceptsStatus: 'Nearest doctrine candidates by wording — nonmatches',
     nearestConcepts: result.candidates.slice(0, SCORING_CONFIG.maxNearestConcepts).map((candidate) => ({
       canonId: candidate.canonId,
       title: candidate.title,
@@ -4216,6 +4227,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
   const researchQueue = {
     schemaVersion: RESEARCH_QUEUE_SCHEMA_VERSION,
     status: 'Research candidates — not LE doctrine',
+    umbrellaTaxonomy: UNMATCHED_UMBRELLA_TAXONOMY,
     // Duplicated from the analysis root on purpose: the queue is exported on
     // its own, and an export with no provenance is an export nobody can trust.
     provenance,
@@ -4325,6 +4337,7 @@ export async function analyzeDocument(document, canonIndex, options = {}) {
       'The relevance gate is lexical triage and can misclassify unseen phrasings in either direction; every ignored passage is listed with its decision evidence and any passage can be re-triaged with a per-passage visitor override.',
       'A lexical score clears the credible threshold only when supported by an exact phrase, a concept signature, or at least two distinctive shared concepts.',
       'A match means the source resembles or engages an indexed LE concept; it does not establish that either claim is true.',
+      'Unmatched umbrellas and reasons are deterministic explanatory triage applied only after a passage remains unmatched; they are not doctrine coverage, doctrine matches, or changes to canon ownership.',
       'Alignment reads negation parity, quotation, attribution, endorsement, rejection, and qualification within the clause that carries the claim, and the generic agreement and disagreement cues that decide the remaining labels read the claim\'s clause and the clause that follows it (evidence-citation language still counts from anywhere in the passage; a verdict stated in an earlier clause does not reach forward). It cannot detect irony, so a passage that mocks a reading by stating it is recorded as stating it; labels should also be reviewed when a claim is highly implicit or depends on context outside the passage.',
       'Clause boundaries are approximated from punctuation, not parsed. Stance scoping and contextual-alias evidence both depend on that approximation, so coordination without a comma, negation inside a subordinate clause, appositive and relative clauses, and chains of attribution can each attach a word to the wrong claim.',
       'External sources listed by LE are carried through as citations; this analysis does not re-fetch or re-verify them.',

@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.7.0';
+} from './lab-intake.js?v=2.7.2';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,36 +15,37 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.7.0';
-import { createDemoDocument } from './lab-demo.js?v=2.7.0';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.7.0';
-import { claimUnitRowDigest } from './lab-analyzer.js?v=2.7.0';
+} from './lab-extractors.js?v=2.7.2';
+import { createDemoDocument } from './lab-demo.js?v=2.7.2';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.7.2';
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.7.2';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.7.0';
+} from './lab-export.js?v=2.7.2';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
   ledgerFilterIsActive,
   ledgerRowMatchesFilter,
   nextLedgerFilter,
-} from './lab-ledger.js?v=2.7.0';
+  unmatchedLedgerLabel,
+} from './lab-ledger.js?v=2.7.2';
 import {
   REVIEW_DISPOSITIONS,
   buildMappingFeedback,
   mappingFeedbackFileName,
   mappingFeedbackToJson,
-} from './lab-feedback.js?v=2.7.0';
+} from './lab-feedback.js?v=2.7.2';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.7.0';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.7.2';
 // The Lab build that rendered a flagged row. Deliberately distinct from
 // provenance.analyzer.version, which names the engine that produced the numbers:
 // a UI-only patch moves this and not that, and triage needs to tell them apart.
-const LAB_RELEASE = '2.6.9';
+const LAB_RELEASE = '2.7.2';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -207,6 +208,7 @@ const state = {
   // three of them rather than the whole document's.
   diagnosticsBySegment: new Map(),
   diagnosticsFor: null,
+  unmatchedTriageBySegment: new Map(),
   flagTarget: null,
   workController: null,
   busy: false,
@@ -970,9 +972,17 @@ function buildLedgerRow(segment) {
     confidenceCell.textContent = confidenceLabel(primary);
   } else {
     alignmentCell.textContent = 'Unmapped';
-    connectionCell.textContent = segment.weakMatches?.[0]
-      ? `Nearest: ${segment.weakMatches[0].title}`
-      : 'No credible match';
+    const triage = state.unmatchedTriageBySegment.get(segment.unit.id);
+    const umbrella = document.createElement('strong');
+    umbrella.className = 'lab-unmatched-ledger-label';
+    umbrella.textContent = unmatchedLedgerLabel(triage);
+    connectionCell.appendChild(umbrella);
+    const nearest = document.createElement('span');
+    nearest.className = 'lab-nearest-nonmatch';
+    nearest.textContent = segment.weakMatches?.[0]
+      ? `Nearest nonmatch: ${segment.weakMatches[0].title}`
+      : 'No credible doctrine neighbor';
+    connectionCell.appendChild(nearest);
     if (segment.weakMatches?.[0]) appendNearbyBand(connectionCell, segment);
     sectionCell.textContent = segment.weakMatches?.[0]
       ? matchSection(segment.weakMatches[0]) || '—'
@@ -1531,6 +1541,14 @@ function renderResearchQueue(result) {
     : 'Unmapped claim-like passages will remain visible here instead of being forced into the nearest canon bucket.';
   items.forEach((item) => {
     const fragment = ui.researchTemplate.content.cloneNode(true);
+    const triage = item.unmatchedTriage;
+    field(fragment, 'umbrella-label').textContent = unmatchedLedgerLabel(triage);
+    const confidence = field(fragment, 'umbrella-confidence');
+    if (triage) {
+      confidence.textContent = `${triage.confidenceLabel} · ${Math.round(Number(triage.confidence || 0) * 100)}%`;
+    } else {
+      confidence.hidden = true;
+    }
     field(fragment, 'segment-ref').textContent = segmentReference({
       id: item.segmentId,
       speaker: item.location?.speaker,
@@ -1538,6 +1556,19 @@ function renderResearchQueue(result) {
     });
     field(fragment, 'excerpt').textContent = item.excerpt;
     field(fragment, 'reason').textContent = item.whyUnmapped;
+    field(fragment, 'umbrella-rationale').textContent = triage?.rationale
+      || 'This older result does not carry unmatched-umbrella metadata.';
+    field(fragment, 'unmatched-reason').textContent = triage?.unmatchedReason?.label
+      || 'Not available in this result version';
+    const secondaryWrap = field(fragment, 'secondary-wrap');
+    if (triage?.secondaryUmbrella) {
+      field(fragment, 'secondary-umbrella').textContent = triage.secondaryUmbrella.label;
+    } else {
+      secondaryWrap.hidden = true;
+    }
+    const doctrineNote = field(fragment, 'doctrine-note');
+    doctrineNote.textContent = triage?.doctrineStatus
+      || 'Umbrella metadata was not available for this older result.';
     if (uncertainSegments.has(item.segmentId)) {
       const caution = document.createElement('p');
       caution.className = 'lab-research-caution';
@@ -1642,6 +1673,9 @@ function renderProvisionalTag(result, coverageAvailable) {
 
 function renderResult(result, documentValue) {
   state.analysis = result;
+  state.unmatchedTriageBySegment = new Map(
+    (result.researchQueue?.items || []).map((item) => [item.segmentId, item.unmatchedTriage]),
+  );
   const coverage = result.coverage.mappedClaimSegmentSharePct;
   const coverageAvailable = Number.isFinite(coverage);
   const ignored = Number(result.metrics.ignoredDomainSegments || 0);
@@ -1856,6 +1890,7 @@ async function cancelWork() {
 
 function resetVisualResults() {
   state.analysis = null;
+  state.unmatchedTriageBySegment.clear();
   state.analyzedDocument = null;
   state.analyzedOverrides = {};
   closeFlagDialog();
@@ -2044,7 +2079,7 @@ async function loadCanonIndex() {
     const sources = canonIndex.stats?.sourceCount
       ?? new Set(canonIndex.entries.map((entry) => entry.page)).size;
     ui.indexMeta.textContent = `Indexed ${formatNumber(concepts)} concepts across ${formatNumber(sources)} LE sources · ${canonIndex.indexVersion}`;
-    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 2.2 · Queue 2.1';
+    ui.schemaMeta.textContent = 'Input 1.0.0 · Analysis 2.6 · Queue 2.3';
     ui.analysisMode.textContent = 'On-device lexical · no semantic model';
     refreshReadyState();
   } catch (error) {

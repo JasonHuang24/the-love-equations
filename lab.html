@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="css/styles.css?v=2.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=2.7.0" />
+  <link rel="stylesheet" href="css/lab.css?v=2.7.2" />
   <script src="js/include.js?v=1.0" defer></script>
-  <script type="module" src="js/lab-app.js?v=2.7.0"></script>
+  <script type="module" src="js/lab-app.js?v=2.7.2"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab</a>
@@ -53,7 +53,7 @@
                 </div>
                 <div>
                   <dt>Contracts</dt>
-                  <dd id="lab-schema-meta">Input 1.0.0 &middot; Analysis 2.2 &middot; Queue 2.1</dd>
+                  <dd id="lab-schema-meta">Input 1.0.0 &middot; Analysis 2.6 &middot; Queue 2.3</dd>
                 </div>
                 <div>
                   <dt>Mode</dt>
@@ -649,20 +649,33 @@
 
     <template id="lab-research-template">
       <article class="lab-result-card lab-research-card">
-        <header>
-          <span class="lab-candidate-badge">Open question</span>
-          <span class="lab-segment-ref" data-field="segment-ref"></span>
-        </header>
-        <blockquote data-field="excerpt"></blockquote>
-        <p class="lab-unmapped-reason" data-field="reason"></p>
-        <dl class="lab-research-grid">
-          <div><dt>Closest canon concepts by wording</dt><dd data-field="nearest"></dd></div>
-          <div><dt>Where it could belong</dt><dd data-field="destination"></dd></div>
-          <div><dt>The question it raises</dt><dd data-field="question"></dd></div>
-          <div><dt>What would disprove it</dt><dd data-field="falsifier"></dd></div>
-          <div><dt>Suggested search terms</dt><dd data-field="search-terms"></dd></div>
-        </dl>
-        <div class="lab-risk-flags" data-field="risk-flags"></div>
+        <details class="lab-unmatched-disclosure">
+          <summary>
+            <span class="lab-unmatched-summary-copy">
+              <span class="lab-candidate-badge">Open question</span>
+              <strong data-field="umbrella-label">Unmatched</strong>
+              <span class="lab-confidence-badge" data-field="umbrella-confidence"></span>
+            </span>
+            <span class="lab-segment-ref" data-field="segment-ref"></span>
+          </summary>
+          <div class="lab-unmatched-details">
+            <span class="lab-card-label">Exact source fragment</span>
+            <blockquote data-field="excerpt"></blockquote>
+            <p class="lab-unmapped-reason" data-field="reason"></p>
+            <p class="lab-umbrella-rationale" data-field="umbrella-rationale"></p>
+            <dl class="lab-research-grid">
+              <div><dt>Unmatched reason</dt><dd data-field="unmatched-reason"></dd></div>
+              <div data-field="secondary-wrap"><dt>Secondary umbrella</dt><dd data-field="secondary-umbrella"></dd></div>
+              <div><dt>Closest canon concepts by wording — nonmatches</dt><dd data-field="nearest"></dd></div>
+              <div><dt>Where it could belong</dt><dd data-field="destination"></dd></div>
+              <div><dt>The question it raises</dt><dd data-field="question"></dd></div>
+              <div><dt>What would disprove it</dt><dd data-field="falsifier"></dd></div>
+              <div><dt>Suggested search terms</dt><dd data-field="search-terms"></dd></div>
+            </dl>
+            <p class="lab-umbrella-doctrine-note" data-field="doctrine-note"></p>
+            <div class="lab-risk-flags" data-field="risk-flags"></div>
+          </div>
+        </details>
       </article>
     </template>
 

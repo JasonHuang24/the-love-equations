@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.7.0';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=2.7.0';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.7.2';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=2.7.2';
 
 /*
  * LE Lab export adapters.
@@ -17,6 +17,16 @@ function markdownText(value) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+}
+
+function markdownExcerpt(value) {
+  const encoded = String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return encoded.split(/\r\n|\r|\n/)
+    .map((line) => (line.length ? `> ${line}` : '>'))
+    .join('\n');
 }
 
 function markdownLink(label, href) {
@@ -159,7 +169,7 @@ export function analysisToMarkdown(result) {
         '',
       );
       match.excerpts?.slice(0, 2).forEach((excerpt) => {
-        lines.push(`> ${markdownText(excerpt)}`, '');
+        lines.push(markdownExcerpt(excerpt), '');
       });
       if (match.sourceLinks?.length) {
         lines.push(`LE sources: ${match.sourceLinks.map((source) => markdownLink(source.label, source.url)).join(' · ')}`, '');
@@ -181,7 +191,7 @@ export function analysisToMarkdown(result) {
       lines.push(
         `### ${location || markdownText(segment.unit?.id)}`,
         '',
-        `> ${markdownText(segment.unit?.text)}`,
+        markdownExcerpt(segment.unit?.text),
         '',
       );
       segment.matches.forEach((match) => {
@@ -274,6 +284,25 @@ function nearestScaleNote(item) {
   return ` — _${shown} of ${scored} concepts that scored${band ? ` · ${band} in the nearby band` : ''}_`;
 }
 
+function unmatchedTriageLines(item) {
+  const triage = item?.unmatchedTriage;
+  if (!triage) return [];
+  const lines = [
+    `- **Subject umbrella:** ${markdownText(triage.primaryUmbrella?.label || 'Unclassified')}${triage.abstained ? ' (abstained)' : ''}`,
+    `- **Confidence:** ${markdownText(triage.confidenceLabel)} (${Math.round(Number(triage.confidence || 0) * 100)}%)`,
+    `- **Why this umbrella:** ${markdownText(triage.rationale)}`,
+    `- **Unmatched reason:** ${markdownText(triage.unmatchedReason?.label)}`,
+  ];
+  if (triage.secondaryUmbrella) {
+    lines.push(`- **Secondary umbrella:** ${markdownText(triage.secondaryUmbrella.label)}`);
+  }
+  if (triage.matchedSignals?.length) {
+    lines.push(`- **Matched triage signals:** ${triage.matchedSignals.map(markdownText).join('; ')}`);
+  }
+  lines.push(`- **Doctrine status:** ${markdownText(triage.doctrineStatus)}`);
+  return lines;
+}
+
 export function researchQueueToMarkdown(result, { includeHeading = true } = {}) {
   const queue = result?.researchQueue || result;
   const ignored = Number(result?.metrics?.ignoredDomainSegments || 0);
@@ -308,14 +337,19 @@ export function researchQueueToMarkdown(result, { includeHeading = true } = {}) 
       timestampLabel(item),
       item.segmentId,
     ].filter(Boolean).map(markdownText).join(' · ');
+    const triage = item.unmatchedTriage;
+    const heading = triage
+      ? `Unmatched — ${triage.primaryUmbrella?.label || 'Unclassified'}`
+      : item.suggestedDestination;
     lines.push(
-      `### RQ ${index + 1} · ${markdownText(item.suggestedDestination)}`,
+      `### RQ ${index + 1} · ${markdownText(heading)}`,
       '',
-      `> ${markdownText(item.excerpt)}`,
+      markdownExcerpt(item.excerpt),
       '',
       `- **Location:** ${location || markdownText(item.segmentId)}`,
       `- **Why unmapped:** ${markdownText(item.whyUnmapped)}`,
-      `- **Nearest LE concepts by wording:** ${item.nearestConcepts?.length
+      ...unmatchedTriageLines(item),
+      `- **Nearest LE concepts by wording (nonmatches):** ${item.nearestConcepts?.length
         ? `${item.nearestConcepts.map((nearest) => `${markdownLink(nearest.title, nearest.href)} (${(Number(nearest.score || 0) * 100).toFixed(0)})`).join(' · ')}${nearestScaleNote(item)}`
         : 'No defensible neighbor'}`,
       `- **Empirical question:** ${markdownText(item.empiricalQuestion)}`,

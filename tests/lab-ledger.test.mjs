@@ -8,6 +8,7 @@ import {
   ledgerFilterIsActive,
   ledgerRowMatchesFilter,
   nextLedgerFilter,
+  unmatchedLedgerLabel,
 } from '../js/lab-ledger.js';
 
 function match({
@@ -107,4 +108,27 @@ test('ledger message rows use the full eight-column table width', () => {
   // Bumped at v2.4.1 when the Review column joined Triage. A message row that
   // spans the wrong number of columns is the visible symptom of the two drifting.
   assert.equal(LEDGER_COLUMN_COUNT, 8);
+});
+
+test('legacy unmatched rows do not imply a classifier decision', () => {
+  assert.equal(unmatchedLedgerLabel(null), 'Unmatched');
+  assert.equal(unmatchedLedgerLabel(undefined), 'Unmatched');
+  assert.equal(unmatchedLedgerLabel({}), 'Unmatched');
+  assert.equal(unmatchedLedgerLabel({
+    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    primaryUmbrella: { id: 'unclassified', label: 'Unclassified' },
+  }), 'Unmatched', 'an explicit abstention decision is required');
+  assert.equal(unmatchedLedgerLabel({
+    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    abstained: true,
+    primaryUmbrella: { id: 'unclassified', label: 'Unclassified' },
+  }), 'Unmatched — Unclassified');
+  assert.equal(unmatchedLedgerLabel({
+    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    abstained: false,
+    primaryUmbrella: {
+      id: 'institutional-authority-governance',
+      label: 'Institutional authority and governance',
+    },
+  }), 'Unmatched — Institutional authority and governance');
 });

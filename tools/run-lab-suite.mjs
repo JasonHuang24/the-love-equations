@@ -79,6 +79,9 @@ const allowDisarmed = options.has('--allow-disarmed');
 const STEPS = [
   ['node', 'tests/lab-intake.test.mjs'],
   ['node', 'tests/lab-analyzer.test.mjs'],
+  ['node', 'tests/lab-unmatched-umbrellas.test.mjs'],
+  ['node', 'tools/lab-unmatched-umbrella-audit.mjs'],
+  ['node', 'tools/lab-unmatched-invariance-audit.mjs', '--selftest'],
   ['node', 'tests/lab-domain-benchmark.test.mjs'],
   ['node', 'tests/lab-match-behavior.test.mjs'],
   ['node', 'tests/lab-export.test.mjs'],

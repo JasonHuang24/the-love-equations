@@ -84,6 +84,71 @@ test('research queue export formats numeric timestamps as milliseconds', () => {
   assert.match(markdown, /\*\*Schema:\*\* `le-lab\.research-queue\/2\.0`/);
 });
 
+test('research queue Markdown exports unmatched triage while old queue items still render', () => {
+  const result = fixture();
+  result.researchQueue.schemaVersion = 'le-lab.research-queue/2.3';
+  result.researchQueue.items[0].unmatchedTriage = {
+    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    primaryUmbrella: {
+      id: 'institutional-authority-governance',
+      label: 'Institutional authority and governance',
+    },
+    secondaryUmbrella: {
+      id: 'brief-nonrelationship-interactions',
+      label: 'Brief or nonrelationship interactions',
+    },
+    confidence: 0.86,
+    confidenceLabel: 'High',
+    abstained: false,
+    matchedSignals: ['organizational or policy setting', 'evaluative or supervisory authority'],
+    rationale: 'Organizational authority and recusal language identify this territory.',
+    unmatchedReason: {
+      id: 'boundary-moderator-directional-evidence',
+      label: 'Boundary, moderator, or directional evidence',
+    },
+    doctrineStatus: 'Explanatory triage only — not doctrine coverage or a doctrine match',
+  };
+
+  const markdown = researchQueueToMarkdown(result);
+  assert.match(markdown, /Unmatched — Institutional authority and governance/);
+  assert.match(markdown, /Why this umbrella:.*Organizational authority/);
+  assert.match(markdown, /Unmatched reason:.*Boundary, moderator, or directional evidence/);
+  assert.match(markdown, /Secondary umbrella:.*Brief or nonrelationship interactions/);
+  assert.match(markdown, /Nearest LE concepts by wording \(nonmatches\)/);
+  assert.match(markdown, /not doctrine coverage or a doctrine match/);
+  assert.match(markdown, /RQ 2 · Deep Dive/, 'legacy queue items keep their old heading');
+
+  const structured = JSON.parse(researchQueueToJson(result));
+  assert.equal(
+    structured.queue.items[0].unmatchedTriage.primaryUmbrella.id,
+    'institutional-authority-governance',
+  );
+});
+
+test('excerpt Markdown preserves exact whitespace while safely encoding entities', () => {
+  const result = fixture();
+  const exact = 'First  clause.\nSecond\tclause.\n\n  <tag> & > tail  ';
+  result.researchQueue.items[0].excerpt = exact;
+
+  const markdown = researchQueueToMarkdown(result);
+  const marker = '> First  clause.\n> Second\tclause.\n>\n>   &lt;tag&gt; &amp; &gt; tail  ';
+  assert.ok(markdown.includes(marker), markdown);
+
+  const encodedBlock = markdown.slice(markdown.indexOf('> First  clause.'),
+    markdown.indexOf('\n\n- **Location:**', markdown.indexOf('> First  clause.')));
+  const reconstructed = encodedBlock
+    .split('\n')
+    .map((line) => line.replace(/^> ?/, ''))
+    .join('\n')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+  assert.equal(reconstructed, exact);
+
+  const json = JSON.parse(researchQueueToJson(result));
+  assert.equal(json.queue.items[0].excerpt, exact, 'JSON fragment remains byte-exact');
+});
+
 test('string timestamps are preserved verbatim in both Markdown exports', () => {
   const result = fixture();
   result.segments[0].unit.startTime = '00:01.250';

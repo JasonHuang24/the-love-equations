@@ -1,0 +1,328 @@
+{
+  "schemaVersion": "le-lab.unmatched-umbrella-evaluation/1.0.0",
+  "frozenAt": "2026-08-30",
+  "status": "frozen-before-rule-implementation",
+  "sourceRecord": "md/pressure-tests.md",
+  "review": {
+    "reviewedBy": "Codex manual review",
+    "standard": "Each fragment was read in its recorded pressure-test context. Primary labels name relational territory; unmatched reasons explain the nonmatch. Negative controls must abstain even when they contain generic relationship words.",
+    "mutationPolicy": "Do not tune or replace cases after implementation begins. Add future holdout cases in a new version."
+  },
+  "cases": [
+    {
+      "id": "asym-01",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-proposal-synthetic-reciprocity.md",
+      "text": "A companion chatbot can feel relationship-like while the apparent partner has no needs, welfare, stake, or independent claim on the user.",
+      "expected": { "primaryUmbrellaId": "asymmetric-nonhuman-relationships", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "asym-02",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-proposal-synthetic-reciprocity.md",
+      "text": "Simulated responsiveness can generate perceived connection and support without reciprocal needs or bilateral interdependence.",
+      "expected": { "primaryUmbrellaId": "asymmetric-nonhuman-relationships", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "asym-03",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-proposal-synthetic-reciprocity.md",
+      "text": "Felt connection is a human outcome; it does not establish chatbot feeling, care, consciousness, or moral agency.",
+      "expected": { "primaryUmbrellaId": "asymmetric-nonhuman-relationships", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "asym-04",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-findings.md A5",
+      "text": "Brief ratings of noninteractive synthetic characters do not show a repeated contingent relationship function.",
+      "expected": { "primaryUmbrellaId": "asymmetric-nonhuman-relationships", "secondaryUmbrellaId": "brief-nonrelationship-interactions", "abstained": false, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "asym-05",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-proposal-synthetic-reciprocity.md",
+      "text": "Assigned chatbot modality produced no significant effect on loneliness or real-world socialization, while voluntary use duration remained noncausal.",
+      "expected": { "primaryUmbrellaId": "asymmetric-nonhuman-relationships", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "asym-06",
+      "kind": "positive",
+      "sourceSection": "pt08 closeout",
+      "text": "Nearly one in three young men and one in four young women have chatted with an AI simulated romantic partner.",
+      "expected": { "primaryUmbrellaId": "asymmetric-nonhuman-relationships", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "authority-01",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-proposal-authority-firewall.md",
+      "text": "The policy prohibits faculty-undergraduate relationships even without current evaluative or supervisory authority.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "authority-02",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-proposal-authority-firewall.md",
+      "text": "A supervisory romance triggers disclosure, recusal, reassignment, and conflict-of-interest review.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "authority-03",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-proposal-authority-firewall.md",
+      "text": "Peer workplace relationships without evaluative authority fall outside the core policy rule unless another conflict exists.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "authority-04",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-findings.md C4",
+      "text": "A relationship outside the reporting chain reduced perceived commitment but produced no significant promotion or raise penalty.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "authority-05",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-proposal-authority-firewall.md",
+      "text": "In a survey of 259 organizational members, coworker romance was rated less disagreeable than supervisor romance.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "authority-06",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-findings.md C5",
+      "text": "Past relationships and reasonably expected future academic authority can trigger notification and alternative supervision.",
+      "expected": { "primaryUmbrellaId": "institutional-authority-governance", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "roles-01",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-proposal-parenthood-fork.md",
+      "text": "Third-party reproduction can separate the decision to become a parent from the search for a romantic co-parent.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "roles-02",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-proposal-parenthood-fork.md",
+      "text": "Donor, genetic contributor, gestational parent, social parent, and support-network roles require explicit separation.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "roles-03",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-findings.md D1",
+      "text": "Women pursued donor conception when no suitable willing partner was available, separating parenthood from romantic partnership.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "roles-04",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-findings.md D4",
+      "text": "Reciprocal IVF splits genetic and gestational parent roles inside a female same-sex couple.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "roles-05",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-findings.md D5",
+      "text": "Actual donor disclosure did not differ significantly, but intended future disclosure differed between solo and partnered mothers.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "roles-06",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-findings.md D7",
+      "text": "No marked relationship-quality hierarchy was detected between gestational, genetic, birth, and non-birth mother roles.",
+      "expected": { "primaryUmbrellaId": "role-unbundling-family-formation", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "roles-07",
+      "kind": "negative-control",
+      "sourceSection": "pt08 deliberate nonclaims",
+      "text": "The register report lists egg-storage rates by patient age and treatment year.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "access-01",
+      "kind": "positive",
+      "sourceSection": "doctrine-pressure-test-06.md",
+      "text": "Legal-status access changed intermarriage formation and separation hazards for cross-border couples.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "access-02",
+      "kind": "positive",
+      "sourceSection": "doctrine-pressure-test-06.md",
+      "text": "A cross-border pairing can bundle mobility, legal status, employment permission, language, and network access into the bargain.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "access-03",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-findings.md D6",
+      "text": "Hospital rules allowed only a partner to stay, excluding the mother, sister, or friend who supplied practical support.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": "role-unbundling-family-formation", "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "access-04",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-findings.md D6",
+      "text": "Separating parenthood from partnership requires institutions to recognize support roles that a spouse would otherwise occupy.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": "role-unbundling-family-formation", "abstained": false, "unmatchedReasonId": "possible-doctrine-gap" }
+    },
+    {
+      "id": "access-05",
+      "kind": "ambiguous",
+      "sourceSection": "pt08 deliberate nonclaims",
+      "text": "External plural-parent recognition varies by jurisdiction and does not establish relationship quality.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": "role-unbundling-family-formation", "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "access-06",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-findings.md D4",
+      "text": "Funding eligibility and legal screening changes differed across fertility-treatment family types.",
+      "expected": { "primaryUmbrellaId": "external-recognition-administrative-access", "secondaryUmbrellaId": "role-unbundling-family-formation", "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "brief-01",
+      "kind": "positive",
+      "sourceSection": "pt08/chatgpt-findings.md A5",
+      "text": "Participants briefly rated noninteractive synthetic characters without repeated contingent interaction.",
+      "expected": { "primaryUmbrellaId": "brief-nonrelationship-interactions", "secondaryUmbrellaId": "asymmetric-nonhuman-relationships", "abstained": false, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "brief-02",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-proposal-synthetic-reciprocity.md",
+      "text": "Immediate connection after one chatbot interaction is not evidence of durable relationship quality or social skill.",
+      "expected": { "primaryUmbrellaId": "brief-nonrelationship-interactions", "secondaryUmbrellaId": "asymmetric-nonhuman-relationships", "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "brief-03",
+      "kind": "negative-control",
+      "sourceSection": "pt08 closeout A9",
+      "text": "A brief rule-based support-message experiment measured reactions to a scripted message rather than a relationship.",
+      "expected": { "primaryUmbrellaId": "brief-nonrelationship-interactions", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "brief-04",
+      "kind": "ambiguous",
+      "sourceSection": "pt08/chatgpt-findings.md C4",
+      "text": "A single workplace-romance vignette measured reputational impressions, not an ongoing couple or observed career outcome.",
+      "expected": { "primaryUmbrellaId": "brief-nonrelationship-interactions", "secondaryUmbrellaId": "institutional-authority-governance", "abstained": false, "unmatchedReasonId": "boundary-moderator-directional-evidence" }
+    },
+    {
+      "id": "brief-05",
+      "kind": "positive",
+      "sourceSection": "pt08 deliberate nonclaims",
+      "text": "A one-shot speed-dating impression records attraction during a short encounter, not relationship maintenance.",
+      "expected": { "primaryUmbrellaId": "brief-nonrelationship-interactions", "secondaryUmbrellaId": null, "abstained": false, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "known-01",
+      "kind": "ambiguous",
+      "sourceSection": "pt08 lane B ruling",
+      "text": "Partners in an open relationship negotiated whether outside sexual contact required advance disclosure.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "existing-doctrine-retrieval-miss" }
+    },
+    {
+      "id": "known-02",
+      "kind": "ambiguous",
+      "sourceSection": "pt08 lane B ruling",
+      "text": "A consensually non-monogamous couple revised its operating agreement after a boundary violation.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "existing-doctrine-retrieval-miss" }
+    },
+    {
+      "id": "known-03",
+      "kind": "ambiguous",
+      "sourceSection": "doctrine-pressure-test-05.md",
+      "text": "The essay describes egg freezing as buying time on the biological clock before a suitable partner appears.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "existing-doctrine-retrieval-miss" }
+    },
+    {
+      "id": "control-01",
+      "kind": "negative-control",
+      "sourceSection": "pt08 instrument finding",
+      "text": "The carbon dating of the sediment layer produced a new estimate.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "control-02",
+      "kind": "negative-control",
+      "sourceSection": "lab crash-test technical prose",
+      "text": "The Kubernetes service maintains a relationship between pods and cloud providers.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "control-03",
+      "kind": "negative-control",
+      "sourceSection": "pt08 methods/table findings",
+      "text": "Participants were recruited online and assigned to one of three experimental conditions.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "control-04",
+      "kind": "negative-control",
+      "sourceSection": "pt08 methods/table findings",
+      "text": "Table 2 reports means, standard deviations, confidence intervals, and sample sizes.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "descriptive-fact-no-relational-mechanism" }
+    },
+    {
+      "id": "control-05",
+      "kind": "negative-control",
+      "sourceSection": "pt08 extraction furniture",
+      "text": "AdvertisementADVERTISEMENT Read more stories from this series.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    },
+    {
+      "id": "control-06",
+      "kind": "negative-control",
+      "sourceSection": "pt05 extraction furniture",
+      "text": "Read more: Why Relationships Matter. Subscribe to our newsletter.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    },
+    {
+      "id": "control-07",
+      "kind": "negative-control",
+      "sourceSection": "analyzer demo negative control",
+      "text": "A new claim says volcanic ash decides which romantic partner sneezes more in autumn.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    },
+    {
+      "id": "control-08",
+      "kind": "negative-control",
+      "sourceSection": "generic language regression",
+      "text": "Dating can feel confusing sometimes, and people have good days and bad days.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    },
+    {
+      "id": "control-09",
+      "kind": "negative-control",
+      "sourceSection": "non-romantic sense matrix",
+      "text": "The relationship between temperature and pressure is linear.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "control-10",
+      "kind": "negative-control",
+      "sourceSection": "non-romantic sense matrix",
+      "text": "My laboratory partner recorded the temperature after calibration.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "outside-human-relational-frame" }
+    },
+    {
+      "id": "control-11",
+      "kind": "negative-control",
+      "sourceSection": "transcript furniture finding",
+      "text": "HOST: Welcome back. MUSIC. Sponsor message. GUEST:",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    },
+    {
+      "id": "control-12",
+      "kind": "negative-control",
+      "sourceSection": "pt07 short-unit hazard",
+      "text": "He also has to be your only romantic partner.",
+      "expected": { "primaryUmbrellaId": "unclassified", "secondaryUmbrellaId": null, "abstained": true, "unmatchedReasonId": "insufficient-evidence" }
+    }
+  ]
+}
