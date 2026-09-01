@@ -65,10 +65,10 @@ const EXPECTED_REASONS = [
 ];
 
 test('taxonomy is versioned, complete, deterministic triage rather than doctrine', () => {
-  assert.equal(UNMATCHED_UMBRELLA_TAXONOMY_VERSION, '1.1.0');
+  assert.equal(UNMATCHED_UMBRELLA_TAXONOMY_VERSION, '1.2.0');
   assert.equal(
     UNMATCHED_UMBRELLA_TAXONOMY.schemaVersion,
-    'le-lab.unmatched-umbrella-taxonomy/1.1.0',
+    'le-lab.unmatched-umbrella-taxonomy/1.2.0',
   );
   assert.deepEqual(
     UNMATCHED_UMBRELLA_TAXONOMY.umbrellas.map(({ id, label }) => [id, label]),
@@ -309,7 +309,7 @@ test('live analyzer adds triage only after a passage remains unmatched', async (
     text: fragment,
   }), CANON);
 
-  assert.equal(ANALYZER_VERSION, '2.7.2');
+  assert.equal(ANALYZER_VERSION, '2.7.3');
   assert.equal(RESEARCH_QUEUE_SCHEMA_VERSION, 'le-lab.research-queue/2.3');
   assert.equal(analysis.metrics.mappedClaimSegments, 0);
   assert.equal(analysis.metrics.unmappedClaimSegments, 1);
@@ -348,4 +348,173 @@ test('live analyzer adds triage only after a passage remains unmatched', async (
   assert.ok(mapped.metrics.mappedClaimSegments > 0);
   assert.equal(mapped.researchQueue.itemCount, 0);
   assert.equal(mapped.segments.some((segment) => 'unmatchedTriage' in segment), false);
+});
+
+/*
+ * v2.7.3 review guards.
+ *
+ * Each case below was reproduced against v2.7.2 before the rule it guards was
+ * written, and each one failed then: 29 of 61 such assertions were red on the
+ * shipped build. They are grouped by the review finding they close, so a future
+ * regression names the defect it reintroduces rather than a line number.
+ */
+test('F-1 role unbundling needs a separation mechanism, not the token "separate"', () => {
+  for (const fragment of [
+    'The clinic keeps separate records for donors and intended parents.',
+    'Separate consent forms are stored for each surrogate and each intended parent.',
+    'The report lists patients, donors, intended parents, and surrogates in separate columns.',
+    'Donors and intended parents are counselled in separate rooms.',
+    'The registry stores donor and surrogate data in separate databases.',
+    'Separate fees apply to egg donors and to intended parents.',
+    'Applicants are seen in separate appointments: the surrogate first, then the intended parents.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  for (const fragment of [
+    'In these families the genetic parent, the gestational parent, and the social parent are different people.',
+    'Solo mothers by choice separate the decision to have a child from the search for a romantic partner, so the genetic and social parent roles no longer travel together.',
+    'These men chose solo fatherhood through surrogacy rather than the search for a romantic partner.',
+  ]) {
+    assert.equal(
+      classifyUnmatchedPassage(fragment).primaryUmbrella.id,
+      'role-unbundling-family-formation',
+      fragment,
+    );
+  }
+});
+
+test('F-2 external recognition needs an administrative effect, not the word "recognize"', () => {
+  for (const fragment of [
+    'In a study, parents using Indian surrogates express affection and recognize mutual benefit through compensation, but some feel a loss of control.',
+    'Couples recognize the benefit of sharing housework and report higher satisfaction.',
+    'Intended parents recognize the benefits of an open donor relationship.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  for (const fragment of [
+    'A parental order transfers legal parenthood from the surrogate to the intended parents.',
+    "Until the parental order is granted, the surrogate and her spouse remain the child's legal parents and the intended parents have no legal status.",
+    'If the surrogate is single, then the man providing the sperm (if he wants to be the father) will automatically be the second legal parent at birth.',
+  ]) {
+    assert.equal(
+      classifyUnmatchedPassage(fragment).primaryUmbrella.id,
+      'external-recognition-administrative-access',
+      fragment,
+    );
+  }
+});
+
+test('F-4 the technical guard never denies the human frame to relational prose', () => {
+  for (const fragment of [
+    'Participants said their AI companion felt more emotionally responsive than a customer support agent, despite having no independent needs or welfare.',
+    'Users describe their Replika partner as offering attachment while having no welfare, agency, or ability to leave, and the API had lower latency.',
+    'The organization bans managers from dating direct reports and requires disclosure; records are stored in sealed containers.',
+    'A companion chatbot offers intimacy without reciprocity, unlike the customer support scripts it was built on.',
+  ]) {
+    assert.notEqual(
+      classifyUnmatchedPassage(fragment).unmatchedReason.id,
+      'outside-human-relational-frame',
+      fragment,
+    );
+  }
+
+  // The multiword technical terms still have to hold every negative control.
+  for (const fragment of [
+    'Role-based access control assigns parent and child roles to service accounts in the database.',
+    'Cloud service accounts inherit access from the parent project.',
+    'The AI system models relationships between database tables and provides support for joins.',
+    'The parent process splits support roles among worker nodes during family formation of containers.',
+    'The virtual companion package supports relationships between data models.',
+    'The customer-support chatbot responds to queries and offers support.',
+    'The AI chatbot connection to the API had lower latency.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+});
+
+test('F-5 no corpus literal decides whether ordinary prose is furniture', () => {
+  const opener = classifyUnmatchedPassage(
+    'The relationship between a supervisor and a direct report is prohibited when one evaluates the other for promotion or pay.',
+  );
+  const rewritten = classifyUnmatchedPassage(
+    'Any relationship between a supervisor and a direct report is prohibited when one evaluates the other for promotion or pay.',
+  );
+  assert.equal(opener.primaryUmbrella.id, 'institutional-authority-governance');
+  assert.equal(
+    opener.primaryUmbrella.id,
+    rewritten.primaryUmbrella.id,
+    'changing the first word must not change the classification',
+  );
+  assert.equal(
+    classifyUnmatchedPassage(
+      'University policy bans supervisors from dating their direct reports and requires disclosure and reassignment.',
+    ).primaryUmbrella.id,
+    'institutional-authority-governance',
+  );
+});
+
+test('F-6 a research sample is not an institution governing its members', () => {
+  for (const fragment of [
+    'Narcissistic traits as mediators in the relationship between parenting styles and nonconsensual nonmonogamy in university students',
+    'Their study with 407 university students from Turkey showed lower relationship satisfaction.',
+    'Relationship quality was measured in a sample of university students and their partners.',
+    'Among students at a large public university, romance was reported by 38 percent.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  for (const fragment of [
+    'Therefore, Boston University policy is that no affiliate shall supervise a student with whom the affiliate has a consensual romantic or sexual relationship.',
+    'An Employee is prohibited from engaging in an amorous relationship with any undergraduate student, whether matriculated at UVM or enrolled as a non-degree student, regardless of the perception of consent by both participants.',
+    'The integrity and professionalism of the teacher-student relationship is fundamental to the educational mission of the University.',
+  ]) {
+    assert.equal(
+      classifyUnmatchedPassage(fragment).primaryUmbrella.id,
+      'institutional-authority-governance',
+      fragment,
+    );
+  }
+});
+
+test('F-7 coding and annotation procedure abstains wherever it sits in the sentence', () => {
+  for (const fragment of [
+    'Multiple LLMs were employed to code 5,504 Reddit posts from eight AI companion communities for relationship focus, primary topic, and emotional valence.',
+    'We coded 1,200 transcripts from AI companion apps for relationship type and emotional tone.',
+    'Two annotators labelled each AI companion conversation for perceived connection.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  assert.equal(
+    classifyUnmatchedPassage(
+      'Second, AI companions operate as hyper attachment objects that elicit especially strong attachment behaviors, because they combine reciprocity, perceived empathy, validation, non-judgment, and persistent availability.',
+    ).primaryUmbrella.id,
+    'asymmetric-nonhuman-relationships',
+  );
+});
+
+test('F-13 a short verbless title is a title whatever punctuation it ends in', () => {
+  for (const fragment of [
+    'AI Companion Relationships and Well-Being.',
+    'Consensual Relationships Between Faculty and Students!',
+    'Donor Conception, Surrogacy and the Intended Parents',
+    'Amorous Relationships With Undergraduate Students',
+    'The Rise of AI Companions and Simulated Responsiveness',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  // Capitalization is never load-bearing: the audits reclassify upper-cased.
+  for (const fragment of [
+    'AI Companion Relationships and Well-Being.',
+    'An Employee is prohibited from engaging in an amorous relationship with any undergraduate student.',
+  ]) {
+    assert.deepEqual(
+      classifyUnmatchedPassage(fragment.toUpperCase()),
+      classifyUnmatchedPassage(fragment),
+      fragment,
+    );
+  }
 });

@@ -2190,7 +2190,14 @@
 
 .lab-unmatched-disclosure[open] > summary::after { content: '−'; }
 
-.lab-unmatched-disclosure > summary:focus-visible {
+/* The inset offset is the whole point: .lab-research-card clips its overflow
+   and the summary fills it edge to edge, so an outward ring is drawn entirely
+   outside the clip box and nothing renders. This selector needs .lab-page to
+   outrank the global focus rule at the top of this file — that rule scores
+   0-3-0 because its :is() takes specificity from [tabindex], and it was
+   winning, restoring outline-offset: 3px and clipping the ring away on every
+   unmatched card (review finding F-3). */
+.lab-page .lab-unmatched-disclosure > summary:focus-visible {
   outline: 3px solid rgba(196, 30, 58, 0.35);
   outline-offset: -3px;
 }

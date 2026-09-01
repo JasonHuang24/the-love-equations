@@ -7,10 +7,10 @@
  * unmatched fragment, and abstention is a first-class result.
  */
 
-export const UNMATCHED_TRIAGE_SCHEMA_VERSION = 'le-lab.unmatched-triage/1.1.0';
+export const UNMATCHED_TRIAGE_SCHEMA_VERSION = 'le-lab.unmatched-triage/1.2.0';
 export const UNMATCHED_UMBRELLA_TAXONOMY_SCHEMA_VERSION =
-  'le-lab.unmatched-umbrella-taxonomy/1.1.0';
-export const UNMATCHED_UMBRELLA_TAXONOMY_VERSION = '1.1.0';
+  'le-lab.unmatched-umbrella-taxonomy/1.2.0';
+export const UNMATCHED_UMBRELLA_TAXONOMY_VERSION = '1.2.0';
 
 const umbrellaDefinitions = [
   {
@@ -136,9 +136,27 @@ const subjectRules = [
     id: 'institutional-authority-governance',
     signals: [
       { family: 'institution', label: 'organizational or policy setting', weight: 0.28, pattern: /\b(?:policy|workplace|organizational|organizations?|institutions?|universit(?:y|ies)|campus|employers?|academic|human resources|hr|reporting (?:chain|line)|career outcome)\b/ },
-      { family: 'authority', label: 'evaluative or supervisory authority', weight: 0.26, pattern: /\b(?:supervis(?:or|ory|ion)|managers?|direct reports?|faculty|undergraduates?|students?|instructors?|coaches?|athletes?|evaluative|authority|reports? to|reporting line|chain of command|promotion|pay|raise penalty|career outcome)\b/ },
+      /*
+       * `students` stays: real policies name the person under authority, and
+       * removing the token cost five correct institutional classifications on
+       * live university-policy prose ("the teacher-student relationship",
+       * "individuals teaching or working at the University and students").
+       * Research prose naming its SAMPLE is a different shape and is handled
+       * where it belongs, in the research-population guard in isTriageFurniture
+       * (review finding F-6). `supervise`, `employee`, `affiliate` and `staff`
+       * are added because policies reach this family through them too.
+       */
+      { family: 'authority', label: 'evaluative or supervisory authority', weight: 0.26, pattern: /\b(?:supervis(?:e|es|ed|or|ory|ion)|managers?|direct reports?|faculty|employees?|affiliates?|staff|undergraduates?|students?|instructors?|coaches?|athletes?|evaluative|authority|reports? to|reporting line|chain of command|promotion|pay|raise penalty|career outcome)\b/ },
       { family: 'governance', label: 'prohibition, disclosure, or recusal', weight: 0.34, pattern: /\b(?:bans?|prohibit|prohibits|prohibited|disclos(?:e|ure)|recus(?:e|al)|reassign(?:ment)?|disciplin(?:e|ary)|conflict[- ]of[- ]interest|notification|alternative supervision|governance)\b/ },
-      { family: 'relationship', label: 'institutional relationship context', weight: 0.14, pattern: /\b(?:romances?|romantic|relationships?|coworkers?|couples?)\b/ },
+      // `dating` earns its place by measurement, not by guess: two independent
+      // probes for findings F-4 and F-5 both landed on the same sentence
+      // ("bans managers from dating direct reports"), which reached the queue
+      // with every other family satisfied and failed only here. The lookahead
+      // is measured too — adding the token surfaced exactly one new assignment
+      // in the 43-source window, an Ohio policy line about "dating violence",
+      // which is intimate-partner violence and not a consensual-romance
+      // governance mechanism.
+      { family: 'relationship', label: 'institutional relationship context', weight: 0.14, pattern: /\b(?:romances?|romantic|relationships?|coworkers?|couples?|dating(?!\s+violence))\b/ },
     ],
     qualifies: (families) => families.has('relationship')
       && ((families.has('institution') && families.has('authority'))
@@ -150,7 +168,25 @@ const subjectRules = [
       { family: 'reproduction', label: 'third-party or assisted reproduction', weight: 0.34, pattern: /\b(?:third[- ]party reproduction|surrogacy|surrogates?|donor(?: conception| disclosure| identity| insemination)?|donated (?:eggs?|sperm|embryos?)|egg donors?|sperm donation|ivf|fertility treatment|fertility[- ]treatment|assisted conception|gestational|genetic parent|reciprocal ivf)\b/ },
       { family: 'roles', label: 'distinct family or support roles', weight: 0.28, pattern: /\b(?:intended parents?|surrogates?|single fathers?|solo fathers?|social parents?|caregiving parents?|support[- ]network roles?|support roles?|practical support|genetic contributors?|genetic contribution|birth mothers?|non[- ]birth mothers?|gestational parents?|donor roles?|egg donors?|family types?|plural[- ]parent|platonically co[- ]parenting|legally recognized parent roles?)\b/ },
       { family: 'formation', label: 'parenthood or family-formation decision', weight: 0.18, pattern: /\b(?:parenthood|fatherhood|parents?|parenting|co[- ]parents?|solo mothers?|single mothers? by choice|family formation|starting a family|mothers?)\b/ },
-      { family: 'split', label: 'roles explicitly separated, substituted, or compared', weight: 0.38, pattern: /\b(?:separat(?:e|es|ed|ing|ion)|split|unbundl|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing)|distinguish(?:es|ed|ing)?|excluding|different people|parent(?:ing)? alone|rather than (?:the search for )?(?:a )?(?:romantic )?(?:partner|parent)|instead of (?:a )?(?:romantic )?(?:partner|parent)|from the surrogate to the intended parents|birth (?:and|versus) non[- ]birth|genetic (?:and|versus) gestational|between (?:gestational|genetic|birth|non[- ]birth|solo|partnered)|without (?:a )?partner|not waiting for (?:a )?partner|even if romance|platonically co[- ]parenting|mediated through motherhood)\b/ },
+      /*
+       * The separation evidence must say what is being separated.
+       *
+       * Until v2.7.3 this family matched the bare token `separate`, so any
+       * administrative use of the word plus any reproduction noun qualified:
+       * separate records, consent forms, columns, rooms, databases, fees and
+       * appointments all classified as role unbundling, six of them at 0.99 and
+       * most of them reaching the live queue (review finding F-1). The token
+       * was doing no work that a mechanism test could not do better — note
+       * that `separately` never matched it, purely because of a word boundary.
+       *
+       * A separation verb now has to govern a role noun within a short window,
+       * or state the separation outright (`different people`, `rather than a
+       * partner`). `separate records for donors and intended parents` puts five
+       * words between the verb and the role and no longer qualifies; `separates
+       * the genetic parent` and `separate the decision ... from the search for
+       * a romantic partner` still do.
+       */
+      { family: 'split', label: 'roles explicitly separated, substituted, or compared', weight: 0.38, pattern: /(?:\b(?:separat(?:e|es|ed|ing|ion)|split|unbundl\w*|decoupl\w*|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing)|distinguish(?:es|ed|ing)?)\b\s+(?:\w+[-\s]+){0,3}\b(?:roles?|parent(?:s|hood|ing)?|mother(?:s|hood)?|father(?:s|hood)?|gestation|functions?)\b|\b(?:separat(?:e|es|ed|ing|ion)|split|unbundl\w*|decoupl\w*)\b\s+(?:\w+[-\s]+){0,6}?\bfrom\b\s+(?:\w+[-\s]+){0,6}?\b(?:partner|parents?|parenthood|romance|marriage|relationship)\b|\b(?:roles?|parent(?:s|hood)?|contributors?|donors?|surrogates?)\b\s+(?:\w+[-\s]+){0,4}\b(?:separat(?:es|ed|ing|ion)|split|unbundl\w*|decoupl\w*|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing))\b|\bexcluding\b\s+(?:\w+[-\s]+){0,3}\b(?:mother|father|parents?|partner|sister|brother|friend|donors?|surrogates?|roles?)\b|\b(?:different people|parent(?:ing)? alone|rather than (?:the search for )?(?:a )?(?:romantic )?(?:partner|parent)|instead of (?:a )?(?:romantic )?(?:partner|parent)|from the surrogate to the intended parents|birth (?:and|versus) non[- ]birth|genetic (?:and|versus) gestational|between (?:gestational|genetic|birth|non[- ]birth|solo|partnered)|without (?:a )?partner|not waiting for (?:a )?partner|even if romance|platonically co[- ]parenting|mediated through motherhood|no longer travel together)\b)/ },
     ],
     qualifies: (families) => families.has('split')
       && (families.has('reproduction') || families.has('roles') || families.has('formation')),
@@ -158,7 +194,22 @@ const subjectRules = [
   {
     id: 'external-recognition-administrative-access',
     signals: [
-      { family: 'administration', label: 'legal or administrative recognition', weight: 0.42, pattern: /\b(?:legal[- ]status|legal parents?|legal parenthood|legal parentage|parental orders?|birth certificates?|consent forms?|licensed clinics?|visa|immigration|citizenship|residence permits?|marriage licen[cs]e|registration|registered|administrative|recognition|recognize|recognized|recognised|funding eligibility|legal screening|hospital rules?|institutional rules?|jurisdiction|court declaration)\b/ },
+      /*
+       * `recognise` only counts when it is doing administrative work.
+       *
+       * The bare verb forms used to sit in this list, so "recognize mutual
+       * benefit" and "couples recognize the benefit of sharing housework"
+       * cleared administration, met `access` on the equally bare `benefit`, and
+       * classified as External recognition at 0.99 with reason "Possible
+       * doctrine gap" — a sentence about feelings presented to a reviewer as
+       * uncovered administrative territory (review finding F-2). The `access`
+       * family already carries the administrative senses that matter
+       * ("recognised as the second legal parent"), so the qualified forms are
+       * kept there, and the verb is kept here only when an institutional actor
+       * or a status object governs it — "institutions to recognize support
+       * roles" still qualifies, "recognize mutual benefit" no longer does.
+       */
+      { family: 'administration', label: 'legal or administrative recognition', weight: 0.42, pattern: /(?:\b(?:legal[- ]status|legal parents?|legal parenthood|legal parentage|parental orders?|birth certificates?|consent forms?|licensed clinics?|visa|immigration|citizenship|residence permits?|marriage licen[cs]e|registration|registered|administrative|recognition|funding eligibility|legal screening|hospital rules?|institutional rules?|jurisdiction|court declaration)\b|\brecogni[sz]\w*\s+(?:\w+[-\s]+){0,3}\b(?:roles?|status|legal parents?|parenthood|partnerships?|marriages?|unions?|rights?)\b|\b(?:institutions?|states?|courts?|law|governments?|authorit(?:y|ies)|registrars?)\b\s+(?:\w+[-\s]+){0,3}\brecogni[sz]\w*)/ },
       { family: 'access', label: 'access, eligibility, or legal effect', weight: 0.44, pattern: /\b(?:access|eligibility|eligible|permission|benefits?|family reunification|next of kin|allowed only|excluding|excluded|automatically|legal status|employment permission|funding eligibility|consent to legal parenthood|give consent (?:if you want .* )?(?:to )?(?:be|being) (?:a |the )?legal parent|withdraw (?:their |your )?consent|transfers? legal parenthood|grants? (?:the intended parents )?legal parenthood|confers?|records?|names? .* on (?:the )?birth certificate|recognis(?:e|ed) as (?:the )?(?:second )?legal parent|recogniz(?:e|ed) as (?:the )?(?:second )?legal parent|(?:will|would|may|must|won't|will not) be (?:the |a )?(?:child(?:'s|s) )?legal parents?|not (?:a |the )?legal parent|who will be (?:the )?(?:child(?:'s|s) )?legal parents?|legal parents? (?:at birth|for nationality purposes)|status as a legal parent|route out of legal parenthood|complex consent arrangements|challenged|otherwise occupy|external plural[- ]parent recognition|surrogacy coverage)\b/ },
       { family: 'relationship', label: 'relationship or family status', weight: 0.16, pattern: /\b(?:intended parents?|surrogates?|couples?|spouses?|partners?|pairings?|marriage|intermarriage|relationships?|family|parenthood|plural[- ]parent|fertility[- ]treatment family types?)\b/ },
       { family: 'cross-border', label: 'cross-border status bundle', weight: 0.26, pattern: /\b(?:cross[- ]border|migrating spouses?|mobility|intermarriage formation)\b/ },
@@ -206,6 +257,35 @@ function scoreSubject(text, rule) {
   };
 }
 
+/*
+ * Calibrated, not guessed: the shortest fragment the frozen evaluation expects
+ * to be SUPPORTED is 10 words (`authority-02`, `brief-01`), and the titles this
+ * has to catch run 5 to 8. Eight leaves a two-word margin against the frozen
+ * evidence on one side and catches every title on the other. Raising it past 9
+ * starts abstaining on real claims — that is what the fixtures are for.
+ */
+const HEADING_MAX_WORDS = 8;
+
+/**
+ * A short fragment with no finite verb is a title, not a claim.
+ *
+ * Capitalization is deliberately NOT consulted. Title case is the obvious
+ * signal and it is unusable here: the audits reclassify every fragment
+ * upper-cased to prove that case is never load-bearing, and a title-case test
+ * answers differently for "Donor Conception and the Intended Parents" and its
+ * upper-cased twin. Length and predication survive that normalization, and they
+ * separate the cases just as well — the titles this has to catch run five to
+ * eight words with no predicate, while the policy sentences it must not catch
+ * run fourteen to twenty and all predicate something.
+ */
+function isVerblessTitle(raw, hasFiniteVerb) {
+  if (hasFiniteVerb) return false;
+  const words = raw.split(/\s+/).filter((word) => /[A-Za-z]/.test(word));
+  if (words.length < 3 || words.length > HEADING_MAX_WORDS) return false;
+  // A sentence break inside the fragment means prose that was cut, not a title.
+  return !/[.!?][”"')\]]?\s+\S/.test(raw);
+}
+
 function isHeadingLikeFragment(fragment) {
   const raw = String(fragment || '')
     .replace(/[\u200b-\u200f\u202a-\u202e\u2060\ufeff]/g, '')
@@ -214,9 +294,28 @@ function isHeadingLikeFragment(fragment) {
   if (!raw) return false;
   const colonHeading = /:[”"')\]]?$/.test(raw);
   const questionHeading = /\?[”"')\]]?$/.test(raw);
-  const hasFiniteVerb = /(?:['’](?:m|re|s|ve|d|ll)\b|\b(?:am|is|are|was|were|be|been|being|do|does|did|have|has|had|got|get|gets|say|says|said|see|sees|saw|look|looks|looking|call|calls|called|produce|produces|produced|remain|remains|remained|affect|affects|affected|can|could|will|would|shall|should|may|might|must|need|needs|provide|provides|provided)\b)/i.test(raw);
-  const structuralHeading = /^(?:\d+(?:\.\d+){1,}\s+|aps\s+\d+\b|university policy\b|meta-analyses?\s+of\b|theoretical rationales?\b|details of\b|listen to\b|conflict of interest in cases\b|character[. -]?ai companions?\b|consent culture and intentional relationships\b|the relationship between\b|an international development\b|journal of\b|generalizability of\b|mean levels of\b|logistic regressions?\b|[a-z]\.,\s+interpersonal perception\b)/i.test(raw);
-  if (structuralHeading) return true;
+  // The lookbehind keeps a hyphenated compound from reading as a predicate:
+  // "Well-Being" ends in "Being", and without it every title containing one
+  // looks like a sentence.
+  const hasFiniteVerb = /(?:['’](?:m|re|s|ve|d|ll)\b|(?<!-)\b(?:am|is|are|was|were|be|been|being|do|does|did|have|has|had|got|get|gets|say|says|said|see|sees|saw|look|looks|looking|call|calls|called|produce|produces|produced|remain|remains|remained|affect|affects|affected|can|could|will|would|shall|should|may|might|must|need|needs|provide|provides|provided|ban|bans|banned|prohibit|prohibits|prohibited|require|requires|required|allow|allows|allowed|separate|separates|separated|transfer|transfers|transferred|grant|grants|granted|recogni[sz]e|recogni[sz]es|describe|describes|described|report|reports|reported|show|shows|showed|offer|offers|offered|operate|operates|operated|elicit|elicits|elicited|include|includes|included|cover|covers|covered|appl(?:y|ies|ied)|depend|depends|means|meant|leave|leaves|left|make|makes|made|take|takes|took|know|knows|knew|think|thinks|thought|feel|feels|felt|want|wants|wanted|use|uses|used|stay|stays|stayed|occur|occurs|occurred)\b)/i.test(raw);
+  /*
+   * Until v2.7.3 this was a list of fifteen literals lifted from the discovery
+   * corpus — `university policy`, `the relationship between`, `details of`,
+   * `character.ai companions` and friends. They matched ordinary prose openers,
+   * so a sentence was forced to abstain for starting with the wrong three words:
+   * "The relationship between a supervisor and a direct report is prohibited…"
+   * abstained while "Any relationship between…" classified at 0.68 (review
+   * finding F-5). The literals also generalised to nothing outside that corpus.
+   *
+   * What those fragments actually had in common is that they are headings, and
+   * a heading is recognisable without knowing the corpus: it is short and it
+   * predicates nothing. Testing that shape instead also closes the gap where a
+   * title ending in a period, or in no punctuation at all, was read as a claim
+   * (review finding F-13).
+   */
+  const numberedHeading = /^(?:\d+(?:\.\d+){1,}\s+|aps\s+\d+\b|journal of\b)/i.test(raw);
+  if (numberedHeading) return true;
+  if (isVerblessTitle(raw, hasFiniteVerb)) return true;
   return colonHeading || (questionHeading && !hasFiniteVerb);
 }
 
@@ -229,13 +328,42 @@ function isTriageFurniture(text, fragment = '') {
     || /\b(?:blood testing|routine counselling|clinic appointments?)\b/.test(text)
     || /\b(?:meet (?:the )?(?:clinic )?eligibility criteria|complete (?:the )?required consent forms)\b/.test(text)
     || /\b(?:separate ancova|between[- ]subjects? factor|as covariates?|teacher questionnaires?|response rate)\b/.test(text)
+    /*
+     * Coding and annotation procedure, wherever it sits in the sentence.
+     * The anchored openers above only catch methods prose that starts with the
+     * participants; a methods sentence that starts with its instrument ("Multiple
+     * LLMs were employed to code 5,504 posts…") sailed past them and then scored
+     * on its own subject matter, classifying as Asymmetric in the live queue
+     * (review finding F-7). This tests the procedure verb, not the sentence head.
+     */
+    || /\b(?:were employed to code|we (?:coded|annotated|labell?ed)|(?:coders?|annotators?|raters?|assistants?)\s+(?:\w+\s+){0,2}(?:coded|annotated|labell?ed|rated)|were (?:coded|annotated|labell?ed)\s+(?:for|by|independently))\b/.test(text)
+    /*
+     * A study naming its SAMPLE, not an institution naming who it governs.
+     * "407 university students", "a sample of university students and their
+     * partners" and "among students at a large public university" were reaching
+     * both the institution and the authority family on a population descriptor
+     * and classifying as institutional governance (review finding F-6). Policy
+     * prose says "the teacher-student relationship" or "supervise a student" and
+     * matches none of these frames, so it keeps its authority reading.
+     */
+    || /\b(?:\d[\d,]*\s+(?:\w+\s+){0,2}(?:students?|undergraduates?|participants?|respondents?)|sample of\s+(?:\w+\s+){0,3}(?:students?|undergraduates?|adults?|participants?|couples?)|among students\b|(?:university|college) students\b)/.test(text)
     || /\b(?:link in the show notes|our sponsor|sponsor(?:'s|ed)? message)\b/.test(text)
     || /\b(?:msc thesis|https?:\/\/|doi:\s*10\.|pp\.\s*\d+[–-]\d+)\b/.test(text)
     || isHeadingLikeFragment(fragment);
 }
 
+/*
+ * This guard runs BEFORE scoring and empties the candidate list, so a hit is a
+ * veto, not a tiebreak — and its reason, "Outside the human-relational frame",
+ * is an affirmative claim that the fragment describes no human relationship.
+ * Three tokens could not carry that claim: `api`, `containers?` and `customer
+ * support` all appear inside ordinary relational prose, and they were vetoing
+ * Replika, AI-companion and supervisory-romance sentences (review finding F-4).
+ * They are dropped; the multiword technical terms below still hold every
+ * negative control in the corpus, measured over eight technical sources.
+ */
 function isTechnicalNonrelationship(text) {
-  return /\b(?:rbac|role[- ]based access control|access[- ]control|database tables?|database joins?|database access|relational databases?|support databases?|sql joins?|support vectors?|service accounts?|customer support|cloud (?:providers?|accounts?)|network nodes?|worker nodes?|data (?:models?|centers?)|between (?:services|systems)|support service|robot controllers?|parent process|parent-child(?: vocabulary| in that tree| roles?)?|required owned elements|required context role|genetic algorithms?|model training|containers?|kubernetes|api|relationships? (?:between|among) (?:database tables?|variables?|schemas?|columns?))\b/.test(text);
+  return /\b(?:rbac|role[- ]based access control|access[- ]control|database tables?|database joins?|database access|relational databases?|support databases?|sql joins?|support vectors?|service accounts?|cloud (?:providers?|accounts?)|network nodes?|worker nodes?|data (?:models?|centers?)|between (?:services|systems)|support service|robot controllers?|parent process|parent-child(?: vocabulary| in that tree| roles?)?|required owned elements|required context role|genetic algorithms?|model training|kubernetes|relationships? (?:between|among) (?:database tables?|variables?|schemas?|columns?))\b/.test(text);
 }
 
 function isDescriptiveEvidence(text) {

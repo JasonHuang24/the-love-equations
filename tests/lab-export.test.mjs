@@ -88,7 +88,7 @@ test('research queue Markdown exports unmatched triage while old queue items sti
   const result = fixture();
   result.researchQueue.schemaVersion = 'le-lab.research-queue/2.3';
   result.researchQueue.items[0].unmatchedTriage = {
-    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    schemaVersion: 'le-lab.unmatched-triage/1.2.0',
     primaryUmbrella: {
       id: 'institutional-authority-governance',
       label: 'Institutional authority and governance',

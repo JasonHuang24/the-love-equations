@@ -1,5 +1,5 @@
-import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.7.2';
-import { validSourceProvenanceUrl } from './lab-intake.js?v=2.7.2';
+import { RESEARCH_QUEUE_SCHEMA_VERSION } from './lab-analyzer.js?v=2.7.3';
+import { validSourceProvenanceUrl } from './lab-intake.js?v=2.7.3';
 
 /*
  * LE Lab export adapters.
@@ -348,6 +348,11 @@ export function researchQueueToMarkdown(result, { includeHeading = true } = {}) 
       '',
       `- **Location:** ${location || markdownText(item.segmentId)}`,
       `- **Why unmapped:** ${markdownText(item.whyUnmapped)}`,
+      // The RQ heading names the umbrella now, so the destination has to be
+      // restated here or it leaves the Markdown export entirely — it was being
+      // dropped for every triaged item while legacy items kept it in their
+      // heading, so the two halves of one file disagreed (review finding F-10).
+      `- **Where it could belong:** ${markdownText(item.suggestedDestination)}`,
       ...unmatchedTriageLines(item),
       `- **Nearest LE concepts by wording (nonmatches):** ${item.nearestConcepts?.length
         ? `${item.nearestConcepts.map((nearest) => `${markdownLink(nearest.title, nearest.href)} (${(Number(nearest.score || 0) * 100).toFixed(0)})`).join(' · ')}${nearestScaleNote(item)}`

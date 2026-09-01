@@ -476,11 +476,17 @@ umbrella on their own.
 Taxonomy 1.1 adds explanatory `currentDoctrineOwners` for the Asymmetric and
 Institutional umbrellas (`frameworks:synthetic-reciprocity` and
 `frameworks:authority-firewall`). This registry belongs only to unmatched
-triage. It is not imported by the matcher. Reason precedence is
-outside-human/furniture, descriptive evidence, boundary/moderator/directional
-evidence, existing-doctrine retrieval miss, possible doctrine gap, then
-insufficient evidence. A boundary statement is therefore not flattened into a
-retrieval miss merely because its subject umbrella has a current owner.
+triage. It is not imported by the matcher. Reason precedence, as
+`reasonFor()` implements it: outside the human frame (technical vocabulary,
+then the adjacent-frame check), descriptive evidence, extraction furniture,
+boundary/moderator/directional evidence, existing-doctrine retrieval miss, then
+insufficient evidence with possible doctrine gap as the fallthrough. Furniture
+resolves to insufficient evidence rather than the outside-human reason, and it
+is tested after descriptive evidence so statistical table language keeps the
+descriptive-fact reason. A boundary statement is not flattened into a retrieval
+miss merely because its subject umbrella has a current owner. (The order above
+was corrected in v2.7.3; the earlier wording described a precedence the code
+never had.)
 
 Role unbundling requires an explicit separation, substitution, comparison, or
 unbundling mechanism. Assisted reproduction, surrogacy, donors, intended
@@ -488,6 +494,18 @@ parents, or parenthood words alone do not qualify. Legal parenthood,
 recognition, consent, eligibility, and access prefer External recognition when
 the exact fragment states that mechanism. Statistical and procedural uses of
 `separate`, `role`, and family vocabulary are guarded as furniture.
+
+From v2.7.3 those two rules are enforced by mechanism rather than by token, after
+a review measured what the tokens were actually doing (`md/pressure-tests.md`,
+pt11, v2.7.3 section). A separation verb has to govern a role noun; `recognise`
+has to be governed by an institutional actor or a status object; the technical
+veto no longer contains `api`, `containers` or `customer support`; a research
+population (`407 university students`, `a sample of university students`) is
+furniture rather than institutional authority; coding and annotation procedure is
+furniture wherever it sits in the sentence; and heading detection is a
+length-and-predication test rather than a list of corpus literals. Capitalization
+is deliberately not consulted anywhere — the audits reclassify every fragment
+upper-cased, so a title-case test cannot be stable.
 
 JSON keeps each queue excerpt byte-exact. Markdown uses a dedicated excerpt
 serializer: it preserves spaces, tabs, line breaks, and blank lines, emits
@@ -505,7 +523,8 @@ the item shape — `scoredConceptTotal` and `nearbyBandTotal` say what the three
 nearest concepts are three OF; 2.3 (v2.7.1) adds the versioned post-match
 umbrella taxonomy and item triage described above. Analyzer v2.7.2 retains the
 2.3 queue shape while advancing the taxonomy/triage payload to 1.1 and
-tightening its explanatory rules. This heading sat at 2.0 while production shipped
+tightening its explanatory rules; v2.7.3 retains 2.3 again and moves the
+payload to 1.2 for the post-review rule rework. This heading sat at 2.0 while production shipped
 both; the drift was caught by the 2026-08-07 cold review (finding 7) and the
 analyzer's live export version is asserted against the constant in
 `tests/lab-analyzer.test.mjs`, so the contract a consumer receives is the

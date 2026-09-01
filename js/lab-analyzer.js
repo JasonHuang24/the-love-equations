@@ -22,7 +22,7 @@
 import {
   classifyUnmatchedPassage,
   UNMATCHED_UMBRELLA_TAXONOMY,
-} from './lab-unmatched-umbrellas.js?v=2.7.2';
+} from './lab-unmatched-umbrellas.js?v=2.7.3';
 
 // Bumped to 2.4 at v2.4.0, again because the analyzer DECIDES differently, in
 // three separate ways: retrieval keeps every exact hit instead of ranking it
@@ -42,7 +42,7 @@ export const ANALYSIS_SCHEMA_VERSION = 'le-lab.analysis/2.6';
 export const RESEARCH_QUEUE_SCHEMA_VERSION = 'le-lab.research-queue/2.3';
 // Release token for the shipped Lab bundle. Kept in step with the ?v= tokens
 // on every Lab module so an export names the build that produced it.
-export const ANALYZER_VERSION = '2.7.2';
+export const ANALYZER_VERSION = '2.7.3';
 export const ANALYSIS_MODE = Object.freeze({
   id: 'local-lexical-v2',
   label: 'On-device deterministic lexical analysis',

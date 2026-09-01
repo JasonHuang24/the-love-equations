@@ -115,16 +115,16 @@ test('legacy unmatched rows do not imply a classifier decision', () => {
   assert.equal(unmatchedLedgerLabel(undefined), 'Unmatched');
   assert.equal(unmatchedLedgerLabel({}), 'Unmatched');
   assert.equal(unmatchedLedgerLabel({
-    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    schemaVersion: 'le-lab.unmatched-triage/1.2.0',
     primaryUmbrella: { id: 'unclassified', label: 'Unclassified' },
   }), 'Unmatched', 'an explicit abstention decision is required');
   assert.equal(unmatchedLedgerLabel({
-    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    schemaVersion: 'le-lab.unmatched-triage/1.2.0',
     abstained: true,
     primaryUmbrella: { id: 'unclassified', label: 'Unclassified' },
   }), 'Unmatched — Unclassified');
   assert.equal(unmatchedLedgerLabel({
-    schemaVersion: 'le-lab.unmatched-triage/1.1.0',
+    schemaVersion: 'le-lab.unmatched-triage/1.2.0',
     abstained: false,
     primaryUmbrella: {
       id: 'institutional-authority-governance',
