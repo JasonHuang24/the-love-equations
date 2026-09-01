@@ -44,12 +44,23 @@ function markdownExcerpt(fragment) {
 }
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+/*
+ * CURRENT evidence only. The taxonomy-1.0 and 1.1 directories beside these are
+ * preserved untouched as historical evidence and are deliberately NOT listed:
+ * the version pins below fail on them, which is the point. Passing a stale
+ * directory explicitly still fails loudly rather than being quietly accepted,
+ * so "the audit passed" cannot mean "the audit read last release's evidence".
+ */
 const DEFAULT_EVIDENCE_DIRS = Object.freeze([
-  'pressure-remediation-replay',
-  'pressure-remediation-holdout',
-  'pressure-remediation-holdout-2',
-  'pressure-remediation-holdout-3',
-  'after-1.1',
+  'pressure-raw-1.3',
+  'pressure-observational-1.3',
+  'pressure-holdout-1.3',
+  'pressure-confirmation-1.3',
+  'pressure-final-holdout-1.3',
+  'pressure-remediation-holdout-1.3',
+  'pressure-remediation-holdout-2-1.3',
+  'pressure-remediation-holdout-3-1.3',
+  'after-1.3',
 ]);
 
 function defaultRoots() {

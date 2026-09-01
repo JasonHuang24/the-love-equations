@@ -1,0 +1,352 @@
+{
+  "schemaVersion": "le-lab.unmatched-umbrella-adversarial/1.3.0",
+  "frozenAt": "2026-09-01T09:28:25.335Z",
+  "taxonomyVersion": "1.3.0",
+  "extends": "unmatched-umbrella-adversarial-1.1.json",
+  "reviewStandard": "Known review probes, held here rather than in the evaluation set. Direct classification is future-safety evidence; liveState records whether the current gate exposes the fragment to post-match triage, so only unmatched cases are user-visible umbrella results. Every requirement was authored before the rule that satisfies it, and 23 of these 42 assertions were red on analyzer 2.7.3.",
+  "provenance": "Review findings G-1 through G-5 against analyzer 2.7.3 (commit 42647c4). Thirteen of the abstention cases were reaching the live unmatched queue with a supported umbrella.",
+  "liveCounts": {
+    "mapped": 5,
+    "unmatched": 23,
+    "excluded": 10,
+    "no-claim": 4
+  },
+  "cases": [
+    {
+      "id": "g1-instrument-analyzes",
+      "text": "The AI chatbot analyzed couples' relationship data and summarized attachment patterns.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g1-instrument-summarizes",
+      "text": "ChatGPT summarized an article about attachment and emotional support.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g1-instrument-survey",
+      "text": "An AI chatbot analyzed survey responses about attachment and emotional support.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g1-instrument-reports",
+      "text": "ChatGPT summarized couples' reports of relationship satisfaction.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "no-claim"
+    },
+    {
+      "id": "g1-instrument-variable",
+      "text": "Replika was the name of a variable in our attachment analysis.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g1-counterpart-replika",
+      "text": "A Replika partner offers attachment while lacking agency, welfare, and any ability to leave.",
+      "requirement": "must keep asymmetric-nonhuman-relationships",
+      "directPrimary": "asymmetric-nonhuman-relationships",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g1-counterpart-companion",
+      "text": "A companion chatbot offers intimacy without reciprocity, unlike the customer support scripts it was built on.",
+      "requirement": "must keep asymmetric-nonhuman-relationships",
+      "directPrimary": "asymmetric-nonhuman-relationships",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "mapped"
+    },
+    {
+      "id": "g2-member-morale",
+      "text": "Employees at the university reported that workplace relationships improved morale.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g2-member-morale-said",
+      "text": "Employees at the university said workplace relationships improved morale.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g2-member-faculty-study",
+      "text": "Faculty at the university studied romantic relationships in the surrounding community.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g2-member-managers-metrics",
+      "text": "Managers at the workplace discussed relationships between customer satisfaction and retention.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g2-member-students-support",
+      "text": "Students said their relationships with campus staff provided emotional support.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "mapped"
+    },
+    {
+      "id": "g2-authority-supervisor-ban",
+      "text": "The relationship between a supervisor and a direct report is prohibited when one evaluates the other for promotion or pay.",
+      "requirement": "must keep institutional-authority-governance",
+      "directPrimary": "institutional-authority-governance",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "mapped"
+    },
+    {
+      "id": "g2-authority-disclose-pay",
+      "text": "Employees must disclose romantic relationships with managers who evaluate their pay.",
+      "requirement": "must keep institutional-authority-governance",
+      "directPrimary": "institutional-authority-governance",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "mapped"
+    },
+    {
+      "id": "g2-authority-bu-policy",
+      "text": "Therefore, Boston University policy is that no affiliate shall supervise a student with whom the affiliate has a consensual romantic or sexual relationship.",
+      "requirement": "must keep institutional-authority-governance",
+      "directPrimary": "institutional-authority-governance",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g2-authority-uvm-policy",
+      "text": "An Employee is prohibited from engaging in an amorous relationship with any undergraduate student, whether matriculated at UVM or enrolled as a non-degree student, regardless of the perception of consent by both participants.",
+      "requirement": "must keep institutional-authority-governance",
+      "directPrimary": "institutional-authority-governance",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g2-authority-teacher-student",
+      "text": "The integrity and professionalism of the teacher-student relationship is fundamental to the educational mission of the University.",
+      "requirement": "must keep institutional-authority-governance",
+      "directPrimary": "institutional-authority-governance",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g2-authority-dating-ban",
+      "text": "University policy bans supervisors from dating their direct reports and requires disclosure and reassignment.",
+      "requirement": "must keep institutional-authority-governance",
+      "directPrimary": "institutional-authority-governance",
+      "directReason": "existing-doctrine-retrieval-miss",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g3-recognition-recovery",
+      "text": "Recognition of family support benefits mothers during recovery.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g3-recognition-challenged",
+      "text": "The study challenged conventional recognition of relationships and reported benefits for couples.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g3-recognition-understanding",
+      "text": "Recognition of relationships benefits couples by improving mutual understanding.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "mapped"
+    },
+    {
+      "id": "g3-recognition-marriage-essay",
+      "text": "The article challenged traditional recognition of marriage and described emotional benefits for families.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g3-recognition-scores",
+      "text": "Researchers recorded recognition scores and benefits reported by couples.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g3-admin-parental-order",
+      "text": "A parental order transfers legal parenthood from the surrogate to the intended parents.",
+      "requirement": "must keep external-recognition-administrative-access",
+      "directPrimary": "external-recognition-administrative-access",
+      "directReason": "possible-doctrine-gap",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g3-admin-until-order",
+      "text": "Until the parental order is granted, the surrogate and her spouse remain the child's legal parents and the intended parents have no legal status.",
+      "requirement": "must keep external-recognition-administrative-access",
+      "directPrimary": "external-recognition-administrative-access",
+      "directReason": "possible-doctrine-gap",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g3-admin-second-parent",
+      "text": "If the surrogate is single, then the man providing the sperm (if he wants to be the father) will automatically be the second legal parent at birth.",
+      "requirement": "must keep external-recognition-administrative-access",
+      "directPrimary": "external-recognition-administrative-access",
+      "directReason": "possible-doctrine-gap",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g4-task-school-fundraiser",
+      "text": "Parents split practical support roles during the school fundraiser.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g4-task-neighborhood-event",
+      "text": "Mothers separate support-network roles for a neighborhood event.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g4-task-neighborhood-fundraiser",
+      "text": "Parents split practical support roles during a neighborhood fundraiser.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g4-task-volunteers",
+      "text": "Mothers separated support roles among volunteers at school.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "no-claim"
+    },
+    {
+      "id": "g4-task-committee",
+      "text": "The parents unbundled support-network roles for the committee.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g4-family-donor-conception",
+      "text": "Donor conception separates genetic parenthood from gestational and social parent roles.",
+      "requirement": "must keep role-unbundling-family-formation",
+      "directPrimary": "role-unbundling-family-formation",
+      "directReason": "possible-doctrine-gap",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g4-family-solo-mothers",
+      "text": "Solo mothers by choice separate the decision to have a child from the search for a romantic partner.",
+      "requirement": "must keep role-unbundling-family-formation",
+      "directPrimary": "role-unbundling-family-formation",
+      "directReason": "possible-doctrine-gap",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g4-family-solo-fathers",
+      "text": "These men chose solo fatherhood through surrogacy rather than the search for a romantic partner.",
+      "requirement": "must keep role-unbundling-family-formation",
+      "directPrimary": "role-unbundling-family-formation",
+      "directReason": "boundary-moderator-directional-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g4-family-different-people",
+      "text": "In these families the genetic parent, the gestational parent, and the social parent are different people.",
+      "requirement": "must keep role-unbundling-family-formation",
+      "directPrimary": "role-unbundling-family-formation",
+      "directReason": "possible-doctrine-gap",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g5-methods-researchers",
+      "text": "Researchers briefly rated romantic messages for emotional support.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "no-claim"
+    },
+    {
+      "id": "g5-methods-lab-coding",
+      "text": "Researchers briefly rated romantic messages for emotional support during the laboratory coding procedure.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g5-methods-pilot",
+      "text": "The research team briefly rated AI companions for emotional support during a pilot methods exercise.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g5-methods-analysts",
+      "text": "Analysts briefly rated relationship vignettes and romantic messages during instrument validation.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "unmatched"
+    },
+    {
+      "id": "g5-methods-software-model",
+      "text": "A software model briefly rated AI companions for emotional support.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "excluded"
+    },
+    {
+      "id": "g5-vignette-no-claim",
+      "text": "A short romance vignette measured impressions of couples.",
+      "requirement": "must abstain",
+      "directPrimary": "unclassified",
+      "directReason": "insufficient-evidence",
+      "liveState": "no-claim"
+    },
+    {
+      "id": "g5-brief-states-limitation",
+      "text": "Participants briefly rated noninteractive synthetic characters without repeated contingent interaction.",
+      "requirement": "must keep brief-nonrelationship-interactions",
+      "directPrimary": "brief-nonrelationship-interactions",
+      "directReason": "outside-human-relational-frame",
+      "liveState": "excluded"
+    }
+  ]
+}

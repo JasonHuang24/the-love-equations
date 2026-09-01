@@ -507,6 +507,21 @@ length-and-predication test rather than a list of corpus literals. Capitalizatio
 is deliberately not consulted anywhere — the audits reclassify every fragment
 upper-cased, so a title-case test cannot be stable.
 
+From v2.7.4 the same standard reaches the other four families, after a second
+verification measured what their tokens were doing (pt11, v2.7.4 section). A
+synthetic counterpart has to occupy a relational position, not merely co-occur
+with relational subject matter, so an AI that analyses or summarises relationship
+data abstains. Institutional MEMBERSHIP is separated from authority: the
+membership nouns keep their scoring weight in a `member` family, and a supported
+assignment needs a governance act or a directional power relation. `recognition`
+counts only with a legal adjective, a status object, or an institutional actor;
+`benefits`, `challenged`, `records` and `automatically` no longer supply
+administrative access. A separation verb has to govern a FAMILY role, so generic
+support or task roles plus a parent noun do not qualify. Brief requires the
+nonrelationship claim outright, and `briefly rated` is measurement furniture
+whoever performs it. A question is never a supported umbrella, because an
+interrogative asserts no mechanism.
+
 JSON keeps each queue excerpt byte-exact. Markdown uses a dedicated excerpt
 serializer: it preserves spaces, tabs, line breaks, and blank lines, emits
 every source line in the blockquote, and encodes only `&`, `<`, and `>`. The
@@ -524,7 +539,9 @@ nearest concepts are three OF; 2.3 (v2.7.1) adds the versioned post-match
 umbrella taxonomy and item triage described above. Analyzer v2.7.2 retains the
 2.3 queue shape while advancing the taxonomy/triage payload to 1.1 and
 tightening its explanatory rules; v2.7.3 retains 2.3 again and moves the
-payload to 1.2 for the post-review rule rework. This heading sat at 2.0 while production shipped
+payload to 1.2 for the post-review rule rework; v2.7.4 retains 2.3 once more and
+moves the payload to 1.3 for the second rework. The queue shape has not changed
+since 2.3 — only the triage payload inside it. This heading sat at 2.0 while production shipped
 both; the drift was caught by the 2026-08-07 cold review (finding 7) and the
 analyzer's live export version is asserted against the constant in
 `tests/lab-analyzer.test.mjs`, so the contract a consumer receives is the

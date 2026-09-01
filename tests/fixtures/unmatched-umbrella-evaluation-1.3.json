@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "le-lab.unmatched-umbrella-evaluation/1.3.0",
+  "frozenAt": "2026-09-01T09:30:15.638Z",
+  "status": "Versioned evaluation successor for taxonomy 1.3. NOT a pre-registered holdout — see provenance.",
+  "extends": "unmatched-umbrella-evaluation-1.1.json",
+  "taxonomyVersion": "1.3.0",
+  "provenance": {
+    "authoring": "Twenty-three sentences written for this set. None appears in the 1.0 or 1.1 fixtures, in the G-1..G-5 review probes, or in the pt11 source corpus.",
+    "sequencing": "Authored AFTER the v2.7.4 rules were implemented, not before. The brief asked for a set sealed ahead of implementation and that did not happen, so this set is NOT pre-registered evidence and must not be described as one.",
+    "influence": "Each expectation was authored from the umbrella definitions before the case was run. All 23 measured results agreed with the authored expectation on the first pass, so no rule was changed in response to this set and it did not become discovery evidence in the tuning sense.",
+    "holdout": "The untouched check for this release is the post-freeze source holdout recorded in md/pressure-tests.md, acquired from live sources after the classifier was frozen."
+  },
+  "reviewStandard": "Every negative control is checked individually and must abstain. Primary, secondary, reason, and abstention are all compared.",
+  "cases": [
+    {
+      "id": "e13-asym-01",
+      "kind": "positive",
+      "text": "Users describe the virtual companion as a confidant, though it has no welfare of its own and cannot refuse the relationship.",
+      "expected": {
+        "primaryUmbrellaId": "asymmetric-nonhuman-relationships",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "existing-doctrine-retrieval-miss"
+      }
+    },
+    {
+      "id": "e13-asym-02",
+      "kind": "positive",
+      "text": "A social robot can provide companionship to isolated residents without ever having a stake in the outcome.",
+      "expected": {
+        "primaryUmbrellaId": "asymmetric-nonhuman-relationships",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "existing-doctrine-retrieval-miss"
+      }
+    },
+    {
+      "id": "e13-auth-01",
+      "kind": "positive",
+      "text": "Departments must reassign grading duties when an instructor begins a romantic relationship with a student in their course.",
+      "expected": {
+        "primaryUmbrellaId": "institutional-authority-governance",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "existing-doctrine-retrieval-miss"
+      }
+    },
+    {
+      "id": "e13-auth-02",
+      "kind": "positive",
+      "text": "A coach who evaluates an athlete for scholarship renewal may not pursue a romantic relationship with that athlete.",
+      "expected": {
+        "primaryUmbrellaId": "institutional-authority-governance",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "existing-doctrine-retrieval-miss"
+      }
+    },
+    {
+      "id": "e13-role-01",
+      "kind": "positive",
+      "text": "Reciprocal IVF lets one partner supply the egg while the other carries the pregnancy, separating genetic and gestational motherhood.",
+      "expected": {
+        "primaryUmbrellaId": "role-unbundling-family-formation",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "possible-doctrine-gap"
+      }
+    },
+    {
+      "id": "e13-role-02",
+      "kind": "positive",
+      "text": "Known-donor arrangements ask families to distinguish the biological father from the social father.",
+      "expected": {
+        "primaryUmbrellaId": "role-unbundling-family-formation",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "possible-doctrine-gap"
+      }
+    },
+    {
+      "id": "e13-access-01",
+      "kind": "positive",
+      "text": "Without a court declaration the non-gestational parent has no legal status, and the couple cannot register the birth.",
+      "expected": {
+        "primaryUmbrellaId": "external-recognition-administrative-access",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "possible-doctrine-gap"
+      }
+    },
+    {
+      "id": "e13-access-02",
+      "kind": "positive",
+      "text": "Immigration authorities recognised the partnership, which made the spouse eligible for a residence permit.",
+      "expected": {
+        "primaryUmbrellaId": "external-recognition-administrative-access",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "possible-doctrine-gap"
+      }
+    },
+    {
+      "id": "e13-brief-01",
+      "kind": "positive",
+      "text": "Raters saw one scripted message without repeated contact, so the design captures impressions rather than a relationship.",
+      "expected": {
+        "primaryUmbrellaId": "brief-nonrelationship-interactions",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "outside-human-relational-frame"
+      }
+    },
+    {
+      "id": "e13-amb-01",
+      "kind": "ambiguous",
+      "text": "Peer romances between coworkers with no evaluative authority do not trigger the disclosure rule unless a reporting line changes.",
+      "expected": {
+        "primaryUmbrellaId": "institutional-authority-governance",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "boundary-moderator-directional-evidence"
+      }
+    },
+    {
+      "id": "e13-amb-02",
+      "kind": "ambiguous",
+      "text": "Disclosure intentions did not differ between solo and partnered mothers, although the genetic and social parent roles were separated in both groups.",
+      "expected": {
+        "primaryUmbrellaId": "role-unbundling-family-formation",
+        "secondaryUmbrellaId": null,
+        "abstained": false,
+        "unmatchedReasonId": "boundary-moderator-directional-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-01",
+      "kind": "negative-control",
+      "text": "The support team split ticket triage roles between the day and night shifts.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-02",
+      "kind": "negative-control",
+      "text": "Parents at the school council recognised the benefits of a shared calendar.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-03",
+      "kind": "negative-control",
+      "text": "Our chatbot summarised the transcript and tagged each message with an emotion label.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-04",
+      "kind": "negative-control",
+      "text": "Faculty members enjoyed the department picnic and reported strong collegial relationships.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-05",
+      "kind": "negative-control",
+      "text": "Analysts briefly scored dating profiles for perceived warmth during pilot testing.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-06",
+      "kind": "negative-control",
+      "text": "The registry stores donor identity separately from the recipient's clinical record.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-07",
+      "kind": "negative-control",
+      "text": "Cloud identity roles inherit permissions from the parent group, and service accounts split read and write access.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "outside-human-relational-frame"
+      }
+    },
+    {
+      "id": "e13-neg-08",
+      "kind": "negative-control",
+      "text": "Table 3 reports the number of couples recognised as legal parents in each jurisdiction.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "descriptive-fact-no-relational-mechanism"
+      }
+    },
+    {
+      "id": "e13-neg-09",
+      "kind": "negative-control",
+      "text": "Students at the conference discussed romantic relationships in fiction.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-10",
+      "kind": "negative-control",
+      "text": "The AI model was trained on relationship advice forums and evaluated for coherence.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-11",
+      "kind": "negative-control",
+      "text": "Managers completed the annual engagement survey about workplace culture.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "insufficient-evidence"
+      }
+    },
+    {
+      "id": "e13-neg-12",
+      "kind": "negative-control",
+      "text": "The couple recognised how much the benefits of counselling had improved their communication.",
+      "expected": {
+        "primaryUmbrellaId": "unclassified",
+        "secondaryUmbrellaId": null,
+        "abstained": true,
+        "unmatchedReasonId": "descriptive-fact-no-relational-mechanism"
+      }
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 import { normalizeInput } from '../js/lab-intake.js';
 import {
@@ -46,6 +47,14 @@ const ADVERSARIAL = JSON.parse(readFileSync(
   new URL('./fixtures/unmatched-umbrella-adversarial-1.1.json', import.meta.url),
   'utf8',
 ));
+const ADVERSARIAL_13 = JSON.parse(readFileSync(
+  new URL('./fixtures/unmatched-umbrella-adversarial-1.3.json', import.meta.url),
+  'utf8',
+));
+const EVALUATION_13 = JSON.parse(readFileSync(
+  new URL('./fixtures/unmatched-umbrella-evaluation-1.3.json', import.meta.url),
+  'utf8',
+));
 
 const EXPECTED_UMBRELLAS = [
   ['asymmetric-nonhuman-relationships', 'Asymmetric or nonhuman relationships'],
@@ -65,10 +74,10 @@ const EXPECTED_REASONS = [
 ];
 
 test('taxonomy is versioned, complete, deterministic triage rather than doctrine', () => {
-  assert.equal(UNMATCHED_UMBRELLA_TAXONOMY_VERSION, '1.2.0');
+  assert.equal(UNMATCHED_UMBRELLA_TAXONOMY_VERSION, '1.3.0');
   assert.equal(
     UNMATCHED_UMBRELLA_TAXONOMY.schemaVersion,
-    'le-lab.unmatched-umbrella-taxonomy/1.2.0',
+    'le-lab.unmatched-umbrella-taxonomy/1.3.0',
   );
   assert.deepEqual(
     UNMATCHED_UMBRELLA_TAXONOMY.umbrellas.map(({ id, label }) => [id, label]),
@@ -309,7 +318,7 @@ test('live analyzer adds triage only after a passage remains unmatched', async (
     text: fragment,
   }), CANON);
 
-  assert.equal(ANALYZER_VERSION, '2.7.3');
+  assert.equal(ANALYZER_VERSION, '2.7.4');
   assert.equal(RESEARCH_QUEUE_SCHEMA_VERSION, 'le-lab.research-queue/2.3');
   assert.equal(analysis.metrics.mappedClaimSegments, 0);
   assert.equal(analysis.metrics.unmappedClaimSegments, 1);
@@ -517,4 +526,276 @@ test('F-13 a short verbless title is a title whatever punctuation it ends in', (
       fragment,
     );
   }
+});
+
+/*
+ * v2.7.4 review guards.
+ *
+ * Every assertion below was reproduced against v2.7.3 before the rule it
+ * guards was written, and 23 of these 40 were red on that build; 13 of the red
+ * ones reached the live unmatched queue, where a reader saw them. They are
+ * grouped by finding so a regression names the defect it reintroduces.
+ *
+ * The shape each one tests is the same: a family of broad tokens was standing
+ * in for the umbrella's actual mechanism, so ordinary prose that merely shared
+ * subject matter with the umbrella got classified. The fix in every case is
+ * positive mechanism evidence, never a longer blacklist.
+ */
+test('G-1 an AI used as an instrument is not a relational counterpart', () => {
+  for (const fragment of [
+    "The AI chatbot analyzed couples' relationship data and summarized attachment patterns.",
+    'ChatGPT summarized an article about attachment and emotional support.',
+    'An AI chatbot analyzed survey responses about attachment and emotional support.',
+    "ChatGPT summarized couples' reports of relationship satisfaction.",
+    'Replika was the name of a variable in our attachment analysis.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  // The entity is the counterpart, or it does something relational for a person.
+  for (const fragment of [
+    'A Replika partner offers attachment while lacking agency, welfare, and any ability to leave.',
+    'A companion chatbot offers intimacy without reciprocity, unlike the customer support scripts it was built on.',
+  ]) {
+    assert.equal(
+      classifyUnmatchedPassage(fragment).primaryUmbrella.id,
+      'asymmetric-nonhuman-relationships',
+      fragment,
+    );
+  }
+});
+
+test('G-2 institutional membership is not authority or governance', () => {
+  for (const fragment of [
+    'Employees at the university reported that workplace relationships improved morale.',
+    'Employees at the university said workplace relationships improved morale.',
+    'Faculty at the university studied romantic relationships in the surrounding community.',
+    'Managers at the workplace discussed relationships between customer satisfaction and retention.',
+    'Students said their relationships with campus staff provided emotional support.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  /*
+   * `students` and the other membership nouns stay in the lexicon: deleting
+   * them was tried in v2.7.3 and cost five correct classifications on live
+   * university-policy prose. What a supported assignment needs is a governance
+   * act or a directional power relation, and every sentence below states one.
+   */
+  for (const fragment of [
+    'The relationship between a supervisor and a direct report is prohibited when one evaluates the other for promotion or pay.',
+    'Employees must disclose romantic relationships with managers who evaluate their pay.',
+    'Therefore, Boston University policy is that no affiliate shall supervise a student with whom the affiliate has a consensual romantic or sexual relationship.',
+    'An Employee is prohibited from engaging in an amorous relationship with any undergraduate student, whether matriculated at UVM or enrolled as a non-degree student, regardless of the perception of consent by both participants.',
+    'The integrity and professionalism of the teacher-student relationship is fundamental to the educational mission of the University.',
+    'University policy bans supervisors from dating their direct reports and requires disclosure and reassignment.',
+  ]) {
+    assert.equal(
+      classifyUnmatchedPassage(fragment).primaryUmbrella.id,
+      'institutional-authority-governance',
+      fragment,
+    );
+  }
+});
+
+test('G-3 ordinary recognition and benefits are not administrative access', () => {
+  for (const fragment of [
+    'Recognition of family support benefits mothers during recovery.',
+    'The study challenged conventional recognition of relationships and reported benefits for couples.',
+    'Recognition of relationships benefits couples by improving mutual understanding.',
+    'The article challenged traditional recognition of marriage and described emotional benefits for families.',
+    'Researchers recorded recognition scores and benefits reported by couples.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  for (const fragment of [
+    'A parental order transfers legal parenthood from the surrogate to the intended parents.',
+    "Until the parental order is granted, the surrogate and her spouse remain the child's legal parents and the intended parents have no legal status.",
+    'If the surrogate is single, then the man providing the sperm (if he wants to be the father) will automatically be the second legal parent at birth.',
+  ]) {
+    assert.equal(
+      classifyUnmatchedPassage(fragment).primaryUmbrella.id,
+      'external-recognition-administrative-access',
+      fragment,
+    );
+  }
+});
+
+test('G-4 ordinary task division is not family-role unbundling', () => {
+  for (const fragment of [
+    'Parents split practical support roles during the school fundraiser.',
+    'Mothers separate support-network roles for a neighborhood event.',
+    'Parents split practical support roles during a neighborhood fundraiser.',
+    'Mothers separated support roles among volunteers at school.',
+    'The parents unbundled support-network roles for the committee.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  for (const fragment of [
+    'Donor conception separates genetic parenthood from gestational and social parent roles.',
+    'Solo mothers by choice separate the decision to have a child from the search for a romantic partner.',
+    'These men chose solo fatherhood through surrogacy rather than the search for a romantic partner.',
+    'In these families the genetic parent, the gestational parent, and the social parent are different people.',
+  ]) {
+    assert.equal(
+      classifyUnmatchedPassage(fragment).primaryUmbrella.id,
+      'role-unbundling-family-formation',
+      fragment,
+    );
+  }
+});
+
+test('G-5 measurement procedure is not a Brief/nonrelationship claim', () => {
+  for (const fragment of [
+    'Researchers briefly rated romantic messages for emotional support.',
+    'Researchers briefly rated romantic messages for emotional support during the laboratory coding procedure.',
+    'The research team briefly rated AI companions for emotional support during a pilot methods exercise.',
+    'Analysts briefly rated relationship vignettes and romantic messages during instrument validation.',
+    'A software model briefly rated AI companions for emotional support.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  /*
+   * Two independent rules carry this finding, and each is needed on its own.
+   * The furniture guard catches the measurement verb whatever actor performs
+   * it; the umbrella's own predicate now requires the nonrelationship claim,
+   * which is what stops a short vignette with no `briefly rated` in it.
+   */
+  assert.equal(
+    classifyUnmatchedPassage('A short romance vignette measured impressions of couples.').abstained,
+    true,
+    'brevity plus adjacent romance vocabulary is not a Brief claim',
+  );
+  assert.equal(
+    classifyUnmatchedPassage(
+      'Participants briefly rated noninteractive synthetic characters without repeated contingent interaction.',
+    ).primaryUmbrella.id,
+    'brief-nonrelationship-interactions',
+    'a fragment that states the relational limitation is still a Brief claim',
+  );
+});
+
+test('1.3 evaluation successor agrees on umbrella, reason, secondary, and abstention', () => {
+  assert.equal(EVALUATION_13.taxonomyVersion, UNMATCHED_UMBRELLA_TAXONOMY_VERSION);
+  assert.ok(
+    /NOT a pre-registered holdout/.test(EVALUATION_13.status),
+    'the set must keep saying it was authored after implementation',
+  );
+  let negativeControls = 0;
+  for (const fixture of EVALUATION_13.cases) {
+    const result = classifyUnmatchedPassage(fixture.text);
+    assert.equal(result.abstained, fixture.expected.abstained, `${fixture.id}: abstention`);
+    assert.equal(result.primaryUmbrella.id, fixture.expected.primaryUmbrellaId, `${fixture.id}: primary`);
+    assert.equal(
+      result.secondaryUmbrella ? result.secondaryUmbrella.id : null,
+      fixture.expected.secondaryUmbrellaId,
+      `${fixture.id}: secondary`,
+    );
+    assert.equal(result.unmatchedReason.id, fixture.expected.unmatchedReasonId, `${fixture.id}: reason`);
+    if (fixture.kind === 'negative-control') {
+      negativeControls += 1;
+      // Checked individually, not as a rate: one classified control is a defect.
+      assert.equal(result.abstained, true, `${fixture.id}: negative control must abstain`);
+    }
+  }
+  assert.equal(negativeControls, 12, 'the 1.3 set carries twelve negative controls');
+  assert.equal(EVALUATION_13.cases.length, 23);
+});
+
+test('G-1..G-5 adversarial probes hold in the live analyzer, not just the classifier', async () => {
+  const liveCounts = { mapped: 0, unmatched: 0, excluded: 0, 'no-claim': 0 };
+  for (const fixture of ADVERSARIAL_13.cases) {
+    const direct = classifyUnmatchedPassage(fixture.text);
+    assert.equal(direct.primaryUmbrella.id, fixture.directPrimary, `${fixture.id}: direct primary`);
+    assert.equal(direct.unmatchedReason.id, fixture.directReason, `${fixture.id}: direct reason`);
+
+    const analysis = await analyzeDocument(normalizeInput({
+      title: `Adversarial probe ${fixture.id}`,
+      text: fixture.text,
+    }), CANON);
+    const liveState = analysis.metrics.mappedClaimSegments > 0
+      ? 'mapped'
+      : analysis.metrics.unmappedClaimSegments > 0
+        ? 'unmatched'
+        : analysis.metrics.ignoredDomainSegments > 0
+          ? 'excluded'
+          : 'no-claim';
+    assert.equal(liveState, fixture.liveState, `${fixture.id}: live population`);
+    liveCounts[liveState] += 1;
+
+    /*
+     * The point of the finding was that these were USER-VISIBLE. A probe that
+     * merely abstains in the classifier proves nothing if the gate would have
+     * shown it anyway, so every one that reaches the queue is checked on the
+     * rendered value: the exact fragment, and the umbrella a reader sees.
+     */
+    if (liveState === 'unmatched') {
+      const item = analysis.researchQueue.items[0];
+      assert.equal(item.excerpt, fixture.text, `${fixture.id}: exact live fragment`);
+      assert.equal(item.unmatchedTriage.primaryUmbrella.id, fixture.directPrimary, `${fixture.id}: live primary`);
+      assert.equal(item.unmatchedTriage.unmatchedReason.id, fixture.directReason, `${fixture.id}: live reason`);
+      if (fixture.directPrimary === 'unclassified') {
+        assert.equal(item.unmatchedTriage.abstained, true, `${fixture.id}: live abstention is explicit`);
+      }
+    }
+  }
+  assert.deepEqual(liveCounts, ADVERSARIAL_13.liveCounts);
+  assert.equal(ADVERSARIAL_13.cases.length, 42);
+});
+
+test('the two frozen evaluation fixtures are never edited to green a rule', () => {
+  /*
+   * Byte identity, not shape identity. An expectation quietly edited to match
+   * new behaviour is exactly what this exists to catch, and it is the one
+   * failure mode a passing evaluation cannot show you. CRLF is normalised so
+   * the pin survives a checkout with a different line-ending setting.
+   */
+  const pin = (name) => createHash('sha256')
+    .update(Buffer.from(
+      readFileSync(new URL(`./fixtures/${name}`, import.meta.url))
+        .filter((byte) => byte !== 0x0d),
+    ))
+    .digest('hex');
+  assert.equal(
+    pin('unmatched-umbrella-evaluation.json'),
+    '96f04813a2d94f0bf7f45b8642208fdce032ccbf8f3d926cf1ff5ec8d4f2cba0',
+    'taxonomy 1.0 evidence must stay byte-identical',
+  );
+  assert.equal(
+    pin('unmatched-umbrella-evaluation-1.1.json'),
+    'e34ba158f084c1020825df646eb1f498d715bbd70f051f53be97802004b00f04',
+    'taxonomy 1.1 successor must stay byte-identical',
+  );
+});
+
+test('G-6 a question asserts no mechanism, so it is never a supported umbrella', () => {
+  /*
+   * Found by the fresh 42-source window rather than by construction: one review
+   * article had eight interrogatives classified as Asymmetric at 0.66, section
+   * headings and research questions alike. They classified on v2.7.3 too, so
+   * this closes an old defect the new corpus exposed. The rule used to require
+   * the question to have NO finite verb, which made it nearly dead - every
+   * well-formed question has one.
+   */
+  for (const fragment of [
+    'Can Humans Have Close Relationships With AI Chatbots?',
+    'Can Close Relationships With Chatbots Fulfill the Functions of Close Relationships With Humans?',
+    'Do these capacities enable humans to develop genuine relationships with their chatbot companions?',
+    'First, to what extent can interactions with chatbots meet the defining criteria of a close relationship?',
+    'Do close relationships with chatbots promote the same downstream consequences for health?',
+    'Should a supervisor be permitted to evaluate a direct report they are dating?',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  // The declarative form of the same subject matter still classifies.
+  assert.equal(
+    classifyUnmatchedPassage(
+      'Close relationships with chatbots do not promote the same downstream consequences, because a chatbot partner has no welfare of its own.',
+    ).primaryUmbrella.id,
+    'asymmetric-nonhuman-relationships',
+  );
 });

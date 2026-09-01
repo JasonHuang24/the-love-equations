@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 import {
   UNMATCHED_TRIAGE_SCHEMA_VERSION,
@@ -32,6 +33,10 @@ const evaluation = {
     ...successor.cases,
   ],
 };
+const evaluation13 = JSON.parse(readFileSync(
+  new URL('tests/fixtures/unmatched-umbrella-evaluation-1.3.json', ROOT),
+  'utf8',
+));
 const analyzerSource = readFileSync(new URL('js/lab-analyzer.js', ROOT), 'utf8');
 const appSource = readFileSync(new URL('js/lab-app.js', ROOT), 'utf8');
 const ledgerSource = readFileSync(new URL('js/lab-ledger.js', ROOT), 'utf8');
@@ -100,6 +105,82 @@ for (const fixture of [...evaluation.cases].reverse()) {
     `${fixture.id}: category changed under transport whitespace or invisible controls`,
   );
 }
+
+/*
+ * The 1.3 successor is audited as its own population, not folded into the 61.
+ * Folding would let a 1.3 pass paper over a 1.0/1.1 regression inside one
+ * averaged number, and the reason the older sets are byte-frozen is precisely
+ * that they should answer separately.
+ */
+let supported13 = 0;
+let abstained13 = 0;
+let negativeControls13 = 0;
+const firstPass13 = new Map();
+for (const fixture of evaluation13.cases) {
+  const result = classifyUnmatchedPassage(fixture.text);
+  firstPass13.set(fixture.id, JSON.stringify(result));
+  assert.equal(result.schemaVersion, UNMATCHED_TRIAGE_SCHEMA_VERSION, fixture.id);
+  assert.equal(result.abstained, fixture.expected.abstained, `${fixture.id}: abstention`);
+  assert.equal(result.primaryUmbrella.id, fixture.expected.primaryUmbrellaId, `${fixture.id}: primary`);
+  assert.equal(
+    result.secondaryUmbrella?.id ?? null,
+    fixture.expected.secondaryUmbrellaId,
+    `${fixture.id}: secondary`,
+  );
+  assert.equal(result.unmatchedReason.id, fixture.expected.unmatchedReasonId, `${fixture.id}: reason`);
+  if (fixture.kind === 'negative-control') {
+    negativeControls13 += 1;
+    assert.equal(result.abstained, true, `${fixture.id}: every negative control must abstain`);
+  }
+  if (result.abstained) abstained13 += 1;
+  else supported13 += 1;
+}
+for (const fixture of [...evaluation13.cases].reverse()) {
+  assert.equal(
+    JSON.stringify(classifyUnmatchedPassage(fixture.text)),
+    firstPass13.get(fixture.id),
+    `${fixture.id}: classification changed when evaluation order reversed`,
+  );
+  assert.equal(
+    JSON.stringify(classifyUnmatchedPassage(
+      `  ${fixture.text.toUpperCase().replace(/\s+/g, '   ')}  `,
+    )),
+    firstPass13.get(fixture.id),
+    `${fixture.id}: category changed under case or whitespace normalization`,
+  );
+  assert.equal(
+    JSON.stringify(classifyUnmatchedPassage(
+      `\u200b${fixture.text.replace(/ /g, '\u00a0').replace(/\. /g, '.\r\n')}\u2060`,
+    )),
+    firstPass13.get(fixture.id),
+    `${fixture.id}: category changed under transport whitespace or invisible controls`,
+  );
+}
+assert.equal(negativeControls13, 12, '1.3 set must keep its twelve negative controls');
+assert.equal(evaluation13.cases.length, 23);
+assert.equal(evaluation13.taxonomyVersion, UNMATCHED_UMBRELLA_TAXONOMY.version);
+
+/*
+ * The two older fixtures are pinned by content hash. A fixture quietly edited
+ * to match new behaviour is the one failure mode a green evaluation cannot
+ * reveal, and the standing rule here is that a red test gets diagnosed, never
+ * greened by moving the goalpost. CR bytes are dropped so the pin survives a
+ * checkout with either line-ending setting.
+ */
+const pinnedDigest = (name) => createHash('sha256')
+  .update(Buffer.from(readFileSync(new URL(`tests/fixtures/${name}`, ROOT))
+    .filter((byte) => byte !== 0x0d)))
+  .digest('hex');
+assert.equal(
+  pinnedDigest('unmatched-umbrella-evaluation.json'),
+  '96f04813a2d94f0bf7f45b8642208fdce032ccbf8f3d926cf1ff5ec8d4f2cba0',
+  'taxonomy 1.0 evidence must stay byte-identical',
+);
+assert.equal(
+  pinnedDigest('unmatched-umbrella-evaluation-1.1.json'),
+  'e34ba158f084c1020825df646eb1f498d715bbd70f051f53be97802004b00f04',
+  'taxonomy 1.1 successor must stay byte-identical',
+);
 
 assert.equal(exactPrimary, evaluation.cases.length);
 assert.equal(exactReason, evaluation.cases.length);
@@ -174,5 +255,7 @@ process.stdout.write(
   `UNMATCHED UMBRELLA AUDIT PASSED · frozen=${evaluation.cases.length}`
   + ` · supported=${supported} · abstained=${abstained} (${percent(abstained / evaluation.cases.length)}%)`
   + ' · primary precision=100% · reason agreement=100% · secondary agreement=100%'
+  + ` · 1.3 set=${evaluation13.cases.length} (${supported13} supported, ${abstained13} abstained, ${negativeControls13} negative controls all abstaining)`
+  + ' · frozen 1.0/1.1 byte pins intact'
   + ' · category stability=100% · UI/export fields=6/6 · responsive/a11y contract=pass\n',
 );
