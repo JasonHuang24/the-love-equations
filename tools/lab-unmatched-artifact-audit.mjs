@@ -52,15 +52,15 @@ const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
  * so "the audit passed" cannot mean "the audit read last release's evidence".
  */
 const DEFAULT_EVIDENCE_DIRS = Object.freeze([
-  'pressure-raw-1.3',
-  'pressure-observational-1.3',
-  'pressure-holdout-1.3',
-  'pressure-confirmation-1.3',
-  'pressure-final-holdout-1.3',
-  'pressure-remediation-holdout-1.3',
-  'pressure-remediation-holdout-2-1.3',
-  'pressure-remediation-holdout-3-1.3',
-  'after-1.3',
+  'pressure-raw-1.4.6',
+  'pressure-observational-1.4.6',
+  'pressure-holdout-1.4.6',
+  'pressure-confirmation-1.4.6',
+  'pressure-final-holdout-1.4.6',
+  'pressure-remediation-holdout-1.4.6',
+  'pressure-remediation-holdout-2-1.4.6',
+  'pressure-remediation-holdout-3-1.4.6',
+  'after-1.4.6',
 ]);
 
 function defaultRoots() {

@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.7.4';
+} from './lab-intake.js?v=2.7.11';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,17 +15,17 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.7.4';
-import { createDemoDocument } from './lab-demo.js?v=2.7.4';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.7.4';
-import { claimUnitRowDigest } from './lab-analyzer.js?v=2.7.4';
+} from './lab-extractors.js?v=2.7.11';
+import { createDemoDocument } from './lab-demo.js?v=2.7.11';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.7.11';
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.7.11';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.7.4';
+} from './lab-export.js?v=2.7.11';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
@@ -33,19 +33,19 @@ import {
   ledgerRowMatchesFilter,
   nextLedgerFilter,
   unmatchedLedgerLabel,
-} from './lab-ledger.js?v=2.7.4';
+} from './lab-ledger.js?v=2.7.11';
 import {
   REVIEW_DISPOSITIONS,
   buildMappingFeedback,
   mappingFeedbackFileName,
   mappingFeedbackToJson,
-} from './lab-feedback.js?v=2.7.4';
+} from './lab-feedback.js?v=2.7.11';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.7.4';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.7.11';
 // The Lab build that rendered a flagged row. Deliberately distinct from
 // provenance.analyzer.version, which names the engine that produced the numbers:
 // a UI-only patch moves this and not that, and triage needs to tell them apart.
-const LAB_RELEASE = '2.7.4';
+const LAB_RELEASE = '2.7.11';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;

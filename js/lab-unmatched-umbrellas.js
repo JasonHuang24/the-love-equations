@@ -7,10 +7,10 @@
  * unmatched fragment, and abstention is a first-class result.
  */
 
-export const UNMATCHED_TRIAGE_SCHEMA_VERSION = 'le-lab.unmatched-triage/1.3.0';
+export const UNMATCHED_TRIAGE_SCHEMA_VERSION = 'le-lab.unmatched-triage/1.4.6';
 export const UNMATCHED_UMBRELLA_TAXONOMY_SCHEMA_VERSION =
-  'le-lab.unmatched-umbrella-taxonomy/1.3.0';
-export const UNMATCHED_UMBRELLA_TAXONOMY_VERSION = '1.3.0';
+  'le-lab.unmatched-umbrella-taxonomy/1.4.6';
+export const UNMATCHED_UMBRELLA_TAXONOMY_VERSION = '1.4.6';
 
 const umbrellaDefinitions = [
   {
@@ -120,11 +120,130 @@ function normalizedText(value) {
     .trim();
 }
 
+/*
+ * A subject family can contribute confidence, but it cannot manufacture a
+ * mechanism by co-occurrence. These predicates connect the actor, action, and
+ * relational object that define each umbrella. They are deliberately
+ * zero-weight signals: established confidence calibration stays intact while
+ * qualification gains an independent semantic requirement.
+ */
+function hasSyntheticRelationalMechanism(text) {
+  const namedCounterpart = /\b(?:ai|artificial intelligence|virtual|synthetic|digital|robot|machine)[- ](?:companions?|partners?|boyfriends?|girlfriends?|friends?|spouses?)\b|\b(?:companion|relational|social) (?:chatbots?|robots?|apps?|bots?)\b|\breplika partners?\b|\b(?:chatbot|bot|ai)[- ](?:partners?|companions?|boyfriends?|girlfriends?)\b/.test(text);
+  const namedRelationalPredicate = /\b(?:as (?:a )?confidant|can feel relationship-like|operate(?:s|d)? as (?:hyper )?attachment objects?)\b|\b(?:has|have)\s+no\b(?:\s+[\w-]+){0,4}\s+\b(?:welfare|agency|stake|independent needs?|ability to leave|consent)\b(?!\s+(?:scores?|fields?|variables?|measures?|standards?|data|metadata|documentation|polic(?:y|ies)|terms?|records?|forms?))|\b(?:without|lacks?|lacking)\b(?:\s+[\w-]+){0,4}\s+\b(?:welfare|agency|stake|independent needs?|ability to leave|consent)\b(?!\s+(?:scores?|fields?|variables?|measures?|standards?|data|metadata|documentation|polic(?:y|ies)|terms?|records?|forms?))|\b(?:cannot|can't|unable to)\s+(?:refuse|leave)\b/.test(text);
+  const relatedToSynthetic = /\b(?:relationships?|attachments?|bonds?|intimacy|friendships?|connections?)\s+(?:with|to)\s+(?:an? |the |their |his |her |its )?(?:ai|(?:conversational )?artificial intelligence|conversational ai|chatbots?|chatgpt|replika|character[. -]?ai|bots?|machines?|robots?|virtual companions?)\b/.test(text);
+  const personContactsSynthetic = /\b(?:chatted|chatting|talk(?:s|ed|ing)?|interact(?:s|ed|ing)?|confide[sd]?|bond(?:s|ed|ing)?|disclos(?:e|ed|ing))\s+(?:with|to|in)?\s*(?:an? |the |their |his |her )?(?:ai|artificial intelligence|chatbots?|chatgpt|replika|character[. -]?ai|bots?|machines?|robots?)\b/.test(text)
+    && /\b(?:attachment|bond|companionship|confidant|connection|intimacy|relationship|romantic partner|social support|emotional support)\b/.test(text);
+  const syntheticActsRelationally = /\b(?:ai|artificial intelligence|chatbots?|chatgpt|replika|character[. -]?ai|bots?|robots?|virtual companions?|social robots?)\b(?:\s+[\w-]+){0,5}\s+\b(?:offers?|offered|provides?|provided|generates?|generated|elicits?|elicited|simulates?|simulated|delivers?|delivered|supplies|supplied)\b(?:\s+[\w-]+){0,4}\s+\b(?:attachment|intimacy|companionship|emotional support|social support|connection|empathy|validation|responsiveness|relationship-like)\b(?!\s+(?:advice|scores?|labels?|variables?|measures?|documentation|datasets?|reports?|resources?|content|materials?|information|links?))/.test(text);
+  const syntheticInteraction = /\b(?:ai|chatbot|chatgpt|replika|character[. -]?ai|robot)[- ](?:interactions?|conversations?|relationships?)\b/.test(text)
+    && /\b(?:attachment|bond|companionship|connection|durable relationship|intimacy|relationship quality|social skill)\b/.test(text);
+  const relationalOutcomeDesign = /\bassigned chatbot modality\b.*\beffect on\b.*\b(?:loneliness|socialization|social skills?|well-being|isolation|connection)\b/.test(text);
+  const conversationalPartner = /\bconversational (?:ai|artificial intelligence)\b(?:\s+[\w-]+){0,10}\s+\b(?:interactive|relational|social) partner\b/.test(text);
+  const syntheticLimitation = /\b(?:simulated responsiveness|felt connection\b.*\bchatbot|synthetic characters?\b.*\b(?:contingent interaction|relationship function)|chatbots?\b.*\b(?:feeling|care|consciousness|moral agency))\b/.test(text);
+  return (namedCounterpart && namedRelationalPredicate)
+    || relatedToSynthetic
+    || personContactsSynthetic
+    || syntheticActsRelationally
+    || syntheticInteraction
+    || relationalOutcomeDesign
+    || conversationalPartner
+    || syntheticLimitation;
+}
+
+function hasInstitutionalRelationalMechanism(text) {
+  if (/\b(?:supervisor|manager|faculty|teacher|student|workplace)?[- ]?romance\s+(?:novels?|fiction|films?|stor(?:y|ies)|literature)\b|\bfiction(?:al)?\b(?:\s+[\w-]+){0,6}\s+\b(?:romances?|romantic relationships?)\b|\brelationships?\b.*\bnot romantic in nature\b/.test(text)) {
+    return false;
+  }
+  const relationship = '(?:romances?|romantic relationships?|relationships?|dating|coworker romances?)';
+  const governance = '(?:bans?|banned|prohibits?|prohibited|discourages?|discouraged|requires?|required|discloses?|disclosed|recus(?:e|es|ed|al)|reassign(?:s|ed|ment)?|not permitted|impermissible|may not (?:engage|pursue|initiate|commence|have|enter))';
+  const governedConnectors = '(?:a|an|the|any|all|amorous|consensual|sexual|romantic|workplace|faculty[- ]undergraduate|teacher[- ]student|supervisor[- ]subordinate|employees?|managers?|supervisors?|faculty|students?|undergraduates?|direct|reports?|coworkers?|members?|affiliates?|from|between|with|their|each|other|in|pursuing|engaging)';
+  const governanceTargetsRelationship = new RegExp(
+    `\\b${governance}\\b(?:\\s+${governedConnectors}){0,10}\\s+\\b${relationship}\\b`,
+  ).test(text);
+  const relationshipIsGoverned = new RegExp(
+    `\\b${relationship}\\b(?:\\s+[\\w-]+){0,7}\\s+\\b(?:is|are|must be|should be|becomes?|triggers?|requires?)\\s+(?:banned|prohibited|disclosed|recused|reassigned|not permitted|impermissible|notification|disclosure|recusal|reassignment|a violation of (?:this |the )?policy)\\b`,
+  ).test(text);
+  /*
+   * A dyad label is not itself an authority mechanism.  In particular,
+   * "the integrity of the teacher-student relationship" names a setting but
+   * says nothing about power, prohibition, disclosure, recusal, or direction.
+   * Keep only forms that connect the dyad to a relationship act; explicit
+   * power language remains covered by directionalRelationship below.
+   */
+  const explicitPowerDyad = /\brelationships? between (?:a |the )?(?:supervisor|manager|faculty member|instructor|coach|mentor) and (?:a |the )?(?:direct report|subordinate|student|undergraduate|athlete|mentee)\b|\b(?:supervisor|manager|faculty|instructor|coach|mentor)\s+romance\b(?!\s+(?:novels?|fiction|films?|stories?|literature))|\b(?:instructor|faculty|coach|mentor|supervisor|manager)\b(?:\s+[\w-]+){0,7}\s+\b(?:romantic relationships?|romances?|dating)\b(?:\s+[\w-]+){0,7}\s+\b(?:students?|undergraduates?|athletes?|mentees?|direct reports?|subordinates?)\b|\bsupervis(?:e|es|ed|ing)\b(?:\s+[\w-]+){0,5}\s+\bstudents?\b(?:\s+[\w-]+){0,10}\s+\b(?:relationships?|romantic)\b/.test(text);
+  const directionalRelationship = /\b(?:relationships?|romances?|romantic|dating|coworkers?)\b(?:\s+[\w-]+){0,9}\s+\b(?:supervisory|evaluative|academic authority|reporting (?:line|chain)|chain of command|direct reports?|power (?:differential|imbalance)|career outcome|alternative supervision|notification|recusal|reassignment)\b|\b(?:supervisory|evaluative|academic authority|reporting (?:line|chain)|chain of command|direct reports?|power (?:differential|imbalance))\b(?:\s+[\w-]+){0,9}\s+\b(?:relationships?|romances?|romantic|dating)\b/.test(text);
+  const authorityVignette = /\bworkplace[- ]romance vignette\b.*\bcareer outcome\b/.test(text);
+  const responsibilityDyad = /\b(?:romantic relationships?|romances?|dating)\b.*\b(?:professional responsibility over|position of greater authority)\b.*\b(?:teacher|advisor|preceptor|supervisor|notify|reporting|evaluative)\b/.test(text);
+  const statisticalBetween = /\brelationship between\b/.test(text);
+  if (statisticalBetween
+      && !explicitPowerDyad
+      && !governanceTargetsRelationship
+      && !relationshipIsGoverned) {
+    return false;
+  }
+  return governanceTargetsRelationship
+    || relationshipIsGoverned
+    || explicitPowerDyad
+    || directionalRelationship
+    || authorityVignette
+    || responsibilityDyad;
+}
+
+function hasRoleUnbundlingMechanism(text) {
+  if (/\b(?:survey|registry|database|table|report|chart|figure|index|spreadsheet)\b.*\b(?:separat\w*|distinguish\w*|splits?)\b.*\b(?:records?|groups?|responses?|columns?|rooms?|fees?|appointments?|mailing lists?|forms?|labels?|entries?|legends?|rows?|colou?rs?)\b/.test(text)) {
+    return false;
+  }
+  const parenthoodFromPartnership = /\b(?:separat\w*|decoupl\w*)\b(?:\s+[\w-]+){0,8}\s+\b(?:parenthood|parenting|family formation|decision to (?:become a parent|have a child))\b(?:\s+[\w-]+){0,8}\s+\bfrom\b(?:\s+[\w-]+){0,8}\s+\b(?:partner|co-parent|partnership|romance|marriage|relationship)\b|\b(?:parenthood|fatherhood|motherhood|parenting|family formation)\b(?:\s+[\w-]+){0,10}\s+\b(?:without|not waiting for|rather than(?: the search for)?)\s+(?:a\s+)?(?:romantic\s+)?(?:partner|co-parent)\b|\bplatonically co-parenting\b/.test(text);
+  const connectedRoleSeparation = text.split(/[.;!?]/).some((clause) => {
+    if (/\b(?:records?|responses?|scores?|variables?|columns?|rooms?|fees?|appointments?|mailing lists?|forms?|labels?|entries?|legends?|rows?|colou?rs?)\b|\binto(?:\s+[\w-]+){0,2}\s+groups?\b|\bseparat\w*\b.*\bby (?:age|condition|treatment|cohort|site|year)\b/.test(clause)) {
+      return false;
+    }
+    const types = new Set(clause.match(
+      /\b(?:genetic|gestational|social|legal|legally recognized|biological|birth|non-birth|donor|intended|caregiving|support-network|solo|partnered)\b/g,
+    ) || []);
+    const familyHead = /\b(?:contribution|contributors?|gestation|motherhood|mothers?|fatherhood|fathers?|parenthood|parents?|parent roles?|roles?)\b/.test(clause);
+    const separation = /\b(?:separat(?:e|es|ed|ing|ion)|splits?|unbundl\w*|decoupl\w*|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing)|distinguish(?:es|ed|ing)?|different people|differed between|hierarchy\b.*\bbetween|versus|require explicit separation)\b/.test(clause);
+    return types.size >= 2 && familyHead && separation;
+  });
+  const excludedSupportSubstitute = /\bexcluding\b(?:\s+[\w-]+){0,4}\s+\b(?:mother|father|sister|brother|friend|partner)\b.*\b(?:support|stay)\b/.test(text);
+  const donorSurrogateSeparation = /\bgestational surrogacy\b.*\bseparate donor(?:'s)? eggs?\b.*\bsurrogate\b.*\b(?:did|does|would|will) not use\b.*\b(?:her |their |the surrogate's )?(?:own )?eggs?\b/.test(text);
+  return parenthoodFromPartnership
+    || connectedRoleSeparation
+    || excludedSupportSubstitute
+    || donorSurrogateSeparation;
+}
+
+function hasAdministrativeRelationalEffect(text) {
+  if (/\b(?:legal status|legal parenthood|eligibility|residence permits?)\s+(?:variables?|scores?|measures?|fields?|preferences?)\b|\b(?:database|table|registry|record|report|model|regression)\b.*\b(?:stores?|indexes?|records?|fields?|variables?|documentation)\b/.test(text)) {
+    return false;
+  }
+  const legalStatusAction = /\bparental orders?\b(?:\s+[\w-]+){0,8}\s+\b(?:grants?|transfers?|confers?)\b(?:\s+[\w-]+){0,6}\s+\b(?:legal parenthood|legal status|parental responsibility)\b|\b(?:institutions?|states?|courts?|governments?|immigration authorities|hospitals?)\b(?:\s+[\w-]+){0,8}\s+\brecogni[sz]\w*\b(?:\s+[\w-]+){0,6}\s+\b(?:partnership|support roles?|legal parents?|parental responsibility)\b/.test(text);
+  const relationalConsequence = /\b(?:couples?|spouses?|partners?|intended parents?|surrogates?|families?|parents?)\b(?:\s+[\w-]+){0,8}\s+\b(?:has|have|had|lacks?|lack|without|obtains?|obtained|receives?|received|becomes?|became|are|is|will be|would be|may be|must be)\b(?:\s+[\w-]+){0,8}\s+\b(?:legal status|legal parenthood|legal parents?|residence permit|employment permission|family reunification|next of kin|birth certificate|eligible for (?:a )?(?:residence permit|visa|funding|treatment))\b|\b(?:will|would|may|must)\s+(?:automatically\s+)?be\s+(?:the |a )?(?:second )?legal parent\b/.test(text);
+  const statusChangesAccess = /\b(?:legal[- ]status access|legal status|funding eligibility|legal screening|external plural-parent recognition|cross-border pairing)\b(?:\s+[\w-]+){0,10}\s+\b(?:changed|changes|differed|varies|depends|bundle|bundles|allows?|prevents?|access|permission|mobility|jurisdiction)\b/.test(text);
+  const explicitRecognitionEffect = /\brecogni[sz]\w*\s+(?:the )?(?:partnership|support roles?|spouse|partner|family|legal parent)\b(?:\s+[\w-]+){0,10}\s+\b(?:eligible|permit|permission|status|occupy|access)\b/.test(text);
+  const partnerOnlyRule = /\b(?:hospital|institutional) rules?\b.*\b(?:allowed only|only allows?)\b.*\bpartner\b/.test(text);
+  const birthRegistrationBarrier = /\b(?:no legal status|not (?:a |the )?legal parent)\b.*\b(?:cannot|can't|could not) register\b/.test(text);
+  const consentDeterminesParenthood = /\b(?:partners?|spouses?|co-parents?)\b.*\b(?:give|gave|withdraw|withdrew|do not give|don't give)\b.*\bconsent\b.*\b(?:will|would|may|might|won't|will not)\b.*\blegal parent\b|\b(?:give|gave|withdraw|withdrew)\b.*\bconsent\b.*\b(?:partners?|spouses?|co-parents?)\b.*\b(?:will|would|may|might|won't|will not)\b.*\blegal parent\b/.test(text);
+  return legalStatusAction
+    || relationalConsequence
+    || statusChangesAccess
+    || explicitRecognitionEffect
+    || partnerOnlyRule
+    || birthRegistrationBarrier
+    || consentDeterminesParenthood;
+}
+
+function hasBriefNonrelationshipMechanism(text) {
+  const explicitContrast = /\b(?:rather than a relationship|not an ongoing couple|not an ongoing relationship|not relationship maintenance|not evidence of durable relationship|one[- ]shot\b.*\bnot relationship|scripted messages?\b.*\brather than a relationship)\b/.test(text);
+  const limitedContact = /\b(?:noninteractive|without repeated|no repeated)\b/.test(text)
+    && /\b(?:ai|chatbots?|couples?|romance|romantic|relationships?|attachment|connection|contingent interaction|synthetic characters?)\b/.test(text);
+  return explicitContrast || limitedContact;
+}
+
 const subjectRules = [
   {
     id: 'asymmetric-nonhuman-relationships',
     signals: [
-      { family: 'counterpart', label: 'synthetic or nonhuman counterpart', weight: 0.42, pattern: /\b(?:(?:artificial intelligence(?: \(ai\))?|ai)(?:[- ]simulated)?[- ](?:companions?|(?:romantic )?partners?|boyfriends?|girlfriends?)|chatgpt|grok|character[. -]?ai|chatbots?|replika|synthetic (?:characters?|companions?|partners?)|simulated responsiveness|artificial empathy|nonhuman|(?:social|companion|relational) robots?|virtual companions?)\b/ },
+      { family: 'counterpart', label: 'synthetic or nonhuman counterpart', weight: 0.42, pattern: /\b(?:(?:artificial intelligence(?: \(ai\))?|ai)(?:[- ]simulated)?[- ](?:companions?|(?:romantic )?partners?|boyfriends?|girlfriends?)|conversational (?:ai|artificial intelligence)|chatgpt|grok|character[. -]?ai|chatbots?|replika|synthetic (?:characters?|companions?|partners?)|simulated responsiveness|artificial empathy|nonhuman|(?:social|companion|relational) robots?|virtual companions?)\b/ },
       /*
        * The synthetic entity has to BE the counterpart or do something
        * relational for a person. Until v2.7.4 this family was a bag of
@@ -139,12 +258,14 @@ const subjectRules = [
        * it delivers a relational function, a person is in contact with it, or
        * it moves a human relational outcome.
        */
-      { family: 'relationship-function', label: 'relationship-like function', weight: 0.24, pattern: /(?:\b(?:artificial intelligence|ai|virtual|synthetic|companion|social|relational|digital|robot|machine)[- ](?:companions?|partners?|boyfriends?|girlfriends?|friends?|spouses?)\b|\bai[- ]simulated[- ]romantic partners?\b|\bcompanion (?:chatbots?|robots?|apps?|bots?)\b|\breplika partners?\b|\b(?:chatbot|bot|ai)[- ](?:partners?|companions?|boyfriends?|girlfriends?)\b|\b(?:offers?|offered|offering|provides?|provided|providing|generates?|generated|generating|elicits?|elicited|eliciting|simulates?|simulated|delivers?|delivered|supplies|supplied|can feel|feels?|felt)\s+(?:\w+[-\s]+){0,3}\b(?:attachment|intimacy|companionship|emotional[- ]support|social[- ]support|perceived connection|connection|empathy|validation|responsiveness|relationship[- ]like)\b|\b(?:relationships?|attachments?|bonds?|intimacy|friendships?|connections?|conversations?|interactions?)\s+(?:with|to|between (?:\w+[-\s]+){0,3})\s*(?:an?|the|their|his|her|its|other)?\s*(?:ai|artificial intelligence|chatbots?|chatgpt|replika|character[. -]?ai|companions?|bots?|machines?|robots?|generative ai)\b|\b(?:chatted|chatting|talk(?:s|ed|ing)?|interact(?:s|ed|ing)?|confide[sd]?|bond(?:s|ed|ing)?|disclos(?:e|ed|ing)\s+to)\s+(?:with|to|in)?\s*(?:an?|the|their|his|her)?\s*(?:ai|artificial intelligence|chatbots?|chatgpt|replika|character[. -]?ai|companions?|bots?|machines?|robots?)\b|\b(?:ai|chatbots?|companions?|bots?|replika|chatgpt|character[. -]?ai|robots?)[- ](?:interactions?|conversations?|chats?|use|usage|companionship|relationships?|partners?|users?)\b|\b(?:effects?|impacts?|influence)\s+on\s+(?:\w+[-\s]+){0,3}\b(?:loneliness|socialization|social skills?|well[- ]being|isolation|connection|attachment|companionship|intimacy)\b|\beffect on (?:\w+[-\s]+){0,3}(?:loneliness|socialization|social skills?|well[- ]being|isolation)\b|\b(?:simulated responsiveness|relationship[- ]like|relationship functions?|hyper[- ]?attachment objects?|attachment objects?|parasocial)\b)/ },
+      { family: 'relationship-function', label: 'relationship-like function', weight: 0.24, pattern: /(?:\b(?:artificial intelligence|ai|virtual|synthetic|companion|social|relational|digital|robot|machine)[- ](?:companions?|partners?|boyfriends?|girlfriends?|friends?|spouses?)\b|\bai[- ]simulated[- ]romantic partners?\b|\bcompanion (?:chatbots?|robots?|apps?|bots?)\b|\breplika partners?\b|\b(?:chatbot|bot|ai)[- ](?:partners?|companions?|boyfriends?|girlfriends?)\b|\bconversational (?:ai|artificial intelligence)\b(?:\s+[\w-]+){0,10}\s+\b(?:interactive|relational|social) partner\b|\b(?:offers?|offered|offering|provides?|provided|providing|generates?|generated|generating|elicits?|elicited|eliciting|simulates?|simulated|delivers?|delivered|supplies|supplied|can feel|feels?|felt)\s+(?:\w+[-\s]+){0,3}\b(?:attachment|intimacy|companionship|emotional[- ]support|social[- ]support|perceived connection|connection|empathy|validation|responsiveness|relationship[- ]like)\b|\b(?:relationships?|attachments?|bonds?|intimacy|friendships?|connections?|conversations?|interactions?)\s+(?:with|to|between (?:\w+[-\s]+){0,3})\s*(?:an?|the|their|his|her|its|other)?\s*(?:ai|(?:conversational )?artificial intelligence|conversational ai|chatbots?|chatgpt|replika|character[. -]?ai|companions?|bots?|machines?|robots?|generative ai)\b|\b(?:chatted|chatting|talk(?:s|ed|ing)?|interact(?:s|ed|ing)?|confide[sd]?|bond(?:s|ed|ing)?|disclos(?:e|ed|ing)\s+to)\s+(?:with|to|in)?\s*(?:an?|the|their|his|her)?\s*(?:ai|artificial intelligence|chatbots?|chatgpt|replika|character[. -]?ai|companions?|bots?|machines?|robots?)\b|\b(?:ai|chatbots?|companions?|bots?|replika|chatgpt|character[. -]?ai|robots?)[- ](?:interactions?|conversations?|chats?|use|usage|companionship|relationships?|partners?|users?)\b|\b(?:effects?|impacts?|influence)\s+on\s+(?:\w+[-\s]+){0,3}\b(?:loneliness|socialization|social skills?|well[- ]being|isolation|connection|attachment|companionship|intimacy)\b|\beffect on (?:\w+[-\s]+){0,3}(?:loneliness|socialization|social skills?|well[- ]being|isolation)\b|\b(?:simulated responsiveness|relationship[- ]like|relationship functions?|hyper[- ]?attachment objects?|attachment objects?|parasocial)\b)/ },
       { family: 'asymmetry', label: 'absent or unequal reciprocity', weight: 0.26, pattern: /\b(?:reciprocal|reciprocity|bilateral|independent needs?|welfare|agency|stake|consent|one[- ]sided|unable|inability to leave|cannot leave|simulated responsiveness|anthropomorph|contingent (?:relationship function|interaction))\b/ },
       { family: 'duration', label: 'brief synthetic contact', weight: 0.08, pattern: /\b(?:brief|one interaction|noninteractive|scripted)\b/ },
+      { family: 'mechanism', label: 'synthetic counterpart occupies a relational position', weight: 0, test: hasSyntheticRelationalMechanism },
     ],
     qualifies: (families) => families.has('counterpart')
-      && (families.has('relationship-function') || families.has('asymmetry')),
+      && (families.has('relationship-function') || families.has('asymmetry'))
+      && families.has('mechanism'),
   },
   {
     id: 'institutional-authority-governance',
@@ -208,17 +329,19 @@ const subjectRules = [
       // which is intimate-partner violence and not a consensual-romance
       // governance mechanism.
       { family: 'relationship', label: 'institutional relationship context', weight: 0.14, pattern: /\b(?:romances?|romantic|relationships?|coworkers?|couples?|dating(?!\s+violence))\b/ },
+      { family: 'mechanism', label: 'governance or power is connected to the relationship', weight: 0, test: hasInstitutionalRelationalMechanism },
     ],
     qualifies: (families) => families.has('relationship')
       && (families.has('governance') || families.has('authority'))
-      && (families.has('institution') || families.has('member') || families.has('authority')),
+      && (families.has('institution') || families.has('member') || families.has('authority'))
+      && families.has('mechanism'),
   },
   {
     id: 'role-unbundling-family-formation',
     signals: [
       { family: 'reproduction', label: 'third-party or assisted reproduction', weight: 0.34, pattern: /\b(?:third[- ]party reproduction|surrogacy|surrogates?|donor(?: conception| disclosure| identity| insemination)?|donated (?:eggs?|sperm|embryos?)|egg donors?|sperm donation|ivf|fertility treatment|fertility[- ]treatment|assisted conception|gestational|genetic parent|reciprocal ivf)\b/ },
-      { family: 'roles', label: 'distinct family or support roles', weight: 0.28, pattern: /\b(?:intended parents?|surrogates?|single fathers?|solo fathers?|single mothers?|solo mothers?|social parents?|caregiving parents?|support[- ]network roles?|support roles?|practical support|genetic contributors?|genetic contribution|birth mothers?|non[- ]birth mothers?|gestational parents?|donor roles?|egg donors?|family types?|plural[- ]parent|platonically co[- ]parenting|legally recognized parent roles?)\b/ },
-      { family: 'formation', label: 'parenthood or family-formation decision', weight: 0.18, pattern: /\b(?:parenthood|fatherhood|parents?|parenting|co[- ]parents?|solo mothers?|single mothers? by choice|family formation|starting a family|mothers?)\b/ },
+      { family: 'roles', label: 'distinct family or support roles', weight: 0.28, pattern: /\b(?:intended parents?|surrogates?|single fathers?|solo fathers?|single mothers?|solo mothers?|solo motherhood|social parents?|biological fathers?|social fathers?|caregiving parents?|support[- ]network roles?|support roles?|practical support|genetic contributors?|genetic contribution|birth mothers?|non[- ]birth mothers?|gestational parents?|donor roles?|egg donors?|family types?|plural[- ]parent|platonically co[- ]parenting|legally recognized parent roles?|parenthood (?:developed |formed |created )?without (?:a )?(?:romantic )?partner)\b/ },
+      { family: 'formation', label: 'parenthood or family-formation decision', weight: 0.18, pattern: /\b(?:parenthood|fatherhood|motherhood|solo motherhood|parents?|parenting|co[- ]parents?|solo mothers?|single mothers? by choice|family formation|starting a family|mothers?)\b/ },
       /*
        * The separation evidence must say what is being separated.
        *
@@ -247,10 +370,12 @@ const subjectRules = [
        * genetic, gestational, donor, intended, legal, social, caregiving and
        * romantic-partner roles this umbrella is actually about.
        */
-      { family: 'split', label: 'roles explicitly separated, substituted, or compared', weight: 0.38, pattern: /(?:\b(?:separat(?:e|es|ed|ing|ion)|split|unbundl\w*|decoupl\w*|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing)|distinguish(?:es|ed|ing)?)\b\s+(?:\w+[-\s]+){0,3}\b(?:parent(?:s|hood|ing)?|mother(?:s|hood)?|father(?:s|hood)?|gestation|(?:genetic|gestational|social|legal|biological|birth|non[- ]birth|donor|intended|caregiving|romantic|parental|family|maternal|paternal)\s+(?:\w+[-\s]+){0,1}?roles?)\b|\b(?:separat(?:e|es|ed|ing|ion)|split|unbundl\w*|decoupl\w*)\b\s+(?:\w+[-\s]+){0,6}?\bfrom\b\s+(?:\w+[-\s]+){0,6}?\b(?:partner|parents?|parenthood|romance|marriage|relationship)\b|\b(?:(?:genetic|gestational|social|legal|birth|non[- ]birth|donor|intended|caregiving|romantic|parental|family|support[- ]network)\s+(?:\w+[-\s]+){0,1}?roles?|genetic contributors?|intended parents?|genetic parents?|gestational parents?|social parents?|legal parents?|birth mothers?|donors?|surrogates?)\b\s+(?:\w+[-\s]+){0,4}\b(?:separat(?:es|ed|ing|ion)|split|unbundl\w*|decoupl\w*|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing))\b|\bexcluding\b\s+(?:\w+[-\s]+){0,3}\b(?:mother|father|parents?|partner|sister|brother|friend|donors?|surrogates?|roles?)\b|\b(?:different people|parent(?:ing)? alone|rather than (?:the search for )?(?:a )?(?:romantic )?(?:partner|parent)|instead of (?:a )?(?:romantic )?(?:partner|parent)|from the surrogate to the intended parents|birth (?:and|versus) non[- ]birth|genetic (?:and|versus) gestational|between (?:gestational|genetic|birth|non[- ]birth|solo|partnered)|without (?:a )?partner|not waiting for (?:a )?partner|even if romance|platonically co[- ]parenting|mediated through motherhood|no longer travel together)\b)/ },
+      { family: 'split', label: 'roles explicitly separated, substituted, or compared', weight: 0.38, pattern: /(?:\b(?:separat(?:e|es|ed|ing|ion)|split|unbundl\w*|decoupl\w*|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing)|distinguish(?:es|ed|ing)?)\b\s+(?:\w+[-\s]+){0,3}\b(?:parent(?:s|hood|ing)?|mother(?:s|hood)?|father(?:s|hood)?|gestation|(?:genetic|gestational|social|legal|biological|birth|non[- ]birth|donor|intended|caregiving|romantic|parental|family|maternal|paternal)\s+(?:\w+[-\s]+){0,1}?roles?)\b|\bgestational surrogacy\b.*\bseparate donor(?:'s)? eggs?\b.*\bsurrogate\b.*\b(?:did|does|would|will) not use\b.*\beggs?\b|\b(?:separat(?:e|es|ed|ing|ion)|split|unbundl\w*|decoupl\w*)\b\s+(?:\w+[-\s]+){0,6}?\bfrom\b\s+(?:\w+[-\s]+){0,6}?\b(?:partner|parents?|parenthood|romance|marriage|relationship)\b|\b(?:(?:genetic|gestational|social|legal|birth|non[- ]birth|donor|intended|caregiving|romantic|parental|family|support[- ]network)\s+(?:\w+[-\s]+){0,1}?roles?|genetic contributors?|intended parents?|genetic parents?|gestational parents?|social parents?|legal parents?|birth mothers?|donors?|surrogates?)\b\s+(?:\w+[-\s]+){0,4}\b(?:separat(?:es|ed|ing|ion)|split|unbundl\w*|decoupl\w*|substitut(?:e|es|ed|ing|ion)|replac(?:e|es|ed|ing))\b|\bexcluding\b\s+(?:\w+[-\s]+){0,3}\b(?:mother|father|parents?|partner|sister|brother|friend|donors?|surrogates?|roles?)\b|\b(?:different people|parent(?:ing)? alone|rather than (?:the search for )?(?:a )?(?:romantic )?(?:partner|parent)|instead of (?:a )?(?:romantic )?(?:partner|parent)|from the surrogate to the intended parents|birth (?:and|versus) non[- ]birth|genetic (?:and|versus) gestational|between (?:gestational|genetic|birth|non[- ]birth|solo|partnered)|without (?:a )?(?:romantic )?partner|not waiting for (?:a )?partner|even if romance|platonically co[- ]parenting|mediated through motherhood|no longer travel together)\b)/ },
+      { family: 'mechanism', label: 'distinct family roles are actually separated or compared', weight: 0, test: hasRoleUnbundlingMechanism },
     ],
     qualifies: (families) => families.has('split')
-      && (families.has('reproduction') || families.has('roles') || families.has('formation')),
+      && (families.has('reproduction') || families.has('roles') || families.has('formation'))
+      && families.has('mechanism'),
   },
   {
     id: 'external-recognition-administrative-access',
@@ -293,18 +418,21 @@ const subjectRules = [
       { family: 'access', label: 'access, eligibility, or legal effect', weight: 0.44, pattern: /\b(?:eligibility|eligible|entitle(?:d|ment|ments)?|permission|family reunification|next of kin|allowed only|legal[- ]status|employment permission|funding eligibility|consent to legal parenthood|give consent (?:if you want .* )?(?:to )?(?:be|being) (?:a |the )?legal parent|withdraw (?:their |your )?consent|transfers? legal parenthood|grants? (?:the intended parents )?legal parenthood|confers?|names? .* on (?:the )?birth certificate|recognis(?:e|ed) as (?:the )?(?:second )?legal parent|recogniz(?:e|ed) as (?:the )?(?:second )?legal parent|(?:will|would|may|must|won't|will not) be (?:the |a )?(?:child(?:'s|s) )?legal parents?|not (?:a |the )?legal parent|who will be (?:the )?(?:child(?:'s|s) )?legal parents?|legal parents? (?:at birth|for nationality purposes)|status as a legal parent|route out of legal parenthood|complex consent arrangements|otherwise occupy|external plural[- ]parent recognition|surrogacy coverage)\b/ },
       { family: 'relationship', label: 'relationship or family status', weight: 0.16, pattern: /\b(?:intended parents?|surrogates?|couples?|spouses?|partners?|pairings?|marriage|intermarriage|relationships?|family|parenthood|plural[- ]parent|fertility[- ]treatment family types?)\b/ },
       { family: 'cross-border', label: 'cross-border status bundle', weight: 0.26, pattern: /\b(?:cross[- ]border|migrating spouses?|mobility|intermarriage formation)\b/ },
+      { family: 'mechanism', label: 'administrative status changes relational access', weight: 0, test: hasAdministrativeRelationalEffect },
     ],
     qualifies: (families) => families.has('administration')
       && families.has('access')
-      && families.has('relationship'),
+      && families.has('relationship')
+      && families.has('mechanism'),
   },
   {
     id: 'brief-nonrelationship-interactions',
     signals: [
       { family: 'brevity', label: 'brief, scripted, or one-shot contact', weight: 0.38, pattern: /\b(?:(?:brief|short) (?:ratings?|interactions?|contact|encounters?|impressions?|vignettes?|messages?|exposure|dates?|(?:[\w-]+ ){0,3}(?:experiment|vignette))|briefly (?:rated|interacted|viewed|encountered)|one(?: \w+){0,2} interaction|one[- ]shot|single (?:workplace[- ]romance )?vignette|scripted messages?|noninteractive|short encounter|speed[- ]dating impression)\b/ },
       { family: 'interaction', label: 'interaction or impression measure', weight: 0.26, pattern: /\b(?:interactions?|rated|ratings?|messages?|vignette|impressions?|encounters?|reaction|attraction)\b/ },
-      { family: 'nonrelationship', label: 'no ongoing relationship mechanism', weight: 0.28, pattern: /\b(?:noninteractive|without repeated|no repeated|rather than a relationship|not an ongoing couple|not relationship maintenance|not evidence of durable relationship|nonrelationship|not an ongoing relationship|not an ongoing)\b/ },
+      { family: 'nonrelationship', label: 'no ongoing relationship mechanism', weight: 0.28, pattern: /\b(?:noninteractive|without repeated|no repeated|rather than a relationship|not an ongoing couple|not relationship maintenance|not evidence of durable relationship|not an ongoing relationship|not an ongoing)\b/ },
       { family: 'relationship', label: 'adjacent relational vocabulary', weight: 0.12, pattern: /\b(?:relationships?|couples?|romance|romantic|(?:perceived|emotional|social|human) connection|(?:emotional|social) support)\b/ },
+      { family: 'mechanism', label: 'the fragment explicitly limits the contact to a nonrelationship', weight: 0, test: hasBriefNonrelationshipMechanism },
     ],
     /*
      * The nonrelationship claim IS the umbrella, so it is required.
@@ -323,7 +451,8 @@ const subjectRules = [
      */
     qualifies: (families) => families.has('brevity')
       && families.has('interaction')
-      && families.has('nonrelationship'),
+      && families.has('nonrelationship')
+      && families.has('mechanism'),
   },
 ];
 
@@ -340,7 +469,8 @@ function roundConfidence(value) {
 }
 
 function scoreSubject(text, rule) {
-  const hits = rule.signals.filter((signal) => signal.pattern.test(text));
+  const hits = rule.signals.filter((signal) =>
+    signal.test ? signal.test(text) : signal.pattern.test(text));
   const families = new Set(hits.map((signal) => signal.family));
   const qualified = rule.qualifies(families);
   const rawScore = hits.reduce((sum, signal) => sum + signal.weight, 0);
@@ -388,11 +518,14 @@ function isHeadingLikeFragment(fragment) {
     .trim();
   if (!raw) return false;
   const colonHeading = /:[”"')\]]?$/.test(raw);
-  const questionHeading = /\?[”"')\]]?$/.test(raw);
+  const assertiveTagQuestion = /(?:,\s*)?(?:(?:(?:does|do|did|is|are|was|were|can|could|will|would|has|have|had|should|must)\s+(?:it|this|that|they|he|she|we|you)\s+not)|(?:(?:doesn't|don't|didn't|isn't|aren't|wasn't|weren't|can't|couldn't|won't|wouldn't|hasn't|haven't|hadn't|shouldn't|mustn't)\s+(?:it|this|that|they|he|she|we|you))|right|correct)\?[”"')\]]?$/i.test(raw);
+  const startsInterrogative = /^(?:who|what|when|where|why|how|which|can|could|will|would|shall|should|may|might|must|is|are|was|were|do|does|did|has|have|had)\b/i.test(raw);
+  const questionHeading = /\?[”"')\]]?$/.test(raw)
+    && (!assertiveTagQuestion || startsInterrogative);
   // The lookbehind keeps a hyphenated compound from reading as a predicate:
   // "Well-Being" ends in "Being", and without it every title containing one
   // looks like a sentence.
-  const hasFiniteVerb = /(?:['’](?:m|re|s|ve|d|ll)\b|(?<!-)\b(?:am|is|are|was|were|be|been|being|do|does|did|have|has|had|got|get|gets|say|says|said|see|sees|saw|look|looks|looking|call|calls|called|produce|produces|produced|remain|remains|remained|affect|affects|affected|can|could|will|would|shall|should|may|might|must|need|needs|provide|provides|provided|ban|bans|banned|prohibit|prohibits|prohibited|require|requires|required|allow|allows|allowed|separate|separates|separated|transfer|transfers|transferred|grant|grants|granted|recogni[sz]e|recogni[sz]es|describe|describes|described|report|reports|reported|show|shows|showed|offer|offers|offered|operate|operates|operated|elicit|elicits|elicited|include|includes|included|cover|covers|covered|appl(?:y|ies|ied)|depend|depends|means|meant|leave|leaves|left|make|makes|made|take|takes|took|know|knows|knew|think|thinks|thought|feel|feels|felt|want|wants|wanted|use|uses|used|stay|stays|stayed|occur|occurs|occurred)\b)/i.test(raw);
+  const hasFiniteVerb = /(?:['’](?:m|re|s|ve|d|ll)\b|(?<!-)\b(?:am|is|are|was|were|be|been|being|do|does|did|have|has|had|got|get|gets|say|says|said|see|sees|saw|look|looks|looking|call|calls|called|produce|produces|produced|remain|remains|remained|affect|affects|affected|can|could|will|would|shall|should|may|might|must|need|needs|provide|provides|provided|ban|bans|banned|prohibit|prohibits|prohibited|require|requires|required|allow|allows|allowed|separate|separates|separated|split|splits|changed|changes|change|form|forms|formed|develop|develops|developed|establish|establishes|established|build|builds|built|experience|experiences|experienced|create|creates|created|transfer|transfers|transferred|grant|grants|granted|recogni[sz]e|recogni[sz]es|describe|describes|described|report|reports|reported|show|shows|showed|offer|offers|offered|operate|operates|operated|elicit|elicits|elicited|include|includes|included|cover|covers|covered|chat|chats|chatted|talk|talks|talked|interact|interacts|interacted|bond|bonds|bonded|confide|confides|confided|disclose|discloses|disclosed|recuse|recuses|recused|simulate|simulates|obtain|obtains|obtained|receive|receives|received|distinguish|distinguishes|distinguished|pursue|pursues|pursued|trigger|triggers|triggered|appl(?:y|ies|ied)|depend|depends|means|meant|leave|leaves|left|make|makes|made|take|takes|took|know|knows|knew|think|thinks|thought|feel|feels|felt|want|wants|wanted|use|uses|used|stay|stays|stayed|occur|occurs|occurred)\b)/i.test(raw);
   /*
    * Until v2.7.3 this was a list of fifteen literals lifted from the discovery
    * corpus — `university policy`, `the relationship between`, `details of`,
@@ -410,23 +543,29 @@ function isHeadingLikeFragment(fragment) {
    */
   const numberedHeading = /^(?:\d+(?:\.\d+){1,}\s+|aps\s+\d+\b|journal of\b)/i.test(raw);
   if (numberedHeading) return true;
+  // A colon joining two predicateless noun phrases is a title/subtitle shape,
+  // regardless of length. A real colon sentence retains its finite predicate
+  // (for example, "The rule is clear: managers may not date reports").
+  const hasClauseOperator = /\b(?:am|is|are|was|were|be|been|do|does|did|have|has|had|can|could|will|would|shall|should|may|might|must)\b/i.test(raw);
+  const nounPhraseSubtitle = /:\s*[“"']?(?:a|an|the)\b/i.test(raw);
+  if (raw.includes(':')
+      && (!hasFiniteVerb || (nounPhraseSubtitle && !hasClauseOperator))) return true;
   if (isVerblessTitle(raw, hasFiniteVerb)) return true;
   /*
    * An interrogative asserts nothing, so it cannot be a supported umbrella
-   * claim - the umbrella's whole standard is that the fragment STATES a
-   * relational mechanism. The `!hasFiniteVerb` qualifier that used to sit here
-   * made this rule nearly dead, because every well-formed question has a finite
-   * verb: "Can Humans Have Close Relationships With AI Chatbots?" and the
-   * research questions around it all cleared it and classified at 0.66. The
-   * fresh 42-source window found eight of them supported in one review article
-   * (review finding G-6); they were supported on 2.7.3 too, so this is an
-   * old defect the new window exposed rather than a regression.
+   * claim. Declarative tag questions ("The policy bans this, does it not?")
+   * do assert a proposition and are retained; an auxiliary-led question stays
+   * interrogative even if it ends in the same tag. The `!hasFiniteVerb`
+   * qualifier that used to sit here made the rule nearly dead, because every
+   * well-formed question has a finite verb. The fresh 42-source window found
+   * eight of them supported in one review article (review finding G-6).
    */
   return colonHeading || questionHeading;
 }
 
 function isTriageFurniture(text, fragment = '') {
   return /^(?:title:|view a pdf\b|both individuals and organizations that work with arxivlabs\b|received:|revised:|closing date and time:|bid number:|must submit\b|table\s+\d+\b|(?:host|guest|speaker)\s*:)/.test(text)
+    || /^[“"][^”"]{4,200}[,”"]\s+in\s+.+,\s*(?:winter|spring|summer|fall|autumn)\s+\d{4}\.?$/.test(text)
     || /^drawing on (?:a |an )?(?:hermeneutic )?(?:systematic |literature )?review and (?:a |an )?survey\b/.test(text)
     || /^(?:we investigated (?:\w+ ){0,3}questions?:|we used .*\bdata\b.*\bto (?:assess|examine|investigate)\b|we triangulated\b.*\b(?:posts?|survey|interviews?)\b|participants? (?:completed|were recruited|were assigned)|the inclusion criteria\b|the .* were interviewed using\b|some examples of (?:specific )?questions (?:included|asked) were\b|this is a brief measure\b|this report (?:covers|lists|describes)\b|throughout this report we use the term\b)/.test(text)
     /*
@@ -444,6 +583,7 @@ function isTriageFurniture(text, fragment = '') {
      */
     || (/\bbriefly (?:rated|viewed|assessed|evaluated|judged|scored)\b/.test(text)
       && !/\b(?:without repeated|no repeated|rather than a relationship|not an ongoing|nonrelationship|noninteractive)\b/.test(text))
+    || /\b(?:scale|instrument|benchmark)\b.*\b(?:uses?|contains?|displays?|presents?)\b.*\b(?:scripted(?:\s+[\w-]+){0,3}\s+messages?|one[- ]shot|noninteractive)\b/.test(text)
     /*
      * "A session was defined as a sequence of chatbot interactions separated by
      * at least 2 hours of inactivity." is an operational definition, and the
@@ -477,6 +617,8 @@ function isTriageFurniture(text, fragment = '') {
     || /\b(?:\d[\d,]*\s+(?:\w+\s+){0,2}(?:students?|undergraduates?|participants?|respondents?)|sample of\s+(?:\w+\s+){0,3}(?:students?|undergraduates?|adults?|participants?|couples?)|among students\b|(?:university|college) students\b)/.test(text)
     || /\b(?:link in the show notes|our sponsor|sponsor(?:'s|ed)? message)\b/.test(text)
     || /\b(?:msc thesis|https?:\/\/|doi:\s*10\.|pp\.\s*\d+[–-]\d+)\b/.test(text)
+    || /\b(?:and|or|the|to|of|with|for|by|as|a|an|including|such as|for example)$/.test(text)
+    || /\b(?:(?:must|will|would|should|can|could|may) both|or other)$/.test(text)
     || isHeadingLikeFragment(fragment);
 }
 
@@ -491,7 +633,7 @@ function isTriageFurniture(text, fragment = '') {
  * negative control in the corpus, measured over eight technical sources.
  */
 function isTechnicalNonrelationship(text) {
-  return /\b(?:rbac|role[- ]based access control|access[- ]control|database tables?|database joins?|database access|relational databases?|support databases?|sql joins?|support vectors?|service accounts?|cloud (?:providers?|accounts?)|network nodes?|worker nodes?|data (?:models?|centers?)|between (?:services|systems)|support service|robot controllers?|parent process|parent-child(?: vocabulary| in that tree| roles?)?|required owned elements|required context role|genetic algorithms?|model training|kubernetes|relationships? (?:between|among) (?:database tables?|variables?|schemas?|columns?))\b/.test(text);
+  return /\b(?:rbac|role[- ]based access control|access[- ]control|database tables?|database joins?|database access|database\b(?:\s+[\w-]+){0,5}\s+\b(?:records?|index(?:es|ed|ing))|relational databases?|support databases?|sql joins?|support vectors?|service accounts?|cloud (?:providers?|accounts?)|network nodes?|worker nodes?|data (?:models?|centers?)|between (?:services|systems)|support service|robot controllers?|parent process|parent-child(?: vocabulary| in that tree| roles?)?|required owned elements|required context role|genetic algorithms?|model training|kubernetes|relationships? (?:between|among) (?:database tables?|variables?|schemas?|columns?))\b/.test(text);
 }
 
 function isDescriptiveEvidence(text) {
@@ -499,7 +641,7 @@ function isDescriptiveEvidence(text) {
 }
 
 function isBoundaryEvidence(text) {
-  return /\b(?:no significant|did not|does not|not evidence|not an ongoing|outside the core|unless|varies|moderator|moderates?|interaction effect|predicted|associated|more likely|less likely|differed across|rather than|only when|reduced perceived|no marked|noncausal|does not cover|fall outside)\b/.test(text);
+  return /\b(?:no significant|did not|does not|not evidence|not an ongoing|outside the core|unless|varies|moderator|moderates?|interaction effect|predicted|associated|more likely|less likely|differed across|rather than|only when|reduced perceived|no marked|noncausal|does not cover|fall outside|no prohibition|not in a direct supervisory|no obligation to (?:disclose|report|notify|recuse)|not obligated to (?:disclose|report|notify|recuse|inform))\b/.test(text);
 }
 
 function isOutsideHumanFrame(text) {

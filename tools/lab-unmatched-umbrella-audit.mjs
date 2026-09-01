@@ -37,6 +37,10 @@ const evaluation13 = JSON.parse(readFileSync(
   new URL('tests/fixtures/unmatched-umbrella-evaluation-1.3.json', ROOT),
   'utf8',
 ));
+const evaluation14 = JSON.parse(readFileSync(
+  new URL('tests/fixtures/unmatched-umbrella-evaluation-1.4.json', ROOT),
+  'utf8',
+));
 const analyzerSource = readFileSync(new URL('js/lab-analyzer.js', ROOT), 'utf8');
 const appSource = readFileSync(new URL('js/lab-app.js', ROOT), 'utf8');
 const ledgerSource = readFileSync(new URL('js/lab-ledger.js', ROOT), 'utf8');
@@ -158,7 +162,54 @@ for (const fixture of [...evaluation13.cases].reverse()) {
 }
 assert.equal(negativeControls13, 12, '1.3 set must keep its twelve negative controls');
 assert.equal(evaluation13.cases.length, 23);
-assert.equal(evaluation13.taxonomyVersion, UNMATCHED_UMBRELLA_TAXONOMY.version);
+assert.equal(evaluation13.taxonomyVersion, '1.3.0');
+
+let supported14 = 0;
+let abstained14 = 0;
+let negativeControls14 = 0;
+const firstPass14 = new Map();
+for (const fixture of evaluation14.cases) {
+  const result = classifyUnmatchedPassage(fixture.text);
+  firstPass14.set(fixture.id, JSON.stringify(result));
+  assert.equal(result.abstained, fixture.expected.abstained, `${fixture.id}: abstention`);
+  assert.equal(result.primaryUmbrella.id, fixture.expected.primaryUmbrellaId, `${fixture.id}: primary`);
+  assert.equal(
+    result.secondaryUmbrella?.id ?? null,
+    fixture.expected.secondaryUmbrellaId,
+    `${fixture.id}: secondary`,
+  );
+  assert.equal(result.unmatchedReason.id, fixture.expected.unmatchedReasonId, `${fixture.id}: reason`);
+  if (fixture.kind === 'negative-control') {
+    negativeControls14 += 1;
+    assert.equal(result.abstained, true, `${fixture.id}: every negative control must abstain`);
+  }
+  if (result.abstained) abstained14 += 1;
+  else supported14 += 1;
+}
+for (const fixture of [...evaluation14.cases].reverse()) {
+  assert.equal(
+    JSON.stringify(classifyUnmatchedPassage(fixture.text)),
+    firstPass14.get(fixture.id),
+    `${fixture.id}: classification changed when evaluation order reversed`,
+  );
+  assert.equal(
+    JSON.stringify(classifyUnmatchedPassage(
+      `  ${fixture.text.toUpperCase().replace(/\s+/g, '   ')}  `,
+    )),
+    firstPass14.get(fixture.id),
+    `${fixture.id}: category changed under case or whitespace normalization`,
+  );
+  assert.equal(
+    JSON.stringify(classifyUnmatchedPassage(
+      `\u200b${fixture.text.replace(/ /g, '\u00a0').replace(/\. /g, '.\r\n')}\u2060`,
+    )),
+    firstPass14.get(fixture.id),
+    `${fixture.id}: category changed under transport whitespace or invisible controls`,
+  );
+}
+assert.equal(negativeControls14, 9, '1.4 set must keep its nine negative controls');
+assert.equal(evaluation14.cases.length, 16);
+assert.equal(evaluation14.taxonomyVersion, '1.4.0');
 
 /*
  * The two older fixtures are pinned by content hash. A fixture quietly edited
@@ -180,6 +231,11 @@ assert.equal(
   pinnedDigest('unmatched-umbrella-evaluation-1.1.json'),
   'e34ba158f084c1020825df646eb1f498d715bbd70f051f53be97802004b00f04',
   'taxonomy 1.1 successor must stay byte-identical',
+);
+assert.equal(
+  pinnedDigest('unmatched-umbrella-evaluation-1.4.json'),
+  'b0c2fcb646ebc4edc1a6ebc4e399b6220bda36d3437782d70d59513dba340e51',
+  'taxonomy 1.4 sealed review evidence must stay byte-identical',
 );
 
 assert.equal(exactPrimary, evaluation.cases.length);
@@ -256,6 +312,7 @@ process.stdout.write(
   + ` · supported=${supported} · abstained=${abstained} (${percent(abstained / evaluation.cases.length)}%)`
   + ' · primary precision=100% · reason agreement=100% · secondary agreement=100%'
   + ` · 1.3 set=${evaluation13.cases.length} (${supported13} supported, ${abstained13} abstained, ${negativeControls13} negative controls all abstaining)`
-  + ' · frozen 1.0/1.1 byte pins intact'
+  + ` · sealed 1.4 set=${evaluation14.cases.length} (${supported14} supported, ${abstained14} abstained, ${negativeControls14} negative controls all abstaining)`
+  + ' · frozen 1.0/1.1/1.4 byte pins intact'
   + ' · category stability=100% · UI/export fields=6/6 · responsive/a11y contract=pass\n',
 );

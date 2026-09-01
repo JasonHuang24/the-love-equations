@@ -7319,7 +7319,7 @@ makes, made again on 375k words the projection never saw.
 | Abstention rate | 92.17% | 93.81% |
 | Asymmetric | 98 | 63 |
 | Institutional authority | 68 | 73 |
-| External recognition | 2 | 1 |
+| External recognition | 2 | 2 |
 | Role unbundling | 2 | 1 |
 | Possible-doctrine-gap reasons | 5 | 3 |
 
@@ -7632,3 +7632,414 @@ Open for a future pass, in priority order:
    once destroyed the archive, so it stays a human decision.
 5. **Recall for Role, External recognition and Brief** remains conservative and
    thinly measured — 1, 1 and 0 supported respectively across 375k fresh words.
+
+## v2.7.5 — connected-mechanism remediation and completed pressure window (2026-09-01)
+
+This pass answers the adversarial v2.7.4 review rather than treating its green
+suite as proof. Analyzer `2.7.5` carries taxonomy/triage `1.4.0`; queue schema
+stays `2.3`. Canon, matcher scores, thresholds, gates, exclusions, ownership,
+alignment, and mapped/unmatched disposition are unchanged. The only production
+call remains `classifyUnmatchedPassage(result.unit.text)` over the final
+`unmappedClaims` population.
+
+### What changed
+
+The five subject rules now have zero-weight connected-mechanism predicates in
+addition to their scored lexical families. Co-occurrence still contributes to
+confidence, but cannot qualify a subject by itself. The rules now distinguish:
+
+- a synthetic counterpart occupying a relational position from an AI used as
+  an instrument, dataset label, support service, or storage object;
+- a governance act or directional power relation from institutional membership,
+  statistical supervisor variables, and a bare teacher-student dyad label;
+- family-role separation from response groups, records, databases, vials, or
+  ordinary task allocation;
+- an administrative effect on a relationship from recognition, benefit,
+  eligibility, or legal-status variables;
+- a stated brief/nonrelationship contrast from measurement language such as
+  `briefly rated`.
+
+Interrogatives abstain, but declarative tag questions keep their assertion.
+Bibliographic title entries abstain. `no obligation to disclose` and `not
+obligated to inform` are explicit boundary evidence and take precedence over
+existing-doctrine retrieval miss. Genuine conversational-AI partnership,
+donor/surrogate separation, consent-controlled legal parenthood, and
+authority-triggered notification remain supported.
+
+The sealed review fixture is
+`tests/fixtures/unmatched-umbrella-evaluation-1.4.json`, frozen before the first
+rule edit at `2026-09-01T08:55:05.0249134-06:00`. It contains 16 cases: seven
+supported/ambiguous examples and nine negative controls, every negative control
+checked individually. Its CR-insensitive SHA-256 is
+`b0c2fcb646ebc4edc1a6ebc4e399b6220bda36d3437782d70d59513dba340e51`.
+The historical 1.0, 1.1, and post-hoc 1.3 fixtures were not rewritten. One 1.3
+expectation is explicitly superseded in the test harness, not edited in place:
+`The integrity and professionalism of the teacher-student relationship is
+fundamental to the educational mission of the University.` now abstains because
+it states importance, not authority or governance.
+
+### Pressure protocol and holdout discipline
+
+- Window start: `2026-09-01T08:55:05.0249134-06:00`.
+- Window end and elapsed time: recorded at final closeout below; the window was
+  kept open through implementation, replay, source review, browser attempt,
+  collision review, and final validation.
+- Discovery: 19 sources selected before the first source freeze.
+- Holdout A (`942754c3…`): seven sources. It exposed a bibliographic false
+  umbrella and a no-disclosure reason error, so it was immediately relabelled
+  discovery evidence.
+- Holdout B (`fe332410…`): seven new sources. Umbrellas were 11/11, but one
+  `not obligated to inform` boundary had the wrong reason; this set was also
+  relabelled discovery evidence.
+- Final sealed source holdout (`eacb486f…`): seven new sources selected after
+  the last rule freeze. No rule or fixture changed after it was opened.
+
+The first two source holdouts are marked `A*` and `B*` below precisely because
+their results influenced later rules. They are not reported as independent
+evaluation. Raw HTML, PDF, and extracted text stayed under uniquely named
+system temporary directories outside the repository. Only gitignored analysis
+JSON and source manifests live under `artifacts/unmatched-umbrellas`.
+
+Common provenance for every row: analyzer `2.7.5`; canon index
+`1.0.0+064e6e7fed71` (`bfh1du145p7ix` snapshot); taxonomy `1.4.0`; queue `2.3`.
+`M/U/E` means mapped claims / unmatched claims / excluded segments. Distribution
+uses `A` Asymmetric, `I` Institutional, `R` Role, `X` External, `B` Brief, and
+`U` explicit Unclassified abstention. The SHA-256 is over the extracted UTF-8
+text analyzed by the harness.
+
+| ID | URL and title | Type | Words | SHA-256 | M/U/E | Umbrella distribution |
+|---|---|---|---:|---|---:|---|
+| D-access-01 | [Becoming the legal parents of your child / HFEA](https://www.hfea.gov.uk/treatments/explore-all-treatments/becoming-the-legal-parents-of-your-child/) | administrative guidance | 1,676 | 27866697daafa8d1b756a802a374ede7ea1069425d88e1cf92b264b844dd00b5 | 2/18/171 | A0 I0 R0 X1 B0 U17 |
+| D-ai-01 | [Attachment Anxiety and Problematic Use of Conversational Artificial Intelligence](https://pmc.ncbi.nlm.nih.gov/articles/PMC12379994/) | research article | 6,741 | bbf105e1c1e131576ea6cee27ccc230a773e9ea38466646e6ba16c5ebd1af5df | 17/101/1107 | A1 I0 R0 X0 B0 U100 |
+| D-ai-02 | [Pathways of long-term AI virtual companion app use](https://pmc.ncbi.nlm.nih.gov/articles/PMC12833267/) | research article | 15,689 | 2629a3cceabd94d65cccae501ce1c1e291cdf1672cc7471352459ebacc997007 | 30/138/2264 | A6 I0 R0 X0 B0 U132 |
+| D-brief-01 | [Strangers in sync](https://pmc.ncbi.nlm.nih.gov/articles/PMC3290409/) | research article | 4,326 | 5a65ad182e9bf24ee1f3613f364819ac8cc1ac55113b404e6f22dbd2959ab0de | 3/17/686 | A0 I0 R0 X0 B0 U17 |
+| D-brief-02 | [Do I Know You?](https://pmc.ncbi.nlm.nih.gov/articles/PMC9330980/) | research article | 9,628 | 100f41fc7b3971779d5d1492e320ccf2f8e57d56dd3727e8f0871f221e628ccc | 3/68/736 | A0 I0 R0 X0 B0 U68 |
+| D-cnm-01 | [How Do People Maintain Consensual Non-Monogamy?](https://pmc.ncbi.nlm.nih.gov/articles/PMC13048939/) | research article | 23,940 | 2bbddd8cf986a13c9a856f56467e4ce6fd0cdec40dee2fade749fa53e4caf18d | 30/202/2198 | A0 I0 R0 X0 B0 U202 |
+| D-cnm-02 | [CNM — Moving Away from a Dyadic Conceptualization](https://pmc.ncbi.nlm.nih.gov/articles/PMC13094264/) | research article | 12,958 | 38e0d3723fdd983b3f1a13ecea70f3d5dea7c75b1626ae40ad6169a88a7bf4cd | 19/259/1454 | A0 I0 R0 X0 B0 U259 |
+| D-furniture-01 | [Pondering Responsible AI transcript](https://www.sas.com/content/dam/SAS/documents/event-collateral/2021/en/podcast-transcripts/ai-podcast-s1e1.pdf) | podcast transcript | 7,166 | a751936bbd4e81178e77c8f7278ccb7f07447cef94e5874975ad7b0acc6c07f7 | 1/4/819 | A0 I0 R0 X0 B0 U4 |
+| D-negative-01 | [Node.parentNode](https://developer.mozilla.org/en-US/docs/Web/API/Node/parentNode) | technical documentation | 650 | cf6bda3b7be640b7a96a1e2f7751af97e856d1955f6b63b98d558344585b80d4 | 0/1/303 | A0 I0 R0 X0 B0 U1 |
+| D-negative-02 | [GITHUB_TOKEN authentication](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication) | technical documentation | 1,409 | c6c39b0f6496b1af55b4e9328bf2417950c2613108f6ff4a78891226c9507c1d | 0/2/453 | A0 I0 R0 X0 B0 U2 |
+| D-negative-03 | [DOM Standard](https://www.w3.org/TR/dom/) | technical specification | 69,665 | e53e5096727275960cad6ac4cd4b75b60892bffc02f0527541ee4b8acffa4046 | 0/4/2489 | A0 I0 R0 X0 B0 U4 |
+| D-negative-04 | [Service accounts overview](https://cloud.google.com/iam/docs/service-account-overview) | technical documentation | 4,336 | 147ee3c5ef55bbd158799bccf4e441afe7f07b4660f90088c3731a43eee90645 | 0/0/897 | A0 I0 R0 X0 B0 U0 |
+| D-negative-05 | [RFC 8259](https://www.rfc-editor.org/rfc/rfc8259.txt) | technical specification | 3,998 | def9fe9077faa3f395768a89064c345372c98c6013fd94309b5326760879797e | 0/4/593 | A0 I0 R0 X0 B0 U4 |
+| D-policy-01 | [Stanford consensual-relationships policy](https://adminguide.stanford.edu/chapters/guiding-policies-and-principles/harassment-discrimination/consensual-sexual-or-romantic) | institutional policy | 2,479 | 18a56e265eea4ea2629d60d52a26e4462f391fb25f4a1058f46b1d5f0c368cd4 | 2/45/201 | A0 I6 R0 X0 B0 U39 |
+| D-policy-02 | [MIT consensual-relationships policy](https://policies.mit.edu/policies-procedures/90-relations-and-responsibilities-within-mit-community/99-consensual-sexual-or) | institutional policy | 3,712 | 594d27b41d9f9b1568039846fed002c875bc2d006b07dcdd460129b2f46ce4a6 | 4/53/359 | A0 I1 R0 X0 B0 U52 |
+| D-policy-03 | [Yale teacher-student policy](https://catalog.yale.edu/dus/university-policy-statements/teacher-student-consensual-relations/) | institutional policy | 758 | d94a71217654c1c1d3fd0ce7c6098f576dbcfc38d8fcae8d283f43e91a789755 | 0/11/87 | A0 I0 R0 X0 B0 U11 |
+| D-policy-04 | [Harvard abuse-of-authority policy](https://ari.hms.harvard.edu/harvard-medical-school-harvard-school-dental-medicine-unprofessional-relationships-abuse-authority) | institutional policy | 731 | 832a4c79180ab8356d6d9189cfe79b425bbc8e3adf9e499e8d41426eab42ec10 | 0/9/132 | A0 I1 R0 X0 B0 U8 |
+| D-roles-01 | [Single fathers using egg donation and surrogacy](https://pmc.ncbi.nlm.nih.gov/articles/PMC10546079/) | research article | 11,459 | 1b57a40546a574c122a67083703b8d3cf0ecaa01c5efe92a63068e3669002823 | 8/82/1070 | A0 I0 R1 X1 B0 U80 |
+| D-roles-02 | [Children of Single Fathers Created by Surrogacy](https://pmc.ncbi.nlm.nih.gov/articles/PMC9688871/) | research article | 5,660 | ae012d411ae5362148367b4b7d193ef74c9e8a2efc60c8365f6f42de330dd838 | 3/26/792 | A0 I0 R0 X0 B0 U26 |
+| A*-hold-ai | [Intentions to accept AI companion apps](https://pmc.ncbi.nlm.nih.gov/articles/PMC13260621/) | research article | 18,155 | de2d6aca9f66de289ae6dddd35a0b475d777e37b80b18ceda12056bc913418ba | 5/49/2423 | A0 I0 R0 X0 B0 U49 |
+| A*-hold-cnm | [Romantic relationship configurations among LGBTQ+ persons](https://pmc.ncbi.nlm.nih.gov/articles/PMC11398688/) | research article | 16,509 | 202e606de69e9b925031362cf83c37ef5577ca85513aab4bbc1ad1d68c00f89a | 24/180/2150 | A0 I0 R0 X0 B0 U180 |
+| A*-hold-policy | [Duke faculty-student policy](https://policies.provost.duke.edu/docs/faculty-handbook-appendix-l-faculty-student-relationships) | institutional policy | 1,534 | 2ddc6fa088b048c347f04d9458ff472ac10f3d146b06ffd0be3a9dd52180e128 | 0/25/72 | A0 I2 R0 X0 B0 U23 |
+| A*-hold-roles | [Intra-family egg donation](https://pmc.ncbi.nlm.nih.gov/articles/PMC3174034/) | research article | 6,789 | 5444143cde6eae2be797f1844685aba101d4bf82c2145ab3186bbd333ad4747b | 0/26/755 | A0 I0 R0 X0 B0 U26 |
+| A*-hold-access | [GOV.UK surrogacy legal-parent guidance](https://www.gov.uk/legal-rights-when-using-surrogates-and-donors/become-the-childs-legal-parent) | administrative guidance | 856 | c406ff8098e92126b174c08a9c23d6b8bf7bc67bb00061197196d841e925d01e | 1/1/180 | A0 I0 R0 X0 B0 U1 |
+| A*-hold-brief | [Social bonding through shared experiences](https://pmc.ncbi.nlm.nih.gov/articles/PMC11521598/) | research article | 14,674 | 728663eb5b5c01f41bee1bd1924e8cf2c41b507ca0324121929a20b9786cbee9 | 17/22/2348 | A0 I0 R0 X0 B0 U22 |
+| A*-hold-negative | [SQLite Foreign Key Support](https://www.sqlite.org/foreignkeys.html) | technical documentation | 5,656 | 58f27095892f5f4b5dd5744091aea680b09ee922160da3a6dec4cdb02d5ae0d6 | 2/6/971 | A0 I0 R0 X0 B0 U6 |
+| B*-final-ai | [Risks and Benefits of AI Chatbot Companions](https://pmc.ncbi.nlm.nih.gov/articles/PMC13160459/) | research article | 3,883 | 2ba6dab752d78aa93f64f7940d8c0c9d93069d2579f20d1f758514e4c41601ad | 2/29/645 | A1 I0 R0 X0 B0 U28 |
+| B*-final-cnm | [Disclosing Non-Monogamy](https://pmc.ncbi.nlm.nih.gov/articles/PMC12011937/) | research article | 11,344 | 6a5ab88bf634d452f2c67227f17c34836883520f4fd6e667df9c50e1dd616ed9 | 5/130/1136 | A0 I0 R0 X0 B0 U130 |
+| B*-final-policy | [Cornell consensual-relationships policy](https://policy.cornell.edu/policy-library/consensual-relationships) | institutional policy | 3,402 | 0e34e147f302df984d9555606d9c25e149f7588e897fc350a60f2e01903def84 | 2/38/335 | A0 I10 R0 X0 B0 U28 |
+| B*-final-roles | [Commercial surrogacy in India](https://pmc.ncbi.nlm.nih.gov/articles/PMC7559454/) | research article | 11,544 | 5c111d3e040eb51e782f998e3b0151f911af0befed70fac0c271b74f0f1e22cf | 5/59/2010 | A0 I0 R0 X0 B0 U59 |
+| B*-final-access | [ALRC legal-parentage submission](https://www.alrc.gov.au/wp-content/uploads/2025/11/128.-S-Jefford.pdf) | policy submission | 18,254 | 7057b7ad0233c2b45a84b1c3296de406dce6781f0aac4baad523ad46d8eaf919 | 3/36/2060 | A0 I0 R0 X0 B0 U36 |
+| B*-final-brief | [Explicit Signals Enhance Social Engagement](https://pmc.ncbi.nlm.nih.gov/articles/PMC12795328/) | research article | 6,682 | 2d07a94c8c0d68b18e86e1710253d0b22428d4b2f2ff816ea2d0a42e1abb5dc3 | 2/6/705 | A0 I0 R0 X0 B0 U6 |
+| B*-final-negative | [Service Workers Nightly](https://www.w3.org/TR/service-workers/) | technical specification | 40,584 | abc6749de1fd10c8d091222b4e979adbc1a6212d76f08be0922816caed292967 | 1/2/2491 | A0 I0 R0 X0 B0 U2 |
+| H-sealed-ai | [Artificial Intelligence as Companionship](https://pmc.ncbi.nlm.nih.gov/articles/PMC13463284/) | research article | 8,284 | a68ef67c0ee2fe0e5568c2253e7e2119efbfc0204830a47339f7e214b9e16070 | 7/58/933 | A0 I0 R0 X0 B0 U58 |
+| H-sealed-cnm | [Defining Polyamory](https://pmc.ncbi.nlm.nih.gov/articles/PMC8321986/) | research article | 12,285 | a0ee0b3e46f3edcddc33f481d7ae45139368cde46f5f1463eb2afc4f6edcd98c | 20/155/1002 | A0 I0 R0 X0 B0 U155 |
+| H-sealed-policy | [Penn sexual-misconduct and consensual-relationships policy](https://catalog.upenn.edu/pennbook/sexual-misconduct-resource-offices-complaint-procedures/) | institutional policy | 19,200 | b68f241ca7626929e36a453bb788c8b030cc4f55bffc37e7c34573b47b62f698 | 3/99/894 | A0 I4 R0 X0 B0 U95 |
+| H-sealed-roles | [On the Donation of Eggs, Sperm, and Selves](https://pmc.ncbi.nlm.nih.gov/articles/PMC9743033/) | research article | 3,773 | 70acc12a6e121880e4ceb2fb9cb2dea25cce018ed7243b82b21638f334f676e9 | 1/32/377 | A0 I0 R1 X0 B0 U31 |
+| H-sealed-access | [Queensland surrogacy and parentage-order rules](https://www.qld.gov.au/family/assisted-reproduction/surrogacy/rules) | administrative guidance | 635 | f87f1920f71826ebce82e107b36369e52339e799433315bdefd8ef8b97706593 | 0/1/139 | A0 I0 R0 X0 B0 U1 |
+| H-sealed-brief | [Connection During Conversations Scale](https://pmc.ncbi.nlm.nih.gov/articles/PMC10795981/) | research article | 18,570 | 0b69c31e7bf14398bdaa6989963f6fb3703116aaa1e49d8788e38318e27fbdbe | 30/32/2369 | A0 I0 R0 X0 B0 U32 |
+| H-sealed-negative | [RFC 7477 Child-to-Parent Synchronization](https://www.ietf.org/ietf-ftp/rfc/rfc7477.txt.pdf) | technical specification | 4,799 | 2757c785483c6b9418170f60b84a404792bd4b580cb1ce39a4327981c7385005 | 0/1/652 | A0 I0 R0 X0 B0 U1 |
+
+### Findings and calibration
+
+Across all 40 sources: 414,393 extracted words; 252 mapped claims; 2,031
+unmatched claims; 41,458 excluded segments. Final umbrella distribution is
+`A8 I24 R2 X2 B0 U1995`; abstention is 98.23%. Reasons are: insufficient 1,765;
+boundary/moderator/directional 148; descriptive 36; existing-doctrine retrieval
+miss 77; possible doctrine gap 3; outside-human 2. Manual review found all 36
+final supported assignments correct, but only the five assignments in phase H
+are untouched holdout evidence. The final sealed holdout is 5/5 for umbrella
+and reason, with 373/378 abstentions (98.68%).
+
+Errors that changed rules are recorded, not erased:
+
+1. Discovery: the Yale sentence about the *integrity* of a teacher-student
+   relationship was a false Institutional assignment. A dyad label no longer
+   counts as a power mechanism.
+2. Holdout A: a quoted bibliography title about AI companionship was a false
+   Asymmetric assignment (initial umbrella precision 2/3), and `no obligation
+   to disclose` was incorrectly a retrieval miss. Citation furniture now
+   abstains and the policy sentence is boundary evidence.
+3. Holdout B: umbrellas were 11/11, but `not obligated to inform` was a retrieval
+   miss rather than boundary evidence. The synonym is now covered.
+4. Final sealed holdout: no assignment or reason error. It did not influence a
+   rule, fixture, or threshold.
+
+The five retained named umbrellas are unchanged; `Unclassified` remains the
+explicit abstention. No umbrella was split, merged, renamed, or promoted.
+`Multi-partner relationship structure` recurred in four independent CNM sources
+and is a coherent candidate, but is **proposed for a future bounded evaluation,
+not promoted here**: the fresh sources do not yet establish boundaries against
+existing CNM doctrine and generic structure language. No other candidate met
+the recurrence/mechanism standard. Brief, External, and Role remain conservative
+recall areas; zero fresh Brief assignments is a limitation, not evidence that
+the umbrella is unnecessary.
+
+Before/after reader-visible examples:
+
+| Fragment shape | v2.7.4 | v2.7.5 |
+|---|---|---|
+| `relationship between supervisor ratings and direct-report satisfaction` | Institutional | explicit abstention |
+| AI analyzes relationship/attachment data | Asymmetric | explicit abstention |
+| university employees report relationship morale | Institutional | explicit abstention |
+| article recognizes relationships and reports benefits | External | explicit abstention |
+| parents split fundraiser support roles | Role | explicit abstention |
+| analysts briefly rate relationship vignettes | Brief | explicit abstention |
+| teacher-student relationship is important to the mission | Institutional | explicit abstention |
+| quoted AI-companion bibliography title | Asymmetric | explicit abstention |
+| `no obligation` / `not obligated` to disclose | retrieval miss | boundary evidence |
+| conversational AI offered as an interactive partner | abstention | Asymmetric |
+| separate donor egg; surrogate did not use her egg | abstention | Role |
+
+Historical current-evidence replay covers 84 analyses and 4,712 unmatched
+items. Taxonomy 1.3 had 123 supported assignments; final 1.4 has 32, with only
+same-category retention or supported-to-abstention transitions—no promotion and
+no category switch. Manual review found the 32 retained assignments correct.
+The default artifact audit reports 32 supported / 4,680 abstained and exact
+source boundaries, JSON, Markdown, order, and normalization. A second invocation
+over the 40 fresh sources reports 36 / 1,995 with the same exactness.
+
+### Final validation and closeout
+
+The exact final commands, browser result, collision result, end timestamp, and
+elapsed time are appended after the final pre-push review so this section does
+not claim checks that have not yet run.
+
+## v2.7.7 — pressure-window patch freeze and final independent holdout (2026-09-01)
+
+The v2.7.5 section above records the planned freeze, but the pressure window
+continued to attack that freeze. Mutation probes found six defects before
+closeout: fictional supervisor-romance prose, a chart separating parent labels,
+database legal-status storage, AI companion policy/metadata language, and a
+measurement scale could still qualify; a short genuine sentence using `formed`
+was mistaken for a title. These were fixed RED-first under taxonomy 1.4.1. The
+first post-freeze source holdout then found a seventh defect: the long
+predicateless bibliography title `More than just a chat: a taxonomy ...`
+classified as Asymmetric. That set was relabelled discovery evidence, a general
+colon title/subtitle test was added RED-first, and the final production freeze
+became analyzer `2.7.7`, triage/taxonomy `1.4.2`, queue schema `2.3`.
+
+The final classifier SHA-256 is
+`1cbcdf87913dda8465a34a7223b2868fabe816e5fe3db65ae4cc2788d7e17418`,
+frozen at `2026-09-01T11:00:16.2619990-06:00`. No classifier, matcher, gate,
+fixture, or threshold changed after the final 1.4.2 source holdout was selected.
+The historical sealed 1.4.0 fixture remains byte-identical at
+`b0c2fcb646ebc4edc1a6ebc4e399b6220bda36d3437782d70d59513dba340e51`;
+it is historical pre-implementation evidence, not silently relabelled as a
+1.4.2 fixture.
+
+### Added source ledger
+
+Common provenance: analyzer `2.7.7`; canon index `1.0.0+064e6e7fed71`
+(`bfh1du145p7ix`); taxonomy `1.4.2`; queue `2.3`. Raw HTML, XML, PDF, RFC text,
+and extracted text remain in uniquely named system-temp directories outside
+the repository. The 1.4.1 set is `D*` because its bibliography error changed a
+rule. The 1.4.2 set is the final untouched holdout. `M/U/E` and umbrella letters
+use the definitions in the v2.7.5 table.
+
+| ID | URL and title | Type | Words | SHA-256 | M/U/E | Umbrella distribution |
+|---|---|---|---:|---|---:|---|
+| D*-141-ai | [Human-AI attachment](https://pmc.ncbi.nlm.nih.gov/articles/PMC12932595/) | research article | 9,808 | d205ec2b3861cd2a90e377239b2f6fb39f8205f9e010c0a271edd8c7955e6519 | 17/143/1,251 | A1 I0 R0 X0 B0 U142 |
+| D*-141-cnm | [Narrative review of non-monogamy](https://pmc.ncbi.nlm.nih.gov/articles/PMC10920412/) | research article | 7,757 | 1c09c9bd9af14d61f13a3b349badc847d8be09513d569c62b8a0b74668121868 | 14/152/564 | A0 I0 R0 X0 B0 U152 |
+| D*-141-policy | [Cornell consensual-relationships policy](https://policy.cornell.edu/policy-library/consensual-relationships) | institutional policy | 3,269 | 83bce184480ecedb42431b26df73c0eba27172ecbd7263dc5e51a6224844ef61 | 2/38/279 | A0 I10 R0 X0 B0 U28 |
+| D*-141-roles | [Solo Fathers and Mothers](https://pmc.ncbi.nlm.nih.gov/articles/PMC9368669/) | research article | 11,544 | ffdb82da29e398a78dd28f007cd337f4fffa12e885e4027509e4f7af8f34959b | 22/44/1,217 | A0 I0 R0 X0 B0 U44 |
+| D*-141-access | [The surrogacy pathway](https://www.gov.uk/government/publications/having-a-child-through-surrogacy/the-surrogacy-pathway-surrogacy-and-the-legal-process-for-intended-parents-and-surrogates-in-england-and-wales) | administrative guidance | 8,457 | 97ac29561092911bd89732c2a6ceb4a338dc8f4f93e98334d817f9dbfd4101dd | 0/24/688 | A0 I0 R0 X3 B0 U21 |
+| D*-141-transcript | [Can AI companionship cure loneliness—or deepen it?](https://www.pbs.org/newshour/podcasts/horizons-with-pbs-news/can-ai-companionship-cure-loneliness-or-deepen-it) | podcast transcript | 514 | d78ec9a27ada5fe5c3d43c53842493e37d8f04c8496aeb99b28b1719455c4dcc | 0/2/97 | A0 I0 R0 X0 B0 U2 |
+| D*-141-negative | [NIST Role Based Access Control](https://csrc.nist.gov/Projects/role-based-access-control/faqs) | technical documentation | 2,179 | 7e2d485f51a62da77ef7dc9b3a6f19f837fd31c0a33d2342cf0b028f84bdb562 | 1/20/182 | A0 I0 R0 X0 B0 U20 |
+| H-142-ai | [Why people turn to AI for companionship](https://www.pbs.org/newshour/show/why-more-people-are-turning-to-artificial-intelligence-for-companionship) | interview transcript | 1,309 | 6788c28cc9ddc6ac0fbc5cb388d477caeba4c3445682456c4f93d5173b89c958 | 1/9/118 | A0 I0 R0 X0 B0 U9 |
+| H-142-cnm | [Primary and secondary relationships in polyamory](https://pmc.ncbi.nlm.nih.gov/articles/PMC5436896/) | research article | 11,815 | 4e0e39f281148a937d6dae08be0cc3f70e67d63cfa09ad98cc016132feb6beea | 37/256/1,121 | A0 I0 R0 X0 B0 U256 |
+| H-142-policy | [University of Denver consensual-relationships policy](https://www.du.edu/sites/default/files/2024-11/HRIC%203.10.070%20Consensual%20Relationships_0.pdf) | institutional policy | 1,537 | 36829054aabe7bc245784b80749e191900b19e51f5cc87b5e968b84a040e66ec | 4/22/147 | A0 I1 R0 X0 B0 U21 |
+| H-142-roles | [Telling donor-conceived children](https://pmc.ncbi.nlm.nih.gov/articles/PMC8463736/) | research article | 4,680 | b86cb7b3997296e892e34d2cfa5eeceda3ea4fa97fbbca5f9111ad8baeee7ad6 | 0/3/844 | A0 I0 R0 X0 B0 U3 |
+| H-142-access | [Care in surrogacy](https://www.gov.uk/government/publications/having-a-child-through-surrogacy/care-in-surrogacy-guidance-for-the-care-of-surrogates-and-intended-parents-in-surrogate-births-in-england-and-wales) | administrative guidance | 6,892 | 4fdd000efcee9228a8257e77170a99fb56878a5d8bc8ff564da3c50432267e85 | 1/15/617 | A0 I0 R0 X0 B0 U15 |
+| H-142-brief | [Speech signals and attraction in speed dating](https://arxiv.org/abs/2607.23037) | research preprint abstract | 642 | dccf6d4fd27c0b104acff445fae1ba77303fee9011de272d2a7632c6ace11169 | 0/7/146 | A0 I0 R0 X0 B0 U7 |
+| H-142-negative | [RFC 7643 SCIM Core Schema](https://www.rfc-editor.org/rfc/rfc7643.txt) | technical specification | 19,515 | df799c112a3fa5be3c0fe054c08b1f4eb5d07590c4c8343a014c4537bf638ae3 | 1/8/2,467 | A0 I0 R0 X0 B0 U8 |
+
+Across all 54 fresh sources the extracted population is 504,311 words. The
+analyzer reports 352 mapped claims, 2,774 unmatched claims, and 51,196 excluded
+segments. Final distribution is `A9 I35 R2 X5 B0 U2723`; 2,723/2,774 items
+abstain (98.16%). Reasons are insufficient 2,420; boundary/moderator/directional
+194; descriptive 44; existing-doctrine retrieval miss 96; possible doctrine
+gap 6; outside-human 14. Manual review found all 51 supported assignments
+defensible, but 50 are discovery-influenced. The final untouched holdout has
+one supported assignment, reviewed correct for umbrella and reason, and
+319/320 abstentions (99.69%). This is evidence of conservative precision, not
+a claim of measured recall.
+
+The historical replay remains 84 analyses / 4,712 unmatched items / 32
+supported / 4,680 abstained. The final fresh replay is 54 analyses / 2,774
+items / 51 supported / 2,723 abstained. Both artifact audits reconstruct exact
+source fragments and verify JSON, Markdown, reverse order, case, whitespace,
+transport normalization, and taxonomy pins. The only 1.4.1-to-1.4.2 supported
+transition was the discovered bibliography title, Asymmetric → Unclassified;
+there was no promotion or category switch.
+
+Retained umbrellas: Asymmetric/nonhuman, Institutional authority, Role
+unbundling, External recognition, Brief/nonrelationship, plus explicit
+Unclassified abstention. Changed umbrellas: none. Split/merge/rename decisions:
+none. Rejected promotions: none met the recurrence plus boundary standard.
+`Multi-partner relationship structure` remains a proposed future evaluation,
+not a new umbrella, because its boundaries against current CNM doctrine and
+generic structure language remain unresolved.
+
+Before/after additions:
+
+| Fragment shape | v2.7.5 | v2.7.7 |
+|---|---|---|
+| supervisor-romance novel | Institutional | explicit abstention |
+| chart separates genetic/gestational parent labels | Role | explicit abstention |
+| database stores partners' legal-status documentation | External | explicit abstention |
+| AI companion has no agency policy / lacks welfare metadata | Asymmetric | explicit abstention |
+| noninteractive scale uses scripted romantic messages | Brief | explicit abstention |
+| `Users formed attachments to conversational artificial intelligence.` | mistaken for title | Asymmetric direct classification; unchanged live gate may still exclude it |
+| long predicateless title with noun-phrase subtitle | Asymmetric | explicit abstention |
+
+### Final closeout
+
+The pressure window began at `2026-09-01T08:55:05.0249134-06:00`. Its final
+end timestamp and elapsed duration are recorded after the last validation run
+below. The required in-app browser was attempted after the full Lab suite. It
+failed during runtime setup with exact error
+`windows sandbox failed: helper_unknown_error: apply deny-read ACLs`; no Lab
+page or viewport rendered and no screenshot was captured. No other browser
+stack was substituted, and static audits are not represented as rendered QA.
+
+Final validation and collision results are appended after the final pre-push
+run so this record does not claim checks before they occur.
+
+## v2.7.11 — final sealed closeout after continued falsification (2026-09-01)
+
+The v2.7.7 freeze above did not survive the rest of the required window. A
+second-ring 88-control matrix found AI consent-documentation, romance-fiction,
+and role-separation edge cases; a subsequent source set found incomplete policy
+fragments, explicitly nonromantic relationships, and `no prohibition` reason
+precedence. Those became RED-first H-8 and H-9 guards under 1.4.3/1.4.4. The
+next sealed set then found one live truncated fragment — `Many users have had
+romantic relationships with Replika chatbots, often including` — supported as
+Asymmetric. It became the RED-first direct-and-live H-10 test and a general
+dangling-list-introducer abstention (`including`, `such as`, `for example`).
+That set is discovery evidence, not a holdout.
+
+The full 56-item manual pass then found two more live truncations in older
+discovery sources: `the employee must both` and `faculty member or other`.
+Both had been counted as correct Institutional assignments. They became the
+RED-first direct-and-live H-11 guard for incomplete correlator/determiner
+endings. The prior precision count is superseded, not silently retained.
+
+The final release is analyzer `2.7.11`, taxonomy/triage `1.4.6`, queue schema
+`2.3`. The classifier SHA-256 is
+`31dced3ea077805fa6fefaf0fdf8fbda35155339af298da9f9df9e42ce443d7c`,
+recorded at `2026-09-01T11:46:47.0807050-06:00`. No classifier, fixture,
+matcher, gate, canon, threshold, or exclusion changed after the replacement
+1.4.6 holdout was selected. The 1.4.0 fixture remains byte-pinned historical
+evidence; no old frozen fixture was edited to green a rule.
+
+### Final source additions and holdout status
+
+The five 1.4.4 sources are `D*`: the Replika truncation changed a rule. The five
+1.4.5 sources are also `D*`: their own results did not change a rule, but the
+full-corpus review performed after they opened did, so they are not represented
+as sealed. Three new 1.4.6 sources were selected only after H-11 and are the
+final untouched holdout. Raw HTML/XML and extracted text stayed in unique system-temporary
+directories outside the repository; only gitignored analysis JSON and manifests
+were retained. Common canon is `1.0.0+064e6e7fed71` / `bfh1du145p7ix`.
+
+| ID | URL and title | Type | Words | SHA-256 | M/U/E | Distribution |
+|---|---|---|---:|---|---:|---|
+| D*-144-ai | [Replika](https://en.wikipedia.org/wiki/Replika) | reference article | 2,233 | 3a5b095d0e9a352bcbc01a7fe5fe2dc1f63f5560a2ed9cdc8a3e4c32407616e6 | 2/12/719 | A3 U9 |
+| D*-144-cnm | [CNM well-being and relationship quality](https://pmc.ncbi.nlm.nih.gov/articles/PMC6985779/) | research article | 13,204 | 3ee870002840b6814136e1acfe79315d3ddc8e34ec1883aa01a85c91c140ff12 | 14/146/2,091 | U146 |
+| D*-144-roles | [Surrogacy outcomes systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC4373177/) | research review | 11,866 | 46304ef7ccf3683e991d9a4bcc7ea344b3838981bf37b66c35c50be0aab22cab | 3/33/846 | U33 |
+| D*-144-policy | [Beliefs and Advice about Workplace Romance](https://pmc.ncbi.nlm.nih.gov/articles/PMC9404732/) | research article | 9,935 | 0e4b4a972ce05ca1d2adb62622b0921aac4a10449701c6cda1515badac46e5cb | 14/202/1,484 | U202 |
+| D*-144-negative | [SCIM Protocol, RFC 7644](https://www.rfc-editor.org/rfc/rfc7644.html) | technical negative control | 19,613 | 36241f2ac5c8c4d9a4217316e75bbb53981d1051fffce421e33612ea33513d1b | 1/3/2,489 | U3 |
+| D*-145-ai | [Human-AI attachment](https://pmc.ncbi.nlm.nih.gov/articles/PMC12932595/) | research article | 9,115 | 4332b2725558754fd7161ddfa711c15d6e235405416ec2ba88d50a7b2a65a0bb | 17/146/1,053 | A1 U145 |
+| D*-145-cnm | [Partners' Other Relationships in CNM](https://pmc.ncbi.nlm.nih.gov/articles/PMC10954970/) | research article | 12,627 | 95a0aa68cec0b625ed2cd1f1718503e4140be753ed2aba3301c138cbab2bdc67 | 16/218/1,342 | U218 |
+| D*-145-roles | [Single mothers by choice systematic review](https://pmc.ncbi.nlm.nih.gov/articles/PMC12574156/) | research review | 14,129 | 9fa87ea946a01e1623a44655a3772bdc5430451dc11fb8ea0b8f9f5e5be2b416 | 20/107/1,827 | U107 |
+| D*-145-policy | [Personal Workplace Relationships](https://pmc.ncbi.nlm.nih.gov/articles/PMC10525437/) | research article | 6,546 | dc9a436a7a1053d098ad429f3db5708ee06ffec06b87f03b68679090c80dbc7c | 17/100/1,699 | I1 U99 |
+| D*-145-negative | [HTTP Semantics, RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html) | technical negative control | 72,393 | 6356bab617967b2d3117b4c64550db96ee6de1ef9f7321b72bdcca64e2809d07 | 3/11/2,475 | U11 |
+| H-146-ai | [Addressing loneliness by AI chatbot](https://pmc.ncbi.nlm.nih.gov/articles/PMC12922247/) | research article | 14,982 | 99a65a266c2fd7a72142800eb28e72ca5d7b350dd4fc4283280b3b3062f42a71 | 4/38/2,365 | U38 |
+| H-146-policy | [Workplace Romance, Wellbeing, and Performance](https://pmc.ncbi.nlm.nih.gov/articles/PMC5736047/) | research article | 10,508 | 8d4ba9109dc15e4860111c7c9cf604eb32e5b583ba4d7737589da35043d02192 | 17/188/1,733 | U188 |
+| H-146-negative | [Structured Field Values, RFC 8941](https://www.rfc-editor.org/rfc/rfc8941.html) | technical negative control | 9,190 | 1e90dec47efd16146f7afad4f0e9d5c57e07b650da0574ff333aefcd6e47ab72 | 0/10/2,399 | U10 |
+
+The final replacement holdout contains 34,680 words, 21 mapped claims, 236
+unmatched claims, and 6,497 excluded segments. All 236 items explicitly abstain,
+including every item from RFC 8941. This clean negative result cannot estimate
+supported-label precision because its supported denominator is zero. No rule,
+fixture, or threshold changed after opening this set.
+
+Across all 72 fresh sources: 733,035 extracted words; 542 mapped, 4,358
+unmatched, and 76,511 excluded. Distribution is `A13 I35 R2 X4 B0 U4304`;
+54/54 supported assignments were manually reviewed correct and 4,304/4,358
+abstain (98.76%). Reasons are insufficient 3,874;
+boundary/moderator/directional 284; descriptive 61; existing-doctrine retrieval
+miss 120; possible doctrine gap 5; outside-human 14. This is a conservative
+precision result, not a recall estimate. Role, External, and Brief recall remain
+thin; the final source holdout contains no Role or External assignment despite
+relevant source topics.
+
+A post-freeze positive-paraphrase attack quantified that limitation rather than
+tuning it away: 17/25 new paraphrases retained the intended primary umbrella.
+Four short External claims had all or most subject signals but abstained under
+the short-heading guard; one `Participants bonded with a social robot...`
+claim hit the research-population guard; two Brief variants abstained; and
+`One chatbot interaction is not evidence of a durable relationship` selected
+Asymmetric with a boundary reason rather than Brief. The paired 304-case new
+negative collision sweep produced 0 supported assignments. These results leave
+the precision freeze intact while making the recall and primary-ordering
+follow-up concrete; they are not folded into the final 54/54 precision numerator.
+The live analyzer sends only one of the eight direct misses to the unmatched
+queue (`The court recognized the spouse as a legal parent, allowing birth
+registration.` → explicit Unclassified); three are excluded and four are
+already mapped. This is one user-visible recall miss plus seven direct-only
+future-safety observations, not eight live failures.
+
+The current historical replay is 84 analyses / 4,712 unmatched items / 28
+supported / 4,684 abstained. The fresh replay is 72 / 4,358 / 54 / 4,304. Both
+artifact audits prove exact fragments and parent boundaries, byte-exact JSON,
+Markdown whitespace and safe encoding, and forward/reverse/case/whitespace/
+transport stability. The final taxonomy retained all five named umbrellas plus
+Unclassified; none was split, merged, renamed, or promoted. Multi-partner
+relationship structure remains a rejected promotion pending clear boundaries;
+no single article created a category.
+
+### Final validation, browser, and collision result
+
+| Check | Result |
+|---|---|
+| `npm run test:lab` | 24/24 steps, exit 0, no DISARMED |
+| focused unmatched test | 37/37 |
+| taxonomy audit | 61 frozen cases exact; 1.3 negative controls 12/12 abstain; sealed 1.4 controls 9/9 abstain |
+| historical artifact audit | 84 analyses / 4,712 items exact |
+| fresh artifact audit | 72 analyses / 4,358 items exact |
+| invariance self-test | passed; intended additive warning accepted and unrelated limitation/score/owner/gate/alignment/exclusion mutations rejected |
+| 29-source invariance | exact: 3,548 passages; mapped 911; unmatched 2,327; excluded 7,626 |
+| release audit | 11 modules, 17 edges, 2 resources, v2.7.11 |
+| `git diff --check` | clean |
+| canon diff | empty |
+
+The required in-app browser was attempted twice. The first runtime setup failed
+with `trusted Node process exited unexpectedly; kernel reset, rerun your
+request`; the retry failed during deny-read ACL setup with `windows sandbox
+failed: helper_unknown_error: apply deny-read ACLs`. No page or viewport was
+rendered and no screenshot was captured. No alternate browser stack was used;
+static responsive/a11y audits are not represented as rendered QA.
+
+`origin/main` was refreshed at `5f680665ba6770a735b074411b62ac98a43255b6`;
+the candidate was 0 ahead / 0 behind it before commit, and three commits ahead
+of recorded base `69b4bab12a193e1fccb6f80359ff2fc4334ea4f9`. There was no concurrent-main
+path overlap. Canon is unchanged, no raw third-party source is tracked, and the
+registered legacy worktree was left untouched as required by `CLAUDE.md`.
+
+The pressure window ran from `2026-09-01T08:55:05.0249134-06:00` through
+`2026-09-01T11:55:15.0677841-06:00`: **3:00:10.0428707**. It remained open
+through source acquisition, final manual review, artifact replay, full-suite
+validation, and the final collision check; no idle time was represented as an
+extra source run or padded statistic.

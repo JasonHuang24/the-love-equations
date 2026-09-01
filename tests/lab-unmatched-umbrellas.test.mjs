@@ -55,6 +55,10 @@ const EVALUATION_13 = JSON.parse(readFileSync(
   new URL('./fixtures/unmatched-umbrella-evaluation-1.3.json', import.meta.url),
   'utf8',
 ));
+const EVALUATION_14 = JSON.parse(readFileSync(
+  new URL('./fixtures/unmatched-umbrella-evaluation-1.4.json', import.meta.url),
+  'utf8',
+));
 
 const EXPECTED_UMBRELLAS = [
   ['asymmetric-nonhuman-relationships', 'Asymmetric or nonhuman relationships'],
@@ -74,10 +78,10 @@ const EXPECTED_REASONS = [
 ];
 
 test('taxonomy is versioned, complete, deterministic triage rather than doctrine', () => {
-  assert.equal(UNMATCHED_UMBRELLA_TAXONOMY_VERSION, '1.3.0');
+  assert.equal(UNMATCHED_UMBRELLA_TAXONOMY_VERSION, '1.4.6');
   assert.equal(
     UNMATCHED_UMBRELLA_TAXONOMY.schemaVersion,
-    'le-lab.unmatched-umbrella-taxonomy/1.3.0',
+    'le-lab.unmatched-umbrella-taxonomy/1.4.6',
   );
   assert.deepEqual(
     UNMATCHED_UMBRELLA_TAXONOMY.umbrellas.map(({ id, label }) => [id, label]),
@@ -318,7 +322,7 @@ test('live analyzer adds triage only after a passage remains unmatched', async (
     text: fragment,
   }), CANON);
 
-  assert.equal(ANALYZER_VERSION, '2.7.4');
+  assert.equal(ANALYZER_VERSION, '2.7.11');
   assert.equal(RESEARCH_QUEUE_SCHEMA_VERSION, 'le-lab.research-queue/2.3');
   assert.equal(analysis.metrics.mappedClaimSegments, 0);
   assert.equal(analysis.metrics.unmappedClaimSegments, 1);
@@ -477,7 +481,6 @@ test('F-6 a research sample is not an institution governing its members', () => 
   for (const fragment of [
     'Therefore, Boston University policy is that no affiliate shall supervise a student with whom the affiliate has a consensual romantic or sexual relationship.',
     'An Employee is prohibited from engaging in an amorous relationship with any undergraduate student, whether matriculated at UVM or enrolled as a non-degree student, regardless of the perception of consent by both participants.',
-    'The integrity and professionalism of the teacher-student relationship is fundamental to the educational mission of the University.',
   ]) {
     assert.equal(
       classifyUnmatchedPassage(fragment).primaryUmbrella.id,
@@ -485,6 +488,14 @@ test('F-6 a research sample is not an institution governing its members', () => 
       fragment,
     );
   }
+
+  assert.equal(
+    classifyUnmatchedPassage(
+      'The integrity and professionalism of the teacher-student relationship is fundamental to the educational mission of the University.',
+    ).abstained,
+    true,
+    'a dyad label plus institutional importance does not state an authority or governance mechanism',
+  );
 });
 
 test('F-7 coding and annotation procedure abstains wherever it sits in the sentence', () => {
@@ -587,7 +598,6 @@ test('G-2 institutional membership is not authority or governance', () => {
     'Employees must disclose romantic relationships with managers who evaluate their pay.',
     'Therefore, Boston University policy is that no affiliate shall supervise a student with whom the affiliate has a consensual romantic or sexual relationship.',
     'An Employee is prohibited from engaging in an amorous relationship with any undergraduate student, whether matriculated at UVM or enrolled as a non-degree student, regardless of the perception of consent by both participants.',
-    'The integrity and professionalism of the teacher-student relationship is fundamental to the educational mission of the University.',
     'University policy bans supervisors from dating their direct reports and requires disclosure and reassignment.',
   ]) {
     assert.equal(
@@ -679,7 +689,7 @@ test('G-5 measurement procedure is not a Brief/nonrelationship claim', () => {
 });
 
 test('1.3 evaluation successor agrees on umbrella, reason, secondary, and abstention', () => {
-  assert.equal(EVALUATION_13.taxonomyVersion, UNMATCHED_UMBRELLA_TAXONOMY_VERSION);
+  assert.equal(EVALUATION_13.taxonomyVersion, '1.3.0');
   assert.ok(
     /NOT a pre-registered holdout/.test(EVALUATION_13.status),
     'the set must keep saying it was authored after implementation',
@@ -705,12 +715,511 @@ test('1.3 evaluation successor agrees on umbrella, reason, secondary, and absten
   assert.equal(EVALUATION_13.cases.length, 23);
 });
 
+test('sealed 1.4 review set enforces connected mechanisms and declarative tag questions', () => {
+  assert.equal(EVALUATION_14.taxonomyVersion, '1.4.0');
+  assert.match(EVALUATION_14.status, /sealed.*before.*remediation/i);
+  assert.equal(EVALUATION_14.cases.length, 16);
+  assert.equal(new Set(EVALUATION_14.cases.map(({ id }) => id)).size, 16);
+
+  for (const fixture of EVALUATION_14.cases) {
+    const result = classifyUnmatchedPassage(fixture.text);
+    assert.equal(result.abstained, fixture.expected.abstained, `${fixture.id}: abstention`);
+    assert.equal(result.primaryUmbrella.id, fixture.expected.primaryUmbrellaId, `${fixture.id}: primary`);
+    assert.equal(
+      result.secondaryUmbrella?.id ?? null,
+      fixture.expected.secondaryUmbrellaId,
+      `${fixture.id}: secondary`,
+    );
+    assert.equal(result.unmatchedReason.id, fixture.expected.unmatchedReasonId, `${fixture.id}: reason`);
+    if (fixture.kind === 'negative-control') {
+      assert.equal(result.abstained, true, `${fixture.id}: every negative control abstains`);
+    }
+  }
+});
+
+test('H-1 connected predicates reject longer token lists that still state no mechanism', () => {
+  for (const fragment of [
+    'The AI companion dataset contains attachment scores.',
+    'ChatGPT offers attachment advice to customers.',
+    'The policy prohibited employees from discussing romantic relationships.',
+    'A supervisor romance novel was not permitted in class.',
+    'The registry distinguishes intended parents from donors for mailing lists.',
+    'The university recognizes that couples have eligibility preferences for the survey.',
+    'Administrative staff recorded that couples were eligible for survey participation.',
+    'The AI companion service offers weather forecasts.',
+    'Researchers interacted with ChatGPT to collect calibration data.',
+    'The log stores chatbot interactions for later analysis.',
+    'The relationship between supervisor ratings and direct-report job satisfaction was significant.',
+    'Researchers separated genetic parent scores from social support roles.',
+    'The survey asked couples about legal status and residence-permit preferences.',
+    'The AI companion dataset has no welfare score.',
+    'A noninteractive interface displays scripted messages without repeated clicks.',
+    'Could the policy ban supervisors from dating direct reports, correct?',
+    'Genetic and gestational mothers were separated by age for analysis.',
+    'The survey asked couples about legal status variables.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  const supported = new Map([
+    [
+      'The workplace bans romances between managers and direct reports.',
+      'institutional-authority-governance',
+    ],
+    [
+      'A social robot provides companionship without having a stake in the outcome.',
+      'asymmetric-nonhuman-relationships',
+    ],
+    [
+      'A parental order grants the intended parents legal parenthood.',
+      'external-recognition-administrative-access',
+    ],
+    [
+      'Users chatted with an AI simulated romantic partner.',
+      'asymmetric-nonhuman-relationships',
+    ],
+    [
+      'Donor conception separates genetic parenthood from gestational and social parent roles.',
+      'role-unbundling-family-formation',
+    ],
+    [
+      'Managers are strongly discouraged from dating their direct reports.',
+      'institutional-authority-governance',
+    ],
+    [
+      'A workplace romance triggers disclosure and recusal.',
+      'institutional-authority-governance',
+    ],
+    [
+      'The noninteractive synthetic characters were rated without repeated contingent interaction.',
+      'brief-nonrelationship-interactions',
+    ],
+  ]);
+  for (const [fragment, expected] of supported) {
+    assert.equal(classifyUnmatchedPassage(fragment).primaryUmbrella.id, expected, fragment);
+  }
+});
+
+test('H-2 generated token-collision matrix abstains across all five supported umbrellas', () => {
+  const controls = [];
+  for (const entity of [
+    'AI companion app',
+    'AI companion dataset',
+    'Replika customer-support service',
+    'ChatGPT report',
+    'social robot controller',
+  ]) {
+    for (const claim of [
+      'analyzes attachment scores',
+      'reports connection variables',
+      'provides emotional support resources',
+      'offers companionship advice',
+      'stores conversations with users',
+      'labels relationship data',
+      'tracks consent fields',
+      'simulates intimacy measures',
+    ]) controls.push(`The ${entity} ${claim} for administrative review.`);
+  }
+  for (const actor of ['Employees', 'Faculty', 'Managers', 'Students']) {
+    for (const pair of [
+      'promotion and job satisfaction',
+      'grading and test anxiety',
+      'pay and retention',
+      'authority and morale',
+    ]) controls.push(`${actor} modeled the relationship between ${pair}.`);
+    for (const action of [
+      'reading romance novels',
+      'discussing romantic relationships',
+      'filing relationship surveys',
+      'rating dating profiles',
+    ]) controls.push(`The policy prohibited ${actor.toLowerCase()} from ${action} during training.`);
+  }
+  for (const lead of ['The survey', 'The registry', 'The clinic', 'The database', 'The report']) {
+    for (const object of [
+      'genetic parents from social parents into response groups',
+      'donors from intended parents for mailing lists',
+      'gestational mothers from social mothers by age',
+      'genetic parent scores from social-role variables',
+    ]) controls.push(`${lead} separates ${object}.`);
+  }
+  for (const lead of ['The survey', 'The consent form', 'The administrative report', 'The intake table']) {
+    for (const object of [
+      'couples about legal-status preferences',
+      'partners about residence-permit variables',
+      'intended parents about eligibility scores',
+      'families about legal-parenthood measures',
+    ]) controls.push(`${lead} asked ${object}.`);
+  }
+  for (const subject of ['interface', 'notification service', 'test harness', 'support widget']) {
+    for (const rest of [
+      'displays scripted messages without repeated clicks',
+      'uses a noninteractive message for one short test',
+      'briefly rates messages in a nonrelationship group',
+    ]) controls.push(`The ${subject} ${rest}.`);
+  }
+
+  assert.equal(controls.length, 120);
+  for (const fragment of controls) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+});
+
+test('H-3 positive paraphrase matrix retains explicit mechanisms across every umbrella', () => {
+  const groups = new Map([
+    ['asymmetric-nonhuman-relationships', [
+      'An AI companion provides emotional support to an isolated user.',
+      'Users formed an attachment to Replika despite its lack of welfare.',
+      'The virtual companion served as a confidant while having no needs of its own.',
+      'A social robot offers companionship without any stake in the outcome.',
+      'A relationship with a chatbot can feel intimate even though the bot lacks agency.',
+      'Users bond with Character.AI in what they describe as a romantic relationship.',
+    ]],
+    ['institutional-authority-governance', [
+      'The policy prohibits romantic relationships between faculty and undergraduates.',
+      'Managers are discouraged from dating their direct reports.',
+      'A relationship between a supervisor and a direct report is prohibited.',
+      'An instructor in a romantic relationship with a student must recuse from grading.',
+      'A workplace romance triggers disclosure and reassignment.',
+      'Coworker relationships outside the reporting line are not covered unless one has evaluative authority.',
+    ]],
+    ['role-unbundling-family-formation', [
+      'Donor conception separates genetic, gestational, and social parenthood among different people.',
+      'Reciprocal IVF splits genetic and gestational parent roles.',
+      'Families distinguish the biological father from the social father.',
+      'Solo motherhood separates the decision to have a child from the search for a romantic partner.',
+      'The genetic parent, gestational parent, and social parent are different people.',
+      'Donor, genetic contributor, gestational parent, and social parent roles require explicit separation.',
+    ]],
+    ['external-recognition-administrative-access', [
+      'A parental order grants the intended parents legal parenthood.',
+      'Immigration authorities recognized the partnership, making the spouse eligible for a residence permit.',
+      'Without a court declaration the parent has no legal status and the couple cannot register the birth.',
+      'Hospital rules allowed only a partner to stay, excluding the mother who provided support.',
+      'Legal-status access changed family formation for cross-border couples.',
+      'Institutions recognize support roles that a spouse would otherwise occupy.',
+    ]],
+    ['brief-nonrelationship-interactions', [
+      'A scripted message measured reactions rather than a relationship.',
+      'A one-shot speed-dating impression is not relationship maintenance.',
+      'A single workplace-romance vignette is not an ongoing couple.',
+      'Participants rated noninteractive synthetic characters without repeated contingent interaction.',
+      'Connection after one chatbot interaction is not evidence of durable relationship quality.',
+    ]],
+  ]);
+
+  let total = 0;
+  for (const [expected, fragments] of groups) {
+    for (const fragment of fragments) {
+      total += 1;
+      assert.equal(classifyUnmatchedPassage(fragment).primaryUmbrella.id, expected, fragment);
+    }
+  }
+  assert.equal(total, 29);
+});
+
+test('H-4 fresh-source mechanisms classify without admitting nearby procedural controls', () => {
+  const supported = new Map([
+    [
+      'The advent of conversational AI offered individuals an interactive partner through one-on-one personalized services.',
+      'asymmetric-nonhuman-relationships',
+    ],
+    [
+      'Participants formed an emotional attachment with conversational artificial intelligence.',
+      'asymmetric-nonhuman-relationships',
+    ],
+    [
+      "All fathers used gestational surrogacy, whereby a separate donor's egg was used and the surrogate did not use her own egg.",
+      'role-unbundling-family-formation',
+    ],
+    [
+      'If both partners give consent before treatment, the partner will be the legal parent.',
+      'external-recognition-administrative-access',
+    ],
+    [
+      'If a romantic relationship develops, the person in the position of greater authority must notify Human Resources and arrange alternate reporting.',
+      'institutional-authority-governance',
+    ],
+    [
+      'Consensual romantic relationships create inherent dangers when a faculty member has professional responsibility over the other person as a teacher or supervisor.',
+      'institutional-authority-governance',
+    ],
+  ]);
+  for (const [fragment, expected] of supported) {
+    assert.equal(classifyUnmatchedPassage(fragment).primaryUmbrella.id, expected, fragment);
+  }
+
+  for (const fragment of [
+    'Conversational artificial intelligence classified emotional-attachment survey responses.',
+    "The donor's eggs were separated into labelled vials for gestational surrogacy.",
+    'Partners recorded consent ratings and legal-parent variables.',
+    'The authority article describes romantic literature for a university course.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+});
+
+test('H-5 sealed-source citations abstain and disclosure limits remain boundary evidence', async () => {
+  const citation = '“Emotional attachment to AI companions and European law,” in MIT Case Studies in Social and Ethical Responsibilities of Computing, Winter 2023.';
+  const directCitation = classifyUnmatchedPassage(citation);
+  assert.equal(directCitation.abstained, true);
+  assert.equal(directCitation.primaryUmbrella.id, 'unclassified');
+
+  const citationAnalysis = await analyzeDocument(normalizeInput({
+    title: 'Bibliography furniture probe',
+    text: citation,
+  }), CANON);
+  if (citationAnalysis.metrics.unmappedClaimSegments > 0) {
+    assert.equal(citationAnalysis.researchQueue.items[0].unmatchedTriage.abstained, true);
+  }
+
+  const boundary = classifyUnmatchedPassage(
+    'There is no obligation to disclose relationships that fall into category (b) to other faculty or graduate students.',
+  );
+  assert.equal(boundary.primaryUmbrella.id, 'institutional-authority-governance');
+  assert.equal(boundary.unmatchedReason.id, 'boundary-moderator-directional-evidence');
+
+  const synonymousBoundary = classifyUnmatchedPassage(
+    'Students and postgraduates are not obligated to inform the civil-rights office of prohibited relationships or those requiring disclosure.',
+  );
+  assert.equal(synonymousBoundary.primaryUmbrella.id, 'institutional-authority-governance');
+  assert.equal(synonymousBoundary.unmatchedReason.id, 'boundary-moderator-directional-evidence');
+});
+
+test('H-6 connected mechanisms reject fiction, display, storage, metadata, and instrument collisions', async () => {
+  const negativeControls = [
+    'The supervisor romance novel follows a manager and a direct report.',
+    'The chart separates genetic and gestational parent labels into colors.',
+    'The database stores partners who have legal status documentation.',
+    'The AI companion app has no agency policy in its terms of service.',
+    'The virtual companion benchmark lacks welfare metadata but reports attachment scores.',
+    'A noninteractive scale uses scripted romantic messages rather than a relationship.',
+  ];
+  for (const fragment of negativeControls) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, `${fragment}: direct`);
+    const analysis = await analyzeDocument(normalizeInput({
+      title: 'H-6 live collision probe',
+      text: fragment,
+    }), CANON);
+    if (analysis.metrics.unmappedClaimSegments > 0) {
+      assert.equal(
+        analysis.researchQueue.items[0].unmatchedTriage.abstained,
+        true,
+        `${fragment}: live unmatched population`,
+      );
+    }
+  }
+
+  const shortClaim = 'Users formed attachments to conversational artificial intelligence.';
+  const direct = classifyUnmatchedPassage(shortClaim);
+  assert.equal(direct.primaryUmbrella.id, 'asymmetric-nonhuman-relationships');
+  const analysis = await analyzeDocument(normalizeInput({
+    title: 'H-6 short declarative claim',
+    text: shortClaim,
+  }), CANON);
+  if (analysis.metrics.unmappedClaimSegments > 0) {
+    assert.equal(analysis.researchQueue.items[0].excerpt, shortClaim);
+    assert.equal(
+      analysis.researchQueue.items[0].unmatchedTriage.primaryUmbrella.id,
+      'asymmetric-nonhuman-relationships',
+    );
+  } else {
+    assert.ok(
+      analysis.metrics.ignoredDomainSegments > 0 || analysis.metrics.mappedClaimSegments > 0,
+      'direct future-safety probe is either mapped or excluded by the unchanged analyzer gate',
+    );
+  }
+});
+
+test('H-7 a long predicateless title with a subtitle is furniture, not a mechanism', () => {
+  const citationTitle = 'More than just a chat: a taxonomy of consumers’ relationships with conversational AI agents and their well-being implications.';
+  assert.equal(classifyUnmatchedPassage(citationTitle).abstained, true);
+
+  const declarativeColon = 'The rule is clear: managers may not enter romantic relationships with their direct reports.';
+  assert.equal(
+    classifyUnmatchedPassage(declarativeColon).primaryUmbrella.id,
+    'institutional-authority-governance',
+  );
+});
+
+test('H-8 neighboring metadata and fiction forms abstain while explicit partner separation classifies', () => {
+  for (const fragment of [
+    'AI companion app has no consent documentation for compliance review.',
+    'Virtual companion benchmark has no consent documentation for compliance review.',
+    'Replika partner dataset has no consent documentation for compliance review.',
+    'Social robot specification has no consent documentation for compliance review.',
+    'The manager romance story features a direct report.',
+    'The workplace romance story features a direct report.',
+    'The faculty romance story features a direct report.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+  assert.equal(
+    classifyUnmatchedPassage('Parenthood developed without a romantic partner.').primaryUmbrella.id,
+    'role-unbundling-family-formation',
+  );
+});
+
+test('H-9 incomplete policy fragments and explicitly nonromantic relations abstain; no-prohibition is boundary evidence', () => {
+  for (const fragment of [
+    'relationships with students for whom such employees have current supervisory, instructional or',
+    'employees, regardless of supervisory relationships, that are not romantic in nature.',
+  ]) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, fragment);
+  }
+
+  const boundary = classifyUnmatchedPassage(
+    'They are not in a direct supervisory or instructional relationship, but there is no prohibition on maintaining the relationship.',
+  );
+  assert.equal(boundary.primaryUmbrella.id, 'institutional-authority-governance');
+  assert.equal(boundary.unmatchedReason.id, 'boundary-moderator-directional-evidence');
+});
+
+test('H-10 dangling list introducers abstain in direct and live unmatched triage', async () => {
+  const fragment = 'Many users have had romantic relationships with Replika chatbots, often including';
+  for (const dangling of [
+    fragment,
+    'The policy prohibits managers from dating direct reports, such as',
+    'Donor conception separates genetic and gestational parent roles, for example',
+  ]) {
+    const direct = classifyUnmatchedPassage(dangling);
+    assert.equal(direct.abstained, true, dangling);
+    assert.equal(direct.unmatchedReason.id, 'insufficient-evidence', dangling);
+  }
+
+  const analysis = await analyzeDocument(normalizeInput({
+    title: 'H-10 live dangling-list probe',
+    text: fragment,
+  }), CANON);
+  assert.equal(analysis.metrics.unmappedClaimSegments, 1);
+  assert.equal(analysis.researchQueue.items[0].excerpt, fragment);
+  assert.equal(analysis.researchQueue.items[0].unmatchedTriage.abstained, true);
+});
+
+test('H-11 dangling correlators and determiners abstain in direct and live triage', async () => {
+  const fragments = [
+    'When a prohibited relationship exists, the employee must both',
+    'Sexual and romantic relationships are prohibited where the faculty member or other',
+  ];
+  for (const fragment of fragments) {
+    assert.equal(classifyUnmatchedPassage(fragment).abstained, true, `${fragment}: direct`);
+    const analysis = await analyzeDocument(normalizeInput({
+      title: 'H-11 live incomplete-fragment probe',
+      text: fragment,
+    }), CANON);
+    assert.equal(analysis.metrics.unmappedClaimSegments, 1, `${fragment}: live population`);
+    assert.equal(analysis.researchQueue.items[0].excerpt, fragment);
+    assert.equal(analysis.researchQueue.items[0].unmatchedTriage.abstained, true, `${fragment}: live`);
+  }
+});
+
+test('H-1 live probes separate reader-visible failures from future-safety coverage', async () => {
+  const probes = [
+    {
+      id: 'institutional-statistical-dyad',
+      text: 'The relationship between supervisor ratings and direct-report job satisfaction was significant.',
+      expectedPrimary: 'unclassified',
+      expectedState: 'unmatched',
+    },
+    {
+      id: 'role-measurement-object',
+      text: 'Researchers separated genetic parent scores from social support roles.',
+      expectedPrimary: 'unclassified',
+      expectedState: 'unmatched',
+    },
+    {
+      id: 'interrogative-with-tag',
+      text: 'Could the policy ban supervisors from dating direct reports, correct?',
+      expectedPrimary: 'unclassified',
+      expectedState: 'unmatched',
+    },
+    {
+      id: 'institutional-connected-policy',
+      text: 'Managers are strongly discouraged from dating their direct reports.',
+      expectedPrimary: 'institutional-authority-governance',
+      expectedState: 'unmatched',
+    },
+    {
+      id: 'role-connected-separation',
+      text: 'Donor conception separates genetic parenthood from gestational and social parent roles.',
+      expectedPrimary: 'role-unbundling-family-formation',
+      expectedState: 'unmatched',
+    },
+  ];
+
+  for (const probe of probes) {
+    const direct = classifyUnmatchedPassage(probe.text);
+    assert.equal(direct.primaryUmbrella.id, probe.expectedPrimary, `${probe.id}: direct`);
+    const analysis = await analyzeDocument(normalizeInput({
+      title: `H-1 live probe ${probe.id}`,
+      text: probe.text,
+    }), CANON);
+    const state = analysis.metrics.mappedClaimSegments > 0
+      ? 'mapped'
+      : analysis.metrics.unmappedClaimSegments > 0
+        ? 'unmatched'
+        : analysis.metrics.ignoredDomainSegments > 0
+          ? 'excluded'
+          : 'no-claim';
+    assert.equal(state, probe.expectedState, `${probe.id}: live population`);
+    const item = analysis.researchQueue.items[0];
+    assert.equal(item.excerpt, probe.text, `${probe.id}: exact live fragment`);
+    assert.equal(item.unmatchedTriage.primaryUmbrella.id, probe.expectedPrimary, `${probe.id}: live`);
+  }
+});
+
+test('sealed 1.4 review probes distinguish direct safety from the live unmatched population', async () => {
+  const expectedCounts = { unmatched: 10, excluded: 4, 'no-claim': 2, mapped: 0 };
+  const counts = { unmatched: 0, excluded: 0, 'no-claim': 0, mapped: 0 };
+
+  for (const fixture of EVALUATION_14.cases) {
+    const direct = classifyUnmatchedPassage(fixture.text);
+    const analysis = await analyzeDocument(normalizeInput({
+      title: `Sealed 1.4 probe ${fixture.id}`,
+      text: fixture.text,
+    }), CANON);
+    const liveState = analysis.metrics.mappedClaimSegments > 0
+      ? 'mapped'
+      : analysis.metrics.unmappedClaimSegments > 0
+        ? 'unmatched'
+        : analysis.metrics.ignoredDomainSegments > 0
+          ? 'excluded'
+          : 'no-claim';
+    counts[liveState] += 1;
+
+    if (liveState === 'unmatched') {
+      const item = analysis.researchQueue.items[0];
+      assert.equal(item.excerpt, fixture.text, `${fixture.id}: exact fragment`);
+      assert.equal(
+        item.unmatchedTriage.primaryUmbrella.id,
+        direct.primaryUmbrella.id,
+        `${fixture.id}: live primary`,
+      );
+      assert.equal(
+        item.unmatchedTriage.unmatchedReason.id,
+        direct.unmatchedReason.id,
+        `${fixture.id}: live reason`,
+      );
+    }
+  }
+  assert.deepEqual(counts, expectedCounts);
+});
+
 test('G-1..G-5 adversarial probes hold in the live analyzer, not just the classifier', async () => {
   const liveCounts = { mapped: 0, unmatched: 0, excluded: 0, 'no-claim': 0 };
   for (const fixture of ADVERSARIAL_13.cases) {
     const direct = classifyUnmatchedPassage(fixture.text);
-    assert.equal(direct.primaryUmbrella.id, fixture.directPrimary, `${fixture.id}: direct primary`);
-    assert.equal(direct.unmatchedReason.id, fixture.directReason, `${fixture.id}: direct reason`);
+    if (fixture.id === 'g2-authority-teacher-student') {
+      /*
+       * Historical evidence is preserved verbatim, but 1.4 deliberately
+       * overturns this post-hoc 1.3 expectation: naming a teacher-student dyad
+       * and calling it important is not an authority/governance mechanism.
+       */
+      assert.equal(direct.primaryUmbrella.id, 'unclassified', `${fixture.id}: corrected primary`);
+      assert.equal(direct.abstained, true, `${fixture.id}: corrected abstention`);
+    } else {
+      assert.equal(direct.primaryUmbrella.id, fixture.directPrimary, `${fixture.id}: direct primary`);
+      assert.equal(direct.unmatchedReason.id, fixture.directReason, `${fixture.id}: direct reason`);
+    }
 
     const analysis = await analyzeDocument(normalizeInput({
       title: `Adversarial probe ${fixture.id}`,
@@ -734,10 +1243,15 @@ test('G-1..G-5 adversarial probes hold in the live analyzer, not just the classi
      */
     if (liveState === 'unmatched') {
       const item = analysis.researchQueue.items[0];
+      const expectedPrimary = fixture.id === 'g2-authority-teacher-student'
+        ? 'unclassified'
+        : fixture.directPrimary;
       assert.equal(item.excerpt, fixture.text, `${fixture.id}: exact live fragment`);
-      assert.equal(item.unmatchedTriage.primaryUmbrella.id, fixture.directPrimary, `${fixture.id}: live primary`);
-      assert.equal(item.unmatchedTriage.unmatchedReason.id, fixture.directReason, `${fixture.id}: live reason`);
-      if (fixture.directPrimary === 'unclassified') {
+      assert.equal(item.unmatchedTriage.primaryUmbrella.id, expectedPrimary, `${fixture.id}: live primary`);
+      if (fixture.id !== 'g2-authority-teacher-student') {
+        assert.equal(item.unmatchedTriage.unmatchedReason.id, fixture.directReason, `${fixture.id}: live reason`);
+      }
+      if (expectedPrimary === 'unclassified') {
         assert.equal(item.unmatchedTriage.abstained, true, `${fixture.id}: live abstention is explicit`);
       }
     }
@@ -746,7 +1260,7 @@ test('G-1..G-5 adversarial probes hold in the live analyzer, not just the classi
   assert.equal(ADVERSARIAL_13.cases.length, 42);
 });
 
-test('the two frozen evaluation fixtures are never edited to green a rule', () => {
+test('frozen evaluation fixtures are never edited to green a rule', () => {
   /*
    * Byte identity, not shape identity. An expectation quietly edited to match
    * new behaviour is exactly what this exists to catch, and it is the one
@@ -768,6 +1282,11 @@ test('the two frozen evaluation fixtures are never edited to green a rule', () =
     pin('unmatched-umbrella-evaluation-1.1.json'),
     'e34ba158f084c1020825df646eb1f498d715bbd70f051f53be97802004b00f04',
     'taxonomy 1.1 successor must stay byte-identical',
+  );
+  assert.equal(
+    pin('unmatched-umbrella-evaluation-1.4.json'),
+    'b0c2fcb646ebc4edc1a6ebc4e399b6220bda36d3437782d70d59513dba340e51',
+    'taxonomy 1.4 sealed review evidence must stay byte-identical',
   );
 });
 

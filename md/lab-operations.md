@@ -522,6 +522,33 @@ nonrelationship claim outright, and `briefly rated` is measurement furniture
 whoever performs it. A question is never a supported umbrella, because an
 interrogative asserts no mechanism.
 
+From v2.7.5 every subject family also has a zero-weight connected-mechanism
+predicate. Scored token families can calibrate confidence but cannot manufacture
+qualification through co-occurrence. This closes statistical
+`relationship between`/supervisor collisions, bare dyad labels, AI-as-instrument
+and bibliography collisions, response-group and database separation, legal
+status variables, and brief measurement prose while retaining explicit
+actor-action-relational-object forms. Declarative tag questions are retained;
+auxiliary-led questions abstain. `no obligation to disclose` and `not obligated
+to inform` are boundary evidence before doctrine ownership is consulted. The
+frozen 1.4 fixture and final sealed source holdout are recorded in pt11.
+
+Analyzer v2.7.11 carries taxonomy/triage 1.4.6. The patch releases add
+mechanism-shaped negative controls found during the completed pressure window:
+fictional romance prose, chart/label role separation, database status storage,
+AI policy/metadata vocabulary, and measurement instruments cannot qualify a
+subject. Short declarative claims using `formed`, `developed`, `established`,
+`built`, `experienced`, or `created` are no longer mistaken for verbless titles.
+A predicateless title/subtitle separated by a colon is furniture even when it is
+longer than the eight-word short-title cap; a declarative colon sentence still
+passes. Later sealed-source attacks additionally reject AI consent-policy
+metadata, romance fiction, incomplete conjunction/preposition fragments, and
+dangling list introducers such as `including`, `such as`, and `for example`,
+plus incomplete correlator/determiner endings such as `must both` and `or other`.
+Explicitly nonromantic relations abstain, while `no prohibition` remains
+boundary evidence. The 1.4.0 fixture is retained byte-for-byte as historical
+sealed evidence; every source set that changed a rule is labelled discovery.
+
 JSON keeps each queue excerpt byte-exact. Markdown uses a dedicated excerpt
 serializer: it preserves spaces, tabs, line breaks, and blank lines, emits
 every source line in the blockquote, and encodes only `&`, `<`, and `>`. The
@@ -540,7 +567,9 @@ umbrella taxonomy and item triage described above. Analyzer v2.7.2 retains the
 2.3 queue shape while advancing the taxonomy/triage payload to 1.1 and
 tightening its explanatory rules; v2.7.3 retains 2.3 again and moves the
 payload to 1.2 for the post-review rule rework; v2.7.4 retains 2.3 once more and
-moves the payload to 1.3 for the second rework. The queue shape has not changed
+moves the payload to 1.3 for the second rework; v2.7.5 retains 2.3 and moves the
+payload to 1.4 for connected-mechanism qualification; v2.7.11 retains 2.3 and
+moves that payload to 1.4.6 for the pressure-window patch corrections. The queue shape has not changed
 since 2.3 — only the triage payload inside it. This heading sat at 2.0 while production shipped
 both; the drift was caught by the 2026-08-07 cold review (finding 7) and the
 analyzer's live export version is asserted against the constant in
