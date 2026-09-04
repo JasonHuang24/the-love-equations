@@ -101,6 +101,11 @@ const STEPS = [
   ['python', 'tools/lab_release_audit.py'],
   ['python', 'tools/lab_ui_audit.py'],
   ['python', 'tools/site_integrity_audit.py'],
+  // The SMV celebrity panel — the one calculator benchmark outside the Lab. Appended 2026-09-03
+  // so `test:lab` (the runner with the stale-tree banner and DISARMED accounting) covers it;
+  // `npm run test:smv` still runs it alone. It prints its own table, not TAP, and exits non-zero
+  // on any band or structural violation, which is all the classifier needs.
+  ['node', 'tests/smv-panel.mjs'],
 ];
 
 /* Trap 4: say which tree these numbers describe, before printing any of them. */

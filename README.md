@@ -77,7 +77,7 @@ No build step, no framework — plain HTML/CSS/JS served statically.
 No npm packages or build step are required. Lab tests use Node and the repository Python tooling:
 
 ```bash
-npm run test:lab                         # Lab intake + analyzer + canon + HTML/ARIA/link audits
+npm run test:lab                         # Lab intake + analyzer + canon + HTML/ARIA/link audits + SMV bands
 npm run test:all                         # Lab + SMV bands + Matchmaker invariants
 node scripts/build-canon-index.mjs       # regenerate after canonical source changes
 node scripts/validate-canon-index.mjs    # validate committed runtime index

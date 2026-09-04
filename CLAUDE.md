@@ -1,7 +1,7 @@
 # The Love Equations — working agreements
 
 Static site + the LE Lab (an NLP engine mapping discourse onto the site's canon).
-Suites: `npm run test:lab` (21 steps) · `npm run test:all`. A step whose
+Suites: `npm run test:lab` (25 steps, incl. the SMV panel) · `npm run test:all`. A step whose
 assertions skipped reports `DISARMED(n)`, in the step label and the summary
 line — it is not a pass. The default runner exits 2; use
 `npm run test:lab:allow-disarmed` only to acknowledge an already-understood

@@ -1559,11 +1559,13 @@
       selectedLensA = (s === 'f') ? 'female' : 'male';   // sync the lens to the profile's sex
       renderQ();
       saveState();
+      autoAdvanceIf(true);
     }
     function setAge(a) {
       answers[AGE_IDX] = a;
       renderQ();
       saveState();
+      autoAdvanceIf(true);
     }
     function setHeightUnit(u) { heightUnit = u; renderQ(); saveState(); }
     function setWeightUnit(u) { weightUnit = u; renderQ(); saveState(); }
@@ -2140,12 +2142,18 @@
       answers[curQ] = i;
       renderQ();
       saveState();
-      if (autoNext) {
-        window.setTimeout(() => {
-          if (curQ === QUESTIONS.length - 1) finishA();
-          else nextQ();
-        }, 150);
-      }
+      autoAdvanceIf(true);
+    }
+
+    // Auto-next for the tap handlers that bypass selectOpt (sex, age, degree/tier, kids, job
+    // ladder). `complete` lets a two-part question wait for its second tap: isAnswered() is true
+    // as soon as a degree or a kid count is picked, but the tier / custody pick is still owed.
+    function autoAdvanceIf(complete) {
+      if (!autoNext || !complete || !isAnswered(curQ)) return;
+      window.setTimeout(() => {
+        if (curQ === QUESTIONS.length - 1) finishA();
+        else nextQ();
+      }, 150);
     }
 
     // Preview HTML for the income / net-worth fields — shared by the initial render (renderQ)
@@ -2380,6 +2388,7 @@
       answers[curQ] = { mode: 'fallback', band: i, label: b[0], score: b[1] };
       jobResults = [];
       renderQ(); saveState();
+      autoAdvanceIf(true);
     }
     function jobPreviewHtml(a) {
       if (a && typeof a.score === 'number') return `<strong>${escapeHtml(a.label)}</strong> → <strong>${a.score.toFixed(1)} / 10</strong> (prestige only — income is scored in Money).`;
@@ -2392,11 +2401,13 @@
       a.degree = i;
       if (i < 3) delete a.tier;   // tier only meaningful at bachelor's+
       renderQ(); saveState();
+      autoAdvanceIf(i < 3);       // bachelor's+ still owes the tier pick
     }
     function setTier(i) {
       const a = ensureAnswerObj();
       a.tier = i;
       renderQ(); saveState();
+      autoAdvanceIf(true);
     }
     function educationPreviewHtml(a) {
       if (!a || a.degree == null) return '<span class="income-hint">Pick your highest degree.</span>';
@@ -2410,11 +2421,13 @@
       a.count = i;
       if (i === 0) delete a.custody;
       renderQ(); saveState();
+      autoAdvanceIf(i === 0);     // any kids still owes the custody pick
     }
     function setKidCustody(k) {
       const a = ensureAnswerObj();
       a.custody = k;
       renderQ(); saveState();
+      autoAdvanceIf(true);
     }
     function kidsPreviewHtml(a) {
       if (!a || a.count == null) return '<span class="income-hint">Select how many children you have.</span>';

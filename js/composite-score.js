@@ -199,7 +199,8 @@
     reset: function () {
       try {
         localStorage.removeItem(FACE_KEY); localStorage.removeItem(BODY_KEY);
-        localStorage.removeItem('loveEquations.faceShot.v1'); localStorage.removeItem('loveEquations.bodyShot.v1');
+        // face.html LC_SHOT_KEY is faceShot.v2 (v1 is purged by face.html on load); body.html BC_SHOT_KEY is bodyShot.v1
+        localStorage.removeItem('loveEquations.faceShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v1');
         // also drop the body calc's saved height/weight/bf inputs — body.html re-persists a
         // bodyScore from them on its next load, silently resurrecting the score just reset here
         localStorage.removeItem('loveEquations.bodyInputs.v1');

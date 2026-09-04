@@ -1435,7 +1435,9 @@
 
     // On load, restore a face + result saved on a previous visit (persists until a new drop or Reset).
     function lcRestoreShot(){
-      let saved; try { saved = JSON.parse(localStorage.getItem('loveEquations.faceShot.v1') || 'null'); } catch(_){ saved = null; }
+      // LC_SHOT_KEY is the classic script's top-level const (shared global lexical scope) — the
+      // one name both the writer (lcSaveShot) and this reader use, so the key cannot drift again.
+      let saved; try { saved = JSON.parse(localStorage.getItem(LC_SHOT_KEY) || 'null'); } catch(_){ saved = null; }
       if (!saved || !saved.img || !saved.state || !saved.state.geo) return;
       if (window.lcSetShot) window.lcSetShot(saved.img);               // so later sex/lens changes re-persist (Codex F1)
       if (window.lcRestoreState) window.lcRestoreState(saved.state);   // sets LC + renders the panel
