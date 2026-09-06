@@ -1,8 +1,23 @@
 # Face Calc — trained beauty model
 
+## Current production contract (September 2026)
+
+The headline requires the trained model. It keeps the calibrated square crop and raw-output
+`REF_RAW` percentile mapping in `face.html`; the legacy `outMin/outMax` normalization below
+is not the headline mapping. Do not change the crop, weights, or average model outputs
+without validating and regenerating that reference through the new pipeline.
+
+`js/face-quality.js` now rejects insufficient native face detail and crops extending outside
+the source image. A second inference on the reflected tensor checks consistency: disagreement
+above 0.25 displayed points withholds the score. Accepted scores still use the original raw
+prediction. This reduces unreliable reads; it does not validate the model against human taste.
+
+The export instructions below describe the existing checkpoint and historical setup.
+
+
 Drop a converted model here as **`face-beauty.onnx`** and the Face Calculator will use it
-for the headline score automatically (on-device, via onnxruntime-web). Until then the page
-runs on the transparent geometry heuristic, and the geometry stays the breakdown either way.
+for the headline score automatically (on-device, via onnxruntime-web). Without the model the page
+shows descriptive geometry only, with no headline score.
 
 ## The contract the page expects
 `face.html` → `MODEL_CONFIG` (top of the MediaPipe `<script type="module">`):

@@ -218,12 +218,13 @@
 .lc-guide { position: absolute; inset: 0; pointer-events: none; }
 .lc-guide svg { width: 100%; height: 100%; display: block; }
 .lc-guide .g-mid   { stroke: rgba(255,255,255,0.35); stroke-width: 0.4; stroke-dasharray: 2 2; }
-.lc-guide .g-shape { fill: none; stroke: rgba(255,255,255,0.75); stroke-width: 0.7; stroke-dasharray: 3 2; }
+.lc-guide .g-shape { fill: none; stroke: rgba(255,255,255,0.75); stroke-width: 0.7; stroke-dasharray: none; }
 .lc-guide .g-bar   { stroke: var(--scarlet); stroke-width: 0.7; stroke-dasharray: 2.4 1.6; opacity: 0.85; }
 .lc-guide-tip {
-  position: absolute; left: 0; right: 0; bottom: 0.5rem; text-align: center;
-  color: #fff; font-size: 12px; text-shadow: 0 1px 3px rgba(0,0,0,0.85); padding: 0 1rem;
+  margin-top: 0.6rem; padding: 0.6rem 0.75rem; border-radius: 8px;
+  background: rgba(196,30,58,0.06); color: var(--text); font-size: 12px; line-height: 1.5;
 }
+.lc-guide-tip[hidden] { display: none; }
 
 /* ── Framing gate — the not-scored-yet prompt for a degraded (overridable) photo ── */
 .lc-gate { padding: 1.2rem 0.4rem; }
@@ -240,12 +241,12 @@
 
 /* ── Camera-app capture: round shutter overlaid on the live preview + the auto-snap toggle ── */
 .lc-shutter {
-  position: absolute; bottom: 0.9rem; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 0.75rem; right: 0.75rem;
   width: 54px; height: 54px; border-radius: 50%;
   background: var(--scarlet); border: 3px solid #fff;
   box-shadow: 0 1px 8px rgba(0,0,0,0.55); cursor: pointer; padding: 0;
 }
-.lc-shutter:active { transform: translateX(-50%) scale(0.9); }
+.lc-shutter:active { transform: scale(0.9); }
 .lc-shutter:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .lc-autosnap { display: flex; align-items: flex-start; gap: 0.45rem; margin-top: 0.6rem; font-size: 12.5px; color: var(--text-dim); line-height: 1.5; cursor: pointer; }
 .lc-autosnap input { margin-top: 2px; accent-color: var(--scarlet); }

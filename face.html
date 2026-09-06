@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
   <script src="js/include.js?v=1.0" defer></script>
-  <script src="js/composite-score.js?v=1.0" defer></script>
+  <script src="js/composite-score.js?v=1.1" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
-  <link rel="stylesheet" href="css/face.css?v=2.2" />
+  <link rel="stylesheet" href="css/face.css?v=2.3" />
 </head>
 <body data-page="face">
   <div data-include="navigation-bar"></div>
@@ -29,7 +29,7 @@
       <details class="calc-fold">
         <summary><i class="ti ti-alert-triangle" aria-hidden="true"></i> Read this first &mdash; methodology &amp; limitations<i class="ti ti-chevron-down calc-fold-chev" aria-hidden="true"></i></summary>
         <div class="calc-fold-body lc-caveat-body">
-        This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; until then the heuristic scores both. <strong>That model learned from SCUT-FBP5500</strong> &mdash; a fixed panel of raters scoring one specific set of faces &mdash; so its scale carries their tastes, era and demographic skew, not a universal truth. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; for a professionally-built facial assessment, see <a href="https://www.qoves.com/" target="_blank" rel="noopener">QOVES</a>.
+        This is a mirror of the two methodologies, not a verdict on a person. It reads everything it can straight from the image &mdash; geometry from 478 facial landmarks, plus skin texture, tone and under-eye from the pixels &mdash; so it&rsquo;s drag-and-drop. But be honest about the ceiling: a transparent, on-device read is a <em>weak</em> proxy. As <a href="frameworks.html#bone-pill">The Bone Pill</a> shows, no honest instrument maps a face to a number, the features that decide most (and the whole profile) a front still can&rsquo;t see, and the &ldquo;shared score&rdquo; dissolves the moment someone actually knows you. Pixel reads are rough and lighting-sensitive. When a trained model (<code>models/face-beauty.onnx</code>) is present it scores the headline number &mdash; on-device, still no upload &mdash; and the geometry becomes the transparent breakdown beneath it; without it there is no headline score. Photos must meet the capture checks, and inconsistent model readings are declined. <strong>That model learned from SCUT-FBP5500</strong> &mdash; a fixed panel of raters scoring one specific set of faces &mdash; so its scale carries their tastes, era and demographic skew, not a universal truth. Everything runs locally; the image never leaves your browser. <strong>This is a transparent prototype, not a clinical tool</strong> &mdash; for a professionally-built facial assessment, see <a href="https://www.qoves.com/" target="_blank" rel="noopener">QOVES</a>.
         </div>
       </details>
 
@@ -53,7 +53,7 @@
             </div>
             <div class="lc-src-panel" data-panel="camera" hidden>
               <button class="lc-btn" id="lc-cam-start"><i class="ti ti-video"></i> Start camera</button>
-              <label class="lc-autosnap" for="lc-autosnap"><input type="checkbox" id="lc-autosnap" checked /> <span><strong>Auto-snap when aligned.</strong> Once your face sits square in the guide for a second, the photo takes itself &mdash; or tap the red shutter on the preview any time.</span></label>
+              <label class="lc-autosnap" for="lc-autosnap"><input type="checkbox" id="lc-autosnap" checked /> <span><strong>Auto-snap when aligned.</strong> Center your face, put your eyes on the red line, and hold still for a second. The shutter uses the same quality checks.</span></label>
             </div>
 
             <div class="lc-stage" id="lc-stage">
@@ -67,10 +67,10 @@
                   <ellipse class="g-shape" cx="50" cy="46" rx="20" ry="27" />
                   <line class="g-bar" x1="33" y1="40" x2="67" y2="40" />
                 </svg>
-                <div class="lc-guide-tip">Face in the oval, eyes on the bar, square-on &mdash; and hold the phone an arm&rsquo;s length or more away (close-up selfies distort proportions).</div>
               </div>
               <button class="lc-shutter" id="lc-shutter" hidden aria-label="Capture photo" title="Capture photo"></button>
             </div>
+            <div class="lc-guide-tip" id="lc-guide-tip" role="status" aria-live="polite" hidden>Center your face in the oval, eyes on the red line. Keep your head level and hold still.</div>
             <div class="lc-status" id="lc-status" role="status" aria-live="polite">Loading the on-device face model&hellip;</div>
             <div class="lc-note lc-privacy"><i class="ti ti-lock"></i> <strong>Stays on this device.</strong> Your photo is read in your browser and never uploaded. It&rsquo;s saved locally so it survives page switches, and is cleared the moment you drop a new one or hit <strong>Reset</strong>.</div>
           </div>
@@ -117,6 +117,8 @@
   <div data-include="composite-section"></div>
 
   <div data-include="footer"></div>
+
+  <script src="js/face-quality.js?v=1"></script>
 
   <!-- ===== Pure scoring core (DOM-free, testable) ===== -->
   <script>
@@ -171,7 +173,7 @@
       // measurement. yaw uses the cheek pair (symmetric → zero baseline on a frontal face, measured).
       // pitchDeg (forehead-top vs chin) is READOUT-ONLY: measured on 37 frontal SCUT faces its baseline
       // spread is ±18° of face shape, so classifyFraming excludes it — kept here for a future estimator.
-      // Non-finite z (a z-less mesh) → 0, which classifyFraming reads as "no z read" and falls back to
+      // Non-finite z (a z-less mesh) is explicitly flagged by depthAvailable; the gate falls back to
       // poseSkew for yaw — it must NOT trip the finite guard upstream.
       const zPx = i => { const z = lm[i].z; return Number.isFinite(z) ? z*W : NaN; };
       const yawRaw   = Math.atan2(zPx(IDX.cheekL)-zPx(IDX.cheekR), Math.abs(raw(IDX.cheekL).x-raw(IDX.cheekR).x) || 1) * 180/Math.PI;
@@ -179,7 +181,7 @@
       const yawDeg   = Number.isFinite(yawRaw)   ? yawRaw   : 0;
       const pitchDeg = Number.isFinite(pitchRaw) ? pitchRaw : 0;
       const rollDeg  = roll * 180/Math.PI;
-      return { symmetry:asym, jaw, midface, fwhr, canthal, eyeSpacing, lips, leanness, noseWidth, eyeOpen, poseSkew, yawDeg, pitchDeg, rollDeg };
+      return { symmetry:asym, jaw, midface, fwhr, canthal, eyeSpacing, lips, leanness, noseWidth, eyeOpen, poseSkew, yawDeg, pitchDeg, rollDeg, depthAvailable:Number.isFinite(yawRaw) ? 1 : 0 };
     }
 
     // raw geometric metrics: ideal + tolerance (reasoned, prototype — tune against real photos)
@@ -310,18 +312,20 @@
     //   poseSkew p90 0.094, max 0.184 on frontal faces — too noisy to sit alongside a live z read
     //     (it refused 3 frontal SCUT faces in the pre-fix run); it classifies ONLY when z is dead.
     const FRAMING_GATE = {
-      yawDeg:   { warn:12,   refuse:25,   what:'head turned' },
-      rollDeg:  { warn:10,   refuse:25,   what:'head tilted sideways' },
+      yawDeg:   { warn:6,    refuse:12,   what:'head turned' },
+      rollDeg:  { warn:5,    refuse:8,   what:'head tilted sideways' },
       poseSkew: { warn:0.12, refuse:0.22, what:'head turned' }   // z-less fallback for yaw only (0.12 = the old soft-note threshold)
     };
     function classifyFraming(geo){
-      if (!geo) return { band:'pass', issues:[] };
+      if (!geo || !Number.isFinite(geo.rollDeg)) return { band:'refuse', issues:['head position unavailable'] };
       const issues = []; let band = 'pass';
       const raise = w => { if (w === 'refuse') band = 'refuse'; else if (band !== 'refuse') band = 'degraded'; };
       const sev = (v, g) => Math.abs(v) >= g.refuse ? 'refuse' : Math.abs(v) >= g.warn ? 'degraded' : null;
       // yaw: the z read when present, else the poseSkew proxy — never both (measured: skew is noisy
       // enough on frontal faces that letting it outvote a live z read produces false refusals)
-      const zAlive = geo.yawDeg !== 0 || geo.pitchDeg !== 0;   // both exactly 0 ⇔ z was unusable (see computeMetrics)
+      const zAlive = geo.depthAvailable === 1; // zero is a valid angle, never a missing-depth sentinel
+      if (zAlive ? !Number.isFinite(geo.yawDeg) : !Number.isFinite(geo.poseSkew))
+        return { band:'refuse', issues:['head position unavailable'] };
       const yb = zAlive ? sev(geo.yawDeg, FRAMING_GATE.yawDeg)
                         : sev(geo.poseSkew == null ? 0 : geo.poseSkew, FRAMING_GATE.poseSkew);
       if (yb){ raise(yb); issues.push(FRAMING_GATE.yawDeg.what + (zAlive ? ' (~' + Math.round(Math.abs(geo.yawDeg)) + '°)' : '')); }
@@ -376,7 +380,7 @@
     const REF_MID = 5.5, REF_SD = 1.4, SCORE_MIN = 1, SCORE_MAX = 10;
     // Machine-side uncertainty half-width by photo count. MEASURED, not assumed: 166 people × ≥3 genuinely
     // different real photographs each (roster galleries), scoring the mean raw of k held-out shots against
-    // the consensus of the rest. Kept in faceScore.v3 for downstream compatibility; Jason's 2026-08-14
+    // the consensus of the rest. Kept in faceScore.v4 for downstream compatibility; Jason's 2026-08-14
     // presentation ruling deliberately removes it from every user-visible score surface.
     const BAND_HALF = [1.7, 1.1, 0.9];
     const MAX_SHOTS = BAND_HALF.length;
@@ -513,12 +517,14 @@
                  // is the mapping of their MEAN raw, and repeated photos steady that point estimate. `addMode`
                  // makes the NEXT scored photo append instead of starting over — set only by the explicit
                  // "Add another photo" affordance, so a plain new drop still means "new person".
-                 shots:[], addMode:false,
+                 shots:[], shotMeta:[], pendingMeta:null, analysisPending:false, addMode:false,
                  sex:null, sexAuto:true, sexSource:'guess', sexConf:null, sexManual:false, reliability:'',
                  framingOverride:false,   // this result was scored on the rate-anyway override — rides into the shot state AND the composite payload (provenance must survive the blend)
                  sexClsSex:null, sexClsConf:null,   // the classifier's raw read, logged even when a manual pick outranks it (so a conflict can surface)
                  gate:null,   // a degraded-framing photo awaiting the user's rate-anyway override ({issues:[…]}); takes over the panel until decided
                  shotDataURL:null, measuredAt:null };
+
+    let lcPrevious = null; // rollback of an explicitly appended photo until model acceptance
 
     document.querySelectorAll('.lc-src').forEach(function(tab){
       tab.setAttribute('role', 'button');
@@ -607,7 +613,7 @@
           + '</div>';
         const go = host.querySelector('#lc-gate-go'), dr = host.querySelector('#lc-gate-drop');
         if (go) go.addEventListener('click', function(){ if (window.lcGateOverride) window.lcGateOverride(); });
-        if (dr) dr.addEventListener('click', function(){ LC.gate = null; window.lcGateOverride = null; window.lcResetResult(); setStatus('Cleared. Drop a face to start again.'); if (window.lcClearCanvas) window.lcClearCanvas(); });
+        if (dr) dr.addEventListener('click', function(){ LC.gate=null; window.lcGateOverride=null; window.lcRejectPhoto('Photo discarded.'); if (!LC.geo && window.lcClearCanvas) window.lcClearCanvas(); });
         return;
       }
       if (!LC.geo){
@@ -621,7 +627,7 @@
       // inventing one. The geometry panel below still renders: it is a description, not a score.
       const shots = LC.shots.filter(Number.isFinite);
       const nShots = shots.length;
-      const usingModel = nShots > 0;
+      const usingModel = nShots > 0 && !LC.analysisPending;
       const score = usingModel ? scoreFromRaws(shots) : null;
       const half = usingModel ? bandHalfFor(nShots) : null;
       const lo = usingModel ? Math.max(SCORE_MIN, score - half) : null;
@@ -699,10 +705,10 @@
 
       // ── Headline. Jason's 2026-08-14 presentation ruling makes the single best-estimate score the result.
       //    Its tier is derived from that same point; percentile and photo count remain plain fine print.
-      //    The unchanged machine-side half-width still persists in faceScore.v3 and is never rendered here.
+      //    The unchanged machine-side half-width still persists in faceScore.v4 and is never rendered here.
       const headline = !usingModel
         ? '<div class="lc-noscore">No score</div>'
-          + '<div class="lc-tier" style="color:'+accent+'">The trained model isn&rsquo;t loaded</div>'
+          + '<div class="lc-tier" style="color:'+accent+'">'+(LC.analysisPending && LC.modelReady ? 'Checking photo quality…' : 'The trained model isn&rsquo;t loaded')+'</div>'
         : '<div class="lc-score" style="color:'+accent+'">'+fmt(score)+' <span class="unit">/ 10</span></div>'
           + '<div class="lc-tier" style="color:'+accent+'">'+faceTier(score, tierSex)+'</div>'
           + '<div class="lc-pct">Around the <strong>'+ordinal(Math.round(pct))+' percentile</strong> of the reference population '
@@ -769,14 +775,14 @@
           // undetermined sex persists as null (matches the Body Calc's model path) — the display-only
           // 'f' fallback must not enter the composite's sex-conflict check as a real read
           source: usingModel ? 'model' : 'heuristic', sex: (sexKnown ? sex : null), ts: LC.measuredAt,
-          framingOverride: !!LC.framingOverride
+          framingOverride: !!LC.framingOverride, qualityVersion:1
         });
       }
       lcSaveShot();   // persist the photo + this result across page switches
     }
 
     window.lcAnalyze = function(geo, soft, reliability, framingOverride){
-      LC.geo = geo; LC.soft = soft; LC.model = null; LC.measuredAt = Date.now();   // new face: the panel shows first, the model score arrives async
+      LC.geo = geo; LC.soft = soft; LC.model = null; LC.modelRaw = null; LC.analysisPending = true; LC.measuredAt = Date.now();   // new face: the panel shows first, the model score arrives async
       // A photo that did NOT arrive through "+ Add another photo" is a new person: drop the accumulated
       // shots. Keeping them would silently average two different faces together.
       // The flag is CONSUMED HERE and nowhere else — its lifetime is exactly "armed until the next photo
@@ -784,9 +790,10 @@
       // photo disarm it between the click and this call, which silently replaced the set instead of adding.
       const append = LC.addMode;
       LC.addMode = false;
-      if (!append) LC.shots = [];
+      if (!append){ LC.shots = []; LC.shotMeta = []; }
       LC.gate = null; window.lcGateOverride = null;    // this photo is committing — any pending framing prompt is decided/superseded
-      LC.reliability = reliability || '';              // persistent low-res caveat (survives the async model re-render)
+      LC.pendingMeta = {reliability:reliability || '', framingOverride:!!framingOverride};
+      LC.reliability = reliability || '';
       LC.framingOverride = !!framingOverride;          // structured provenance: a degraded-framing photo scored on the user's override
       LC.sexClsSex = null; LC.sexClsConf = null;   // new photo → drop the previous photo's classifier read before this one's fires
       // Manual sex (a panel flip) OUTRANKS the guess AND the classifier and SURVIVES a new photo — re-measure the
@@ -809,16 +816,46 @@
     };
     // `t` is retained only as the "a model result landed" flag; the SCORE now comes from LC.shots, since
     // the mapping consumes raw model outputs directly (no normalised t in the display path any more).
+    function lcAggregateQuality(){
+      LC.framingOverride = LC.shotMeta.some(m=>m.framingOverride);
+      LC.reliability = [...new Set(LC.shotMeta.map(m=>m.reliability).filter(Boolean))].join(' ');
+    }
     window.lcSetModelScore = function(t, raw){
-      LC.model = t; LC.modelRaw = (raw==null?null:raw);
-      if (Number.isFinite(raw)){
-        if (LC.shots.length >= MAX_SHOTS) LC.shots.shift();   // a 4th photo replaces the oldest, never silently ignored
-        LC.shots.push(raw);
-      }
-      setStatus(LC.shots.length > 1
+      if (!Number.isFinite(raw)) return;
+      LC.model = t; LC.modelRaw = raw; LC.analysisPending = false;
+      LC.shots = LC.shots.concat(raw).slice(-MAX_SHOTS);
+      LC.shotMeta = LC.shotMeta.concat(LC.pendingMeta || {reliability:'',framingOverride:false}).slice(-MAX_SHOTS);
+      LC.pendingMeta = null; lcPrevious = null;
+      lcAggregateQuality();
+      setStatus((LC.shots.length > 1
         ? 'Scored with the trained model — averaging ' + LC.shots.length + ' photos.'
-        : 'Scored with the trained model (raw output ' + (raw==null?'?':(+raw).toFixed(3)) + ').');
+        : 'Scored with the trained model.') + (LC.reliability ? ' ' + LC.reliability : ''));
       renderResult();
+    };
+    window.lcBeginPhoto = function(){
+      if (LC.addMode && LC.shots.length){
+        if (LC.geo && !LC.analysisPending) lcPrevious=JSON.parse(JSON.stringify(LC));
+        // Replacing a still-gated append keeps the last accepted photo as rollback.
+      } else lcPrevious=null;
+    };
+    window.lcRejectPhoto = function(message){
+      if (lcPrevious){
+        const previous=lcPrevious; lcPrevious=null;
+        Object.assign(LC,previous); LC.addMode=true;
+        if (window.lcPaintSavedShot) window.lcPaintSavedShot(LC.shotDataURL);
+        renderResult();
+        setStatus(message + ' Previous photos kept; choose a replacement.', true);
+      } else {
+        window.lcResetResult();
+        setStatus(message,true);
+      }
+    };
+    window.lcParkGate = function(issues){
+      LC.geo=null; LC.model=null; LC.modelRaw=null; LC.analysisPending=true;
+      if (!LC.addMode){ LC.shots=[]; LC.shotMeta=[]; }
+      lcClearShot();
+      if (window.leComposite) window.leComposite.clearFace();
+      LC.gate={issues}; renderResult();
     };
     window.lcModelReady = function(ok){ LC.modelReady = ok; };
     // the on-device classifier reports in — it OVERRIDES the geometry guess but NEVER a manual pick. The read is
@@ -830,19 +867,20 @@
       LC.sex = s; LC.sexSource = 'model'; LC.sexConf = conf; LC.sexAuto = true;
       renderResult();
     };
-    window.lcResetResult = function(){ LC.gate = null; window.lcGateOverride = null; LC.geo = null; LC.soft = null; LC.model = null; LC.shots = []; LC.addMode = false; LC.reliability = ''; LC.framingOverride = false; LC.sexClsSex = null; LC.sexClsConf = null; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
+    window.lcResetResult = function(){ LC.gate = null; window.lcGateOverride = null; LC.geo = null; LC.soft = null; LC.model = null; LC.modelRaw = null; LC.shots = []; LC.shotMeta = []; LC.pendingMeta = null; LC.analysisPending = false; lcPrevious = null; LC.addMode = false; LC.reliability = ''; LC.framingOverride = false; LC.sexClsSex = null; LC.sexClsConf = null; LC.shotDataURL = null; lcClearShot(); if (window.leComposite && window.leComposite.clearFace) window.leComposite.clearFace(); renderResult(); };
     // a degraded-framing photo parks here until the user rules on it (renderResult owns the prompt UI)
     window.lcShowGate = function(issues){ LC.gate = { issues: issues || [] }; renderResult(); };
 
     // ---- Persist the dropped photo + its result across page switches (until replaced by a new drop or Reset) ----
-    // v2: the payload now carries the SHOTS array, and no longer carries a lens `profile`. Bumped rather
+    // v3: only capture-quality-checked shots restore; per-shot warnings travel with the raw array. Bumped rather
     // than migrated — a v1 shot was scored on the retired contrast curve, so restoring one would put a
     // pre-recalibration number back on screen.
-    const LC_SHOT_KEY = 'loveEquations.faceShot.v2';
+    const LC_SHOT_KEY = 'loveEquations.faceShot.v3'; // only quality-checked photos may restore
+    try { localStorage.removeItem('loveEquations.faceShot.v2'); } catch(e){}
     try { localStorage.removeItem('loveEquations.faceShot.v1'); } catch(e){}
     function lcSaveShot(){
-      if (!LC.geo || !LC.shotDataURL) return;          // only persist a real, analysed result
-      const state = { shots:LC.shots.slice(), geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
+      if (!LC.geo || !LC.shotDataURL || LC.analysisPending) return;          // only persist a real, analysed result
+      const state = { shots:LC.shots.slice(), shotMeta:LC.shotMeta.map(m=>({...m})), qualityVersion:1, geo:LC.geo, soft:LC.soft, model:LC.model, modelRaw:LC.modelRaw,
         sex:LC.sex, sexAuto:LC.sexAuto, sexSource:LC.sexSource, sexConf:LC.sexConf, sexManual:LC.sexManual,
         sexClsSex:LC.sexClsSex, sexClsConf:LC.sexClsConf,
         reliability:LC.reliability, framingOverride:!!LC.framingOverride, measuredAt:LC.measuredAt };
@@ -854,17 +892,19 @@
     window.lcSetShot = function(dataURL){ LC.shotDataURL = dataURL || null; };
     // restore the saved analysis into LC + re-render the panel (the module repaints the canvas separately)
     window.lcRestoreState = function(s){
-      if (!s || typeof s !== 'object' || !s.geo || typeof s.geo !== 'object') return;   // schema guard
+      if (!s || s.qualityVersion !== 1 || typeof s !== 'object' || !s.geo || typeof s.geo !== 'object') return;   // schema guard
       const fin = (x, d) => (typeof x==='number' && isFinite(x)) ? x : d;
       LC.geo = s.geo; LC.soft = (s.soft && typeof s.soft==='object') ? s.soft : null;
-      LC.shots = Array.isArray(s.shots) ? s.shots.filter(Number.isFinite).slice(0, MAX_SHOTS) : [];
+      const entries = Array.isArray(s.shots) ? s.shots.map((raw,i)=>({raw,meta:s.shotMeta && s.shotMeta[i]})).filter(e=>Number.isFinite(e.raw) && e.meta && typeof e.meta.reliability==='string').slice(-MAX_SHOTS) : [];
+      LC.shots=entries.map(e=>e.raw); LC.shotMeta=entries.map(e=>({reliability:e.meta.reliability,framingOverride:!!e.meta.framingOverride}));
+      LC.pendingMeta=null; LC.analysisPending=false;
       LC.addMode = false;
       LC.measuredAt = fin(s.measuredAt, Date.now());
       LC.model = fin(s.model, null); LC.modelRaw = fin(s.modelRaw, null);
       LC.sex = (s.sex==='m'||s.sex==='f') ? s.sex : null; LC.sexAuto = !!s.sexAuto;
       LC.sexSource = s.sexSource || 'guess'; LC.sexConf = fin(s.sexConf, null);
       LC.sexClsSex = (s.sexClsSex==='m'||s.sexClsSex==='f') ? s.sexClsSex : null; LC.sexClsConf = fin(s.sexClsConf, null);
-      LC.sexManual = !!s.sexManual; LC.reliability = s.reliability || ''; LC.framingOverride = !!s.framingOverride;
+      LC.sexManual = !!s.sexManual; lcAggregateQuality();
       renderResult();
     };
     // Per-calculator Reset — clears THIS calc only (photo, result, saved shot, composite face entry);
@@ -881,9 +921,9 @@
       // current generation and would mutate status/state after the wipe (cold-review find). The hook
       // lives in the MediaPipe module (which owns currentGen and the pending tensors).
       if (window.lcCancelAnalysis) window.lcCancelAnalysis();
-      LC.gate = null; window.lcGateOverride = null;
+      LC.gate = null; window.lcGateOverride = null; lcPrevious=null;
       LC.geo = null; LC.soft = null; LC.model = null; LC.modelRaw = null; LC.reliability = '';
-      LC.shots = []; LC.addMode = false;
+      LC.shots = []; LC.shotMeta = []; LC.pendingMeta = null; LC.analysisPending = false; lcPrevious = null; LC.addMode = false;
       LC.framingOverride = false; LC.measuredAt = null;
       LC.sex = null; LC.sexAuto = true; LC.sexSource = 'guess'; LC.sexConf = null; LC.sexManual = false; LC.shotDataURL = null;
       LC.sexClsSex = null; LC.sexClsConf = null;
@@ -1005,10 +1045,9 @@
     // SCUT trained on 256→224 (roughly square, undistorted); stretching a tall mesh rect to 224² is a
     // distribution shift, so we take a square box (1.4× the face, nudged up a touch for forehead/hair).
     function cropFaceTensor(srcCanvas, lm, W, H){
-      let minx=1,miny=1,maxx=0,maxy=0;
-      for (let i=0;i<lm.length;i++){ const p=lm[i]; if(p.x<minx)minx=p.x; if(p.y<miny)miny=p.y; if(p.x>maxx)maxx=p.x; if(p.y>maxy)maxy=p.y; }
-      const x0=minx*W, y0=miny*H, x1=maxx*W, y1=maxy*H;
-      const cx=(x0+x1)/2, cy=(y0+y1)/2 - (y1-y0)*0.06, side=Math.max(x1-x0, y1-y0)*1.4;
+      const crop=FaceQuality.faceCrop(lm,W,H);
+      if (!crop || !crop.inside) throw new Error('Face crop is outside the image');
+      const {cx,cy,side}=crop;
       const S=MODEL_CONFIG.inputSize;
       const off=document.createElement('canvas'); off.width=S; off.height=S;
       const octx=off.getContext('2d',{ willReadFrequently:true });
@@ -1025,9 +1064,19 @@
         const oName=MODEL_CONFIG.outputName || session.outputNames[0];
         const raw=Number(out[oName].data[0]);
         if (!Number.isFinite(raw)) throw new Error('model returned a non-finite value');   // don't render NaN
+        const mirrored=FaceQuality.mirrorTensor(data,S);
+        const mirrorOut=await session.run({[inName]:new ort.Tensor('float32',mirrored,[1,3,S,S])});
+        if (gen !== currentGen) return;
+        const mirrorRaw=Number(mirrorOut[oName].data[0]);
+        if (!Number.isFinite(mirrorRaw)) throw new Error('model returned a non-finite value');
+        if (!FaceQuality.consistent(raw,mirrorRaw,window.scoreFromRaw)){
+          currentGen++; pendingTensor=null; pendingSexTensor=null;
+          window.lcRejectPhoto('Photo not scored: the model gives inconsistent readings of this image. Try another clear, front-facing photo.');
+          return;
+        }
         const norm=Math.max(0, Math.min(1, (raw-MODEL_CONFIG.outMin)/(MODEL_CONFIG.outMax-MODEL_CONFIG.outMin)));
         window.lcSetModelScore(norm, raw);
-      } catch(e){ if (gen === currentGen) window.lcSetStatus('Trained-model inference failed: '+e.message, true); }   // a stale rejection must not clobber the current face
+      } catch(e){ if (gen === currentGen){ currentGen++; pendingTensor=null; pendingSexTensor=null; window.lcRejectPhoto('Trained-model inference failed: '+e.message); } }   // a stale rejection must not clobber the current face
     }
 
     // ── Sex classifier (InsightFace genderage.onnx, on-device). Drop models/face-sex.onnx to enable. ──
@@ -1139,10 +1188,12 @@
 
     let lcBusy = false;
     let framingAutoOverride = false;   // batch harness only: score degraded-framing images without the interactive prompt (caveat still recorded)
-    function drawAndScore(srcEl, W, H){
+    function drawAndScore(srcEl, W, H, cameraMode=false){
       if (lcBusy){ window.lcSetStatus('Still analysing the previous photo — drop this one again when it finishes.', true); return; }   // guard against double-submit
       lcBusy = true;
       const gen = ++currentGen;                 // this analysis owns `gen`; stale async results self-discard
+      pendingTensor=null; pendingSexTensor=null;
+      window.lcBeginPhoto();
       try {
         canvas.width=W; canvas.height=H; canvas.hidden=false; video.hidden=true; stage.classList.add('show');
         const ctx = canvas.getContext('2d', { willReadFrequently:true });
@@ -1150,41 +1201,37 @@
         if (!landmarker){
           if (landmarkerState === 'failed'){
             // don't promise a retry that cannot happen — re-attempt the CDN load instead
-            window.lcSetStatus('Face model failed to load earlier — retrying the download now; drop the photo again once it says Ready.', true);
+            window.lcRejectPhoto('Face model failed to load earlier — retrying the download now; drop the photo again once it says Ready.');
             init();
           } else {
-            window.lcSetStatus('Model still loading — try again in a moment.', true);
+            window.lcRejectPhoto('Model still loading — try again in a moment.');
           }
           return;
         }
         let r;
-        try { r = landmarker.detect(canvas); } catch(e){ window.lcSetStatus('Detection error: '+e.message, true); window.lcResetResult(); return; }
+        try { r = landmarker.detect(canvas); } catch(e){ window.lcRejectPhoto('Detection error: '+e.message); return; }
         if (!r || !r.faceLandmarks || !r.faceLandmarks.length){
-          window.lcSetStatus('No face found — try a clearer, front-facing shot.', true); window.lcResetResult(); return;
+          window.lcRejectPhoto('No face found — try a clearer, front-facing shot.'); return;
         }
         const lm = r.faceLandmarks[0];
-        if (!lm || lm.length < 468){ window.lcSetStatus('Incomplete face mesh — try another photo.', true); window.lcResetResult(); return; }
-        // tiny-face reject — fraction-of-frame is the ONLY gate (a face lost in a big scene). 10% minimum.
-        // No absolute-px floor: we crop to the face box and upscale to 224, MediaPipe already confirmed a full
-        // mesh (checked above), and genuinely-soft small faces are flagged non-blockingly below ("⚠ Low-res read")
-        // rather than rejected. (px shown in the message for diagnosis only)
-        const fx = i => lm[i].x*W, fy = i => lm[i].y*H;
-        const faceW = Math.hypot(fx(234)-fx(454), fy(234)-fy(454));
-        const fwFrac = faceW / W;
-        if (fwFrac < 0.10){
-          window.lcSetStatus('Face too small (' + Math.round(faceW) + 'px wide, ' + Math.round(fwFrac*100) + '% of a ' + W + '×' + H + ' frame) — use a closer, higher-res photo.', true);
-          window.lcResetResult(); return;
-        }
+        if (!lm || lm.length < 468){ window.lcRejectPhoto('Incomplete face mesh — try another photo.'); return; }
+        const srcW = srcEl.naturalWidth || srcEl.width || W;
+        const srcH = srcEl.naturalHeight || srcEl.height || H;
+        const quality=FaceQuality.photoQuality(lm,srcW,srcH);
+        if (!quality.ok){ window.lcRejectPhoto(quality.message); return; }
         const geo = window.lcComputeMetrics(lm, W, H);
         if (!geo || !Object.values(geo).every(Number.isFinite)){
-          window.lcSetStatus('Could not measure this face (bad landmarks).', true); window.lcResetResult(); return;
+          window.lcRejectPhoto('Could not measure this face (bad landmarks).'); return;
         }
         // Three-band framing gate: refuse is final (the number would measure the camera angle, not the
         // face); degraded parks the fully-prepared analysis behind an explicit rate-anyway override below.
         const fr = window.lcClassifyFraming(geo);
         if (fr.band === 'refuse'){
-          window.lcSetStatus('This angle is too far off to measure — ' + fr.issues.join('; ') + '. Retake facing the camera square-on.', true);
-          window.lcResetResult(); return;
+          window.lcRejectPhoto('This angle is too far off to measure — ' + fr.issues.join('; ') + '. Retake facing the camera square-on.'); return;
+        }
+        if (cameraMode){
+          const alignment=FaceQuality.cameraQuality(lm,srcW,srcH,geo,fr);
+          if (!alignment.ok){ window.lcRejectPhoto('Photo not scored: '+alignment.message); return; }
         }
         const pixelStats = samplePixels(ctx, lm, W, H);   // sample BEFORE drawing overlay
         const soft = window.lcComputeSoft(pixelStats);
@@ -1192,10 +1239,8 @@
         // The canvas is downscaled for fast detection + the overlay, but the CNN/sex crops should pull
         // full-res pixels so a distant face in a high-res photo keeps its detail. Landmarks are normalized
         // [0,1], so the same lm map onto srcEl's native frame exactly as onto the canvas.
-        const srcW = srcEl.naturalWidth || srcEl.width || W;
-        const srcH = srcEl.naturalHeight || srcEl.height || H;
         let tensorData = null;
-        try { tensorData = cropFaceTensor(srcEl, lm, srcW, srcH); } catch(_){ tensorData = null; }
+        try { tensorData = cropFaceTensor(srcEl, lm, srcW, srcH); } catch(_){ window.lcRejectPhoto('Photo not scored: could not prepare a complete face crop.'); return; }
         let sexData = null, eyesHidden = false;
         try { eyesHidden = faceEyesOccluded(ctx, lm, W, H); } catch(_){ eyesHidden = false; }   // ctx = clean 520-canvas, pre-overlay
         if (!eyesHidden){
@@ -1204,12 +1249,6 @@
         window.__lcSexSkip = eyesHidden ? 'eyes-occluded' : '';   // instrumentation only
         // pendingTensor / pendingSexTensor are set in commit() below, NOT here: a photo parked behind the
         // framing prompt must not get auto-scored by a model that finishes loading mid-prompt.
-        // Non-blocking reliability note: how many REAL source pixels span the face (native, not the
-        // 520-canvas measure). Below this the CNN crop is upscaled and softer — score still shown, just flagged.
-        const nativeFaceW = fwFrac * srcW;
-        const relWarn = (nativeFaceW < 110 || fwFrac < 0.14)
-          ? ' · small/distant face (~' + Math.round(nativeFaceW) + 'px of real detail) — score is rougher than a tight, sharp headshot.'
-          : '';
         const du = new DrawingUtils(ctx);
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:'#ffffff22', lineWidth:0.5 });
         du.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:'#C41E3A', lineWidth:1.5 });
@@ -1227,7 +1266,7 @@
         const commit = function(){
           pendingTensor = tensorData; pendingTensorGen = gen;
           pendingSexTensor = eyesHidden ? null : sexData; pendingSexGen = gen;
-          window.lcAnalyze(geo, soft, relWarn + framingCaveat, fr.band === 'degraded');
+          window.lcAnalyze(geo, soft, framingCaveat, fr.band === 'degraded');
           if (sexData && sexSession && !eyesHidden) inferSex(sexData, gen);   // refine the geometry sex-guess with the classifier
           if (tensorData && session){ window.lcSetStatus('Scoring with the trained model…'); inferAndSet(tensorData, gen); }
           else if (tensorData && modelState === 'loading'){ window.lcSetStatus('Face measured — trained model still loading, the score will update automatically…'); }
@@ -1238,16 +1277,15 @@
           // open, and navigating away restored it under the new photo (cold-review find; the privacy note
           // promises "cleared the moment you drop a new one"). Retire it, then keep THIS photo's snapshot
           // for the post-override commit.
-          window.lcResetResult();
           window.lcSetShot(shotURL);
           window.lcGateOverride = function(){ if (gen !== currentGen) return; window.lcGateOverride = null; commit(); };
-          window.lcShowGate(fr.issues);
+          window.lcParkGate(fr.issues);
           window.lcSetStatus('Photo readable, but the framing is off — rate it anyway in the panel, or retake square-on.', true);
           return;
         }
         commit();
       } catch(e){
-        window.lcSetStatus('Analysis failed: '+e.message, true); window.lcResetResult();
+        window.lcRejectPhoto('Analysis failed: '+e.message);
       } finally {
         lcBusy = false;
       }
@@ -1347,18 +1385,18 @@
     const shutter=document.getElementById('lc-shutter');
     const autoSnapChk=document.getElementById('lc-autosnap');
     const guideEl=document.getElementById('lc-guide');
-    const guideTip=guideEl.querySelector('.lc-guide-tip');
+    const guideTip=document.getElementById('lc-guide-tip');
     const GUIDE_TIP_DEFAULT=guideTip.textContent;
     const AUTOSNAP_KEY='loveEquations.calcAutoSnap.v1';   // shared with the Body Calc — one preference
     try { autoSnapChk.checked = localStorage.getItem(AUTOSNAP_KEY) !== '0'; } catch(_){}
     autoSnapChk.addEventListener('change', function(){
       try { localStorage.setItem(AUTOSNAP_KEY, autoSnapChk.checked ? '1' : '0'); } catch(_){}
-      alignStreak=0; guideTip.textContent=GUIDE_TIP_DEFAULT;
+      alignStreak=0; alignAnchor=null; guideTip.textContent=GUIDE_TIP_DEFAULT;
     });
 
-    // Auto-align loop: ~3 checks/sec on a 360px frame; 3 consecutive pass-band reads (~1s stable) → snap.
-    let alignTimer=null, alignStreak=0;
-    const ALIGN_EVERY_MS=350, ALIGN_STREAK_NEEDED=3;
+    // Auto-align loop: ~3 checks/sec on a 360px frame; 4 consecutive stable pass-band reads (at least 1s) → snap.
+    let alignTimer=null, alignStreak=0, alignAnchor=null;
+    const ALIGN_EVERY_MS=350, ALIGN_STREAK_NEEDED=4;
     const alignCanvas=document.createElement('canvas');
     const alignCtx=alignCanvas.getContext('2d',{ willReadFrequently:true });
     function alignTick(){
@@ -1372,18 +1410,20 @@
         alignCtx.drawImage(video, 0, 0, alignCanvas.width, alignCanvas.height);
         const r=landmarker.detect(alignCanvas);
         const lm=r && r.faceLandmarks && r.faceLandmarks[0];
-        let ok=false;
+        let quality={ok:false,message:'Bring one clear face into the guide.'};
         if (lm && lm.length>=468){
-          const geo=window.lcComputeMetrics(lm, alignCanvas.width, alignCanvas.height);
-          const fwFrac=Math.hypot((lm[234].x-lm[454].x)*alignCanvas.width,(lm[234].y-lm[454].y)*alignCanvas.height)/alignCanvas.width;
-          ok = !!geo && Object.values(geo).every(Number.isFinite)
-            && window.lcClassifyFraming(geo).band==='pass'
-            && fwFrac >= 0.14;                                      // the pipeline's "small/distant" warn edge, not its 0.10 refuse edge
+          const geo=window.lcComputeMetrics(lm,alignCanvas.width,alignCanvas.height);
+          if (geo && Object.values(geo).every(Number.isFinite))
+            quality=FaceQuality.cameraQuality(lm,video.videoWidth,video.videoHeight,geo,window.lcClassifyFraming(geo));
         }
-        guideTip.textContent = ok ? 'Hold still…' : GUIDE_TIP_DEFAULT;
-        alignStreak = ok ? alignStreak+1 : 0;
-        if (alignStreak >= ALIGN_STREAK_NEEDED){ captureFrame(); return; }   // captureFrame stops the camera → loop dies
-      } catch(_){ alignStreak=0; }
+        if (!quality.ok){
+          alignStreak=0; alignAnchor=null; guideTip.textContent=quality.message;
+        } else {
+          if (!FaceQuality.stable(alignAnchor,quality.anchor)){alignStreak=0;alignAnchor=quality.anchor;}
+          alignStreak++; guideTip.textContent='Hold still…';
+          if (alignStreak >= ALIGN_STREAK_NEEDED){ captureFrame(); return; }
+        }
+      } catch(_){ alignStreak=0; alignAnchor=null; }
       schedule();
     }
 
@@ -1394,7 +1434,7 @@
       tmp.getContext('2d').drawImage(video, 0, 0, w, h);
       window.lcStopCamera();                       // stop FIRST so the result paint never races the live preview
       const maxW=520, scale=Math.min(1, maxW/w);
-      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale));
+      drawAndScore(tmp, Math.round(w*scale), Math.round(h*scale), true);
     }
     shutter.addEventListener('click', captureFrame);
 
@@ -1412,8 +1452,8 @@
         stream=s;
         video.srcObject=stream; await video.play();
         video.hidden=false; canvas.hidden=true; stage.classList.add('show');
-        guideEl.hidden=false; shutter.hidden=false;
-        alignStreak=0; guideTip.textContent=GUIDE_TIP_DEFAULT;
+        guideEl.hidden=false; guideTip.hidden=false; shutter.hidden=false;
+        alignStreak=0; alignAnchor=null; guideTip.textContent=GUIDE_TIP_DEFAULT;
         if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
         alignTimer=setTimeout(alignTick, ALIGN_EVERY_MS);
         window.lcSetStatus(autoSnapChk.checked
@@ -1427,10 +1467,18 @@
     window.addEventListener('pagehide', () => window.lcStopCamera());   // bfcache keeps the page alive — the camera must not stay on
     window.lcStopCamera=function(){
       if (alignTimer){ clearTimeout(alignTimer); alignTimer=null; }
-      alignStreak=0;
+      alignStreak=0; alignAnchor=null;
       if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-      video.hidden=true; guideEl.hidden=true; shutter.hidden=true;
+      video.hidden=true; guideEl.hidden=true; guideTip.hidden=true; shutter.hidden=true;
       guideTip.textContent=GUIDE_TIP_DEFAULT;
+    };
+
+    window.lcPaintSavedShot=function(url){
+      if (!url) return;
+      const gen=currentGen,im=new Image();
+      im.onload=()=>{ if(gen!==currentGen)return; canvas.width=im.naturalWidth;canvas.height=im.naturalHeight;
+        canvas.getContext('2d').drawImage(im,0,0);canvas.hidden=false;video.hidden=true;stage.classList.add('show'); };
+      im.src=url;
     };
 
     // On load, restore a face + result saved on a previous visit (persists until a new drop or Reset).
@@ -1438,7 +1486,7 @@
       // LC_SHOT_KEY is the classic script's top-level const (shared global lexical scope) — the
       // one name both the writer (lcSaveShot) and this reader use, so the key cannot drift again.
       let saved; try { saved = JSON.parse(localStorage.getItem(LC_SHOT_KEY) || 'null'); } catch(_){ saved = null; }
-      if (!saved || !saved.img || !saved.state || !saved.state.geo) return;
+      if (!saved || !saved.img || !saved.state || saved.state.qualityVersion!==1 || !saved.state.geo) return;
       if (window.lcSetShot) window.lcSetShot(saved.img);               // so later sex/lens changes re-persist (Codex F1)
       if (window.lcRestoreState) window.lcRestoreState(saved.state);   // sets LC + renders the panel
       const im = new Image();
@@ -1501,7 +1549,7 @@
       let cur = null;
       const origStatus = window.lcSetStatus, origModel = window.lcSetModelScore, origSex = window.lcSetSex;
       function wrapsOn(){
-        window.lcSetStatus = function(msg,isErr){ if (cur){ cur.statusMsg=String(msg==null?'':msg); cur.statusErr=!!isErr; if (isErr && /inference failed/i.test(cur.statusMsg)){ cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } } return origStatus.apply(this,arguments); };
+        window.lcSetStatus = function(msg,isErr){ if (cur){ cur.statusMsg=String(msg==null?'':msg); cur.statusErr=!!isErr; if (isErr && /inference failed|Photo not scored/i.test(cur.statusMsg)){ cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } } return origStatus.apply(this,arguments); };
         window.lcSetModelScore = function(t,raw){ if (cur){ cur.model=t; cur.modelRaw=(raw==null?null:raw); cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } return origModel.apply(this,arguments); };
         window.lcSetSex = function(sex,conf){ if (cur) cur.sexFired=true; return origSex.apply(this,arguments); };
       }
@@ -1542,7 +1590,7 @@
         await settle(modelExpected);
         try{ URL.revokeObjectURL(img.src);}catch(_){}
 
-        const scored = !!LC.geo;
+        const scored = !!LC.geo && Number.isFinite(cur.modelRaw);
         let bp='', cv='';
         if (scored){
           // Batch scores ONE photo per row (that is the point of a calibration sweep), so it always uses
@@ -1602,6 +1650,7 @@
         // A pending gate prompt cannot survive a batch: batch commits clear the global override closure and
         // retire its generation, so restoring the prompt afterwards would paint a dead "Rate anyway" button.
         // Decide it first (cold-review find).
+        if (LC.analysisPending && !LC.gate){ statusEl.textContent='A photo is still being checked — wait for it to finish or reset before batching.'; return; }
         if (LC.gate){ statusEl.textContent = 'A framing prompt is open — decide it (Rate anyway / Discard) before running a batch.'; return; }
         running = true; rows.length = 0; renderTable();
         const snap = snapshot();

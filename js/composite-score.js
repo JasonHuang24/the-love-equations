@@ -11,15 +11,15 @@
 (function () {
   'use strict';
 
-  // v3 = the 2026-08-14 recalibration's convention (5.0 = reference-population median, one point =
-  // 1/1.4 sd, every score carries a measured uncertainty band). QUARANTINE: we read ONLY v3. A v2 score
+  // Body v3 uses the 2026-08-14 recalibration's convention (5.0 = reference-population median, one point =
+  // 1/1.4 sd, every score carries a measured uncertainty band). QUARANTINE: face v4 additionally requires the new capture checks. A v2 score
   // was produced by the retired contrast curve — on that curve the median face read 3.46 — so blending a
   // stored v2 into an Overall would silently mix two incompatible scales. Old keys are not migrated and
   // not read; they are deleted on load so they cannot be resurrected by a downgrade.
-  var FACE_KEY = 'loveEquations.faceScore.v3';
+  var FACE_KEY = 'loveEquations.faceScore.v4'; // capture-quality checked face results only
   var BODY_KEY = 'loveEquations.bodyScore.v3';
   // The stored lens pick joins the legacy purge: the lens toggle is gone (one scale since 2026-08-14).
-  var LEGACY_KEYS = ['loveEquations.faceScore.v2', 'loveEquations.bodyScore.v2', 'loveEquations.compositeLens.v1'];
+  var LEGACY_KEYS = ['loveEquations.faceScore.v3', 'loveEquations.faceScore.v2', 'loveEquations.bodyScore.v2', 'loveEquations.compositeLens.v1'];
   for (var _i = 0; _i < LEGACY_KEYS.length; _i++) {
     try { localStorage.removeItem(LEGACY_KEYS[_i]); } catch (e) {}
   }
@@ -199,8 +199,8 @@
     reset: function () {
       try {
         localStorage.removeItem(FACE_KEY); localStorage.removeItem(BODY_KEY);
-        // face.html LC_SHOT_KEY is faceShot.v2 (v1 is purged by face.html on load); body.html BC_SHOT_KEY is bodyShot.v1
-        localStorage.removeItem('loveEquations.faceShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v1');
+        // face.html LC_SHOT_KEY is faceShot.v3 (older shots are purged on load); body.html BC_SHOT_KEY is bodyShot.v1
+        localStorage.removeItem('loveEquations.faceShot.v3'); localStorage.removeItem('loveEquations.faceShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v1');
         // also drop the body calc's saved height/weight/bf inputs — body.html re-persists a
         // bodyScore from them on its next load, silently resurrecting the score just reset here
         localStorage.removeItem('loveEquations.bodyInputs.v1');

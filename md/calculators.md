@@ -1161,3 +1161,152 @@ new body-fat and window inputs per archetype; delete invitation answers), re-ass
 bands and tier expectations still pass. Adjust a band only if a fixture sits on a moved
 boundary, and log any touched band in a code comment.
 
+
+---
+
+# Face calculator review and test suite — 2026-09-05
+
+## Verdict
+
+The current calculator fails repeatability and capture-quality checks. Stricter capture requirements would help, especially a real minimum face resolution and enforcement of the visible guide. They would not by themselves make the trained model agree with human judgments: a mirrored copy of the same accepted photo changed the score by 0.74 points while yaw and roll both remained small.
+
+This delivery adds review tests and a repeatable browser audit. It changes no production scoring, alignment, model weights, calibration, or UI. No deployment or commit was made.
+
+## Scope and acceptance criteria
+
+Inventoried the three script layers in `face.html`: pure measurements/scoring; UI, multi-photo state and persistence; MediaPipe, ONNX, camera/file/URL/paste capture and debug batch integration. Reviewed the model contract in `models/README.md` and the historical calibration record in this volume. The headline uses raw CNN predictions through `REF_RAW`; the descriptive geometry and pixel bands do not adjust it.
+
+- 28 executable unit/contract tests against actual page functions: mapping and tensor preprocessing, framing boundaries/fallbacks, auto-capture, square crop coordinates, new/add/reset state and override provenance.
+- 24 local roster photographs, three each for eight named roster entries; selected deterministically from sorted filenames, not selected by a desired score.
+- 72 real browser pipeline attempts: the 24 originals plus six variants of one original per entry (identical repeat, horizontal reflection, 75% brightness, 2px blur, 96px-wide source, +8 degree rotation). All originals are decoded and re-encoded as PNG, so each comparison starts from the same decoded pixels.
+- Real MediaPipe detection and shipped ONNX inference through the interactive file-input handler. Degraded results are explicitly overridden by the harness and recorded; hard refusals remain refused. The debug batch path is reviewed in code but is not substituted for interactive scoring.
+- Proposed engineering checks: identical-repeat drift <=0.10, reflection <=0.25, brightness/blur/rotation <=0.50 display points, and refuse a 96px-wide source. These are proposed product tolerances, not validated human-perception thresholds. Also require every planned attempt, no runtime exceptions, and no unsettled/time-out results.
+- No responsive UI change was made; this is not a site-wide layout audit. Webcam hardware and known-ground-truth 3D head poses were not tested. Camera acceptance was exercised with deterministic landmarks against the real `alignTick` function and stubbed detector/capture boundaries.
+
+## Findings, prioritized
+
+### 1. [P1] The model pipeline changes its answer under transformations that preserve identity
+
+Source: `face.html` `cropFaceTensor` (1007–1016), `inferAndSet` (1018–1031), `scoreFromRaw` (416–419).
+
+For `images/roster/brad-pitt/1.jpg`, the baseline score was **4.0506**. Horizontal reflection produced **4.7938**, with both inputs in the pass band. The measured baseline/mirror yaw was about +2.81/-2.99 degrees; roll about +1.16/-1.00. Even a provisional yaw <=6 / roll <=5 filter would accept both. An 8-degree image rotation produced **4.6374**, still pass-band (roll 9.92 degrees). Repeating unchanged pixels differed by only 0.0104 in this case.
+
+The geometry is roll-normalized, but the CNN crop is an axis-aligned bounding square; the CNN input is not leveled using the eye axis. The square includes context and can run outside the image. This establishes a pipeline stability problem; it does not isolate how much is due to landmark changes, crop differences, or model weights. The transformed image tests include all those effects intentionally.
+
+Recommendation: evaluate eye-aligned, in-bounds crops and reflection-consistent inference on the same tests, then recalibrate `REF_RAW` through the changed pipeline. Changing the crop while keeping the old reference untested would introduce a new mismatch. The score mapping is monotone: changing its curve can adjust spacing but cannot repair an incorrect ordering of faces.
+
+### 2. [P1] The guide does not enforce its visible or verbal capture contract
+
+Source: `face.html` `alignTick` (1364–1387), `classifyFraming` (317–330).
+
+The actual conditions are a finite metric object, pass-band framing, and cheek width >=14% of the frame. It does not compare the face to the oval, eye height to the bar, image/crop boundaries, maximum face size, or motion between frames. Three passing samples cause capture even when synthetic face positions alternate left/right/left. A heavily off-center face and an overlarge/clipped face also cause capture in the suite. “Hold still” means three independently passing samples, not measured stability; those samples span roughly 700ms once the first has arrived.
+
+Recommendation: make position, eye-line, min/max scale, full crop containment and actual inter-frame motion part of one shared capture contract. Recheck that contract at full-resolution capture. Use the uploaded-photo path too for quality checks that apply equally to uploads. Make the guide explain the failing condition. A harsher drawing alone changes none of these decisions.
+
+Pitch currently has no gate. The code explicitly records that the forehead/chin depth proxy confounds shape and pose, so simply turning that existing proxy into a strict threshold would be unjustified. Replace and validate the pose estimator against known-angle photographs before enforcing pitch.
+
+### 3. [P1] Very low-resolution faces still receive an ordinary headline score
+
+Source: `face.html` `drawAndScore` (1167–1179, 1207–1212).
+
+The hard size check is relative to frame width, not available facial detail. All six scorable 96px-wide variants received scores. The Brad Pitt variant contained approximately **23 real pixels across the face**, yet increased from **4.05 to 5.59** and passed framing. The low-resolution note survives in the reliability field, but it does not block the headline. The final status text is also replaced by the generic scored message.
+
+Recommendation: promote insufficient native facial detail to a blocking quality condition, with sharpness/exposure checks validated separately. The existing 110px warning is a starting point to evaluate, not a proven sufficient resolution. A stricter yaw/roll grid cannot restore discarded pixels.
+
+### 4. [P2] Multi-photo averaging loses quality provenance
+
+Source: `face.html` `lcAnalyze` (783–795), `lcSetModelScore` (817–828), composite save (763–779).
+
+The raw output from an overridden photo stays in `LC.shots` when a clean photo is appended, but `LC.framingOverride` and `LC.reliability` are replaced by the latest photo's values. The resulting average and composite can therefore report no override while still using the overridden measurement. The regression test executes the real UI state functions and reproduces this.
+
+Recommendation: retain per-shot provenance alongside raw outputs; derive aggregate warnings from the retained shots, including when the fourth replaces the oldest. Separately, the degraded-photo branch calls `lcResetResult`, which clears `addMode` and accumulated shots before the override commits; this threatens “add another photo” continuity and deserves a full browser flow regression when repaired.
+
+### 5. [P2/P3] Framing classification has fragile missing-data behavior
+
+Source: `face.html` `classifyFraming` (317–326).
+
+`classifyFraming(null)` returns pass. Production scoring currently protects that call with a finite-geometry guard, so this is defensive API debt, not evidence that an empty upload receives a score. More subtly, both depth-derived angles being zero is used as the missing-depth sentinel. Valid zero-valued depth measurements are indistinguishable from absent depth and can incorrectly activate the noisy skew fallback. Both behaviors are exposed by contract tests; neither was established as frequent in the real-photo run.
+
+Recommendation: represent depth availability explicitly, and return a nonpassing unavailable classification for absent geometry. Keep this lower priority than the observed photo instability and missing capture checks.
+
+## Results
+
+**Unit suite: 28 tests, 21 pass, 7 fail.** Failures are the intended unmet-contract assertions, not accepted snapshots of faulty behavior. Strict mode exits nonzero. An explicitly named `--allow-known` mode marks those seven as TODO for isolating regressions in the passing controls; it must not be described as all requirements passing.
+
+**Browser audit: 24 photographs, 72 attempts, 56 scored, 16 refused, zero page runtime exceptions.** Of the eight originals receiving perturbations, six scored and two were refused, leaving six scorable comparisons per transformation. Of the 24 unmodified images, 20 scored. Degraded photos were explicitly overridden; the audit does not pretend all scored rows met the normal pass gate.
+
+**40 browser-result contract checks: 29 pass, 11 fail.** These comprise three reflection-tolerance failures, two rotation-tolerance failures, and six low-resolution refusal failures. Raw observations were collected from the actual browser; the contract checks were then evaluated against those saved observations. Future `audit:face:photos` runs perform both steps automatically and exit nonzero on contract failure.
+
+| Transformation | Scorable pairs | Largest absolute score change |
+| --- | ---: | ---: |
+| Identical repeat | 6 | 0.0253 |
+| Reflection | 6 | 0.7432 |
+| Brightness x0.75 | 6 | 0.2830 |
+| Gaussian-style browser blur, 2px | 6 | 0.2892 |
+| Image rotation +8 degrees | 6 | 0.5868 |
+| Whole image reduced to 96px width | 6 | 1.5357 |
+
+Across different photographs, the Brad Pitt entry ranged **4.05–7.97**, and the Scarlett Johansson entry spanned **2.86 points**. These are descriptive examples, not accuracy errors: age, expression, styling, angle and image content differ. Controlled same-image perturbations are the stronger evidence of instability.
+
+No human-rated held-out test set or user preference labels were supplied for this review. Existing SCUT calibration is in-distribution and potentially training-contaminated, as the historical record itself acknowledges. Repeating those labels cannot establish general taste or accuracy on candid uploads. To assess that claim, use identity-disjoint photos rated by the intended audience; measure ranking agreement and error, and compare subgroup results only where sample sizes support it. More photos can steady a model's estimate without correcting a systematic preference mismatch.
+
+## Reproduce and inspect
+
+Requires **Node 20+**. The machine's default Node is 16.17.1; its `node --test` reported a misleading one-file pass without executing these tests. The new runner explicitly rejects that version.
+
+- `npm run test:face` — strict deterministic review suite; currently exits 1 for seven findings.
+- `npm run test:face:allow-known` — passing controls plus seven explicitly marked TODO failures.
+- `npm run audit:face:photos` — local HTTP server, browser/model execution and contract results; requires Playwright, network access for the page's existing MediaPipe/ONNX runtime downloads, and the repository's local roster images. Uses `CODEX_NODE_MODULES` and optional `LE_BROWSER_EXECUTABLE`, as the existing responsive audit does. Models and images are served locally; no photos are uploaded.
+
+On this machine use the bundled Node directory ahead of the default Node on PATH:
+
+```powershell
+$env:PATH = 'C:\Users\sourd\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin;' + $env:PATH
+$env:CODEX_NODE_MODULES = 'C:\Users\sourd\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+$env:LE_BROWSER_EXECUTABLE = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+node tools/run-face-suite.mjs
+node tools/audit-face-photos.mjs
+```
+
+Files added: `tests/face-calculator.test.mjs`, `tests/helpers/face-core.mjs`, `tools/run-face-suite.mjs`, `tools/audit-face-photos.mjs`, `tools/face-photo-contracts.mjs`, and `tests/fixtures/face-review-baseline.json`. The baseline contains actual per-image observations, contract results and SHA-256 hashes of the tested photos, production page and beauty model. It is evidence, not a fabricated expected-attractiveness fixture. Fresh detailed artifacts are written under the ignored `artifacts/face-review/` directory.
+
+The first exploratory browser run exposed a test-harness startup race: beauty model readiness preceded detector readiness. The harness was corrected to wait for both, and the full 72 attempts were rerun. All figures above use the corrected run. The deterministic suite executes actual function bodies extracted from `face.html`; it does not duplicate the calculator mathematics as a separate implementation. Browser inference ran in desktop Chrome/WASM only; cross-browser/mobile numerical parity remains unmeasured.
+---
+
+# Face capture quality release — 2026-09-05
+
+This implementation supersedes the known-failure status of the preceding review. All former review failures are now mandatory regression tests; there is no allow-known/TODO mode.
+
+## Shipped behavior
+
+- One shared `FaceQuality` contract checks native facial detail (at least 110 pixels cheek-to-cheek), a fully contained square model crop, and finite landmarks. Upload, drop, paste, URL, camera and debug batch all reach the same scoring checks. A small face cannot pass by occupying a large fraction of a tiny image.
+- Estimated yaw warns at 6 degrees and refuses at 12; roll warns at 5 and refuses at 8. The camera requires the pass band. Uploads retain an explicit override only within the narrower warning band. Missing geometry refuses; explicit depth availability distinguishes a valid zero angle from missing depth. Pitch remains informational because the existing estimator has not been validated for gating.
+- Auto-capture enforces the oval, eye line, minimum/maximum scale and full crop containment. Four samples 350ms apart require at least a second of stability, measured against the first sample to catch slow drift. SVG coordinates account for `xMidYMid meet` in landscape and portrait. Full-resolution capture checks alignment again, including manual shutter captures.
+- Guidance sits below the preview and is accessible to screen readers. The shutter sits outside the oval so it does not hide the chin alignment target.
+- Before accepting the original prediction, a second inference checks a reflected copy of the same tensor. More than 0.25 display points of disagreement declines the photo. **The accepted headline still uses the original raw output, unchanged crop, weights and `REF_RAW` mapping.** This is an abstention check, not a newly calibrated ensemble. It does not establish human-rating accuracy or retrain the model's preferences.
+- Per-shot warnings persist through averaging, reload and composite output, and are removed only when their associated shot leaves the retained set. A gated or rejected additional photo cannot expose a previous score under the new image or lose earlier accepted photos. Discarding/replacing an unsuccessful addition restores the previous result. Batch runs cannot interrupt an unfinished analysis.
+- Snapshot storage is now `faceShot.v3`, with per-shot quality metadata; composite/import storage is `faceScore.v4`. Older unvalidated face records are cleared. The composite, SMV and Matchmaker readers use the new key, and global reset clears the new snapshot too. Face-only reset preserves the Body score. All two shared-script references and all three downstream face-score readers were inventoried and updated.
+- The generated canon index was refreshed for source hashes. Its indexed calculator synopsis is unchanged, avoiding unrelated Lab ranking changes.
+
+## Validation and tradeoff
+
+- **44/44 deterministic tests pass**, including pixel boundaries, tensor reflection, framing thresholds, camera motion/eye placement/aspect ratios, append/override/discard/replacement, provenance eviction and storage restoration.
+- **72 real detector/model attempts completed:** 16 scored, 56 explicitly refused; all **18 photo-contract checks pass**. All eight reduced-resolution probes are refused. The suite also requires at least six original controls to remain scorable, so rejecting everything cannot pass.
+- **7/24 candid originals were accepted**, versus 20/24 in the baseline. This is intentionally stricter and is a material usability tradeoff. Three of those seven required the explicit framing override; four passed normally. Only two of the eight transformation seeds remain scorable; nine paired transformations produced scores, with the rest refused. Do not present fewer scorable pairs as proof that the underlying model became more accurate.
+- **15 real-browser flow assertions pass:** upload/drop/paste/URL, gated append, absence of a stale headline, override provenance, reload, rejected-append rollback, Face/global resets, legacy purge, batch isolation and camera stop.
+- **40 layout configurations pass:** portrait and landscape camera feeds, both user-selectable width modes, and ten viewports spanning 360px mobile, tablet, desktop, 1080p, 16:10 desktop, 1440p and 4K. Checked horizontal overflow, guide/video coordinate agreement, guidance placement and shutter/oval separation. Mobile, tablet and desktop screenshots were visually inspected. The webcam was simulated with a canvas stream; physical camera devices and mobile browser inference were not tested.
+- `npm run test:all` passes: the face suite, the complete 25-step Lab suite, the SMV pressure panel and Matchmaker verification. No Lab threshold fixture was relaxed or re-adjudicated to accommodate this change.
+
+The model binary and its calibrated headline path are unchanged. A future crop normalization, ensemble, weight replacement or preference calibration still needs independent validation and a regenerated reference. These changes improve which measurements are accepted; they do not turn the existing prototype into a validated aesthetic judge.
+
+## Reproduction and evidence
+
+With Node 20+ on PATH:
+
+```text
+npm run test:face
+npm run test:all
+npm run audit:face:photos
+```
+
+The browser audit uses the same `CODEX_NODE_MODULES` and `LE_BROWSER_EXECUTABLE` settings documented in the preceding review. `node tools/audit-face-photos.mjs --flows-only` runs integration/layout checks without repeating the photo sweep. Inputs are existing local repository photos. The final pre/post observations are checked in as `tests/fixtures/face-review-baseline.json` and `tests/fixtures/face-quality-results.json`, including source/model/photo hashes and every observed result. They are not human-rating labels. Detailed runtime logs and screenshots remain local under `artifacts/face-review/`.
