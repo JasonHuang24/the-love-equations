@@ -1,7 +1,7 @@
 {
   "schemaVersion": "le-canon-index/1.1",
-  "indexVersion": "1.0.0+60d6c00e09ed",
-  "generatedAt": "2026-09-04T05:03:12.000Z",
+  "indexVersion": "1.0.0+3f1c180239a1",
+  "generatedAt": "2026-09-06T04:44:37.000Z",
   "sourcePages": [
     {
       "page": "hierarchy.html",
@@ -199,7 +199,7 @@
       "inputs": [
         "smvcalc.html"
       ],
-      "sha256": "7045dc2821216be2655f91ebc9483adea83349e9eabb1d3863d1d1c3f1f9992e",
+      "sha256": "4b53e95e430faf327b76582736ca3f4e23bf41507688692758d1f5648c3602ca",
       "conceptCount": 1
     },
     {
@@ -221,7 +221,7 @@
       "inputs": [
         "face.html"
       ],
-      "sha256": "dcf5d206536db0ba6aeb2dea75690d7e95eef193448ca62706ce5ec17f0026e4",
+      "sha256": "8d39a9880c079614f1ad92c0046dc3c7b11e268763b68c2ecde65ee2947f11e2",
       "conceptCount": 1
     },
     {
@@ -232,7 +232,7 @@
       "inputs": [
         "body.html"
       ],
-      "sha256": "8caf556c7a44521d9ead35dfdb96f46fea1e6cb154980623717c261c0bfaddb0",
+      "sha256": "59ed0cbc6d400c746d1bdc77af5d20ae4de5f0c4597a82db38d3cb7b471fceff",
       "conceptCount": 1
     },
     {
@@ -243,7 +243,7 @@
       "inputs": [
         "matchmaker.html"
       ],
-      "sha256": "f4d394374aed5020ef7fcdd0e559030b8b951874b13728fdfd98cb6ddf03ae03",
+      "sha256": "38d282e6d9691217d0f19e77814cf8b79435c02cb35b875e855bf74d3d5b8ce7",
       "conceptCount": 1
     }
   ],

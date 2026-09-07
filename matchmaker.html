@@ -4747,7 +4747,7 @@
     // (chip shows "imported") and sticks until re-pasted or overridden.
     const expect = (userSex==='m'||userSex==='f') ? userSex : null;
     const faceRec = readCalcImport('loveEquations.faceScore.v4', 'face', expect);
-    const bodyRec = readCalcImport('loveEquations.bodyScore.v3', 'body', expect);
+    const bodyRec = readCalcImport('loveEquations.bodyScore.v4', 'body', expect);
     importedFace = faceRec ? faceRec.value : null;
     importedBody = bodyRec ? bodyRec.value : null;
     // Both-or-nothing (Sol audit #3): a lone Face or Body read is NOT an overall Looks score —
@@ -4784,7 +4784,7 @@
 
   function calcOverrideCaveat(){
     const expect=(userSex==='m'||userSex==='f')?userSex:null;
-    const recs=[readCalcImport('loveEquations.faceScore.v4','face',expect), readCalcImport('loveEquations.bodyScore.v3','body',expect)].filter(Boolean);
+    const recs=[readCalcImport('loveEquations.faceScore.v4','face',expect), readCalcImport('loveEquations.bodyScore.v4','body',expect)].filter(Boolean);
     const overridden=recs.filter(r=>r.framingOverride);
     if (!overridden.length) return '';
     return ` <span style="color:#A06A12"><strong>Reduced-accuracy import:</strong> ${overridden.length===2?'both calculator photos were':'the calculator photo was'} rated through an override.</span>`;

@@ -9,6 +9,8 @@
     "test:lab": "node tools/run-lab-suite.mjs",
     "test:smv": "node tests/smv-panel.mjs",
     "verify:matchmaker": "python tools/verify_matchmaker.py",
-    "test:all": "npm run test:face && npm run test:lab && npm run test:smv && npm run verify:matchmaker"
+    "test:all": "npm run test:face && npm run test:body && npm run test:lab && npm run test:smv && npm run verify:matchmaker",
+    "test:body": "node tools/run-body-suite.mjs",
+    "audit:body:photos": "node tools/audit-body-photos.mjs"
   }
 }

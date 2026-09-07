@@ -179,6 +179,26 @@ is the sex. If your model's output order differs (male first, or a single sigmoi
 
 # Body Calc — trained body model (optional; geometry runs without it)
 
+## Current production contract (2026-09-07)
+
+A photo must pass the native-detail and pose checks before either scoring route runs.
+Shoulders and hips must be confidently inside the image; uncertain knees or feet cannot
+unlock full-body measurements. Multiple detected people are refused. At least 220 native
+pixels of subject extent are required; enlarging an image in the preview does not meet this.
+
+Geometry headlines require all three measured outline ratios: waist-to-hip, shoulder-to-waist,
+and shoulder-to-hip. Missing outline cues cannot be overridden into a score, including when
+model inference fails. Complete torso outlines retain the explicit framing override. Model
+weights, square crop, empirical reference tables, and optional-input blending are unchanged.
+These gates reduce unsupported scores; they do not validate attractiveness against human labels.
+
+Four stable camera probes must fit the visible guide. Per-photo warnings survive averaging,
+reload, and cross-page use. The quality boundary uses `bodyShot.v2` and `bodyScore.v4`; earlier
+snapshots/scores are cleared. See the September body audit in `md/calculators.md` and run
+`npm run test:body` / `npm run audit:body:photos` for reproducible checks.
+
+The following sections preserve the model's historical training and calibration setup.
+
 Drop a converted model here as **`body-beauty.onnx`** and `body.html` will use it for the headline
 score automatically (on-device, via onnxruntime-web). Until then the page runs on the transparent
 **pose-geometry** composite, and the geometry stays the breakdown either way.

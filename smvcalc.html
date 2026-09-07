@@ -383,7 +383,7 @@
     // reference median at 5.5 — the same value this quiz's Looks factor uses as its neutral/manual-gap
     // anchor — so the import is the identity (clamped). DOM-free and testable.
     const FACE_SCORE_KEY = 'loveEquations.faceScore.v4';
-    const BODY_SCORE_KEY = 'loveEquations.bodyScore.v3';
+    const BODY_SCORE_KEY = 'loveEquations.bodyScore.v4';
     // Identity since the 2026-08-14 conventional anchor: the calcs' scale now puts its median at 5.5,
     // which IS this calculator's neutral — the old piecewise 5.0→5.5 re-anchor became a no-op and was
     // retired with the marker bump (percentile-v3.1). Clamp only.
@@ -972,7 +972,7 @@
         placeholder: 'e.g. 18',
         // §10.3 body fat % — placed between build (frame) and face. Type is count-style (the raw % feeds
         // countToScore via the sex-specific anchors below); imported from inputs.bf on a provenance-cleared
-        // bodyScore.v3 record exactly like face imports from Face Calc, else an honest self-estimate flagged
+        // bodyScore.v4 record exactly like face imports from Face Calc, else an honest self-estimate flagged
         // soft. Anchors are PIECEWISE and NON-MONOTONIC — leanness is an inverted-U: score peaks lean and
         // falls off at BOTH extremes (essential-fat gaunt on one side, obese on the other). Calibration
         // (spec §10.3): male peak 10–12% → 9.0, male median ~25% → 5.2, 38%+ → ≤2.8; female peak 18–21% →

@@ -17,9 +17,9 @@
   // stored v2 into an Overall would silently mix two incompatible scales. Old keys are not migrated and
   // not read; they are deleted on load so they cannot be resurrected by a downgrade.
   var FACE_KEY = 'loveEquations.faceScore.v4'; // capture-quality checked face results only
-  var BODY_KEY = 'loveEquations.bodyScore.v3';
+  var BODY_KEY = 'loveEquations.bodyScore.v4';
   // The stored lens pick joins the legacy purge: the lens toggle is gone (one scale since 2026-08-14).
-  var LEGACY_KEYS = ['loveEquations.faceScore.v3', 'loveEquations.faceScore.v2', 'loveEquations.bodyScore.v2', 'loveEquations.compositeLens.v1'];
+  var LEGACY_KEYS = ['loveEquations.bodyScore.v3', 'loveEquations.faceScore.v3', 'loveEquations.faceScore.v2', 'loveEquations.bodyScore.v2', 'loveEquations.compositeLens.v1'];
   for (var _i = 0; _i < LEGACY_KEYS.length; _i++) {
     try { localStorage.removeItem(LEGACY_KEYS[_i]); } catch (e) {}
   }
@@ -115,7 +115,7 @@
       // the "Rate anyway — reduced accuracy" override must not blend into the overall looking like a
       // to-standard read — the caveat rides the payload so the blend stays as honest as the calc panel.
       // Name the actual override cause: the body's rate-anyway flag can mean non-standard framing OR an
-      // unreadable outline (bodyScore.v3 overrideReason: 'framing' | 'outline' | 'framing+outline'); the
+      // unreadable outline (bodyScore.v4 overrideReason: 'framing' | 'outline' | 'framing+outline'); the
       // face's only override is framing. Older body payloads without overrideReason read as framing.
       var bodyCause = body.overrideReason === 'outline' ? 'unreadable outline'
         : body.overrideReason === 'framing+outline' ? 'non-standard framing and an unreadable outline'
@@ -199,8 +199,8 @@
     reset: function () {
       try {
         localStorage.removeItem(FACE_KEY); localStorage.removeItem(BODY_KEY);
-        // face.html LC_SHOT_KEY is faceShot.v3 (older shots are purged on load); body.html BC_SHOT_KEY is bodyShot.v1
-        localStorage.removeItem('loveEquations.faceShot.v3'); localStorage.removeItem('loveEquations.faceShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v1');
+        // face.html LC_SHOT_KEY is faceShot.v3 (older shots are purged on load); body.html BC_SHOT_KEY is bodyShot.v2
+        localStorage.removeItem('loveEquations.faceShot.v3'); localStorage.removeItem('loveEquations.faceShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v1');
         // also drop the body calc's saved height/weight/bf inputs — body.html re-persists a
         // bodyScore from them on its next load, silently resurrecting the score just reset here
         localStorage.removeItem('loveEquations.bodyInputs.v1');

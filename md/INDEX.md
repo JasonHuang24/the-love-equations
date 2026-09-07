@@ -158,6 +158,8 @@ record whose own headline was later corrected, with the correction recorded in-f
 
 ## Calculators
 
+- 2026-09-07 · [Body calculator reliability audit](calculators.md#body-calculator-reliability-audit--2026-09-07) **LIVE** — complete-outline scoring, confidence/detail gates, stable capture, per-photo provenance; 46 regressions, 87 image attempts, 18 browser flows, 40 camera layouts
+
 - 2026-06-20 · [body-cnn-scoping-brief.md](calculators.md) **HIST ★** — no turnkey body-beauty CNN exists; ruled train-your-own on the Connor OSF set (726 rated bodies) or stay on geometry — research only
 - 2026-07-05 · [body-calc-hybrid-spec.md](calculators.md) **LIVE** — hybrid ruled & shipped: objective spine (height/weight/BF% → FFMI) closes the 4 photo holes, photo keeps shape only; all 6 decision points ruled
 - 2026-07-06 · [face-calibration-report.md](calculators.md) **LIVE** — outMin/outMax re-anchored 1.5/4.5 → 1.797/4.379 off 400 SCUT faces through the shipped pipeline; ρ=0.933 but no holdout — optimistic by its own admission

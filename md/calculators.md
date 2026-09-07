@@ -1310,3 +1310,110 @@ npm run audit:face:photos
 ```
 
 The browser audit uses the same `CODEX_NODE_MODULES` and `LE_BROWSER_EXECUTABLE` settings documented in the preceding review. `node tools/audit-face-photos.mjs --flows-only` runs integration/layout checks without repeating the photo sweep. Inputs are existing local repository photos. The final pre/post observations are checked in as `tests/fixtures/face-review-baseline.json` and `tests/fixtures/face-quality-results.json`, including source/model/photo hashes and every observed result. They are not human-rating labels. Detailed runtime logs and screenshots remain local under `artifacts/face-review/`.
+
+
+---
+
+# Body calculator reliability audit — 2026-09-07
+
+Request: audit the body calculator, refine reproducible defects, then commit and push.
+Baseline: `36ef687ecdb54b026cee0de22a35101595503771`.
+
+## Coverage and acceptance criteria
+
+Inspected all five image-entry routes (file picker, drop, paste, URL, camera), both headline
+routes (trained model and silhouette), optional-input blending, three-photo accumulation,
+asynchronous model/pose failure, restoration, and reset. The storage boundary covers the body
+snapshot, shared composite, SMV import and both Matchmaker import paths. Camera layout checks
+cover ten viewport sizes in both width modes with portrait and landscape streams: 40 cases.
+
+Acceptance: no rating from untrusted required joints, undersized native input, multiple detected
+people, unknown pose quality, or an incomplete geometry outline; no stale score during analysis;
+no loss of earlier photos or their warnings on a rejected append; reset must cancel camera work;
+all existing calculator/import and repository checks must continue to pass.
+
+## Findings and refinements
+
+1. **Sparse geometry created extreme ratings.** On the same PNG pixels, reflecting
+   `images/roster/taylor-swift/3.jpg` changed the read from 7.58 to 3.64 as the surviving cue
+   switched from shoulder/hip breadth to taper. Another reflected image moved from 2.27 to 4.90.
+   The old code renormalized the weight of whichever single cue survived into an entire score.
+   Geometry now requires measured waist/hip, shoulder/waist and shoulder/hip ratios. A failed
+   model can fall back only to this complete outline. Framing overrides remain available for
+   a complete upper-body outline; missing measurements cannot be overridden into a rating.
+2. **Required-joint confidence was incomplete.** Low-presence shoulders and off-image shoulders
+   could pass; an averaged lower-body confidence could hide an unreadable knee. All four torso
+   corners now need at least 0.5 confidence and must be inside the image. Each lower-body joint
+   needs at least 0.38 confidence to unlock height and standing proportions. The worker detects
+   up to two poses and refuses when it sees more than one. A missing quality verdict is refused.
+3. **Resolution and alignment were permissive.** The old 220-pixel detail threshold only warned.
+   It now refuses undersized subjects based on source pixels, with presence and visibility both
+   considered. Auto-snap requires four probes about 600 ms apart; landmark drift is measured
+   from the first probe, not just the preceding frame. Center, head and foot placement must
+   match the actual SVG meet coordinates. Video orientation changes update the preview aspect.
+4. **Photo state lost provenance and displayed stale information.** Warning metadata now belongs
+   to each shot. Adding a clean shot retains earlier warnings until that earlier shot is evicted.
+   Pending/gated photos clear the headline and composite import. Rejected/discarded appends
+   restore the earlier image, scores and warnings while preserving newly edited optional inputs.
+   A camera request that resolves after Reset is stopped instead of reopening the preview.
+5. **The audit could claim a score without one.** In the 51-image baseline, the batch labeled
+   22 rows scored, but only 20 had any numeric result. Batch outcome now requires a resolvable
+   shot percentile. The tests check storage isolation and reject phantom scored rows.
+
+## Evidence and validation
+
+- `tests/body-calculator.test.mjs`: 46 passing tests against actual scoring, worker, camera and
+  state functions. The initial regression run reproduced shoulder-confidence, knee-confidence,
+  dimensions, frame-boundary, warning-loss and stale-raw defects before implementation.
+- `tests/fixtures/body-review-baseline.json`: 51 original JPEG attempts using the baseline.
+- `tests/fixtures/body-review-before-outline.json`: intermediate 87-attempt run that exposed
+  the reflection/sparse-cue failures. Originals and transformations in this run use PNG encoding.
+- `tests/fixtures/body-review-photos.json`: fixed manifest of 51 originals plus six transformations
+  on each of six selected photos (repeat, mirror, 75% brightness, 2px blur, reduced resolution,
+  upper-body crop). Source assets are already in the repository.
+- `tests/fixtures/body-quality-results.json`: final 87 attempts, source/model/image SHA-256 hashes,
+  browser and runtime versions, 30 photo assertions, 18 browser flows, and 40 layout cases.
+  Nine of 51 originals remain scorable: two model and seven complete-geometry reads. All six
+  undersized stress images refuse. Exact-repeat checks allow at most 0.25 points; mirror,
+  brightness and blur checks allow 0.75 points when both inputs score, or a refusal. Both scoring
+  routes remain exercised so refusal-only behavior cannot pass the suite.
+- Browser flows exercise real file/drop/paste/URL input, explicit overrides, three-photo reload,
+  rejected/discarded additions, pending model rendering, isolated/shared reset, legacy-key purge,
+  manual camera capture refusal and late camera permission cancellation. Camera streams are
+  simulated canvases; no physical-camera performance claim is made.
+- Camera layout checks cover 360×800, 390×844, 768×1024, 820×1180, 1024×768, 1366×768,
+  1920×1080, 1920×1200, 2560×1440 and 3840×2160 in original/wide modes, for both stream
+  orientations. Assertions cover overflow, native video aspect, guide bounds, separate guidance
+  text and shutter/foot-line overlap. Focused mobile/tablet/desktop screenshots and the framing
+  gate were also visually inspected. Screenshots and full logs are local under `artifacts/body-review/`.
+- `npm run test:all` passed: face suite, body suite, all 25 Lab steps, SMV panel and Matchmaker
+  verification. The final rollback/camera refinements additionally passed the updated 46-test
+  body suite and the final browser/photo run. Existing face/composite browser flows also passed
+  after the shared storage-key update. Canon index rebuilt and validated; `git diff --check` clean.
+
+## Limits and compatibility
+
+This is a stricter input contract, not a newly trained taste model. It declines more photos.
+Model weights, model crop, reference distributions, geometry bands and optional-input weights
+remain unchanged. The geometry reference still describes the existing mixed-quality reference
+population; it has not been re-estimated as a distribution conditional on the new gates.
+These roster photos are not an independent human-rating holdout, so the audit cannot establish
+agreement with human aesthetic judgement or demographic fairness. Lighting, clothing and the
+bare/clothed routing heuristic remain sources of variation.
+
+`loveEquations.bodyShot.v2` carries `qualityVersion:1` and per-shot metadata;
+`loveEquations.bodyScore.v4` is read by the composite, SMV and Matchmaker. Older body snapshots
+and scores are purged instead of silently restoring ratings made under the weaker contract.
+Optional inputs (`bodyInputs.v1`) and the current face score remain compatible.
+
+Run with Node >=20 (older Node can silently skip the test runner):
+
+```
+npm run test:body
+npm run audit:body:photos
+npm run test:all
+```
+
+The browser audit uses Playwright from `CODEX_NODE_MODULES` when set and the browser executable
+from `LE_BROWSER_EXECUTABLE`; it runs an ephemeral localhost server and performs all image inference
+locally. Model dependencies still download from their existing pinned public URLs.

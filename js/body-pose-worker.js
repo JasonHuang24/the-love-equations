@@ -48,9 +48,11 @@ function confidence(point){
 }
 
 function assessPose(lm, width, height){
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width<=0 || height<=0) return {ok:false,code:'malformed',message:'The image dimensions are invalid.'};
   if (!lm || lm.length < 33 || !REQUIRED.every(i => lm[i] && Number.isFinite(lm[i].x) && Number.isFinite(lm[i].y))){
     return { ok:false, code:'malformed', message:'The pose landmarks were incomplete. Try a clearer photo.' };
   }
+  if (![11,12,23,24].every(i=>confidence(lm[i])>=0.5 && lm[i].x>=0 && lm[i].x<=1 && lm[i].y>=0 && lm[i].y<=1)) return {ok:false,code:'partial',message:'Keep both shoulders and hips visible and inside the photo.'};
   const px = i => ({ x:lm[i].x*width, y:lm[i].y*height });
   const mid = (a,b) => { const p=px(a), q=px(b); return { x:(p.x+q.x)/2, y:(p.y+q.y)/2 }; };
   const dist = (a,b) => { const p=px(a), q=px(b); return Math.hypot(p.x-q.x,p.y-q.y); };
@@ -106,7 +108,7 @@ function assessPose(lm, width, height){
   const lower=[25,26,27,28,29,30,31,32];
   const lowerConfidence=lower.reduce((sum,i)=>sum+confidence(lm[i]),0)/lower.length;
   const feetInside=[27,28,29,30,31,32].every(i => lm[i].x>=-0.03 && lm[i].x<=1.03 && lm[i].y>=0.04 && lm[i].y<=0.985);
-  const feetPresent = feetInside && lowerConfidence >= 0.48 && confidence(lm[27]) >= 0.38 && confidence(lm[28]) >= 0.38;
+  const feetPresent = feetInside && lower.every(i=>confidence(lm[i])>=0.38) && lowerConfidence >= 0.48 && confidence(lm[27]) >= 0.38 && confidence(lm[28]) >= 0.38;
   if (!feetPresent){
     issues.push('the photo is cropped above the feet — the score scale was calibrated on full-body shots');
     return { ok:true, code:'ok', framing:'torso', shoulderTorso, hipTorso, yawDeg, tilt, band:'degraded', issues };
@@ -237,7 +239,7 @@ async function makePoseLandmarker(){
   const fileset=await mod.FilesetResolver.forVisionTasks(WASM_URL);
   return mod.PoseLandmarker.createFromOptions(fileset,{
     baseOptions:{modelAssetPath:POSE_MODEL_URL,delegate:'CPU'},
-    canvas:new OffscreenCanvas(1,1), runningMode:'IMAGE', numPoses:1,
+    canvas:new OffscreenCanvas(1,1), runningMode:'IMAGE', numPoses:2,
     outputSegmentationMasks:false
   });
 }
@@ -265,7 +267,12 @@ function analyze(message){
   try {
     if (!poseLandmarker) throw new Error('pose engine is not ready');
     postTrace(id,'pose-start',startedAt);
-    poseLandmarker.detect(bitmap,result=>{ landmarks=result.landmarks && result.landmarks[0] || null; });
+    let count=0;
+    poseLandmarker.detect(bitmap,result=>{ count=result.landmarks?.length || 0; landmarks=result.landmarks && result.landmarks[0] || null; });
+    if(count>1){
+      quality={ok:false,code:'multiple',message:'More than one body found. Use a photo of one person.'};
+      self.postMessage({type:'result',id,landmarks,silhouette:null,quality,warning:quality.message,recycle:false});return;
+    }
     postTrace(id,'pose-complete',startedAt);
     if (!landmarks){
       self.postMessage({type:'result',id,landmarks:null,silhouette:null,quality:null,warning:'',recycle:false,

@@ -42,9 +42,9 @@ export async function auditFaceFlows(page,output){
   s=await submit(clean,{append:true,small:true});
   check('rejected append restores accepted photo and scores',JSON.stringify(s.shots)===JSON.stringify(before.shots)&&s.photo===before.photo&&s.override);
   // Shared raw-score storage must keep the existing Body score intact on Face reset.
-  await page.evaluate(()=>localStorage.setItem('loveEquations.bodyScore.v3',JSON.stringify({sentinel:'keep-body',convention:'percentile-v3.1',bp:6,cv:6,bpMax:10,cvMax:10,floor:1,source:'model',sex:null,ts:Date.now()})));
+  await page.evaluate(()=>localStorage.setItem('loveEquations.bodyScore.v4',JSON.stringify({sentinel:'keep-body',convention:'percentile-v3.1',bp:6,cv:6,bpMax:10,cvMax:10,floor:1,source:'model',sex:null,ts:Date.now()})));
   await page.locator('#lc-reset').click();
-  check('face-only reset keeps body data',await page.evaluate(()=>localStorage.getItem('loveEquations.faceShot.v3')===null&&localStorage.getItem('loveEquations.faceScore.v4')===null&&JSON.parse(localStorage.getItem('loveEquations.bodyScore.v3')).sentinel==='keep-body'));
+  check('face-only reset keeps body data',await page.evaluate(()=>localStorage.getItem('loveEquations.faceShot.v3')===null&&localStorage.getItem('loveEquations.faceScore.v4')===null&&JSON.parse(localStorage.getItem('loveEquations.bodyScore.v4')).sentinel==='keep-body'));
   s=await submit(clean,{route:'drop'});check('drop uses quality-checked scoring',s.shots.length===1);
   s=await submit(clean,{route:'paste',small:true});check('paste cannot bypass resolution refusal',s.shots.length===0&&s.status.includes('face too small'));
   await page.locator('#lc-url').fill(new URL(clean,page.url()).href);
