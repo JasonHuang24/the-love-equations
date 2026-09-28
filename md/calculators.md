@@ -1478,6 +1478,65 @@ the `window.lcSetStatus` hook the batch harness listens on — so batch mode wai
 timeout per such photo and logs a stale "Scoring with the trained model…" reason. The benchmark
 forwards the message to the hook (no scoring change); the page's own batch mode still has the bug.
 
+## Rework — a non-discriminating face model (candidate, NOT applied)
+
+Per the ruling above, the ethnicity gap was treated as a model defect, not a disclosure. Two candidates
+were built and measured through the unedited page (`--face-model` + `--face-ref`); neither is live.
+
+- **Data.** MEBeauty (2021 GitHub release: 2,531 in-the-wild faces, Asian/Black/Caucasian/Hispanic/
+  Indian/Middle-Eastern, 1–10, ~300 raters; **non-commercial research only**), 1,174 usable after the
+  page's own crop/angle gates (tightly-framed photos reflect-padded so the page's crop box fits).
+  Optional: OMI (1,004 synthetic StyleGAN faces; **CC BY-NC-SA**). Held out entirely: the London Face
+  Set (102 studio faces, CC BY, self-reported ethnicity). Chicago Face Database, AMFD and MR2 are
+  form-gated — no form was submitted. MEBeauty's own raters put Black faces ~0.9 below Caucasian:
+  training on raw ratings would have taught the gap.
+- **Model.** Frozen MobileCLIP-S1 image encoder + linear ridge head, exported as ONE graph honouring
+  face.html's existing contract (224² ImageNet-normalized in, scalar out) — no page code change, only
+  the .onnx and `REF_RAW`. Chosen over MobileCLIP2-S0/S2 and ViT-B/16-DFN on MEBeauty validation ρ.
+- **Non-discrimination by construction.** Labels z-scored within (dataset, ethnicity, sex), so the
+  head cannot learn a group-mean offset; and every direction along which an ethnic group's mean
+  embedding differs from its dataset mean is projected out of the head (mean parity on the training
+  faces). `REF_RAW` = the exported graph's output over MEBeauty, each ethnicity×sex cell weighted
+  equally (the upstream SCUT reference reweighted its subsets the same way).
+
+| roster, 790 photos | shipped SCUT | MEBeauty+OMI | **MEBeauty only** |
+|---|---|---|---|
+| scored | 146 | 215 | 214 |
+| ORDER ρ person-mean (95% bootstrap CI) | 0.244 (0.02–0.45) | 0.538 (0.40–0.66) | **0.550** (0.39–0.67) |
+| ORDER AUC attractive over plain | 0.728 | 0.922 | **0.936** |
+| STABILITY ICC(1) · median within-person range | 0.281 · 0.80 | 0.754 · 1.09 | 0.735 · **0.69** |
+| mirror-inconsistency refusals | 109 | 40 | 41 |
+| FAIRNESS Black − rest (95% CI) | **−2.00** (−3.03, −0.91) | −0.50 (−1.07, +0.05) | **−0.11** (−0.62, +0.49) |
+| same, only people the shipped model also scored (94 per pairing) | −2.14 / −2.00 | −0.40 | −0.01 |
+| MEBeauty test ρ (held out) · London ρ (never seen) | 0.344 · 0.441 | 0.655 · 0.622 | 0.671 · 0.537 |
+
+Recommendation: **MEBeauty only** — best on the roster, fairness gap indistinguishable from zero, and no
+share-alike term. Both candidates were fixed before either was benchmarked; choosing between the two
+on the roster is disclosed as a roster-informed choice. Honest limits: n Black = 14 people on the
+roster (the CI is wide); four East Asian people read +1.43 (n too small to call); the reference is one
+rater's judgment. Costs: the file is 86.5 MB vs 45 MB (int8 dynamic quantization destroyed the model,
+ρ −0.003 vs fp32; MatMul-only int8 kept it at ρ 0.9995 but only reached 72.6 MB); licensing stays
+non-commercial like SCUT; face.html's SCUT copy would need rewriting.
+
+The candidate bundle — both .onnx files (sha256 `0c36e518…391620` MEBeauty-only, `a115015a…fa67a9b02`
++OMI), `REF_RAW` tables, heads, page-pipeline crops, embeddings, the exact recipe scripts and an apply
+checklist — is in `artifacts/face-candidate-2026-09-28/` (gitignored, local to this checkout).
+**Awaiting Jason's ruling** on: applying it, the 86.5 MB download, the licence, and the copy.
+
+## Body Calc — measured, not reworked
+
+Its ORDER is inverted on the photos its gates accept (ρ −0.158, AUC 0.287, 55 photos / 48 people —
+the roster is mostly headshots, so this is thin evidence). No rework was attempted: the ruling was about
+the face, and a body rework needs its own rated full-body data (the Connor OSF set in
+`body-cnn-scoping-brief.md` is the known source) run through the same within-group labels + erasure
+recipe, plus a roster with more full-body photos before any body number here is worth acting on.
+
+## What was NOT done
+
+No page, model, constant or copy on the live site changed; nothing pushed. The page's batch-harness
+refusal bug (above) is filed, not fixed. No sex-fairness analysis. No human rating beyond the frozen
+reference. The Body Calc is unchanged.
+
 ## Stale-checkout note
 
 This checkout's `main` sat at b277c8c (2026-08-09) while `origin/main` held 47 newer commits
