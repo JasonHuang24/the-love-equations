@@ -1417,3 +1417,71 @@ npm run test:all
 The browser audit uses Playwright from `CODEX_NODE_MODULES` when set and the browser executable
 from `LE_BROWSER_EXECUTABLE`; it runs an ephemeral localhost server and performs all image inference
 locally. Model dependencies still download from their existing pinned public URLs.
+
+
+---
+
+# Real-photo looks benchmark — 2026-09-28
+
+Request (Jason, 2026-09-28): the Face and Body Calc scores "aren't reasonable" — understand why, then
+fix it. Rulings given in-session: the benchmark's ground truth is **Claude's judgment** ("Your judgment");
+the Face Calc's ethnicity gap is **not to be disclosed but reworked** ("no reason for it to discriminate");
+build the benchmark, and **Jason decides later** whether its readings should move anything.
+Tree measured: `85ce43d` (see *Stale-checkout note* — the first run measured the wrong tree).
+
+## What the instrument is
+
+`tools/looks-benchmark.mjs` (`npm run bench:looks`; metrics in `tools/looks-benchmark-metrics.mjs`,
+unit-tested by `npm run test:looks`) runs the tracked roster — 790 ordinary real photos of 192 real
+people (8 fictional/custom rows excluded) — through each page's own debug batch harness in headless
+Chrome, and reports four separate readings. It is a measurement, not a gate: no thresholds.
+
+- **ORDER** — Spearman ρ of person-mean score against the reference rating; AUC of photos of people
+  rated ≥8 over people rated ≤5.
+- **STABILITY** — ICC(1) of a person's score across their photos; mirror-image deltas on the portraits.
+- **SHAPE** — score quantiles, tier histogram, floor/ceiling counts.
+- **FAIRNESS** — person-mean score residual after regressing on the reference rating, by ethnicity;
+  headline = Black minus everyone else, at equal reference looks.
+
+Ground truth: `tests/fixtures/looks-benchmark-labels.json` — a frozen snapshot of the roster's `looks`,
+`g` and `ethnicity` fields from `matchmaker.html` (identical at b277c8c and 85ce43d), reviewed and adopted
+as Claude's judgment under the ruling above. It is one rater's reference, and the roster is celebrities
+(skewed attractive, heavily photographed); the benchmark's value is comparative — shipped vs candidate
+on the same photos — not an absolute validity claim. A relabel is a ruling.
+
+Candidates are measured without editing a page: `--face-model`/`--body-model` swap the .onnx on the
+local server and `--face-ref`/`--body-ref` swap the page's `REF_RAW` percentile table (asserted to hit
+exactly once).
+
+## Baseline — shipped 85ce43d
+
+| | Face Calc | Body Calc |
+|---|---|---|
+| scored / photos | 146 / 790 | 55 / 790 |
+| ORDER ρ, person-mean (people) | **0.244** (101) | **−0.158** (48) |
+| ORDER AUC attractive over plain | 0.728 (69/34) | **0.287** (23/5) |
+| STABILITY ICC(1) (people ≥2 photos) | 0.281 (34) | −0.135 (7) |
+| STABILITY median / p90 within-person range | 0.80 / 2.60 | 1.30 / 2.16 |
+| SHAPE p5 / p50 / p95 | 4.00 / 6.41 / 8.41 | 3.15 / 4.92 / 7.29 |
+| FAIRNESS Black − rest, at equal reference | **−2.00** (n 11) | −0.19 (n 13) |
+
+Reading: the 2026-08-14 percentile remap fixed SHAPE (no floor pile-up, a sane median). It did not
+touch ORDER or FAIRNESS, because both are properties of the SCUT-FBP5500 model itself, which never saw
+a Black face — at equal reference looks the Face Calc scores Black faces 2.0 points lower (≈1.4 sd on
+the percentile scale). The Body Calc's order is inverted on the photos it accepts, but n is small (the
+new gates accept 55 of 790 roster photos; most roster photos are headshots).
+
+Face refusals at 85ce43d: 162 "leave more space around your face", 109 mirror-inconsistent model
+readings, 64 no face, the rest head angle / size. **Harness defect (not fixed, page untouched):** the
+mirror-consistency rejection goes through `window.lcRejectPhoto`, whose internal status write bypasses
+the `window.lcSetStatus` hook the batch harness listens on — so batch mode waits the full 15 s settle
+timeout per such photo and logs a stale "Scoring with the trained model…" reason. The benchmark
+forwards the message to the hook (no scoring change); the page's own batch mode still has the bug.
+
+## Stale-checkout note
+
+This checkout's `main` sat at b277c8c (2026-08-09) while `origin/main` held 47 newer commits
+(2026-08-13 → 09-07: the percentile remap, the capture-quality gates, the body rebuild). The first
+benchmark run measured the stale pages; it is superseded and not recorded here. The tree was
+fast-forwarded to 85ce43d (clean fast-forward, nothing local lost) before the baseline above. Same
+failure class as 2026-07-31; the benchmark prints the tree it tested on its first line.

@@ -158,6 +158,7 @@ record whose own headline was later corrected, with the correction recorded in-f
 
 ## Calculators
 
+- 2026-09-28 · [Real-photo looks benchmark](calculators.md#real-photo-looks-benchmark--2026-09-28) **LIVE** — 790 roster photos / 192 people through the shipped pages vs a frozen reference (Claude's judgment, ruled): Face ρ 0.24, Black −2.0 at equal looks (the SCUT model, untouched by the percentile remap); Body ρ −0.16 on 55 accepted photos; stale-checkout note
 - 2026-09-07 · [Body calculator reliability audit](calculators.md#body-calculator-reliability-audit--2026-09-07) **LIVE** — complete-outline scoring, confidence/detail gates, stable capture, per-photo provenance; 46 regressions, 87 image attempts, 18 browser flows, 40 camera layouts
 
 - 2026-06-20 · [body-cnn-scoping-brief.md](calculators.md) **HIST ★** — no turnkey body-beauty CNN exists; ruled train-your-own on the Connor OSF set (726 rated bodies) or stay on geometry — research only

@@ -1,0 +1,2637 @@
+{
+ "_about": "Frozen ground truth for tools/looks-benchmark.mjs (the Face/Body Calc real-photo benchmark). Per-person reference looks (0-10), sex and ethnicity are a SNAPSHOT of the matchmaker.html roster fields at git b277c8c, reviewed and adopted by Claude as the benchmark reference under Jason's in-session ruling of 2026-09-28 (asked how to set the ground truth, he answered \"Your judgment\"). Frozen: never edit a value to green a result; a relabel is a ruling. fictional=true rows (game/fiction/custom renders) are excluded from every metric. Photos live at images/roster/<slug>/<file>; portrait is the roster headshot (images/roster/<slug>.jpg), used only for the mirror test.",
+ "source": "matchmaker.html @ b277c8c (values re-verified identical at 85ce43d)",
+ "ruledBy": "Claude (delegated by Jason, 2026-09-28)",
+ "people": {
+  "margot-robbie": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 9.5,
+   "fictional": false,
+   "portrait": "margot-robbie.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "sydney-sweeney": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "sydney-sweeney.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "gal-gadot": {
+   "sex": "f",
+   "ethnicity": "middle-eastern",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "gal-gadot.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "zendaya": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "zendaya.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "scarlett-johansson": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 9.2,
+   "fictional": false,
+   "portrait": "scarlett-johansson.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "kim-kardashian": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "kim-kardashian.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "mila-kunis": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "mila-kunis.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "anne-hathaway": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.3,
+   "fictional": false,
+   "portrait": "anne-hathaway.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "emma-stone": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "emma-stone.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "jennifer-lawrence": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.1,
+   "fictional": false,
+   "portrait": "jennifer-lawrence.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "taylor-swift": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "taylor-swift.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "adele": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "adele.jpg",
+   "photos": [
+    "4.jpg",
+    "8.jpg",
+    "9.jpg",
+    "10.jpg"
+   ]
+  },
+  "mindy-kaling": {
+   "sex": "f",
+   "ethnicity": "south-asian",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "mindy-kaling.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "amy-schumer": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 4.5,
+   "fictional": false,
+   "portrait": "amy-schumer.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "lizzo": {
+   "sex": "f",
+   "ethnicity": "black",
+   "looks": 5,
+   "fictional": false,
+   "portrait": "lizzo.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "5.jpg"
+   ]
+  },
+  "lena-dunham": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 3.5,
+   "fictional": false,
+   "portrait": "lena-dunham.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "susan-boyle": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 3,
+   "fictional": false,
+   "portrait": "susan-boyle.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "mama-june": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 3.5,
+   "fictional": false,
+   "portrait": "mama-june.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "amber-heard": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "amber-heard.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "bella-thorne": {
+   "sex": "f",
+   "ethnicity": "latino",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "bella-thorne.jpg",
+   "photos": [
+    "5.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg",
+    "9.jpg"
+   ]
+  },
+  "grimes": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "grimes.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "rebel-wilson": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 5.4,
+   "fictional": false,
+   "portrait": "rebel-wilson.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "azealia-banks": {
+   "sex": "f",
+   "ethnicity": "black",
+   "looks": 6,
+   "fictional": false,
+   "portrait": "azealia-banks.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "anna-sorokin": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "anna-sorokin.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "trisha-paytas": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 5,
+   "fictional": false,
+   "portrait": "trisha-paytas.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "farrah-abraham": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 5.8,
+   "fictional": false,
+   "portrait": "farrah-abraham.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "elizabeth-holmes": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 5,
+   "fictional": false,
+   "portrait": "elizabeth-holmes.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "casey-anthony": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 4.4,
+   "fictional": false,
+   "portrait": "casey-anthony.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "tonya-harding": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "tonya-harding.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "rachel-dolezal": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "rachel-dolezal.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "whoopi-goldberg": {
+   "sex": "f",
+   "ethnicity": "black",
+   "looks": 3.5,
+   "fictional": false,
+   "portrait": "whoopi-goldberg.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "angela-deem": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 2.5,
+   "fictional": false,
+   "portrait": "angela-deem.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "tila-tequila": {
+   "sex": "f",
+   "ethnicity": "east-asian",
+   "looks": 5,
+   "fictional": false,
+   "portrait": "tila-tequila.jpg",
+   "photos": [
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "aubrey-oday": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "aubrey-oday.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "jenelle-evans": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "jenelle-evans.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "nadya-suleman": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "nadya-suleman.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "roseanne-barr": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 3.5,
+   "fictional": false,
+   "portrait": "roseanne-barr.jpg",
+   "photos": [
+    "3.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "rosie-odonnell": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 3.8,
+   "fictional": false,
+   "portrait": "rosie-odonnell.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "jo-brand": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 3,
+   "fictional": false,
+   "portrait": "jo-brand.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "ana-de-armas": {
+   "sex": "f",
+   "ethnicity": "latino",
+   "looks": 9.4,
+   "fictional": false,
+   "portrait": "ana-de-armas.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "megan-fox": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 9.2,
+   "fictional": false,
+   "portrait": "megan-fox.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "victoria-justice": {
+   "sex": "f",
+   "ethnicity": "latino",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "victoria-justice.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "emma-watson": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "emma-watson.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "natalie-portman": {
+   "sex": "f",
+   "ethnicity": "middle-eastern",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "natalie-portman.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "elizabeth-olsen": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "elizabeth-olsen.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "lana-condor": {
+   "sex": "f",
+   "ethnicity": "east-asian",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "lana-condor.jpg",
+   "photos": [
+    "3.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg",
+    "9.jpg"
+   ]
+  },
+  "emmy-rossum": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "emmy-rossum.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "hailee-steinfeld": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "hailee-steinfeld.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "pom-klementieff": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "pom-klementieff.jpg",
+   "photos": [
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "rosa-salazar": {
+   "sex": "f",
+   "ethnicity": "latino",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "rosa-salazar.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "kylie-jenner": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "kylie-jenner.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "chloe-grace-moretz": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.4,
+   "fictional": false,
+   "portrait": "chloe-grace-moretz.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "jennifer-haben": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.9,
+   "fictional": false,
+   "portrait": "jennifer-haben.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "alice-lane": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "alice-lane.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "marina-laswick": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.9,
+   "fictional": false,
+   "portrait": "marina-laswick.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "shaelah-mcgilton": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 8.4,
+   "fictional": false,
+   "portrait": "shaelah-mcgilton.jpg",
+   "photos": [
+    "1.jpg"
+   ]
+  },
+  "marz": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.8,
+   "fictional": false,
+   "portrait": "marz.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "valkyrae": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "valkyrae.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "piia-tamare": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.3,
+   "fictional": false,
+   "portrait": "piia-tamare.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "callan-exorcist": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.6,
+   "fictional": false,
+   "portrait": "callan-exorcist.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "evil-addams": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.8,
+   "fictional": false,
+   "portrait": "evil-addams.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "alissa-white-gluz": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.8,
+   "fictional": false,
+   "portrait": "alissa-white-gluz.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "melissa-bonny": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.9,
+   "fictional": false,
+   "portrait": "melissa-bonny.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "pokimane": {
+   "sex": "f",
+   "ethnicity": "middle-eastern",
+   "looks": 7.4,
+   "fictional": false,
+   "portrait": "pokimane.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "qtcinderella": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "qtcinderella.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "maya-higa": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 7.4,
+   "fictional": false,
+   "portrait": "maya-higa.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "amelia-dimoldenberg": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.2,
+   "fictional": false,
+   "portrait": "amelia-dimoldenberg.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "frivolousfox": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.2,
+   "fictional": false,
+   "portrait": "frivolousfox.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "dizzykitten": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.2,
+   "fictional": false,
+   "portrait": "dizzykitten.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "asmr-darling": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.4,
+   "fictional": false,
+   "portrait": "asmr-darling.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "5.jpg"
+   ]
+  },
+  "gibi-asmr": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.2,
+   "fictional": false,
+   "portrait": "gibi-asmr.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "blaire-white": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "blaire-white.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "lilypichu": {
+   "sex": "f",
+   "ethnicity": "east-asian",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "lilypichu.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "ihascupquake": {
+   "sex": "f",
+   "ethnicity": "latino",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "ihascupquake.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "emma-blackery": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "emma-blackery.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "gab-smolders": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "gab-smolders.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "5.jpg"
+   ]
+  },
+  "whispersred": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 6,
+   "fictional": false,
+   "portrait": "whispersred.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg"
+   ]
+  },
+  "courtney-clenney": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.9,
+   "fictional": false,
+   "portrait": "courtney-clenney.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "selene-ashford": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 9.5,
+   "fictional": true,
+   "portrait": "selene-ashford.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "tifa-lockhart": {
+   "sex": "f",
+   "ethnicity": "other",
+   "looks": 9.5,
+   "fictional": true,
+   "portrait": "tifa-lockhart.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "vera-lux": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 9,
+   "fictional": true,
+   "portrait": "vera-lux.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "aerith-gainsborough": {
+   "sex": "f",
+   "ethnicity": "other",
+   "looks": 8.5,
+   "fictional": true,
+   "portrait": "aerith-gainsborough.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "triss-merigold": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": true,
+   "portrait": "triss-merigold.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "anna-henrietta": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.5,
+   "fictional": true,
+   "portrait": "anna-henrietta.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "keira-metz": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": true,
+   "portrait": "keira-metz.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "philippa-eilhart": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": true,
+   "portrait": "philippa-eilhart.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "beyonce": {
+   "sex": "f",
+   "ethnicity": "black",
+   "looks": 8.9,
+   "fictional": false,
+   "portrait": "beyonce.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "rihanna": {
+   "sex": "f",
+   "ethnicity": "black",
+   "looks": 9.1,
+   "fictional": false,
+   "portrait": "rihanna.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "serena-williams": {
+   "sex": "f",
+   "ethnicity": "black",
+   "looks": 6.4,
+   "fictional": false,
+   "portrait": "serena-williams.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "simone-biles": {
+   "sex": "f",
+   "ethnicity": "black",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "simone-biles.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "priyanka-chopra": {
+   "sex": "f",
+   "ethnicity": "south-asian",
+   "looks": 8.8,
+   "fictional": false,
+   "portrait": "priyanka-chopra.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "lisa-blackpink": {
+   "sex": "f",
+   "ethnicity": "east-asian",
+   "looks": 8.9,
+   "fictional": false,
+   "portrait": "lisa-blackpink.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "awkwafina": {
+   "sex": "f",
+   "ethnicity": "east-asian",
+   "looks": 5.4,
+   "fictional": false,
+   "portrait": "awkwafina.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "sofia-vergara": {
+   "sex": "f",
+   "ethnicity": "latino",
+   "looks": 8.8,
+   "fictional": false,
+   "portrait": "sofia-vergara.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "shakira": {
+   "sex": "f",
+   "ethnicity": "latino",
+   "looks": 8.4,
+   "fictional": false,
+   "portrait": "shakira.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "bella-hadid": {
+   "sex": "f",
+   "ethnicity": "mixed",
+   "looks": 9.3,
+   "fictional": false,
+   "portrait": "bella-hadid.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "billie-eilish": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 7.8,
+   "fictional": false,
+   "portrait": "billie-eilish.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "sabrina-carpenter": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8.3,
+   "fictional": false,
+   "portrait": "sabrina-carpenter.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "dolly-parton": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "dolly-parton.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "monica-bellucci": {
+   "sex": "f",
+   "ethnicity": "white",
+   "looks": 9.5,
+   "fictional": false,
+   "portrait": "monica-bellucci.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "henry-cavill": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 9.5,
+   "fictional": false,
+   "portrait": "henry-cavill.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "chris-hemsworth": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 9.5,
+   "fictional": false,
+   "portrait": "chris-hemsworth.jpg",
+   "photos": [
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "idris-elba": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "idris-elba.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "michael-b-jordan": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "michael-b-jordan.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "ryan-gosling": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "ryan-gosling.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "brad-pitt": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 9.5,
+   "fictional": false,
+   "portrait": "brad-pitt.jpg",
+   "photos": [
+    "1.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "drake": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "drake.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "paul-rudd": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "paul-rudd.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "pete-davidson": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5,
+   "fictional": false,
+   "portrait": "pete-davidson.jpg",
+   "photos": [
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "7.jpg"
+   ]
+  },
+  "jonah-hill": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "jonah-hill.jpg",
+   "photos": [
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "seth-rogen": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 4.5,
+   "fictional": false,
+   "portrait": "seth-rogen.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "elon-musk": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "elon-musk.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "mark-zuckerberg": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 3.5,
+   "fictional": false,
+   "portrait": "mark-zuckerberg.jpg",
+   "photos": [
+    "3.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "jeff-bezos": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 3,
+   "fictional": false,
+   "portrait": "jeff-bezos.jpg",
+   "photos": [
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "danny-devito": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 2.5,
+   "fictional": false,
+   "portrait": "danny-devito.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "steve-buscemi": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 2.5,
+   "fictional": false,
+   "portrait": "steve-buscemi.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "kevin-federline": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "kevin-federline.jpg",
+   "photos": [
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "pauly-shore": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "pauly-shore.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "armie-hammer": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "armie-hammer.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "dev-patel": {
+   "sex": "m",
+   "ethnicity": "south-asian",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "dev-patel.jpg",
+   "photos": [
+    "3.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg",
+    "9.jpg"
+   ]
+  },
+  "johnny-depp": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "johnny-depp.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "russell-brand": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "russell-brand.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "shia-labeouf": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "shia-labeouf.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "nicolas-cage": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "nicolas-cage.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "post-malone": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": null,
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "jack-black": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 4.5,
+   "fictional": false,
+   "portrait": "jack-black.jpg",
+   "photos": [
+    "1.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
+   ]
+  },
+  "joe-rogan": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "joe-rogan.jpg",
+   "photos": [
+    "4.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg"
+   ]
+  },
+  "billy-mcfarland": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "billy-mcfarland.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "ben-shapiro": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5,
+   "fictional": false,
+   "portrait": "ben-shapiro.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "james-corden": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "james-corden.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "martin-shkreli": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "martin-shkreli.jpg",
+   "photos": [
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "george-santos": {
+   "sex": "m",
+   "ethnicity": "latino",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "george-santos.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "sam-bankman-fried": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 3,
+   "fictional": false,
+   "portrait": "sam-bankman-fried.jpg",
+   "photos": [
+    "3.jpg",
+    "7.jpg"
+   ]
+  },
+  "rudy-giuliani": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 3.5,
+   "fictional": false,
+   "portrait": "rudy-giuliani.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "spencer-pratt": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.5,
+   "fictional": false,
+   "portrait": "spencer-pratt.jpg",
+   "photos": [
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "jon-gosselin": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 4.5,
+   "fictional": false,
+   "portrait": "jon-gosselin.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "kato-kaelin": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5,
+   "fictional": false,
+   "portrait": "kato-kaelin.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "tekashi-6ix9ine": {
+   "sex": "m",
+   "ethnicity": "latino",
+   "looks": 4,
+   "fictional": false,
+   "portrait": "tekashi-6ix9ine.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "joe-exotic": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 3,
+   "fictional": false,
+   "portrait": "joe-exotic.jpg",
+   "photos": [
+    "1.jpg",
+    "3.jpg"
+   ]
+  },
+  "jason-momoa": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "jason-momoa.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "dwayne-johnson": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "dwayne-johnson.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "cristiano-ronaldo": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "cristiano-ronaldo.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "roman-reigns": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 9,
+   "fictional": false,
+   "portrait": "roman-reigns.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "5.jpg"
+   ]
+  },
+  "lebron-james": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "lebron-james.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "lionel-messi": {
+   "sex": "m",
+   "ethnicity": "latino",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "lionel-messi.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "conor-mcgregor": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "conor-mcgregor.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "5.jpg"
+   ]
+  },
+  "tom-brady": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "tom-brady.jpg",
+   "photos": [
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "travis-kelce": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7,
+   "fictional": false,
+   "portrait": "travis-kelce.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "harry-styles": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "harry-styles.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "bad-bunny": {
+   "sex": "m",
+   "ethnicity": "latino",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "bad-bunny.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "the-weeknd": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 6,
+   "fictional": false,
+   "portrait": "the-weeknd.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "zayn-malik": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "zayn-malik.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "ed-sheeran": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 4.5,
+   "fictional": false,
+   "portrait": "ed-sheeran.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "justin-bieber": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "justin-bieber.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "kanye-west": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 6,
+   "fictional": false,
+   "portrait": "kanye-west.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "timothee-chalamet": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "timothee-chalamet.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "pedro-pascal": {
+   "sex": "m",
+   "ethnicity": "latino",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "pedro-pascal.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "george-clooney": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "george-clooney.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "keanu-reeves": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 8.5,
+   "fictional": false,
+   "portrait": "keanu-reeves.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "ryan-reynolds": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "ryan-reynolds.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg"
+   ]
+  },
+  "andrew-tate": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 6.5,
+   "fictional": false,
+   "portrait": "andrew-tate.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "chris-brown": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "chris-brown.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "dan-bilzerian": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6,
+   "fictional": false,
+   "portrait": "dan-bilzerian.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "jungkook": {
+   "sex": "m",
+   "ethnicity": "east-asian",
+   "looks": 8,
+   "fictional": false,
+   "portrait": "jungkook.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
+   ]
+  },
+  "leonardo-dicaprio": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 9.3,
+   "fictional": false,
+   "portrait": "leonardo-dicaprio.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "tom-cruise": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8.7,
+   "fictional": false,
+   "portrait": "tom-cruise.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "denzel-washington": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 8.8,
+   "fictional": false,
+   "portrait": "denzel-washington.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "will-smith": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 8.3,
+   "fictional": false,
+   "portrait": "will-smith.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "robert-pattinson": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8.9,
+   "fictional": false,
+   "portrait": "robert-pattinson.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "glen-powell": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 8.7,
+   "fictional": false,
+   "portrait": "glen-powell.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "simu-liu": {
+   "sex": "m",
+   "ethnicity": "east-asian",
+   "looks": 7.7,
+   "fictional": false,
+   "portrait": "simu-liu.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "jacob-elordi": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 9.1,
+   "fictional": false,
+   "portrait": "jacob-elordi.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "rami-malek": {
+   "sex": "m",
+   "ethnicity": "middle-eastern",
+   "looks": 6.8,
+   "fictional": false,
+   "portrait": "rami-malek.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "kumail-nanjiani": {
+   "sex": "m",
+   "ethnicity": "south-asian",
+   "looks": 6.4,
+   "fictional": false,
+   "portrait": "kumail-nanjiani.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "bruno-mars": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 7.1,
+   "fictional": false,
+   "portrait": "bruno-mars.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "eminem": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6.6,
+   "fictional": false,
+   "portrait": "eminem.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "snoop-dogg": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 5.4,
+   "fictional": false,
+   "portrait": "snoop-dogg.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "kendrick-lamar": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 6.1,
+   "fictional": false,
+   "portrait": "kendrick-lamar.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "lewis-capaldi": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 4.8,
+   "fictional": false,
+   "portrait": "lewis-capaldi.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "shohei-ohtani": {
+   "sex": "m",
+   "ethnicity": "east-asian",
+   "looks": 7.5,
+   "fictional": false,
+   "portrait": "shohei-ohtani.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "usain-bolt": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 7.7,
+   "fictional": false,
+   "portrait": "usain-bolt.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "michael-phelps": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6.7,
+   "fictional": false,
+   "portrait": "michael-phelps.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "tyson-fury": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.6,
+   "fictional": false,
+   "portrait": "tyson-fury.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "neymar": {
+   "sex": "m",
+   "ethnicity": "latino",
+   "looks": 7.6,
+   "fictional": false,
+   "portrait": "neymar.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "mrbeast": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6.1,
+   "fictional": false,
+   "portrait": "mrbeast.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "pewdiepie": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7.1,
+   "fictional": false,
+   "portrait": "pewdiepie.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "ninja": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6.6,
+   "fictional": false,
+   "portrait": "ninja.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "logan-paul": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7.3,
+   "fictional": false,
+   "portrait": "logan-paul.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "ksi": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 6.8,
+   "fictional": false,
+   "portrait": "ksi.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "xqc": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 5.4,
+   "fictional": false,
+   "portrait": "xqc.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "kai-cenat": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 6.3,
+   "fictional": false,
+   "portrait": "kai-cenat.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg"
+   ]
+  },
+  "ishowspeed": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 6,
+   "fictional": false,
+   "portrait": "ishowspeed.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "kevin-hart": {
+   "sex": "m",
+   "ethnicity": "black",
+   "looks": 5.6,
+   "fictional": false,
+   "portrait": "kevin-hart.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "john-mulaney": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6.8,
+   "fictional": false,
+   "portrait": "john-mulaney.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "jordan-peterson": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 6.2,
+   "fictional": false,
+   "portrait": "jordan-peterson.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "hasan-piker": {
+   "sex": "m",
+   "ethnicity": "middle-eastern",
+   "looks": 8.2,
+   "fictional": false,
+   "portrait": "hasan-piker.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "prince-harry": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 7.2,
+   "fictional": false,
+   "portrait": "prince-harry.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  },
+  "bill-gates": {
+   "sex": "m",
+   "ethnicity": "white",
+   "looks": 3.4,
+   "fictional": false,
+   "portrait": "bill-gates.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "jensen-huang": {
+   "sex": "m",
+   "ethnicity": "east-asian",
+   "looks": 5.3,
+   "fictional": false,
+   "portrait": "jensen-huang.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg"
+   ]
+  },
+  "barack-obama": {
+   "sex": "m",
+   "ethnicity": "mixed",
+   "looks": 7.1,
+   "fictional": false,
+   "portrait": "barack-obama.jpg",
+   "photos": [
+    "1.jpg",
+    "2.jpg",
+    "3.jpg"
+   ]
+  }
+ }
+}
