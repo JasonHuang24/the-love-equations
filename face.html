@@ -1547,13 +1547,16 @@
       // ---- per-image capture. LC.modelRaw is NOT reset per image, so the wrappers are the only reliable
       //      per-image source for the model output; status carries the refusal reason. ----
       let cur = null;
-      const origStatus = window.lcSetStatus, origModel = window.lcSetModelScore, origSex = window.lcSetSex;
+      const origStatus = window.lcSetStatus, origModel = window.lcSetModelScore, origSex = window.lcSetSex, origReject = window.lcRejectPhoto;
       function wrapsOn(){
         window.lcSetStatus = function(msg,isErr){ if (cur){ cur.statusMsg=String(msg==null?'':msg); cur.statusErr=!!isErr; if (isErr && /inference failed|Photo not scored/i.test(cur.statusMsg)){ cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } } return origStatus.apply(this,arguments); };
         window.lcSetModelScore = function(t,raw){ if (cur){ cur.model=t; cur.modelRaw=(raw==null?null:raw); cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } return origModel.apply(this,arguments); };
         window.lcSetSex = function(sex,conf){ if (cur) cur.sexFired=true; return origSex.apply(this,arguments); };
+        // lcRejectPhoto writes its status through the module-internal setStatus, bypassing the hook above — so a
+        // refusal from inferAndSet (e.g. the mirror-consistency gate) must settle the row here, with its own reason.
+        window.lcRejectPhoto = function(msg){ if (cur){ cur.statusMsg=String(msg==null?'':msg); cur.statusErr=true; cur.modelSettled=true; if (cur.res){ const r=cur.res; cur.res=null; r(); } } return origReject.apply(this,arguments); };
       }
-      function wrapsOff(){ window.lcSetStatus=origStatus; window.lcSetModelScore=origModel; window.lcSetSex=origSex; }
+      function wrapsOff(){ window.lcSetStatus=origStatus; window.lcSetModelScore=origModel; window.lcSetSex=origSex; window.lcRejectPhoto=origReject; }
 
       const SETTLE_MS = 15000, SEX_GRACE_MS = 500;
       const delay = ms => new Promise(r=>setTimeout(r,ms));

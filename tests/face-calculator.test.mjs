@@ -186,3 +186,38 @@ test('replacing a gated append preserves the original rollback',()=>{
   w.lcBeginPhoto();w.lcRejectPhoto('Replacement rejected');
   assert.deepEqual(Array.from(w.lcState.shots),[3]);assert.equal(w.lcState.modelRaw,3);
 });
+
+// Runs the page's real debug batch IIFE against a stubbed pipeline. The model's mirror-consistency gate refuses
+// asynchronously through window.lcRejectPhoto (not the lcSetStatus hook), so the harness must hear that call:
+// otherwise the row waits the full settle timeout and logs the stale "Scoring…" status as its reason.
+function batchHarness(handleImage) {
+  const module = scripts.find(s => s.includes('(function lcBatchMode(){'));
+  const start = module.indexOf('(function lcBatchMode(){'), end = module.indexOf('\n    })();', start);
+  if (start < 0 || end < 0) throw new Error('Cannot extract lcBatchMode');
+  const el = () => ({ hidden:true, disabled:false, textContent:'', innerHTML:'', addEventListener(){}, click(){}, classList:{ add(){}, remove(){}, contains:()=>false } });
+  const els = {};
+  const window = { lcState:{ geo:null }, lcSetSex(){}, lcClearCanvas(){}, scoreFromRaw:raw=>raw, batchToCSV:()=>'' };
+  window.lcSetStatus = msg => { window.status = msg; };
+  window.lcSetModelScore = () => {};
+  window.lcRejectPhoto = msg => { window.lcState.geo = null; window.status = msg; };   // internal status write, no hook
+  class Image { set src(_) { setTimeout(() => this.onload(), 0); } }
+  class Storage { setItem(){} removeItem(){} }
+  const ctx = vm.createContext({ window, location:{ search:'?debug', hostname:'' }, document:{ getElementById:id => els[id] ??= el() },
+    canvas:{ hidden:true }, stage:el(), video:{}, Image, Storage, localStorage:{}, URL:{ createObjectURL:()=>'blob:', revokeObjectURL(){} },
+    setTimeout, clearTimeout, console, Promise, Date, handleImage, session:{}, modelState:'ready', sexSession:null,
+    currentGen:0, pendingTensor:null, pendingSexTensor:null, framingAutoOverride:false });
+  vm.runInContext(module.slice(start, end + 9), ctx, { filename:'face.html:lcBatchMode' });
+  return window;
+}
+test('batch settles a model-consistency refusal at once, with its real reason', async () => {
+  const reason = 'Photo not scored: the model gives inconsistent readings of this image. Try another clear, front-facing photo.';
+  const w = batchHarness(() => {
+    w.lcState.geo = {}; w.lcSetStatus('Scoring with the trained model…');
+    setTimeout(() => w.lcRejectPhoto(reason), 5);   // inferAndSet's async mirror-consistency rejection
+  });
+  const t0 = Date.now();
+  await w.__lcBatchRun([{ name:'mirror.jpg', type:'image/jpeg' }]);
+  assert.equal(w.__lcBatchRows[0].outcome, 'refused');
+  assert.equal(w.__lcBatchRows[0].refusal, reason);
+  assert.ok(Date.now() - t0 < 2000, `settled after ${Date.now() - t0} ms — waited on the settle timeout`);
+});

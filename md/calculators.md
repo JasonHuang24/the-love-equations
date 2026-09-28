@@ -1477,6 +1477,8 @@ mirror-consistency rejection goes through `window.lcRejectPhoto`, whose internal
 the `window.lcSetStatus` hook the batch harness listens on — so batch mode waits the full 15 s settle
 timeout per such photo and logs a stale "Scoring with the trained model…" reason. The benchmark
 forwards the message to the hook (no scoring change); the page's own batch mode still has the bug.
+**Fixed after 8a557da:** the batch harness now wraps `window.lcRejectPhoto` itself (the row settles at once
+with its real reason; regression test in `tests/face-calculator.test.mjs`) and the benchmark's shim is gone.
 
 ## Rework — a non-discriminating face model (candidate, NOT applied)
 

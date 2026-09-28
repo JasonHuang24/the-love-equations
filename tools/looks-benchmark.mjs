@@ -119,16 +119,6 @@ async function runInPage(page, calc, list, { mirror = false, crops = false } = {
     }
     // Crop capture (face only): cropFaceTensor calls window.lcPreprocess with the exact 224² RGBA the model sees.
     // A row is pushed after its image's pipeline ran, so the last crop seen belongs to that row; refused rows get none.
-    // Refusal forwarding (face): since 36ef687 the model's mirror-consistency gate rejects through
-    // window.lcRejectPhoto, whose internal status write bypasses the window.lcSetStatus hook the batch harness
-    // listens on — so the harness waits its full 15 s settle timeout and logs a stale "Scoring…" reason. Forward
-    // the rejection message to the hook (same text, isErr) so the row settles at once with its real reason.
-    // Changes no scoring decision: the photo is refused either way.
-    let origReject = null;
-    if (calc === 'face' && window.lcRejectPhoto) {
-      origReject = window.lcRejectPhoto;
-      window.lcRejectPhoto = function (message) { const r = origReject.apply(this, arguments); try { window.lcSetStatus(message, true); } catch { } return r; };
-    }
     let origPre = null, origPush = null;
     if (crops && calc === 'face') {
       origPre = window.lcPreprocess;
@@ -140,7 +130,7 @@ async function runInPage(page, calc, list, { mirror = false, crops = false } = {
       origPush = rows.push;
       rows.push = function (r) { window.__benchCrops.push({ name: r.filename, canvas: window.__benchCrop || null }); window.__benchCrop = null; return Array.prototype.push.apply(this, arguments); };
     }
-    try { await run(files); } finally { if (origPre) window.lcPreprocess = origPre; if (origPush) rows.push = origPush; if (origReject) window.lcRejectPhoto = origReject; }
+    try { await run(files); } finally { if (origPre) window.lcPreprocess = origPre; if (origPush) rows.push = origPush; }
     const out = rows.map(r => Object.assign({}, r));
     // One scale since the 2026-08-14 percentile recalibration: the harness writes the score to both bp and cv.
     const tierOf = s => calc === 'face' ? window.faceTier(s, null) : window.frameTier(s, null);
