@@ -280,6 +280,8 @@ could feed future writing.
 
 # Build Attribution — who built what
 
+**2026-10-27 — Codex Matchmaker audit and photo completion.** At baseline `85ce43d`, 94/200 galleries met five images (829 total). The owner allowed varied adult eras with dates and public sources with provenance labels. Final: 200/200 galleries, 1,000 images, 199 gallery-path additions, 28 retirements, and 103 changed leads; 201 dated source records, including 87 public-source records explicitly marked rights-unverified. Reviewed the full baseline image set, selected additions, and all final circular avatars; corrected wrong-person, underage, duplicate, dark, cut-off, and booking-image defects. Added photo credits and generated-art labels; fixed keyboard zoom/focus, mobile hero layout, resize arrows, age-label association, null-factor import crashes, failed-copy reporting, and blocked-storage startup. No numeric roster/trait rating changed. The audit documents 684/1,200 stable-trait comparisons differing by at least one point between profile and engine, unsupported acceptance percentages, and unsourced prose inferences; these remain open. Validation: strict roster check, two publisher-parser regression tests, browser checks for 200 profiles / 42 viewport-mode states, and Lab suite 25/25 (canon/release/site/SMV included). Canon regenerated; release graph/cache token 2.7.12, no analyzer algorithm change. Full evidence and remaining limitations: [Matchmaker audit](roster.md#matchmaker-audit--2026-10-27). The owner subsequently requested commit and push.
+
 Two AI builders in the loop: **Claude** (Opus) and **Codex**. The loop is
 build → the other reviews → Jason decides.
 

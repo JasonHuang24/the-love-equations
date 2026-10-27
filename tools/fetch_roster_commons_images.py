@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ROSTER_DIR = ROOT / "images" / "roster"
 MATCHMAKER = ROOT / "matchmaker.html"
 MANIFEST = ROSTER_DIR / "manifest.json"
-CREDITS = ROOT / "md" / "roster-image-credits.md"
+CREDITS = ROOT / "md" / "roster.md"
 
 UA = "TheLoveEquationsRosterImageFetcher/1.0 (local static site maintenance)"
 REQUEST_DELAY_SECONDS = float(os.environ.get("ROSTER_FETCH_REQUEST_DELAY", "2.5"))

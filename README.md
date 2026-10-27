@@ -27,7 +27,7 @@ The landing page presents the content in a deliberate hierarchy; the repo follow
 | `face.html` | Face Calculator — MediaPipe landmarks + a trained ONNX model, PSL scale, in-browser |
 | `body.html` | Body Calculator — pose + silhouette geometry with a CNN headline, folded with Face into one Looks score |
 | `compatibility.html` | Compatibility Calculator — score anyone against any of the four hierarchies, 7–7 Rule verdicts |
-| `matchmaker.html` | Matchmaker — your scores against a 150-profile roster, desire × odds ranking with the math shown |
+| `matchmaker.html` | Matchmaker — your scores against a 200-profile roster, desire × odds ranking with the math shown |
 | `lab.html` | LE Lab — normalize pasted transcripts and local sources, map claim-like passages into the LE canon, pressure-test the reasoning, and export unmapped research candidates |
 
 **The evidence:**
@@ -103,7 +103,7 @@ Useful switches while developing:
 `tools/` holds the Python maintenance scripts (`pip install -r tools/requirements.txt`):
 roster image pipeline (`fetch_*`, `wire_roster_candidates.py`, `fill_curated_roster_images.py`,
 `crop_roster_images.py`, `audit_roster_images.py`), matchmaker invariants (`verify_matchmaker.py` — run it
-after any roster/data edit), and face-model calibration (`calibrate_face_anchors.py`,
+after any roster/data edit; add `--require-quota` to enforce five images per gallery), and face-model calibration (`calibrate_face_anchors.py`,
 `sample_face_calibration.py`). `models/train_body_beauty.py` retrains the body CNN (needs torch/torchvision;
 read `models/README.md` first — the calibration anchors in `body.html` are the source of truth).
 

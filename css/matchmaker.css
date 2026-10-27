@@ -205,7 +205,8 @@
 .mm-rcards { display: flex; flex-direction: column; gap: 12px; }
 .mm-avatar { position: relative; overflow: hidden; width: 46px; height: 46px; flex-shrink: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; color: #fffaf3; letter-spacing: 0.02em; }
 /* headshot overlays the initials; if it fails to load it removes itself and the initials show through */
-.mm-avatar-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
+.mm-avatar-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+.mm-avatar-photo[src*="/joe-exotic/1.jpg"] { object-position: 85% center; }
 .mm-card-name { font-size: 15px; font-weight: 700; color: var(--text); }
 .mm-card-meta { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
 
@@ -369,14 +370,23 @@
 .mmw-shot { display: block; height: 168px; min-width: 96px; max-width: 240px; border-radius: 12px; object-fit: cover; object-position: center center; border: 0.5px solid var(--border); cursor: zoom-in;
   background: linear-gradient(100deg, var(--bg) 40%, rgba(120,90,70,.08) 50%, var(--bg) 60%); background-size: 200% 100%; animation: mmwShimmer 1.2s linear infinite; }
 .mmw-shot.is-loaded { animation: none; background: var(--bg); }
+.mmw-photo-button { display: block; padding: 0; border: 0; border-radius: 12px; background: transparent; cursor: zoom-in; }
+.mmw-photo-button:focus-visible { outline: 3px solid var(--scarlet); outline-offset: 2px; }
+.mmw-photo-credit { contain: inline-size; overflow-wrap: anywhere; margin-top: .3rem; font-size: 11px; line-height: 1.4; color: var(--text-dim); }
+.mmw-photo-credit a { color: var(--scarlet-dim); }
+.mmw-photo-context { display: block; margin: .15rem 0; }
+.mmw-photo-note { font-size: 11px; line-height: 1.5; color: var(--text-dim); margin: .6rem 0; }
 @keyframes mmwShimmer { from { background-position: 120% 0; } to { background-position: -80% 0; } }
-.mmw-shot-stamp { display: block; margin-top: .22rem; color: var(--text-dim); font-size: 8.5px; line-height: 1.2; letter-spacing: 0; text-transform: none; text-align: center; opacity: .66; font-weight: 400; }
+.mmw-shot-stamp { display: block; margin-top: .22rem; color: var(--text-dim); font-size: 10px; line-height: 1.35; letter-spacing: 0; text-transform: none; text-align: center; opacity: 1; font-weight: 400; contain: inline-size; }
 .mmw-hero-stamp { width: 100%; max-width: 104px; }
 .mmw-car-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border-radius: 50%; border: 0.5px solid var(--border); background: rgba(255,250,243,.92); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; z-index: 2; box-shadow: 0 2px 8px -3px rgba(80,40,30,.4); transition: all .12s; }
 .mmw-car-btn:hover { color: var(--scarlet); border-color: var(--scarlet); }
 .mmw-car-prev { left: -8px; } .mmw-car-next { right: -8px; }
+.mmw-carousel-wrap .mmw-car-btn { top: 86px; } /* Center on the 168px photo, above its credit. */
 /* fullscreen lightbox for a tapped carousel shot */
 .mmw-lightbox { position: fixed; inset: 0; z-index: 200; background: rgba(20,12,10,.86); display: flex; align-items: center; justify-content: center; padding: 3vh 3vw; cursor: zoom-out; backdrop-filter: blur(3px); }
+dialog.mmw-lightbox { width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; border: 0; box-sizing: border-box; }
+dialog.mmw-lightbox::backdrop { background: transparent; }
 .mmw-lightbox img { max-width: 100%; max-height: 94vh; border-radius: 10px; box-shadow: 0 20px 60px -20px rgba(0,0,0,.7); }
 .mmw-lb-close { position: absolute; top: 14px; right: 18px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(20,12,10,.55); color: #fff; font-size: 24px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .mmw-lb-close:hover, .mmw-lb-close:focus-visible { background: rgba(255,255,255,.18); outline: 2px solid rgba(255,255,255,.5); }
@@ -431,4 +441,8 @@
   .mmw:not(.is-minimized) { left: .6rem; right: .6rem; bottom: .6rem; width: auto; }
   .mmw-card { padding: .85rem; }
   .mmw-name { font-size: 20px; }
+  .mmw-hero { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: .65rem; }
+  .mmw-hero-av-wrap { max-width: 84px; }
+  .mmw-hero-av { width: 84px !important; height: 84px !important; }
+  .mmw-card-pill { grid-column: 2; margin: 0; text-align: left; }
 }

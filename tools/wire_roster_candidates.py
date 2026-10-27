@@ -31,7 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import mm_data
 from crop_roster_images import crop_to_ratio, head_safe_square, save_jpeg, GALLERY_CAP, LEAD_CAP
 
-CREDITS = mm_data.ROOT / "md" / "roster-image-credits.md"
+CREDITS = mm_data.ROOT / "md" / "roster.md"
 STAMP_TEXT = "visual match, unverified"
 
 

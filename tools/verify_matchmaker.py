@@ -9,6 +9,8 @@ scores in range), LF-only line endings, asset-rev format.
 """
 
 import re
+import argparse
+import json
 import subprocess
 import sys
 import tempfile
@@ -44,6 +46,9 @@ def eol_consistent(raw):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--require-quota', action='store_true', help='Fail unless every gallery contains at least five photos; visual distinctness still needs human review.')
+    args = parser.parse_args()
     raw = mm_data.MATCHMAKER.read_bytes()
     check(eol_consistent(raw),
           "line endings consistent (LF, or uniform CRLF from a Windows checkout)")
@@ -71,6 +76,7 @@ def main():
     img_map = data["ROSTER_IMG"]
     gal_map = data["GALLERY_IMG"]
     stamps = data["PHOTO_STAMP"]
+    meta = mm_data.load_data(names=('PHOTO_META',))['PHOTO_META']
 
     slugs = [c["slug"] for c in roster]
     check(len(slugs) == len(set(slugs)), f"ROSTER slugs unique ({len(slugs)} members)")
@@ -102,6 +108,21 @@ def main():
     wired = set(owner) | set(img_map.values())
     unwired_stamps = sorted(set(stamps) - wired)
     check(not unwired_stamps, f"every PHOTO_STAMP key is a wired path {unwired_stamps[:5]}")
+    check(set(meta) <= wired, 'every PHOTO_META entry is wired')
+    check(all(m.get('date') and m.get('author') and m.get('license') and m.get('source', '').startswith('https://')
+              and (m['source'].startswith('https://commons.wikimedia.org/') or
+                   (m.get('rightsStatus') == 'unverified' and m['license'] == 'Reuse licence unverified'
+                    and (m['date'].startswith('Published ') or (m.get('dateBasis') == 'capture' and m.get('dateEvidence'))))) for m in meta.values()),
+          f'all {len(meta)} reviewed-photo records have dates, author, license and source')
+    manifest = json.loads((mm_data.ROSTER_DIR / 'manifest.json').read_text(encoding='utf-8'))
+    check(manifest == img_map, 'generated lead manifest matches ROSTER_IMG')
+    gaps = {s: max(0, 5-len(gal_map.get(s, []))) for s in slugs}
+    gap_count = sum(gaps.values())
+    quota_label = f'five-photo quota: {sum(v == 0 for v in gaps.values())}/{len(slugs)} profiles; {gap_count} slots missing'
+    if args.require_quota:
+        check(gap_count == 0, quota_label)
+    else:
+        print('INFO  ' + quota_label + ' (not a visual-quality pass)')
 
     bad_rows = []
     for c in roster:
@@ -120,7 +141,18 @@ def main():
     check(not bad_rows, f"ROSTER rows well-formed {bad_rows[:5]}")
 
     bad_traits = []
+    expected_traits = {
+        'f': set('looks class desire fun initiative purity values interests avail warmth loyalty'.split()),
+        'm': set('confidence status looks spark initiative warmth loyalty values purity desire'.split()),
+    }
+    roster_by_slug = {c['slug']: c for c in roster}
     for slug, prof in profiles.items():
+        if slug in roster_by_slug:
+            c = roster_by_slug[slug]
+            if set(prof.get('traits', {})) != expected_traits[c['g']]:
+                bad_traits.append(f'{slug}:missing/extra trait keys')
+            if prof.get('traits', {}).get('looks', {}).get('s') != c['looks']:
+                bad_traits.append(f'{slug}:looks anchor drift')
         if not prof.get("blurb"):
             bad_traits.append(f"{slug}:blurb")
         for key, t in (prof.get("traits") or {}).items():

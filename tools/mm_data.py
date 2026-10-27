@@ -65,6 +65,18 @@ def asset_rev(text=None):
     return m.group(1)
 
 
+def replace_literal(text, name, replacement):
+    """Replace only the named declaration, even when its value is an empty {}.
+
+    Replacing by literal content alone can hit an unrelated object or catch body.
+    """
+    match = re.search(rf"const {re.escape(name)}\s*=\s*", text)
+    if not match:
+        raise KeyError(f"const {name} not found")
+    original = extract_literal(text, name)
+    return text[:match.end()] + replacement + text[match.end()+len(original):]
+
+
 def load_data(names=DATA_NAMES):
     text = MATCHMAKER.read_text(encoding="utf-8")
     parts = [f"const {n} = {extract_literal(text, n)};" for n in names]

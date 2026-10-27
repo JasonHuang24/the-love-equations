@@ -168,6 +168,8 @@ record whose own headline was later corrected, with the correction recorded in-f
 
 ## Roster
 
+- 2026-10-27 · [Matchmaker audit](roster.md#matchmaker-audit--2026-10-27) **HIST** — all 200 galleries reach five images; visual review, dated source ledger, UI/input fixes, and unresolved rating/prose findings. [Complete coverage and score differences](../data/matchmaker-audit-2026-10-27.json).
+
 - 2026-06-27 · [profiles-codex-brief.md](roster.md) **LIVE** — the PROFILES schema ruled: 11 women / 10 men traits, the `over` override map, roster-anchored scoring (looks ±0.5), Margot Robbie as gold standard
 - 2026-06-27 · [profiles-codex-brief-round2.md](roster.md) **HIST** — round 1's 11 Codex profiles ruled landed; round 2 ruled append-only direct edits, em-dashes, roster-anchored looks/status for 10–20 more
 - 2026-06-27 · [roster-image-credits.md](roster.md) **LIVE** — photo QA ruled: no padded galleries, mugshots withheld (5 profiles stay initials-only); per-asset Commons credit ledger

@@ -9,3 +9,4 @@ numpy>=1.26
 # scipy is optional everywhere it's imported (guarded try/except), but epoch selection in
 # models/train_body_beauty.py is Spearman-based — install it for any real training run.
 scipy>=1.11
+beautifulsoup4>=4.12
