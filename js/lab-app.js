@@ -7,7 +7,7 @@ import {
   normalizeInput,
   validSourceProvenanceUrl,
   validateNormalizedDocument,
-} from './lab-intake.js?v=2.7.12';
+} from './lab-intake.js?v=2.7.13';
 import {
   ExtractionSession,
   attachCompanionTranscript,
@@ -15,17 +15,17 @@ import {
   extractFile,
   extractUrlText,
   readSystemClipboard,
-} from './lab-extractors.js?v=2.7.12';
-import { createDemoDocument } from './lab-demo.js?v=2.7.12';
-import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.7.12';
-import { claimUnitRowDigest } from './lab-analyzer.js?v=2.7.12';
+} from './lab-extractors.js?v=2.7.13';
+import { createDemoDocument } from './lab-demo.js?v=2.7.13';
+import { LabAnalyzerClient } from './lab-analyzer-client.js?v=2.7.13';
+import { claimUnitRowDigest } from './lab-analyzer.js?v=2.7.13';
 import {
   analysisToJson,
   analysisToMarkdown,
   downloadTextFile,
   exportFileName,
   researchQueueToMarkdown,
-} from './lab-export.js?v=2.7.12';
+} from './lab-export.js?v=2.7.13';
 import {
   LEDGER_COLUMN_COUNT,
   compareLedgerEntries,
@@ -33,19 +33,19 @@ import {
   ledgerRowMatchesFilter,
   nextLedgerFilter,
   unmatchedLedgerLabel,
-} from './lab-ledger.js?v=2.7.12';
+} from './lab-ledger.js?v=2.7.13';
 import {
   REVIEW_DISPOSITIONS,
   buildMappingFeedback,
   mappingFeedbackFileName,
   mappingFeedbackToJson,
-} from './lab-feedback.js?v=2.7.12';
+} from './lab-feedback.js?v=2.7.13';
 
-const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.7.12';
+const CANON_INDEX_URL = 'data/le-canon-index.json?v=2.7.13';
 // The Lab build that rendered a flagged row. Deliberately distinct from
 // provenance.analyzer.version, which names the engine that produced the numbers:
 // a UI-only patch moves this and not that, and triage needs to tell them apart.
-const LAB_RELEASE = '2.7.11';
+const LAB_RELEASE = '2.7.13';
 const MAX_RENDERED_CITATIONS = 160;
 const MAX_RENDERED_SOURCE_SEGMENTS = 500;
 const MAX_RENDERED_LEDGER_ROWS = 300;
@@ -110,6 +110,11 @@ const ui = {
   workspace: byId('lab-workspace'),
   workspaceSubtitle: byId('lab-workspace-subtitle'),
   analysisStatusDetail: byId('lab-analysis-status-detail'),
+  staleNotice: byId('lab-results-stale'),
+  resultGuide: byId('lab-result-guide'),
+  guideTitle: byId('lab-guide-title'),
+  guideCopy: byId('lab-guide-copy'),
+  guideAction: byId('lab-guide-action'),
   analysisProgressWrap: byId('lab-analysis-progress-wrap'),
   analysisProgress: byId('lab-analysis-progress'),
   indexMeta: byId('lab-index-meta'),
@@ -213,6 +218,12 @@ const state = {
   workController: null,
   busy: false,
   resetSequence: 0,
+  inputRevision: 0,
+  analyzedRevision: null,
+  generatedTitle: '',
+  generatedUrl: '',
+  rendered: { ledger: MAX_RENDERED_LEDGER_ROWS, citations: MAX_RENDERED_CITATIONS,
+    triage: MAX_RENDERED_TRIAGE_ROWS, source: MAX_RENDERED_SOURCE_SEGMENTS },
   domainOverrides: new Map(),
   lastAnalyzedDocumentId: null,
   ledgerView: {
@@ -293,6 +304,8 @@ function setBusy(busy, phase = '') {
   ui.companionInput.disabled = busy;
   ui.pasteButton.disabled = busy;
   ui.dropZone.disabled = busy;
+  [ui.text, ui.sourceTitle, ui.sourceUrl, ui.clearText, ui.removeFile]
+    .forEach((control) => { control.disabled = busy; });
   ui.analysisProgressWrap.hidden = !(busy && phase === 'analyzing');
   if (!busy) {
     ui.analysisProgress.value = 0;
@@ -399,6 +412,7 @@ function refreshReadyState(readiness = currentInputReadiness()) {
   ui.textCount.textContent = `${formatNumber(words)} ${words === 1 ? 'word' : 'words'}`;
   const canAnalyze = hasPotentialInput(readiness) && Boolean(state.canonIndex) && !state.busy;
   ui.analyze.disabled = !canAnalyze;
+  ui.clearText.disabled = state.busy || !ui.text.value;
 
   if (!state.canonIndex) {
     ui.readyNote.textContent = 'The canon index must load before analysis.';
@@ -419,10 +433,64 @@ function refreshReadyState(readiness = currentInputReadiness()) {
   } else {
     ui.readyNote.textContent = 'Add analyzable text to begin.';
   }
+  syncResultFreshness();
 }
 
 function updateUrlGuidance() {
+  markInputChanged();
+  // A URL that supplied the text is an input, not just an editable citation.
+  if (['article-url', 'rss-url'].includes(state.normalizedDocument?.source.type)
+      && ui.sourceUrl.value.trim() !== state.normalizedDocument.source.url) {
+    state.normalizedDocument = null;
+    state.activeInput = 'url';
+    if (ui.sourceTitle.value === state.generatedTitle) ui.sourceTitle.value = '';
+    state.generatedTitle = '';
+  }
   refreshReadyState(currentInputReadiness());
+}
+
+function resultsAreStale() {
+  return Boolean(state.analysis) && state.analyzedRevision !== state.inputRevision;
+}
+
+function syncResultFreshness() {
+  const stale = resultsAreStale();
+  ui.staleNotice.hidden = !stale;
+  [ui.copyMarkdown, ui.downloadMarkdown, ui.downloadJson, ui.exportResearch]
+    .forEach((button) => { button.disabled = !state.analysis || stale || state.busy; });
+  document.querySelectorAll('[data-source-decision]').forEach((button) => {
+    button.disabled = stale || state.busy;
+  });
+}
+
+function markInputChanged() {
+  state.inputRevision += 1;
+  syncResultFreshness();
+}
+
+function resetRenderLimits() {
+  state.rendered = { ledger: MAX_RENDERED_LEDGER_ROWS, citations: MAX_RENDERED_CITATIONS,
+    triage: MAX_RENDERED_TRIAGE_ROWS, source: MAX_RENDERED_SOURCE_SEGMENTS };
+}
+
+// Keep each initial render bounded, but let every passage be inspected in the tab.
+function moreRecordsButton(kind, total, batchSize, render) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'lab-triage-button lab-load-more';
+  button.dataset.loadMore = kind;
+  button.textContent = `Show ${formatNumber(Math.min(batchSize, total - state.rendered[kind]))} more (${formatNumber(state.rendered[kind])} of ${formatNumber(total)} shown)`;
+  button.addEventListener('click', () => {
+    state.rendered[kind] += batchSize;
+    render();
+    const next = document.querySelector(`[data-load-more="${kind}"]`);
+    // Rerendering removes the clicked button; keep keyboard focus in the view.
+    const fallback = kind === 'triage' ? ui.triage.querySelector('summary')
+      : document.querySelector('.lab-tab-panel.is-active');
+    (next || fallback)?.focus({ preventScroll: true });
+    syncResultFreshness();
+  });
+  return button;
 }
 
 function documentWithCurrentProvenance(documentValue) {
@@ -437,17 +505,27 @@ function updateLoadedDocument(documentValue, { inputKind = 'document', announce 
   if (!validation.valid) {
     throw new LabIntakeError('INVALID_NORMALIZED_DOCUMENT', validation.errors.join(' '));
   }
+  if (!ui.sourceTitle.value.trim() || ui.sourceTitle.value === state.generatedTitle) {
+    ui.sourceTitle.value = '';
+    state.generatedTitle = documentValue.source.title;
+  }
   const loadedDocument = documentWithCurrentProvenance(documentValue);
   state.normalizedDocument = loadedDocument;
   state.activeInput = inputKind;
   if (!ui.sourceTitle.value.trim()) ui.sourceTitle.value = loadedDocument.source.title;
   const existingUrl = validSourceProvenanceUrl(loadedDocument.source.url);
-  if (!ui.sourceUrl.value.trim() && existingUrl) ui.sourceUrl.value = existingUrl;
-  renderNormalizedDocument(loadedDocument);
+  if (!ui.sourceUrl.value.trim() && existingUrl) {
+    ui.sourceUrl.value = existingUrl;
+    state.generatedUrl = existingUrl;
+  }
+  // Source and the results must always describe the same completed run.
+  if (!state.analysis) renderNormalizedDocument(loadedDocument);
   renderWarnings(loadedDocument.extraction.warnings);
   if (announce) {
     ui.intakeStatus.textContent = `${formatNumber(loadedDocument.stats.words)} words prepared on your device.`;
-    setLabState('empty', 'A normalized source is ready. Nothing has been analyzed yet.');
+    setLabState('empty', state.analysis
+      ? 'A new source is ready. Analyze to replace the previous results below.'
+      : 'A normalized source is ready. Nothing has been analyzed yet.');
   }
   refreshReadyState();
   return loadedDocument;
@@ -506,9 +584,18 @@ async function removeCurrentMedia() {
 
 async function prepareSelectedFile(file) {
   if (!file || state.busy) return;
+  const sequence = state.resetSequence;
+  markInputChanged();
+  setBusy(true, 'extracting');
   clearError();
   renderWarnings([]);
   await removeCurrentMedia();
+  if (sequence !== state.resetSequence) return;
+  ui.text.value = '';
+  if (ui.sourceTitle.value === state.generatedTitle) ui.sourceTitle.value = '';
+  if (ui.sourceUrl.value === state.generatedUrl) ui.sourceUrl.value = '';
+  state.generatedTitle = '';
+  state.generatedUrl = '';
   state.normalizedDocument = null;
   state.activeInput = 'file';
   const classification = classifyLocalFile(file);
@@ -525,6 +612,7 @@ async function prepareSelectedFile(file) {
       title: ui.sourceTitle.value.trim() || undefined,
       url: currentInputReadiness().provenanceUrl,
     });
+    if (signal.aborted || sequence !== state.resetSequence) return;
     if (extracted?.schema === 'le-lab.local-media') {
       state.media = extracted;
       state.activeInput = 'media';
@@ -537,10 +625,14 @@ async function prepareSelectedFile(file) {
       updateLoadedDocument(extracted);
     }
   } catch (error) {
+    if (sequence !== state.resetSequence) return;
     if (error?.name !== 'AbortError') showError(error, { analysisFailure: true });
+    else showCancelledWork();
   } finally {
-    ui.progressWrap.hidden = true;
-    setBusy(false);
+    if (sequence === state.resetSequence) {
+      ui.progressWrap.hidden = true;
+      setBusy(false);
+    }
   }
 }
 
@@ -549,6 +641,9 @@ async function prepareCompanion(file) {
     if (file && !state.media) showError(new LabIntakeError('MEDIA_REQUIRED', 'Choose a local audio or video file before adding its companion transcript.'));
     return;
   }
+  const sequence = state.resetSequence;
+  markInputChanged();
+  state.normalizedDocument = null;
   clearError();
   state.companionFile = file;
   ui.companionStatus.textContent = `${file.name} selected; preparing locally…`;
@@ -564,22 +659,29 @@ async function prepareCompanion(file) {
       title: ui.sourceTitle.value.trim() || undefined,
       url: currentInputReadiness().provenanceUrl,
     });
+    if (signal.aborted || sequence !== state.resetSequence) return;
     state.activeInput = 'document';
     ui.companionStatus.textContent = `${file.name} linked · ${formatNumber(documentValue.stats.words)} analyzable words.`;
     updateLoadedDocument(documentValue);
   } catch (error) {
+    if (sequence !== state.resetSequence) return;
     state.companionFile = null;
     ui.companionInput.value = '';
     ui.companionStatus.textContent = 'No companion transcript attached.';
     if (error?.name !== 'AbortError') showError(error, { analysisFailure: true });
+    else showCancelledWork();
   } finally {
-    ui.progressWrap.hidden = true;
-    setBusy(false);
+    if (sequence === state.resetSequence) {
+      ui.progressWrap.hidden = true;
+      setBusy(false);
+    }
   }
 }
 
 async function prepareClipboard({ event = null } = {}) {
   if (state.busy) return;
+  const sequence = state.resetSequence;
+  markInputChanged();
   clearError();
   setLabState('extracting', 'Reading the clipboard locally.');
   setBusy(true, 'extracting');
@@ -602,20 +704,29 @@ async function prepareClipboard({ event = null } = {}) {
         title: ui.sourceTitle.value.trim() || undefined,
         url: currentInputReadiness().provenanceUrl,
       });
+    if (signal.aborted || sequence !== state.resetSequence) return;
+    await removeCurrentMedia();
+    if (sequence !== state.resetSequence) return;
+    clearFileSummary();
+    ui.text.value = '';
     if (documentValue.source.type === 'clipboard-text') {
       ui.text.value = documentValue.text;
       state.activeInput = 'text';
     }
     updateLoadedDocument(documentValue, { inputKind: documentValue.source.type === 'clipboard-text' ? 'text' : 'document' });
   } catch (error) {
+    if (sequence !== state.resetSequence) return;
     if (error?.name !== 'AbortError') showError(error, { analysisFailure: true });
+    else showCancelledWork();
   } finally {
-    ui.progressWrap.hidden = true;
-    setBusy(false);
+    if (sequence === state.resetSequence) {
+      ui.progressWrap.hidden = true;
+      setBusy(false);
+    }
   }
 }
 
-async function documentForAnalysis() {
+async function documentForAnalysis(controller) {
   const pastedText = ui.text.value.trim();
   const readiness = currentInputReadiness();
   if (pastedText && (state.activeInput === 'text' || !state.normalizedDocument)) {
@@ -646,6 +757,7 @@ async function documentForAnalysis() {
       onProgress: handleExtractionProgress,
       title: ui.sourceTitle.value.trim() || undefined,
     });
+    if (controller.signal.aborted) throw new DOMException('Analysis cancelled', 'AbortError');
     return updateLoadedDocument(documentValue, { inputKind: 'document', announce: false });
   }
   if (readiness.blockingUrlError) throw readiness.blockingUrlError;
@@ -733,15 +845,16 @@ function triageButton(label, ariaLabel, onClick, variant = '') {
   button.className = `lab-triage-button${variant ? ` is-${variant}` : ''}`;
   button.textContent = label;
   button.setAttribute('aria-label', ariaLabel);
+  button.dataset.sourceDecision = '';
   button.addEventListener('click', onClick);
   return button;
 }
 
 async function setDomainOverride(unitId, action) {
-  if (state.busy) return;
+  if (state.busy || resultsAreStale()) return;
   if (!action) state.domainOverrides.delete(unitId);
   else state.domainOverrides.set(unitId, action);
-  await runAnalysis();
+  await runAnalysis(null, { reveal: false });
 }
 
 function renderTriage(result) {
@@ -792,7 +905,7 @@ function renderTriage(result) {
       item.appendChild(triageButton('Undo', `Undo your inclusion of “${shortExcerpt}”`, () => setDomainOverride(segment.unit.id, null)));
       ui.triageList.appendChild(item);
     });
-  ignored.slice(0, MAX_RENDERED_TRIAGE_ROWS).forEach((passage) => {
+  ignored.slice(0, state.rendered.triage).forEach((passage) => {
     const item = document.createElement('li');
     item.className = 'lab-triage-item';
 
@@ -838,12 +951,10 @@ function renderTriage(result) {
     item.appendChild(actions);
     ui.triageList.appendChild(item);
   });
-  if (ignored.length > MAX_RENDERED_TRIAGE_ROWS) {
+  if (ignored.length > state.rendered.triage) {
     const item = document.createElement('li');
     item.className = 'lab-triage-item';
-    const note = document.createElement('p');
-    note.textContent = `${formatNumber(ignored.length - MAX_RENDERED_TRIAGE_ROWS)} more skipped passages are preserved in the JSON export.`;
-    item.appendChild(note);
+    item.appendChild(moreRecordsButton('triage', ignored.length, MAX_RENDERED_TRIAGE_ROWS, () => renderTriage(result)));
     ui.triageList.appendChild(item);
   }
 }
@@ -1037,14 +1148,14 @@ function paintLedger() {
   const visible = claims
     .filter((entry) => ledgerRowMatchesFilter(entry.segment, view.filter))
     .sort((a, b) => compareLedgerEntries(a, b, view.sort));
-  visible.slice(0, MAX_RENDERED_LEDGER_ROWS).forEach((entry) => {
+  visible.slice(0, state.rendered.ledger).forEach((entry) => {
     ui.mapTableBody.appendChild(buildLedgerRow(entry.segment));
   });
-  if (visible.length > MAX_RENDERED_LEDGER_ROWS) {
+  if (visible.length > state.rendered.ledger) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
     cell.colSpan = LEDGER_COLUMN_COUNT;
-    cell.textContent = `${formatNumber(visible.length - MAX_RENDERED_LEDGER_ROWS)} additional rows are preserved in the Markdown and JSON exports.`;
+    cell.appendChild(moreRecordsButton('ledger', visible.length, MAX_RENDERED_LEDGER_ROWS, paintLedger));
     row.appendChild(cell);
     ui.mapTableBody.appendChild(row);
   }
@@ -1063,15 +1174,18 @@ function paintLedger() {
     ui.mapTableBody.appendChild(row);
   }
   syncLedgerControls();
+  syncResultFreshness();
 }
 
 function setLedgerFilter(filter) {
   const next = nextLedgerFilter(state.ledgerView.filter, filter);
   state.ledgerView.filter = next;
+  state.rendered.ledger = MAX_RENDERED_LEDGER_ROWS;
   paintLedger();
 }
 
 function setLedgerSort(key) {
+  state.rendered.ledger = MAX_RENDERED_LEDGER_ROWS;
   const sort = state.ledgerView.sort;
   if (sort.key === key) {
     sort.dir = sort.dir === 'asc' ? 'desc' : 'asc';
@@ -1199,6 +1313,7 @@ async function ensureDiagnostics(segmentId) {
       domainOverrides: state.analyzedOverrides,
       diagnostics: { segmentIds: [segmentId] },
     });
+    if (controller.signal.aborted) throw new DOMException('Analysis cancelled', 'AbortError');
     assertTraceMatchesAnalysis(traced, state.analysis);
     if (state.diagnosticsFor !== state.analysis.id) {
       state.diagnosticsBySegment.clear();
@@ -1207,10 +1322,12 @@ async function ensureDiagnostics(segmentId) {
     state.diagnosticsBySegment.set(segmentId, traced.diagnostics);
     return traced.diagnostics;
   } finally {
-    state.workController = null;
-    setBusy(false);
-    ui.analysisStatusDetail.textContent = restoreStatus;
-    ui.intakeStatus.textContent = restoreIntake;
+    if (state.workController === controller) {
+      state.workController = null;
+      setBusy(false);
+      ui.analysisStatusDetail.textContent = restoreStatus;
+      ui.intakeStatus.textContent = restoreIntake;
+    }
   }
 }
 
@@ -1395,7 +1512,7 @@ function renderCitations(result) {
     segment.matches.forEach((match) => cards.push({ segment, match }));
   });
   ui.citationsEmpty.hidden = cards.length > 0;
-  cards.slice(0, MAX_RENDERED_CITATIONS).forEach(({ segment, match }) => {
+  cards.slice(0, state.rendered.citations).forEach(({ segment, match }) => {
     const fragment = ui.citationTemplate.content.cloneNode(true);
     field(fragment, 'alignment').textContent = match.alignment.label;
     field(fragment, 'confidence').textContent = confidenceLabel(match);
@@ -1434,11 +1551,8 @@ function renderCitations(result) {
     if (!sources.childElementCount) sources.hidden = true;
     ui.citationsList.appendChild(fragment);
   });
-  if (cards.length > MAX_RENDERED_CITATIONS) {
-    const note = document.createElement('p');
-    note.className = 'lab-render-limit-note';
-    note.textContent = `${formatNumber(cards.length - MAX_RENDERED_CITATIONS)} additional match cards are preserved in exports.`;
-    ui.citationsList.appendChild(note);
+  if (cards.length > state.rendered.citations) {
+    ui.citationsList.appendChild(moreRecordsButton('citations', cards.length, MAX_RENDERED_CITATIONS, () => renderCitations(result)));
   }
   ui.citationCount.textContent = formatNumber(cards.length);
 }
@@ -1603,6 +1717,10 @@ function setMetadataUrl(url) {
 
 function renderNormalizedDocument(documentValue) {
   if (!documentValue) {
+    [ui.sourceMetaTitle, ui.sourceMetaType, ui.sourceMetaMethod, ui.sourceMetaSpeakers, ui.sourceMetaUrl]
+      .forEach((node) => { node.textContent = '—'; });
+    ui.sourceWarnings.hidden = true;
+    clearNode(ui.extractionWarnings);
     ui.sourceEmpty.hidden = false;
     clearNode(ui.sourceSegments);
     return;
@@ -1623,7 +1741,7 @@ function renderNormalizedDocument(documentValue) {
   ui.sourceWarnings.hidden = !documentValue.extraction.warnings.length;
   ui.sourceEmpty.hidden = true;
   clearNode(ui.sourceSegments);
-  documentValue.segments.slice(0, MAX_RENDERED_SOURCE_SEGMENTS).forEach((segment) => {
+  documentValue.segments.slice(0, state.rendered.source).forEach((segment) => {
     const fragment = ui.sourceSegmentTemplate.content.cloneNode(true);
     field(fragment, 'segment-id').textContent = segment.id;
     const time = field(fragment, 'timestamp');
@@ -1642,12 +1760,10 @@ function renderNormalizedDocument(documentValue) {
     field(fragment, 'text').textContent = segment.text;
     ui.sourceSegments.appendChild(fragment);
   });
-  if (documentValue.segments.length > MAX_RENDERED_SOURCE_SEGMENTS) {
+  if (documentValue.segments.length > state.rendered.source) {
     const item = document.createElement('li');
     item.className = 'lab-source-segment';
-    const paragraph = document.createElement('p');
-    paragraph.textContent = `${formatNumber(documentValue.segments.length - MAX_RENDERED_SOURCE_SEGMENTS)} additional normalized segments are preserved in JSON export.`;
-    item.appendChild(paragraph);
+    item.appendChild(moreRecordsButton('source', documentValue.segments.length, MAX_RENDERED_SOURCE_SEGMENTS, () => renderNormalizedDocument(documentValue)));
     ui.sourceSegments.appendChild(item);
   }
 }
@@ -1719,6 +1835,7 @@ function renderResult(result, documentValue) {
   renderPressureTests(result);
   renderResearchQueue(result);
   renderNormalizedDocument(documentValue);
+  renderResultGuide(result);
 
   const exportButtons = [ui.copyMarkdown, ui.downloadMarkdown, ui.downloadJson, ui.exportResearch];
   exportButtons.forEach((button) => { button.disabled = false; });
@@ -1741,6 +1858,7 @@ function renderResult(result, documentValue) {
     ? `No claim-like passage cleared the credible threshold; ${formatNumber(result.researchQueue.itemCount)} research candidate(s) remain visible.`
     : `${formatNumber(mapped)} of ${formatNumber(result.metrics.claimLikeSegments)} claim-like segments mapped; ${formatNumber(result.pressureTests.length)} prioritized tension(s).`;
   setLabState(nextState, detail);
+  state.completedState = nextState;
   ui.workspaceSubtitle.textContent = coverageAvailable
     ? `${result.source.title} · ${coverage}% claim-like-segment coverage · ${result.analysisMode.label}.`
     : `${result.source.title} · coverage not applicable · ${result.analysisMode.label}.`;
@@ -1749,7 +1867,42 @@ function renderResult(result, documentValue) {
     : 'Analysis complete on this device.';
 }
 
-async function runAnalysis(event) {
+function renderResultGuide(result) {
+  ui.resultGuide.hidden = false;
+  const claims = result.metrics.claimLikeSegments;
+  const mapped = result.metrics.mappedClaimSegments;
+  const pressures = result.pressureTests.length;
+  const skipped = result.metrics.ignoredDomainSegments;
+  let target;
+  if (!claims) {
+    ui.guideTitle.textContent = 'Check what the Lab could read';
+    ui.guideCopy.textContent = skipped
+      ? 'No claims remain in this analysis. Review the skipped passages and add back anything relationship-related that the word matcher missed.'
+      : 'The Lab needs an explicit claim about dating or relationships. Try a complete sentence with enough context to say who or what it describes.';
+    ui.guideAction.textContent = skipped ? 'Review skipped passages' : 'Edit your text';
+    target = skipped ? 'triage' : 'input';
+  } else if (!mapped) {
+    ui.guideTitle.textContent = 'No match is still useful information';
+    ui.guideCopy.textContent = 'These claims did not clear the wording threshold. Open Questions keeps them available for investigation; a missed match does not make a claim false or new.';
+    ui.guideAction.textContent = 'Explore open questions';
+    target = 'research';
+  } else {
+    ui.guideTitle.textContent = 'Check the match, then question the claim';
+    ui.guideCopy.textContent = 'Use Citations to compare the exact passage with the linked concept. Match confidence measures wording overlap, not truth or the strength of evidence.';
+    if (skipped) ui.guideCopy.textContent += ` Also review the ${formatNumber(skipped)} skipped passage${skipped === 1 ? '' : 's'} below; relevant wording can be missed.`;
+    ui.guideAction.textContent = pressures ? `Review ${formatNumber(pressures)} pressure test${pressures === 1 ? '' : 's'}` : 'Compare matched passages';
+    target = pressures ? 'pressure' : 'citations';
+  }
+  ui.guideAction.onclick = () => {
+    if (target === 'triage') {
+      ui.triage.open = true;
+      ui.triage.querySelector('summary').focus();
+    } else if (target === 'input') ui.text.focus();
+    else activateTab(target, { focus: true });
+  };
+}
+
+async function runAnalysis(event, { reveal = true } = {}) {
   event?.preventDefault();
   if (state.busy) return;
   clearError();
@@ -1757,11 +1910,13 @@ async function runAnalysis(event) {
     showError(new Error('The canon index is unavailable; reload the page before analyzing.'), { analysisFailure: true });
     return;
   }
-  state.workController = new AbortController();
+  const controller = new AbortController();
+  const revision = state.inputRevision;
+  state.workController = controller;
   setBusy(true, 'extracting');
   try {
-    const documentValue = await documentForAnalysis();
-    if (state.workController.signal.aborted) return;
+    const documentValue = await documentForAnalysis(controller);
+    if (controller.signal.aborted) return;
     // Overrides are keyed to content-derived unit IDs; a different document
     // means a different source, so stale decisions never carry across.
     if (state.lastAnalyzedDocumentId !== documentValue.id) {
@@ -1769,17 +1924,18 @@ async function runAnalysis(event) {
       state.lastAnalyzedDocumentId = documentValue.id;
       // A different source also invalidates the ledger's view state.
       resetLedgerView();
+      resetRenderLimits();
     }
     setLabState('analyzing', 'Tracing exact terms, weighted overlap, and canon relationships.');
     setBusy(true, 'analyzing');
     ui.analysisProgressWrap.hidden = false;
     const overrides = Object.fromEntries(state.domainOverrides);
     const result = await analyzer.analyze(documentValue, state.canonIndex, {
-      signal: state.workController.signal,
+      signal: controller.signal,
       onProgress: handleAnalysisProgress,
       domainOverrides: overrides,
     });
-    if (state.workController.signal.aborted) return;
+    if (controller.signal.aborted) return;
     (result.domainRelevance?.overrides?.unmatchedIds || [])
       .forEach((unitId) => state.domainOverrides.delete(unitId));
     // A new run means any cached trace describes a run that is no longer on screen.
@@ -1787,18 +1943,26 @@ async function runAnalysis(event) {
     clearDiagnosticsCache();
     state.analyzedDocument = documentValue;
     state.analyzedOverrides = overrides;
+    state.analyzedRevision = revision;
     renderResult(result, documentValue);
+    if (reveal) {
+      activateTab('map');
+      revealWorkspace();
+      byId('lab-workspace-title').focus({ preventScroll: true });
+    }
   } catch (error) {
+    if (state.workController !== controller) return;
     if (error?.name === 'AbortError') {
-      ui.intakeStatus.textContent = 'Work cancelled. No partial result was promoted.';
-      setLabState(state.analysis ? 'success' : 'empty', 'The current operation was cancelled.');
+      showCancelledWork();
     } else {
       showError(error, { analysisFailure: true });
     }
   } finally {
-    state.workController = null;
-    ui.progressWrap.hidden = true;
-    setBusy(false);
+    if (state.workController === controller) {
+      state.workController = null;
+      ui.progressWrap.hidden = true;
+      setBusy(false);
+    }
   }
 }
 
@@ -1888,11 +2052,21 @@ async function cancelWork() {
   ui.intakeStatus.textContent = 'Cancelling current work…';
 }
 
+function showCancelledWork() {
+  ui.intakeStatus.textContent = 'Work cancelled. No partial result was promoted.';
+  setLabState(state.analysis ? state.completedState : 'empty', state.analysis
+    ? 'The operation was cancelled. The previous completed results remain below.'
+    : 'The operation was cancelled. Nothing has been analyzed.');
+}
+
 function resetVisualResults() {
   state.analysis = null;
   state.unmatchedTriageBySegment.clear();
   state.analyzedDocument = null;
   state.analyzedOverrides = {};
+  state.analyzedRevision = null;
+  ui.staleNotice.hidden = true;
+  ui.resultGuide.hidden = true;
   closeFlagDialog();
   clearDiagnosticsCache();
   [ui.metricWords, ui.metricSegments, ui.metricClaims, ui.metricCoverage,
@@ -1942,11 +2116,14 @@ function resetVisualResults() {
 }
 
 async function resetLab({ preserveInputs = false } = {}) {
-  state.resetSequence += 1;
+  const sequence = ++state.resetSequence;
+  setBusy(true);
+  state.inputRevision += 1;
   state.workController?.abort();
   state.workController = null;
   analyzer.reset();
   await extractionSession.reset();
+  if (sequence !== state.resetSequence) return;
   state.normalizedDocument = null;
   state.activeInput = null;
   state.sourceFile = null;
@@ -1954,6 +2131,9 @@ async function resetLab({ preserveInputs = false } = {}) {
   state.media = null;
   state.domainOverrides.clear();
   state.lastAnalyzedDocumentId = null;
+  state.generatedTitle = '';
+  state.generatedUrl = '';
+  resetRenderLimits();
   resetLedgerView();
   syncLedgerControls();
   if (!preserveInputs) {
@@ -1979,7 +2159,7 @@ async function resetLab({ preserveInputs = false } = {}) {
   setBusy(false);
   setLabState('empty', 'No source is loaded. Nothing has been analyzed.');
   ui.intakeStatus.textContent = 'Ready for a source.';
-  ui.workspaceSubtitle.textContent = 'The empty instrument shows the route. Run the Demo Test or bring a source to populate every chamber with real, source-derived results.';
+  ui.workspaceSubtitle.textContent = 'Run the Demo Test or add your own text to fill this page with real results.';
   refreshReadyState();
 }
 
@@ -1988,7 +2168,6 @@ async function loadDemo() {
   await resetLab();
   try {
     const documentValue = createDemoDocument();
-    ui.sourceTitle.value = documentValue.source.title;
     // Show the transcript in the paste box too. It used to load invisibly as a
     // normalized document, so one click filled the title, left the textarea empty,
     // and the whole run read as "nothing happened". The pasted text does NOT become
@@ -2000,20 +2179,22 @@ async function loadDemo() {
     ui.text.value = documentValue.text;
     updateLoadedDocument(documentValue);
     ui.intakeStatus.textContent = 'Original demonstration loaded. Map it to populate the full Lab.';
-    await runAnalysis();
+    await runAnalysis(null, { reveal: false });
     // The results are the point of the demo, and they render a full screen below
     // the intake form — without this the visitor is left looking at the same empty
     // scaffolding they clicked from.
-    if (state.analysis) revealWorkspace();
+    if (state.analysis) {
+      revealWorkspace();
+      byId('lab-workspace-title').focus({ preventScroll: true });
+    }
   } catch (error) {
     showError(error, { analysisFailure: true });
   }
 }
 
 /**
- * Bring the analysis into view after an automatic run. Only used by the demo:
- * a manual Analyze click is a deliberate act by someone already looking at the
- * page, and yanking their scroll position would be rude.
+ * Bring completed results into view after Analyze or Demo. In-place triage
+ * reruns preserve the current tab and scroll position.
  *
  * The page inherits `html { scroll-behavior: smooth }` from styles.css, and a
  * smooth scroll is an animation the browser is free not to run — in a headless
@@ -2049,13 +2230,17 @@ function revealWorkspace() {
 }
 
 async function removeFile() {
+  if (state.busy) return;
+  markInputChanged();
   extractionSession.cancel('Selected source removed.');
   await removeCurrentMedia();
   clearFileSummary();
+  if (ui.sourceTitle.value === state.generatedTitle) ui.sourceTitle.value = '';
+  state.generatedTitle = '';
   if (state.activeInput === 'document' || state.activeInput === 'file' || state.activeInput === 'media') {
     state.normalizedDocument = null;
     state.activeInput = ui.text.value.trim() ? 'text' : null;
-    renderNormalizedDocument(null);
+    if (!state.analysis) renderNormalizedDocument(null);
     renderWarnings([]);
   }
   setLabState(state.analysis ? app.dataset.labState : 'empty', state.analysis
@@ -2124,10 +2309,22 @@ function wireDropZone() {
 }
 
 ui.form.addEventListener('submit', runAnalysis);
-ui.text.addEventListener('input', () => {
-  if (ui.text.value.trim()) state.activeInput = 'text';
+function textInputChanged() {
+  markInputChanged();
+  if (state.sourceFile || !ui.text.value.trim()) {
+    if (ui.sourceTitle.value === state.generatedTitle) ui.sourceTitle.value = '';
+    if (ui.sourceUrl.value === state.generatedUrl) ui.sourceUrl.value = '';
+    state.generatedTitle = '';
+    state.generatedUrl = '';
+  }
+  state.activeInput = ui.text.value.trim() ? 'text' : null;
+  state.normalizedDocument = null;
+  clearFileSummary();
+  void removeCurrentMedia();
+  if (!state.analysis) renderNormalizedDocument(null);
   refreshReadyState();
-});
+}
+ui.text.addEventListener('input', textInputChanged);
 ui.text.addEventListener('paste', (event) => {
   const hasImage = [...(event.clipboardData?.items || [])].some((item) => item.type?.startsWith('image/'));
   const hasText = Boolean(event.clipboardData?.getData('text/plain')?.trim());
@@ -2137,12 +2334,14 @@ ui.text.addEventListener('paste', (event) => {
   }
 });
 ui.sourceUrl.addEventListener('input', updateUrlGuidance);
-ui.sourceTitle.addEventListener('input', refreshReadyState);
+ui.sourceTitle.addEventListener('input', () => {
+  markInputChanged();
+  refreshReadyState();
+});
 ui.pasteButton.addEventListener('click', () => prepareClipboard());
 ui.clearText.addEventListener('click', () => {
   ui.text.value = '';
-  if (state.activeInput === 'text') state.activeInput = state.normalizedDocument ? 'document' : null;
-  refreshReadyState();
+  textInputChanged();
   ui.text.focus();
 });
 ui.fileInput.addEventListener('change', () => prepareSelectedFile(ui.fileInput.files?.[0]));

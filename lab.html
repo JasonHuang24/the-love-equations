@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Paste any dating commentary into The Love Equations Lab and see which ideas on this site it touches, where its claims overreach, and what it leaves unanswered—all on your device." />
+  <meta name="description" content="Explore English-language dating commentary with The Love Equations Lab: find related ideas on this site, patterns worth questioning, and unmatched claims—all on your device." />
   <title>LE Lab &mdash; The Love Equations</title>
   <link rel="icon" href="data:," />
   <script>/* Stamp the width mode before styles.css paints so a stored preference cannot flash. Mirrors the rule in js/include.js — change both together. */try{document.documentElement.dataset.contentWidth=localStorage.getItem("le-content-width")==="wide"?"wide":"original"}catch(e){document.documentElement.dataset.contentWidth="original"}</script>
   <link rel="stylesheet" href="css/styles.css?v=2.6" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <link rel="stylesheet" href="css/lab.css?v=2.7.12" />
+  <link rel="stylesheet" href="css/lab.css?v=2.7.13" />
   <script src="js/include.js?v=1.0" defer></script>
-  <script type="module" src="js/lab-app.js?v=2.7.12"></script>
+  <script type="module" src="js/lab-app.js?v=2.7.13"></script>
 </head>
 <body data-page="lab">
   <a class="lab-skip-link" href="#lab-workbench">Skip to the Lab</a>
@@ -22,10 +22,10 @@
     <header class="lab-hero">
       <div class="lab-hero-inner">
         <div class="lab-hero-copy">
-          <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> Test any dating claim against the canon</div>
+          <div class="lab-eyebrow"><i class="ti ti-flask-2" aria-hidden="true"></i> Explore dating claims against the canon</div>
           <h1>The Love Equations <em>Lab</em></h1>
           <p class="lab-product-line">Bring a claim. See where it fits, where it strains, and what the map is missing.</p>
-          <p class="lab-hero-sub">Paste text or drop a file. The Lab shows which ideas on this site your text touches, where its claims overreach, and what it could not match.</p>
+          <p class="lab-hero-sub">Paste English-language text or drop a file. Find related ideas on this site, patterns worth questioning, and claims the Lab could not match.</p>
           <div class="lab-hero-actions">
             <button class="btn lab-demo-button" id="lab-load-demo" type="button">
               <i class="ti ti-player-play" aria-hidden="true"></i> Demo Test
@@ -97,7 +97,7 @@
                 <div class="lab-input-icon">
                   <i class="ti ti-link" aria-hidden="true"></i>
                   <input id="lab-source-url" name="sourceUrl" type="url" inputmode="url"
-                         autocomplete="url" placeholder="https://youtube.com/watch?v=..." />
+                         autocomplete="url" aria-describedby="lab-url-note" placeholder="https://youtube.com/watch?v=..." />
                 </div>
                 <p class="lab-field-note" id="lab-url-note">A URL alone is not a transcript. If the browser cannot retrieve usable text, the Lab keeps the link and asks you to paste or attach the transcript.</p>
               </div>
@@ -127,13 +127,13 @@
 
               <div class="lab-file-pane">
                 <input class="lab-visually-hidden" id="lab-file-input" name="sourceFile" type="file"
-                       accept=".txt,.md,.srt,.vtt,.json,.csv,.pdf,.html,.htm,text/plain,text/markdown,text/csv,application/json,application/pdf,text/html,image/*,audio/*,video/*" />
+                       accept=".txt,.text,.md,.markdown,.srt,.vtt,.json,.jsonl,.csv,.tsv,.rtf,.pdf,.html,.htm,text/plain,text/markdown,text/csv,application/json,application/pdf,text/html,image/*,audio/*,video/*" />
                 <button class="lab-drop-zone" id="lab-drop-zone" type="button"
                         aria-describedby="lab-file-types lab-drop-status">
                   <span class="lab-drop-icon" aria-hidden="true"><i class="ti ti-file-upload"></i></span>
                   <span class="lab-drop-title">Drop a file here</span>
                   <span class="lab-drop-or">or choose a local file</span>
-                  <span class="lab-drop-types" id="lab-file-types">TXT, MD, SRT, VTT, JSON, CSV, PDF, HTML, images, audio, or video</span>
+                  <span class="lab-drop-types" id="lab-file-types">Text, Markdown, subtitles, JSON/JSONL, CSV/TSV, RTF, PDF, HTML, images, audio, or video</span>
                 </button>
                 <p class="lab-drop-status" id="lab-drop-status">Nothing selected.</p>
 
@@ -158,10 +158,10 @@
                     <div class="lab-media-preview" id="lab-media-preview" hidden aria-label="Local media preview"></div>
                     <label class="lab-companion-label" for="lab-companion-input">
                       <span><i class="ti ti-file-text" aria-hidden="true"></i> Attach companion transcript</span>
-                      <small>TXT, MD, SRT, VTT, JSON, or CSV</small>
+                      <small>Text, Markdown, SRT, VTT, JSON/JSONL, or CSV/TSV</small>
                     </label>
                     <input class="lab-visually-hidden" id="lab-companion-input" name="companionFile" type="file"
-                           accept=".txt,.md,.srt,.vtt,.json,.csv,text/plain,text/markdown,text/csv,application/json" />
+                           accept=".txt,.text,.md,.markdown,.srt,.vtt,.json,.jsonl,.csv,.tsv,text/plain,text/markdown,text/csv,application/json" />
                     <p class="lab-field-note" id="lab-companion-status">No companion transcript attached.</p>
                     <p class="lab-honesty-note"><i class="ti ti-info-circle" aria-hidden="true"></i> A media player is not transcription. The Lab analyzes only text it actually extracted or that you supplied.</p>
                   </div>
@@ -179,13 +179,13 @@
                   <span id="lab-intake-progress-label">Preparing source&hellip;</span>
                   <span id="lab-intake-progress-value">0%</span>
                 </div>
-                <progress id="lab-intake-progress" max="100" value="0">0%</progress>
+                <progress id="lab-intake-progress" aria-label="Source reading progress" max="100" value="0">0%</progress>
               </div>
               <ul class="lab-warning-list" id="lab-intake-warnings" aria-live="polite"></ul>
               <div class="lab-error-box" id="lab-intake-error" role="alert" hidden>
                 <i class="ti ti-alert-triangle" aria-hidden="true"></i>
                 <div>
-                  <strong>That file could not be read.</strong>
+                  <strong>The Lab needs attention.</strong>
                   <p id="lab-intake-error-message"></p>
                 </div>
               </div>
@@ -244,7 +244,7 @@
         <div class="lab-workspace-head">
           <div>
             <div class="lab-section-kicker">02 &middot; Results</div>
-            <h2 id="lab-workspace-title">Analysis</h2>
+            <h2 id="lab-workspace-title" tabindex="-1">Analysis</h2>
             <p id="lab-workspace-subtitle">Run the Demo Test or add your own text to fill this page with real results.</p>
           </div>
           <div class="lab-export-controls" aria-label="Analysis exports">
@@ -274,9 +274,20 @@
             <span id="lab-analysis-status-detail">No text is loaded. Nothing has been analyzed.</span>
           </div>
           <div class="lab-state-progress" id="lab-analysis-progress-wrap" hidden>
-            <progress id="lab-analysis-progress" max="100" value="0">0%</progress>
+            <progress id="lab-analysis-progress" aria-label="Analysis progress" max="100" value="0">0%</progress>
           </div>
         </div>
+
+        <div class="lab-results-stale" id="lab-results-stale" role="status" hidden>
+          <strong>Your input has changed.</strong> These results and the Source view describe the previous analysis. Analyze again to update them; exports and passage decisions are paused until then.
+        </div>
+        <aside class="lab-result-guide" id="lab-result-guide" aria-labelledby="lab-guide-title" hidden>
+          <div>
+            <h3 id="lab-guide-title">Read this result</h3>
+            <p id="lab-guide-copy"></p>
+          </div>
+          <button class="btn lab-subtle-button" id="lab-guide-action" type="button">Review results</button>
+        </aside>
 
         <div class="lab-metrics" aria-label="Analysis summary">
           <div class="lab-metric">
@@ -476,9 +487,9 @@
               </div>
             </div>
             <div>
-              <div class="lab-readout-head"><h3>Evidence tier</h3><span>How well-supported the matched concepts are</span></div>
+              <div class="lab-readout-head"><h3>Canon labels</h3><span>Evidence grades and content types of matched concepts</span></div>
               <div class="lab-distribution-list" id="lab-evidence-distribution">
-                <p>No matched evidence tiers yet.</p>
+                <p>No matched canon labels yet.</p>
               </div>
             </div>
           </section>
@@ -511,8 +522,8 @@
           <div class="lab-view-intro">
             <div>
               <div class="lab-section-kicker">Stress test</div>
-              <h3>Where a claim overreaches&mdash;and what would change the verdict.</h3>
-              <p>The Lab flags the risky patterns: absolute language, causal leaps, collapsed stages, moralized market value, scope errors, and ignored boundary conditions. A flag is a question to investigate, not a conviction.</p>
+              <h3>Patterns worth questioning&mdash;and evidence to look for.</h3>
+              <p>The Lab flags wording patterns such as absolutes, causal leaps, and collapsed stages. A flag can also appear when a speaker quotes or rejects that wording. Check who is making the claim before treating a flag as criticism; sources and statistics are not independently verified.</p>
             </div>
             <div class="lab-risk-key" aria-label="Common pressure-test flags">
               <span>Absolute</span><span>Causal</span><span>Gender scope</span><span>Stage collapse</span><span>Boundary</span>
@@ -586,6 +597,7 @@
         </div>
         <div class="lab-limit-grid">
           <p><strong>Matching is not proof.</strong> Word overlap can find a relevant concept on this site; it cannot establish that either side is true.</p>
+          <p><strong>English wording is the working language.</strong> The rules do not translate text. Everyday paraphrases, indirect claims, and other languages can be missed. Review skipped passages and add back relevant text before relying on the map.</p>
           <p><strong>Coverage describes your text only.</strong> A high matched share means your text talks about things this site covers&mdash;not that it represents anyone else.</p>
           <p><strong>Unmatched is useful.</strong> It may be noise, a source error, a gap on this site, or a lead worth chasing. The Open Questions view keeps those possibilities separate.</p>
           <p><strong>Irony is read straight.</strong> The stance label reads negation, quotation, attribution, and qualification from the sentence itself. It has no way to detect sarcasm, so a passage that mocks an idea by stating it is recorded as stating it. Where a stance label looks backwards, check the tone first.</p>

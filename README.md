@@ -58,6 +58,7 @@ No build step, no framework — plain HTML/CSS/JS served statically.
   provides face/pose landmarks. See `models/README.md` for training, calibration anchors, and the
   export contract. Nothing leaves the browser.
 - **LE Lab contracts:** `lab.html` is the instrument shell; modular browser extractors normalize every successful input into a versioned document before the deterministic analyzer returns a versioned result. Raw source material stays in session memory by default, and Reset cancels active work and revokes local media previews.
+- **Lab result snapshots:** editing or replacing an input marks the previous results stale and pauses exports and passage decisions until a new analysis completes. Source stays tied to that completed run. The match table, citations, skipped passages, and source segments render in bounded batches with Show more controls; later records remain reviewable in the browser.
 - **Cross-page state:** calculators share `localStorage` keys — `loveEquations.faceScore.v2`,
   `bodyScore.v2`, the shot keys, `smvCalculator.v7_2`, `compatibilityCalculator.v1`, `matchmaker.v1` — and a
   clipboard "profile package" JSON format (`source: 'love-equations.compatibility' | 'love-equations.smv'`)
@@ -84,7 +85,14 @@ node scripts/validate-canon-index.mjs    # validate committed runtime index
 python tools/lab_ui_audit.py             # Lab DOM/ARIA/link/CSS contract
 python tools/lab_release_audit.py        # recursive Lab module/resource release-token graph
 python tools/site_integrity_audit.py     # whole-site local links/fragments/IDs/ARIA
+node tools/lab-browser-audit.mjs         # actual browser workflows + 60 viewport/mode states × 5 tabs
 ```
+
+The browser audit needs Node 20+, Playwright (installed or via `CODEX_NODE_MODULES`),
+and an available Chromium browser (`LE_BROWSER_EXECUTABLE` can select one). It starts
+its own temporary local server and saves its report and screenshots under
+`artifacts/lab-browser-audit/`. Geometry checks and screenshot review are separate
+from the static HTML/ARIA audit; the browser audit is not part of the dependency-free suite.
 
 ## Local development
 

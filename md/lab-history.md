@@ -9591,3 +9591,61 @@ a new instrument-finding shape worth remembering when authoring
 person-named entries.
 
 Suite 18/18 green at 603ef1a, 13fb159, a24c146, and fc1d893.
+
+---
+
+# LE Lab usefulness audit — 2026-10-27
+
+**Brief:** Jason requested a fresh, thorough audit, testing from new angles, a usefulness grade, and implementation of worthwhile changes. Baseline: clean `main`, `f4c2047`, release 2.7.12. Implementation: 2.7.13. This is a product and workflow audit with independent engine probes, not a new calibration or scientific validation of the canon.
+
+**Overall usefulness: B after this pass; C+ at baseline.** These are reviewer judgments, not measured accuracy scores. The Lab is useful for exploring the site's concepts and collecting passages to investigate. It still requires a reader who checks the original text, skipped passages, and linked context. It cannot independently decide whether a dating claim is true.
+
+| Use | Assessment after changes | Reason |
+| --- | --- | --- |
+| Finding relevant LE concepts | B+ | Passage-level wording traces, links and adjacent doctrine make connections inspectable. Ordinary paraphrases can still be missed. |
+| Organizing a source for research | B+ | Local intake, visible exclusions, reversible inclusion decisions and exports are useful; all four previously capped views now expose later records. |
+| Critiquing reasoning | C+ | Pressure questions provide prompts, but quotation, rejection and sarcasm can still produce misleading flags. |
+| Workflow reliability and clarity | A− | Source replacement, clearing, title editing, cancellation, stale-result handling and recovery now have real-browser regression coverage. |
+| Readability and navigation | B+ | Larger reading text, responsive disclosures, keyboard tabs, a next-step guide and automatic results focus help. The seven-column match table still needs horizontal scrolling on small screens. |
+
+## Inventory and acceptance checks
+
+The inspected hierarchy contains four intake routes (paste, clipboard, local files/companions, URL), five result tabs, four export controls, seven sortable ledger columns plus the debug-only feedback column, and four bounded rendering loops. Acceptance required correct source/result identity through edits and replacement; cancellation/reset without late results; access to the final item beyond every rendering limit; keyboard tab navigation; readable repeated text; and layout checks in both width modes from 320px through 4K, including breakpoint neighbors. Existing analyzer, canon, threshold and integrity contracts must stay green.
+
+Deliberate exceptions: the match table and medium-width tab strip use contained horizontal scrolling. Initial render batches remain 300 ledger rows, 160 citation cards, 120 skipped passages and 500 source segments to bound rendering work. The existing 2,500-unit engine ceiling was not changed. The Lab retains its own 1,360px maximum instrument width, so the global width preference does not expand it; both preference states were exercised. Debug feedback remains hidden from ordinary readers. No scoring rule, threshold, canon entry or frozen benchmark fixture changed.
+
+## Findings implemented
+
+1. **Optional-title input disabled Analyze.** The raw DOM event was passed into a function expecting a readiness object. The listener now computes readiness correctly. Confirmed red in the baseline browser and green after the change.
+2. **Clearing text could resurrect old content.** Clearing the demo left Analyze enabled with “218 words prepared and ready.” Clearing and keyboard deletion now invalidate the active normalized input; switching to typed text also releases the old file/media selection.
+3. **Results and Source could describe different documents.** Input revisions now mark completed results stale. Source remains the snapshot used for that completed analysis. All four exports and passage decisions pause until a new run completes. File replacement clears the competing paste input; generated titles are replaced without discarding a visitor's custom title.
+4. **Changing a fetched URL could relabel old fetched text.** A changed URL that supplied the active document now invalidates that document and retrieves the new source on Analyze. URL metadata on pasted/local sources remains metadata.
+5. **Reset and late async completion shared mutable state.** Analysis now captures its own controller; extraction handlers use reset-generation guards. Old completion/finally paths cannot restore a reset run or clear a newer controller. Inputs are locked during work, while Cancel and Reset remain available.
+6. **Later records were inaccessible in four views.** Replaced export-only truncation notes with Show more controls in the ledger, citations, skipped passages and Source. Later skipped passages can now be restored in the UI. Controls preserve keyboard focus after rerendering.
+7. **Results required too much interpretation before a first useful action.** Added result-specific guidance for matched, unmatched and no-claim outcomes. Analyze and Demo bring the completed results into view and focus the result heading; inclusion reruns preserve the current view.
+8. **Presentation overstated what matching establishes.** The hero now describes English-language exploration. Pressure Test explicitly warns that quoting or rejecting flagged language can still trigger a pattern. “Evidence tier” became “Canon labels,” because Framework/Model/Glossary are content types, not evidence grades. The result guide distinguishes word overlap from truth and directs readers to skipped passages.
+9. **Small reading text and narrow-screen chips reduced usability.** Increased passage/explanation text, checked all 132 nodes across eight repeated reading selectors in the demo, and fixed long skipped-passage labels expanding their grid column on mobile. Compact badges remain secondary labels.
+10. **Intake and release metadata drift.** File pickers now include supported JSONL, TSV and RTF extensions. Progress elements have accessible names and URL help is associated with its input. Generic errors no longer always blame a file. Feedback's stale `LAB_RELEASE` value now matches 2.7.13, and the release audit checks this equality. The existing version-only assertion was advanced to 2.7.13; semantic assertions were not weakened.
+
+## Independent engine probes and unresolved limitations
+
+Thirteen newly authored probes covered named concepts, plain paraphrase, assertion/negation/quotation, sarcasm, a purported study, relationship metaphor, a technical control, Spanish, a nonclaim, an unsupported statistic and an invisible-character variant. They are diagnostic examples, not a representative accuracy benchmark. Exact probes and outputs are in the local ignored `artifacts/lab-audit/independent-probes.json`.
+
+- “Selection, compatibility, and retention are different tests for dating couples.” matched The Conversion Ladder at 76/100. Inserting a zero-width space into “compatibility” preserved that result.
+- “Getting someone to go out with you is different from finding out whether you can build a good life together.” was skipped entirely. So were “We keep moving the goalposts whenever we talk about getting married.” and the probe claiming a study proves shared musical tastes keep people married. These are concrete recall gaps in ordinary relationship language.
+- “All women are like that.” and its explicit negation received different stance labels, but both produced the same two absolute/gender-scope pressure flags. The quotation/rejection probe also received those flags. Attribution-sensitive pressure detection remains an open engine issue.
+- The Spanish relationship sentence was skipped. The UI now names English as the working language; it does not claim translation support.
+- An invented “Exactly 93 percent…” dating statistic stayed visible as an unmatched claim but produced no prioritized pressure test. Absence of pressure flags is not validation of a statistic.
+- The technical control was correctly skipped. Sarcasm still requires human interpretation.
+
+The next meaningful engine work is a separately evaluated improvement to paraphrase recall and attribution-sensitive pressure detection. Broadening a few keywords to make these examples pass would not establish better behavior across the corpus. This pass preserves the existing frozen evaluations and records the observations rather than manufacturing an accuracy gain. External source quality and the truth of the canon were not independently researched in this audit.
+
+## Verification and limits of the evidence
+
+- **Baseline:** the existing Lab runner passed all 25 steps even while the title/clear-text bugs reproduced in Chrome. That suite alone did not cover these browser workflows.
+- **Final engine/contracts:** `node tools/run-lab-suite.mjs` passed **25/25**, zero failed/disarmed steps. Includes the frozen domain/mapping tests, export/feedback/intake tests, canon validation, recursive release graph, static UI/site integrity and SMV panel.
+- **Browser:** `tools/lab-browser-audit.mjs` passed **19/19 checks**, with zero uncaught browser errors. It exercises real DOM interactions and downloads, including the five tabs, seven sort controls, stale-result gating, file/URL replacement, clearing, no-domain/override/undo behavior, SRT/HTML/JSONL/TSV/RTF intake, audio plus companion transcript, synthetic clipboard success/denial, blocked PDF/OCR dependencies, Worker fallback, cancellation, delayed-fetch reset, missing-index recovery and no-match research export. Clipboard tests do not read or overwrite the user's actual clipboard.
+- **Coverage:** a 505-paragraph source exposed exactly **305 claim rows, 307 citation cards, 200 skipped passages and 505 source segments** after expansion. Its final skipped passage was successfully included and appeared in the export's override record.
+- **Responsive:** **30 resolutions × 2 width preferences × 5 tabs = 300 geometry measurements**, with triage and nested research disclosures expanded. No unintended horizontal overflow; intentional scroll containers are explicit exceptions. Geometry measurements do not prove visual quality. Separately inspected top, intake, result, ledger, citation, pressure, nested and final screenshots across mobile, tablet, desktop, 1080p and 4K. Local report and 40 screenshots: `artifacts/lab-browser-audit/`.
+- **Live imports:** a generated one-page text PDF and a clean PNG containing “Physical attraction matters in dating.” both extracted the exact sentence using the real pinned PDF.js/Tesseract dependencies, then completed analysis. This verifies simple live extraction, not OCR accuracy on difficult scans or arbitrary PDFs. Evidence: `artifacts/lab-audit/live-imports.json`.
+- **Scope:** Chrome on Windows; no claim of Safari/Firefox coverage, human screen-reader certification, representative NLP accuracy, or new calibration. Source handling, local privacy design and existing engine contracts were preserved. The owner authorized commit and push on 2026-10-28.

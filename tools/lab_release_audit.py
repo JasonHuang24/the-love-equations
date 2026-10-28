@@ -206,6 +206,10 @@ if len(tokens) != 1:
     add_error(f"Lab release tokens disagree: {formatted}")
 
 active_token = next(iter(tokens), None)
+app_text = (ROOT / 'js' / 'lab-app.js').read_text(encoding='utf-8')
+ui_versions = re.findall(r"(?m)^const LAB_RELEASE\s*=\s*['\"]([^'\"]+)['\"]", app_text)
+if len(ui_versions) != 1 or ui_versions[0] != active_token:
+    add_error('Feedback LAB_RELEASE must match the deployed Lab release token')
 if active_token and analyzer_version and active_token != analyzer_version:
     add_error(
         f"Lab release token v={active_token} does not match ANALYZER_VERSION {analyzer_version}"
