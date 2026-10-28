@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SMV Calculator &mdash; The Love Equations</title>
+  <meta name="description" content="Explore a 30-question dating-market self-assessment across Looks, Money, Status, Charm, and Exposure, with switchable market lenses and profile comparisons." />
   <script>/* Stamp the width mode before styles.css paints so a stored preference cannot flash. Mirrors the rule in js/include.js — change both together. */try{document.documentElement.dataset.contentWidth=localStorage.getItem("le-content-width")==="wide"?"wide":"original"}catch(e){document.documentElement.dataset.contentWidth="original"}</script>
-  <link rel="stylesheet" href="css/styles.css?v=2.6" />
+  <link rel="stylesheet" href="css/styles.css?v=2.7" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <script src="js/include.js?v=1.0" defer></script>
+  <script src="js/include.js?v=1.1" defer></script>
   <link rel="stylesheet" href="css/smvcalc.css?v=2.0" />
 </head>
 <body data-page="smvcalc">
@@ -2824,7 +2825,7 @@
     }
     async function copyToClipboard(text, st, okMsg){
       try { await navigator.clipboard.writeText(text); if (st) st.textContent = okMsg; return; } catch(e){}
-      try { const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); if (st) st.textContent = okMsg+' (via selection)'; }
+      try { const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); let copied=false; try { copied=document.execCommand('copy'); } finally { ta.remove(); } if (!copied) throw new Error('Copy refused'); if (st) st.textContent = okMsg+' (via selection)'; }
       catch(e2){ if (st) st.textContent = 'Copy failed — clipboard is blocked here.'; }
     }
 

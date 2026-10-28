@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Matchmaker &mdash; The Love Equations</title>
+  <meta name="description" content="Explore an illustrative 200-profile roster using your attraction and compatibility preferences, with transparent scoring and explanations of the ranking model." />
   <script>/* Stamp the width mode before styles.css paints so a stored preference cannot flash. Mirrors the rule in js/include.js — change both together. */try{document.documentElement.dataset.contentWidth=localStorage.getItem("le-content-width")==="wide"?"wide":"original"}catch(e){document.documentElement.dataset.contentWidth="original"}</script>
-  <link rel="stylesheet" href="css/styles.css?v=2.6" />
+  <link rel="stylesheet" href="css/styles.css?v=2.7" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/matchmaker.css?v=8.7" />
+  <script src="js/include.js?v=1.1" defer></script>
+  <link rel="stylesheet" href="css/matchmaker.css?v=8.8" />
 </head>
 <body data-page="matchmaker">
   <div data-include="navigation-bar"></div>
@@ -4776,7 +4777,12 @@
     const compat = readLS('loveEquations.compatibilityCalculator.v1');
     if (compat && compat.values && typeof compat.values==='object'){
       const ak = compat.activeKey;
-      const scored = ak && PYRAMIDS[ak] && Object.keys(compat.values).some(k => k.indexOf(ak+'-')===0 && compat.values[k] > 1.0);
+      // Compatibility persists neutral 5.0 defaults even before a profile is scored. Its
+      // explicit touched flag distinguishes those defaults from real all-minimum scores;
+      // retain the old heuristic only for records written before that flag existed.
+      const scored = ak && PYRAMIDS[ak] && (compat.touched === undefined
+        ? Object.keys(compat.values).some(k => k.indexOf(ak+'-')===0 && compat.values[k] > 1.0)
+        : compat.touched === true);
       if (scored){ compatValues = compat.values; compatImported = true; selfGrades = Object.assign({}, compat.values); pyramid = ak; }
     }
     if (PYRAMIDS[pyramid].describes !== targetSex()) pyramid = pyramidsForTarget()[0];

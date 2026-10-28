@@ -2,6 +2,7 @@
 
 .pills-shell {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.35rem;
 }
 
@@ -164,7 +165,7 @@
 }
 
 .pill-page { display: none; }
-.pill-page.visible { display: grid; gap: 1rem; }
+.pill-page.visible { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
 
 .dossier-grid {
   display: grid;
@@ -959,7 +960,7 @@
   line-height: 1.6;
 }
 .reading-synth strong { color: var(--text); }
-.reading-synth a { color: var(--scarlet-dim); text-decoration: none; font-weight: 600; white-space: nowrap; }
+.reading-synth a { color: var(--scarlet-dim); text-decoration: none; font-weight: 600; }
 .reading-synth a:hover { color: var(--scarlet); }
 
 @media (max-width: 860px) {

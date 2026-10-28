@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Love Hierarchy — The Love Equations</title>
+  <meta name="description" content="Compare four three-tier frameworks for attraction and compatibility, explore their relationship gates, and build your own Love Hierarchy." />
   <script>/* Stamp the width mode before styles.css paints so a stored preference cannot flash. Mirrors the rule in js/include.js — change both together. */try{document.documentElement.dataset.contentWidth=localStorage.getItem("le-content-width")==="wide"?"wide":"original"}catch(e){document.documentElement.dataset.contentWidth="original"}</script>
-  <link rel="stylesheet" href="css/styles.css?v=2.6" />
+  <link rel="stylesheet" href="css/styles.css?v=2.7" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <script src="js/include.js?v=1.0" defer></script>
-  <link rel="stylesheet" href="css/hierarchy.css?v=1.7" />
+  <script src="js/include.js?v=1.1" defer></script>
+  <link rel="stylesheet" href="css/hierarchy.css?v=1.8" />
 </head>
 <body data-page="hierarchy">
   <div data-include="navigation-bar"></div>
@@ -359,20 +360,20 @@
       <button class="btn builder-add-tier" id="add-tier-btn" onclick="window.__builder.addTier()"><span class="add-plus" style="font-size:16px;">+</span> Add tier</button>
 
       <div class="builder-actions">
-        <button class="btn" onclick="toggleBuilderPanel('export')">Export JSON</button>
-        <button class="btn" onclick="toggleBuilderPanel('import')">Import JSON</button>
+        <button class="btn" id="builder-export-toggle" aria-controls="bpanel-export" aria-expanded="false" onclick="toggleBuilderPanel('export')">Export JSON</button>
+        <button class="btn" id="builder-import-toggle" aria-controls="bpanel-import" aria-expanded="false" onclick="toggleBuilderPanel('import')">Import JSON</button>
         <button class="btn" onclick="resetBuilder()">Reset</button>
       </div>
 
       <div class="builder-panel" id="bpanel-export" hidden>
-        <div class="bpanel-label">Copy this JSON to save or share:</div>
+        <label class="bpanel-label" for="export-text">Copy this JSON to save or share:</label>
         <textarea class="bpanel-text" id="export-text" readonly></textarea>
         <button class="btn" onclick="copyExport()">Copy to clipboard</button>
         <span class="bpanel-msg" id="export-msg"></span>
       </div>
 
       <div class="builder-panel" id="bpanel-import" hidden>
-        <div class="bpanel-label">Paste JSON below, then click Load:</div>
+        <label class="bpanel-label" for="import-text">Paste JSON below, then click Load:</label>
         <textarea class="bpanel-text" id="import-text" placeholder='[{"name":"Primary","factors":[]},{"name":"Secondary","factors":[]}]'></textarea>
         <button class="btn" onclick="loadImport()">Load</button>
         <span class="bpanel-msg" id="import-msg"></span>
@@ -451,14 +452,14 @@
             <div class="factor-card ${cls} builder-card">
               <button class="bf-remove" onclick="window.__builder.removeFactor(${ti}, ${fi})" aria-label="Remove factor">&times;</button>
               <div class="factor-num ${cls}">${String(fi + 1).padStart(2, '0')}</div>
-              <input type="text" class="bf-input" value="${escapeAttr(name)}" oninput="window.__builder.renameFactor(${ti}, ${fi}, this.value)" placeholder="Factor name" />
+              <input type="text" class="bf-input" value="${escapeAttr(name)}" oninput="window.__builder.renameFactor(${ti}, ${fi}, this.value)" placeholder="Factor name" aria-label="Factor ${fi + 1} in tier ${ti + 1}" />
             </div>
           `).join('');
           const addCard = tier.factors.length < MAX_PER_TIER ? `
-            <div class="factor-card builder-add" onclick="window.__builder.addFactor(${ti})">
-              <div class="add-plus">+</div>
-              <div class="add-label">Add factor</div>
-            </div>
+            <button type="button" class="factor-card builder-add" onclick="window.__builder.addFactor(${ti})" aria-label="Add factor to tier ${ti + 1}">
+              <span class="add-plus" aria-hidden="true">+</span>
+              <span class="add-label">Add factor</span>
+            </button>
           ` : '';
           return `<div class="builder-tier">
             <div class="bt-head">
@@ -516,6 +517,8 @@
         document.getElementById('bpanel-' + other).hidden = true;
         const panel = document.getElementById('bpanel-' + which);
         panel.hidden = !panel.hidden;
+        document.getElementById('builder-' + other + '-toggle').setAttribute('aria-expanded', 'false');
+        document.getElementById('builder-' + which + '-toggle').setAttribute('aria-expanded', String(!panel.hidden));
         if (which === 'export' && !panel.hidden) {
           document.getElementById('export-text').value = JSON.stringify(state, null, 2);
           document.getElementById('export-msg').textContent = '';

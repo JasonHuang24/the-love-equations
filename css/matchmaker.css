@@ -6,10 +6,17 @@
 .mm-tag.lens, .mm-tag.est { background: #EEEDFE; color: #3C3489; }
 
 /* ── form + sticky live-preview layout ── */
+.content { container-type: inline-size; }
 .mm-form-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 1.2rem; align-items: start; }
-@media (max-width: 880px) { .mm-form-wrap { grid-template-columns: 1fr; } }
+@media (max-width: 880px) { .mm-form-wrap { grid-template-columns: minmax(0, 1fr); } }
 .mm-preview-col { position: sticky; top: 1rem; }
 @media (max-width: 880px) { .mm-preview-col { position: static; } }
+/* The selected reading width can be narrower than the viewport. Stack the
+   preview when the actual content column cannot hold both usable columns. */
+@container (max-width: 760px) {
+  .mm-form-wrap { grid-template-columns: minmax(0, 1fr); }
+  .mm-preview-col { position: static; }
+}
 .mm-preview { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.05rem; }
 .mm-preview-h { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-dim); }
 .mm-preview-h i { color: var(--scarlet); font-size: 15px; }
@@ -101,7 +108,7 @@
 .mm-grade-row { display: flex; align-items: center; gap: 12px; margin-bottom: 9px; }
 .mm-grade-name { width: 180px; flex-shrink: 0; font-size: 12px; color: var(--text); }
 .mm-grade-name small { display: block; color: var(--text-dim); font-size: 10px; line-height: 1.3; }
-.mm-grade-slider { flex: 1; accent-color: var(--scarlet); cursor: pointer; }
+.mm-grade-slider { flex: 1; min-width: 0; accent-color: var(--scarlet); cursor: pointer; }
 .mm-grade-num { width: 26px; text-align: right; font-size: 13px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 
 /* ── desire quiz ── */
@@ -126,7 +133,6 @@
 .mm-opt.mm-check.active::before { border-color: #fffaf3; background-color: #fffaf3; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.4 5 8.8 9.5 3.8' fill='none' stroke='%23c41e3a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 /* when the ticked option is the neutral "No preference", keep the box readable on the beige pill */
 .mm-opt.mm-check.active.is-neutral::before { border-color: var(--text-dim); background-color: var(--text-dim); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.4 5 8.8 9.5 3.8' fill='none' stroke='%23F3E6D8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
-@media (max-width: 600px){ .mm-quiz { grid-template-columns: 1fr; } }
 
 /* ── find matches button ── */
 .mm-find-wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0.5rem 0 1.4rem; }
@@ -445,4 +451,18 @@ dialog.mmw-lightbox::backdrop { background: transparent; }
   .mmw-hero-av-wrap { max-width: 84px; }
   .mmw-hero-av { width: 84px !important; height: 84px !important; }
   .mmw-card-pill { grid-column: 2; margin: 0; text-align: left; }
+}
+
+@media (max-width: 600px) {
+  .mm-step { padding: 1rem; }
+  .mm-step-sub, .mm-controls, .mm-intake-grid, .mm-import, .mm-pyr-row,
+  .mm-grade-host, .mm-quiz, .mm-simple-toggle, .mm-simple-note { margin-left: 0; }
+  .mm-ctl { flex-wrap: wrap; }
+  .mm-toggle-btn { white-space: nowrap; }
+  .mm-quiz { grid-template-columns: minmax(0, 1fr); }
+  /* Keep a usable slider track below each label instead of squeezing it beside
+     a fixed 180px label into a single thumb on narrow phones. */
+  .mm-grade-row { display: grid; grid-template-columns: minmax(0, 1fr) 26px; gap: 5px 12px; }
+  .mm-grade-name { width: auto; grid-column: 1 / -1; }
+  .mm-grade-slider { width: 100%; }
 }

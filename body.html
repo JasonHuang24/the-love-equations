@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Body Calculator &mdash; The Love Equations</title>
+  <meta name="description" content="Analyze body photos on your device with a prototype calculator, review photo-quality checks, and combine face and body estimates into a Looks score." />
   <script>/* Stamp the width mode before styles.css paints so a stored preference cannot flash. Mirrors the rule in js/include.js — change both together. */try{document.documentElement.dataset.contentWidth=localStorage.getItem("le-content-width")==="wide"?"wide":"original"}catch(e){document.documentElement.dataset.contentWidth="original"}</script>
-  <link rel="stylesheet" href="css/styles.css?v=2.6" />
+  <link rel="stylesheet" href="css/styles.css?v=2.7" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <script src="js/include.js?v=1.0" defer></script>
-  <script src="js/composite-score.js?v=1.2" defer></script>
+  <script src="js/include.js?v=1.1" defer></script>
+  <script src="js/composite-score.js?v=1.3" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js" defer></script>
   <!-- NOT deferred: the inline scoring core below runs during parse and calls bodyArmBand. The pose
        worker importScripts() this same file — one definition of the arm-band predicate, two contexts. -->
@@ -3324,7 +3325,7 @@
       btnMd.addEventListener('click', async ()=>{
         const md = window.batchToMarkdown(rows, COLUMNS);
         try { await navigator.clipboard.writeText(md); statusEl.textContent='Markdown copied to clipboard.'; }
-        catch(_){ const ta=document.createElement('textarea'); ta.value=md; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(__){} ta.remove(); statusEl.textContent='Markdown copied.'; }
+        catch(_){ const ta=document.createElement('textarea'); ta.value=md; document.body.appendChild(ta); ta.select(); let copied=false; try{copied=document.execCommand('copy');}catch(__){} finally{ta.remove();} statusEl.textContent=copied?'Markdown copied.':'Copy failed — clipboard is blocked here. Use CSV download instead.'; }
       });
       btnClear.addEventListener('click', ()=>{ if (running) return; rows.length=0; renderTable(); statusEl.textContent='Cleared.'; });
       const dz = document.getElementById('bc-batch-drop');

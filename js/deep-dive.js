@@ -111,7 +111,15 @@
   btn.setAttribute('aria-label', 'Back to top');
   btn.innerHTML = '<i class="ti ti-arrow-up" aria-hidden="true"></i>';
   document.body.appendChild(btn);
-  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  const scrollBehavior = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+  btn.addEventListener('click', () => {
+    const heading = document.querySelector('h1');
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    }
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
+  });
 
   // ── Per-frame work: one scrollY read, then writes only when values change ──
   let activeId = null;
@@ -164,7 +172,7 @@
       // and it fires only when the era changes (a handful of times per read).
       if (track && trackOverflows) {
         const t = eraCentre.get(id);
-        if (t != null) track.scrollTo({ left: t, behavior: 'smooth' });
+        if (t != null) track.scrollTo({ left: t, behavior: scrollBehavior() });
       }
     }
     if (progressFill && pct !== lastPct) {

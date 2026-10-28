@@ -35,13 +35,13 @@
 .bf-input { width: 100%; border: none; background: transparent; font-family: inherit; font-size: 14px; color: var(--text); padding: 0; outline: none; }
 .bf-input:focus { border-bottom: 1px solid var(--scarlet); }
 .bf-input::placeholder { color: var(--text-dim); font-style: italic; }
-.builder-add { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border-style: dashed; color: var(--text-dim); min-height: 70px; transition: color 0.12s, border-color 0.12s, background 0.12s; }
+.builder-add { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border-style: dashed; color: var(--text-dim); min-height: 70px; font: inherit; text-align: center; transition: color 0.12s, border-color 0.12s, background 0.12s; }
 .builder-add:hover { color: var(--scarlet); border-color: var(--scarlet); background: var(--scarlet-pale); }
 .add-plus { font-size: 22px; line-height: 1; }
 .add-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
 .builder-actions { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; }
 .builder-panel { margin-top: 1rem; padding: 1rem 1.25rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-md); }
-.bpanel-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.bpanel-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 .bpanel-text { width: 100%; min-height: 110px; padding: 0.75rem; border: 0.5px solid var(--border); border-radius: var(--radius-sm); background: var(--card); font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 12px; color: var(--text); resize: vertical; margin-bottom: 8px; box-sizing: border-box; }
 .bpanel-msg { font-size: 12px; margin-left: 10px; }
 .bpanel-msg.ok { color: #1D9E75; }

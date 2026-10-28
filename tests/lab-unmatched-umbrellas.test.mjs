@@ -322,7 +322,7 @@ test('live analyzer adds triage only after a passage remains unmatched', async (
     text: fragment,
   }), CANON);
 
-  assert.equal(ANALYZER_VERSION, '2.7.13');
+  assert.equal(ANALYZER_VERSION, '2.7.14');
   assert.equal(RESEARCH_QUEUE_SCHEMA_VERSION, 'le-lab.research-queue/2.3');
   assert.equal(analysis.metrics.mappedClaimSegments, 0);
   assert.equal(analysis.metrics.unmappedClaimSegments, 1);

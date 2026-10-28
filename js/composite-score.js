@@ -27,23 +27,35 @@
   // Provisional, tunable: face vs. body share of "overall looks" (one constant re-weights everywhere).
   var FACE_WEIGHT = 0.5;
 
+  // Storage is optional: quota/private-mode failures must not replace the current read with an
+  // older saved score. Failed writes stay available for this page's lifetime, including clears.
+  var sessionScores = Object.create(null);
   function readScore(key) {
+    if (Object.prototype.hasOwnProperty.call(sessionScores, key)) return sessionScores[key];
     try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }
     catch (e) { return null; }
   }
-  function writeScore(key, obj) { try { localStorage.setItem(key, JSON.stringify(obj)); } catch (e) {} }
+  function writeScore(key, obj) {
+    sessionScores[key] = obj;
+    try { localStorage.setItem(key, JSON.stringify(obj)); delete sessionScores[key]; } catch (e) {}
+  }
+  function clearScore(key) {
+    sessionScores[key] = null;
+    try { localStorage.removeItem(key); delete sessionScores[key]; } catch (e) {}
+  }
   function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
   function num(x) { return typeof x === 'number' && isFinite(x); }
 
   // A persisted score is trustworthy only if it names the CURRENT convention (percentile-v3.1, the
   // 2026-08-14 5.5-median anchor — an older 5.0-median score blended in would silently mix two scales,
   // the same class of defect that retired the v2 keys), both score fields agree and are finite, and the
-  // floor sits below the max. Guards against stale / partial / hand-edited payloads.
+  // numbers stay inside the current 1–10 bounds. Guards against stale / partial / hand-edited payloads.
   function validScore(o) {
     return !!o && typeof o === 'object'
       && o.convention === 'percentile-v3.1'
       && num(o.bp) && num(o.cv) && num(o.bpMax) && num(o.cvMax) && num(o.floor)
-      && o.bpMax > o.floor && o.cvMax > o.floor;
+      && o.floor === 1 && o.bpMax === 10 && o.cvMax === 10
+      && Math.abs(o.bp - o.cv) < 1e-9 && o.cv >= o.floor && o.cv <= o.cvMax;
   }
 
   // The exact number the calc displays (bp === cv on the single scale; no normalisation).
@@ -87,7 +99,9 @@
       : s === 'heuristic' ? 'geometry heuristic'
       : s === 'measured' ? 'measured numbers (no photo)'           // Body Calc numbers-only path (objective spine, no photo blended)
       : s === 'hybrid' ? 'hybrid read (measured &times; photo)'   // Body Calc objective-spine blend (bodyScore.v2 additive source)
-      : (s || '—');
+      : String(s || '—').replace(/[&<>"']/g, function (ch) {
+          return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[ch];
+        });
   }
   var ACCENT = '#0F6E56';   // the conventional accent — the only scale left
 
@@ -100,6 +114,12 @@
     var haveFace = validScore(face);
     var bodyNeedsSex = !!(body && body.needsSex);
     var haveBody = validScore(body) && !bodyNeedsSex;
+    var unsaved = [];
+    if (haveFace && sessionScores[FACE_KEY]) unsaved.push('face');
+    if ((haveBody || bodyNeedsSex) && sessionScores[BODY_KEY]) unsaved.push('body');
+    var storageNote = unsaved.length
+      ? '<div class="composite-note"><strong>Could not save the ' + unsaved.join(' and ') + ' read' + (unsaved.length > 1 ? 's' : '') + '.</strong> This result is available on this page, but will be lost when you leave or reload.</div>'
+      : '';
 
     if (haveFace && haveBody) {
       var fsex = face.sex || null, bsex = body.sex || null;
@@ -142,6 +162,7 @@
         + photoNote
         + conflictNote
         + overrideNote
+        + storageNote
         + '<div class="composite-note"><strong>Two prototype reads, blended.</strong> Face from the ' + sourceWord(face.source) + ' (' + ago(face.ts) + '), body from the ' + sourceWord(body.source) + ' (' + ago(body.ts) + '). <strong>Assumes both are the same person</strong> &mdash; scores persist across visits, so an old read can linger; Reset clears them. The ' + wF + '/' + wB + ' face/body split is a provisional, tunable default. A mirror of the methodology, not a verdict on a person.</div>'
         + '<div class="composite-foot"><button type="button" id="composite-reset">Reset both (scores + photos)</button></div>';
       wireReset();
@@ -179,6 +200,7 @@
       + '<div class="composite-empty-lead">Your <strong>overall looks rating</strong> blends both calculators. Score the missing one to see it.</div>'
       + '<div class="composite-rows">' + faceRow + bodyRow + '</div>'
       + loneNote
+      + storageNote
       + ((anyScored || bodyNeedsSex) ? '<div class="composite-foot"><button type="button" id="composite-reset">Reset</button></div>' : '')
       + '</div>';
     wireReset();
@@ -194,11 +216,11 @@
     saveBody: function (obj) { writeScore(BODY_KEY, obj); render(); },
     // a calc invalidates its own result (failed/cleared photo) → drop its composite score so the blend
     // never shows a number for an emptied calculator
-    clearFace: function () { try { localStorage.removeItem(FACE_KEY); } catch (e) {} render(); },
-    clearBody: function () { try { localStorage.removeItem(BODY_KEY); } catch (e) {} render(); },
+    clearFace: function () { clearScore(FACE_KEY); render(); },
+    clearBody: function () { clearScore(BODY_KEY); render(); },
     reset: function () {
+      clearScore(FACE_KEY); clearScore(BODY_KEY);
       try {
-        localStorage.removeItem(FACE_KEY); localStorage.removeItem(BODY_KEY);
         // face.html LC_SHOT_KEY is faceShot.v3 (older shots are purged on load); body.html BC_SHOT_KEY is bodyShot.v2
         localStorage.removeItem('loveEquations.faceShot.v3'); localStorage.removeItem('loveEquations.faceShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v2'); localStorage.removeItem('loveEquations.bodyShot.v1');
         // also drop the body calc's saved height/weight/bf inputs — body.html re-persists a

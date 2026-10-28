@@ -24,7 +24,7 @@ The landing page presents the content in a deliberate hierarchy; the repo follow
 | Page | What it is |
 |---|---|
 | `smvcalc.html` | SMV Calculator — 30-question self-assessment, switchable market lenses, profile A/B comparison |
-| `face.html` | Face Calculator — MediaPipe landmarks + a trained ONNX model, PSL scale, in-browser |
+| `face.html` | Face Calculator — MediaPipe landmarks + a trained ONNX model, prototype 1–10 percentile scale, in-browser |
 | `body.html` | Body Calculator — pose + silhouette geometry with a CNN headline, folded with Face into one Looks score |
 | `compatibility.html` | Compatibility Calculator — score anyone against any of the four hierarchies, 7–7 Rule verdicts |
 | `matchmaker.html` | Matchmaker — your scores against a 200-profile roster, desire × odds ranking with the math shown |
@@ -53,14 +53,16 @@ No build step, no framework — plain HTML/CSS/JS served statically.
 
 - **Partials:** `partials/navigation-bar.html`, `footer.html`, and `composite-section.html` are injected at
   runtime by `js/include.js` (fetch + `outerHTML`), which then fires a `partials:loaded` event on `document`.
-  Scripts that measure layout or render into the partials listen for it.
+  Scripts that measure layout or render into the partials listen for it. The shared shell adds a main
+  landmark and first-tab skip link, preserves keyboard focus when navigation collapses, and keeps the
+  mobile menu scrollable within the viewport.
 - **On-device models:** `models/*.onnx` run via onnxruntime-web (pinned CDN); MediaPipe tasks-vision (pinned)
   provides face/pose landmarks. See `models/README.md` for training, calibration anchors, and the
   export contract. Nothing leaves the browser.
 - **LE Lab contracts:** `lab.html` is the instrument shell; modular browser extractors normalize every successful input into a versioned document before the deterministic analyzer returns a versioned result. Raw source material stays in session memory by default, and Reset cancels active work and revokes local media previews.
 - **Lab result snapshots:** editing or replacing an input marks the previous results stale and pauses exports and passage decisions until a new analysis completes. Source stays tied to that completed run. The match table, citations, skipped passages, and source segments render in bounded batches with Show more controls; later records remain reviewable in the browser.
-- **Cross-page state:** calculators share `localStorage` keys — `loveEquations.faceScore.v2`,
-  `bodyScore.v2`, the shot keys, `smvCalculator.v7_2`, `compatibilityCalculator.v1`, `matchmaker.v1` — and a
+- **Cross-page state:** calculators share `localStorage` keys under the `loveEquations.` prefix — `faceScore.v4`,
+  `bodyScore.v4`, the shot keys, `smvCalculator.v7_2`, `compatibilityCalculator.v1`, `matchmaker.v1` — and a
   clipboard "profile package" JSON format (`source: 'love-equations.compatibility' | 'love-equations.smv'`)
   for explicit exchange between SMV Calc, Compatibility, and Matchmaker.
 - **Fonts & CDN:** Playfair Display is self-hosted in `fonts/` (variable woff2, SIL OFL). Tabler icons and calculator model runtimes remain version-pinned. LE Lab lazy-loads PDF.js 3.11.174 and Tesseract.js 5.1.1 only when needed; top-level bundles carry SRI, worker/core/model URLs are exact-version pinned, failures leave transcript intake usable, and library downloads are labeled separately from source upload.
@@ -79,13 +81,16 @@ No npm packages or build step are required. Lab tests use Node and the repositor
 
 ```bash
 npm run test:lab                         # Lab intake + analyzer + canon + HTML/ARIA/link audits + SMV bands
-npm run test:all                         # Lab + SMV bands + Matchmaker invariants
+npm run test:all                         # Face + Body + Looks metrics + calculator interop + Lab + SMV + Matchmaker
+npm run test:interop                     # score persistence, profile imports, clipboard failure regression checks
 node scripts/build-canon-index.mjs       # regenerate after canonical source changes
 node scripts/validate-canon-index.mjs    # validate committed runtime index
 python tools/lab_ui_audit.py             # Lab DOM/ARIA/link/CSS contract
 python tools/lab_release_audit.py        # recursive Lab module/resource release-token graph
 python tools/site_integrity_audit.py     # whole-site local links/fragments/IDs/ARIA
 node tools/lab-browser-audit.mjs         # actual browser workflows + 60 viewport/mode states × 5 tabs
+node tools/site-browser-audit.mjs        # all 24 pages, both widths, CSS breakpoint neighbors, screenshots
+node tools/site-interaction-audit.mjs    # keyboard shell, filters, disclosures, hierarchy builder, deep links
 ```
 
 The browser audit needs Node 20+, Playwright (installed or via `CODEX_NODE_MODULES`),
@@ -93,6 +98,11 @@ and an available Chromium browser (`LE_BROWSER_EXECUTABLE` can select one). It s
 its own temporary local server and saves its report and screenshots under
 `artifacts/lab-browser-audit/`. Geometry checks and screenshot review are separate
 from the static HTML/ARIA audit; the browser audit is not part of the dependency-free suite.
+
+The two site browser audits use the same runtime options and start their own local servers.
+Site screenshots and geometry results go to `artifacts/site-browser-audit/`; inspect the images
+separately from the automated assertions. `LE_AUDIT_PAGES` accepts a comma-separated page list for
+focused layout checks, and `LE_AUDIT_SCREENSHOTS=0` skips capture. Run without those filters for release coverage.
 
 ## Local development
 

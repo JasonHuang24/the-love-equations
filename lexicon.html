@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Lexicon &mdash; The Love Equations</title>
+  <meta name="description" content="Look up dating, attraction, and relationship terminology in The Love Equations' searchable lexicon, with definitions and links to related frameworks." />
   <script>/* Stamp the width mode before styles.css paints so a stored preference cannot flash. Mirrors the rule in js/include.js — change both together. */try{document.documentElement.dataset.contentWidth=localStorage.getItem("le-content-width")==="wide"?"wide":"original"}catch(e){document.documentElement.dataset.contentWidth="original"}</script>
-  <link rel="stylesheet" href="css/styles.css?v=2.6" />
+  <link rel="stylesheet" href="css/styles.css?v=2.7" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
         integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-  <script src="js/include.js?v=1.0" defer></script>
+  <script src="js/include.js?v=1.1" defer></script>
   <link rel="stylesheet" href="css/lexicon.css?v=1.9" />
 </head>
 <body data-page="lexicon">
@@ -340,6 +341,11 @@
 
     function renderLex(filter) {
       if (filter !== undefined) lexLens = filter;
+      document.querySelectorAll('.lex-fbtn').forEach(button => {
+        const selected = button.dataset.lens === lexLens;
+        button.classList.toggle('active', selected);
+        button.setAttribute('aria-pressed', String(selected));
+      });
       const grid = document.getElementById('lex-grid');
       const terms = lexPlain(lexQuery).trim().split(/\s+/).filter(Boolean);
       const shown = LEX.filter(t => (lexLens === 'all' || t[1] === lexLens) && lexMatches(t, terms));
@@ -411,8 +417,7 @@
       }
     })();
 
-    function lexFilter(lens, btn) {
-      document.querySelectorAll('.lex-fbtn').forEach(b => b.classList.toggle('active', b === btn));
+    function lexFilter(lens) {
       renderLex(lens);
     }
 
@@ -448,23 +453,30 @@
       }
     })();
 
-    // Honor a #lens hash (e.g. lexicon.html#red) coming from a dossier "Go deeper" link.
-    (function () {
-      const h = (location.hash || '').replace('#', '');
+    // Honor both initial and same-page destinations, including browser history.
+    function routeLexHash() {
+      let h;
+      try { h = decodeURIComponent((location.hash || '').slice(1)); }
+      catch { return; }
       const valid = ['shared', 'black', 'red', 'blue'];
-      if (valid.includes(h)) {
-        const btn = document.querySelector(`.lex-fbtn[data-lens="${h}"]`);
-        document.querySelectorAll('.lex-fbtn').forEach(b => b.classList.toggle('active', b === btn));
-        renderLex(h);
-      } else {
+      if (!h) {
         renderLex('all');
-        // Cards render client-side, so a #term-* deep link needs a manual scroll.
-        if (h.indexOf('term-') === 0) {
-          const el = document.getElementById(h);
-          if (el) el.scrollIntoView();
+      } else if (valid.includes(h)) {
+        renderLex(h);
+      } else if (h.startsWith('term-') && LEX.some(term => lexSlug(term[0]) === h)) {
+        // A valid deep link must still work after a filter/search hid its card.
+        if (!document.getElementById(h)) {
+          lexQuery = '';
+          document.getElementById('lex-search').value = '';
+          document.getElementById('lex-search-clear').hidden = true;
+          renderLex('all');
         }
+        document.getElementById(h)?.scrollIntoView();
       }
-    })();
+    }
+    renderLex('all');
+    window.addEventListener('hashchange', routeLexHash);
+    routeLexHash();
   </script>
 </body>
 </html>

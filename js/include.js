@@ -10,6 +10,20 @@
     // Storage can be unavailable in privacy-restricted contexts; the toggle still works for this page.
   }
   root.dataset.contentWidth = widthMode;
+  // Every page has one content wrapper; preserve Lab's native main and its ID.
+  // Install this before fetching partials so the bypass remains usable if a
+  // navigation request fails or is slow.
+  const main = document.querySelector('main, .page');
+  if (main) {
+    if (main.tagName !== 'MAIN') main.setAttribute('role', 'main');
+    if (!main.id) main.id = 'main-content';
+    main.setAttribute('tabindex', '-1');
+    const skip = document.createElement('a');
+    skip.className = 'skip-link';
+    skip.href = `#${main.id}`;
+    skip.textContent = 'Skip to content';
+    document.body.prepend(skip);
+  }
   const placeholders = document.querySelectorAll('[data-include]');
   await Promise.all([...placeholders].map(async el => {
     const name = el.dataset.include;
@@ -55,9 +69,23 @@
   const toggle = document.querySelector('.nav-toggle');
   const links = document.getElementById('nav-links');
   if (toggle && links) {
+    const collapsed = window.matchMedia('(max-width: 1480px)');
+    let navFocus = null;
+    document.addEventListener('focusin', (event) => {
+      navFocus = event.target === toggle || links.contains(event.target) ? event.target : null;
+    });
+    document.addEventListener('focusout', (event) => {
+      // A deliberate blur should not be restored. A responsive display:none
+      // blur can precede the media-query event, so remember that hidden control.
+      if (event.target === navFocus && !event.relatedTarget && event.target.getClientRects().length) navFocus = null;
+    });
     const setOpen = (open) => {
       links.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      // Do not leave keyboard focus inside a menu that has just become hidden.
+      if (!open && collapsed.matches && links.contains(document.activeElement)) {
+        toggle.focus({ preventScroll: true });
+      }
     };
     toggle.addEventListener('click', () => {
       setOpen(toggle.getAttribute('aria-expanded') !== 'true');
@@ -67,7 +95,16 @@
       if (e.target.closest('.nav-link')) setOpen(false);
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
+    });
+    collapsed.addEventListener('change', () => {
+      const previousFocus = document.activeElement === document.body ? navFocus : document.activeElement;
+      setOpen(false);
+      if (collapsed.matches && links.contains(previousFocus)) toggle.focus({ preventScroll: true });
+      // The hamburger itself is hidden on desktop; return its focus to a link.
+      if (!collapsed.matches && previousFocus === toggle) {
+        (links.querySelector('[aria-current="page"]') || links.querySelector('.nav-link'))?.focus({ preventScroll: true });
+      }
     });
   }
 
@@ -80,7 +117,14 @@
     btn.setAttribute('aria-label', 'Back to top');
     btn.innerHTML = '<i class="ti ti-arrow-up" aria-hidden="true"></i>';
     document.body.appendChild(btn);
-    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    btn.addEventListener('click', () => {
+      const heading = document.querySelector('h1');
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
+      }
+      window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    });
     const onScroll = () => btn.classList.toggle('show', window.scrollY > 600);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();

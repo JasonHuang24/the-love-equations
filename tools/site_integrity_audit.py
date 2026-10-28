@@ -1,4 +1,4 @@
-"""Static whole-site integrity audit for local HTML, fragments, IDs, and ARIA."""
+"""Static whole-site integrity audit for links, IDs, ARIA, and page metadata."""
 
 from collections import Counter
 from html.parser import HTMLParser
@@ -26,9 +26,28 @@ class SiteParser(HTMLParser):
         self.references = []
         self.targets = []
         self.h1_count = 0
+        self.languages = []
+        self.descriptions = []
+        self.viewports = []
+        self.images_missing_alt = []
+        self.unsafe_blank_links = []
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
+        if tag == "html":
+            self.languages.append(values.get("lang", ""))
+        if tag == "meta":
+            name = (values.get("name") or "").lower()
+            if name == "description":
+                self.descriptions.append(values.get("content", ""))
+            if name == "viewport":
+                self.viewports.append(values.get("content", ""))
+        if tag == "img" and "alt" not in values:
+            self.images_missing_alt.append(self.getpos()[0])
+        if tag == "a" and (values.get("target") or "").lower() == "_blank":
+            rel = set((values.get("rel") or "").lower().split())
+            if not rel.intersection({"noopener", "noreferrer"}):
+                self.unsafe_blank_links.append((self.getpos()[0], values.get("href", "")))
         if tag == "h1":
             self.h1_count += 1
         if values.get("id"):
@@ -61,6 +80,22 @@ def dynamic_fragment_exists(target, fragment):
     return False
 
 
+def page_metadata_errors(document):
+    """Check full-page metadata; injected partials deliberately omit it."""
+    issues = []
+    if len(document.languages) != 1 or not (document.languages[0] or "").strip():
+        issues.append("expected exactly one html element with a nonempty lang attribute")
+    if len(document.descriptions) != 1 or not (document.descriptions[0] or "").strip():
+        issues.append("expected exactly one nonempty meta description")
+    if len(document.viewports) != 1 or not re.search(
+        r"(?:^|[,;])\s*width\s*=\s*device-width\s*(?:[,;]|$)",
+        document.viewports[0] or "",
+        re.IGNORECASE,
+    ):
+        issues.append("expected exactly one viewport meta tag with width=device-width")
+    return issues
+
+
 errors = []
 checked_targets = 0
 
@@ -72,6 +107,12 @@ for source in HTML_FILES:
     if source.parent == ROOT and document.h1_count != 1:
         errors.append(
             f"{source.name}: expected exactly one h1, found {document.h1_count}")
+    if source.parent == ROOT:
+        errors.extend(f"{source.name}: {issue}" for issue in page_metadata_errors(document))
+    for line in document.images_missing_alt:
+        errors.append(f"{source.name}:{line}: img is missing an alt attribute")
+    for line, href in document.unsafe_blank_links:
+        errors.append(f"{source.name}:{line}: target=_blank link needs noopener or noreferrer: {href}")
 
     source_ids = set(document.ids)
     for kind, reference in document.references:

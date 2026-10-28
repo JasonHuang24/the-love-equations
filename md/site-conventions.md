@@ -125,3 +125,80 @@ whether cards are in the right tab/section.
   open a PR unless explicitly asked.
 - After any card change, re-run the inventory + balance checks above before committing.
 
+---
+
+# General website audit — 2026-10-28
+
+Requested by Jason, including permission to edit, commit, and push. Baseline:
+`d47ba32`. Scope: engineering, usability, accessibility, responsive presentation,
+content plumbing, and product-description accuracy across all **24 pages**.
+
+## Coverage and repairs
+
+- **Shared shell:** all 24 pages now have one main landmark and a working first-tab
+  skip link. All 16 navigation destinations remain reachable in short mobile menus.
+  DOM tab order matches the collapsed layout, Escape returns focus, and responsive
+  changes recover focus from controls that become hidden. The full navigation row
+  stays compressed through 1800px to avoid overflow immediately above 1700px.
+- **Reference interactions:** all 12 back-to-top controls (four references and eight
+  essays) respect reduced motion and restore heading focus. Lexicon's five filters
+  expose their selected state and respond to same-page/history fragments; term
+  links reveal cards hidden by filtering. Malformed Dynamics hashes fail softly.
+  The Hierarchy builder's Add factor controls are native buttons; factor fields and
+  import/export textareas have labels, and disclosure buttons expose expanded state.
+- **Readable styling:** the shared dim text token changed from `#a58b7b` to `#765e51`;
+  footer headings increased from .45 to .58 opacity. The final default-state survey
+  found 1,806 direct-text token uses and 96 footer headings. Flattened solid-background
+  ratios have a 4.90:1 floor for the dim token; footer headings exceed 5.27:1 even
+  against the strongest footer glow. These calculations are not a pixel-level or
+  whole-site WCAG certification. Screenshots were inspected separately.
+- **Responsive components:** Pills' nested grids can shrink to the available column;
+  its final synthesis link can wrap. Matchmaker's mobile sliders have usable tracks,
+  and both Matchmaker and Compatibility stack according to actual content width,
+  including the narrower desktop wide-mode cases. Footer columns wrap before their
+  labels collide. Deliberately scrollable tables/timelines remain scrollable.
+- **Calculator reliability:** Matchmaker respects Compatibility's explicit touched
+  flag, excluding untouched neutral defaults and accepting deliberately scored
+  all-minimum profiles. Composite scores survive storage failure for the current page,
+  disclose failed persistence, reject invalid/inconsistent scale records, and escape
+  stored source labels. Clipboard helpers correctly report refusal or exceptions.
+- **Descriptions and maintenance:** added 13 missing meta descriptions (24/24 now
+  covered), corrected the homepage's obsolete 150-profile roster and PSL-scale copy,
+  and updated the documented v4 score keys. Extended the static audit and added
+  repeatable browser and calculator regression checks. Shared asset references and
+  the Lab release graph were refreshed; Lab release **2.7.14** changes no algorithm.
+
+## Validation
+
+| Check | Result |
+|---|---|
+| `npm run test:all` | Passed: Face 45, Body 46, Looks 6, calculator interop 27; Lab 25/25 steps; SMV fixture/structure checks; 200/200 Matchmaker profiles. Zero failures, skipped assertions, disarmed gates, cancellations, or todos. |
+| Static site integrity | 27 documents including three partials; 826 local targets; 65 rendered Mythbuster fragments. Metadata, language/viewport, image-alt presence, safe new-tab links, IDs and ARIA references pass. |
+| Site browser matrix | 24 pages × 84 viewport sizes × 2 width modes = **4,032** settled measurements; 50/50 checks, zero uncaught exceptions or horizontal overflow. Includes CSS media-query boundaries and neighbors, 320px phones through 4K, 16:9 and 16:10. |
+| Final focused rerun | Homepage copy and Compatibility's final container fix: 336 measurements, 6/6 checks. Compatibility additionally passed 22 targeted states including its actual container-query boundary. |
+| Interaction browser audit | **52** checks: all page shells, 133 Dynamics card states, five factor tabs, four hierarchy disclosures and builder workflows, all 65 Mythbuster entries and filters, three Pill panels, empty states, and 12 back-to-top controls. |
+| Lab browser audit | **19/19** workflows and 300 tab/viewport/mode measurements. Last-record access verified for 305 ledger rows, 307 citations, 200 skipped passages, and 505 source segments. |
+| Calculator browser workflows | Seven storage/import/clipboard workflows; zero uncaught errors. Additional settled layout checks cover calculator internals and footer columns. |
+| Canon | 715 concepts / 22 sources. All concept entries and scoring surfaces remain identical; only source hashes, index version, and the required post-commit source timestamp change. |
+
+The broad capture contains 240 screenshots: top/middle/end of every page at mobile,
+desktop and 4K, plus the final content before each footer on mobile. Representative
+top, middle, nested/open, final-card, and footer states were visually reviewed;
+tablet and extra instrument/panel screenshots were inspected in the focused audits.
+Reports and screenshots remain in ignored `artifacts/site-browser-audit/` and
+`artifacts/lab-browser-audit/`; tooling is committed for reproduction. Layout checks
+wait for two animation frames after resizing; immediate measurements can observe
+stale media-query layout. Geometry checks allow deliberate scrolling/clipping
+containers and do not substitute for screenshot inspection.
+
+## Limits and remaining work
+
+This pass did not recrawl or fact-check the 253 unique external URLs, rerun model
+training/real-photo benchmarks, or change editorial doctrine or numerical scoring.
+The existing [photo-model validity findings](calculators.md#real-photo-looks-benchmark--2026-09-28),
+[Matchmaker trait/odds/prose findings](roster.md#matchmaker-audit--2026-10-27), and
+[Lab recall/attribution limitations](lab-history.md#le-lab-usefulness-audit--2026-10-27)
+remain relevant. Passing software tests is not evidence that those models are
+scientifically validated. Browser verification used desktop Chromium with simulated
+viewport sizes; physical-device and cross-engine testing were not performed.
+
